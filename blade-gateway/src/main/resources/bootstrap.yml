@@ -1,0 +1,59 @@
+server:
+  port: 8200
+
+# 需要配置的服务名
+blade:
+  service:
+    blade-auth: blade-auth
+    blade-system: blade-system
+    blade-anbiao: blade-anbiao
+    blade-upload: blade-upload
+    blade-user: blade-user
+
+spring:
+  cloud:
+    gateway:
+      routes:
+      # 认证中心
+      - id: ${blade.service.blade-auth}
+        uri: lb://${blade.service.blade-auth}
+        predicates:
+        - Path=/${blade.service.blade-auth}/**
+        filters:
+        - name: RequestRateLimiter
+          args:
+            # 使用SpEL按名称引用bean
+            key-resolver: '#{@remoteAddrKeyResolver}'
+            # 允许用户每秒处理多少个请求
+            redis-rate-limiter.replenishRate: 10
+            # 允许在一秒钟内完成的最大请求数
+            redis-rate-limiter.burstCapacity: 20
+        - StripPrefix=1
+      # 系统模块
+      - id: ${blade.service.blade-system}
+        uri: lb://${blade.service.blade-system}
+        predicates:
+        - Path=/${blade.service.blade-system}/**
+      # 人员模块
+      - id: ${blade.service.blade-user}
+        uri: lb://${blade.service.blade-user}
+        predicates:
+        - Path=/${blade.service.blade-user}/**
+      # 安标模块
+      - id: ${blade.service.blade-anbiao}
+        uri: lb://${blade.service.blade-anbiao}
+        predicates:
+        - Path=/${blade.service.blade-anbiao}/**
+      # 附件
+      - id: ${blade.service.blade-upload}
+      uri: lb://${blade.service.blade-upload}
+      predicates:
+        - Path=/${blade.service.blade-upload}/**
+      discovery:
+        locator:
+          enabled: true
+    loadbalancer:
+      retry:
+        enabled: true
+
+

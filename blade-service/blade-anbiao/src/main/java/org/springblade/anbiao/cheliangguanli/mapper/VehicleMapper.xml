@@ -1,0 +1,1570 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.cheliangguanli.mapper.VehicleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="vehicleVOResultMap" type="org.springblade.anbiao.cheliangguanli.vo.VehicleVO">
+        <id column="id" property="id"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="deptName" property="deptName"/>
+        <result column="cheliangpaizhao" property="cheliangpaizhao"/>
+        <result column="chepaiyanse" property="chepaiyanse"/>
+        <result column="shiyongxingzhi" property="shiyongxingzhi"/>
+        <result column="jiashiyuanid" property="jiashiyuanid"/>
+        <result column="changpai" property="changpai"/>
+        <result column="xinghao" property="xinghao"/>
+        <result column="chejiahao" property="chejiahao"/>
+        <result column="luntaiguige" property="luntaiguige"/>
+        <result column="cheshenyanse" property="cheshenyanse"/>
+        <result column="hedingzaike" property="hedingzaike"/>
+        <result column="yingyunnianxian" property="yingyunnianxian"/>
+        <result column="dengjizhengshubianhao" property="dengjizhengshubianhao"/>
+        <result column="chelianglaiyuan" property="chelianglaiyuan"/>
+        <result column="zhucedengjishijian" property="zhucedengjishijian"/>
+        <result column="ruhushijian" property="ruhushijian"/>
+        <result column="guohushijian" property="guohushijian"/>
+        <result column="tuishishijian" property="tuishishijian"/>
+        <result column="qiangzhibaofeishijian" property="qiangzhibaofeishijian"/>
+        <result column="jieboyunshuzhenghao" property="jieboyunshuzhenghao"/>
+        <result column="yuancheliangpaizhao" property="yuancheliangpaizhao"/>
+        <result column="cheliangzhuangtai" property="cheliangzhuangtai"/>
+        <result column="cheliangtingfangdiqu" property="cheliangtingfangdiqu"/>
+        <result column="danganhao" property="danganhao"/>
+        <result column="beiyongcheliang" property="beiyongcheliang"/>
+        <result column="yunyingshang" property="yunyingshang"/>
+        <result column="suoshuchedui" property="suoshuchedui"/>
+        <result column="xingshifujian" property="xingshifujian"/>
+        <result column="fujian" property="fujian"/>
+        <result column="fadongjixinghao" property="fadongjixinghao"/>
+        <result column="fadongjihao" property="fadongjihao"/>
+        <result column="fadongjipailianggonglv" property="fadongjipailianggonglv"/>
+        <result column="ranliaoleibie" property="ranliaoleibie"/>
+        <result column="ranyouxiaohao" property="ranyouxiaohao"/>
+        <result column="paifangbiaozhun" property="paifangbiaozhun"/>
+        <result column="zhuanxiangfangshi" property="zhuanxiangfangshi"/>
+        <result column="chemenshezhi" property="chemenshezhi"/>
+        <result column="zhouju" property="zhouju"/>
+        <result column="chechang" property="chechang"/>
+        <result column="chekuan" property="chekuan"/>
+        <result column="chegao" property="chegao"/>
+        <result column="luntaishu" property="luntaishu"/>
+        <result column="chezhoushu" property="chezhoushu"/>
+        <result column="gangbantanhuangpianshu" property="gangbantanhuangpianshu"/>
+        <result column="dipanxinghao" property="dipanxinghao"/>
+        <result column="donglileixing" property="donglileixing"/>
+        <result column="zongzhiliang" property="zongzhiliang"/>
+        <result column="zhengbeizhiliang" property="zhengbeizhiliang"/>
+        <result column="luntaizonglei" property="luntaizonglei"/>
+        <result column="xuanguaxingshi" property="xuanguaxingshi"/>
+        <result column="xingchezhidongfangshi" property="xingchezhidongfangshi"/>
+        <result column="zhidongqiqianlun" property="zhidongqiqianlun"/>
+        <result column="zhidongqihoulun" property="zhidongqihoulun"/>
+        <result column="abs" property="abs"/>
+        <result column="kongtiaoxitong" property="kongtiaoxitong"/>
+        <result column="huanshuqi" property="huanshuqi"/>
+        <result column="biansuxiangxingshi" property="biansuxiangxingshi"/>
+        <result column="zhizhaochangshang" property="zhizhaochangshang"/>
+        <result column="gouzhishuizhenghao" property="gouzhishuizhenghao"/>
+        <result column="chuchangriqi" property="chuchangriqi"/>
+        <result column="leijilicheng" property="leijilicheng"/>
+        <result column="zhongduanfuwuqi" property="zhongduanfuwuqi"/>
+        <result column="cheliangdengji" property="cheliangdengji"/>
+        <result column="weishengjian" property="weishengjian"/>
+        <result column="fadongjipailiang" property="fadongjipailiang"/>
+        <result column="cheliangwaikuochicun" property="cheliangwaikuochicun"/>
+        <result column="ranliaoxiaohaofujian" property="ranliaoxiaohaofujian"/>
+        <result column="beizhu" property="beizhu"/>
+        <result column="gpsanzhuangshijian" property="gpsanzhuangshijian"/>
+        <result column="zhinenghuaxitong" property="zhinenghuaxitong"/>
+        <result column="gps" property="gps"/>
+        <result column="xingshijiluyi" property="xingshijiluyi"/>
+        <result column="zongduanid" property="zongduanid"/>
+        <result column="zongduanxinghao" property="zongduanxinghao"/>
+        <result column="cheliangzhaopian" property="cheliangzhaopian"/>
+        <result column="is_deleted" property="isdel"/>
+        <result column="yunshujiezhi" property="yunshujiezhi"/>
+        <result column="terminalprotocoltype" property="terminalprotocoltype"/>
+        <result column="videochannelnum" property="videochannelnum"/>
+        <result column="platformconnectiontype" property="platformconnectiontype"/>
+    </resultMap>
+
+    <resultMap id="CPResultMap" type="org.springblade.anbiao.cheliangguanli.entity.VehicleCP">
+        <id column="id" property="id"/>
+        <result column="cheliangpaizhao" property="cheliangpaizhao"/>
+    </resultMap>
+
+    <resultMap id="GPSVehicleResultMap" type="org.springblade.anbiao.cheliangguanli.entity.VehicleToGps">
+        <id column="id" property="id"/>
+    </resultMap>
+
+    <resultMap id="GDSVehicleResultMap" type="org.springblade.anbiao.cheliangguanli.entity.VehicleGDSTJ">
+        <id column="id" property="id"/>
+    </resultMap>
+
+
+    <select id="selectByKey" resultMap="vehicleVOResultMap" parameterType="java.lang.String">
+        select  a.*, b.dept_name as deptName from  anbiao_vehicle a
+            inner join blade_dept b
+                on a.dept_id = b.id
+            where a.id=#{id}
+    </select>
+
+    <select id="selectByCPYS" resultMap="vehicleVOResultMap" parameterType="java.lang.String">
+        select
+            a.id,
+            ifnull(a.cheliangpaizhao,'') as cheliangpaizhao,
+            ifnull(a.chepaiyanse,'') as chepaiyanse,
+            ifnull(a.shiyongxingzhi,'') as shiyongxingzhi,
+            case when ifnull(a.jiashiyuanxingming,'') = 'null' then '' else ifnull(a.jiashiyuanxingming,'') end as jiashiyuanxingming,
+            case when ifnull(a.jiashiyuandianhua,'') = 'null' then '' else ifnull(a.jiashiyuandianhua,'') end as jiashiyuandianhua,
+            case when ifnull(a.yayunyuanxingming,'') = 'null' then '' else ifnull(a.yayunyuanxingming,'') end as yayunyuanxingming,
+            case when ifnull(a.yayunyuandianhua,'') = 'null' then '' else ifnull(a.yayunyuandianhua,'') end as yayunyuandianhua,
+            case when ifnull(a.chezhu,'') = 'null' then '' else ifnull(a.chezhu,'') end as chezhu,
+            case when ifnull(a.chezhudianhua,'') = 'null' then '' else ifnull(a.chezhudianhua,'') end as chezhudianhua,
+            case when ifnull(a.zongduanxinghao,'') = 'null' then '' else ifnull(a.zongduanxinghao,'') end as zongduanxinghao,
+            case when ifnull(a.chejiahao,'') = 'null' then '' else ifnull(a.chejiahao,'') end as chejiahao,
+            case when ifnull(a.changpai,'') = 'null' then '' else ifnull(a.changpai,'') end as changpai,
+            case when ifnull(a.yunyingshang,'') = 'null' then '' else ifnull(a.yunyingshang,'') end as yunyingshang,
+            case when ifnull(a.cheliangzhaopian,'') = 'null' then '' else ifnull(a.cheliangzhaopian,'') end as cheliangzhaopian,
+            case when ifnull(a.zongduanid,'') = 'null' then '' else ifnull(a.zongduanid,'') end as zongduanid,
+            case when ifnull(a.xinghao,'') = 'null' then '' else ifnull(a.xinghao,'') end as xinghao,
+            case when ifnull(a.hedingzaike,'') = 'null' then '' else ifnull(a.hedingzaike,'') end as hedingzaike,
+            case when ifnull(a.yunyingshangmingcheng,'') = 'null' then '' else ifnull(a.yunyingshangmingcheng,'') end as yunyingshangmingcheng,
+            CASE
+                    WHEN cheliangzhuangtai=0 and ifnull(is_deleted,0) = 0 THEN '在用'
+                    WHEN cheliangzhuangtai=1 and ifnull(is_deleted,0) = 0 THEN '停用'
+                    WHEN ifnull(is_deleted,1) = 1 THEN '删除'
+            END cheliangzhuangtai,
+            ifnull(b.securityofficertelephone,'') as securityofficertelephone
+        from
+            anbiao_vehicle a
+            left join anbiao_organization b on a.dept_id = b.dept_id
+        where 1=1
+            and cheliangpaizhao=#{cheliangpaizhao}
+            and chepaiyanse=#{chepaiyanse}
+            and ifnull(is_deleted,0) = 0
+            and ifnull(cheliangzhuangtai,0) != 2
+        LIMIT 1;
+    </select>
+
+    <select id="selectCPYS" resultMap="vehicleVOResultMap" parameterType="java.lang.String">
+        select cheliangpaizhao from anbiao_vehicle
+        where cheliangpaizhao=#{cheliangpaizhao}
+            and chepaiyanse=#{chepaiyanse}
+            and ifnull(is_deleted,0) = 0
+            and ifnull(cheliangzhuangtai,0) != 2
+        LIMIT 1;
+    </select>
+
+    <!-- 车辆 删除 -->
+    <update id="deleteVehicle" parameterType="java.lang.String" >
+         update anbiao_vehicle set is_deleted = 1 , caozuoshijian = NOW()
+        WHERE id = #{id}
+  </update>
+
+    <!-- 车辆 停用 -->
+    <update id="updateVehicleOutStatus" parameterType="java.lang.String" >
+         update anbiao_vehicle set cheliangzhuangtai = 1 , caozuoshijian = NOW()
+        WHERE id = #{id}
+  </update>
+
+    <!-- 车辆 起用 -->
+    <update id="updateVehicleSignStatus" parameterType="java.lang.String" >
+         update anbiao_vehicle set cheliangzhuangtai = 0 , caozuoshijian = NOW()
+        WHERE id = #{id}
+  </update>
+
+    <!-- 车辆 报废 -->
+    <update id="updateVehicleScrapStatus" parameterType="java.lang.String" >
+         update anbiao_vehicle set cheliangzhuangtai = 2 , caozuoshijian = NOW()
+        WHERE id = #{id}
+  </update>
+
+    <!-- 车辆异动 -->
+    <update id="updateDeptId" parameterType="map" >
+         update anbiao_vehicle set dept_id = #{deptId} , caozuoshijian = NOW()
+         WHERE id = #{id}
+  </update>
+
+    <sql id="tableSql">
+	 SELECT
+        a.id,
+        a.dept_id,
+        cheliangpaizhao,
+        chepaiyanse,
+        ifnull(shiyongxingzhi,'') as shiyongxingzhi,
+        ifnull(changpai,'') as changpai,
+        ifnull(xinghao,'') as xinghao,
+        ifnull(chejiahao,'') as chejiahao,
+        ifnull(yunyingshang,'') as yunyingshang,
+        ifnull(yunyingshangmingcheng,'') as yunyingshangmingcheng,
+        ifnull(zongduanid,'') as zongduanid,
+        c.dept_name as deptName,
+        ifnull(cheshenyanse,'') as cheshenyanse,
+        ifnull(cheliangzhaopian,'') as cheliangzhaopian,
+        ifnull(hedingzaike,'') as hedingzaike,
+        ifnull(dengjizhengshubianhao,'') as dengjizhengshubianhao,
+        ifnull(qiangzhibaofeishijian,'') as qiangzhibaofeishijian,
+        ifnull(jieboyunshuzhenghao,'') as jieboyunshuzhenghao,
+        ifnull(yuancheliangpaizhao,'') as yuancheliangpaizhao,
+        ifnull(cheliangzhuangtai,'') as cheliangzhuangtai,
+        ifnull(danganhao,'') as danganhao,
+        ifnull(suoshuchedui,'') as suoshuchedui,
+        ifnull(xingshifujian,'') as xingshifujian,
+        ifnull(zongzhiliang,'') as zongzhiliang,
+        ifnull(beizhu,'') as beizhu,
+        ifnull(gpsanzhuangshijian,'') as gpsanzhuangshijian,
+        ifnull(zongduanxinghao,'') as zongduanxinghao,
+        ifnull(yunshujiezhi,'') as yunshujiezhi,
+        ifnull(jiashiyuanxingming,'') as jiashiyuanxingming,
+        case when ifnull(a.caozuoshijian,'') != '' then a.caozuoshijian
+        else a.createtime
+        end as caozuoshijian,
+        ifnull(jiashiyuandianhua,'') as jiashiyuandianhua,
+        ifnull(yayunyuanxingming,'') as yayunyuanxingming,
+        ifnull(yayunyuandianhua,'') as yayunyuandianhua,
+        ifnull(chezhu,'') as chezhu,
+        ifnull(chezhudianhua,'') as chezhudianhua,
+        ifnull(c.area,'') as area,
+        zhongduanleixing,
+        ifnull(terminalprotocoltype,'') as terminalprotocoltype,
+        ifnull(videochannelnum,'') as videochannelnum,
+        ifnull(platformconnectiontype,'') as platformconnectiontype
+    <if test="ids !=null and ids != ''and ids == '1'.toString()">
+        ,yj.shuoming
+    </if>
+    FROM
+        anbiao_vehicle a
+        inner join anbiao_organization c on a.dept_id = c.dept_id and c.isdelete = 0
+        <if test="ids !=null and ids != ''and ids == '1'.toString()">
+        left join(
+            SELECT
+                biaoid,
+                (select shuoming from anbiao_yujingxiang where id = tixingxiangqingid) as shuoming
+            from
+                anbiao_jinritixing_jiesuan
+            where IFNULL(isdelete,0)=0
+                and dept_id = #{deptId}
+                and tongjiriqi = #{tongjiriqi}
+                and tixingleixing = #{tixingleixing}
+                and tixingxiangqingid = #{tixingxiangqingid}
+            )yj on yj.biaoid = a.id
+        </if>
+    WHERE 1=1
+        and ifnull(a.is_deleted,0) = 0
+        and ifnull(cheliangzhuangtai,0) != 2
+        and a.dept_id in(
+            SELECT
+                DISTINCT
+                xiaji.id
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+                <if test="deptId != null">
+                    and shangji.id=#{deptId}
+                </if>
+            )
+  </sql>
+
+    <sql id="querySql">
+        <if test="cheliangpaizhao !=null and cheliangpaizhao != ''">
+            AND cheliangpaizhao like CONCAT('%',#{cheliangpaizhao},'%')
+        </if>
+
+        <if test="zongduanid !=null and zongduanid != ''">
+            AND zongduanid like CONCAT('%',#{zongduanid},'%')
+        </if>
+
+        <if test="caozuoshijian !=null and caozuoshijian != ''">
+            AND caozuoshijian &gt;= #{caozuoshijian}
+        </if>
+
+        <if test="caozuoshijian !=null and caozuoshijian != ''">
+            AND caozuoshijian &gt;= #{caozuoshijian}
+        </if>
+
+        <if test="deptName !=null and deptName != ''">
+            AND deptName like CONCAT('%',#{deptName},'%')
+        </if>
+
+        <if test="areaName !=null and areaName != ''">
+            AND area like CONCAT('%',#{areaName},'%')
+        </if>
+
+        <if test='cheliangleixing !=null and cheliangleixing != ""and cheliangleixing == "1" '>
+            AND cheliangpaizhao LIKE '%挂%'
+        </if>
+
+        <if test="shiyongxingzhi !=null and shiyongxingzhi != '' ">
+            AND shiyongxingzhi = #{shiyongxingzhi}
+        </if>
+
+        <if test="cheliangzhuangtai !=null and cheliangzhuangtai != '' and cheliangzhuangtai == '0'.toString() ">
+            AND ifnull(cheliangzhuangtai,0) = 0
+        </if>
+
+        <if test="cheliangzhuangtai !=null and cheliangzhuangtai != '' and cheliangzhuangtai == '1'.toString() ">
+            AND ifnull(cheliangzhuangtai,0) = 1
+        </if>
+
+<!--        <if test="cheliangzhuangtai !=null and cheliangzhuangtai != '' and cheliangzhuangtai == '报废'.toString() ">-->
+<!--            AND ifnull(cheliangzhuangtai,'') = 2-->
+<!--        </if>-->
+    </sql>
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        order by cheliangpaizhao
+        <if test="ids !=null and ids != ''and ids == '1'.toString()">
+            ,shuoming desc
+        </if>
+    </sql>
+
+    <select id="selectVehiclePage" resultMap="vehicleVOResultMap"
+            parameterType="org.springblade.anbiao.cheliangguanli.page.VehiclePage" resultType="org.springblade.anbiao.cheliangguanli.vo.VehicleVO">
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectVehicleTotal"
+            parameterType="org.springblade.anbiao.cheliangguanli.page.VehiclePage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql" />
+        )d
+        where 1 = 1
+        <include refid="querySql" />
+    </select>
+
+    <select id="selectCL" resultMap="CPResultMap" parameterType="java.lang.String">
+        SELECT
+        a.id,
+        cheliangpaizhao
+        FROM
+        anbiao_vehicle a
+        inner join  (
+        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b
+        on a.dept_id = b.id
+        WHERE 1=1
+            and ifnull(a.is_deleted,0) = 0
+            and ifnull(a.cheliangzhuangtai,0) != 2
+        <if test="cheliangpaizhao !=null and cheliangpaizhao != ''">
+            AND cheliangpaizhao  LIKE '%${cheliangpaizhao}%'
+        </if>
+    </select>
+
+    <select id="vehicleDayCount" resultType="int">
+        SELECT
+            count(1)
+        FROM
+	        anbiao_vehicle
+        WHERE
+	        dept_id = #{deptId}
+        AND is_deleted = 0
+        and ifnull(cheliangzhuangtai,0) != 2
+        AND cheliangpaizhao NOT LIKE '%挂'
+    </select>
+
+    <select id="xianzhiVehcleCount" resultType="int">
+            SELECT
+	        count(1)
+	        FROM
+		        anbiao_vehicle
+	        WHERE
+		        dept_id = #{deptId}
+	        AND is_deleted = 0
+	        AND cheliangpaizhao NOT LIKE '%挂'
+	        AND cheliangzhuangtai = 1
+    </select>
+    <select id="vehileOne" resultType="org.springblade.anbiao.cheliangguanli.entity.Vehicle">
+        SELECT
+            a.*,
+            ifnull(b.securityofficertelephone,'') as securityofficertelephone
+        from
+            anbiao_vehicle a
+            left join anbiao_organization b on a.dept_id = b.dept_id
+        where 1=1
+        <if test="cheliangpaizhao !=null and cheliangpaizhao != '' ">
+            AND cheliangpaizhao = #{cheliangpaizhao}
+        </if>
+        <if test="chepaiyanse !=null and chepaiyanse != '' ">
+            AND chepaiyanse = #{chepaiyanse}
+        </if>
+            AND a.is_deleted=0
+            AND ifnull(cheliangzhuangtai,0) != 2
+        <if test="deptId !=null and deptId != '' ">
+            AND a.dept_id=#{deptId}
+        </if>
+        limit 1
+    </select>
+
+    <select id="selectVehicleAll" resultMap="GPSVehicleResultMap" parameterType="java.lang.String" >
+       select
+            *
+       from(
+        select
+            <if test="caozuoshijian !=null and caozuoshijian != ''">
+                CASE
+                    WHEN cheliangzhuangtai=0 and ifnull(a.is_deleted,0) = 0 THEN '在用'
+                    WHEN cheliangzhuangtai=1 and ifnull(a.is_deleted,0) = 0 THEN '停用'
+                    WHEN ifnull(a.is_deleted,1) = 1 THEN '删除'
+                END cheliangzhuangtai,
+            </if>
+            a.dept_id as deptId,b.dept_name as deptName,a.simnum,a.zongduanxinghao,
+            case when ifnull(a.caozuoshijian,'') = '' then a.createtime else a.caozuoshijian end as caozuoshijian,
+            a.createtime,a.id,REPLACE(a.cheliangpaizhao, '\\n', '') cheliangpaizhao,a.chepaiyanse,a.shiyongxingzhi,
+            a.zongduanid,a.terminalprotocoltype,a.videochannelnum,a.platformconnectiontype
+        from
+            anbiao_vehicle a
+            inner join blade_dept b on a.dept_id = b.id
+        where 1=1
+        <if test="caozuoshijian !=null and caozuoshijian != '' ">
+            and (a.createtime &gt; #{caozuoshijian} or a.caozuoshijian &gt; #{caozuoshijian})
+            and ifnull(a.cheliangzhuangtai,0) != 2
+        </if>
+
+        <if test=" caozuoshijian == null or caozuoshijian == '' ">
+            and ifnull(a.cheliangzhuangtai,0) = 0
+            and ifnull(a.is_deleted,0) = 0
+        </if>
+        ) a
+        order by a.caozuoshijian asc
+    </select>
+
+    <select id="selectVehicleAll_FY" resultMap="GPSVehicleResultMap" parameterType="java.lang.String" >
+        select
+            *
+        from(
+            select
+            <if test="caozuoshijian !=null and caozuoshijian != ''">
+                CASE
+                WHEN cheliangzhuangtai=0 and ifnull(a.is_deleted,0) = 0 THEN '在用'
+                WHEN cheliangzhuangtai=1 and ifnull(a.is_deleted,0) = 0 THEN '停用'
+                WHEN ifnull(a.is_deleted,1) = 1 THEN '删除'
+                END cheliangzhuangtai,
+            </if>
+            a.dept_id as deptId,b.dept_name as deptName,a.simnum,a.zongduanxinghao,
+            case when ifnull(a.caozuoshijian,'') = '' then a.createtime else a.caozuoshijian end as caozuoshijian,
+            a.createtime,a.id,REPLACE(a.cheliangpaizhao, '\\n', '') cheliangpaizhao,a.chepaiyanse,a.shiyongxingzhi,
+            a.zongduanid,a.terminalprotocoltype,a.videochannelnum,a.platformconnectiontype
+        from
+        anbiao_vehicle a
+        inner join (
+        SELECT
+        DISTINCT
+        xiaji.id,
+        xiaji.parent_id,
+        xiaji.dept_name,
+        xiaji.is_deleted
+        FROM
+        blade_dept shangji,
+        blade_dept xiaji
+        WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+            AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+            AND shangji.id = 5609
+        ) b on a.dept_id = b.id
+        where 1=1
+        <if test="caozuoshijian !=null and caozuoshijian != '' ">
+            and (a.createtime &gt; #{caozuoshijian} or a.caozuoshijian &gt; #{caozuoshijian})
+            and ifnull(a.cheliangzhuangtai,0) != 2
+        </if>
+
+        <if test=" caozuoshijian == null or caozuoshijian == '' ">
+            and ifnull(a.cheliangzhuangtai,0) = 0
+            and ifnull(a.is_deleted,0) = 0
+        </if>
+        ) a
+        order by a.caozuoshijian asc
+    </select>
+
+    <select id="selectVehicleAll_NFY" resultMap="GPSVehicleResultMap" parameterType="java.lang.String" >
+        select
+            *
+        from(
+            select
+            <if test="caozuoshijian !=null and caozuoshijian != ''">
+                CASE
+                    WHEN cheliangzhuangtai=0 and ifnull(a.is_deleted,0) = 0 THEN '在用'
+                    WHEN cheliangzhuangtai=1 and ifnull(a.is_deleted,0) = 0 THEN '停用'
+                    WHEN ifnull(a.is_deleted,1) = 1 THEN '删除'
+                END cheliangzhuangtai,
+            </if>
+                a.dept_id as deptId,b.dept_name as deptName,a.simnum,a.zongduanxinghao,
+                case when ifnull(a.caozuoshijian,'') = '' then a.createtime else a.caozuoshijian end as caozuoshijian,
+                a.createtime,a.id,REPLACE(a.cheliangpaizhao, '\\n', '') cheliangpaizhao,a.chepaiyanse,a.shiyongxingzhi,
+                a.zongduanid,a.terminalprotocoltype,a.videochannelnum,a.platformconnectiontype
+            from
+                anbiao_vehicle a
+            inner join (
+                SELECT
+                    DISTINCT
+                    xiaji.id,
+                    xiaji.parent_id,
+                    xiaji.dept_name,
+                    xiaji.is_deleted
+                FROM
+                    blade_dept shangji,
+                    blade_dept xiaji
+                WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                    AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+                    AND xiaji.id not in(
+                        SELECT
+                            DISTINCT
+                            xiaji.id
+                        FROM
+                            blade_dept shangji,
+                            blade_dept xiaji
+                        WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                            AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+                            AND shangji.id = 5609
+                        )
+                    ) b on a.dept_id = b.id
+         where 1=1
+        <if test="caozuoshijian !=null and caozuoshijian != '' ">
+            and (a.createtime &gt; #{caozuoshijian} or a.caozuoshijian &gt; #{caozuoshijian})
+            and ifnull(a.cheliangzhuangtai,0) != 2
+        </if>
+
+        <if test=" caozuoshijian == null or caozuoshijian == '' ">
+            and ifnull(a.cheliangzhuangtai,0) = 0
+            and ifnull(a.is_deleted,0) = 0
+        </if>
+        ) a
+        order by a.caozuoshijian asc
+    </select>
+
+    <select id="selectByYYS" resultMap="GPSVehicleResultMap" parameterType="java.lang.String" >
+        select DISTINCT id,yunyingshang from anbiao_vehicle
+        where id = #{id}
+    </select>
+
+    <select id="selectVehicleColor" parameterType="string"
+            resultType="org.springblade.anbiao.cheliangguanli.vo.VehicleVO">
+        select dict_key as chepaiyanse from blade_dict
+        where code ='colour'
+        and dict_key = #{color}
+        and is_deleted = 0
+        and dict_key != -1
+    </select>
+
+    <insert id="insertSelective" parameterType="org.springblade.anbiao.cheliangguanli.vo.VehicleVO" >
+        insert into anbiao_vehicle
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != '' ">
+                id,
+            </if>
+            <if test="deptId != null ">
+                dept_id,
+            </if>
+            <if test="cheliangpaizhao != null and cheliangpaizhao != '' ">
+                cheliangpaizhao,
+            </if>
+            <if test="chepaiyanse != null and chepaiyanse != '' ">
+                chepaiyanse,
+            </if>
+            <if test="shiyongxingzhi != null and shiyongxingzhi != '' ">
+                shiyongxingzhi,
+            </if>
+            <if test="cheliangzhuangtai != null and cheliangzhuangtai != '' ">
+                cheliangzhuangtai,
+            </if>
+            <if test="zhongduanleixing != null ">
+                zhongduanleixing,
+            </if>
+            <if test="platformconnectiontype != null and platformconnectiontype != '' ">
+                platformconnectiontype,
+            </if>
+            <if test="terminalprotocoltype != null and terminalprotocoltype != '' ">
+                terminalprotocoltype,
+            </if>
+            <if test="videochannelnum != null and videochannelnum != '' ">
+                videochannelnum,
+            </if>
+            <if test="daoluyunshuzheng != null and daoluyunshuzheng != '' ">
+                daoluyunshuzheng,
+            </if>
+            <if test="daoluyunshuzhengchulingriqi != null and daoluyunshuzhengchulingriqi != '' ">
+                daoluyunshuzhengchulingriqi,
+            </if>
+            <if test="daoluyunshuzhengyouxiaoqi != null and daoluyunshuzhengyouxiaoqi != '' ">
+                daoluyunshuzhengyouxiaoqi,
+            </if>
+            <if test="bencinianshenriqi != null and bencinianshenriqi != '' ">
+                bencinianshenriqi,
+            </if>
+            <if test="xiacinianshenriqi != null and xiacinianshenriqi != '' ">
+                xiacinianshenriqi,
+            </if>
+            <if test="bencinianjianriqi != null and bencinianjianriqi != '' ">
+                bencinianjianriqi,
+            </if>
+            <if test="xiacinianjianriqi != null and xiacinianjianriqi != '' ">
+                xiacinianjianriqi,
+            </if>
+            <if test="bencijipingriqi != null and bencijipingriqi != '' ">
+                bencijipingriqi,
+            </if>
+            <if test="xiacijipingriqi != null and xiacijipingriqi != '' ">
+                xiacijipingriqi,
+            </if>
+            <if test="baofeiriqi != null and baofeiriqi != '' ">
+                baofeiriqi,
+            </if>
+            <if test="cheliangjishudengji != null and cheliangjishudengji != '' ">
+                cheliangjishudengji,
+            </if>
+            <if test="xinghao != null and xinghao != '' ">
+                xinghao,
+            </if>
+            <if test="changpai != null and changpai != '' ">
+                changpai,
+            </if>
+            <if test="zongzhiliang != null and zongzhiliang != '' ">
+                zongzhiliang,
+            </if>
+            <if test="hedingzaike != null and hedingzaike != '' ">
+                hedingzaike,
+            </if>
+            <if test="chejiahao != null and chejiahao != '' ">
+                chejiahao,
+            </if>
+            <if test="yunyingshangmingcheng != null and yunyingshangmingcheng != '' ">
+                yunyingshangmingcheng,
+            </if>
+            <if test="yunyingshang != null and yunyingshang != '' ">
+                yunyingshang,
+            </if>
+            <if test="zongduanid != null and zongduanid != '' ">
+                zongduanid,
+            </if>
+            <if test="jiashiyuanid != null and jiashiyuanid != '' ">
+                jiashiyuanid,
+            </if>
+            <if test="yayunyuanid != null and yayunyuanid != '' ">
+                yayunyuanid,
+            </if>
+            <if test="beizhu != null and beizhu != '' ">
+                beizhu,
+            </if>
+            <if test="zongduanxinghao != null and zongduanxinghao != '' ">
+                zongduanxinghao,
+            </if>
+            <if test="chezhu != null and chezhu != '' ">
+                chezhu,
+            </if>
+            <if test="chezhudianhua != null and chezhudianhua != '' ">
+                chezhudianhua,
+            </if>
+            <if test="jiashiyuanxingming != null and jiashiyuanxingming != '' ">
+                jiashiyuanxingming,
+            </if>
+            <if test="jiashiyuandianhua != null and jiashiyuandianhua != '' ">
+                jiashiyuandianhua,
+            </if>
+            <if test="yayunyuanxingming != null and yayunyuanxingming != '' ">
+                yayunyuanxingming,
+            </if>
+            <if test="yayunyuandianhua != null and yayunyuandianhua != '' ">
+                yayunyuandianhua,
+            </if>
+            <if test="suoshuyunguan != null and suoshuyunguan != '' ">
+                suoshuyunguan,
+            </if>
+            <if test="isdel != null ">
+                is_deleted,
+            </if>
+            createtime,
+            <if test="caozuoren != null and caozuoren != '' ">
+                caozuoren,
+            </if>
+            <if test="caozuorenid != null and caozuorenid != '' ">
+                caozuorenid,
+            </if>
+            caozuoshijian,
+            <if test="teamno != null and teamno != '' ">
+                teamno,
+            </if>
+            <if test="owenno != null and owenno != '' ">
+                owenno,
+            </if>
+            <if test="daoluyunzhengfujian != null and daoluyunzhengfujian != '' ">
+                daoluyunzhengfujian,
+            </if>
+            <if test="dabiaojianchafujian != null and dabiaojianchafujian != '' ">
+                dabiaojianchafujian,
+            </if>
+            <if test="nianshenfujian != null and nianshenfujian != '' ">
+                nianshenfujian,
+            </if>
+            <if test="xingshizhengzhengyefujian != null and xingshizhengzhengyefujian != '' ">
+                xingshizhengzhengyefujian,
+            </if>
+            <if test="xingshizhengfuyefujian != null and xingshizhengfuyefujian != '' ">
+                xingshizhengfuyefujian,
+            </if>
+            <if test="cheliangdengjizhengshuzhengyefujian != null and cheliangdengjizhengshuzhengyefujian != '' ">
+                cheliangdengjizhengshuzhengyefujian,
+            </if>
+            <if test="cheliangdengjizhengshufuyefujian != null and cheliangdengjizhengshufuyefujian != '' ">
+                cheliangdengjizhengshufuyefujian,
+            </if>
+            <if test="simnum != null and simnum != '' ">
+                simnum,
+            </if>
+            <if test="baoxiandaoqishijian != null and baoxiandaoqishijian != '' ">
+                baoxiandaoqishijian,
+            </if>
+            <if test="xingshizhengdaoqishijian != null and xingshizhengdaoqishijian != '' ">
+                xingshizhengdaoqishijian,
+            </if>
+            <if test="fadongjihao != null and fadongjihao != '' ">
+                fadongjihao,
+            </if>
+            <if test="zhongduanchangshang != null and zhongduanchangshang != '' ">
+                zhongduanchangshang,
+            </if>
+            <if test="area != null and area != '' ">
+                area
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != '' ">
+                #{id},
+            </if>
+            <if test="deptId != null and deptId != '' ">
+                #{deptId},
+            </if>
+            <if test="cheliangpaizhao != null and cheliangpaizhao != '' ">
+                #{cheliangpaizhao},
+            </if>
+            <if test="chepaiyanse != null and chepaiyanse != '' ">
+                #{chepaiyanse},
+            </if>
+            <if test="shiyongxingzhi != null and shiyongxingzhi != '' ">
+                #{shiyongxingzhi},
+            </if>
+            <if test="cheliangzhuangtai != null and cheliangzhuangtai != '' ">
+                #{cheliangzhuangtai},
+            </if>
+            <if test="zhongduanleixing != null ">
+                #{zhongduanleixing},
+            </if>
+            <if test="platformconnectiontype != null and platformconnectiontype != '' ">
+                #{platformconnectiontype},
+            </if>
+            <if test="terminalprotocoltype != null and terminalprotocoltype != '' ">
+                #{terminalprotocoltype},
+            </if>
+            <if test="videochannelnum != null">
+                #{videochannelnum},
+            </if>
+            <if test="daoluyunshuzheng != null and daoluyunshuzheng != '' ">
+                #{daoluyunshuzheng},
+            </if>
+            <if test="daoluyunshuzhengchulingriqi != null and daoluyunshuzhengchulingriqi != '' ">
+                #{daoluyunshuzhengchulingriqi},
+            </if>
+            <if test="daoluyunshuzhengyouxiaoqi != null and daoluyunshuzhengyouxiaoqi != '' ">
+                #{daoluyunshuzhengyouxiaoqi},
+            </if>
+            <if test="bencinianshenriqi != null and bencinianshenriqi != '' ">
+                #{bencinianshenriqi},
+            </if>
+            <if test="xiacinianshenriqi != null and xiacinianshenriqi != '' ">
+                #{xiacinianshenriqi},
+            </if>
+            <if test="bencinianjianriqi != null and bencinianjianriqi != '' ">
+                #{bencinianjianriqi},
+            </if>
+            <if test="xiacinianjianriqi != null and xiacinianjianriqi != '' ">
+                #{xiacinianjianriqi},
+            </if>
+            <if test="bencijipingriqi != null and bencijipingriqi != '' ">
+                #{bencijipingriqi},
+            </if>
+            <if test="xiacijipingriqi != null and xiacijipingriqi != '' ">
+                #{xiacijipingriqi},
+            </if>
+            <if test="baofeiriqi != null and baofeiriqi != '' ">
+                #{baofeiriqi},
+            </if>
+            <if test="cheliangjishudengji != null and cheliangjishudengji != '' ">
+                #{cheliangjishudengji},
+            </if>
+            <if test="xinghao != null and xinghao != '' ">
+                #{xinghao},
+            </if>
+            <if test="changpai != null and changpai != '' ">
+                #{changpai},
+            </if>
+            <if test="zongzhiliang != null and zongzhiliang != '' ">
+                #{zongzhiliang},
+            </if>
+            <if test="hedingzaike != null and hedingzaike != '' ">
+                #{hedingzaike},
+            </if>
+            <if test="chejiahao != null and chejiahao != '' ">
+                #{chejiahao},
+            </if>
+            <if test="yunyingshangmingcheng != null and yunyingshangmingcheng != '' ">
+                #{yunyingshangmingcheng},
+            </if>
+            <if test="yunyingshang != null and yunyingshang != '' ">
+                #{yunyingshang},
+            </if>
+            <if test="zongduanid != null and zongduanid != '' ">
+                #{zongduanid},
+            </if>
+            <if test="jiashiyuanid != null and jiashiyuanid != '' ">
+                #{jiashiyuanid},
+            </if>
+            <if test="yayunyuanid != null and yayunyuanid != '' ">
+                #{yayunyuanid},
+            </if>
+            <if test="beizhu != null and beizhu != '' ">
+                #{beizhu},
+            </if>
+            <if test="zongduanxinghao != null and zongduanxinghao != '' ">
+                #{zongduanxinghao},
+            </if>
+            <if test="chezhu != null and chezhu != '' ">
+                #{chezhu},
+            </if>
+            <if test="chezhudianhua != null and chezhudianhua != '' ">
+                #{chezhudianhua},
+            </if>
+            <if test="jiashiyuanxingming != null and jiashiyuanxingming != '' ">
+                #{jiashiyuanxingming},
+            </if>
+            <if test="jiashiyuandianhua != null and jiashiyuandianhua != '' ">
+                #{jiashiyuandianhua},
+            </if>
+            <if test="yayunyuanxingming != null and yayunyuanxingming != '' ">
+                #{yayunyuanxingming},
+            </if>
+            <if test="yayunyuandianhua != null and yayunyuandianhua != '' ">
+                #{yayunyuandianhua},
+            </if>
+            <if test="suoshuyunguan != null and suoshuyunguan != '' ">
+                #{suoshuyunguan},
+            </if>
+            <if test="isdel != null ">
+                #{isdel},
+            </if>
+            now(),
+            <if test="caozuoren != null and caozuoren != '' ">
+                #{caozuoren},
+            </if>
+            <if test="caozuorenid != null and caozuorenid != '' ">
+                #{caozuorenid},
+            </if>
+            now(),
+            <if test="teamno != null and teamno != '' ">
+                #{teamno},
+            </if>
+            <if test="owenno != null and owenno != '' ">
+                #{owenno},
+            </if>
+            <if test="daoluyunzhengfujian != null and daoluyunzhengfujian != '' ">
+                #{daoluyunzhengfujian},
+            </if>
+            <if test="dabiaojianchafujian != null and dabiaojianchafujian != '' ">
+                #{dabiaojianchafujian},
+            </if>
+            <if test="nianshenfujian != null and nianshenfujian != '' ">
+                #{nianshenfujian},
+            </if>
+            <if test="xingshizhengzhengyefujian != null and xingshizhengzhengyefujian != '' ">
+                #{xingshizhengzhengyefujian},
+            </if>
+            <if test="xingshizhengfuyefujian != null and xingshizhengfuyefujian != '' ">
+                #{xingshizhengfuyefujian},
+            </if>
+            <if test="cheliangdengjizhengshuzhengyefujian != null and cheliangdengjizhengshuzhengyefujian != '' ">
+                #{cheliangdengjizhengshuzhengyefujian},
+            </if>
+            <if test="cheliangdengjizhengshufuyefujian != null and cheliangdengjizhengshufuyefujian != '' ">
+                #{cheliangdengjizhengshufuyefujian},
+            </if>
+            <if test="simnum != null and simnum != '' ">
+                #{simnum},
+            </if>
+            <if test="baoxiandaoqishijian != null and baoxiandaoqishijian != '' ">
+                #{baoxiandaoqishijian},
+            </if>
+            <if test="xingshizhengdaoqishijian != null and xingshizhengdaoqishijian != '' ">
+                #{xingshizhengdaoqishijian},
+            </if>
+            <if test="fadongjihao != null and fadongjihao != '' ">
+                #{fadongjihao},
+            </if>
+            <if test="zhongduanchangshang != null and zhongduanchangshang != '' ">
+                #{zhongduanchangshang},
+            </if>
+            <if test="area != null and area != '' ">
+                #{area}
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 根据企业ID、车辆牌照、车牌颜色修改相应车辆信息 -->
+    <update id="updateSelective" parameterType="org.springblade.anbiao.cheliangguanli.vo.VehicleVO" >
+        update anbiao_vehicle
+        <set>
+            <if test="shiyongxingzhi != null and shiyongxingzhi != '' ">
+                shiyongxingzhi = #{shiyongxingzhi},
+            </if>
+            <if test="cheliangzhuangtai != null and cheliangzhuangtai != '' ">
+                cheliangzhuangtai = #{cheliangzhuangtai},
+            </if>
+            <if test="zhongduanleixing != null ">
+                zhongduanleixing = #{zhongduanleixing},
+            </if>
+            <if test="platformconnectiontype != null and platformconnectiontype != '' ">
+                platformconnectiontype = #{platformconnectiontype},
+            </if>
+            <if test="terminalprotocoltype != null and terminalprotocoltype != '' ">
+                terminalprotocoltype = #{terminalprotocoltype},
+            </if>
+            <if test="videochannelnum != null">
+                videochannelnum = #{videochannelnum},
+            </if>
+            <if test="daoluyunshuzheng != null and daoluyunshuzheng != '' ">
+                daoluyunshuzheng = #{daoluyunshuzheng},
+            </if>
+            <if test="daoluyunshuzhengchulingriqi != null and daoluyunshuzhengchulingriqi != '' ">
+                daoluyunshuzhengchulingriqi = #{daoluyunshuzhengchulingriqi},
+            </if>
+            <if test="daoluyunshuzhengyouxiaoqi != null and daoluyunshuzhengyouxiaoqi != '' ">
+                daoluyunshuzhengyouxiaoqi = #{daoluyunshuzhengyouxiaoqi},
+            </if>
+            <if test="bencinianshenriqi != null and bencinianshenriqi != '' ">
+                bencinianshenriqi = #{bencinianshenriqi},
+            </if>
+            <if test="xiacinianshenriqi != null and xiacinianshenriqi != '' ">
+                xiacinianshenriqi = #{xiacinianshenriqi},
+            </if>
+            <if test="bencinianjianriqi != null and bencinianjianriqi != '' ">
+                bencinianjianriqi = #{bencinianjianriqi},
+            </if>
+            <if test="xiacinianjianriqi != null and xiacinianjianriqi != '' ">
+                xiacinianjianriqi = #{xiacinianjianriqi},
+            </if>
+            <if test="bencijipingriqi != null and bencijipingriqi != '' ">
+                bencijipingriqi = #{bencijipingriqi},
+            </if>
+            <if test="xiacijipingriqi != null and xiacijipingriqi != '' ">
+                xiacijipingriqi = #{xiacijipingriqi},
+            </if>
+            <if test="baofeiriqi != null and baofeiriqi != '' ">
+                baofeiriqi = #{baofeiriqi},
+            </if>
+            <if test="cheliangjishudengji != null and cheliangjishudengji != '' ">
+                cheliangjishudengji = #{cheliangjishudengji},
+            </if>
+            <if test="xinghao != null and xinghao != '' ">
+                xinghao = #{xinghao},
+            </if>
+            <if test="changpai != null and changpai != '' ">
+                changpai = #{changpai},
+            </if>
+            <if test="zongzhiliang != null and zongzhiliang != '' ">
+                zongzhiliang = #{zongzhiliang},
+            </if>
+            <if test="hedingzaike != null and hedingzaike != '' ">
+                hedingzaike = #{hedingzaike},
+            </if>
+            <if test="chejiahao != null and chejiahao != '' ">
+                chejiahao = #{chejiahao},
+            </if>
+            <if test="yunyingshangmingcheng != null and yunyingshangmingcheng != '' ">
+                yunyingshangmingcheng = #{yunyingshangmingcheng},
+            </if>
+            <if test="yunyingshang != null and yunyingshang != '' ">
+                yunyingshang = #{yunyingshang},
+            </if>
+            <if test="jiashiyuanid != null and jiashiyuanid != '' ">
+                jiashiyuanid = #{jiashiyuanid},
+            </if>
+            <if test="yayunyuanid != null and yayunyuanid != '' ">
+                yayunyuanid = #{yayunyuanid},
+            </if>
+            <if test="beizhu != null and beizhu != '' ">
+                beizhu = #{beizhu},
+            </if>
+            <if test="zongduanxinghao != null and zongduanxinghao != '' ">
+                zongduanxinghao = #{zongduanxinghao},
+            </if>
+            <if test="chezhu != null and chezhu != '' ">
+                chezhu = #{chezhu},
+            </if>
+            <if test="chezhudianhua != null and chezhudianhua != '' ">
+                chezhudianhua = #{chezhudianhua},
+            </if>
+            <if test="jiashiyuanxingming != null and jiashiyuanxingming != '' ">
+                jiashiyuanxingming = #{jiashiyuanxingming},
+            </if>
+            <if test="jiashiyuandianhua != null and jiashiyuandianhua != '' ">
+                jiashiyuandianhua = #{jiashiyuandianhua},
+            </if>
+            <if test="yayunyuanxingming != null and yayunyuanxingming != '' ">
+                yayunyuanxingming = #{yayunyuanxingming},
+            </if>
+            <if test="yayunyuandianhua != null and yayunyuandianhua != '' ">
+                yayunyuandianhua = #{yayunyuandianhua},
+            </if>
+            <if test="suoshuyunguan != null and suoshuyunguan != '' ">
+                suoshuyunguan = #{suoshuyunguan},
+            </if>
+            <if test="caozuoren != null and caozuoren != '' ">
+                caozuoren = #{caozuoren},
+            </if>
+            <if test="caozuorenid != null and caozuorenid != '' ">
+                caozuorenid = #{caozuorenid},
+            </if>
+            caozuoshijian = now(),
+            <if test="teamno != null and teamno != '' ">
+                teamno = #{teamno},
+            </if>
+            <if test="owenno != null and owenno != '' ">
+                owenno = #{owenno},
+            </if>
+            <if test="daoluyunzhengfujian != null and daoluyunzhengfujian != '' ">
+                daoluyunzhengfujian = #{daoluyunzhengfujian},
+            </if>
+            <if test="dabiaojianchafujian != null and dabiaojianchafujian != '' ">
+                dabiaojianchafujian = #{dabiaojianchafujian},
+            </if>
+            <if test="nianshenfujian != null and nianshenfujian != '' ">
+                nianshenfujian = #{nianshenfujian},
+            </if>
+            <if test="xingshizhengzhengyefujian != null and xingshizhengzhengyefujian != '' ">
+                xingshizhengzhengyefujian = #{xingshizhengzhengyefujian},
+            </if>
+            <if test="xingshizhengfuyefujian != null and xingshizhengfuyefujian != '' ">
+                xingshizhengfuyefujian = #{xingshizhengfuyefujian},
+            </if>
+            <if test="cheliangdengjizhengshuzhengyefujian != null and cheliangdengjizhengshuzhengyefujian != '' ">
+                cheliangdengjizhengshuzhengyefujian = #{cheliangdengjizhengshuzhengyefujian},
+            </if>
+            <if test="cheliangdengjizhengshufuyefujian != null and cheliangdengjizhengshufuyefujian != '' ">
+                cheliangdengjizhengshufuyefujian = #{cheliangdengjizhengshufuyefujian},
+            </if>
+            <if test="simnum != null and simnum != '' ">
+                simnum = #{simnum},
+            </if>
+            <if test="baoxiandaoqishijian != null and baoxiandaoqishijian != '' ">
+                baoxiandaoqishijian = #{baoxiandaoqishijian},
+            </if>
+            <if test="xingshizhengdaoqishijian != null and xingshizhengdaoqishijian != '' ">
+                xingshizhengdaoqishijian = #{xingshizhengdaoqishijian},
+            </if>
+            <if test="fadongjihao != null and fadongjihao != '' ">
+                fadongjihao = #{fadongjihao},
+            </if>
+            <if test="zhongduanchangshang != null and zhongduanchangshang != '' ">
+                zhongduanchangshang = #{zhongduanchangshang},
+            </if>
+            <if test="carowneraddress != null and carowneraddress != '' ">
+                carowneraddress = #{carowneraddress},
+            </if>
+            <if test="area != null and area != '' ">
+                area = #{area}
+            </if>
+        </set>
+        where dept_id = #{deptId}
+        and cheliangpaizhao = #{cheliangpaizhao}
+        and chepaiyanse = #{chepaiyanse}
+        and is_deleted = 0
+    </update>
+
+    <select id="selectByZongDuan" resultMap="vehicleVOResultMap" parameterType="java.lang.String" >
+        select zongduanid from anbiao_vehicle
+        where is_deleted = 0
+            and ifnull(cheliangzhuangtai,0) != 2
+            and zongduanid = #{id}
+        group by
+            zongduanid
+        LIMIT 1
+    </select>
+
+    <sql id="tableGDSSql">
+        select
+            case when IFNULL(b.area,'') = '' then '河南' else b.area end as areaName,
+            concat(#{begintime},'至',#{endtime}) as date,
+            SUM(b.shu) as xzshu,
+            SUM(zyshu) as zyshu,
+            SUM(tyshu) as tyshu,
+            SUM(scshu) as scshu,
+            max(b.shiyongxingzhi) as shiyongxingzhi,
+            case when IFNULL(max(b.shiyongxingzhi),'') = '道路货物运输' then SUM(b.shu) end as dlhwxzshu,
+            case when IFNULL(max(b.shiyongxingzhi),'') = '道路危险品运输' then SUM(b.shu) end as dlwxpxzshu,
+            case when IFNULL(max(b.shiyongxingzhi),'') = '道路旅客运输' then SUM(b.shu) end as dllkxzshu,
+
+            case when IFNULL(max(b.shiyongxingzhi),'') = '道路货物运输' and ifnull(SUM(zyshu),0) &gt; 0 then SUM(b.zyshu) else 0 end as dlhwzyshu,
+            case when IFNULL(max(b.shiyongxingzhi),'') = '道路危险品运输' and ifnull(SUM(zyshu),0) &gt; 0 then SUM(b.zyshu) else 0 end as dlwxpzyshu,
+            case when IFNULL(max(b.shiyongxingzhi),'') = '道路旅客运输' and ifnull(SUM(zyshu),0) &gt; 0 then SUM(b.zyshu) else 0 end as dllkzyshu,
+
+            case when IFNULL(max(b.shiyongxingzhi),'') = '道路货物运输' and ifnull(SUM(tyshu),0) &gt; 0 then SUM(b.tyshu) else 0 end as dlhwtyshu,
+            case when IFNULL(max(b.shiyongxingzhi),'') = '道路危险品运输' and ifnull(SUM(tyshu),0) &gt; 0 then SUM(b.tyshu) else 0 end as dlwxptyshu,
+            case when IFNULL(max(b.shiyongxingzhi),'') = '道路旅客运输' and ifnull(SUM(tyshu),0) &gt; 0 then SUM(b.tyshu) else 0 end as dllktyshu,
+
+            case when IFNULL(max(b.shiyongxingzhi),'') = '道路货物运输' and ifnull(SUM(scshu),0) &gt; 0 then SUM(b.scshu) else 0 end as dlhwscshu,
+            case when IFNULL(max(b.shiyongxingzhi),'') = '道路危险品运输' and ifnull(SUM(scshu),0) &gt; 0 then SUM(b.scshu) else 0 end as dlwxpscshu,
+            case when IFNULL(max(b.shiyongxingzhi),'') = '道路旅客运输' and ifnull(SUM(scshu),0) &gt; 0 then SUM(b.scshu) else 0 end as dllkscshu
+        from(
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            )a
+        inner JOIN(
+            select
+                a.dept_id,
+                COUNT(1) as shu,
+                max(shiyongxingzhi) as shiyongxingzhi,
+                CASE WHEN max(cheliangzhuangtai)=0 and ifnull(max(a.is_deleted),0) = 0 THEN 1 end as zyshu,
+                CASE WHEN max(cheliangzhuangtai)=1 and ifnull(max(a.is_deleted),0) = 0 THEN 1 end as tyshu,
+                CASE WHEN max(cheliangzhuangtai)=2 and ifnull(max(a.is_deleted),0) = 0 THEN 1 end as bfshu,
+                CASE WHEN ifnull(max(a.is_deleted),1) = 1 THEN 1 END scshu,
+                b.area
+            from
+                anbiao_vehicle a
+                inner join anbiao_organization b on a.dept_id = b.dept_id
+            where 1=1
+                and b.isdelete = 0
+                and ifnull(a.cheliangzhuangtai,0) != 2
+                and a.createtime &gt;= #{begintime}
+                and a.createtime &lt;= #{endtime}
+            GROUP BY
+                shiyongxingzhi,
+                dept_id,
+                b.area
+            )b on a.id = b.dept_id
+        where 1=1
+        GROUP BY
+            b.area,
+            b.shiyongxingzhi
+    </sql>
+
+    <sql id="queryGDSSql">
+        <if test="areaName !=null and areaName != '' ">
+            and areaName = #{areaName}
+        </if>
+    </sql>
+
+    <sql id="orderGDSSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by date
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <select id="selectGDSVehiclePage" resultMap="GDSVehicleResultMap"
+            parameterType="org.springblade.anbiao.cheliangguanli.page.VehiclePage" resultType="org.springblade.anbiao.cheliangguanli.entity.VehicleGDSTJ">
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableGDSSql" />
+            )b
+            where 1=1
+            <include refid="queryGDSSql" />
+            <include refid="orderGDSSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableGDSSql" />
+            )b
+            where 1=1
+            <include refid="queryGDSSql" />
+            <include refid="orderGDSSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectGDSVehicleTotal" parameterType="org.springblade.anbiao.cheliangguanli.page.VehiclePage" resultType="int">
+        select COUNT(1) from (
+        <include refid="tableGDSSql" />
+        )d
+        where 1 = 1
+        <include refid="queryGDSSql" />
+    </select>
+
+
+    <sql id="tableGDSMXSql">
+        select
+            case when IFNULL(b.area,'') = '' then '河南' else b.area end as areaName,
+            b.dept_id as deptId,
+            a.dept_name as deptName,
+            b.cheliangpaizhao,
+            b.chepaiyanse,
+            b.shiyongxingzhi,
+            b.cheliangzhuangtai,
+            case when ifnull(b.caozuoshijian,'') = '' then b.createtime else b.caozuoshijian end as caozuoshijian,
+            a.is_deleted,
+            b.caozuoren
+        from(
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            )a
+        inner JOIN(
+            select
+                a.dept_id,
+                cheliangpaizhao,
+                chepaiyanse,
+                shiyongxingzhi,
+                CASE
+                    WHEN cheliangzhuangtai=0 and ifnull(a.is_deleted,0) = 0 THEN '在用'
+                    WHEN cheliangzhuangtai=1 and ifnull(a.is_deleted,0) = 0 THEN '停用'
+                    WHEN ifnull(a.is_deleted,1) = 1 THEN '删除'
+                END cheliangzhuangtai,
+                a.caozuoshijian,
+                a.createtime,
+                a.caozuoren,
+                a.is_deleted,
+                b.area
+            from
+                anbiao_vehicle a
+                inner join anbiao_organization b on a.dept_id = b.dept_id
+            where 1=1
+                and b.isdelete = 0
+                and ifnull(a.cheliangzhuangtai,0) != 2
+                and a.caozuoshijian &gt;= #{begintime}
+                and a.caozuoshijian &lt;= #{endtime}
+            )b on a.id = b.dept_id
+        ORDER BY b.dept_id
+    </sql>
+
+    <sql id="queryGDSMXSql">
+        <if test="cheliangpaizhao !=null and cheliangpaizhao != ''">
+            AND cheliangpaizhao like CONCAT('%',#{cheliangpaizhao},'%')
+        </if>
+
+        <if test="deptName !=null and deptName != ''">
+            AND deptName like CONCAT('%',#{deptName},'%')
+        </if>
+
+        <if test="cheliangzhuangtai !=null and cheliangzhuangtai != '' and cheliangzhuangtai == '新增'.toString() ">
+            AND createtime &gt;= #{begintime}
+            AND createtime &lt;= #{endtime}
+        </if>
+
+        <if test="cheliangzhuangtai !=null and cheliangzhuangtai != '' and cheliangzhuangtai == '在用'.toString() ">
+            AND ifnull(cheliangzhuangtai,'') = 0
+        </if>
+
+        <if test="cheliangzhuangtai !=null and cheliangzhuangtai != '' and cheliangzhuangtai == '停用'.toString() ">
+            AND ifnull(cheliangzhuangtai,'') = 1
+        </if>
+
+        <if test="cheliangzhuangtai !=null and cheliangzhuangtai != '' and cheliangzhuangtai == '删除'.toString() ">
+            AND ifnull(is_deleted,0) = 1
+        </if>
+
+    </sql>
+    <sql id="orderGDSMXSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by cheliangpaizhao
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <select id="selectGDSMXVehiclePage" resultMap="GDSVehicleResultMap"
+            parameterType="org.springblade.anbiao.cheliangguanli.page.VehiclePage" resultType="org.springblade.anbiao.cheliangguanli.entity.VehicleGDSTJ">
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableGDSMXSql" />
+            )b
+            where 1=1
+            <include refid="queryGDSMXSql" />
+            <include refid="orderGDSMXSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableGDSMXSql" />
+            )b
+            where 1=1
+            <include refid="queryGDSMXSql" />
+            <include refid="orderGDSMXSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectGDSMXVehicleTotal" parameterType="org.springblade.anbiao.cheliangguanli.page.VehiclePage" resultType="int">
+        select COUNT(1) from (
+        <include refid="tableGDSMXSql" />
+        )d
+        where 1 = 1
+        <include refid="queryGDSMXSql" />
+    </select>
+
+    <select id="vehileList" resultType="org.springblade.anbiao.cheliangguanli.entity.Vehicle">
+        SELECT
+	        cheliangpaizhao,
+            chepaiyanse,
+            shiyongxingzhi,
+            id,
+            CASE
+                WHEN ifnull(cheliangzhuangtai,0) = 0 and ifnull(is_deleted,0) = 0 THEN '在用'
+                WHEN ifnull(cheliangzhuangtai,0) = 1 and ifnull(is_deleted,0) = 0 THEN '停用'
+                WHEN ifnull(is_deleted,1) = 1 THEN '删除'
+            END cheliangzhuangtai
+        FROM
+	        anbiao_vehicle_enterprise
+        WHERE 1=1
+            AND is_deleted=0
+            AND ifnull(cheliangzhuangtai,0) != 2
+            AND dept_id= #{deptId}
+    </select>
+
+    <!-- 修改车辆终端ID -->
+    <update id="updateVehicleZongDuanId" parameterType="java.lang.String" >
+         update anbiao_vehicle set zongduanid = #{zongduanid}, caozuoshijian = NOW(),caozuoren=#{caozuoren},caozuorenid=#{caozuorenid}
+        WHERE id = #{id}
+  </update>
+
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.cheliangguanli.entity.CheliangJiashiyuan">
+    </resultMap>
+
+    <select id="getVehidAndJiashiyuanId" resultMap="BaseResultMap">
+        select * from anbiao_cheliang_jiashiyuan
+        where vehid = #{vehid}
+            and jiashiyuanid = #{jiashiyuanid}
+    </select>
+
+    <insert id="insertVehidAndJiashiyuan" parameterType="org.springblade.anbiao.cheliangguanli.entity.CheliangJiashiyuan" >
+        insert into anbiao_cheliang_jiashiyuan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="vehid != null">
+                vehid,
+            </if>
+            <if test="jiashiyuanid != null">
+                jiashiyuanid,
+            </if>
+            <if test="createtime != null">
+                createtime,
+            </if>
+            <if test="type != null">
+                type
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="vehid != null">
+                #{vehid},
+            </if>
+            <if test="jiashiyuanid != null">
+                #{jiashiyuanid},
+            </if>
+            <if test="createtime != null">
+                #{createtime},
+            </if>
+            <if test="type != null">
+                #{type}
+            </if>
+
+        </trim>
+    </insert>
+
+    <resultMap id="VehicleGDSTJMap" type="org.springblade.anbiao.cheliangguanli.entity.VehicleGDSTJ">
+    </resultMap>
+
+    <select id="getVehidNumByDeptId" resultMap="VehicleGDSTJMap">
+        select dept_id,COUNT(1) as vehicleNum from anbiao_vehicle
+        where dept_id = #{deptId}
+            and is_deleted = 0
+    </select>
+
+    <resultMap id="SUZHOUDeptResultMap" type="org.springblade.anbiao.cheliangguanli.entity.SUZHOUDept">
+    </resultMap>
+
+    <!-- 安徽宿州额外数据接口 -->
+    <select id="getDeptList" resultMap="SUZHOUDeptResultMap" parameterType="java.lang.String">
+        select
+            a.id as deptId,
+            a.dept_name as deptName
+        from
+            blade_dept a
+        left join anbiao_organization b on a.id =b.dept_id
+        where a.is_deleted = 0
+            and b.isdelete = 0
+            and b.jigouleixing = 'qiye'
+            and a.id != 1
+    </select>
+
+    <resultMap id="SUZHOUVehicleResultMap" type="org.springblade.anbiao.cheliangguanli.entity.SUZHOUVehicle">
+    </resultMap>
+
+    <select id="getSUZHOUVehicleList" resultMap="SUZHOUVehicleResultMap" parameterType="java.lang.String">
+        select
+            b.dept_id as deptId,
+            b.dept_name as deptName,
+            b.jingyingdizhi,
+            b.lianxidianhua,
+            a.id as cheliangid,
+            a.cheliangpaizhao,
+            a.chepaiyanse,
+            a.shiyongxingzhi,
+            a.jieboyunshuzhenghao,
+            a.jiashiyuanid,
+            ifnull(a.jiashiyuanxingming,'') jiashiyuanxingming,
+            ifnull(a.jiashiyuandianhua,'') jiashiyuandianhua,
+            c.nianling as age,
+            c.shenfenzhenghao,
+            c.jiashizhenghao
+        from
+            anbiao_vehicle a
+            left join anbiao_organization b on a.dept_id = b.dept_id
+            left join anbiao_jiashiyuan c on a.jiashiyuanid = c.id
+        where 1=1
+            and a.is_deleted = 0
+            and b.isdelete = 0
+            and a.cheliangzhuangtai = 0
+        <if test=" deptId !=null and deptId != '' ">
+            and a.dept_id = #{deptId}
+        </if>
+    </select>
+
+    <resultMap id="SUZHOUVehicleTJResultMap" type="org.springblade.anbiao.cheliangguanli.entity.SUZHOUVehicleTJ">
+    </resultMap>
+
+    <select id="getSUZHOUVehicleTJList" resultMap="SUZHOUVehicleTJResultMap" parameterType="java.lang.String">
+        select
+            dept_name as deptName,
+            dept_id as deptId,
+            IFNULL(zongshu,0) sumCount,
+            IFNULL(puhuo,0) generalCargoCount,
+            IFNULL(weihuo,0) dangerousGoodsCount,
+            IFNULL(lvke,0) passengerCount,
+            IFNULL(zongshu-puhuo-weihuo-lvke,0) as otherCount
+        from(
+            select
+                b.dept_name,
+                DeptID as dept_id,
+                COUNT(DISTINCT a.vehid) as zongshu,
+                SUM(case when locate('普通货车',a.shiyongxingzhi) > 0 then 1 end) as puhuo,
+                SUM(case when locate('危险品货车',a.shiyongxingzhi) > 0 then 1 end) as weihuo,
+                SUM(case when locate('客运车',a.shiyongxingzhi) > 0 then 1 end) as lvke
+            from
+                tpvehdata a
+            left join blade_dept b on a.DeptID = b.id
+            where 1=1
+            <if test=" deptId !=null and deptId != '' ">
+                and DeptID = #{deptId}
+            </if>
+                and b.is_deleted = 0
+            GROUP BY
+                b.dept_name,
+                DeptID,
+                shiyongxingzhi
+            )a
+    </select>
+
+
+    <resultMap id="VehicleDriverMap" type="org.springblade.anbiao.cheliangguanli.entity.VehicleDriver">
+    </resultMap>
+
+    <!--根据车辆ID获取车辆绑定驾驶员信息-->
+    <select id="getVehicleDriver" resultMap="VehicleDriverMap" parameterType="java.lang.String">
+        <if test=" type == '1'.toString() ">
+            select
+                b.id,b.jiashiyuanxingming,b.shoujihaoma,b.shenfenzhenghao,b.shenfenzhenghao,b.dept_id as deptId
+            from
+                anbiao_vehicle a,anbiao_jiashiyuan b
+            where a.jiashiyuanid = b.id
+            <if test=" deptId !=null and deptId != '' ">
+                and a.dept_id = #{deptId}
+            </if>
+            <if test=" cheliangpaizhao !=null and cheliangpaizhao != '' ">
+                and a.cheliangpaizhao = #{cheliangpaizhao}
+            </if>
+            <if test=" chepaiyanse !=null and chepaiyanse != '' ">
+                and a.chepaiyanse = #{chepaiyanse}
+            </if>
+                and b.isdelete = 0
+            limit 1
+        </if>
+
+        <if test=" type == '0'.toString() ">
+            select
+                b.id,b.jiashiyuanxingming,b.shoujihaoma,b.shenfenzhenghao,b.shenfenzhenghao,b.dept_id as deptId
+            from
+                anbiao_vehicle_enterprise a,anbiao_jiashiyuan_enterprise b
+            where a.jiashiyuanid = b.id
+            <if test=" deptId !=null and deptId != '' ">
+                and a.dept_id = #{deptId}
+            </if>
+            <if test=" cheliangpaizhao !=null and cheliangpaizhao != '' ">
+                and a.cheliangpaizhao = #{cheliangpaizhao}
+            </if>
+            <if test=" chepaiyanse !=null and chepaiyanse != '' ">
+                and a.chepaiyanse = #{chepaiyanse}
+            </if>
+                and b.isdelete = 0
+            limit 1
+        </if>
+
+
+    </select>
+
+    <!--根据企业ID获取驾驶员信息-->
+    <select id="getDriverByDeptIdList" resultMap="VehicleDriverMap" parameterType="java.lang.String">
+        <if test=" type == '1'.toString() ">
+            select
+                b.id,b.jiashiyuanxingming,b.shoujihaoma,b.shenfenzhenghao,b.dept_id as deptId
+            from
+                anbiao_jiashiyuan b
+            where 1=1
+            <if test=" deptId !=null and deptId != '' ">
+                and b.dept_id = #{deptId}
+            </if>
+            and b.jiashiyuanleixing = '驾驶员'
+            and b.isdelete = 0
+        </if>
+
+        <if test=" type == '0'.toString() ">
+            select
+                b.id,b.jiashiyuanxingming,b.shoujihaoma,b.shenfenzhenghao,b.dept_id as deptId
+            from
+                anbiao_jiashiyuan_enterprise b
+            where 1=1
+            <if test=" deptId !=null and deptId != '' ">
+                and b.dept_id = #{deptId}
+            </if>
+            and b.jiashiyuanleixing = '驾驶员'
+            and b.isdelete = 0
+        </if>
+    </select>
+
+
+
+</mapper>

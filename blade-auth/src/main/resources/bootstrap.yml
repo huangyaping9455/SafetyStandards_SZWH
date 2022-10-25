@@ -1,0 +1,15 @@
+server:
+  port: 8100
+#文件的物理路径前缀与url前缀
+fileserver:
+  path-prefix: ${fileserver.dev.path}
+  url-prefix: ${fileserver.dev.url}
+  falg: ${fileserver.dev.flag}
+  photoLogo: ${fileserver.dev.photoLogo}
+#  key: ${fileserver.key}
+  key: abcdefgabcdefg12
+alarmserver:
+  address-path: ${alarmserver.dev.address}
+wechatserver:
+  appId: wx77ab38d2018a7dad
+  secret: fb5f638eb339e0c82bffddbbfe63147a

@@ -1,0 +1,25 @@
+#服务器端口
+server:
+  port: 8106
+
+#数据源配置
+spring:
+  datasource:
+#    url: ${blade.datasource.dev.url}
+#    username: ${blade.datasource.dev.username}
+#    password: ${blade.datasource.dev.password}
+
+    #交运
+    url: jdbc:mysql://183.230.82.21:18205/blade?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+    username: root
+    password: admin@JY2021
+
+#文件的物理路径前缀与url前缀
+fileserver:
+  path-prefix: ${fileserver.dev.path}
+  url-prefix: ${fileserver.dev.url}
+  photoLogo: ${fileserver.dev.photoLogo}
+  key: ${fileserver.dev.key}
+#  key: abcdefgabcdefg12
+alarmserver:
+  address-path: ${alarmserver.dev.address}

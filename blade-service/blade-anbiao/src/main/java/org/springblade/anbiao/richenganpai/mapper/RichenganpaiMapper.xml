@@ -1,0 +1,1007 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.richenganpai.mapper.RichenganpaiMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="richenganpaiResultMap" type="org.springblade.anbiao.richenganpai.entity.Richenganpai">
+        <id column="id" property="id"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="renwuleixing" property="renwuleixing"/>
+        <result column="renwubiaoti" property="renwubiaoti"/>
+        <result column="anpairen" property="anpairen"/>
+        <result column="anpairen_id" property="anpairenId"/>
+        <result column="zerenren" property="zerenren"/>
+        <result column="zerenren_id" property="zerenrenId"/>
+        <result column="zhixingrens" property="zhixingrens"/>
+        <result column="zhixingren_ids" property="zhixingrenIds"/>
+        <result column="is_jinji" property="isJinji"/>
+        <result column="is_zhongyao" property="isZhongyao"/>
+        <result column="renwukaishishijian" property="renwukaishishijian"/>
+        <result column="renwujiezhishijian" property="renwujiezhishijian"/>
+        <result column="renwuneirong" property="renwuneirong"/>
+        <result column="ziwozongjie" property="ziwozongjie"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="caozuoren" property="caozuoren"/>
+        <result column="caozuorenid" property="caozuorenid"/>
+        <result column="caozuoshijian" property="caozuoshijian"/>
+        <result column="is_finish" property="isFinish"/>
+        <result column="renwudidian" property="renwudidian"/>
+        <result column="finish_user" property="finishuser"/>
+        <result column="finish_userid" property="finishuserid"/>
+        <result column="finish_time" property="finishtime"/>
+        <result column="finish_remark" property="finishremark"/>
+        <result column="finish_img" property="finishimg"/>
+        <result column="finish_status" property="finishstatus"/>
+        <result column="tier" property="tier"/>
+        <result column="tiername" property="tiername"/>
+    </resultMap>
+
+    <!--删除-->
+    <delete id="deleteBind">
+        update
+            anbiao_richenganpai
+        set
+            is_deleted = 1,
+            caozuoshijian = #{updateTime},
+            caozuoren = #{updateUser},
+            caozuorenid = #{updateUserId}
+        where id=#{Id}
+    </delete>
+
+    <insert id="insertSelective" parameterType="org.springblade.anbiao.richenganpai.entity.Richenganpai" >
+        insert into anbiao_richenganpai
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="deptId != null and deptId != '' ">
+                dept_id,
+            </if>
+            <if test="renwuleixing != null and renwuleixing !='' ">
+                renwuleixing,
+            </if>
+            <if test="renwubiaoti != null and renwubiaoti != '' ">
+                renwubiaoti,
+            </if>
+            <if test="anpairen != null and anpairen != '' ">
+                anpairen,
+            </if>
+            <if test="anpairenId != null and anpairenId != '' ">
+                anpairen_id,
+            </if>
+            <if test="zerenren != null and zerenren != '' ">
+                zerenren,
+            </if>
+            <if test="zerenrenId != null and zerenrenId != '' ">
+                zerenren_id,
+            </if>
+            <if test="zhixingrens != null and zhixingrens != '' ">
+                zhixingrens,
+            </if>
+            <if test="zhixingrenIds != null and zhixingrenIds != '' ">
+                zhixingren_ids,
+            </if>
+            <if test="isJinji != null and isJinji != '' ">
+                is_jinji,
+            </if>
+            <if test="isZhongyao != null and isZhongyao != '' ">
+                is_zhongyao,
+            </if>
+            <if test="renwukaishishijian != null and renwukaishishijian != '' ">
+                renwukaishishijian,
+            </if>
+            <if test="renwujiezhishijian != null and renwujiezhishijian != '' ">
+                renwujiezhishijian,
+            </if>
+            <if test="renwuneirong != null and renwuneirong != '' ">
+                renwuneirong,
+            </if>
+            <if test="ziwozongjie != null and ziwozongjie != '' ">
+                ziwozongjie,
+            </if>
+            <if test="isDeleted != null and isDeleted != '' ">
+                is_deleted,
+            </if>
+            <if test="caozuoren != null and renwubiaoti != '' ">
+                caozuoren,
+            </if>
+            <if test="caozuorenid != null and caozuorenid != '' ">
+                caozuorenid,
+            </if>
+            <if test="caozuoshijian != null and caozuoshijian != '' ">
+                caozuoshijian,
+            </if>
+            <if test="isFinish != null and isFinish != '' ">
+                is_finish,
+            </if>
+            <if test="renwudidian != null and renwudidian != '' ">
+                renwudidian,
+            </if>
+            <if test="finishuserid != null and finishuserid != '' ">
+                finish_userid,
+            </if>
+            <if test="finishuser != null and finishuser != '' ">
+                finish_user,
+            </if>
+            <if test="finishtime != null and finishtime != '' ">
+                finish_time,
+            </if>
+            <if test="finishremark != null and finishremark != '' ">
+                finish_remark,
+            </if>
+            <if test="finishimg != null and finishimg != '' ">
+                finish_img,
+            </if>
+            <if test="finishstatus != null and finishstatus != '' ">
+                finish_status,
+            </if>
+            <if test="tier != null and tier != '' ">
+                tier,
+            </if>
+            <if test="tiername != null and tiername != '' ">
+                tiername,
+            </if>
+            <if test="safetyfileId != null and safetyfileId != '' ">
+                safetyfileId,
+            </if>
+            <if test="leixing != null and leixing != '' ">
+                leixing
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="deptId != null and deptId != '' ">
+                #{deptId},
+            </if>
+            <if test="renwuleixing != null and renwuleixing != '' ">
+                #{renwuleixing},
+            </if>
+            <if test="renwubiaoti != null and renwubiaoti != '' ">
+                #{renwubiaoti},
+            </if>
+            <if test="anpairen != null and anpairen != '' ">
+                #{anpairen},
+            </if>
+            <if test="anpairenId != null and anpairenId != '' ">
+                #{anpairenId},
+            </if>
+            <if test="zerenren != null and zerenren != '' ">
+                #{zerenren},
+            </if>
+            <if test="zerenrenId != null and zerenrenId != '' ">
+                #{zerenrenId},
+            </if>
+            <if test="zhixingrens != null and zhixingrens != '' ">
+                #{zhixingrens},
+            </if>
+            <if test="zhixingrenIds != null and zhixingrenIds != '' ">
+                #{zhixingrenIds},
+            </if>
+            <if test="isJinji != null and isJinji != '' ">
+                #{isJinji},
+            </if>
+            <if test="isZhongyao != null and isZhongyao != '' ">
+                #{isZhongyao},
+            </if>
+            <if test="renwukaishishijian != null and renwukaishishijian != '' ">
+                #{renwukaishishijian},
+            </if>
+            <if test="renwujiezhishijian != null and renwujiezhishijian != '' ">
+                #{renwujiezhishijian},
+            </if>
+            <if test="renwuneirong != null and renwuneirong != '' ">
+                #{renwuneirong},
+            </if>
+            <if test="ziwozongjie != null and ziwozongjie != '' ">
+                #{ziwozongjie},
+            </if>
+            <if test="isDeleted != null and isDeleted != '' ">
+                #{is_deleted},
+            </if>
+            <if test="caozuoren != null and caozuoren != '' ">
+                #{caozuoren},
+            </if>
+            <if test="caozuorenid != null and caozuorenid != '' ">
+                #{caozuorenid},
+            </if>
+            <if test="caozuoshijian != null and caozuoshijian != '' ">
+                #{caozuoshijian},
+            </if>
+            <if test="isFinish != null and isFinish != '' ">
+                #{isFinish},
+            </if>
+            <if test="renwudidian != null and renwudidian != '' ">
+                #{renwudidian},
+            </if>
+            <if test="finishuserid != null and finishuserid != '' ">
+                #{finishuserid},
+            </if>
+            <if test="finishuser != null and finishuser != '' ">
+                #{finishuser},
+            </if>
+            <if test="finishtime != null and finishtime != '' ">
+                #{finishtime},
+            </if>
+            <if test="finishremark != null and finishremark != '' ">
+                #{finishremark},
+            </if>
+            <if test="finishimg != null and finishimg != '' ">
+                #{finishimg},
+            </if>
+            <if test="finishstatus != null and finishstatus != '' ">
+                #{finishstatus},
+            </if>
+            <if test="tier != null and tier != '' ">
+                #{tier},
+            </if>
+            <if test="tiername != null and tiername != '' ">
+                #{tiername},
+            </if>
+            <if test="safetyfileId != null and safetyfileId != '' ">
+                #{safetyfileId},
+            </if>
+            <if test="leixing != null and leixing != '' ">
+                #{leixing}
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 根据文件ID更新日程待办相应数据 -->
+    <update id="updateSelective" parameterType="org.springblade.anbiao.richenganpai.entity.Richenganpai" >
+        update anbiao_richenganpai
+        <set>
+            <if test="deptId != null and deptId != '' ">
+                dept_id = #{deptId},
+            </if>
+            <if test="renwuleixing != null and renwuleixing != '' ">
+                renwuleixing = #{renwuleixing},
+            </if>
+            <if test="renwubiaoti != null and renwubiaoti != '' ">
+                renwubiaoti = #{renwubiaoti},
+            </if>
+            <if test="anpairen != null and anpairen != '' ">
+                anpairen = #{anpairen},
+            </if>
+            <if test="anpairenId != null and anpairenId != '' ">
+                anpairen_id = #{anpairenId},
+            </if>
+            <if test="zerenren != null and zerenren != '' ">
+                zerenren = #{zerenren},
+            </if>
+            <if test="zerenrenId != null and zerenrenId != '' ">
+                zerenren_id = #{zerenrenId},
+            </if>
+            <if test="zhixingrens != null and zhixingrens != '' ">
+                zhixingrens = #{zhixingrens},
+            </if>
+            <if test="zhixingrenIds != null and zhixingrenIds != '' ">
+                zhixingren_ids = #{zhixingrenIds},
+            </if>
+            <if test="isJinji != null and isJinji != '' ">
+                is_jinji = #{isJinji},
+            </if>
+            <if test="isZhongyao != null and isZhongyao != '' ">
+                is_zhongyao = #{isZhongyao},
+            </if>
+            <if test="renwukaishishijian != null and renwukaishishijian != '' ">
+                renwukaishishijian = #{renwukaishishijian},
+            </if>
+            <if test="renwujiezhishijian != null and renwujiezhishijian != '' ">
+                renwujiezhishijian = #{renwujiezhishijian},
+            </if>
+            <if test="renwuneirong != null and renwuneirong != '' ">
+                renwuneirong = #{renwuneirong},
+            </if>
+            <if test="ziwozongjie != null and ziwozongjie != '' ">
+                ziwozongjie = #{ziwozongjie},
+            </if>
+            <if test="isDeleted != null and isDeleted != '' ">
+                is_deleted = #{isDeleted},
+            </if>
+            <if test="caozuoren != null and caozuoren != '' ">
+                caozuoren = #{caozuoren},
+            </if>
+            <if test="caozuorenid != null and caozuorenid != '' ">
+                caozuorenid = #{caozuorenid},
+            </if>
+            <if test="caozuoshijian != null and caozuoshijian != '' ">
+                caozuoshijian = #{caozuoshijian},
+            </if>
+            <if test="isFinish != null and isFinish != '' ">
+                is_finish = #{isFinish},
+            </if>
+            <if test="renwudidian != null and renwudidian != '' ">
+                renwudidian = #{renwudidian},
+            </if>
+            <if test="finishuserid != null and finishuserid != '' ">
+                finish_userid = #{finishuserid},
+            </if>
+            <if test="finishuser != null and finishuser != '' ">
+                finish_user = #{finishuser},
+            </if>
+            <if test="finishtime != null and finishtime != '' ">
+                finish_time = #{finishtime},
+            </if>
+            <if test="finishremark != null and finishremark != '' ">
+                finish_remark = #{finishremark},
+            </if>
+            <if test="finishimg != null and finishimg != '' ">
+                finish_img = #{finishimg},
+            </if>
+            <if test="finishstatus != null and finishstatus != '' ">
+                finish_status = #{finishstatus},
+            </if>
+            <if test="tier != null and tier != '' ">
+                tier = #{tier},
+            </if>
+            <if test="leixing != null and leixing != '' ">
+                leixing = #{leixing},
+            </if>
+            <if test="safetyfileId != null and safetyfileId != '' ">
+                safetyfileId = #{safetyfileId},
+            </if>
+            <if test="tiername != null and tiername != '' ">
+                tiername = #{tiername}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectByIds" resultType="org.springblade.anbiao.richenganpai.entity.Richenganpai">
+        select *,datediff(NOW(),renwujiezhishijian) as chaoqitianshu from anbiao_richenganpai where id=#{id}
+    </select>
+
+    <select id="selectRichenganpaiPage" resultMap="richenganpaiResultMap">
+        select * from anbiao_richenganpai where is_deleted = 0
+    </select>
+    <!--查询日程首页数据-->
+    <select id="selectRichengIndex" resultType="org.springblade.anbiao.richenganpai.vo.RichengIndexVo">
+        SELECT
+            a.key as num,
+            CONCAT(LEFT(#{date}, 8), a.key) AS date,
+            count(b.id) AS zongrenwushu,
+            sum(b.is_zhongyao) AS zhongyaorenwushu,
+            sum(b.is_jinji) AS jinjirenwushu
+        FROM
+            nums a
+        LEFT JOIN anbiao_richenganpai b
+        ON
+            unix_timestamp(CONCAT(LEFT(#{date}, 8), a.key)) BETWEEN unix_timestamp(b.renwukaishishijian) AND unix_timestamp(b.renwujiezhishijian)
+        AND b.dept_id = #{deptId}
+        AND ( b.zerenren_id = #{userId}  OR FIND_IN_SET(#{userId}, b.zhixingren_ids) )
+        WHERE
+            a.key &lt;= DAY (LAST_DAY(#{date}))
+        GROUP BY
+            a.key
+        ORDER BY
+            a.key
+    </select>
+
+    <sql id="querySql">
+
+        <!--企业端安全标准化待办-->
+        <if test="type == 1 ">
+            and renwuleixing = '安全标准化建设'
+        </if>
+        <!--企业端日程待办-->
+        <if test="type == 2 ">
+            and renwuleixing != '安全标准化建设'
+        </if>
+
+        <!--运维端-->
+        <if test="type == null || type == '' ">
+            <if test="renwuleixing != null and renwuleixing != ''">
+                and renwuleixing = #{renwuleixing}
+            </if>
+        </if>
+
+        <if test="renwubiaoti != null and renwubiaoti != ''">
+            and renwubiaoti = #{renwubiaoti}
+        </if>
+
+        <if test="isFinish == 0">
+            and ifnull(isFinish,0) = 0
+        </if>
+
+        <if test="isFinish == 1">
+            and ifnull(isFinish,0) = 1
+        </if>
+
+        <if test="isFinish == 2">
+            and ifnull(isFinish,0) = 2
+        </if>
+
+    </sql>
+
+    <!--获取日程代办事项-->
+    <sql id="tableByDateSql">
+        SELECT
+            b.id,
+            dept_id,
+            renwuleixing,
+            renwubiaoti,
+            anpairen,
+            anpairen_id,
+            zerenren,
+            zerenren_id,
+            zhixingrens,
+            zhixingren_ids as zhixingrenIds,
+            is_jinji,
+            is_zhongyao,
+            renwukaishishijian,
+            renwujiezhishijian,
+            renwuneirong,
+            ziwozongjie,
+            b.is_deleted,
+            caozuoren,
+            caozuorenid,
+            caozuoshijian,
+            is_finish as isFinish,
+            renwudidian,
+            finish_user,
+            finish_userid,
+            finish_time,
+            finish_remark,
+            finish_img,
+            finish_status,
+            tier,
+            tiername,
+            leixing
+        FROM(
+            SELECT
+                DISTINCT
+                xiaji.id,
+                xiaji.parent_id,
+                xiaji.dept_name,
+                xiaji.is_deleted
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                AND xiaji.is_deleted = 0
+                AND xiaji.extend_type='机构'
+                AND shangji.id = #{deptId}
+            )a
+            inner join anbiao_richenganpai b on a.id = b.dept_id
+            WHERE b.is_deleted=0
+                and leixing = #{leixing}
+
+            <if test="userId != null and userId != ''">
+                and (zerenren_id = #{userId} OR FIND_IN_SET(#{userId}, zhixingren_ids))
+            </if>
+
+            <if test="leixing == 1 ">
+                <if test="dateTime != null and dateTime != ''">
+                    and left(#{dateTime},10) = left(renwukaishishijian,10)
+                </if>
+            </if>
+
+            <if test="leixing == 2 ">
+                <if test="dateTime != null and dateTime != ''">
+                    and left(#{dateTime},10) = left(renwukaishishijian,10)
+                </if>
+            </if>
+
+            <if test="leixing == 3 ">
+                <if test="dateTime != null and dateTime != ''">
+                    and left(#{dateTime},7) = left(renwukaishishijian,7)
+                </if>
+            </if>
+
+            <if test="leixing == 4 ">
+                <if test="dateTime != null and dateTime != ''">
+                    and left(#{dateTime},10) = left(renwukaishishijian,10)
+                </if>
+            </if>
+
+            <if test="leixing == 5 ">
+                <if test="dateTime != null and dateTime != ''">
+                    and left(#{dateTime},4) = left(renwukaishishijian,4)
+                </if>
+            </if>
+
+    </sql>
+
+    <sql id="orderByDateSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by renwukaishishijian desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order == 0">
+            asc
+        </if>
+    </sql>
+
+    <select timeout="600" id="selectByDate" resultType="org.springblade.anbiao.richenganpai.vo.RichenganpaiVO"
+            parameterType="org.springblade.anbiao.richenganpai.page.RiChengAnPaiPage">
+        <if test="size == 0">
+            select * from (
+            <include refid="tableByDateSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderByDateSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="tableByDateSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderByDateSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectByDateTotal"
+            parameterType="org.springblade.anbiao.richenganpai.page.RiChengAnPaiPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableByDateSql"/>
+        )d where 1 = 1
+        <include refid="querySql"/>
+    </select>
+
+    <!--获取超期日程-->
+    <sql id="tableChaoqiByDateSql">
+        SELECT
+            b.id,
+            dept_id,
+            renwuleixing,
+            renwubiaoti,
+            zhixingrens,
+            zhixingren_ids,
+            is_jinji,
+            is_zhongyao,
+            renwukaishishijian,
+            renwujiezhishijian,
+            renwuneirong,
+            ziwozongjie,
+            b.is_deleted,
+            caozuoren,
+            caozuorenid,
+            caozuoshijian,
+            is_finish as isFinish,
+            renwudidian,
+            zerenren,
+            zerenren_id,
+            anpairen,
+            anpairen_id,
+            finish_user,
+            finish_userid,
+            finish_time,
+            finish_remark,
+            finish_img,
+            finish_status,
+            datediff(NOW(),renwujiezhishijian) as chaoqitianshu,
+            tier,
+            tiername,
+            leixing
+        FROM(
+            SELECT
+                DISTINCT
+                xiaji.id,
+                xiaji.parent_id,
+                xiaji.dept_name,
+                xiaji.is_deleted
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                AND xiaji.is_deleted = 0
+                AND xiaji.extend_type='机构'
+                AND shangji.id = #{deptId}
+                )a
+            inner join anbiao_richenganpai b on a.id = b.dept_id
+            WHERE b.is_deleted=0
+                and leixing = #{leixing}
+
+            <if test="userId != null and userId != ''">
+                and (zerenren_id = #{userId} OR FIND_IN_SET(#{userId}, zhixingren_ids))
+            </if>
+
+            <if test="leixing == 1 ">
+                <if test="dateTime != null and dateTime != ''">
+                    and left(#{dateTime},10) > left(renwujiezhishijian,10)
+                    and ifnull(is_finish,0) = 0
+                    and left(#{dateTime},10) = left(now(),10)
+                </if>
+            </if>
+
+            <if test="leixing == 2 ">
+                <if test="dateTime != null and dateTime != ''">
+                    and left(#{dateTime},10) > left(renwujiezhishijian,10)
+                    and ifnull(is_finish,0) = 0
+                    and left(#{dateTime},10) = left(now(),10)
+                </if>
+            </if>
+
+            <if test="leixing == 3 ">
+                <if test="dateTime != null and dateTime != ''">
+                    and left(#{dateTime},7) > left(renwujiezhishijian,7)
+                    and ifnull(is_finish,0) = 0
+                    and left(#{dateTime},10) = left(now(),10)
+                </if>
+            </if>
+
+            <if test="leixing == 4 ">
+                <if test="dateTime != null and dateTime != ''">
+                    and left(#{dateTime},10) > left(renwujiezhishijian,10)
+                    and ifnull(is_finish,0) = 0
+                    and left(#{dateTime},10) = left(now(),10)
+                </if>
+            </if>
+
+            <if test="leixing == 5 ">
+                <if test="dateTime != null and dateTime != ''">
+                    and left(#{dateTime},4) > left(renwujiezhishijian,4)
+                    and ifnull(is_finish,0) = 0
+                    and left(#{dateTime},10) = left(now(),10)
+                </if>
+            </if>
+    </sql>
+
+    <sql id="orderChaoQiByDateSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by renwujiezhishijian desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order == 0">
+            asc
+        </if>
+    </sql>
+
+    <select timeout="600" id="selectChaoQiByDate" resultType="org.springblade.anbiao.richenganpai.vo.RichenganpaiVO"
+            parameterType="org.springblade.anbiao.richenganpai.page.RiChengAnPaiPage">
+        <if test="size == 0">
+            select * from (
+            <include refid="tableChaoqiByDateSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderChaoQiByDateSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="tableChaoqiByDateSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderChaoQiByDateSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectChaoQiByDateTotal"
+            parameterType="org.springblade.anbiao.richenganpai.page.RiChengAnPaiPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableChaoqiByDateSql"/>
+        )d where 1 = 1
+        <include refid="querySql"/>
+    </select>
+
+    <!--获取安排的日程-->
+    <sql id="tableAnpaiByUserSql">
+        SELECT
+            b.id,
+            dept_id,
+            renwuleixing,
+            renwubiaoti,
+            zhixingrens,
+            zhixingren_ids,
+            is_jinji,
+            is_zhongyao,
+            renwukaishishijian,
+            renwujiezhishijian,
+            renwuneirong,
+            ziwozongjie,
+            b.is_deleted,
+            caozuoren,
+            caozuorenid,
+            caozuoshijian,
+            is_finish as isFinish,
+            renwudidian,
+            zerenren,
+            zerenren_id,
+            anpairen,
+            anpairen_id,
+            finish_user,
+            finish_userid,
+            finish_time,
+            finish_remark,
+            finish_img,
+            finish_status,
+            tier,
+            tiername,
+            leixing
+        FROM(
+            SELECT
+                DISTINCT
+                xiaji.id,
+                xiaji.parent_id,
+                xiaji.dept_name,
+                xiaji.is_deleted
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                AND xiaji.is_deleted = 0
+                AND xiaji.extend_type='机构'
+                AND shangji.id = #{deptId}
+            )a
+            inner join anbiao_richenganpai b on a.id = b.dept_id
+            WHERE b.is_deleted=0
+                and leixing = #{leixing}
+
+            <if test="isFinish != null and isFinish != ''">
+                and ifnull(is_finish,0) = #{isFinish}
+            </if>
+
+            <if test="userId != null and userId != ''">
+                and (anpairen_id = #{userId} OR FIND_IN_SET(#{userId}, zhixingren_ids))
+            </if>
+
+            <if test="leixing == 1 ">
+                <if test="dateTime != null and dateTime != ''">
+                    and left(#{dateTime},10) = left(renwukaishishijian,10)
+                </if>
+            </if>
+
+            <if test="leixing == 2 ">
+                <if test="dateTime != null and dateTime != ''">
+                    and left(#{dateTime},10) = left(renwukaishishijian,10)
+                </if>
+            </if>
+
+            <if test="leixing == 3 ">
+                <if test="dateTime != null and dateTime != ''">
+                    and left(#{dateTime},7) = left(renwukaishishijian,7)
+                </if>
+            </if>
+
+            <if test="leixing == 4 ">
+                <if test="dateTime != null and dateTime != ''">
+                    and left(#{dateTime},10) = left(renwukaishishijian,10)
+                </if>
+            </if>
+
+            <if test="leixing == 5 ">
+                <if test="dateTime != null and dateTime != ''">
+                    and left(#{dateTime},4) = left(renwukaishishijian,4)
+                </if>
+            </if>
+    </sql>
+
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by renwukaishishijian desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order == 0">
+            asc
+        </if>
+    </sql>
+
+    <select timeout="600" id="selectAnpaiByUser" resultType="org.springblade.anbiao.richenganpai.vo.RichenganpaiVO"
+            parameterType="org.springblade.anbiao.richenganpai.page.RiChengAnPaiPage">
+        <if test="size == 0">
+            select * from (
+            <include refid="tableAnpaiByUserSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="tableAnpaiByUserSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectAnpaiByUserTotal"
+            parameterType="org.springblade.anbiao.richenganpai.page.RiChengAnPaiPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableAnpaiByUserSql"/>
+        )d where 1 = 1
+        <include refid="querySql"/>
+    </select>
+
+    <!--按照日历统计日程待办数据-->
+    <sql id="tableScheduleByDateSql">
+        select
+            b.renwukaishishijian as dayShow,
+            SUM(IFNULL(cqnum,0)+IFNULL(rcnum,0)) as count,
+            0 as wccount
+        from(
+            SELECT
+                COUNT(b.id) as rcnum,
+                renwukaishishijian
+            FROM(
+                SELECT
+                    DISTINCT
+                    xiaji.id,
+                    xiaji.parent_id,
+                    xiaji.dept_name,
+                    xiaji.is_deleted
+                FROM
+                    blade_dept shangji,
+                    blade_dept xiaji
+                WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                    AND xiaji.is_deleted = 0
+                    AND xiaji.extend_type='机构'
+                    AND shangji.id = #{deptId}
+                )a
+                inner join anbiao_richenganpai b on a.id = b.dept_id
+                WHERE b.is_deleted=0
+                    and leixing = 1
+                    and (
+                        left(renwukaishishijian,10) >= left(#{dateBeginTime},10)
+                        and left(renwukaishishijian,10) &lt;= left(#{dateEndTime},10)
+                    )
+                    and ifnull(is_finish,0) = 0
+                    and renwuleixing != '安全标准化建设'
+                group by renwukaishishijian
+            )b
+        left join(
+            SELECT
+                DISTINCT
+                COUNT(b.id) as cqnum,
+                left(now(),10) as cqdate
+            FROM(
+                SELECT
+                    DISTINCT
+                    xiaji.id,
+                    xiaji.parent_id,
+                    xiaji.dept_name,
+                    xiaji.is_deleted
+                FROM
+                    blade_dept shangji,
+                    blade_dept xiaji
+                WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                    AND xiaji.is_deleted = 0
+                    AND xiaji.extend_type='机构'
+                    AND shangji.id = #{deptId}
+                )a
+            inner join anbiao_richenganpai b on a.id = b.dept_id
+            WHERE b.is_deleted=0
+                and leixing = 1
+                and left(now(),10) > left(renwujiezhishijian,10)
+                and ifnull(is_finish,0) = 0
+                and renwuleixing != '安全标准化建设'
+            group by left(now(),10)
+            )c on c.cqdate = b.renwukaishishijian
+        GROUP BY
+            b.renwukaishishijian
+    union
+        select
+            d.renwukaishishijian as dayShow,
+            0 as count,
+            COUNT(d.id) as wccount
+        from(
+            SELECT
+                b.id,
+                left(now(),10) as renwukaishishijian
+            FROM(
+                SELECT
+                    DISTINCT
+                    xiaji.id,
+                    xiaji.parent_id,
+                    xiaji.dept_name,
+                    xiaji.is_deleted
+                FROM
+                    blade_dept shangji,
+                    blade_dept xiaji
+                WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                    AND xiaji.is_deleted = 0
+                    AND xiaji.extend_type='机构'
+                    AND shangji.id = #{deptId}
+                )a
+            inner join anbiao_richenganpai b on a.id = b.dept_id
+            WHERE b.is_deleted=0
+                and leixing = 1
+                and left(now(),10) > left(renwujiezhishijian,10)
+			    and ifnull(is_finish,0) = 0
+                and renwuleixing != '安全标准化建设'
+            )d
+        GROUP BY
+            d.renwukaishishijian
+    </sql>
+    <sql id="queryScheduleByDateSql">
+    </sql>
+    <sql id="orderScheduleByDateSql">
+        <!-- 默认排序规则 -->
+        order by dayShow asc
+    </sql>
+
+    <select timeout="600" id="selectScheduleByDate" resultType="org.springblade.anbiao.richenganpai.vo.RichenganpaiVO"
+            parameterType="org.springblade.anbiao.richenganpai.page.RiChengAnPaiPage">
+        <if test="size == 0">
+            select * from (
+            <include refid="tableScheduleByDateSql"/>
+            )b
+            where 1=1
+            <include refid="queryScheduleByDateSql"/>
+            <include refid="orderScheduleByDateSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="tableScheduleByDateSql"/>
+            )b
+            where 1=1
+            <include refid="queryScheduleByDateSql"/>
+            <include refid="orderScheduleByDateSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectScheduleByDateTotal"
+            parameterType="org.springblade.anbiao.richenganpai.page.RiChengAnPaiPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableScheduleByDateSql"/>
+        )d where 1 = 1
+        <include refid="queryScheduleByDateSql"/>
+    </select>
+
+    <resultMap id="userResultMap" type="org.springblade.system.user.entity.User">
+        <result column="id" property="id"/>
+        <result column="tenant_code" property="tenantCode"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="status" property="status"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="account" property="account"/>
+        <result column="password" property="password"/>
+        <result column="name" property="name"/>
+        <result column="real_name" property="realName"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="birthday" property="birthday"/>
+        <result column="sex" property="sex"/>
+        <result column="role_id" property="roleId"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="postId" property="postId"/>
+        <result column="openid" property="openid"/>
+        <result column="is_locked" property="isLocked"/>
+        <result column="loginErrorcount" property="loginErrorCount"/>
+        <result column="lastLoginErrorTime" property="lastLoginErrorTime"/>
+    </resultMap>
+
+    <select id="getUserById" resultMap="userResultMap">
+        SELECT
+            *
+        FROM
+            blade_user
+        WHERE
+            id = #{param1}
+    </select>
+</mapper>

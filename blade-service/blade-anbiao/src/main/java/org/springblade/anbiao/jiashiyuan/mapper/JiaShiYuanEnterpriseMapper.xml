@@ -1,0 +1,667 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.jiashiyuan.mapper.JiaShiYuanEnterpriseMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="jiaShiYuanResultMap" type="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanEnterprise">
+    </resultMap>
+
+    <update id="updateDel" parameterType="java.lang.String">
+        UPDATE anbiao_jiashiyuan_enterprise SET isdelete = 1 where id = #{id}
+    </update>
+
+    <sql id="tableSql">
+        select * from(
+        SELECT
+        a.id,
+        jiashiyuanxingming,
+        xingbie,
+        shenfenzhenghao,
+        chushengshijian,
+        nianling,
+        shoujihaoma,
+        congyerenyuanleixing,
+        shenfenzhengyouxiaoqi,
+        jiashiyuanleixing,
+        a.dept_id as deptId,
+        b.dept_name deptName,
+        shenfenzhengfujian,
+        congyezhengfujian,
+        jiashizhengfujian,
+        jiatingzhuzhi,
+        jiashizhenghao,
+        zhunjiachexing,
+        jiashizhengchulingriqi,
+        jiashizhengyouxiaoqi,
+        tijianyouxiaoqi,
+        congyezigezheng,
+        congyeleibie,
+        congyezhengyouxiaoqi,
+        congyezhengchulingri,
+        fazhengjiguan,
+        chengxinkaoheshijian,
+        xiacichengxinkaoheshijian,
+        a.beizhu,
+        a.caozuorenid,
+        a.caozuoshijian,
+        a.caozuoren,
+        a.isdelete,
+        a.createtime,
+        tijianriqi
+        <if test="ids !=null and ids != ''and ids == '1'.toString()">,yj.shuoming
+        </if>
+        FROM
+        anbiao_jiashiyuan_enterprise a
+        inner join (
+        <include
+            refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b on a.dept_id = b.id
+            <if test="ids !=null and ids != ''and ids == '1'.toString()">
+            left join(
+                SELECT
+                    biaoid,
+                    (select shuoming from anbiao_yujingxiang where id = tixingxiangqingid) as shuoming
+                from
+                    anbiao_jinritixing_jiesuan
+                where IFNULL(isdelete,0)=0
+                    and dept_id = #{deptId}
+                    and tongjiriqi = #{tongjiriqi}
+                    and tixingleixing = #{tixingleixing}
+                    and tixingxiangqingid = #{tixingxiangqingid}
+                )yj on yj.biaoid = a.id
+            </if>
+            WHERE 1=1 and ifnull(a.isdelete,0) = 0
+        )a
+    </sql>
+
+    <sql id="querySql">
+        <if test="jiashiyuanxingming !=null and jiashiyuanxingming != ''">
+            AND jiashiyuanxingming  LIKE '%${jiashiyuanxingming}%'
+        </if>
+
+        <if test="deptName !=null and deptName != ''">
+            AND deptName LIKE '%${deptName}%'
+        </if>
+
+        <if test="jiashiyuanleixing !=null and jiashiyuanleixing != ''">
+            AND jiashiyuanleixing LIKE '%${jiashiyuanleixing}%'
+        </if>
+
+        <if test="xingbie !=null and xingbie != ''">
+            AND xingbie = #{xingbie}
+        </if>
+
+        <if test="shenfenzhenghao !=null and shenfenzhenghao != ''">
+            AND shenfenzhenghao = #{shenfenzhenghao}
+        </if>
+
+        <if test="zhunjiachexing !=null and zhunjiachexing != ''">
+            AND zhunjiachexing LIKE '%${zhunjiachexing}%'
+        </if>
+
+        <if test="congyeleibiestatus == '包含'.toString() ">
+            <if test="congyeleibie !=null and congyeleibie != ''">
+                and congyeleibie in
+                <foreach collection="idss" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </if>
+
+        <if test="congyeleibiestatus == '属于'.toString() ">
+            <if test="congyeleibie !=null and congyeleibie != ''">
+                and congyeleibie in
+                <foreach collection="idss" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </if>
+
+        <if test="congyeleibiestatus == '不包含'.toString() ">
+            <if test="congyeleibie !=null and congyeleibie != ''">
+                and congyeleibie not in
+                <foreach collection="idss" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </if>
+
+        <if test="congyezhengchulingristatus == '等于'.toString() ">
+            <if test="congyezhengchulingri !=null and congyezhengchulingri != ''">
+                AND left(congyezhengchulingri,10) = #{congyezhengchulingri}
+            </if>
+        </if>
+
+        <if test="congyezhengchulingristatus == '大于'.toString() ">
+            <if test="congyezhengchulingri !=null and congyezhengchulingri != ''">
+                AND left(congyezhengchulingri,10) > #{congyezhengchulingri}
+            </if>
+        </if>
+
+        <if test="congyezhengchulingristatus == '大于等于'.toString() ">
+            <if test="congyezhengchulingri !=null and congyezhengchulingri != ''">
+                AND left(congyezhengchulingri,10) >= #{congyezhengchulingri}
+            </if>
+        </if>
+
+        <if test="congyezhengchulingristatus == '小于'.toString() ">
+            <if test="congyezhengchulingri !=null and congyezhengchulingri != ''">
+                AND left(congyezhengchulingri,10) &lt; #{congyezhengchulingri}
+            </if>
+        </if>
+
+        <if test="congyezhengchulingristatus == '小于等于'.toString() ">
+            <if test="congyezhengchulingri !=null and congyezhengchulingri != ''">
+                AND left(congyezhengchulingri,10) &lt;= #{congyezhengchulingri}
+            </if>
+        </if>
+
+        <if test="congyezhengyouxiaoqistatus == '等于'.toString() ">
+            <if test="congyezhengyouxiaoqi !=null and congyezhengyouxiaoqi != ''">
+                AND left(congyezhengyouxiaoqi,10) = #{congyezhengyouxiaoqi}
+            </if>
+        </if>
+
+        <if test="congyezhengyouxiaoqistatus == '大于'.toString() ">
+            <if test="congyezhengyouxiaoqi !=null and congyezhengyouxiaoqi != ''">
+                AND left(congyezhengyouxiaoqi,10) > #{congyezhengyouxiaoqi}
+            </if>
+        </if>
+
+        <if test="congyezhengyouxiaoqistatus == '大于等于'.toString() ">
+            <if test="congyezhengyouxiaoqi !=null and congyezhengyouxiaoqi != ''">
+                AND left(congyezhengyouxiaoqi,10) >= #{congyezhengyouxiaoqi}
+            </if>
+        </if>
+
+        <if test="congyezhengyouxiaoqistatus == '小于'.toString() ">
+            <if test="congyezhengyouxiaoqi !=null and congyezhengyouxiaoqi != ''">
+                AND left(congyezhengyouxiaoqi,10) &lt; #{congyezhengyouxiaoqi}
+            </if>
+        </if>
+
+        <if test="congyezhengyouxiaoqistatus == '小于等于'.toString() ">
+            <if test="congyezhengyouxiaoqi !=null and congyezhengyouxiaoqi != ''">
+                AND left(congyezhengyouxiaoqi,10) &lt;= #{congyezhengyouxiaoqi}
+            </if>
+        </if>
+
+    </sql>
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        order by jiashiyuanxingming
+        <if test="ids !=null and ids != ''and ids == '1'.toString()">
+            ,shuoming desc
+        </if>
+
+    </sql>
+
+    <select id="selectPageList" parameterType="org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage" resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanEnterprise">
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectTotal" parameterType="org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage" resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql" />
+        )d
+        where 1 = 1
+        <include refid="querySql" />
+    </select>
+
+    <select id="selectByIds" parameterType="java.lang.String" resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanEnterprise">
+        SELECT
+            a.*,b.dept_name deptName
+        FROM
+            anbiao_jiashiyuan_enterprise a
+            inner join blade_dept b on a.dept_id = b.id
+        WHERE ifnull(a.isdelete ,0) = 0 and a.id=#{id}
+    </select>
+
+    <select id = "selectByCardNo" parameterType="java.lang.String" resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanEnterprise">
+        select
+            a.*,b.dept_name as deptName
+        from
+            anbiao_jiashiyuan_enterprise a
+        inner join blade_dept b on a.dept_id = b.id
+        WHERE 1=1
+            and ifnull(a.isdelete ,0) = 0
+            and a.dept_id = #{deptId}
+        <if test="cardNo !=null and cardNo != ''">
+            and a.shenfenzhenghao=#{cardNo}
+            and a.jiashiyuanleixing = #{jiashiyuanleixing}
+        </if>
+        <if test="driverNo !=null and driverNo != ''">
+            and a.jiashizhenghao=#{driverNo}
+            and a.jiashiyuanleixing = #{jiashiyuanleixing}
+        </if>
+    </select>
+
+    <select id="jiaShiYuanList" resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanEnterprise">
+        select
+            DISTINCT
+            id,
+            jiashiyuanxingming,
+            xingbie,
+            jiashiyuanleixing,
+            shenfenzhenghao,
+            shoujihaoma
+        from
+            anbiao_jiashiyuan_enterprise
+        where isdelete = 0
+            AND dept_id= #{deptId}
+    </select>
+
+    <insert id="insertSelective" parameterType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanEnterprise" >
+        insert into anbiao_jiashiyuan_enterprise
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="id != null and id != '' ">
+                id,
+            </if>
+
+            <if test="deptId != null and deptId != '' ">
+                dept_id,
+            </if>
+
+            <if test="jiashiyuanxingming != null and jiashiyuanxingming != '' ">
+                jiashiyuanxingming,
+            </if>
+
+            <if test="xingbie != null and xingbie != '' ">
+                xingbie,
+            </if>
+
+            <if test="shenfenzhenghao != null and shenfenzhenghao != '' ">
+                shenfenzhenghao,
+            </if>
+
+            <if test="nianling != null and nianling != '' ">
+                nianling,
+            </if>
+
+            <if test="zhunjiachexing != null and zhunjiachexing != '' ">
+                zhunjiachexing,
+            </if>
+
+            <if test="congyezigezheng != null and congyezigezheng != '' ">
+                congyezigezheng,
+            </if>
+
+            <if test="congyeleibie != null and congyeleibie != '' ">
+                congyeleibie,
+            </if>
+
+            <if test="congyezhengchulingri != null and congyezhengchulingri != '' ">
+                congyezhengchulingri,
+            </if>
+
+            <if test="congyezhengyouxiaoqi != null and congyezhengyouxiaoqi != '' ">
+                congyezhengyouxiaoqi,
+            </if>
+
+            <if test="chengxinkaoheshijian != null and chengxinkaoheshijian != '' ">
+                chengxinkaoheshijian,
+            </if>
+
+            <if test="xiacichengxinkaoheshijian != null and xiacichengxinkaoheshijian != '' ">
+                xiacichengxinkaoheshijian,
+            </if>
+
+            <if test="jiashizhengchulingriqi != null and jiashizhengchulingriqi != '' ">
+                jiashizhengchulingriqi,
+            </if>
+
+            <if test="jiashizhengyouxiaoqi != null and jiashizhengyouxiaoqi != '' ">
+                jiashizhengyouxiaoqi,
+            </if>
+
+            <if test="fazhengjiguan != null and fazhengjiguan != '' ">
+                fazhengjiguan,
+            </if>
+
+            <if test="jiatingzhuzhi != null and jiatingzhuzhi != '' ">
+                jiatingzhuzhi,
+            </if>
+
+            <if test="chushengshijian != null and chushengshijian != '' ">
+                chushengshijian,
+            </if>
+
+            <if test="shoujihaoma != null and shoujihaoma != '' ">
+                shoujihaoma,
+            </if>
+
+            <if test="jiashiyuanleixing != null and jiashiyuanleixing != '' ">
+                jiashiyuanleixing,
+            </if>
+
+            <if test="congyerenyuanleixing != null and congyerenyuanleixing != '' ">
+                congyerenyuanleixing,
+            </if>
+
+            <if test="isdelete != null and isdelete != '' ">
+                isdelete,
+            </if>
+
+            <if test="createtime != null and createtime != '' ">
+                createtime,
+            </if>
+
+            <if test="caozuoren != null and caozuoren != '' ">
+                caozuoren,
+            </if>
+
+            <if test="caozuoshijian != null and caozuoshijian != '' ">
+                caozuoshijian,
+            </if>
+
+            <if test="caozuorenid != null and caozuorenid != '' ">
+                caozuorenid,
+            </if>
+
+            <if test="congyezhengfujian != null and congyezhengfujian != '' ">
+                congyezhengfujian,
+            </if>
+
+            <if test="shenfenzhengfujian != null and shenfenzhengfujian != '' ">
+                shenfenzhengfujian,
+            </if>
+
+            <if test="jiashizhengfujian != null and jiashizhengfujian != '' ">
+                jiashizhengfujian,
+            </if>
+
+            <if test="beizhu != null and beizhu != '' ">
+                beizhu
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="id != null and id != '' ">
+                #{id},
+            </if>
+
+            <if test="deptId != null and deptId != '' ">
+                #{deptId},
+            </if>
+
+            <if test="jiashiyuanxingming != null and jiashiyuanxingming != '' ">
+                #{jiashiyuanxingming},
+            </if>
+
+            <if test="xingbie != null and xingbie != '' ">
+                #{xingbie},
+            </if>
+
+            <if test="shenfenzhenghao != null and shenfenzhenghao != '' ">
+                #{shenfenzhenghao},
+            </if>
+
+            <if test="nianling != null and nianling != '' ">
+                #{nianling},
+            </if>
+
+            <if test="zhunjiachexing != null and zhunjiachexing != '' ">
+                #{zhunjiachexing},
+            </if>
+
+            <if test="congyezigezheng != null and congyezigezheng != '' ">
+                #{congyezigezheng},
+            </if>
+
+            <if test="congyeleibie != null and congyeleibie != '' ">
+                #{congyeleibie},
+            </if>
+
+            <if test="congyezhengchulingri != null and congyezhengchulingri != '' ">
+                #{congyezhengchulingri},
+            </if>
+
+            <if test="congyezhengyouxiaoqi != null and congyezhengyouxiaoqi != '' ">
+                #{congyezhengyouxiaoqi},
+            </if>
+
+            <if test="chengxinkaoheshijian != null and chengxinkaoheshijian != '' ">
+                #{chengxinkaoheshijian},
+            </if>
+
+            <if test="xiacichengxinkaoheshijian != null and xiacichengxinkaoheshijian != '' ">
+                #{xiacichengxinkaoheshijian},
+            </if>
+
+            <if test="jiashizhengchulingriqi != null and jiashizhengchulingriqi != '' ">
+                #{jiashizhengchulingriqi},
+            </if>
+
+            <if test="jiashizhengyouxiaoqi != null and jiashizhengyouxiaoqi != '' ">
+                #{jiashizhengyouxiaoqi},
+            </if>
+
+            <if test="fazhengjiguan != null and fazhengjiguan != '' ">
+                #{fazhengjiguan},
+            </if>
+
+            <if test="jiatingzhuzhi != null and jiatingzhuzhi != '' ">
+                #{jiatingzhuzhi},
+            </if>
+
+            <if test="chushengshijian != null and chushengshijian != '' ">
+                #{chushengshijian},
+            </if>
+
+            <if test="shoujihaoma != null and shoujihaoma != '' ">
+                #{shoujihaoma},
+            </if>
+
+            <if test="jiashiyuanleixing != null and jiashiyuanleixing != '' ">
+                #{jiashiyuanleixing},
+            </if>
+
+            <if test="congyerenyuanleixing != null and congyerenyuanleixing != '' ">
+                #{congyerenyuanleixing},
+            </if>
+
+            <if test="isdelete != null and isdelete != '' ">
+                #{isdelete},
+            </if>
+
+            <if test="createtime != null and createtime != '' ">
+                #{createtime},
+            </if>
+
+            <if test="caozuoren != null and caozuoren != '' ">
+                #{caozuoren},
+            </if>
+
+            <if test="caozuoshijian != null and caozuoshijian != '' ">
+                #{caozuoshijian},
+            </if>
+
+            <if test="caozuorenid != null and caozuorenid != '' ">
+                #{caozuorenid},
+            </if>
+
+            <if test="congyezhengfujian != null and congyezhengfujian != '' ">
+                #{congyezhengfujian},
+            </if>
+
+            <if test="shenfenzhengfujian != null and shenfenzhengfujian != '' ">
+                #{shenfenzhengfujian},
+            </if>
+
+            <if test="jiashizhengfujian != null and jiashizhengfujian != '' ">
+                #{jiashizhengfujian},
+            </if>
+
+            <if test="beizhu != null and beizhu != '' ">
+                #{beizhu}
+            </if>
+
+        </trim>
+    </insert>
+
+    <update id="updateSelective" parameterType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanEnterprise" >
+        update anbiao_jiashiyuan_enterprise
+        <set>
+
+            <if test="deptId != null and deptId != '' ">
+                dept_id = #{deptId},
+            </if>
+
+            <if test="jiashiyuanxingming != null and jiashiyuanxingming != '' ">
+                jiashiyuanxingming = #{jiashiyuanxingming},
+            </if>
+
+            <if test="xingbie != null and xingbie != '' ">
+                xingbie = #{xingbie},
+            </if>
+
+            <if test="shenfenzhenghao != null and shenfenzhenghao != '' ">
+                shenfenzhenghao = #{shenfenzhenghao},
+            </if>
+
+            <if test="nianling != null and nianling != '' ">
+                nianling = #{nianling},
+            </if>
+
+            <if test="zhunjiachexing != null and zhunjiachexing != '' ">
+                zhunjiachexing = #{zhunjiachexing},
+            </if>
+
+            <if test="congyezigezheng != null and congyezigezheng != '' ">
+                congyezigezheng = #{congyezigezheng},
+            </if>
+
+            <if test="congyeleibie != null and congyeleibie != '' ">
+                congyeleibie = #{congyeleibie},
+            </if>
+
+            <if test="congyezhengchulingri != null and congyezhengchulingri != '' ">
+                congyezhengchulingri = #{congyezhengchulingri},
+            </if>
+
+            <if test="congyezhengyouxiaoqi != null and congyezhengyouxiaoqi != '' ">
+                congyezhengyouxiaoqi = #{congyezhengyouxiaoqi},
+            </if>
+
+            <if test="chengxinkaoheshijian != null and chengxinkaoheshijian != '' ">
+                chengxinkaoheshijian = #{chengxinkaoheshijian},
+            </if>
+
+            <if test="xiacichengxinkaoheshijian != null and xiacichengxinkaoheshijian != '' ">
+                xiacichengxinkaoheshijian = #{xiacichengxinkaoheshijian},
+            </if>
+
+            <if test="jiashizhengchulingriqi != null and jiashizhengchulingriqi != '' ">
+                jiashizhengchulingriqi = #{jiashizhengchulingriqi},
+            </if>
+
+            <if test="jiashizhengyouxiaoqi != null and jiashizhengyouxiaoqi != '' ">
+                jiashizhengyouxiaoqi = #{jiashizhengyouxiaoqi},
+            </if>
+
+            <if test="fazhengjiguan != null and fazhengjiguan != '' ">
+                fazhengjiguan = #{fazhengjiguan},
+            </if>
+
+            <if test="jiatingzhuzhi != null and jiatingzhuzhi != '' ">
+                jiatingzhuzhi = #{jiatingzhuzhi},
+            </if>
+
+            <if test="chushengshijian != null and chushengshijian != '' ">
+                chushengshijian = #{chushengshijian},
+            </if>
+
+            <if test="shoujihaoma != null and shoujihaoma != '' ">
+                shoujihaoma = #{shoujihaoma},
+            </if>
+
+            <if test="jiashiyuanleixing != null and jiashiyuanleixing != '' ">
+                jiashiyuanleixing = #{jiashiyuanleixing},
+            </if>
+
+            <if test="congyerenyuanleixing != null and congyerenyuanleixing != '' ">
+                congyerenyuanleixing = #{congyerenyuanleixing},
+            </if>
+
+            <if test="isdelete != null and isdelete != '' ">
+                isdelete = #{isdelete},
+            </if>
+
+            <if test="caozuoren != null and caozuoren != '' ">
+                caozuoren = #{caozuoren},
+            </if>
+
+            <if test="caozuoshijian != null and caozuoshijian != '' ">
+                caozuoshijian = #{caozuoshijian},
+            </if>
+
+            <if test="caozuorenid != null and caozuorenid != '' ">
+                caozuorenid = #{caozuorenid},
+            </if>
+
+            <if test="congyezhengfujian != null and congyezhengfujian != '' ">
+                congyezhengfujian = #{congyezhengfujian},
+            </if>
+
+            <if test="shenfenzhengfujian != null and shenfenzhengfujian != '' ">
+                shenfenzhengfujian = #{shenfenzhengfujian},
+            </if>
+
+            <if test="jiashizhengfujian != null and jiashizhengfujian != '' ">
+                jiashizhengfujian = #{jiashizhengfujian},
+            </if>
+
+            <if test="beizhu != null and beizhu != '' ">
+                beizhu = #{beizhu}
+            </if>
+
+        </set>
+        where id = #{id}
+            and isdelete = 0
+    </update>
+
+    <select id="getjiaShiYuanByOne" resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanEnterprise">
+        select
+            *
+        from
+            anbiao_jiashiyuan_enterprise
+        where isdelete = 0
+        <if test="deptId != null and deptId != '' ">
+            AND dept_id= #{deptId}
+        </if>
+        <if test="jiashiyuanxingming != null and jiashiyuanxingming != '' ">
+            AND jiashiyuanxingming = #{jiashiyuanxingming}
+        </if>
+        <if test="shoujihaoma != null and shoujihaoma != '' ">
+            AND shoujihaoma = #{shoujihaoma}
+        </if>
+        <if test="shenfenzhenghao != null and shenfenzhenghao != '' ">
+            AND shenfenzhenghao = #{shenfenzhenghao}
+        </if>
+        <if test="jiashiyuanleixing != null and jiashiyuanleixing != '' ">
+            AND jiashiyuanleixing = #{jiashiyuanleixing}
+        </if>
+        LIMIT 1
+    </select>
+
+
+
+</mapper>
