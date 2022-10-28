@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.cheliangguanli.mapper.VehicleInspectionItemsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="vehicleInspectionItemsResultMap" type="org.springblade.anbiao.cheliangguanli.entity.VehicleInspectionItems">
+        <id column="ids" property="ids"/>
+        <result column="vit_item" property="vitItem"/>
+        <result column="vit_name" property="vitName"/>
+        <result column="vit_model" property="vitModel"/>
+        <result column="vit_describe" property="vitDescribe"/>
+        <result column="vit_trial_scope" property="vitTrialScope"/>
+        <result column="vit_trial_model" property="vitTrialModel"/>
+        <result column="vit_order_num" property="vitOrderNum"/>
+        <result column="vit_delete" property="vitDelete"/>
+        <result column="vit_create_time" property="vitCreateTime"/>
+        <result column="vit_create_by_ids" property="vitCreateByIds"/>
+        <result column="vit_create_by_name" property="vitCreateByName"/>
+        <result column="vit_update_time" property="vitUpdateTime"/>
+        <result column="vit_update_by_ids" property="vitUpdateByIds"/>
+        <result column="vit_update_by_name" property="vitUpdateByName"/>
+    </resultMap>
+
+
+    <select id="selectVehicleInspectionItemsPage" resultMap="vehicleInspectionItemsResultMap">
+        select * from anbiao_vehicle_inspection_items where is_deleted = 0
+    </select>
+
+</mapper>

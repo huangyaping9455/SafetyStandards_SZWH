@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.cheliangguanli.mapper.VehicleXingnengbaogaoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="vehicleXingnengbaogaoResultMap" type="org.springblade.anbiao.cheliangguanli.entity.VehicleXingnengbaogao">
+        <id column="avx_ids" property="avxIds"/>
+        <id column="avx_av_ids" property="avxAvIds"/>
+        <result column="avx_inspection_organization" property="avxInspectionOrganization"/>
+        <result column="avx_inspection_date" property="avxInspectionDate"/>
+        <result column="avx_enclosure" property="avxEnclosure"/>
+        <result column="avx_delete" property="avxDelete"/>
+        <result column="avx_create_time" property="avxCreateTime"/>
+        <result column="avx_create_by_ids" property="avxCreateByIds"/>
+        <result column="avx_create_by_name" property="avxCreateByName"/>
+        <result column="avx_update_time" property="avxUpdateTime"/>
+        <result column="avx_update_by_ids" property="avxUpdateByIds"/>
+        <result column="avx_update_by_name" property="avxUpdateByName"/>
+    </resultMap>
+
+
+    <select id="selectVehicleXingnengbaogaoPage" resultMap="vehicleXingnengbaogaoResultMap">
+        select * from anbiao_vehicle_xingnengbaogao where is_deleted = 0
+    </select>
+
+</mapper>

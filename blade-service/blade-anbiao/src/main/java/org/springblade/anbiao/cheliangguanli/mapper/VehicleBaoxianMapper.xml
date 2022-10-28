@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.cheliangguanli.mapper.VehicleBaoxianMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="vehicleBaoxianResultMap" type="org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxian">
+        <id column="avb_ids" property="avbIds"/>
+        <result column="avb_policy_no" property="avbPolicyNo"/>
+        <result column="avb_insured_ids" property="avbInsuredIds"/>
+        <result column="avb_insured_name" property="avbInsuredName"/>
+        <result column="avb_insured_contacts" property="avbInsuredContacts"/>
+        <result column="avb_insured_contact_number" property="avbInsuredContactNumber"/>
+        <result column="avb_insured_contact_address" property="avbInsuredContactAddress"/>
+        <result column="avb_insure_ids" property="avbInsureIds"/>
+        <result column="avb_insure_name" property="avbInsureName"/>
+        <result column="avb_insure_contacts" property="avbInsureContacts"/>
+        <result column="avb_insure_contact_number" property="avbInsureContactNumber"/>
+        <result column="avb_insure_contact_address" property="avbInsureContactAddress"/>
+        <result column="avb_insurance_period_start" property="avbInsurancePeriodStart"/>
+        <result column="avb_insurance_period_end" property="avbInsurancePeriodEnd"/>
+        <result column="avb_insurance_days" property="avbInsuranceDays"/>
+        <result column="avb_calculation_method" property="avbCalculationMethod"/>
+        <result column="avb_av_ids" property="avbAvIds"/>
+        <result column="avb_year_security_pooling_fund" property="avbYearSecurityPoolingFund"/>
+        <result column="avb_year_premium" property="avbYearPremium"/>
+        <result column="avb_insurance_company" property="avbInsuranceCompany"/>
+        <result column="avb_baoshi_bao_no" property="avbBaoshiBaoNo"/>
+        <result column="avb_signing_date" property="avbSigningDate"/>
+        <result column="avb_total" property="avbTotal"/>
+        <result column="avb_replacement_price" property="avbReplacementPrice"/>
+        <result column="avb_bail_company_date" property="avbBailCompanyDate"/>
+        <result column="avb_bail_headquarters_date" property="avbBailHeadquartersDate"/>
+        <result column="avb_compensation_standard" property="avbCompensationStandard"/>
+        <result column="avb_are_accidents" property="avbAreAccidents"/>
+        <result column="avb_purchase_method" property="avbPurchaseMethod"/>
+        <result column="avb_insurance_ratio" property="avbInsuranceRatio"/>
+        <result column="avb_permitted_seat" property="avbPermittedSeat"/>
+        <result column="avb_permitted_seat_driver_seat" property="avbPermittedSeatDriverSeat"/>
+        <result column="avb_permitted_seat_front_seats" property="avbPermittedSeatFrontSeats"/>
+        <result column="avb_permitted_seat_back_row_seats" property="avbPermittedSeatBackRowSeats"/>
+        <result column="avb_live_seat" property="avbLiveSeat"/>
+        <result column="avb_live_seat_driver_seat" property="avbLiveSeatDriverSeat"/>
+        <result column="avb_live_seat_front_seats" property="avbLiveSeatFrontSeats"/>
+        <result column="avb_live_seat_back_row_seats" property="avbLiveSeatBackRowSeats"/>
+        <result column="avb_seating_mode" property="avbSeatingMode"/>
+        <result column="avb_driver_seat_rate" property="avbDriverSeatRate"/>
+        <result column="avb_front_row_rate" property="avbFrontRowRate"/>
+        <result column="avb_back_row_rate" property="avbBackRowRate"/>
+        <result column="avb_vehicle_and_vessel_tax" property="avbVehicleAndVesselTax"/>
+        <result column="avb_vehicle_and_vessel_tax_reduction" property="avbVehicleAndVesselTaxReduction"/>
+        <result column="avb_vehicle_and_vessel_tax_paid_in" property="avbVehicleAndVesselTaxPaidIn"/>
+        <result column="avb_total_premium" property="avbTotalPremium"/>
+        <result column="avb_company_total_premium" property="avbCompanyTotalPremium"/>
+        <result column="avb_total_planned_premium" property="avbTotalPlannedPremium"/>
+        <result column="avb_totalize_premium" property="avbTotalizePremium"/>
+        <result column="avb_company_totalize_premium" property="avbCompanyTotalizePremium"/>
+        <result column="avb_approve" property="avbApprove"/>
+        <result column="avb_special_agreement" property="avbSpecialAgreement"/>
+        <result column="avb_enclosure" property="avbEnclosure"/>
+        <result column="avb_delete" property="avbDelete"/>
+        <result column="avb_create_time" property="avbCreateTime"/>
+        <result column="avb_create_by_ids" property="avbCreateByIds"/>
+        <result column="avb_create_by_name" property="avbCreateByName"/>
+        <result column="avb_update_time" property="avbUpdateTime"/>
+        <result column="avb_update_by_ids" property="avbUpdateByIds"/>
+        <result column="avb_update_by_name" property="avbUpdateByName"/>
+    </resultMap>
+
+
+    <select id="selectVehicleBaoxianPage" resultMap="vehicleBaoxianResultMap">
+        select * from anbiao_vehicle_baoxian where is_deleted = 0
+    </select>
+
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.cheliangguanli.mapper.VehicleJingyingxukezhengMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="vehicleJingyingxukezhengResultMap" type="org.springblade.anbiao.cheliangguanli.entity.VehicleJingyingxukezheng">
+        <id column="avj_ids" property="avjIds"/>
+        <result column="avj_operator_name" property="avjOperatorName"/>
+        <result column="avj_license_no" property="avjLicenseNo"/>
+        <result column="avj_business_license" property="avjBusinessLicense"/>
+        <result column="avj_operation_deadline" property="avjOperationDeadline"/>
+        <result column="avj_starting_point" property="avjStartingPoint"/>
+        <result column="avj_ending" property="avjEnding"/>
+        <result column="avj_departure_station_name" property="avjDepartureStationName"/>
+        <result column="avj_terminal_station_name" property="avjTerminalStationName"/>
+        <result column="avj_departure_loading_station" property="avjDepartureLoadingStation"/>
+        <result column="avj_final_arrival_at_loading_station" property="avjFinalArrivalAtLoadingStation"/>
+        <result column="avj_main_route" property="avjMainRoute"/>
+        <result column="avj_docking_station" property="avjDockingStation"/>
+        <result column="avj_passenger_transport_type" property="avjPassengerTransportType"/>
+        <result column="avj_shift_line_category" property="avjShiftLineCategory"/>
+        <result column="avj_daily_departure" property="avjDailyDeparture"/>
+        <result column="avj_license_plate" property="avjLicensePlate"/>
+        <result column="avj_passenger_car_type_and_grade" property="avjPassengerCarTypeAndGrade"/>
+        <result column="avj_valid_period_passenger_car_type" property="avjValidPeriodPassengerCarType"/>
+        <result column="avj_technical_grade_vehicle" property="avjTechnicalGradeVehicle"/>
+        <result column="avj_serial_bus_passenger_transport_sign" property="avjSerialBusPassengerTransportSign"/>
+        <result column="avj_annual_review_vehicles" property="avjAnnualReviewVehicles"/>
+        <result column="avj_end_review_vehicles" property="avjEndReviewVehicles"/>
+        <result column="avj_remarks" property="avjRemarks"/>
+        <result column="avj_enclosure" property="avjEnclosure"/>
+        <result column="avj_operating_agency" property="avjOperatingAgency"/>
+        <result column="avj_licensing_authority" property="avjLicensingAuthority"/>
+        <result column="avj_delete" property="avjDelete"/>
+        <result column="avj_create_time" property="avjCreateTime"/>
+        <result column="avj_create_by_ids" property="avjCreateByIds"/>
+        <result column="avj_create_by_name" property="avjCreateByName"/>
+        <result column="avj_update_time" property="avjUpdateTime"/>
+        <result column="avj_update_by_ids" property="avjUpdateByIds"/>
+        <result column="avj_update_by_name" property="avjUpdateByName"/>
+    </resultMap>
+
+
+    <select id="selectVehicleJingyingxukezhengPage" resultMap="vehicleJingyingxukezhengResultMap">
+        select * from anbiao_vehicle_jingyingxukezheng where is_deleted = 0
+    </select>
+
+</mapper>

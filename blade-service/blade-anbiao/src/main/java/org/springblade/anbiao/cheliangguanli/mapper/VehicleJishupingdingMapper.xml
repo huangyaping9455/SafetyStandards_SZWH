@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.cheliangguanli.mapper.VehicleJishupingdingMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="vehicleJishupingdingResultMap" type="org.springblade.anbiao.cheliangguanli.entity.VehicleJishupingding">
+        <id column="avj_ids" property="avjIds"/>
+        <result column="avj_technical_evaluation" property="avjTechnicalEvaluation"/>
+        <result column="avj_technical_date" property="avjTechnicalDate"/>
+        <result column="avj_enclosure" property="avjEnclosure"/>
+        <result column="avj_delete" property="avjDelete"/>
+        <result column="avj_create_time" property="avjCreateTime"/>
+        <result column="avj_create_by_ids" property="avjCreateByIds"/>
+        <result column="avj_create_by_name" property="avjCreateByName"/>
+        <result column="avj_update_time" property="avjUpdateTime"/>
+        <result column="avj_update_by_ids" property="avjUpdateByIds"/>
+        <result column="avj_update_by_name" property="avjUpdateByName"/>
+    </resultMap>
+
+
+    <select id="selectVehicleJishupingdingPage" resultMap="vehicleJishupingdingResultMap">
+        select * from anbiao_vehicle_jishupingding where is_deleted = 0
+    </select>
+
+</mapper>

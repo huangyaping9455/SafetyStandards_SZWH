@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.cheliangguanli.mapper.VehicleDaoluyunshuzhengMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="vehicleDaoluyunshuzhengResultMap" type="org.springblade.anbiao.cheliangguanli.entity.VehicleDaoluyunshuzheng">
+        <id column="avd_ids" property="avdIds"/>
+        <result column="avd_av_ids" property="avdAvIds"/>
+        <result column="avd_business_owner" property="avdBusinessOwner"/>
+        <result column="avd_plate_no" property="avdPlateNo"/>
+        <result column="avd_vehicle_type" property="avdVehicleType"/>
+        <result column="avd_tonnage" property="avdTonnage"/>
+        <result column="avd_vehicle_long" property="avdVehicleLong"/>
+        <result column="avd_vehicle_wide" property="avdVehicleWide"/>
+        <result column="avd_vehicle_high" property="avdVehicleHigh"/>
+        <result column="avd_issuing_authority" property="avdIssuingAuthority"/>
+        <result column="avd_road_transport_certificate_no" property="avdRoadTransportCertificateNo"/>
+        <result column="avd_issue_date" property="avdIssueDate"/>
+        <result column="avd_plate_color" property="avdPlateColor"/>
+        <result column="avd_business_license_no" property="avdBusinessLicenseNo"/>
+        <result column="avd_economic_type" property="avdEconomicType"/>
+        <result column="avd_nature_business" property="avdNatureBusiness"/>
+        <result column="avd_valid_until" property="avdValidUntil"/>
+        <result column="avd_remarks" property="avdRemarks"/>
+        <result column="avd_enclosure" property="avdEnclosure"/>
+        <result column="avd_delete" property="avdDelete"/>
+        <result column="avd_create_time" property="avdCreateTime"/>
+        <result column="avd_create_by_ids" property="avdCreateByIds"/>
+        <result column="avd_create_by_name" property="avdCreateByName"/>
+        <result column="avd_update_time" property="avdUpdateTime"/>
+        <result column="avd_update_by_ids" property="avdUpdateByIds"/>
+        <result column="avd_update_by_name" property="avdUpdateByName"/>
+    </resultMap>
+
+
+    <select id="selectVehicleDaoluyunshuzhengPage" resultMap="vehicleDaoluyunshuzhengResultMap">
+        select * from anbiao_vehicle_daoluyunshuzheng where is_deleted = 0
+    </select>
+
+</mapper>
