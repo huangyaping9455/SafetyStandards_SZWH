@@ -653,7 +653,23 @@
                 area,
             </if>
             <if test="securityofficertelephone != null">
-                securityofficertelephone
+                securityofficertelephone,
+            </if>
+
+            <if test="daoluyunshuzhengfujian != null">
+                daoluyunshuzhengfujian,
+            </if>
+            <if test="daoluyunshuzhengkaishiriqi != null">
+                daoluyunshuzhengkaishiriqi,
+            </if>
+            <if test="daoluyunshuzhengjieshuriqi != null">
+                daoluyunshuzhengjieshuriqi,
+            </if>
+            <if test="jingyingxukezhengfujian != null">
+                jingyingxukezhengfujian,
+            </if>
+            <if test="yingyezhizhaofujian != null">
+                yingyezhizhaofujian
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -794,7 +810,22 @@
                 #{area},
             </if>
             <if test="securityofficertelephone != null">
-                #{securityofficertelephone}
+                #{securityofficertelephone},
+            </if>
+            <if test="daoluyunshuzhengfujian != null">
+                #{daoluyunshuzhengfujian},
+            </if>
+            <if test="daoluyunshuzhengkaishiriqi != null">
+                #{daoluyunshuzhengkaishiriqi},
+            </if>
+            <if test="daoluyunshuzhengjieshuriqi != null">
+                #{daoluyunshuzhengjieshuriqi},
+            </if>
+            <if test="jingyingxukezhengfujian != null">
+                #{jingyingxukezhengfujian},
+            </if>
+            <if test="yingyezhizhaofujian != null">
+                #{yingyezhizhaofujian}
             </if>
         </trim>
     </insert>

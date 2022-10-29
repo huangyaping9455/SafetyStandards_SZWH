@@ -12,7 +12,6 @@ import com.alibaba.csp.sentinel.util.StringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.util.TextUtils;
 import org.springblade.anbiao.cheliangguanli.entity.CheliangJiashiyuan;
@@ -21,18 +20,12 @@ import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
 import org.springblade.anbiao.configure.entity.Configure;
 import org.springblade.anbiao.configure.service.IConfigureService;
-import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanCongyezigezheng;
-import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanJiashizheng;
-import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanRuzhi;
-import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
-import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanCongyezigezhengService;
-import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanJiashizhengService;
-import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanRuzhiService;
-import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
+import org.springblade.anbiao.jiashiyuan.service.*;
+import org.springblade.anbiao.jiashiyuan.service.impl.AnbiaoJiashiyuanTijianServiceImpl;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
 import org.springblade.common.constant.CommonConstant;
-import org.springblade.common.tool.DateUtils;
 import org.springblade.common.tool.IdCardUtil;
 import org.springblade.common.tool.RegexUtils;
 import org.springblade.core.log.annotation.ApiLog;
@@ -40,7 +33,6 @@ import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
 import org.springblade.core.tool.utils.DigestUtil;
 import org.springblade.system.entity.Dept;
-import org.springblade.system.entity.Dict;
 import org.springblade.system.feign.IDictClient;
 import org.springblade.system.feign.ISysClient;
 import org.springblade.upload.upload.feign.IFileUploadClient;
@@ -48,7 +40,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -74,6 +65,8 @@ public class JiaShiYuanController {
 	private IAnbiaoJiashiyuanRuzhiService ruzhiService;
 	private IAnbiaoJiashiyuanJiashizhengService jiashizhengService;
 	private IAnbiaoJiashiyuanCongyezigezhengService congyezigezhengService;
+	private IAnbiaoJiashiyuanTijianService tijianService;
+	private AnbiaoJiashiyuanTijianServiceImpl tijianServiceImpl;
 
 
 	/**
@@ -207,7 +200,10 @@ public class JiaShiYuanController {
 		if(detal != null){
 			///入职登记表///
 			if(type == 1){
-				AnbiaoJiashiyuanRuzhi ruzhiInfo = ruzhiService.getById(detal.getId());
+				QueryWrapper<AnbiaoJiashiyuanRuzhi> ruzhiQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanRuzhi>();
+				ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrIds, detal.getId());
+				ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrDelete, "0");
+				AnbiaoJiashiyuanRuzhi ruzhiInfo = ruzhiService.getBaseMapper().selectOne(ruzhiQueryWrapper);
 				if(ruzhiInfo != null){
 					//本人照片(人员头像)
 					if(StrUtil.isNotEmpty(ruzhiInfo.getAjrHeadPortrait()) && ruzhiInfo.getAjrHeadPortrait().contains("http") == false){
@@ -216,6 +212,11 @@ public class JiaShiYuanController {
 					r.setData(ruzhiInfo);
 					r.setCode(200);
 					r.setMsg("获取成功");
+					return r;
+				}else{
+					r.setCode(500);
+					r.setMsg("暂无数据");
+					return r;
 				}
 			}
 
@@ -239,12 +240,20 @@ public class JiaShiYuanController {
 					r.setData(shenfenzhengInfo);
 					r.setCode(200);
 					r.setMsg("获取成功");
+					return r;
+				}else{
+					r.setCode(500);
+					r.setMsg("暂无数据");
+					return r;
 				}
 			}
 
 			///驾驶证///
 			if(type == 3){
-				AnbiaoJiashiyuanJiashizheng jiashizhengInfo = jiashizhengService.getById(detal.getId());
+				QueryWrapper<AnbiaoJiashiyuanJiashizheng> jiashizhengQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanJiashizheng>();
+				jiashizhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanJiashizheng::getAjjAjIds, detal.getId());
+				jiashizhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanJiashizheng::getAjjDelete, "0");
+				AnbiaoJiashiyuanJiashizheng jiashizhengInfo = jiashizhengService.getBaseMapper().selectOne(jiashizhengQueryWrapper);
 				if(jiashizhengInfo != null){
 					//驾驶证正面照片
 					if(StrUtil.isNotEmpty(jiashizhengInfo.getAjjFrontPhotoAddress()) && jiashizhengInfo.getAjjFrontPhotoAddress().contains("http") == false){
@@ -257,12 +266,20 @@ public class JiaShiYuanController {
 					r.setData(jiashizhengInfo);
 					r.setCode(200);
 					r.setMsg("获取成功");
+					return r;
+				}else{
+					r.setCode(500);
+					r.setMsg("暂无数据");
+					return r;
 				}
 			}
 
 			///从业资格证///
 			if(type == 4){
-				AnbiaoJiashiyuanCongyezigezheng congyezigezhengInfo = congyezigezhengService.getById(detal.getId());
+				QueryWrapper<AnbiaoJiashiyuanCongyezigezheng> congyezigezhengQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanCongyezigezheng>();
+				congyezigezhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanCongyezigezheng::getAjcAjIds, detal.getId());
+				congyezigezhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanCongyezigezheng::getAjcDelete, "0");
+				AnbiaoJiashiyuanCongyezigezheng congyezigezhengInfo = congyezigezhengService.getBaseMapper().selectOne(congyezigezhengQueryWrapper);
 				if(congyezigezhengInfo != null){
 					//从业资格证照片
 					if(StrUtil.isNotEmpty(congyezigezhengInfo.getAjcLicence()) && congyezigezhengInfo.getAjcLicence().contains("http") == false){
@@ -271,6 +288,11 @@ public class JiaShiYuanController {
 					r.setData(congyezigezhengInfo);
 					r.setCode(200);
 					r.setMsg("获取成功");
+					return r;
+				}else{
+					r.setCode(500);
+					r.setMsg("暂无数据");
+					return r;
 				}
 			}
 
