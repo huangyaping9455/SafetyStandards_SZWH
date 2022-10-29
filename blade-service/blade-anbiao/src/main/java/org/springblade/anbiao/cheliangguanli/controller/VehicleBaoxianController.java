@@ -22,6 +22,7 @@ import lombok.AllArgsConstructor;
 import javax.validation.Valid;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springblade.common.tool.FuncUtil;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
 import org.springblade.core.tool.api.R;
@@ -113,7 +114,7 @@ public class VehicleBaoxianController extends BladeController {
 	@PostMapping("/remove")
 	@ApiOperation(value = "逻辑删除", notes = "传入ids")
 	public R remove(@ApiParam(value = "主键集合", required = true) @RequestParam String ids) {
-		return R.status(vehicleBaoxianService.deleteLogic(Func.toLongList(ids)));
+		return R.status(vehicleBaoxianService.deleteLogic(FuncUtil.toLongList(ids)));
 	}
 
 

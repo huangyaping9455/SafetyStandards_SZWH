@@ -18,10 +18,10 @@ package org.springblade.anbiao.cheliangguanli.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import lombok.AllArgsConstructor;
 import javax.validation.Valid;
 
+import org.springblade.common.tool.FuncUtil;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
 import org.springblade.core.tool.api.R;
@@ -52,7 +52,6 @@ public class VehicleXingshizhengController extends BladeController {
 	 * 详情
 	 */
 	@GetMapping("/detail")
-	@ApiOperationSupport(order = 1)
 	@ApiOperation(value = "详情", notes = "传入vehicleXingshizheng")
 	public R<VehicleXingshizheng> detail(VehicleXingshizheng vehicleXingshizheng) {
 		VehicleXingshizheng detail = vehicleXingshizhengService.getOne(Condition.getQueryWrapper(vehicleXingshizheng));
@@ -63,7 +62,6 @@ public class VehicleXingshizhengController extends BladeController {
 	 * 分页 车辆行驶证信息
 	 */
 	@GetMapping("/list")
-	@ApiOperationSupport(order = 2)
 	@ApiOperation(value = "分页", notes = "传入vehicleXingshizheng")
 	public R<IPage<VehicleXingshizheng>> list(VehicleXingshizheng vehicleXingshizheng, Query query) {
 		IPage<VehicleXingshizheng> pages = vehicleXingshizhengService.page(Condition.getPage(query), Condition.getQueryWrapper(vehicleXingshizheng));
@@ -74,7 +72,6 @@ public class VehicleXingshizhengController extends BladeController {
 	 * 自定义分页 车辆行驶证信息
 	 */
 	@GetMapping("/page")
-	@ApiOperationSupport(order = 3)
 	@ApiOperation(value = "分页", notes = "传入vehicleXingshizheng")
 	public R<IPage<VehicleXingshizhengVO>> page(VehicleXingshizhengVO vehicleXingshizheng, Query query) {
 		IPage<VehicleXingshizhengVO> pages = vehicleXingshizhengService.selectVehicleXingshizhengPage(Condition.getPage(query), vehicleXingshizheng);
@@ -85,7 +82,6 @@ public class VehicleXingshizhengController extends BladeController {
 	 * 新增 车辆行驶证信息
 	 */
 	@PostMapping("/save")
-	@ApiOperationSupport(order = 4)
 	@ApiOperation(value = "新增", notes = "传入vehicleXingshizheng")
 	public R save(@Valid @RequestBody VehicleXingshizheng vehicleXingshizheng) {
 		return R.status(vehicleXingshizhengService.save(vehicleXingshizheng));
@@ -95,7 +91,6 @@ public class VehicleXingshizhengController extends BladeController {
 	 * 修改 车辆行驶证信息
 	 */
 	@PostMapping("/update")
-	@ApiOperationSupport(order = 5)
 	@ApiOperation(value = "修改", notes = "传入vehicleXingshizheng")
 	public R update(@Valid @RequestBody VehicleXingshizheng vehicleXingshizheng) {
 		return R.status(vehicleXingshizhengService.updateById(vehicleXingshizheng));
@@ -105,22 +100,20 @@ public class VehicleXingshizhengController extends BladeController {
 	 * 新增或修改 车辆行驶证信息
 	 */
 	@PostMapping("/submit")
-	@ApiOperationSupport(order = 6)
 	@ApiOperation(value = "新增或修改", notes = "传入vehicleXingshizheng")
 	public R submit(@Valid @RequestBody VehicleXingshizheng vehicleXingshizheng) {
 		return R.status(vehicleXingshizhengService.saveOrUpdate(vehicleXingshizheng));
 	}
 
-	
+
 	/**
 	 * 删除 车辆行驶证信息
 	 */
 	@PostMapping("/remove")
-	@ApiOperationSupport(order = 7)
 	@ApiOperation(value = "逻辑删除", notes = "传入ids")
 	public R remove(@ApiParam(value = "主键集合", required = true) @RequestParam String ids) {
-		return R.status(vehicleXingshizhengService.deleteLogic(Func.toLongList(ids)));
+		return R.status(vehicleXingshizhengService.deleteLogic(FuncUtil.toLongList(ids)));
 	}
 
-	
+
 }

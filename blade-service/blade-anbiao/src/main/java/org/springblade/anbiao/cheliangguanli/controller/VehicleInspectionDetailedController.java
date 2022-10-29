@@ -18,10 +18,10 @@ package org.springblade.anbiao.cheliangguanli.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import lombok.AllArgsConstructor;
 import javax.validation.Valid;
 
+import org.springblade.common.tool.FuncUtil;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
 import org.springblade.core.tool.api.R;
@@ -52,7 +52,6 @@ public class VehicleInspectionDetailedController extends BladeController {
 	 * 详情
 	 */
 	@GetMapping("/detail")
-	@ApiOperationSupport(order = 1)
 	@ApiOperation(value = "详情", notes = "传入vehicleInspectionDetailed")
 	public R<VehicleInspectionDetailed> detail(VehicleInspectionDetailed vehicleInspectionDetailed) {
 		VehicleInspectionDetailed detail = vehicleInspectionDetailedService.getOne(Condition.getQueryWrapper(vehicleInspectionDetailed));
@@ -63,7 +62,6 @@ public class VehicleInspectionDetailedController extends BladeController {
 	 * 分页 车辆安全检查详细情况
 	 */
 	@GetMapping("/list")
-	@ApiOperationSupport(order = 2)
 	@ApiOperation(value = "分页", notes = "传入vehicleInspectionDetailed")
 	public R<IPage<VehicleInspectionDetailed>> list(VehicleInspectionDetailed vehicleInspectionDetailed, Query query) {
 		IPage<VehicleInspectionDetailed> pages = vehicleInspectionDetailedService.page(Condition.getPage(query), Condition.getQueryWrapper(vehicleInspectionDetailed));
@@ -74,7 +72,6 @@ public class VehicleInspectionDetailedController extends BladeController {
 	 * 自定义分页 车辆安全检查详细情况
 	 */
 	@GetMapping("/page")
-	@ApiOperationSupport(order = 3)
 	@ApiOperation(value = "分页", notes = "传入vehicleInspectionDetailed")
 	public R<IPage<VehicleInspectionDetailedVO>> page(VehicleInspectionDetailedVO vehicleInspectionDetailed, Query query) {
 		IPage<VehicleInspectionDetailedVO> pages = vehicleInspectionDetailedService.selectVehicleInspectionDetailedPage(Condition.getPage(query), vehicleInspectionDetailed);
@@ -85,7 +82,6 @@ public class VehicleInspectionDetailedController extends BladeController {
 	 * 新增 车辆安全检查详细情况
 	 */
 	@PostMapping("/save")
-	@ApiOperationSupport(order = 4)
 	@ApiOperation(value = "新增", notes = "传入vehicleInspectionDetailed")
 	public R save(@Valid @RequestBody VehicleInspectionDetailed vehicleInspectionDetailed) {
 		return R.status(vehicleInspectionDetailedService.save(vehicleInspectionDetailed));
@@ -95,7 +91,6 @@ public class VehicleInspectionDetailedController extends BladeController {
 	 * 修改 车辆安全检查详细情况
 	 */
 	@PostMapping("/update")
-	@ApiOperationSupport(order = 5)
 	@ApiOperation(value = "修改", notes = "传入vehicleInspectionDetailed")
 	public R update(@Valid @RequestBody VehicleInspectionDetailed vehicleInspectionDetailed) {
 		return R.status(vehicleInspectionDetailedService.updateById(vehicleInspectionDetailed));
@@ -105,22 +100,20 @@ public class VehicleInspectionDetailedController extends BladeController {
 	 * 新增或修改 车辆安全检查详细情况
 	 */
 	@PostMapping("/submit")
-	@ApiOperationSupport(order = 6)
 	@ApiOperation(value = "新增或修改", notes = "传入vehicleInspectionDetailed")
 	public R submit(@Valid @RequestBody VehicleInspectionDetailed vehicleInspectionDetailed) {
 		return R.status(vehicleInspectionDetailedService.saveOrUpdate(vehicleInspectionDetailed));
 	}
 
-	
+
 	/**
 	 * 删除 车辆安全检查详细情况
 	 */
 	@PostMapping("/remove")
-	@ApiOperationSupport(order = 7)
 	@ApiOperation(value = "逻辑删除", notes = "传入ids")
 	public R remove(@ApiParam(value = "主键集合", required = true) @RequestParam String ids) {
-		return R.status(vehicleInspectionDetailedService.deleteLogic(Func.toLongList(ids)));
+		return R.status(vehicleInspectionDetailedService.deleteLogic(FuncUtil.toLongList(ids)));
 	}
 
-	
+
 }

@@ -18,10 +18,10 @@ package org.springblade.anbiao.cheliangguanli.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import lombok.AllArgsConstructor;
 import javax.validation.Valid;
 
+import org.springblade.common.tool.FuncUtil;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
 import org.springblade.core.tool.api.R;
@@ -52,7 +52,6 @@ public class VehicleXingnengbaogaoController extends BladeController {
 	 * 详情
 	 */
 	@GetMapping("/detail")
-	@ApiOperationSupport(order = 1)
 	@ApiOperation(value = "详情", notes = "传入vehicleXingnengbaogao")
 	public R<VehicleXingnengbaogao> detail(VehicleXingnengbaogao vehicleXingnengbaogao) {
 		VehicleXingnengbaogao detail = vehicleXingnengbaogaoService.getOne(Condition.getQueryWrapper(vehicleXingnengbaogao));
@@ -63,7 +62,6 @@ public class VehicleXingnengbaogaoController extends BladeController {
 	 * 分页 车辆综合性能检测报告
 	 */
 	@GetMapping("/list")
-	@ApiOperationSupport(order = 2)
 	@ApiOperation(value = "分页", notes = "传入vehicleXingnengbaogao")
 	public R<IPage<VehicleXingnengbaogao>> list(VehicleXingnengbaogao vehicleXingnengbaogao, Query query) {
 		IPage<VehicleXingnengbaogao> pages = vehicleXingnengbaogaoService.page(Condition.getPage(query), Condition.getQueryWrapper(vehicleXingnengbaogao));
@@ -74,7 +72,6 @@ public class VehicleXingnengbaogaoController extends BladeController {
 	 * 自定义分页 车辆综合性能检测报告
 	 */
 	@GetMapping("/page")
-	@ApiOperationSupport(order = 3)
 	@ApiOperation(value = "分页", notes = "传入vehicleXingnengbaogao")
 	public R<IPage<VehicleXingnengbaogaoVO>> page(VehicleXingnengbaogaoVO vehicleXingnengbaogao, Query query) {
 		IPage<VehicleXingnengbaogaoVO> pages = vehicleXingnengbaogaoService.selectVehicleXingnengbaogaoPage(Condition.getPage(query), vehicleXingnengbaogao);
@@ -85,7 +82,6 @@ public class VehicleXingnengbaogaoController extends BladeController {
 	 * 新增 车辆综合性能检测报告
 	 */
 	@PostMapping("/save")
-	@ApiOperationSupport(order = 4)
 	@ApiOperation(value = "新增", notes = "传入vehicleXingnengbaogao")
 	public R save(@Valid @RequestBody VehicleXingnengbaogao vehicleXingnengbaogao) {
 		return R.status(vehicleXingnengbaogaoService.save(vehicleXingnengbaogao));
@@ -95,7 +91,6 @@ public class VehicleXingnengbaogaoController extends BladeController {
 	 * 修改 车辆综合性能检测报告
 	 */
 	@PostMapping("/update")
-	@ApiOperationSupport(order = 5)
 	@ApiOperation(value = "修改", notes = "传入vehicleXingnengbaogao")
 	public R update(@Valid @RequestBody VehicleXingnengbaogao vehicleXingnengbaogao) {
 		return R.status(vehicleXingnengbaogaoService.updateById(vehicleXingnengbaogao));
@@ -105,22 +100,20 @@ public class VehicleXingnengbaogaoController extends BladeController {
 	 * 新增或修改 车辆综合性能检测报告
 	 */
 	@PostMapping("/submit")
-	@ApiOperationSupport(order = 6)
 	@ApiOperation(value = "新增或修改", notes = "传入vehicleXingnengbaogao")
 	public R submit(@Valid @RequestBody VehicleXingnengbaogao vehicleXingnengbaogao) {
 		return R.status(vehicleXingnengbaogaoService.saveOrUpdate(vehicleXingnengbaogao));
 	}
 
-	
+
 	/**
 	 * 删除 车辆综合性能检测报告
 	 */
 	@PostMapping("/remove")
-	@ApiOperationSupport(order = 7)
 	@ApiOperation(value = "逻辑删除", notes = "传入ids")
 	public R remove(@ApiParam(value = "主键集合", required = true) @RequestParam String ids) {
-		return R.status(vehicleXingnengbaogaoService.deleteLogic(Func.toLongList(ids)));
+		return R.status(vehicleXingnengbaogaoService.deleteLogic(FuncUtil.toLongList(ids)));
 	}
 
-	
+
 }
