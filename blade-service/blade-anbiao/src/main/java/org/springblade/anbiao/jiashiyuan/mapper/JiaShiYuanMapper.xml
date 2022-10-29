@@ -52,29 +52,12 @@ values
             jiaotongweifajilu,zhirensiwangzeren,weiguileixing,jiachejingli,beizhu,fuyinjian,bumen,lizhishijian,
             denglumima,zhaopian,tijianriqi,ifnull(c.area,'') as area,
             b.dept_name deptName
-        <if test="ids !=null and ids != ''and ids == '1'.toString()">
-            ,yj.shuoming
-        </if>
         FROM
             anbiao_jiashiyuan a
         inner join anbiao_organization c on a.dept_id = c.dept_id and c.isdelete = 0
         inner join  (
             <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) b on a.dept_id = b.id
-        <if test="ids !=null and ids != ''and ids == '1'.toString()">
-        left join(
-            SELECT
-                biaoid,
-                (select shuoming from anbiao_yujingxiang where id = tixingxiangqingid) as shuoming
-            from
-                anbiao_jinritixing_jiesuan
-            where IFNULL(a.isdelete,0)=0
-                and dept_id = #{deptId}
-                and tongjiriqi = #{tongjiriqi}
-                and tixingleixing = #{tixingleixing}
-                and tixingxiangqingid = #{tixingxiangqingid}
-            )yj on yj.biaoid = a.id
-        </if>
         WHERE 1=1 and ifnull(a.isdelete,0) = 0
     </sql>
 
@@ -87,24 +70,12 @@ values
             AND deptName LIKE '%${deptName}%'
         </if>
 
-        <if test="jiashiyuanleixing !=null and jiashiyuanleixing != ''">
-            AND jiashiyuanleixing LIKE '%${jiashiyuanleixing}%'
-        </if>
-
-        <if test="xingbie !=null and xingbie != ''">
-            AND xingbie = #{xingbie}
-        </if>
-
         <if test="shenfenzhenghao !=null and shenfenzhenghao != ''">
             AND shenfenzhenghao = #{shenfenzhenghao}
         </if>
 
-        <if test="zhunjiachexing !=null and zhunjiachexing != ''">
-            AND zhunjiachexing LIKE '%${zhunjiachexing}%'
-        </if>
-
-        <if test="areaName !=null and areaName != ''">
-            AND area like CONCAT('%',#{areaName},'%')
+        <if test="shoujihaoma !=null and shoujihaoma != ''">
+            AND shoujihaoma = #{shoujihaoma}
         </if>
 
     </sql>

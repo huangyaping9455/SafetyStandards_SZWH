@@ -9,9 +9,8 @@ import cn.hutool.json.JSONUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import com.alibaba.csp.sentinel.util.StringUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -22,8 +21,14 @@ import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
 import org.springblade.anbiao.configure.entity.Configure;
 import org.springblade.anbiao.configure.service.IConfigureService;
+import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanCongyezigezheng;
+import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanJiashizheng;
+import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanRuzhi;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
+import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanCongyezigezhengService;
+import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanJiashizhengService;
+import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanRuzhiService;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
 import org.springblade.common.constant.CommonConstant;
@@ -66,6 +71,10 @@ public class JiaShiYuanController {
 	private ISysClient iSysClient;
 	private IVehicleService vehicleService;
 	private IDictClient iDictClient;
+	private IAnbiaoJiashiyuanRuzhiService ruzhiService;
+	private IAnbiaoJiashiyuanJiashizhengService jiashizhengService;
+	private IAnbiaoJiashiyuanCongyezigezhengService congyezigezhengService;
+
 
 	/**
 	 * 新增
@@ -75,63 +84,19 @@ public class JiaShiYuanController {
 	@ApiOperation(value = "新增-驾驶员资料管理", notes = "传入jiaShiYuan", position = 1)
 	public R insert(@RequestBody JiaShiYuan jiaShiYuan,BladeUser user) {
 		jiaShiYuan.setJiashiyuanleixing("驾驶员");
-		jiaShiYuan.setCaozuoren(user.getUserName());
-		jiaShiYuan.setCaozuorenid(user.getUserId());
-		jiaShiYuan.setCaozuoshijian(DateUtil.now());
+		if(user != null){
+			jiaShiYuan.setCaozuoren(user.getUserName());
+			jiaShiYuan.setCaozuorenid(user.getUserId());
+		}else{
+			jiaShiYuan.setCaozuoren(jiaShiYuan.getCaozuoren());
+			jiaShiYuan.setCaozuorenid(jiaShiYuan.getCaozuorenid());
+		}
 		jiaShiYuan.setCreatetime(DateUtil.now());
 		jiaShiYuan.setDenglumima(DigestUtil.encrypt(jiaShiYuan.getShoujihaoma().substring(jiaShiYuan.getShoujihaoma().length()-6)));
 		if("男".equals(jiaShiYuan.getXingbie())){
 			jiaShiYuan.setXingbie("1");
 		}else if("女".equals(jiaShiYuan.getXingbie())){
 			jiaShiYuan.setXingbie("2");
-		}
-		if("".equals(jiaShiYuan.getChushengshijian())){
-			jiaShiYuan.setChushengshijian(null);
-		}
-		if("".equals(jiaShiYuan.getShenfenzhengyouxiaoqi())){
-			jiaShiYuan.setShenfenzhengyouxiaoqi(null);
-		}
-		if("".equals(jiaShiYuan.getPingyongriqi())){
-			jiaShiYuan.setPingyongriqi(null);
-		}
-		if("".equals(jiaShiYuan.getJiashizhengchulingriqi())){
-			jiaShiYuan.setJiashizhengchulingriqi(null);
-		}
-		if("".equals(jiaShiYuan.getJiashizhengyouxiaoqi())){
-			jiaShiYuan.setJiashizhengyouxiaoqi(null);
-		}
-		if("".equals(jiaShiYuan.getTijianyouxiaoqi())){
-			jiaShiYuan.setTijianyouxiaoqi(null);
-		}
-		if("".equals(jiaShiYuan.getCongyezhengyouxiaoqi())){
-			jiaShiYuan.setCongyezhengyouxiaoqi(null);
-		}
-		if("".equals(jiaShiYuan.getCongyezhengchulingri())){
-			jiaShiYuan.setCongyezhengchulingri(null);
-		}
-		if("".equals(jiaShiYuan.getXiacichengxinkaoheshijian())){
-			jiaShiYuan.setXiacichengxinkaoheshijian(null);
-		}
-		if("".equals(jiaShiYuan.getXiacijixujiaoyushijian())){
-			jiaShiYuan.setXiacijixujiaoyushijian(null);
-		}
-		if("".equals(jiaShiYuan.getHuzhaoyouxiaoqi())){
-			jiaShiYuan.setHuzhaoyouxiaoqi(null);
-		}
-		if("".equals(jiaShiYuan.getZhunjiazhengyouxiaoqi())){
-			jiaShiYuan.setZhunjiazhengyouxiaoqi(null);
-		}
-		if("".equals(jiaShiYuan.getLizhishijian())){
-			jiaShiYuan.setLizhishijian(null);
-		}
-		if("".equals(jiaShiYuan.getChengxinkaoheshijian())){
-			jiaShiYuan.setChengxinkaoheshijian(null);
-		}
-		if("".equals(jiaShiYuan.getJixujiaoyushijian())){
-			jiaShiYuan.setJixujiaoyushijian(null);
-		}
-		if("".equals(jiaShiYuan.getTijianriqi())){
-			jiaShiYuan.setTijianriqi(null);
 		}
 		return R.status(iJiaShiYuanService.save(jiaShiYuan));
 	}
@@ -143,8 +108,6 @@ public class JiaShiYuanController {
 	@ApiLog("编辑-驾驶员资料管理")
 	@ApiOperation(value = "编辑-驾驶员资料管理", notes = "编辑jiaShiYuan", position = 2)
 	public R update(@RequestBody JiaShiYuan jiaShiYuan, BladeUser user) {
-		System.out.println(jiaShiYuan.toString());
-
 		if("男".equals(jiaShiYuan.getXingbie())){
 			jiaShiYuan.setXingbie("1");
 		}else if("女".equals(jiaShiYuan.getXingbie())){
@@ -154,62 +117,10 @@ public class JiaShiYuanController {
 			jiaShiYuan.setCaozuoren(user.getUserName());
 			jiaShiYuan.setCaozuorenid(user.getUserId());
 		}else{
-			jiaShiYuan.setCaozuoren("hyp");
-			jiaShiYuan.setCaozuorenid(1);
+			jiaShiYuan.setCaozuoren(jiaShiYuan.getCaozuoren());
+			jiaShiYuan.setCaozuorenid(jiaShiYuan.getCaozuorenid());
 		}
-
 		jiaShiYuan.setCaozuoshijian(DateUtil.now());
-		if("".equals(jiaShiYuan.getCreatetime())){
-			jiaShiYuan.setCreatetime(DateUtil.now());
-		}
-		if("".equals(jiaShiYuan.getChushengshijian())){
-			jiaShiYuan.setChushengshijian(null);
-		}
-		if("".equals(jiaShiYuan.getShenfenzhengyouxiaoqi())){
-			jiaShiYuan.setShenfenzhengyouxiaoqi(null);
-		}
-		if("".equals(jiaShiYuan.getPingyongriqi())){
-			jiaShiYuan.setPingyongriqi(null);
-		}
-		if("".equals(jiaShiYuan.getJiashizhengchulingriqi())){
-			jiaShiYuan.setJiashizhengchulingriqi(null);
-		}
-		if("".equals(jiaShiYuan.getJiashizhengyouxiaoqi())){
-			jiaShiYuan.setJiashizhengyouxiaoqi(null);
-		}
-		if("".equals(jiaShiYuan.getTijianyouxiaoqi())){
-			jiaShiYuan.setTijianyouxiaoqi(null);
-		}
-		if("".equals(jiaShiYuan.getCongyezhengyouxiaoqi())){
-			jiaShiYuan.setCongyezhengyouxiaoqi(null);
-		}
-		if("".equals(jiaShiYuan.getCongyezhengchulingri())){
-			jiaShiYuan.setCongyezhengchulingri(null);
-		}
-		if("".equals(jiaShiYuan.getXiacichengxinkaoheshijian())){
-			jiaShiYuan.setXiacichengxinkaoheshijian(null);
-		}
-		if("".equals(jiaShiYuan.getXiacijixujiaoyushijian())){
-			jiaShiYuan.setXiacijixujiaoyushijian(null);
-		}
-		if("".equals(jiaShiYuan.getHuzhaoyouxiaoqi())){
-			jiaShiYuan.setHuzhaoyouxiaoqi(null);
-		}
-		if("".equals(jiaShiYuan.getZhunjiazhengyouxiaoqi())){
-			jiaShiYuan.setZhunjiazhengyouxiaoqi(null);
-		}
-		if("".equals(jiaShiYuan.getLizhishijian())){
-			jiaShiYuan.setLizhishijian(null);
-		}
-		if("".equals(jiaShiYuan.getChengxinkaoheshijian())){
-			jiaShiYuan.setChengxinkaoheshijian(null);
-		}
-		if("".equals(jiaShiYuan.getJixujiaoyushijian())){
-			jiaShiYuan.setJixujiaoyushijian(null);
-		}
-		if("".equals(jiaShiYuan.getTijianriqi())){
-			jiaShiYuan.setTijianriqi(null);
-		}
 		return R.status(iJiaShiYuanService.updateById(jiaShiYuan));
 	}
 
@@ -219,8 +130,65 @@ public class JiaShiYuanController {
 	@PostMapping("/del")
 	@ApiLog("删除-驾驶员资料管理")
 	@ApiOperation(value = "删除-驾驶员资料管理", notes = "传入id", position = 3)
-	public R del(String id) {
-		return R.status(iJiaShiYuanService.updateDel(id));
+	public R del(String id, BladeUser user) {
+		R r = new R();
+		JiaShiYuan detal = iJiaShiYuanService.selectByIds(id);
+		boolean i = false;
+
+		///入职登记表///
+		QueryWrapper<AnbiaoJiashiyuanRuzhi> ruzhiQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanRuzhi>();
+		ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrIds, detal.getId());
+		ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrDelete, "0");
+		AnbiaoJiashiyuanRuzhi ruzhideail = ruzhiService.getBaseMapper().selectOne(ruzhiQueryWrapper);
+		if(ruzhideail != null){
+			AnbiaoJiashiyuanRuzhi ruzhi = new AnbiaoJiashiyuanRuzhi();
+			ruzhi.setAjrUpdateByIds(user.getUserId().toString());
+			ruzhi.setAjrUpdateByName(user.getUserName());
+			ruzhi.setAjrUpdateTime(DateUtil.now());
+			ruzhi.setAjrDelete("1");
+			ruzhi.setAjrIds(ruzhideail.getAjrIds());
+			i = ruzhiService.updateById(ruzhi);
+		}
+
+		///驾驶证///
+		QueryWrapper<AnbiaoJiashiyuanJiashizheng> jiashizhengQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanJiashizheng>();
+		jiashizhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanJiashizheng::getAjjAjIds, detal.getId());
+		jiashizhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanJiashizheng::getAjjDelete, "0");
+		AnbiaoJiashiyuanJiashizheng jiashizhengdeail = jiashizhengService.getBaseMapper().selectOne(jiashizhengQueryWrapper);
+		if(jiashizhengdeail != null){
+			AnbiaoJiashiyuanJiashizheng jiashizheng = new AnbiaoJiashiyuanJiashizheng();
+			jiashizheng.setAjjUpdateByName(user.getUserName());
+			jiashizheng.setAjjUpdateByIds(user.getUserId().toString());
+			jiashizheng.setAjjUpdateTime(DateUtil.now());
+			jiashizheng.setAjjDelete("1");
+			jiashizheng.setAjjIds(jiashizheng.getAjjIds());
+			i = jiashizhengService.updateById(jiashizheng);
+		}
+
+		///从业资格证///
+		QueryWrapper<AnbiaoJiashiyuanCongyezigezheng> congyezigezhengQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanCongyezigezheng>();
+		congyezigezhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanCongyezigezheng::getAjcAjIds, detal.getId());
+		congyezigezhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanCongyezigezheng::getAjcDelete, "0");
+		AnbiaoJiashiyuanCongyezigezheng deail = congyezigezhengService.getBaseMapper().selectOne(congyezigezhengQueryWrapper);
+		if(deail != null){
+			AnbiaoJiashiyuanCongyezigezheng congyezigezheng = new AnbiaoJiashiyuanCongyezigezheng();
+			congyezigezheng.setAjcUpdateByName(user.getUserName());
+			congyezigezheng.setAjcUpdateByIds(user.getUserId().toString());
+			congyezigezheng.setAjcUpdateTime(DateUtil.now());
+			i = congyezigezhengService.updateById(congyezigezheng);
+		}
+
+
+		///驾驶员信息主表///
+		i = iJiaShiYuanService.updateDel(id);
+		if(i){
+			r.setCode(200);
+			r.setMsg("删除成功");
+		}else{
+			r.setCode(500);
+			r.setMsg("删除失败");
+		}
+		return r;
 	}
 
 	/**
@@ -228,30 +196,94 @@ public class JiaShiYuanController {
 	 */
 	@GetMapping("/detail")
 	@ApiLog("详情-驾驶员资料管理")
-	@ApiOperation(value = "详情-驾驶员资料管理", notes = "传入id", position = 4)
-	public R detail(String id) {
-		JiaShiYuan detal=iJiaShiYuanService.selectByIds(id);
-//		//照片
-		if(StrUtil.isNotEmpty(detal.getZhaopian()) && detal.getZhaopian().contains("http") == false){
-			detal.setZhaopian(fileUploadClient.getUrl(detal.getZhaopian()));
+	@ApiOperation(value = "详情-驾驶员资料管理", notes = "传入id、type", position = 4)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "id", value = "驾驶员ID", required = true),
+		@ApiImplicitParam(name = "type", value = "分类（1：入职登记表，2：身份证，3：驾驶证，4:从业资格证,5:体检表,6:岗前培训三级教育卡," +
+			"7:三年无重大责任事故正面,8:驾驶员安全责任书,9:驾驶员职业危害告知书,10:劳动合同,11:其他,）", required = true),
+	})
+	public R detail(String id,int type) {
+		R r = new R();
+		JiaShiYuan detal = iJiaShiYuanService.selectByIds(id);
+		if(detal != null){
+			///入职登记表///
+			if(type == 1){
+				AnbiaoJiashiyuanRuzhi ruzhiInfo = ruzhiService.getById(detal.getId());
+				if(ruzhiInfo != null){
+					//本人照片(人员头像)
+					if(StrUtil.isNotEmpty(ruzhiInfo.getAjrHeadPortrait()) && ruzhiInfo.getAjrHeadPortrait().contains("http") == false){
+						ruzhiInfo.setAjrHeadPortrait(fileUploadClient.getUrl(ruzhiInfo.getAjrHeadPortrait()));
+					}
+					r.setData(ruzhiInfo);
+					r.setCode(200);
+					r.setMsg("获取成功");
+				}
+			}
+
+			///身份证///
+			if(type == 2){
+				JiaShiYuan shenfenzhengInfo = iJiaShiYuanService.selectByIds(id);
+				if(shenfenzhengInfo != null){
+					//照片(人员头像)
+//					if(StrUtil.isNotEmpty(detal.getZhaopian()) && detal.getZhaopian().contains("http") == false){
+//						detal.setZhaopian(fileUploadClient.getUrl(detal.getZhaopian()));
+//					}
+					//身份证附件
+					if(StrUtil.isNotEmpty(detal.getShenfenzhengfujian()) && detal.getShenfenzhengfujian().contains("http") == false){
+						detal.setShenfenzhengfujian(fileUploadClient.getUrl(detal.getShenfenzhengfujian()));
+					}
+					//身份证附件反面
+					if(StrUtil.isNotEmpty(detal.getShenfenzhengfanmianfujian()) && detal.getShenfenzhengfanmianfujian().contains("http") == false){
+						detal.setShenfenzhengfanmianfujian(fileUploadClient.getUrl(detal.getShenfenzhengfanmianfujian()));
+					}
+
+					r.setData(shenfenzhengInfo);
+					r.setCode(200);
+					r.setMsg("获取成功");
+				}
+			}
+
+			///驾驶证///
+			if(type == 3){
+				AnbiaoJiashiyuanJiashizheng jiashizhengInfo = jiashizhengService.getById(detal.getId());
+				if(jiashizhengInfo != null){
+					//驾驶证正面照片
+					if(StrUtil.isNotEmpty(jiashizhengInfo.getAjjFrontPhotoAddress()) && jiashizhengInfo.getAjjFrontPhotoAddress().contains("http") == false){
+						jiashizhengInfo.setAjjFrontPhotoAddress(fileUploadClient.getUrl(jiashizhengInfo.getAjjFrontPhotoAddress()));
+					}
+					//驾驶证反面照片
+					if(StrUtil.isNotEmpty(jiashizhengInfo.getAjjAttachedPhotos()) && jiashizhengInfo.getAjjAttachedPhotos().contains("http") == false){
+						jiashizhengInfo.setAjjAttachedPhotos(fileUploadClient.getUrl(jiashizhengInfo.getAjjAttachedPhotos()));
+					}
+					r.setData(jiashizhengInfo);
+					r.setCode(200);
+					r.setMsg("获取成功");
+				}
+			}
+
+			///从业资格证///
+			if(type == 4){
+				AnbiaoJiashiyuanCongyezigezheng congyezigezhengInfo = congyezigezhengService.getById(detal.getId());
+				if(congyezigezhengInfo != null){
+					//从业资格证照片
+					if(StrUtil.isNotEmpty(congyezigezhengInfo.getAjcLicence()) && congyezigezhengInfo.getAjcLicence().contains("http") == false){
+						congyezigezhengInfo.setAjcLicence(fileUploadClient.getUrl(congyezigezhengInfo.getAjcLicence()));
+					}
+					r.setData(congyezigezhengInfo);
+					r.setCode(200);
+					r.setMsg("获取成功");
+				}
+			}
+
+
+
+
+
+		}else{
+			r.setMsg("暂无数据");
+			r.setCode(500);
+			return r;
 		}
-//		//身份证附件
-		if(StrUtil.isNotEmpty(detal.getShenfenzhengfujian()) && detal.getShenfenzhengfujian().contains("http") == false){
-			detal.setShenfenzhengfujian(fileUploadClient.getUrl(detal.getShenfenzhengfujian()));
-		}
-//		//从业证附件
-		if(StrUtil.isNotEmpty(detal.getCongyezhengfujian()) && detal.getCongyezhengfujian().contains("http") == false){
-			detal.setCongyezhengfujian(fileUploadClient.getUrl(detal.getCongyezhengfujian()));
-		}
-//		//驾驶证附件
-		if(StrUtil.isNotEmpty(detal.getJiashizhengfujian()) && detal.getJiashizhengfujian().contains("http") == false){
-			detal.setJiashizhengfujian(fileUploadClient.getUrl(detal.getJiashizhengfujian()));
-		}
-//		//复印件
-		if(StrUtil.isNotEmpty(detal.getFuyinjian()) && detal.getFuyinjian().contains("http") == false){
-			detal.setFuyinjian(fileUploadClient.getUrl(detal.getFuyinjian()));
-		}
-		return R.data(detal);
+		return r;
 	}
 
 	/**
@@ -263,82 +295,16 @@ public class JiaShiYuanController {
 	public R<JiaShiYuanPage<JiaShiYuanVO>> list(@RequestBody JiaShiYuanPage jiaShiYuanPage) {
 		jiaShiYuanPage.setJiashiyuanleixing("驾驶员");
 		JiaShiYuanPage<JiaShiYuanVO> pages = iJiaShiYuanService.selectPageList(jiaShiYuanPage);
-//		List<JiaShiYuanVO>  list=pages.getRecords();
-//		String log="[";
-//		for (int i = 0; i <list.size() ; i++) {
-//			//照片
-//			if(StrUtil.isNotEmpty(list.get(i).getZhaopian())){
-//				String str = list.get(i).getZhaopian();
-//				boolean status = str.contains("/");
-//				if(status){
-//					String str1 =str.substring(0, str.lastIndexOf("/"));
-//					String str2 =str.substring(str1.length()+1, str.length());
-//					log=log+"{\"name\":\""+str2+"\",\"url\":\""+str+"\",\"id\":\""+""+"\",\"savename\":\""+str2+"\"},";
-//					list.get(i).setZhaopian(fileUploadClient.getUrl(str2));
-//					if(StringUtils.isBlank(list.get(i).getZhaopian())){
-//						list.get(i).setZhaopian(log+"]");
-//					}
-//				}
-//			}
-//			//身份证附件
-//			if(StrUtil.isNotEmpty(list.get(i).getShenfenzhengfujian())){
-//				String str = list.get(i).getShenfenzhengfujian();
-//				boolean status = str.contains("/");
-//				if(status) {
-//					String str1 = str.substring(0, str.lastIndexOf("/"));
-//					String str2 = str.substring(str1.length() + 1, str.length());
-//					log = log + "{\"name\":\"" + str2 + "\",\"url\":\"" + str + "\",\"id\":\"" + "" + "\",\"savename\":\"" + str2 + "\"},";
-//					list.get(i).setShenfenzhengfujian(fileUploadClient.getUrl(str2));
-//					if (StringUtils.isBlank(list.get(i).getShenfenzhengfujian())) {
-//						list.get(i).setShenfenzhengfujian(log + "]");
-//					}
-//				}
-//			}
-//			//从业证附件
-//			if(StrUtil.isNotEmpty(list.get(i).getCongyezhengfujian())){
-//				String str = list.get(i).getCongyezhengfujian();
-//				boolean status = str.contains("/");
-//				if(status) {
-//					String str1 = str.substring(0, str.lastIndexOf("/"));
-//					String str2 = str.substring(str1.length() + 1, str.length());
-//					log = log + "{\"name\":\"" + str2 + "\",\"url\":\"" + str + "\",\"id\":\"" + "" + "\",\"savename\":\"" + str2 + "\"},";
-//					list.get(i).setCongyezhengfujian(fileUploadClient.getUrl(str2));
-//					if (StringUtils.isBlank(list.get(i).getCongyezhengfujian())) {
-//						list.get(i).setCongyezhengfujian(log + "]");
-//					}
-//				}
-//			}
-//			//驾驶证附件
-//			if(StrUtil.isNotEmpty(list.get(i).getJiashizhengfujian())){
-//				String str = list.get(i).getJiashizhengfujian();
-//				boolean status = str.contains("/");
-//				if(status) {
-//					String str1 = str.substring(0, str.lastIndexOf("/"));
-//					String str2 = str.substring(str1.length() + 1, str.length());
-//					log = log + "{\"name\":\"" + str2 + "\",\"url\":\"" + str + "\",\"id\":\"" + "" + "\",\"savename\":\"" + str2 + "\"},";
-//					list.get(i).setJiashizhengfujian(fileUploadClient.getUrl(str2));
-//					if (StringUtils.isBlank(list.get(i).getJiashizhengfujian())) {
-//						list.get(i).setJiashizhengfujian(log + "]");
-//					}
-//				}
-//			}
-//			//复印件
-//			if(StrUtil.isNotEmpty(list.get(i).getFuyinjian())){
-//				String str = list.get(i).getFuyinjian();
-//				boolean status = str.contains("/");
-//				if(status) {
-//					String str1 = str.substring(0, str.lastIndexOf("/"));
-//					String str2 = str.substring(str1.length() + 1, str.length());
-//					log = log + "{\"name\":\"" + str2 + "\",\"url\":\"" + str + "\",\"id\":\"" + "" + "\",\"savename\":\"" + str2 + "\"},";
-//					list.get(i).setFuyinjian(fileUploadClient.getUrl(str2));
-//					if (StringUtils.isBlank(list.get(i).getFuyinjian())) {
-//						list.get(i).setFuyinjian(log + "]");
-//					}
-//				}
-//			}
-//		}
 		return R.data(pages);
 	}
+
+
+
+
+
+
+
+
 
 	/********************************** 配置表 ***********************/
 

@@ -130,7 +130,7 @@ public class DepartmentpostController extends BladeController {
 			//String menuId="5,29,30,31,32";
 			//默认给企业端赋权
 			//String menuId="108,67,68,69,87,88,89,90,91,92,93,94,109,110,111,112,113,114,118,119,120,121,122,123,124,125,127,128,129,130,132,133,134,135,136,139,140";
-			String menuId="67,68,109,87,88,89,110";
+			String menuId="67,68";
 			iSysClient.ABgrant(dept.getId()+"", menuId,1);
 		}else{
 

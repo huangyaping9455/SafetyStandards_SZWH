@@ -173,7 +173,7 @@ public class AuthController {
 					return R.fail(errMsg);
 				}
 			}else {
-				user = client.login(user.getId().toString(), DigestUtil.encrypt(password));
+				user = client.login(name, DigestUtil.encrypt(password));
 				System.out.println(user);
 				//判断该账号是否有默认岗位，若无，则自动添加默认岗位
 				if(user == null || StringUtils.isBlank(user.getPostId())){

@@ -15,6 +15,7 @@
  */
 package org.springblade.system.user.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -183,5 +184,41 @@ public class User extends TenantEntity {
 	 */
 	@ApiModelProperty(value = "修改者")
 	private Integer updateUser;
+
+	/**
+	 * 只是为了能接收参数，不需要存入数据库
+	 */
+	@TableField(exist = false)
+	private String code;
+
+	/**
+	 * 微信名
+	 */
+	@TableField(exist = false)
+	private String nickName;
+
+	/**
+	 * 头像
+	 */
+	@TableField(exist = false)
+	private String avatarUrl;
+
+	/**
+	 * 性别 0 未知  1 男   2 女
+	 */
+	@TableField(exist = false)
+	private String gender;
+
+	/**
+	 * 第一次登录时间
+	 */
+	@TableField(exist = false)
+	private Date firstLoginTime;
+
+	/**
+	 * 最后一次登录时间
+	 */
+	@TableField(exist = false)
+	private Date lastLoginTime;
 
 }

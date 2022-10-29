@@ -80,6 +80,9 @@ public class JiaShiYuan implements Serializable {
 	@ApiModelProperty(value = "从业人员类型（用于展示）")
 	private String congyerenyuanleixingshow;
 
+	@ApiModelProperty(value = "身份证初领日期",required = true)
+	private String shenfenzhengchulingriqi;
+
 	/**
 	 * 身份证有效期
 	 */
@@ -128,8 +131,11 @@ public class JiaShiYuan implements Serializable {
 	/**
 	 * 身份证复印件
 	 */
-	@ApiModelProperty(value = "身份证复印件")
+	@ApiModelProperty(value = "身份证附件正面")
 	private String shenfenzhengfujian;
+
+	@ApiModelProperty(value = "身份证附件反面")
+	private String shenfenzhengfanmianfujian;
 
 	/**
 	 * 从业证复印件
