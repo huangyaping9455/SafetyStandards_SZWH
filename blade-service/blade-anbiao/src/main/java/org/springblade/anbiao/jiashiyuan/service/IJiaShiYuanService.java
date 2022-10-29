@@ -113,4 +113,9 @@ public interface IJiaShiYuanService extends IService<JiaShiYuan> {
 	 */
 	void bindDriverOpenId(String account, String openid);
 
+
+	/**
+	 * 人员信息详情
+	 */
+	JiaShiYuan selectDriverDetailById(String id);
 }

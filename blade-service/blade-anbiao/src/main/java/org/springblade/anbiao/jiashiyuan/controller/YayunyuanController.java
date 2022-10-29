@@ -218,7 +218,7 @@ public class YayunyuanController {
 	@ApiLog("分页-押运员资料管理")
 	@ApiOperation(value = "分页-押运员资料管理", notes = "传入JiaShiYuanPage", position = 5)
 	public R<JiaShiYuanPage<JiaShiYuanVO>> list(@RequestBody JiaShiYuanPage jiaShiYuanPage) {
-		jiaShiYuanPage.setJiashiyuanleixing("押运员");
+//		jiaShiYuanPage.setJiashiyuanleixing("押运员");
 		JiaShiYuanPage<JiaShiYuanVO> pages = iJiaShiYuanService.selectPageList(jiaShiYuanPage);
 		return R.data(pages);
 	}
