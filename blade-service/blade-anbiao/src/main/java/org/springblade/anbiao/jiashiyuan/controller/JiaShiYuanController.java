@@ -207,7 +207,10 @@ public class JiaShiYuanController {
 		if(detal != null){
 			///入职登记表///
 			if(type == 1){
-				AnbiaoJiashiyuanRuzhi ruzhiInfo = ruzhiService.getById(detal.getId());
+				QueryWrapper<AnbiaoJiashiyuanRuzhi> ruzhiQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanRuzhi>();
+				ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrIds, detal.getId());
+				ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrDelete, "0");
+				AnbiaoJiashiyuanRuzhi ruzhiInfo = ruzhiService.getBaseMapper().selectOne(ruzhiQueryWrapper);
 				if(ruzhiInfo != null){
 					//本人照片(人员头像)
 					if(StrUtil.isNotEmpty(ruzhiInfo.getAjrHeadPortrait()) && ruzhiInfo.getAjrHeadPortrait().contains("http") == false){
@@ -216,6 +219,11 @@ public class JiaShiYuanController {
 					r.setData(ruzhiInfo);
 					r.setCode(200);
 					r.setMsg("获取成功");
+					return r;
+				}else{
+					r.setCode(500);
+					r.setMsg("暂无数据");
+					return r;
 				}
 			}
 
@@ -239,12 +247,20 @@ public class JiaShiYuanController {
 					r.setData(shenfenzhengInfo);
 					r.setCode(200);
 					r.setMsg("获取成功");
+					return r;
+				}else{
+					r.setCode(500);
+					r.setMsg("暂无数据");
+					return r;
 				}
 			}
 
 			///驾驶证///
 			if(type == 3){
-				AnbiaoJiashiyuanJiashizheng jiashizhengInfo = jiashizhengService.getById(detal.getId());
+				QueryWrapper<AnbiaoJiashiyuanJiashizheng> jiashizhengQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanJiashizheng>();
+				jiashizhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanJiashizheng::getAjjAjIds, detal.getId());
+				jiashizhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanJiashizheng::getAjjDelete, "0");
+				AnbiaoJiashiyuanJiashizheng jiashizhengInfo = jiashizhengService.getBaseMapper().selectOne(jiashizhengQueryWrapper);
 				if(jiashizhengInfo != null){
 					//驾驶证正面照片
 					if(StrUtil.isNotEmpty(jiashizhengInfo.getAjjFrontPhotoAddress()) && jiashizhengInfo.getAjjFrontPhotoAddress().contains("http") == false){
@@ -257,12 +273,20 @@ public class JiaShiYuanController {
 					r.setData(jiashizhengInfo);
 					r.setCode(200);
 					r.setMsg("获取成功");
+					return r;
+				}else{
+					r.setCode(500);
+					r.setMsg("暂无数据");
+					return r;
 				}
 			}
 
 			///从业资格证///
 			if(type == 4){
-				AnbiaoJiashiyuanCongyezigezheng congyezigezhengInfo = congyezigezhengService.getById(detal.getId());
+				QueryWrapper<AnbiaoJiashiyuanCongyezigezheng> congyezigezhengQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanCongyezigezheng>();
+				congyezigezhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanCongyezigezheng::getAjcAjIds, detal.getId());
+				congyezigezhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanCongyezigezheng::getAjcDelete, "0");
+				AnbiaoJiashiyuanCongyezigezheng congyezigezhengInfo = congyezigezhengService.getBaseMapper().selectOne(congyezigezhengQueryWrapper);
 				if(congyezigezhengInfo != null){
 					//从业资格证照片
 					if(StrUtil.isNotEmpty(congyezigezhengInfo.getAjcLicence()) && congyezigezhengInfo.getAjcLicence().contains("http") == false){
@@ -271,8 +295,14 @@ public class JiaShiYuanController {
 					r.setData(congyezigezhengInfo);
 					r.setCode(200);
 					r.setMsg("获取成功");
+					return r;
+				}else{
+					r.setCode(500);
+					r.setMsg("暂无数据");
+					return r;
 				}
 			}
+
 
 
 
