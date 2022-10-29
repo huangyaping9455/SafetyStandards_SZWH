@@ -294,5 +294,21 @@ public class Organizations implements Serializable {
     @ApiModelProperty(value = "企业安全负责人电话")
     private String securityofficertelephone;
 
+	@ApiModelProperty(value = "道路运输证附件")
+	private String daoluyunshuzhengfujian;
+
+	@ApiModelProperty(value = "道路运输证有效期(起)")
+	private String daoluyunshuzhengkaishiriqi;
+
+	@ApiModelProperty(value = "道路运输证有效期(止)")
+	private String daoluyunshuzhengjieshuriqi;
+
+	@ApiModelProperty(value = "经营许可证附件")
+	private String jingyingxukezhengfujian;
+
+	@ApiModelProperty(value = "工商营业执照附件")
+	private String yingyezhizhaofujian;
+
+
 
 }

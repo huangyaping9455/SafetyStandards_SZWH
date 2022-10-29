@@ -130,6 +130,15 @@ public class OrganizationsController extends BladeController {
 		if(StrUtil.isNotEmpty(organization.getZuzhijigoutu())){
 			organization.setZuzhijigoutu(fileUploadClient.getUrl(organization.getZuzhijigoutu()));
 		}
+		if(StrUtil.isNotEmpty(organization.getDaoluyunshuzhengfujian())){
+			organization.setDaoluyunshuzhengfujian(fileUploadClient.getUrl(organization.getDaoluyunshuzhengfujian()));
+		}
+		if(StrUtil.isNotEmpty(organization.getJingyingxukezhengfujian())){
+			organization.setJingyingxukezhengfujian(fileUploadClient.getUrl(organization.getJingyingxukezhengfujian()));
+		}
+		if(StrUtil.isNotEmpty(organization.getYingyezhizhaofujian())){
+			organization.setYingyezhizhaofujian(fileUploadClient.getUrl(organization.getYingyezhizhaofujian()));
+		}
 		return R.data(organization);
 	}
 	/**

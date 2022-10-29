@@ -1,8 +1,7 @@
 package org.springblade.anbiao.jiashiyuan.service;
 
-import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanTijian;
-import org.springblade.anbiao.yinhuanpaicha.entity.AnbiaoJiashiyuanTijian;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanTijian;
 
 /**
  * <p>
