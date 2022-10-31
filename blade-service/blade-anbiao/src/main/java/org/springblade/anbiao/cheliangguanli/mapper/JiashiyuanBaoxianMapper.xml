@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.cheliangguanli.mapper.JiashiyuanBaoxianMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="jiashiyuanBaoxianResultMap" type="org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxian">
+        <id column="ajb_ids" property="ajbIds"/>
+        <result column="ajb_policy_no" property="ajbPolicyNo"/>
+        <result column="ajb_insured_ids" property="ajbInsuredIds"/>
+        <result column="ajb_insured_name" property="ajbInsuredName"/>
+        <result column="ajb_insured_contacts" property="ajbInsuredContacts"/>
+        <result column="ajb_insured_contact_number" property="ajbInsuredContactNumber"/>
+        <result column="ajb_insured_contact_address" property="ajbInsuredContactAddress"/>
+        <result column="ajb_insure_ids" property="ajbInsureIds"/>
+        <result column="ajb_insure_name" property="ajbInsureName"/>
+        <result column="ajb_insure_contacts" property="ajbInsureContacts"/>
+        <result column="ajb_insure_contact_number" property="ajbInsureContactNumber"/>
+        <result column="ajb_insure_contact_address" property="ajbInsureContactAddress"/>
+        <result column="ajb_insurance_period_start" property="ajbInsurancePeriodStart"/>
+        <result column="ajb_insurance_period_end" property="ajbInsurancePeriodEnd"/>
+        <result column="ajb_insurance_days" property="ajbInsuranceDays"/>
+        <result column="ajb_calculation_method" property="ajbCalculationMethod"/>
+        <result column="ajb_aj_ids" property="ajbAjIds"/>
+        <result column="ajb_year_security_pooling_fund" property="ajbYearSecurityPoolingFund"/>
+        <result column="ajb_year_premium" property="ajbYearPremium"/>
+        <result column="ajb_insurance_company" property="ajbInsuranceCompany"/>
+        <result column="ajb_baoshi_bao_no" property="ajbBaoshiBaoNo"/>
+        <result column="ajb_signing_date" property="ajbSigningDate"/>
+        <result column="ajb_total" property="ajbTotal"/>
+        <result column="ajb_replacement_price" property="ajbReplacementPrice"/>
+        <result column="ajb_bail_company_date" property="ajbBailCompanyDate"/>
+        <result column="ajb_bail_headquarters_date" property="ajbBailHeadquartersDate"/>
+        <result column="ajb_compensation_standard" property="ajbCompensationStandard"/>
+        <result column="ajb_are_accidents" property="ajbAreAccidents"/>
+        <result column="ajb_purchase_method" property="ajbPurchaseMethod"/>
+        <result column="ajb_insurance_ratio" property="ajbInsuranceRatio"/>
+        <result column="ajb_permitted_seat" property="ajbPermittedSeat"/>
+        <result column="ajb_permitted_seat_driver_seat" property="ajbPermittedSeatDriverSeat"/>
+        <result column="ajb_permitted_seat_front_seats" property="ajbPermittedSeatFrontSeats"/>
+        <result column="ajb_permitted_seat_back_row_seats" property="ajbPermittedSeatBackRowSeats"/>
+        <result column="ajb_live_seat" property="ajbLiveSeat"/>
+        <result column="ajb_live_seat_driver_seat" property="ajbLiveSeatDriverSeat"/>
+        <result column="ajb_live_seat_front_seats" property="ajbLiveSeatFrontSeats"/>
+        <result column="ajb_live_seat_back_row_seats" property="ajbLiveSeatBackRowSeats"/>
+        <result column="ajb_seating_mode" property="ajbSeatingMode"/>
+        <result column="ajb_driver_seat_rate" property="ajbDriverSeatRate"/>
+        <result column="ajb_front_row_rate" property="ajbFrontRowRate"/>
+        <result column="ajb_back_row_rate" property="ajbBackRowRate"/>
+        <result column="ajb_vehicle_and_vessel_tax" property="ajbVehicleAndVesselTax"/>
+        <result column="ajb_vehicle_and_vessel_tax_reduction" property="ajbVehicleAndVesselTaxReduction"/>
+        <result column="ajb_vehicle_and_vessel_tax_paid_in" property="ajbVehicleAndVesselTaxPaidIn"/>
+        <result column="ajb_total_premium" property="ajbTotalPremium"/>
+        <result column="ajb_company_total_premium" property="ajbCompanyTotalPremium"/>
+        <result column="ajb_total_planned_premium" property="ajbTotalPlannedPremium"/>
+        <result column="ajb_totalize_premium" property="ajbTotalizePremium"/>
+        <result column="ajb_company_totalize_premium" property="ajbCompanyTotalizePremium"/>
+        <result column="ajb_approve" property="ajbApprove"/>
+        <result column="ajb_special_agreement" property="ajbSpecialAgreement"/>
+        <result column="ajb_enclosure" property="ajbEnclosure"/>
+        <result column="ajb_delete" property="ajbDelete"/>
+        <result column="ajb_create_time" property="ajbCreateTime"/>
+        <result column="ajb_create_by_ids" property="ajbCreateByIds"/>
+        <result column="ajb_create_by_name" property="ajbCreateByName"/>
+        <result column="ajb_update_time" property="ajbUpdateTime"/>
+        <result column="ajb_update_by_ids" property="ajbUpdateByIds"/>
+        <result column="ajb_update_by_name" property="ajbUpdateByName"/>
+    </resultMap>
+
+
+    <select id="selectJiashiyuanBaoxianPage" resultMap="jiashiyuanBaoxianResultMap">
+        select * from anbiao_jiashiyuan_baoxian where is_deleted = 0
+    </select>
+
+</mapper>

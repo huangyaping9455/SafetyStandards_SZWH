@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.cheliangguanli.mapper.DeptBaoxianMingxiMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="deptBaoxianMingxiResultMap" type="org.springblade.anbiao.cheliangguanli.entity.DeptBaoxianMingxi">
+        <id column="avbm_ids" property="avbmIds"/>
+        <result column="avbm_avb_ids" property="avbmAvbIds"/>
+        <result column="avbm_risk" property="avbmRisk"/>
+        <result column="avbm_increase_insurance" property="avbmIncreaseInsurance"/>
+        <result column="avbm_correction_date" property="avbmCorrectionDate"/>
+        <result column="avbm_insured_type" property="avbmInsuredType"/>
+        <result column="avbm_insurance_amount" property="avbmInsuranceAmount"/>
+        <result column="avbm_basic_premium" property="avbmBasicPremium"/>
+        <result column="avbm_rate" property="avbmRate"/>
+        <result column="avbm_discount" property="avbmDiscount"/>
+        <result column="avbm_autonomy_coefficient" property="avbmAutonomyCoefficient"/>
+        <result column="avbm_total" property="avbmTotal"/>
+        <result column="avbm_overall_planning" property="avbmOverallPlanning"/>
+        <result column="avbm_overall_amount" property="avbmOverallAmount"/>
+        <result column="avbm_company_amount" property="avbmCompanyAmount"/>
+        <result column="avbm_serial_no" property="avbmSerialNo"/>
+    </resultMap>
+
+
+    <select id="selectDeptBaoxianMingxiPage" resultMap="deptBaoxianMingxiResultMap">
+        select * from anbiao_dept_baoxian_mingxi where is_deleted = 0
+    </select>
+
+</mapper>
