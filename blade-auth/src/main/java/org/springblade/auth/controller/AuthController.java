@@ -63,8 +63,8 @@ public class AuthController {
 
 
 	@PostMapping("operatingCenterSignIn")
-	@ApiLog("运维端--验证登录")
-	@ApiOperation(value = "运维端--验证登录", notes = "传入账号:name,密码:password", position = 2)
+	@ApiLog("web端--验证登录")
+	@ApiOperation(value = "web端--验证登录", notes = "传入账号:name,密码:password", position = 2)
 	public R<AuthInfoConfig> operatingCenterSignIn(
 			@ApiParam(value = "账号", required = true) @RequestParam String name,
 			@ApiParam(value = "密码", required = true) @RequestParam String password,

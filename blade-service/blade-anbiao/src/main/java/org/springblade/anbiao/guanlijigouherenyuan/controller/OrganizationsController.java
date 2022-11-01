@@ -75,7 +75,7 @@ public class OrganizationsController extends BladeController {
 	@ApiLog("详情(树形结构详情)-企业资料")
 	@ApiOperation(value = "详情(树形结构详情)-企业资料", notes = "传入单位id", position = 1)
 	public R detailByDeptId(String id ){
-		OrganizationsVO organization=organizationService.selectByDeptId(id);
+		OrganizationsVO organization = organizationService.selectByDeptId(id);
 		if("qiye".equals(organization.getJigouleixing())){
 
 			if(!StringUtils.isBlank(organization.getProvince())){

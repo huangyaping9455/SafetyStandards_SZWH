@@ -309,6 +309,8 @@ public class Organizations implements Serializable {
 	@ApiModelProperty(value = "工商营业执照附件")
 	private String yingyezhizhaofujian;
 
+	@ApiModelProperty(value = "道路许可证号")
+	private String daoluxukezhenghao;
 
 
 }
