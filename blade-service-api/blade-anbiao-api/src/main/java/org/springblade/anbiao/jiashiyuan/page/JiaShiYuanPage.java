@@ -15,7 +15,7 @@ import org.springblade.common.BasePage;
 public class JiaShiYuanPage<T> extends BasePage<T> {
 	private static final long serialVersionUID = 1L;
 
-	@ApiModelProperty(value = "单位id",required = true)
+	@ApiModelProperty(value = "单位ID",required = true)
 	private Integer deptId;
 
 	@ApiModelProperty(value = "单位名称")

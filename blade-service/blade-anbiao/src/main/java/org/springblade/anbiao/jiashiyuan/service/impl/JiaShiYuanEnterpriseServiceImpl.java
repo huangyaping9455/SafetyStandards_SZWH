@@ -94,4 +94,9 @@ public class JiaShiYuanEnterpriseServiceImpl extends ServiceImpl<JiaShiYuanEnter
 		return JiaShiYuanEnterpriseMapper.getjiaShiYuanByOne(deptId, jiashiyuanxingming, shoujihaoma, shenfenzhenghao, jiashiyuanleixing);
 	}
 
+//	@Override
+//	public List<JiaShiYuanEnterprise> selectEnterprisePerson(String id) {
+//		return JiaShiYuanEnterpriseMapper.selectEnterprisePerson(id);
+//	}
+
 }

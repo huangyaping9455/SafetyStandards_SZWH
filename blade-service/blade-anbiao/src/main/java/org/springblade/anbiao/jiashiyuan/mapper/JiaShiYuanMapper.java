@@ -24,6 +24,7 @@ public interface JiaShiYuanMapper extends BaseMapper<JiaShiYuan> {
 	 * @return
 	 */
 	List<JiaShiYuanVO> selectPageList(JiaShiYuanPage jiaShiYuanPage);
+
 	/**
 	 * 统计
 	 * @param
@@ -121,5 +122,10 @@ public interface JiaShiYuanMapper extends BaseMapper<JiaShiYuan> {
 	 * @param openid
 	 */
 	void bindDriverOpenId(String account, String openid);
+
+	/**
+	 * 人员信息详情
+	 */
+	JiaShiYuan selectDriverDetailById(String id);
 
 }

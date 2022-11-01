@@ -41,10 +41,11 @@ public class JiaShiYuan implements Serializable {
 	/**
 	 * 性别
 	 */
-	@ApiModelProperty(value = "性别")
+	@ApiModelProperty(value = "性别（1：男，2：女）")
 	private String xingbie;
 
 	@ApiModelProperty(value = "性别（用于展示）")
+	@TableField(exist = false)
 	private String xingbieshow;
 
 	/**

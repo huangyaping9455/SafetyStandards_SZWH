@@ -49,6 +49,7 @@ public class JiashiyuanheimingdanController extends BladeController {
 
 	private IJiashiyuanheimingdanService jiashiyuanheimingdanService;
 	private IConfigureService mapService;
+
 	/**
 	* 详情
 	*/
