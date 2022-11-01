@@ -35,6 +35,9 @@ public class AnbiaoSafetyTrainingPage<T> extends BasePage<T> {
 	@ApiModelProperty(value = "培训类型")
 	private String astTrainingCategory;
 
+	@ApiModelProperty(value = "驾驶员ID")
+	private String aadApIds;
+
 	@ApiModelProperty(value = "排序字段")
 	private String orderColumns;
 

@@ -33,12 +33,14 @@
     <sql id="tableSql">
         select
             a.*,
-            b.dept_name as deptname
+            b.dept_name as deptname,
+            c.*
         from
             anbiao_safety_training a
             inner join  (
                 <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) b on a.ast_dept_ids = b.id
+            left join anbiao_safety_training_detail c on c.aad_ast_ids = a.ast_ids
         where a.ast_delete = 0
           and a.ast_training_form = 1
           and a.ast_training_end_time >= #{date}
@@ -54,6 +56,9 @@
         <if test="astTrainingCategory != null and astTrainingCategory != '' ">
             and astTrainingCategory = #{astTrainingCategory}
         </if>
+        <if test="aadApIds != null and aadApIds != '' ">
+            and c.aad_ap_ids = #{aadApIds}
+        </if>
     </sql>
 
     <sql id="orderSql">
@@ -62,7 +67,7 @@
     </sql>
 
     <select id="selectPage" resultMap="AnbiaoSafetyTrainingVOBaseResultMap"
-            parameterType="org.springblade.anbiao.chuchejiancha.page.AnbiaoCarExamineInfoPage" >
+            parameterType="org.springblade.anbiao.jiaoyupeixun.page.AnbiaoSafetyTrainingPage" >
         <if test="size == 0" >
             select * from (
             <include refid="tableSql" />
