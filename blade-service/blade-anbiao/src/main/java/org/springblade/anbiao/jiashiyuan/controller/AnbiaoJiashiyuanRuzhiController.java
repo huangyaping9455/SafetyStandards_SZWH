@@ -42,7 +42,7 @@ public class AnbiaoJiashiyuanRuzhiController {
 	public R insert(@RequestBody AnbiaoJiashiyuanRuzhi ruzhi, BladeUser user) {
 		R r = new R();
 		QueryWrapper<AnbiaoJiashiyuanRuzhi> ruzhiQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanRuzhi>();
-		ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrIds, ruzhi.getAjrIds());
+		ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrAjIds, ruzhi.getAjrAjIds());
 		ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrDelete, "0");
 		AnbiaoJiashiyuanRuzhi deail = ruzhiService.getBaseMapper().selectOne(ruzhiQueryWrapper);
 		if(deail == null){
@@ -68,6 +68,5 @@ public class AnbiaoJiashiyuanRuzhiController {
 			return R.status(ruzhiService.updateById(ruzhi));
 		}
 	}
-
 
 }
