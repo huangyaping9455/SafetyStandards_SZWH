@@ -32,7 +32,7 @@ public class AnbiaoSafetyTraining implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "安全培训主键")
-    @TableId(value = "ast_ids", type = IdType.AUTO)
+    @TableId(value = "ast_ids", type = IdType.UUID)
     private String astIds;
 
     @ApiModelProperty(value = "企业主键")

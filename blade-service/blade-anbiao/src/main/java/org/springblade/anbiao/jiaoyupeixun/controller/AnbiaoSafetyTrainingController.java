@@ -67,6 +67,7 @@ public class AnbiaoSafetyTrainingController {
 				train.setAstCreateByIds(user.getUserId().toString());
 			}
 			train.setAstCreateTime(DateUtil.now());
+			train.setAstTrainingForm("1");
 			train.setAstDelete("0");
 			boolean i = service.save(train);
 			if(i){
