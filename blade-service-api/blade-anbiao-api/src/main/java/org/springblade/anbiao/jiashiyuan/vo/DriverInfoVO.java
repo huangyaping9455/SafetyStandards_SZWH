@@ -1,21 +1,15 @@
 package org.springblade.anbiao.jiashiyuan.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 
 /**
- * Created by you on 2019/4/22.
+ * Created by you on 2022/11/03
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-@ApiModel(value = "JiaShiYuanVO对象", description = "JiaShiYuanVO对象")
-public class DriverInfoVO extends JiaShiYuan{
+@ApiModel(value = "DriverInfoVO对象", description = "DriverInfoVO对象")
+public class DriverInfoVO {
 
 	private static final long serialVersionUID = 1L;
 
