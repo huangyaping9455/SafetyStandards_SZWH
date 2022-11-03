@@ -638,9 +638,18 @@ values
         from
             anbiao_jiashiyuan
         where isdelete = 0
-            <!--AND dept_id= #{deptId}-->
+        <if test="deptId != null and deptId != '' ">
+            AND dept_id= #{deptId}
+        </if>
+        <if test="jiashiyuanxingming != null and jiashiyuanxingming != '' ">
             AND jiashiyuanxingming = #{jiashiyuanxingming}
+        </if>
+        <if test="shoujihaoma != null and shoujihaoma != '' ">
             AND shoujihaoma = #{shoujihaoma}
+        </if>
+        <if test="jiashiyuanleixing != null and jiashiyuanleixing != '' ">
+            AND jiashiyuanleixing = #{jiashiyuanleixing}
+        </if>
         LIMIT 1
     </select>
 
@@ -691,6 +700,17 @@ values
         update anbiao_jiashiyuan set openid=#{param2}
         where shoujihaoma = #{param1}
           and isdelete = 0
+    </select>
+
+    <select id="selectDriverInfo" resultType="org.springblade.anbiao.jiashiyuan.vo.DriverInfoVO">
+        select
+            a.id,a.dept_id as deptId,d.dept_name as deptName,a.jiashiyuanxingming,a.shenfenzhenghao,a.shoujihaoma,a.openid,b.ajr_head_portrait as zhaopian
+        from
+            anbiao_jiashiyuan a
+            left join blade_dept d on d.id = a.dept_id and d.is_deleted = 0
+            left join anbiao_jiashiyuan_ruzhi b on a.id = b.ajr_aj_ids and b.ajr_delete = 0
+        where a.isdelete = 0
+          and a.id = #{jsyId}
     </select>
 
 </mapper>

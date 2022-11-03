@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
+import org.springblade.anbiao.jiashiyuan.vo.DriverInfoVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
 
 import java.util.List;
@@ -87,7 +88,8 @@ public interface IJiaShiYuanService extends IService<JiaShiYuan> {
 	 */
 	JiaShiYuan getjiaShiYuan(@Param("deptId") String deptId,
 							 @Param("jiashiyuanxingming") String jiashiyuanxingming,
-							 @Param("shoujihaoma") String shoujihaoma);
+							 @Param("shoujihaoma") String shoujihaoma,
+							 @Param("jiashiyuanleixing") String jiashiyuanleixing);
 
 	JiaShiYuan getjiaShiYuanByOne(@Param("deptId") String deptId,
 								  @Param("jiashiyuanxingming") String jiashiyuanxingming,
@@ -113,9 +115,11 @@ public interface IJiaShiYuanService extends IService<JiaShiYuan> {
 	 */
 	void bindDriverOpenId(String account, String openid);
 
-
 	/**
-	 * 人员信息详情
+	 * 根据驾驶员ID获取个人详细信息（司机小程序个人中心）
+	 * @param jsyId
+	 * @return
 	 */
-	JiaShiYuan selectDriverDetailById(String id);
+	DriverInfoVO selectDriverInfo(String jsyId);
+
 }

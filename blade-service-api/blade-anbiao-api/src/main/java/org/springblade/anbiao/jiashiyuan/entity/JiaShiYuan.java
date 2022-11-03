@@ -79,6 +79,7 @@ public class JiaShiYuan implements Serializable {
 	private String congyerenyuanleixing;
 
 	@ApiModelProperty(value = "从业人员类型（用于展示）")
+	@TableField(exist = false)
 	private String congyerenyuanleixingshow;
 
 	@ApiModelProperty(value = "身份证初领日期",required = true)
@@ -115,6 +116,7 @@ public class JiaShiYuan implements Serializable {
 	private String jiashiyuanleixing;
 
 	@ApiModelProperty(value = "驾驶员类型（用于展示）")
+	@TableField(exist = false)
 	private String jiashiyuanleixingshow;
 
 	/**
@@ -228,6 +230,10 @@ public class JiaShiYuan implements Serializable {
 	 */
 	@ApiModelProperty(value = "从业类别")
 	private String congyeleibie;
+
+	@ApiModelProperty(value = "从业类别（用于展示）")
+	@TableField(exist = false)
+	private String congyeleibieshow;
 
 	/**
 	 * 从业证有效期
@@ -465,12 +471,14 @@ public class JiaShiYuan implements Serializable {
 	 * 车辆牌照
 	 */
 	@ApiModelProperty(value = "车辆牌照")
+	@TableField(exist = false)
 	private String cheliangpaizhao;
 
 	/**
 	 * 车牌颜色
 	 */
 	@ApiModelProperty(value = "车牌颜色")
+	@TableField(exist = false)
 	private String chepaiyanse;
 
 	@ApiModelProperty(value = "openid")

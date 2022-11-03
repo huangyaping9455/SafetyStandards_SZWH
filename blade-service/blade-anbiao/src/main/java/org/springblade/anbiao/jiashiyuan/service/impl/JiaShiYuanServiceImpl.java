@@ -7,6 +7,7 @@ import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.mapper.JiaShiYuanMapper;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
+import org.springblade.anbiao.jiashiyuan.vo.DriverInfoVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
 import org.springframework.stereotype.Service;
 
@@ -140,8 +141,8 @@ public class JiaShiYuanServiceImpl extends ServiceImpl<JiaShiYuanMapper, JiaShiY
 	}
 
 	@Override
-	public JiaShiYuan getjiaShiYuan(String deptId, String jiashiyuanxingming, String shoujihaoma) {
-		return jiaShiYuanMapper.getjiaShiYuan(deptId, jiashiyuanxingming, shoujihaoma);
+	public JiaShiYuan getjiaShiYuan(String deptId, String jiashiyuanxingming, String shoujihaoma,String jiashiyuanleixing) {
+		return jiaShiYuanMapper.getjiaShiYuan(deptId, jiashiyuanxingming, shoujihaoma, jiashiyuanleixing);
 	}
 
 	@Override
@@ -165,8 +166,9 @@ public class JiaShiYuanServiceImpl extends ServiceImpl<JiaShiYuanMapper, JiaShiY
 	}
 
 	@Override
-	public JiaShiYuan selectDriverDetailById(String id) {
-		return jiaShiYuanMapper.selectDriverDetailById(id);
+	public DriverInfoVO selectDriverInfo(String jsyId) {
+		return jiaShiYuanMapper.selectDriverInfo(jsyId);
 	}
+
 
 }

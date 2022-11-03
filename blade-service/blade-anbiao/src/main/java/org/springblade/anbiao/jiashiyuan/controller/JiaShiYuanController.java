@@ -12,6 +12,7 @@ import com.alibaba.csp.sentinel.util.StringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.util.TextUtils;
 import org.springblade.anbiao.cheliangguanli.entity.CheliangJiashiyuan;
@@ -33,6 +34,7 @@ import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
 import org.springblade.core.tool.utils.DigestUtil;
 import org.springblade.system.entity.Dept;
+import org.springblade.system.entity.Dict;
 import org.springblade.system.feign.IDictClient;
 import org.springblade.system.feign.ISysClient;
 import org.springblade.upload.upload.feign.IFileUploadClient;
@@ -969,407 +971,13 @@ public class JiaShiYuanController {
 		return R.data(pages);
 	}
 
-
-
-
-
-
-
-
-
-	/********************************** 配置表 ***********************/
-
-	/**
-	 * 根据单位id获取配置模块数据
-	 */
-	@GetMapping("/listMap")
-	@ApiLog("获取配置-驾驶员资料管理")
-	@ApiOperation(value = "获取配置-驾驶员资料管理", notes = "传入deptId", position = 6)
-	public R<JSONArray> listMap(Integer deptId) {
-		List<Configure> list1=mapService.selectMapList("anbiao_jiashiyuan_map",deptId);
-		String str="";
-		for (int i = 0; i <list1.size() ; i++) {
-			//转换成json数据并put id
-			JSONObject jsonObject = JSONUtil.parseObj(list1.get(i).getBiaodancanshu());
-			jsonObject.put("id",list1.get(i).getId());
-			if(!str.equals("")){
-				str=str+","+jsonObject.toString();
-			}else{
-				str=jsonObject.toString();
-			}
-		}
-		str="["+str+"]";
-		JSONArray json= JSONUtil.parseArray(str);
-		return R.data(json);
+	@GetMapping("/getDriverInfo")
+	@ApiLog("根据驾驶员ID获取个人详细信息（司机小程序个人中心）")
+	@ApiOperation(value = "根据驾驶员ID获取个人详细信息（司机小程序个人中心）", notes = "传入id", position = 1)
+	public R getDriverInfo( String jsyId) {
+		return R.data(iJiaShiYuanService.selectDriverInfo(jsyId));
 	}
 
-	/**
-	 * 配置表新增
-	 */
-	@PostMapping("/insertMap")
-	@ApiLog("配置表新增-驾驶员资料管理")
-	@ApiOperation(value = "配置表新增-驾驶员资料管理", notes = "传入biaodancanshu与deptId", position = 7)
-	public R insertMap(String biaodancanshu,String deptId) {
-		Configure configure=new Configure();
-		JSONObject jsonObject = JSONUtil.parseObj(biaodancanshu);
-		configure.setLabel(jsonObject.getStr("label"));
-		configure.setShujubiaoziduan(jsonObject.getStr("prop"));
-		configure.setDeptId(Integer.parseInt(deptId));
-		configure.setTableName("anbiao_jiashiyuan_map");
-		configure.setBiaodancanshu(biaodancanshu);
-		return R.status(mapService.insertMap(configure));
-	}
-	/**
-	 * 配置表编辑
-	 */
-	@PostMapping("/updateMap")
-	@ApiLog("配置表编辑-驾驶员资料管理")
-	@ApiOperation(value = "配置表编辑-驾驶员资料管理", notes = "传入biaodancanshu与id", position = 9)
-	public R updateMap(String biaodancanshu,String id) {
-		Configure configure=new Configure();
-		JSONObject jsonObject = JSONUtil.parseObj(biaodancanshu);
-		configure.setId(id);
-		configure.setLabel(jsonObject.getStr("label"));
-		configure.setShujubiaoziduan(jsonObject.getStr("prop"));
-		configure.setTableName("anbiao_jiashiyuan_map");
-		configure.setBiaodancanshu(biaodancanshu);
-		return R.status(mapService.updateMap(configure));
-	}
-
-	/**
-	 * 配置表删除
-	 */
-	@PostMapping("/delMap")
-	@ApiLog("配置表删除-驾驶员资料管理")
-	@ApiOperation(value = "配置表删除-驾驶员资料管理", notes = "传入id", position = 8)
-	public R delMap(@ApiParam(value = "主键id", required = true) @RequestParam String id) {
-		return R.status(mapService.delMap("anbiao_jiashiyuan_map",id));
-	}
-
-	/**
-	 * 驾驶员资料导入
-	 * @author: Elvis
-	 * @date: 2020/6/23 09:23
-	 * @param
-	 * @return: org.springblade.core.tool.api.R
-	 */
-	@PostMapping("driverImportOne")
-	@ApiLog("驾驶员资料-导入(本企业)")
-	@ApiOperation(value = "驾驶员资料-导入(本企业)", notes = "file", position = 10)
-	public  R driverImportOne(@RequestParam(value = "file") MultipartFile file, BladeUser user, String DeptId, String DeptName){
-
-		ExcelReader reader = null;
-		try {
-			reader = ExcelUtil.getReader(file.getInputStream());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		List<Map<String,Object>> readAll = reader.readAll();
-		int index=readAll.size();
-		if(index>5000){
-
-			return  R.fail("导入条目不能超过5000条");
-
-		}
-		int aa=0;
-		int bb=0;
-		List<JiaShiYuan> drivers=new ArrayList<>();
-		boolean b=true;
-		for(Map<String,Object> a:readAll){
-			aa++;
-			JiaShiYuan driver=new JiaShiYuan();
-			String id= IdUtil.simpleUUID();
-			driver.setId(id);
-			driver.setDeptId(Integer.valueOf(DeptId));
-
-			String tmp=String.valueOf(a.get("身份证号"));
-			driver.setShenfenzhenghao(tmp);
-			JiaShiYuanVO driverVO = iJiaShiYuanService.selectByCardNo(driver.getDeptId().toString(),tmp,null,"驾驶员");
-			if(driverVO!=null){
-				driver.setMsg("该驾驶员已存在");
-				driver.setMsg2(false);
-				bb++;
-			}else{
-				driver.setMsg2(true);
-			}
-			tmp = String.valueOf(a.get("驾驶员姓名"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setJiashiyuanxingming(tmp);
-			}
-			tmp = String.valueOf(a.get("性别"));
-			if("男".equals(tmp)){
-				driver.setXingbie("1");
-			}else if("女".equals(tmp)){
-				driver.setXingbie("2");
-			}
-			tmp = String.valueOf(a.get("出生日期"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setChushengshijian(tmp);
-			}
-			tmp = String.valueOf(a.get("年龄"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setNianling(tmp);
-			}
-			tmp = String.valueOf(a.get("手机号码"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setShoujihaoma(tmp);
-			}
-			tmp = String.valueOf(a.get("从业类别"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setCongyerenyuanleixing(tmp);
-			}
-			tmp = String.valueOf(a.get("身份证有效期"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setShenfenzhengyouxiaoqi(tmp);
-			}
-			tmp = String.valueOf(a.get("文化程度"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setWenhuachengdu(tmp);
-			}
-			tmp = String.valueOf(a.get("聘用日期"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setPingyongriqi(tmp);
-			}
-			tmp = String.valueOf(a.get("机动驾驶员"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setJidongjiashiyuan(tmp);
-			}
-			tmp = String.valueOf(a.get("驾驶员类型"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setJiashiyuanleixing(tmp);
-			}
-			tmp = String.valueOf(a.get("家庭住址"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setJiatingzhuzhi(tmp);
-			}
-			tmp = String.valueOf(a.get("准驾车型"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setZhunjiachexing(tmp);
-			}
-			tmp = String.valueOf(a.get("驾驶证号"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setJiashizhenghao(tmp);
-			}
-			tmp = String.valueOf(a.get("驾驶证初领日期"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setJiashizhengchulingriqi(tmp);
-			}
-			tmp = String.valueOf(a.get("驾驶证有效期"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setJiashizhengyouxiaoqi(tmp);
-			}
-			tmp = String.valueOf(a.get("驾龄"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setJialing(tmp);
-			}
-			tmp = String.valueOf(a.get("从业资格证号"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setCongyezigezheng(tmp);
-			}
-			tmp = String.valueOf(a.get("部门"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setBumen(tmp);
-			}
-			tmp = String.valueOf(a.get("离辞职时间"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setLizhishijian(tmp);
-			}
-			tmp = String.valueOf(a.get("违法记分"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setWeifajifen(tmp);
-			}
-			tmp = String.valueOf(a.get("体检日期"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setTijianriqi(tmp);
-			}
-			tmp = String.valueOf(a.get("体检有效期"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setTijianyouxiaoqi(tmp);
-			}
-			tmp = String.valueOf(a.get("护照号码"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setHuzhaohaoma(tmp);
-			}
-			tmp = String.valueOf(a.get("护照类型"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setHuzhaoleibie(tmp);
-			}
-			tmp = String.valueOf(a.get("国家码"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setGuojiama(tmp);
-			}
-			tmp = String.valueOf(a.get("护照有效期"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setHuzhaoyouxiaoqi(tmp);
-			}
-			tmp = String.valueOf(a.get("准驾证号"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setZhunjiazhenghao(tmp);
-			}
-			tmp = String.valueOf(a.get("准驾类型"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setZhunjialeixing(tmp);
-			}
-			tmp = String.valueOf(a.get("准运线"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setZhunyunxian(tmp);
-			}
-			tmp = String.valueOf(a.get("准驾证有效期"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setZhunjiazhengyouxiaoqi(tmp);
-			}
-			tmp = String.valueOf(a.get("缴纳标准"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setJiaonabiaozhun(tmp);
-			}
-			tmp = String.valueOf(a.get("缴纳金额"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setJiaonajine(tmp);
-			}
-			tmp = String.valueOf(a.get("风险金缴纳"));
-			if(!StringUtil.isNotEmpty(tmp)){
-				driver.setShifoujiaona(tmp);
-			}
-			driver.setCreatetime(DateUtil.now());
-			if(user!=null){
-				driver.setCaozuoren(user.getUserName());
-				driver.setCaozuorenid(user.getUserId());
-			}
-			driver.setCaozuoshijian(DateUtil.now());
-
-			drivers.add(driver);
-
-		}
-		if(bb>0){
-			return  R.data(400,drivers,"导入失败");
-		}else{
-			b=iJiaShiYuanService.saveBatch(drivers);
-			if(b){
-				return  R.data(drivers,"成功导入:"+aa+"条");
-			}else{
-				return  R.fail("导入失败");
-			}
-		}
-	}
-
-//	/**
-//	 * 驾驶员信息-导入
-//	 * @author: elvis
-//	 * @date: 2020/06/23 10:23
-//	 * @param
-//	 * @return: org.springblade.core.tool.api.R
-//	 */
-//	@PostMapping("driverImport")
-//	@ApiLog("驾驶员信息-导入")
-//	@ApiOperation(value = "驾驶员信息-导入", notes = "file", position = 10)
-//	public  R driverImport(@RequestParam(value = "file") MultipartFile file, BladeUser user){
-//
-//		ExcelReader reader = null;
-//		try {
-//			reader = ExcelUtil.getReader(file.getInputStream());
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		List<Map<String,Object>> readAll = reader.readAll();
-//		int index=readAll.size();
-//		if(index>5000){
-//			return  R.fail("导入条目不能超过5000条");
-//		}
-//		int aa=0;
-//		int bb=0;
-//		List<JiaShiYuan> drivers=new ArrayList<JiaShiYuan>();
-//		boolean b=true;
-//		for(Map<String,Object> a:readAll){
-//			aa++;
-//			JiaShiYuan driver=new JiaShiYuan();
-//			Dept dept;
-//			String id=IdUtil.simpleUUID();
-//			driver.setId(id);
-//			String deptname =  String.valueOf(a.get("机构名称"));
-//			dept = iSysClient.getDeptByName(deptname);
-//			if (dept != null){
-//				driver.setDeptId(Integer.valueOf(dept.getId()));
-//
-//			}else{
-//				driver.setMsg("机构不存在");
-//				driver.setMsg2(false);
-//				bb++;
-//			}
-////			driver.setDeptName(dept.getDeptName());
-//
-//			String tmp=String.valueOf(a.get("身份证号"));
-//			driver.setShenfenzhenghao(tmp);
-//			JiaShiYuanVO driverVO = iJiaShiYuanService.selectByCardNo(tmp);
-//			if(driverVO!=null){
-//				driver.setMsg("该驾驶员已存在");
-//				driver.setMsg2(false);
-//				bb++;
-//			}else{
-//				driver.setMsg2(true);
-//			}
-//
-//			driver.setJiashiyuanxingming(String.valueOf(a.get("驾驶员姓名")));
-//
-//			tmp = String.valueOf(a.get("性别"));
-//			if("男".equals(tmp)){
-//				driver.setXingbie("1");
-//			}else if("女".equals(tmp)){
-//				driver.setXingbie("2");
-//			}
-//			driver.setChushengshijian((a.get("出生日期") == null) ? null : a.get("出生日期").toString());
-//			driver.setNianling(String.valueOf(a.get("年龄")));
-//			driver.setShoujihaoma(String.valueOf(a.get("手机号码")));
-//			driver.setCongyerenyuanleixing(String.valueOf(a.get("从业类别")));
-//			driver.setShenfenzhengyouxiaoqi((a.get("身份证有效期") == null) ? null : a.get("身份证有效期").toString());
-//			driver.setWenhuachengdu(String.valueOf(a.get("文化程度")));
-//			driver.setPingyongriqi((a.get("聘用日期") == null) ? null : a.get("聘用日期").toString());
-//
-//			driver.setJidongjiashiyuan(String.valueOf(a.get("机动驾驶员")));
-//			driver.setJiashiyuanleixing("驾驶员");
-//			driver.setJiatingzhuzhi(String.valueOf(a.get("家庭住址")));
-//			driver.setZhunjiachexing(String.valueOf(a.get("准驾车型")));
-//			driver.setJiashizhenghao(String.valueOf(a.get("驾驶证号")));
-//			driver.setJiashizhengchulingriqi((a.get("驾驶证初领日期") == null) ? null : a.get("驾驶证初领日期").toString());
-//			driver.setJiashizhengyouxiaoqi((a.get("驾驶证有效期") == null) ? null : a.get("驾驶证有效期").toString());
-//			driver.setJialing(String.valueOf(a.get("驾龄")));
-//			driver.setCongyezigezheng(String.valueOf(a.get("从业资格证号")));
-//			driver.setBumen(String.valueOf(a.get("部门")));
-//			driver.setLizhishijian((a.get("离辞职时间") == null) ? null : a.get("离辞职时间").toString());
-//			driver.setWeifajifen(String.valueOf(a.get("违法记分")));
-//			driver.setTijianriqi((a.get("体检日期") == null) ? null : a.get("体检日期").toString());
-//			driver.setTijianyouxiaoqi((a.get("体检有效期") == null) ? null : a.get("体检有效期").toString());
-//			driver.setHuzhaohaoma(String.valueOf(a.get("护照号码")));
-//			driver.setHuzhaoleibie(String.valueOf(a.get("护照类型")));
-//			driver.setGuojiama(String.valueOf(a.get("国家码")));
-//			driver.setHuzhaoyouxiaoqi((a.get("护照有效期") == null) ? null : a.get("护照有效期").toString());
-//			driver.setZhunjiazhenghao(String.valueOf(a.get("准驾证号")));
-//			driver.setZhunjialeixing(String.valueOf(a.get("准驾类型")));
-//			driver.setZhunyunxian(String.valueOf(a.get("准运线")));
-//			driver.setZhunjiazhengyouxiaoqi((a.get("准驾证有效期") == null) ? null : a.get("准驾证有效期").toString());
-//			driver.setJiaonabiaozhun(String.valueOf(a.get("缴纳标准")));
-//			driver.setJiaonajine(String.valueOf(a.get("缴纳金额")));
-//			driver.setShifoujiaona(String.valueOf(a.get("风险金缴纳")));
-//			driver.setCreatetime(DateUtil.now());
-//			if(user!=null){
-//				driver.setCaozuoren(user.getUserName());
-//				driver.setCaozuorenid(user.getUserId());
-//			}
-//
-//			driver.setCaozuoshijian(DateUtil.now());
-//
-//			drivers.add(driver);
-//		}
-//		if(bb>0){
-//			return  R.data(400,drivers,"导入失败");
-//		}else{
-//			b=iJiaShiYuanService.saveBatch(drivers);
-//			if(b){
-//				return  R.data(drivers,"成功导入:"+aa+"条");
-//			}else{
-//				return  R.fail("导入失败");
-//			}
-//		}
-//	}
 
 	@GetMapping(value = "/getJSYByVehicle")
 	@ApiLog("企业-查询驾驶员绑定车辆")
@@ -1439,15 +1047,22 @@ public class JiaShiYuanController {
 	}
 
 	/**
-	 * 驾驶员信息--验证
+	 * 驾驶员档案信息--验证
 	 * @update: 黄亚平 添加验证
 	 * @param
 	 */
-	@PostMapping("driverImport")
-	@ApiLog("驾驶员信息-验证")
-	@ApiOperation(value = "驾驶员信息-验证", notes = "file", position = 10)
-	public R driverImport(@RequestParam(value = "file") MultipartFile file,BladeUser user){
+	@PostMapping("driverDeptImport")
+	@ApiLog("企业端--驾驶员档案信息--验证(最新)")
+	@ApiOperation(value = "企业端--驾驶员档案信息--验证(最新)", notes = "file", position = 11)
+	public R driverDeptImport(@RequestParam(value = "file") MultipartFile file,BladeUser user,@RequestParam String leixing) throws ParseException {
 		R rs = new R();
+		if (user == null) {
+			rs.setCode(500);
+			rs.setMsg("用户权限验证失败");
+			rs.setData(null);
+			rs.setSuccess(false);
+			return rs;
+		}
 		ExcelReader reader = null;
 		try {
 			reader = ExcelUtil.getReader(file.getInputStream());
@@ -1466,8 +1081,8 @@ public class JiaShiYuanController {
 		String errorStr="";
 
 		List<Map<String,Object>> readAll = reader.readAll();
-		if(readAll.size()>5000){
-			errorStr+="导入数据超过5000条，无法导入！";
+		if(readAll.size()>2000){
+			errorStr+="导入数据超过2000条，无法导入！";
 			rs.setMsg(errorStr);
 			rs.setCode(400);
 			return rs;
@@ -1476,15 +1091,16 @@ public class JiaShiYuanController {
 		List<JiaShiYuan> drivers= new ArrayList<>();
 		for(Map<String,Object> a:readAll){
 			aa++;
+			Dept dept;
 			JiaShiYuan driver=new JiaShiYuan();
 			SimpleDateFormat dateFormat2=new SimpleDateFormat("yyyy-MM-dd");
-			Dept dept;
 			JiaShiYuanVO driverVO = null;
-			String deptname =  String.valueOf(a.get("所属单位")).trim();
+			//验证所属企业是否存在
+			String deptname =  String.valueOf(a.get("所属企业")).trim();
 			if(StringUtils.isBlank(deptname)){
-				driver.setMsg("所属单位不能为空;");
+				driver.setMsg("所属企业不能为空;");
 				driver.setImportUrl("icon_cha.png");
-				errorStr+="所属单位不能为空;";
+				errorStr+="所属企业不能为空;";
 				bb++;
 			}
 			dept = iSysClient.getDeptByName(deptname.trim());
@@ -1493,13 +1109,18 @@ public class JiaShiYuanController {
 				driver.setDeptName(deptname.trim());
 				driver.setImportUrl("icon_gou.png");
 			}else{
-				driver.setMsg(deptname+"所属单位不存在;");
+				driver.setMsg(deptname+"所属企业不存在;");
 				driver.setImportUrl("icon_cha.png");
-				errorStr+=deptname+"所属单位不存在;";
-				bb++;
+				errorStr+=deptname+"所属企业不存在;";
+				rs.setMsg(errorStr);
+				rs.setCode(500);
+				rs.setSuccess(false);
+				rs.setData(drivers);
+				return rs;
 			}
+			//验证驾驶员姓名不能为空
 			String driverName = String.valueOf(a.get("驾驶员姓名")).trim();
-			if(StringUtils.isBlank(driverName)){
+			if(StringUtils.isBlank(driverName) && !driverName.equals("null")){
 				driver.setMsg("驾驶员姓名不能为空;");
 				driver.setImportUrl("icon_cha.png");
 				errorStr+="驾驶员姓名不能为空;";
@@ -1508,33 +1129,65 @@ public class JiaShiYuanController {
 				driver.setJiashiyuanxingming(driverName);
 				driver.setImportUrl("icon_gou.png");
 			}
-			String tmp = String.valueOf(a.get("身份证号")).trim();
-			if(StringUtils.isNotBlank(tmp)){
-				//校验身份证是否合法
-				if(IdCardUtil.isValidCard(tmp) == true){
-					driver.setShenfenzhenghao(tmp);
-					//根据企业ID、身份证号查询该身份证是否存在
-					driverVO = iJiaShiYuanService.selectByCardNo(driver.getDeptId().toString(),tmp,null,"驾驶员");
-					System.out.println(driverVO);
-					if(driverVO!=null){
-						driver.setMsg(driverVO.getShenfenzhenghao()+"该驾驶员身份证号已存在;");
-						driver.setImportUrl("icon_cha.png");
-						errorStr+=driverVO.getShenfenzhenghao()+"该驾驶员身份证号已存在;";
-						bb++;
-					}else{
-						driver.setShenfenzhenghao(tmp);
-						driver.setImportUrl("icon_gou.png");
-					}
-				}else{
-					driver.setMsg(tmp+"该驾驶员身份证号不合法;");
+			if(!"更新导入".equals(leixing)){
+				//验证驾驶员性别
+				String sex = String.valueOf(a.get("性别")).trim();
+				if (StringUtils.isBlank(sex) && !sex.equals("null")) {
+					driver.setMsg("性别不能为空;");
 					driver.setImportUrl("icon_cha.png");
-					errorStr+=tmp+"该驾驶员身份证号不合法;";
+					errorStr += "性别不能为空;";
 					bb++;
+				} else {
+					String[] arr = {"男", "女"};
+					boolean ss = false;
+					ss = ArrayUtils.contains(arr, sex);
+					if (ss == true) {
+						if ("男".equals(sex)) {
+							driver.setXingbie("1");
+							driver.setXingbieshow(sex);
+							driver.setImportUrl("icon_gou.png");
+						}
+						if ("女".equals(sex)) {
+							driver.setXingbie("2");
+							driver.setXingbieshow(sex);
+							driver.setImportUrl("icon_gou.png");
+						}
+					} else {
+						driver.setMsg("性别填写异常;");
+						driver.setImportUrl("icon_cha.png");
+						errorStr += "性别填写异常;";
+						bb++;
+					}
+				}
+				//验证身份证号码
+				String tmp = String.valueOf(a.get("身份证号码")).trim();
+				if (StringUtils.isNotBlank(tmp) && !tmp.equals("null")) {
+					//校验身份证号码是否合法
+					if (IdCardUtil.isValidCard(tmp) == true) {
+						driver.setShenfenzhenghao(tmp);
+						//根据企业ID、身份证号、从业人员类型查询该身份证是否存在
+						String congyerenyuanleixing = String.valueOf(a.get("从业人员类型")).trim();
+						driverVO = iJiaShiYuanService.selectByCardNo(driver.getDeptId().toString(), tmp, null, congyerenyuanleixing);
+						if (driverVO != null) {
+							driver.setMsg(driverVO.getShenfenzhenghao() + "该企业驾驶员身份证号已存在;");
+							driver.setImportUrl("icon_cha.png");
+							errorStr += driverVO.getShenfenzhenghao() + "该企业驾驶员身份证号已存在;";
+							bb++;
+						} else {
+							driver.setShenfenzhenghao(tmp);
+							driver.setImportUrl("icon_gou.png");
+						}
+					} else {
+						driver.setMsg(tmp + "该驾驶员身份证号不合法;");
+						driver.setImportUrl("icon_cha.png");
+						errorStr += tmp + "该驾驶员身份证号不合法;";
+						bb++;
+					}
 				}
 			}
 			//验证手机号码是否合法
 			String shoujihaoma = String.valueOf(a.get("手机号码")).trim();
-			if(StringUtils.isBlank(shoujihaoma)){
+			if(StringUtils.isBlank(shoujihaoma) && !shoujihaoma.equals("null")){
 				driver.setMsg("手机号码不能为空;");
 				driver.setImportUrl("icon_cha.png");
 				errorStr+="手机号码不能为空;";
@@ -1542,7 +1195,43 @@ public class JiaShiYuanController {
 			}else{
 				if(RegexUtils.checkMobile(shoujihaoma)){
 					driver.setShoujihaoma(shoujihaoma);
-					driver.setImportUrl("icon_gou.png");
+//					if ("运维端".equals(type)) {
+					if ("更新导入".equals(leixing)) {
+						//根据企业ID、驾驶员姓名、手机号码、从业人员类型查询驾驶员是否存在
+//							String congyerenyuanleixing = String.valueOf(a.get("从业人员类型")).trim();
+						JiaShiYuan driverss = iJiaShiYuanService.getjiaShiYuan(driver.getDeptId().toString(),driver.getJiashiyuanxingming(),driver.getShoujihaoma(),null);
+						if(driverss == null){
+							driver.setMsg(shoujihaoma+"该企业驾驶员姓名及手机号码不存在;");
+							driver.setImportUrl("icon_cha.png");
+							errorStr+=shoujihaoma+"该企业驾驶员姓名及手机号码不存在;";
+							bb++;
+						}else{
+							driver.setImportUrl("icon_gou.png");
+						}
+					}else{
+						//根据企业ID、驾驶员姓名、手机号码、从业人员类型查询驾驶员是否存在
+						String congyerenyuanleixing = String.valueOf(a.get("从业人员类型")).trim();
+						JiaShiYuan driverss = iJiaShiYuanService.getjiaShiYuan(driver.getDeptId().toString(),driver.getJiashiyuanxingming(),driver.getShoujihaoma(),congyerenyuanleixing);
+						if(driverss!=null){
+							driver.setMsg(shoujihaoma+"该企业驾驶员姓名及手机号码已同时存在;");
+							driver.setImportUrl("icon_cha.png");
+							errorStr+=shoujihaoma+"该企业驾驶员姓名及手机号码已同时存在;";
+							bb++;
+						}else{
+							driver.setImportUrl("icon_gou.png");
+						}
+					}
+//					}
+//					else{
+//						if(driverss == null){
+//							driver.setMsg(shoujihaoma+"该企业驾驶员姓名及手机号码不存在;");
+//							driver.setImportUrl("icon_cha.png");
+//							errorStr+=shoujihaoma+"该企业驾驶员姓名及手机号码不存在;";
+//							bb++;
+//						}else{
+//							driver.setImportUrl("icon_gou.png");
+//						}
+//					}
 				}else{
 					driver.setMsg(shoujihaoma+"该手机号码不合法;");
 					errorStr+=shoujihaoma+"该手机号码不合法;";
@@ -1550,20 +1239,85 @@ public class JiaShiYuanController {
 					bb++;
 				}
 			}
-
+			//验证Excel导入时，是否存在重复数据
+			for (JiaShiYuan item : drivers) {
+				if (item.getJiashiyuanxingming().equals(driverName) && item.getShoujihaoma().equals(shoujihaoma) && item.getDeptName().equals(deptname)) {
+					driver.setImportUrl("icon_cha.png");
+					errorStr += driverName + "驾驶员重复；";
+					driver.setMsg(driverName + "驾驶员重复；");
+					bb++;
+				}
+			}
+			if(!"更新导入".equals(leixing)){
+				//验证从业资格证类别是否满足规则
+				String congyeleibie = String.valueOf(a.get("从业资格证类别")).trim();
+				if (StringUtils.isBlank(congyeleibie) && !congyeleibie.equals("null")) {
+					driver.setMsg("从业资格证类别不能为空;");
+					driver.setImportUrl("icon_cha.png");
+					errorStr += "从业资格证类别不能为空;";
+					bb++;
+				} else {
+					boolean ss = false;
+					List<Dict> dictVOList = iDictClient.getDictByCode("congyezigezhengleibie", null);
+					for (int i = 0; i < dictVOList.size(); i++) {
+						ss = dictVOList.get(i).getDictValue().equals(congyeleibie);
+						if (ss == true) {
+							break;
+						}
+					}
+					if (ss == true) {
+						dictVOList = iDictClient.getDictByCode("congyezigezhengleibie", congyeleibie);
+						driver.setImportUrl("icon_gou.png");
+						driver.setCongyeleibie(dictVOList.get(0).getDictKey());
+						driver.setCongyeleibieshow(dictVOList.get(0).getDictValue());
+					} else {
+						driver.setImportUrl("icon_cha.png");
+						errorStr += congyeleibie + ",该从业资格证类别异常,请校验”;";
+						driver.setMsg(congyeleibie + ",该从业资格证类别异常,请校验;");
+						bb++;
+					}
+				}
+				//验证从业人员类型
+				String congyerenyuanleixing = String.valueOf(a.get("从业人员类型")).trim();
+				if (StringUtils.isNotBlank(congyerenyuanleixing) && !congyerenyuanleixing.equals("null")) {
+					boolean ss = false;
+					List<Dict> dictVOList = iDictClient.getDictByCode("congyerenyuanleixing", null);
+					for (int i = 0; i < dictVOList.size(); i++) {
+						ss = dictVOList.get(i).getDictValue().equals(congyerenyuanleixing);
+						if (ss == true) {
+							break;
+						}
+					}
+					if (ss == true) {
+						dictVOList = iDictClient.getDictByCode("congyerenyuanleixing", congyerenyuanleixing);
+						driver.setImportUrl("icon_gou.png");
+						driver.setJiashiyuanleixing(dictVOList.get(0).getDictKey());
+					} else {
+						driver.setImportUrl("icon_cha.png");
+						errorStr += congyerenyuanleixing + ",该从业人员类型异常,请校验”;";
+						driver.setMsg(congyerenyuanleixing + ",该从业人员类型异常,请校验;");
+						bb++;
+					}
+				} else {
+					driver.setMsg("从业人员类型不能为空;");
+					driver.setImportUrl("icon_cha.png");
+					errorStr += "从业人员类型不能为空;";
+					bb++;
+				}
+			}
 			//验证驾驶证是否合法
 			String jiashizheng = String.valueOf(a.get("驾驶证号")).trim();
-			if(StringUtils.isNotBlank(jiashizheng) && jiashizheng != null){
+			if(StringUtils.isNotBlank(jiashizheng) && jiashizheng != null && !jiashizheng.equals("null")){
 				if(IdCardUtil.isValidCard(jiashizheng) == true){
 					driver.setJiashizhenghao(jiashizheng);
 					driverVO = iJiaShiYuanService.selectByCardNo(driver.getDeptId().toString(),null,jiashizheng,"驾驶员");
 					if(driverVO!=null){
-						driver.setMsg(driverVO.getJiashizhenghao()+"该驾驶证号已存在;");
+						driver.setMsg(driverVO.getJiashizhenghao()+"该企业驾驶证号已存在;");
 						driver.setImportUrl("icon_cha.png");
-						errorStr+=driverVO.getJiashizhenghao()+"该驾驶证号已存在;";
+						errorStr+=driverVO.getJiashizhenghao()+"该企业驾驶证号已存在;";
 						bb++;
 					}else{
-						driver.setShenfenzhenghao(tmp);
+						driver.setShenfenzhenghao(jiashizheng);
 						driver.setImportUrl("icon_gou.png");
 					}
 				}else{
@@ -1573,61 +1327,210 @@ public class JiaShiYuanController {
 					bb++;
 				}
 			}
-
 			//验证从业资格证号
 			String congyezigezheng = String.valueOf(a.get("从业资格证号")).trim();
-			if(StringUtils.isNotBlank(congyezigezheng)){
+			if(StringUtils.isNotBlank(congyezigezheng) && !congyezigezheng.equals("null")){
 				driver.setCongyezigezheng(congyezigezheng);
 				driver.setImportUrl("icon_gou.png");
 			}
-
-			//验证从业证有效期
-			String congyezigezhengyouxiaoqi = String.valueOf(a.get("从业证有效期")).trim();
-			if(StringUtils.isNotBlank(congyezigezheng)){
-				driver.setCongyezhengyouxiaoqi(congyezigezhengyouxiaoqi);
-				driver.setImportUrl("icon_gou.png");
-			}
-
-			String cheliangpaiz = String.valueOf(a.get("车辆牌照")).trim();
-			if(StringUtils.isNotBlank(cheliangpaiz) && !cheliangpaiz.equals("null")) {
-				if (isCarnumberNO(cheliangpaiz) == false) {
-					driver.setMsg("辆牌照格式不正确;");
-					errorStr += cheliangpaiz + "辆牌照格式不正确;";
-					driver.setImportUrl("icon_cha.png");
-					bb++;
-				} else {
-					driver.setImportUrl("icon_gou.png");
+			//验证准驾车型是否满足规则
+			String zhunjiachexing = String.valueOf(a.get("准驾车型")).trim();
+			if(StringUtils.isNotBlank(zhunjiachexing) && !zhunjiachexing.equals("null")){
+				boolean ss = false;
+				List<Dict> dictVOList = iDictClient.getDictByCode("zhunjiachexing",null);
+				for(int i= 0;i<dictVOList.size();i++){
+					ss = dictVOList.get(i).getDictValue().equals(zhunjiachexing);
+					if(ss == true){
+						break;
+					}
 				}
-			}
-
-			String chepaiyanse = String.valueOf(a.get("车牌颜色")).trim();
-			if (StringUtils.isNotBlank(chepaiyanse) && !chepaiyanse.equals("null")) {
-				VehicleVO vehicleVO = vehicleService.selectVehicleColor(chepaiyanse);
-				if (vehicleVO == null || vehicleVO.getChepaiyanse() == null) {
-					driver.setMsg("车牌颜色输入错误;");
-					errorStr += "车牌颜色输入错误;";
-					driver.setImportUrl("icon_cha.png");
-					bb++;
-				} else {
+				if(ss == true){
+					dictVOList = iDictClient.getDictByCode("zhunjiachexing",zhunjiachexing);
 					driver.setImportUrl("icon_gou.png");
-				}
-			}
-
-			if (StringUtils.isNotBlank(chepaiyanse) && StringUtils.isNotBlank(cheliangpaiz) && !cheliangpaiz.equals("null") && !cheliangpaiz.equals("null")) {
-				Vehicle vehicleVO = vehicleService.vehileOne(cheliangpaiz,chepaiyanse,Integer.valueOf(dept.getId()));
-				if(vehicleVO!=null){
-					driver.setImportUrl("icon_gou.png");
+					driver.setZhunjiachexing(dictVOList.get(0).getDictKey());
 				}else{
 					driver.setImportUrl("icon_cha.png");
-					errorStr+=cheliangpaiz+"该车不存在;";
-					driver.setMsg(cheliangpaiz+"该车不存在;");
+					errorStr += zhunjiachexing+",该从准驾车型异常,请校验”;";
+					driver.setMsg(zhunjiachexing+",该从准驾车型异常,请校验;");
 					bb++;
 				}
-				driver.setCheliangpaizhao(cheliangpaiz);
-				driver.setChepaiyanse(chepaiyanse);
-			}else{
-				driver.setCheliangpaizhao("");
-				driver.setChepaiyanse("");
+			}
+			//验证从业资格证发放日期
+			String congyezhengchulingri = String.valueOf(a.get("从业资格证初次发放日期")).trim();
+			if(StringUtils.isNotBlank(congyezhengchulingri) && !congyezhengchulingri.equals("null")){
+				if(DateUtils.isDateString(congyezhengchulingri,null) == true){
+					driver.setCongyezhengchulingri(congyezhengchulingri);
+					driver.setImportUrl("icon_gou.png");
+				}else{
+					driver.setMsg(congyezhengchulingri+",该从业资格证初次发放日期,不是时间格式;");
+					errorStr+=congyezhengchulingri+",该从业资格证初次发放日期,不是时间格式;";
+					driver.setImportUrl("icon_cha.png");
+					bb++;
+				}
+			}
+			//验证从业资格证有效截至日期
+			String congyezhengyouxiaoqi = String.valueOf(a.get("从业资格证有效截至日期")).trim();
+			if(StringUtils.isNotBlank(congyezhengyouxiaoqi) && !congyezhengyouxiaoqi.equals("null")){
+				if(DateUtils.isDateString(congyezhengyouxiaoqi,null) == true){
+					driver.setCongyezhengyouxiaoqi(congyezhengyouxiaoqi);
+					driver.setImportUrl("icon_gou.png");
+				}else{
+					driver.setMsg(congyezhengyouxiaoqi+",该从业资格证有效截至日期,不是时间格式;");
+					errorStr+=congyezhengyouxiaoqi+",该从业资格证有效截至日期,不是时间格式;";
+					driver.setImportUrl("icon_cha.png");
+					bb++;
+				}
+			}
+			//验证 从业资格证发放日期 不能大于 从业资格证有效截至日期
+			if(StringUtils.isNotBlank(congyezhengchulingri) && !congyezhengchulingri.equals("null") && StringUtils.isNotBlank(congyezhengyouxiaoqi) && !congyezhengyouxiaoqi.equals("null")){
+				int a1 = congyezhengchulingri.length();
+				int b1 = congyezhengyouxiaoqi.length();
+				if(a1 == b1){
+					if(a1 <= 10){
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+						if(DateUtils.belongCalendar(format.parse(congyezhengchulingri),format.parse(congyezhengyouxiaoqi))){
+							driver.setImportUrl("icon_gou.png");
+						}else{
+							driver.setMsg("从业资格证发放日期,不能大于从业资格证有效截至日期;");
+							errorStr+="从业资格证发放日期,不能大于从业资格证有效截至日期;";
+							driver.setImportUrl("icon_cha.png");
+							bb++;
+						}
+					}
+					if(a1 > 10){
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						if(DateUtils.belongCalendar(format.parse(congyezhengchulingri),format.parse(congyezhengyouxiaoqi))){
+							driver.setImportUrl("icon_gou.png");
+						}else{
+							driver.setMsg("从业资格证发放日期,不能大于从业资格证有效截至日期;");
+							errorStr+="从业资格证发放日期,不能大于从业资格证有效截至日期;";
+							driver.setImportUrl("icon_cha.png");
+							bb++;
+						}
+					}
+				}else{
+					driver.setMsg("从业资格证发放日期与从业资格证有效截至日期,时间格式不一致;");
+					errorStr+="从业资格证发放日期与从业资格证有效截至日期,时间格式不一致;";
+					driver.setImportUrl("icon_cha.png");
+					bb++;
+				}
+			}
+			//验证本次诚信考核日期
+			String chengxinkaoheshijian = String.valueOf(a.get("本次诚信考核日期")).trim();
+			if(StringUtils.isNotBlank(chengxinkaoheshijian) && !chengxinkaoheshijian.equals("null")){
+				if(DateUtils.isDateString(chengxinkaoheshijian,null) == true){
+					driver.setChengxinkaoheshijian(chengxinkaoheshijian);
+					driver.setImportUrl("icon_gou.png");
+				}else{
+					driver.setMsg(chengxinkaoheshijian+",该本次诚信考核日期,不是时间格式;");
+					errorStr+=chengxinkaoheshijian+",该本次诚信考核日期,不是时间格式;";
+					driver.setImportUrl("icon_cha.png");
+					bb++;
+				}
+			}
+			//验证下次诚信考核日期
+			String xiacichengxinkaoheshijian = String.valueOf(a.get("下次诚信考核日期")).trim();
+			if(StringUtils.isNotBlank(xiacichengxinkaoheshijian) && !xiacichengxinkaoheshijian.equals("null")){
+				if(DateUtils.isDateString(xiacichengxinkaoheshijian,null) == true){
+					driver.setXiacichengxinkaoheshijian(xiacichengxinkaoheshijian);
+					driver.setImportUrl("icon_gou.png");
+				}else{
+					driver.setMsg(xiacichengxinkaoheshijian+",该下次诚信考核日期,不是时间格式;");
+					errorStr+=xiacichengxinkaoheshijian+",该下次诚信考核日期,不是时间格式;";
+					driver.setImportUrl("icon_cha.png");
+					bb++;
+				}
+			}
+			//验证 本次诚信考核日期 不能大于 下次诚信考核日期
+			if(StringUtils.isNotBlank(chengxinkaoheshijian) && !chengxinkaoheshijian.equals("null") && StringUtils.isNotBlank(xiacichengxinkaoheshijian) && !xiacichengxinkaoheshijian.equals("null")){
+				int a1 = chengxinkaoheshijian.length();
+				int b1 = xiacichengxinkaoheshijian.length();
+				if(a1 == b1){
+					if(a1 <= 10){
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+						if(DateUtils.belongCalendar(format.parse(chengxinkaoheshijian),format.parse(xiacichengxinkaoheshijian))){
+							driver.setImportUrl("icon_gou.png");
+						}else{
+							driver.setMsg("本次诚信考核日期,不能大于下次诚信考核日期;");
+							errorStr+="本次诚信考核日期,不能大于下次诚信考核日期;";
+							driver.setImportUrl("icon_cha.png");
+							bb++;
+						}
+					}
+					if(a1 > 10){
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						if(DateUtils.belongCalendar(format.parse(chengxinkaoheshijian),format.parse(xiacichengxinkaoheshijian))){
+							driver.setImportUrl("icon_gou.png");
+						}else{
+							driver.setMsg("本次诚信考核日期,不能大于下次诚信考核日期;");
+							errorStr+="本次诚信考核日期,不能大于下次诚信考核日期;";
+							driver.setImportUrl("icon_cha.png");
+							bb++;
+						}
+					}
+				}else{
+					driver.setMsg("从业资格证发放日期与从业资格证有效截至日期,时间格式不一致;");
+					errorStr+="从业资格证发放日期与从业资格证有效截至日期,时间格式不一致;";
+					driver.setImportUrl("icon_cha.png");
+					bb++;
+				}
+			}
+			//验证驾驶证有效截至日期
+			String jiashizhengyouxiaoqi = String.valueOf(a.get("驾驶证有效截至日期")).trim();
+			if(StringUtils.isNotBlank(jiashizhengyouxiaoqi) && !jiashizhengyouxiaoqi.equals("null")){
+				if(DateUtils.isDateString(jiashizhengyouxiaoqi,null) == true){
+					driver.setJiashizhengyouxiaoqi(jiashizhengyouxiaoqi);
+					driver.setImportUrl("icon_gou.png");
+				}else{
+					driver.setMsg(jiashizhengyouxiaoqi+",该驾驶证有效截至日期,不是时间格式;");
+					errorStr+=jiashizhengyouxiaoqi+",该驾驶证有效截至日期,不是时间格式;";
+					driver.setImportUrl("icon_cha.png");
+					bb++;
+				}
+			}
+			//验证身份证有效截至日期
+			String shenfenzhengyouxiaoqi = String.valueOf(a.get("身份证有效截至日期")).trim();
+			if(StringUtils.isNotBlank(shenfenzhengyouxiaoqi) && !shenfenzhengyouxiaoqi.equals("null")){
+				if(DateUtils.isDateString(shenfenzhengyouxiaoqi,null) == true){
+					driver.setShenfenzhengyouxiaoqi(shenfenzhengyouxiaoqi);
+					driver.setImportUrl("icon_gou.png");
+				}else{
+					driver.setMsg(shenfenzhengyouxiaoqi+",该驾驶证有效截至日期,不是时间格式;");
+					errorStr+=shenfenzhengyouxiaoqi+",该驾驶证有效截至日期,不是时间格式;";
+					driver.setImportUrl("icon_cha.png");
+					bb++;
+				}
+			}
+			//验证体检有效截至日期
+			String tijianyouxiaoqi = String.valueOf(a.get("体检有效截至日期")).trim();
+			if(StringUtils.isNotBlank(tijianyouxiaoqi) && !tijianyouxiaoqi.equals("null")){
+				if(DateUtils.isDateString(tijianyouxiaoqi,null) == true){
+					driver.setTijianyouxiaoqi(tijianyouxiaoqi);
+					driver.setImportUrl("icon_gou.png");
+				}else{
+					driver.setMsg(tijianyouxiaoqi+",该体检有效截至日期,不是时间格式;");
+					errorStr+=tijianyouxiaoqi+",该体检有效截至日期,不是时间格式;";
+					driver.setImportUrl("icon_cha.png");
+					bb++;
+				}
+			}
+			//验证发证机关
+			String fazhengjiguan = String.valueOf(a.get("发证机关")).trim();
+			if(StringUtils.isNotBlank(fazhengjiguan) && !fazhengjiguan.equals("null")){
+				driver.setFazhengjiguan(fazhengjiguan);
+				driver.setImportUrl("icon_gou.png");
+			}
+			//验证籍贯
+			String jiatingzhuzhi = String.valueOf(a.get("籍贯")).trim();
+			if(StringUtils.isNotBlank(jiatingzhuzhi) && !jiatingzhuzhi.equals("null")){
+				driver.setJiatingzhuzhi(jiatingzhuzhi);
+				driver.setImportUrl("icon_gou.png");
+			}
+			//验证备注
+			String beizhu = String.valueOf(a.get("备注")).trim();
+			if(StringUtils.isNotBlank(beizhu) && !beizhu.equals("null")){
+				driver.setBeizhu(beizhu);
+				driver.setImportUrl("icon_gou.png");
 			}
 			drivers.add(driver);
 		}
@@ -1647,19 +1550,23 @@ public class JiaShiYuanController {
 	}
 
 	/**
-	 * 驾驶员信息--确认导入
-	 * @author: elvis
-	 * @date: 2020/10/19 10:23
+	 * 企业端--驾驶员档案信息--确认导入
 	 * @param
-	 * @return: org.springblade.core.tool.api.R
 	 */
-	@PostMapping("driverImportOk")
-	@ApiLog("驾驶员信息-确认导入")
-	@ApiOperation(value = "驾驶员信息-确认导入", notes = "drivers", position = 10)
-	public R driverImportOk(@RequestParam(value = "drivers") String drivers,BladeUser user,@RequestParam Integer userId,@RequestParam String userName){
+	@PostMapping("driverDeptImportOk")
+	@ApiLog("企业端--驾驶员档案信息--确认导入(最新)")
+	@ApiOperation(value = "企业端--驾驶员档案信息--确认导入(最新)", notes = "drivers", position = 10)
+	public R driverDeptImportOk(@RequestParam(value = "drivers") String drivers,BladeUser user,@RequestParam Integer userId,@RequestParam String userName){
 		JSONArray json = JSONUtil.parseArray(drivers);
 		List<Map<String,Object>> lists = (List)json;
 		R rs = new R();
+		if (user == null) {
+			rs.setCode(500);
+			rs.setMsg("用户权限验证失败");
+			rs.setData(null);
+			rs.setSuccess(false);
+			return rs;
+		}
 		//时间默认格式
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		//验证数据成功条数
@@ -1671,8 +1578,8 @@ public class JiaShiYuanController {
 		//错误信息
 		String errorStr="";
 
-		if(lists.size()>5000){
-			errorStr+="导入数据超过5000条，无法导入！";
+		if(lists.size()>2000){
+			errorStr+="导入数据超过2000条，无法导入！";
 			rs.setMsg(errorStr);
 			rs.setCode(400);
 			return rs;
@@ -1682,80 +1589,52 @@ public class JiaShiYuanController {
 			aa++;
 			JiaShiYuan driver=new JiaShiYuan();
 			SimpleDateFormat dateFormat2=new SimpleDateFormat("yyyy-MM-dd");
-			Dept dept;
-			String id=IdUtil.simpleUUID();
-			driver.setId(id);
-			driver.setDeptId(Integer.valueOf(String.valueOf(a.get("deptId")).trim()));
+			String deptId = String.valueOf(a.get("deptId"));
+			driver.setDeptId(Integer.valueOf(deptId));
 			driver.setJiashiyuanxingming(String.valueOf(a.get("jiashiyuanxingming")).trim());
+			driver.setXingbie(String.valueOf(a.get("xingbie")));
 			String tmp = String.valueOf(a.get("shenfenzhenghao")).trim();
 			driver.setShenfenzhenghao(tmp);
-			//通过身份证获取性别
-			Integer sex = IdCardUtil.getGender(tmp);
-//			if(1 == sex){
-//				driver.setXingbie("男");
-//			}else if(2 == sex){
-//				driver.setXingbie("女");
-//			}
-			if(1 == sex){
-				driver.setXingbie("1");
-			}else if(0 == sex){
-				driver.setXingbie("2");
-			}
 			//通过身份证获取年龄
 			Integer age = IdCardUtil.getAgeByCard(tmp);
 			driver.setNianling(age.toString());
 			//通过身份证获取生日日期
 			Date chushengshijian = IdCardUtil.getBirthDate(tmp);
-			driver.setChushengshijian(dateFormat2.format(chushengshijian));
-			//验证手机号码是否合法
 			String shoujihaoma = String.valueOf(a.get("shoujihaoma")).trim();
 			driver.setShoujihaoma(shoujihaoma);
-			driver.setJiashiyuanleixing("驾驶员");
-			driver.setCongyerenyuanleixing("驾驶员");
+			driver.setChushengshijian(dateFormat2.format(chushengshijian));
+			driver.setCongyeleibie(String.valueOf(a.get("congyeleibie")).trim());
+			driver.setJiashiyuanleixing(String.valueOf(a.get("jiashiyuanleixing")).trim());
+			driver.setCongyerenyuanleixing(String.valueOf(a.get("jiashiyuanleixing")).trim());
 			driver.setJiashizhenghao(String.valueOf(a.get("jiashizhenghao")).trim());
 			driver.setCongyezigezheng(String.valueOf(a.get("congyezigezheng")).trim());
-			if(String.valueOf(a.get("congyezhengyouxiaoqi")) == "null"){
-				driver.setCongyezhengyouxiaoqi("");
-			}else{
-				driver.setCongyezhengyouxiaoqi(String.valueOf(a.get("congyezhengyouxiaoqi")).trim());
-			}
-			driver.setDenglumima(DigestUtil.encrypt("123456"));
+			driver.setZhunjiachexing(String.valueOf(a.get("zhunjiachexing")).trim());
+			driver.setCongyezhengchulingri(String.valueOf(a.get("congyezhengchulingri")).trim());
+			driver.setCongyezhengyouxiaoqi(String.valueOf(a.get("congyezhengyouxiaoqi")).trim());
+			driver.setChengxinkaoheshijian(String.valueOf(a.get("chengxinkaoheshijian")).trim());
+			driver.setXiacichengxinkaoheshijian(String.valueOf(a.get("xiacichengxinkaoheshijian")).trim());
+			driver.setJiashizhengchulingriqi(String.valueOf(a.get("jiashizhengchulingriqi")).trim());
+			driver.setJiashizhengyouxiaoqi(String.valueOf(a.get("jiashizhengyouxiaoqi")).trim());
+			driver.setShenfenzhengyouxiaoqi(String.valueOf(a.get("shenfenzhengyouxiaoqi")).trim());
+			driver.setTijianyouxiaoqi(String.valueOf(a.get("tijianyouxiaoqi")).trim());
+			driver.setFazhengjiguan(String.valueOf(a.get("fazhengjiguan")).trim());
+			driver.setBeizhu(String.valueOf(a.get("beizhu")).trim());
 			driver.setIsdelete(0);
 			driver.setCreatetime(DateUtil.now());
 			driver.setCaozuoshijian(DateUtil.now());
 			if(user != null){
 				driver.setCaozuoren(user.getUserName());
 				driver.setCaozuorenid(user.getUserId());
-			}else{
-				driver.setCaozuoren(userName);
-				driver.setCaozuorenid(userId);
 			}
-			if(StringUtils.isNotBlank(String.valueOf(a.get("cheliangpaizhao"))) && StringUtils.isNotBlank(String.valueOf(a.get("chepaiyanse")))){
-				driver.setCheliangpaizhao(String.valueOf(a.get("cheliangpaizhao")));
-				driver.setChepaiyanse(String.valueOf(a.get("chepaiyanse")));
-				isDataValidity = iJiaShiYuanService.insertSelective(driver);
-				//向车辆驾驶员绑定关系表中添加记录
-				Vehicle vehicleVO = vehicleService.vehileOne(driver.getCheliangpaizhao(),driver.getChepaiyanse(),Integer.valueOf(driver.getDeptId()));
-				CheliangJiashiyuan cheliangJiashiyuan = vehicleService.getVehidAndJiashiyuanId(vehicleVO.getId(),driver.getId());
-				if(cheliangJiashiyuan == null){
-					CheliangJiashiyuan cheliangJiashiyuan1 = new CheliangJiashiyuan();
-					cheliangJiashiyuan1.setDeptId(vehicleVO.getDeptId());
-					cheliangJiashiyuan1.setCreatetime(DateUtil.now());
-					cheliangJiashiyuan1.setJiashiyuanid(driver.getId());
-					cheliangJiashiyuan1.setVehid(vehicleVO.getId());
-					cheliangJiashiyuan1.setType("1");
-					boolean vaj = vehicleService.insertVehidAndJiashiyuan(cheliangJiashiyuan1);
-				}
-				//更新车辆表相关数据信息
-				Vehicle vehicle = new Vehicle();
-				vehicle.setJiashiyuanxingming(driver.getJiashiyuanxingming());
-				vehicle.setJiashiyuandianhua(driver.getShoujihaoma());
-				vehicle.setDeptId(driver.getDeptId());
-				vehicle.setJiashiyuanid(driver.getId());
-				vehicle.setChepaiyanse(driver.getChepaiyanse());
-				vehicle.setCheliangpaizhao(driver.getCheliangpaizhao());
-				boolean v = vehicleService.updateSelective(vehicle);
+			//登录密码
+			driver.setDenglumima(DigestUtil.encrypt("123456"));
+			JiaShiYuan driverInfo = iJiaShiYuanService.getjiaShiYuanByOne(driver.getDeptId().toString(),driver.getJiashiyuanxingming(), driver.getShoujihaoma(),driver.getShenfenzhenghao(),driver.getJiashiyuanleixing());
+			if(driverInfo != null){
+				driver.setId(driverInfo.getId());
+				isDataValidity = iJiaShiYuanService.updateSelective(driver);
 			}else{
+				String id= IdUtil.simpleUUID();
+				driver.setId(id);
 				isDataValidity = iJiaShiYuanService.insertSelective(driver);
 			}
 		}
@@ -1771,5 +1650,6 @@ public class JiaShiYuanController {
 			return rs;
 		}
 	}
+
 
 }
