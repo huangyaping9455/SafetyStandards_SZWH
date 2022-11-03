@@ -151,6 +151,13 @@ public class JiaShiYuan implements Serializable {
 	private String jiashizhengfujian;
 
 	/**
+	 * 驾驶证复印件附页
+	 */
+	@ApiModelProperty(value = "驾驶证复印件附页")
+	@TableField(exist = false)
+	private String jiashizhengfujianfanmian;
+
+	/**
 	 * 家庭住址
 	 */
 	@ApiModelProperty(value = "家庭住址")

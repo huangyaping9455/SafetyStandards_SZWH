@@ -23,7 +23,6 @@ import org.springblade.anbiao.configure.service.IConfigureService;
 import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.service.*;
-import org.springblade.anbiao.jiashiyuan.service.impl.AnbiaoJiashiyuanTijianServiceImpl;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
 import org.springblade.common.constant.CommonConstant;
 import org.springblade.common.tool.DateUtils;
@@ -44,13 +43,10 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by you on 2019/4/22.
@@ -345,20 +341,98 @@ public class JiaShiYuanController {
 
 		//新增
 		if (deail == null) {
-			jiaShiYuan.setJiashiyuanleixing("驾驶员");
+			if(StringUtils.isBlank(jiaShiYuan.getJiashiyuanleixing())){
+				jiaShiYuan.setCongyerenyuanleixing("驾驶员");
+			}
 			jiaShiYuan.setCaozuoren(user.getUserName());
 			jiaShiYuan.setCaozuorenid(user.getUserId());
 			jiaShiYuan.setCreatetime(DateUtil.now());
 			jiaShiYuan.setDenglumima(DigestUtil.encrypt(jiaShiYuan.getShoujihaoma().substring(jiaShiYuan.getShoujihaoma().length() - 6)));
 			jiaShiYuan.setXingbie(Integer.toString(IdCardUtil.getGender(jiaShiYuan.getShenfenzhenghao())));
 			jiaShiYuan.setIsdelete(0);
-			return R.status(iJiaShiYuanService.save(jiaShiYuan));
+			boolean i = iJiaShiYuanService.save(jiaShiYuan);
+			if (i){
+				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShoujihaoma, jiaShiYuan.getShoujihaoma());
+				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShenfenzhenghao, jiaShiYuan.getShenfenzhenghao());
+				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId, jiaShiYuan.getDeptId());
+				jiaShiYuan = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+
+				//向入职登记表添加信息
+				AnbiaoJiashiyuanRuzhi ruzhi = new AnbiaoJiashiyuanRuzhi();
+				QueryWrapper<AnbiaoJiashiyuanRuzhi> ruzhiQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanRuzhi>();
+				ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrAjIds, jiaShiYuan.getId());
+				ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrDelete, "0");
+				AnbiaoJiashiyuanRuzhi rzdeail = ruzhiService.getBaseMapper().selectOne(ruzhiQueryWrapper);
+				if(rzdeail == null){
+					ruzhi.setAjrCreateByName(jiaShiYuan.getCaozuoren());
+					ruzhi.setAjrCreateByIds(jiaShiYuan.getCaozuorenid().toString());
+					ruzhi.setAjrCreateTime(jiaShiYuan.getCaozuoshijian());
+					ruzhi.setAjrDelete("0");
+					ruzhi.setAjrAjIds(jiaShiYuan.getId());
+					ruzhi.setAjrName(jiaShiYuan.getJiashiyuanxingming());
+					ruzhi.setAjrSex(jiaShiYuan.getXingbie());
+					ruzhi.setAjrAge(Integer.valueOf(jiaShiYuan.getNianling()));
+					ruzhi.setAjrIdNumber(jiaShiYuan.getShenfenzhenghao());
+					ruzhi.setAjrApproverStatus("0");
+					i = ruzhiService.save(ruzhi);
+				}
+
+				//向驾驶证信息表添加数据
+				AnbiaoJiashiyuanJiashizheng jiashizheng = new AnbiaoJiashiyuanJiashizheng();
+				QueryWrapper<AnbiaoJiashiyuanJiashizheng> jiashizhengQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanJiashizheng>();
+				jiashizhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanJiashizheng::getAjjAjIds, jiashizheng.getAjjAjIds());
+				jiashizhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanJiashizheng::getAjjDelete, "0");
+				AnbiaoJiashiyuanJiashizheng jszdeail = jiashizhengService.getBaseMapper().selectOne(jiashizhengQueryWrapper);
+				if(jszdeail == null){
+					jiashizheng.setAjjAjIds(jiaShiYuan.getId());
+					jiashizheng.setAjjFileNo(jiaShiYuan.getJiashizhenghao());
+					jiashizheng.setAjjValidPeriodStart(jiaShiYuan.getJiashizhengchulingriqi());
+					jiashizheng.setAjjValidPeriodEnd(jiaShiYuan.getJiashizhengyouxiaoqi());
+					jiashizheng.setAjjFrontPhotoAddress(jiaShiYuan.getJiashizhengfujian());
+					jiashizheng.setAjjAttachedPhotos(jiaShiYuan.getJiashizhengfujianfanmian());
+					jiashizheng.setAjjStatus("0");
+					jiashizheng.setAjjDelete("0");
+					jiashizheng.setAjjCreateByIds(jiaShiYuan.getCaozuorenid().toString());
+					jiashizheng.setAjjCreateByName(jiaShiYuan.getCaozuoren());
+					jiashizheng.setAjjCreateTime(jiaShiYuan.getCaozuoshijian());
+					i = jiashizhengService.save(jiashizheng);
+				}
+
+				//向从业资格证信息表添加数据
+				AnbiaoJiashiyuanCongyezigezheng congyezigezheng = new AnbiaoJiashiyuanCongyezigezheng();
+				QueryWrapper<AnbiaoJiashiyuanCongyezigezheng> congyezigezhengQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanCongyezigezheng>();
+				congyezigezhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanCongyezigezheng::getAjcAjIds, jiaShiYuan.getId());
+				congyezigezhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanCongyezigezheng::getAjcDelete, "0");
+				AnbiaoJiashiyuanCongyezigezheng cyzdeail = congyezigezhengService.getBaseMapper().selectOne(congyezigezhengQueryWrapper);
+				if(cyzdeail == null){
+					congyezigezheng.setAjcIds(jiaShiYuan.getId());
+					congyezigezheng.setAjcCertificateNo(jiaShiYuan.getCongyezigezheng());
+					congyezigezheng.setAjcIssueDate(jiaShiYuan.getCongyezhengchulingri());
+					congyezigezheng.setAjcValidUntil(jiaShiYuan.getCongyezhengyouxiaoqi());
+					congyezigezheng.setAjcLicence(jiaShiYuan.getCongyezhengfujian());
+					congyezigezheng.setAjcStatus("0");
+					congyezigezheng.setAjcCreateTime(DateUtil.now());
+					congyezigezheng.setAjcDelete("0");
+					i = congyezigezhengService.save(congyezigezheng);
+				}
+			}
+
+			if (i){
+				r.setMsg("添加成功");
+				r.setCode(200);
+				r.setSuccess(true);
+				return r;
+			}else{
+				r.setMsg("添加失败");
+				r.setCode(500);
+				r.setSuccess(false);
+				return r;
+			}
 		} else {
-			jiaShiYuan.setId(deail.getId());
-			jiaShiYuan.setCaozuoren(user.getUserName());
-			jiaShiYuan.setCaozuorenid(user.getUserId());
-			jiaShiYuan.setCaozuoshijian(DateUtil.now());
-			return R.status(iJiaShiYuanService.updateById(jiaShiYuan));
+			r.setMsg("该驾驶员信息已存在");
+			r.setCode(500);
+			r.setSuccess(false);
+			return r;
 		}
 	}
 
