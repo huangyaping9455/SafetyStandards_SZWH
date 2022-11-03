@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.anquanhuiyi.mapper.AnbiaoAnquanhuiyiDetailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiDetail">
+        <id column="aad_ids" property="aadIds" />
+        <result column="aad_aa_ids" property="aadAaIds" />
+        <result column="aad_ap_ids" property="aadApIds" />
+        <result column="aad_ap_name" property="aadApName" />
+        <result column="aad_ap_type" property="aadApType" />
+        <result column="add_ap_head_portrait" property="addApHeadPortrait" />
+        <result column="add_ap_autograph" property="addApAutograph" />
+        <result column="add_ap_being_joined" property="addApBeingJoined" />
+        <result column="add_time" property="addTime" />
+    </resultMap>
+
+</mapper>
