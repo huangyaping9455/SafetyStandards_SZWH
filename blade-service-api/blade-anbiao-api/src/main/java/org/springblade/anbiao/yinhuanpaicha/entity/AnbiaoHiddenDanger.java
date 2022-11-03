@@ -29,7 +29,7 @@ public class AnbiaoHiddenDanger implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "隐患主键")
-    @TableId(value = "ahd_ids", type = IdType.AUTO)
+    @TableId(value = "ahd_ids", type = IdType.UUID)
     private String ahdIds;
 
     @ApiModelProperty(value = "企业主键")
