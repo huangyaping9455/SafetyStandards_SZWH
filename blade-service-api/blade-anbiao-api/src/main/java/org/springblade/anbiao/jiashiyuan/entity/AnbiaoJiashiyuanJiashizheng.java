@@ -30,7 +30,7 @@ public class AnbiaoJiashiyuanJiashizheng implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "主键")
-    @TableId(value = "ajj_ids", type = IdType.AUTO)
+    @TableId(value = "ajj_ids", type = IdType.UUID)
     private String ajjIds;
 
     @ApiModelProperty(value = "驾驶员信息表主键")

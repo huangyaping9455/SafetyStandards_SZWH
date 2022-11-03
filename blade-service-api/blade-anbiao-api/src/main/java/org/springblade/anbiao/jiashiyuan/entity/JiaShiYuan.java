@@ -129,6 +129,7 @@ public class JiaShiYuan implements Serializable {
 	 * 单位名称
 	 */
 	@ApiModelProperty(value = "单位名称")
+	@TableField(exist = false)
 	private String deptName;
 
 	/**

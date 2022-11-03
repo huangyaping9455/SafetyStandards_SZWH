@@ -69,4 +69,38 @@ public class AnbiaoJiashiyuanRuzhiController {
 		}
 	}
 
+	/**
+	 * 入职登记信息--审批
+	 * @update: 李明昊 添加审批
+	 * @param
+	 */
+	@PostMapping("/driverAudit")
+	@ApiLog("入职登记信息--审批")
+	@ApiOperation(value = "入职登记信息--审批", notes = "ajrId", position = 10)
+	public R driverAudit( String ajrId,BladeUser user ){
+		R r = new R();
+		QueryWrapper<AnbiaoJiashiyuanRuzhi> jiashiyuanRuzhiQueryWrapper = new QueryWrapper<>();
+		jiashiyuanRuzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrIds,ajrId);
+		jiashiyuanRuzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrApproverStatus,"0");
+		AnbiaoJiashiyuanRuzhi deail = ruzhiService.getBaseMapper().selectOne(jiashiyuanRuzhiQueryWrapper);
+
+		if (deail != null){
+			if (deail.getAjrApproverAutograph() != null){
+				deail.setAjrApproverStatus("1");
+				deail.setAjrApproverName(user.getUserName());
+				deail.setAjrApproverTime(DateUtil.now());
+				return R.status(ruzhiService.updateById(deail));
+			}else {
+				r.setMsg("审批后请签名");
+				r.setCode(500);
+				r.setSuccess(false);
+				return r;
+			}
+		}else {
+			r.setMsg("无入职登记信息可审批");
+			r.setCode(500);
+			r.setSuccess(false);
+			return r;
+		}
+	}
 }
