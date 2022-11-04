@@ -474,14 +474,14 @@ public class JiaShiYuanController {
 			return r;
 		}
 		oldpassWord = DigestUtil.encrypt(oldpassWord);
-		if (detal.getDenglumima().equals(oldpassWord)){
+		if (!(detal.getDenglumima().equals(oldpassWord))){
 			r.setMsg("原密码不正确");
 			r.setCode(500);
 			r.setSuccess(false);
 			return r;
 		}else{
 			passWord = DigestUtil.encrypt(passWord);
-			boolean temp = jiaShiYuanService.updatePassWord(id, passWord);
+			boolean temp = jiaShiYuanService.updatePassWord(passWord,id);
 			if (temp == true){
 				r.setMsg("修改成功");
 				r.setCode(200);
@@ -658,7 +658,13 @@ public class JiaShiYuanController {
 		}
 
 		///驾驶员信息主表///
-		i = iJiaShiYuanService.updateDel(id);
+		JiaShiYuan jiaShiYuan = new JiaShiYuan();
+		jiaShiYuan.setCaozuorenid(user.getUserId());
+		jiaShiYuan.setCaozuoren(user.getUserName());
+		jiaShiYuan.setCaozuoshijian(DateUtil.now());
+		jiaShiYuan.setIsdelete(1);
+		jiaShiYuan.setId(id);
+		i = iJiaShiYuanService.updateById(jiaShiYuan);
 		if(i){
 			r.setCode(200);
 			r.setMsg("删除成功");
