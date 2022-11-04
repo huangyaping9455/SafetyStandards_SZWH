@@ -15,7 +15,7 @@
  */
 package org.springblade.system.controller;
 
-import com.alibaba.nacos.client.utils.StringUtils;
+import com.alibaba.nacos.api.utils.StringUtils;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import org.springblade.core.boot.ctrl.BladeController;

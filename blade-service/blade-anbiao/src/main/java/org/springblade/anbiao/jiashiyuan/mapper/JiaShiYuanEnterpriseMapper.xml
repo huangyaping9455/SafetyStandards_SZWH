@@ -3,7 +3,8 @@
 <mapper namespace="org.springblade.anbiao.jiashiyuan.mapper.JiaShiYuanEnterpriseMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="jiaShiYuanResultMap" type="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanEnterprise">
+    <resultMap
+        id="jiaShiYuanResultMap" type="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanEnterprise">
     </resultMap>
 
     <update id="updateDel" parameterType="java.lang.String">
@@ -48,7 +49,8 @@
         a.isdelete,
         a.createtime,
         tijianriqi
-        <if test="ids !=null and ids != ''and ids == '1'.toString()">,yj.shuoming
+        <if
+            test="ids !=null and ids != ''and ids == '1'.toString()">,yj.shuoming
         </if>
         FROM
         anbiao_jiashiyuan_enterprise a
@@ -662,6 +664,22 @@
         LIMIT 1
     </select>
 
+    <select id="selectEnterprisePerson" resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanEnterprise">
 
+        SELECT
+            a.*,b.dept_name deptName
+        FROM
+            anbiao_jiashiyuan_enterprise a
+                inner join blade_dept b on a.dept_id = b.id
+        WHERE
+                a.dept_id =
+                (
+                    SELECT
+                        a.dept_id
+                    FROM
+                        anbiao_jiashiyuan_enterprise a
+                    WHERE
+                        ifnull(a.isdelete ,0) = 0 and a.id=#{id})
+    </select>
 
 </mapper>

@@ -159,4 +159,18 @@ public class Personnel implements Serializable {
 	 */
 	@ApiModelProperty(value = "岗位id")
 	private String postId;
+
+	@ApiModelProperty(value = "身份证附件正面")
+	private String shenfenzhengfujian;
+
+	@ApiModelProperty(value = "身份证附件反面")
+	private String shenfenzhengfanmianfujian;
+
+	@ApiModelProperty(value = "其他附件证明")
+	private String qitazhengmianfujian;
+
+	@ApiModelProperty(value = "其他附件反面")
+	private String qitafanmianfujian;
+
+
 }

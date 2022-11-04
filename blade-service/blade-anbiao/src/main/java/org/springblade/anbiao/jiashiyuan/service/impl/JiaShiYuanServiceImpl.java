@@ -7,12 +7,10 @@ import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.mapper.JiaShiYuanMapper;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
+import org.springblade.anbiao.jiashiyuan.vo.DriverInfoVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
-import org.springblade.common.constant.CommonConstant;
-import org.springblade.core.tool.utils.DigestUtil;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -143,8 +141,8 @@ public class JiaShiYuanServiceImpl extends ServiceImpl<JiaShiYuanMapper, JiaShiY
 	}
 
 	@Override
-	public JiaShiYuan getjiaShiYuan(String deptId, String jiashiyuanxingming, String shoujihaoma) {
-		return jiaShiYuanMapper.getjiaShiYuan(deptId, jiashiyuanxingming, shoujihaoma);
+	public JiaShiYuan getjiaShiYuan(String deptId, String jiashiyuanxingming, String shoujihaoma,String jiashiyuanleixing) {
+		return jiaShiYuanMapper.getjiaShiYuan(deptId, jiashiyuanxingming, shoujihaoma, jiashiyuanleixing);
 	}
 
 	@Override
@@ -166,5 +164,11 @@ public class JiaShiYuanServiceImpl extends ServiceImpl<JiaShiYuanMapper, JiaShiY
 	public void bindDriverOpenId(String account, String openid) {
 		jiaShiYuanMapper.bindDriverOpenId(account, openid);
 	}
+
+	@Override
+	public DriverInfoVO selectDriverInfo(String jsyId) {
+		return jiaShiYuanMapper.selectDriverInfo(jsyId);
+	}
+
 
 }

@@ -78,5 +78,8 @@ public interface IJiaShiYuanEnterpriseService extends IService<JiaShiYuanEnterpr
 											@Param("jiashiyuanleixing") String jiashiyuanleixing
 	);
 
+	/**
+	 * 传入用户主键、返回所属企业人员信息列表*/
+//	List<JiaShiYuanEnterprise> selectEnterprisePerson(String id);
 
 }

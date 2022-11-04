@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.chuchejiancha.mapper.AnbiaoCarExamineMapper">
+
+	<resultMap id="AnbiaoCarExamineVOResultMap" type="org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineVO">
+	</resultMap>
+
+
+	<select id="getCarExamineMTree" parameterType="java.lang.String" resultType="org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineVO">
+        SELECT
+            DISTINCT
+            xiaji.parentid as parentId,
+            xiaji.*
+        FROM
+            anbiao_car_examine shangji,
+            anbiao_car_examine xiaji
+        WHERE xiaji.treecode LIKE CONCAT(shangji.treecode,'%')
+            AND xiaji.isdelete = 0
+            AND xiaji.status = 1
+            AND xiaji.deptid = #{deptId}
+		<if test="Id != null">
+            AND shangji.id = #{Id}
+		</if>
+		<if test="parentId != null">
+			AND xiaji.parentid = #{parentId}
+		</if>
+		<if test="Name != null">
+			AND xiaji.name like '%${Name}%'
+		</if>
+		<if test="type != null">
+			AND xiaji.parentid != 0
+		</if>
+	</select>
+
+	<select id="getCarExamineMTreeMuBan" resultType="org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineVO">
+		select
+			id,parentid as parentId,name
+		from
+			anbiao_car_examine
+		WHERE deptid = 1
+		  AND isdelete = 0
+		  AND status = 1
+		  AND parentid = 0
+		GROUP BY id,parentid,`name`
+	</select>
+
+	<select id="selectGetQYWD" resultType="org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineVO">
+		select
+			a.dept_id as deptId,
+			a.dept_name as deptName
+		from
+			anbiao_organization a
+			inner join(
+				select b.id from blade_dept a,blade_dept b
+				where b.tree_code like CONCAT(a.tree_code,'%')
+				  and a.id = #{deptId}
+				  and b.extend_type = '机构'
+			)b on a.dept_id = b.id
+		where jigouleixing in('qiye','geti')
+		  and a.isdelete = 0
+		  and dept_id not in(
+			select deptid from anbiao_car_examine
+			where isdelete = 0
+			  and dept_id is not null
+			group by
+				deptid
+			)
+		group by
+			a.dept_id,
+			a.dept_name
+	</select>
+
+	<select id="selectMaxId" resultType="java.lang.Integer">
+		select max(id) from  anbiao_car_examine
+	</select>
+
+	<sql id="tableDeptYHSql">
+		select
+			a.id as deptid,
+			a.dept_name as deptName,
+			b.name,
+			(select name from blade_user where id = b.createid and is_deleted = 0) as createname,
+			b.createtime,
+			'已生成' as statusShow
+		from (
+			 SELECT
+				 DISTINCT
+				 xiaji.id,
+				 xiaji.dept_name
+			 FROM
+				 blade_dept shangji,
+				 blade_dept xiaji
+			 WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+			   AND xiaji.is_deleted = 0
+			   AND xiaji.extend_type='机构'
+			   AND shangji.id = #{deptId}
+			 ) a
+		 inner join(
+			select deptid,name,createid,createtime from anbiao_car_examine
+			where isdelete = 0
+			  and `status` = 1
+			  and parentid = 0
+			  and deptid != 1
+			GROUP BY
+				deptid,name,createid,createtime
+			) b on a.id = b.deptid
+	</sql>
+
+	<sql id="queryDeptYHSql">
+		<if test="deptname != null and deptname != '' ">
+			and deptname like '%${deptname}%'
+		</if>
+	</sql>
+
+	<sql id="orderDeptYHSql">
+		<!-- 默认排序规则 -->
+		<if test="orderColumn == null or orderColumn == ''">
+			order by createtime
+		</if>
+		<if test="orderColumn != null and orderColumn != ''">
+			order by ${orderColumn}
+		</if>
+		<if test="orderColumn != null and orderColumn != '' and order != 0">
+			desc
+		</if>
+	</sql>
+
+	<select id="selectCarExamineDeptListPage" resultMap="AnbiaoCarExamineVOResultMap"
+			parameterType="org.springblade.anbiao.chuchejiancha.page.YinhuanpaichaXiangPage" >
+		<if test="size == 0" >
+			select * from (
+			<include refid="tableDeptYHSql" />
+			)b
+			where 1=1
+			<include refid="queryDeptYHSql" />
+			<include refid="orderDeptYHSql" />
+			limit ${total}
+		</if>
+		<if test="current != 0" >
+			select * from (
+			<include refid="tableDeptYHSql" />
+			)b
+			where 1=1
+			<include refid="queryDeptYHSql" />
+			<include refid="orderDeptYHSql" />
+			limit ${offsetNo},${size}
+		</if>
+	</select>
+
+	<select id="selectCarExamineDeptListTotal"
+			parameterType="org.springblade.anbiao.chuchejiancha.page.YinhuanpaichaXiangPage"
+			resultType="int">
+		select COUNT(1) from (
+		<include refid="tableDeptYHSql" />
+		)d
+		where 1 = 1
+		<include refid="queryDeptYHSql" />
+	</select>
+
+	<!-- 假删除 -->
+	<update id="deleteYingjiyanlian" >
+		update anbiao_car_examine set
+			isdelete = 1,updatetime = now()
+		WHERE deptid = #{deptId}
+	</update>
+
+
+</mapper>

@@ -6,10 +6,12 @@ fileserver:
   url-prefix: ${fileserver.dev.url}
   falg: ${fileserver.dev.flag}
   photoLogo: ${fileserver.dev.photoLogo}
-#  key: ${fileserver.key}
-  key: abcdefgabcdefg12
+  key: ${fileserver.dev.key}
+#  key: abcdefgabcdefg12
 alarmserver:
   address-path: ${alarmserver.dev.address}
 wechatserver:
-  appId: wx77ab38d2018a7dad
-  secret: fb5f638eb339e0c82bffddbbfe63147a
+#  appId: wx77ab38d2018a7dad
+  appId: ${wechatserver.dev.appId}
+#  secret: fb5f638eb339e0c82bffddbbfe63147a
+  secret: ${wechatserver.dev.secret}

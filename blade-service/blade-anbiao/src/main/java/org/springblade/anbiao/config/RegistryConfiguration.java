@@ -16,6 +16,7 @@
 package org.springblade.anbiao.config;
 
 
+import org.springblade.anbiao.chuchejiancha.entity.FileCarExamineParse;
 import org.springblade.core.secure.registry.SecureRegistry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +35,11 @@ public class RegistryConfiguration implements WebMvcConfigurer {
 		secureRegistry.excludePathPatterns("/anbiao/**");
 		secureRegistry.excludePathPatterns("/upload/**");
 		return secureRegistry;
+	}
+
+	@Bean
+	public FileCarExamineParse fileCarExamineParse(){
+		return new FileCarExamineParse();
 	}
 
 //	@Bean

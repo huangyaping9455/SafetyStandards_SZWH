@@ -16,6 +16,7 @@
 package org.springblade.anbiao.guanlijigouherenyuan.controller;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -78,7 +79,36 @@ public class PersonnelController extends BladeController {
 	@ApiLog("详情-人员管理")
 	@ApiOperation(value = "详情-人员管理", notes = "传入id", position = 1)
 	public R detail(String id) {
-		return R.data(personnelService.getById(id));
+		R r = new R();
+		Personnel deail = personnelService.getById(id);
+		if(deail != null){
+			//身份证正面
+			if (StrUtil.isNotEmpty(deail.getShenfenzhengfujian()) && deail.getShenfenzhengfujian().contains("http") == false) {
+				deail.setShenfenzhengfujian(fileUploadClient.getUrl(deail.getShenfenzhengfujian()));
+			}
+			//身份证反面
+			if (StrUtil.isNotEmpty(deail.getShenfenzhengfanmianfujian()) && deail.getShenfenzhengfanmianfujian().contains("http") == false) {
+				deail.setShenfenzhengfanmianfujian(fileUploadClient.getUrl(deail.getShenfenzhengfanmianfujian()));
+			}
+			//其他证件正面
+			if (StrUtil.isNotEmpty(deail.getQitazhengmianfujian()) && deail.getQitazhengmianfujian().contains("http") == false) {
+				deail.setQitazhengmianfujian(fileUploadClient.getUrl(deail.getQitazhengmianfujian()));
+			}
+			//其他证件反面
+			if (StrUtil.isNotEmpty(deail.getQitafanmianfujian()) && deail.getQitafanmianfujian().contains("http") == false) {
+				deail.setQitafanmianfujian(fileUploadClient.getUrl(deail.getQitafanmianfujian()));
+			}
+			r.setMsg("获取成功");
+			r.setData(deail);
+			r.setCode(200);
+			r.setSuccess(true);
+			return r;
+		}else{
+			r.setMsg("获取成功，暂无数据");
+			r.setCode(200);
+			r.setSuccess(true);
+			return r;
+		}
 	}
 
 	/**

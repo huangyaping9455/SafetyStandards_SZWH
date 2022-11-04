@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.chuchejiancha.mapper.AnbiaoCarExamineInfoMapper">
+
+    <resultMap id="AnbiaoCarExamineInfoResultMap" type="org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamineInfo">
+    </resultMap>
+
+    <sql id="tableDeptYHSql">
+        select
+            a.cheliangpaizhao,
+            a.chepaiyanse,
+            c.jiashiyuanxingming,
+            c.shoujihaoma,
+            d.dept_name as deptname,
+            b.*,
+            case when IFNULL(b.id,'') = '' then '未完成' else '已完成' end as statusshow
+        from
+            anbiao_vehicle a
+            left join (
+                select * from anbiao_car_examine_info
+                where date >= #{date}
+            ) b on b.vehid = a.id
+            left join anbiao_jiashiyuan c on b.jsyid = c.id and c.isdelete = 0
+            left join blade_dept d on a.dept_id = d.id and d.is_deleted = 0
+        where a.dept_id = #{deptId}
+    </sql>
+
+    <sql id="queryDeptYHSql">
+        <if test="statusshow != null and statusshow != '' ">
+            and statusshow like '%${statusshow}%'
+        </if>
+    </sql>
+
+    <sql id="orderDeptYHSql">
+        <!-- 默认排序规则 -->
+        ORDER BY statusshow,cheliangpaizhao desc
+    </sql>
+
+    <select id="selectCarExamineInfoPage" resultMap="AnbiaoCarExamineInfoResultMap"
+            parameterType="org.springblade.anbiao.chuchejiancha.page.AnbiaoCarExamineInfoPage" >
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableDeptYHSql" />
+            )b
+            where 1=1
+            <include refid="queryDeptYHSql" />
+            <include refid="orderDeptYHSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableDeptYHSql" />
+            )b
+            where 1=1
+            <include refid="queryDeptYHSql" />
+            <include refid="orderDeptYHSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectCarExamineInfoTotal"
+            parameterType="org.springblade.anbiao.chuchejiancha.page.AnbiaoCarExamineInfoPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableDeptYHSql" />
+        )d
+        where 1 = 1
+        <include refid="queryDeptYHSql" />
+    </select>
+
+</mapper>

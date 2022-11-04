@@ -41,10 +41,11 @@ public class JiaShiYuan implements Serializable {
 	/**
 	 * 性别
 	 */
-	@ApiModelProperty(value = "性别")
+	@ApiModelProperty(value = "性别（1：男，2：女）")
 	private String xingbie;
 
 	@ApiModelProperty(value = "性别（用于展示）")
+	@TableField(exist = false)
 	private String xingbieshow;
 
 	/**
@@ -78,6 +79,7 @@ public class JiaShiYuan implements Serializable {
 	private String congyerenyuanleixing;
 
 	@ApiModelProperty(value = "从业人员类型（用于展示）")
+	@TableField(exist = false)
 	private String congyerenyuanleixingshow;
 
 	@ApiModelProperty(value = "身份证初领日期",required = true)
@@ -114,6 +116,7 @@ public class JiaShiYuan implements Serializable {
 	private String jiashiyuanleixing;
 
 	@ApiModelProperty(value = "驾驶员类型（用于展示）")
+	@TableField(exist = false)
 	private String jiashiyuanleixingshow;
 
 	/**
@@ -126,6 +129,7 @@ public class JiaShiYuan implements Serializable {
 	 * 单位名称
 	 */
 	@ApiModelProperty(value = "单位名称")
+	@TableField(exist = false)
 	private String deptName;
 
 	/**
@@ -148,6 +152,13 @@ public class JiaShiYuan implements Serializable {
 	 */
 	@ApiModelProperty(value = "驾驶证复印件")
 	private String jiashizhengfujian;
+
+	/**
+	 * 驾驶证复印件附页
+	 */
+	@ApiModelProperty(value = "驾驶证复印件附页")
+	@TableField(exist = false)
+	private String jiashizhengfujianfanmian;
 
 	/**
 	 * 家庭住址
@@ -220,6 +231,10 @@ public class JiaShiYuan implements Serializable {
 	 */
 	@ApiModelProperty(value = "从业类别")
 	private String congyeleibie;
+
+	@ApiModelProperty(value = "从业类别（用于展示）")
+	@TableField(exist = false)
+	private String congyeleibieshow;
 
 	/**
 	 * 从业证有效期
@@ -457,12 +472,14 @@ public class JiaShiYuan implements Serializable {
 	 * 车辆牌照
 	 */
 	@ApiModelProperty(value = "车辆牌照")
+	@TableField(exist = false)
 	private String cheliangpaizhao;
 
 	/**
 	 * 车牌颜色
 	 */
 	@ApiModelProperty(value = "车牌颜色")
+	@TableField(exist = false)
 	private String chepaiyanse;
 
 	@ApiModelProperty(value = "openid")

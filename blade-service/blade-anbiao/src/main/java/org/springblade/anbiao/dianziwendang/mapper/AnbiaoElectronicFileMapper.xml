@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.dianziwendang.mapper.AnbiaoElectronicFileMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.dianziwendang.entity.AnbiaoElectronicFile">
+        <id column="aef_id" property="aefId" />
+        <result column="aef_dept_id" property="aefDeptId" />
+        <result column="aef_name" property="aefName" />
+        <result column="aef_type" property="aefType" />
+        <result column="aef_person_type" property="aefPersonType" />
+        <result column="aef_neirong" property="aefNeirong" />
+        <result column="aef_img" property="aefImg" />
+        <result column="aef_delete" property="aefDelete" />
+        <result column="aef_create_time" property="aefCreateTime" />
+        <result column="aef_create_by_ids" property="aefCreateByIds" />
+        <result column="aef_create_by_name" property="aefCreateByName" />
+        <result column="aef_update_time" property="aefUpdateTime" />
+        <result column="aef_update_by_ids" property="aefUpdateByIds" />
+        <result column="aef_update_by_name" property="aefUpdateByName" />
+    </resultMap>
+
+</mapper>

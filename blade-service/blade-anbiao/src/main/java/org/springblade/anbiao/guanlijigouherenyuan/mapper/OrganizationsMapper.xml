@@ -669,7 +669,19 @@
                 jingyingxukezhengfujian,
             </if>
             <if test="yingyezhizhaofujian != null">
-                yingyezhizhaofujian
+                yingyezhizhaofujian,
+            </if>
+            <if test="daoluxukezhenghao != null">
+                daoluxukezhenghao,
+            </if>
+            <if test="jigoubianma != null">
+                jigoubianma,
+            </if>
+            <if test="jingyingxukezhengchulingriqi != null">
+                jingyingxukezhengchulingriqi,
+            </if>
+            <if test="jingyingxukezhengyouxiaoqi != null">
+                jingyingxukezhengyouxiaoqi
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -825,7 +837,19 @@
                 #{jingyingxukezhengfujian},
             </if>
             <if test="yingyezhizhaofujian != null">
-                #{yingyezhizhaofujian}
+                #{yingyezhizhaofujian},
+            </if>
+            <if test="daoluxukezhenghao != null">
+                #{daoluxukezhenghao},
+            </if>
+            <if test="jigoubianma != null">
+                #{jigoubianma},
+            </if>
+            <if test="jingyingxukezhengchulingriqi != null">
+                #{jingyingxukezhengchulingriqi},
+            </if>
+            <if test="jingyingxukezhengyouxiaoqi != null">
+                #{jingyingxukezhengyouxiaoqi}
             </if>
         </trim>
     </insert>

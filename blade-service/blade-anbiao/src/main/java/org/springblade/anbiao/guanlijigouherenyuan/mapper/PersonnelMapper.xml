@@ -315,7 +315,23 @@
             </if>
 
             <if test="postId != null">
-                post_id
+                post_id,
+            </if>
+
+            <if test="shenfenzhengfujian != null">
+                shenfenzhengfujian,
+            </if>
+
+            <if test="shenfenzhengfanmianfujian != null">
+                shenfenzhengfanmianfujian,
+            </if>
+
+            <if test="qitazhengmianfujian != null">
+                qitazhengmianfujian,
+            </if>
+
+            <if test="postId != null">
+                qitafanmianfujian
             </if>
 
         </trim>
@@ -398,7 +414,23 @@
             </if>
 
             <if test="postId != null">
-                #{postId}
+                #{postId},
+            </if>
+
+            <if test="shenfenzhengfujian != null">
+                #{shenfenzhengfujian},
+            </if>
+
+            <if test="shenfenzhengfanmianfujian != null">
+                #{shenfenzhengfanmianfujian},
+            </if>
+
+            <if test="qitazhengmianfujian != null">
+                #{qitazhengmianfujian},
+            </if>
+
+            <if test="postId != null">
+                #{qitafanmianfujian}
             </if>
 
         </trim>
@@ -480,7 +512,23 @@
             </if>
 
             <if test="postId != null and postId != '' ">
-                post_id = #{postId}
+                post_id = #{postId},
+            </if>
+
+            <if test="shenfenzhengfujian != null">
+                shenfenzhengfujian = #{shenfenzhengfujian},
+            </if>
+
+            <if test="shenfenzhengfanmianfujian != null">
+                shenfenzhengfanmianfujian = #{shenfenzhengfanmianfujian},
+            </if>
+
+            <if test="qitazhengmianfujian != null">
+                qitazhengmianfujian = #{qitazhengmianfujian},
+            </if>
+
+            <if test="postId != null">
+                qitafanmianfujian = #{qitafanmianfujian}
             </if>
 
         </set>

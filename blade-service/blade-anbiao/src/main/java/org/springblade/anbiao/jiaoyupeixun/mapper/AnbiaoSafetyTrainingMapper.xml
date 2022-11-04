@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.jiaoyupeixun.mapper.AnbiaoSafetyTrainingMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.jiaoyupeixun.entity.AnbiaoSafetyTraining">
+        <id column="ast_ids" property="astIds" />
+        <result column="ast_dept_ids" property="astDeptIds" />
+        <result column="ast_training_topic" property="astTrainingTopic" />
+        <result column="ast_training_category" property="astTrainingCategory" />
+        <result column="ast_training_form" property="astTrainingForm" />
+        <result column="ast_training_start_time" property="astTrainingStartTime" />
+        <result column="ast_training_end_time" property="astTrainingEndTime" />
+        <result column="ast_training_duration" property="astTrainingDuration" />
+        <result column="ast_should_attend_number" property="astShouldAttendNumber" />
+        <result column="ast_actual_participation" property="astActualParticipation" />
+        <result column="ast_training_content" property="astTrainingContent" />
+        <result column="ast_participants" property="astParticipants" />
+        <result column="ast_site_photos" property="astSitePhotos" />
+        <result column="ast_enclosure" property="astEnclosure" />
+        <result column="ast_delete" property="astDelete" />
+        <result column="ast_create_time" property="astCreateTime" />
+        <result column="ast_create_by_ids" property="astCreateByIds" />
+        <result column="ast_create_by_name" property="astCreateByName" />
+        <result column="ast_update_time" property="astUpdateTime" />
+        <result column="ast_update_by_ids" property="astUpdateByIds" />
+        <result column="ast_update_by_name" property="astUpdateByName" />
+    </resultMap>
+
+    <resultMap id="AnbiaoSafetyTrainingVOBaseResultMap" type="org.springblade.anbiao.jiaoyupeixun.vo.AnbiaoSafetyTrainingVO">
+    </resultMap>
+
+    <sql id="tableSql">
+        select
+            a.*,
+            b.dept_name as deptname,
+            c.*
+        from
+            anbiao_safety_training a
+            inner join  (
+                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) b on a.ast_dept_ids = b.id
+            left join anbiao_safety_training_detail c on c.aad_ast_ids = a.ast_ids
+        where a.ast_delete = 0
+          and a.ast_training_form = 1
+          and a.ast_training_end_time >= #{date}
+    </sql>
+
+    <sql id="querySql">
+        <if test="deptname != null and deptname != '' ">
+            and deptname like '%${deptname}%'
+        </if>
+        <if test="astTrainingTopic != null and astTrainingTopic != '' ">
+            and astTrainingTopic like '%${astTrainingTopic}%'
+        </if>
+        <if test="astTrainingCategory != null and astTrainingCategory != '' ">
+            and astTrainingCategory = #{astTrainingCategory}
+        </if>
+        <if test="aadApIds != null and aadApIds != '' ">
+            and c.aad_ap_ids = #{aadApIds}
+        </if>
+    </sql>
+
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        ORDER BY ast_training_end_time desc
+    </sql>
+
+    <select id="selectPage" resultMap="AnbiaoSafetyTrainingVOBaseResultMap"
+            parameterType="org.springblade.anbiao.jiaoyupeixun.page.AnbiaoSafetyTrainingPage" >
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectTotal"
+            parameterType="org.springblade.anbiao.jiaoyupeixun.page.AnbiaoSafetyTrainingPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql" />
+        )d
+        where 1 = 1
+        <include refid="querySql" />
+    </select>
+
+</mapper>
