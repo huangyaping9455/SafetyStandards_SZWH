@@ -187,6 +187,14 @@ public class VehicleController {
 		return R.data(map);
 	}
 
+	@PostMapping("/addSave")
+	@ApiLog("新增-车辆资料管理【新版】")
+	@ApiOperation(value = "新增-车辆资料管理", notes = "传入Vehicle", position = 3)
+	public R addSave(@RequestBody Vehicle vehicle,BladeUser user) {
+    	R r = new R();
+    	return r;
+	}
+
     @PostMapping("/insert")
 	@ApiLog("新增-车辆资料管理")
     @ApiOperation(value = "新增-车辆资料管理", notes = "传入Vehicle", position = 3)

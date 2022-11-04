@@ -15,6 +15,10 @@
         <result column="avj_update_time" property="avjUpdateTime"/>
         <result column="avj_update_by_ids" property="avjUpdateByIds"/>
         <result column="avj_update_by_name" property="avjUpdateByName"/>
+        <result column="avj_driving_mileage" property="avjDrivingMileage" />
+        <result column="avj_quality_inspection" property="avjQualityInspection" />
+        <result column="avj_vehicle_technical_grade" property="avjVehicleTechnicalGrade" />
+        <result column="avj_vehicle_type_class" property="avjVehicleTypeClass" />
     </resultMap>
 
 

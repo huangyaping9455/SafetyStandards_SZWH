@@ -86,6 +86,17 @@
         <result column="terminalprotocoltype" property="terminalprotocoltype"/>
         <result column="videochannelnum" property="videochannelnum"/>
         <result column="platformconnectiontype" property="platformconnectiontype"/>
+        <result column="chelianghuoqufangshi" property="chelianghuoqufangshi" />
+        <result column="weihuzhouqi" property="weihuzhouqi"  />
+        <result column="cheliangleixing" property="cheliangleixing"  />
+        <result column="cheliangpinpai" property="cheliangpinpai"  />
+        <result column="shifoujinkou" property="shifoujinkou"  />
+        <result column="lunju" property="lunju"  />
+        <result column="huoxiangneibuchicun" property="huoxiangneibuchicun"  />
+        <result column="hedingzaizhiliang" property="hedingzaizhiliang"  />
+        <result column="zhunqianyinzongzhiliang" property="zhunqianyinzongzhiliang"  />
+        <result column="jiashishizaike" property="jiashishizaike"  />
+
     </resultMap>
 
     <resultMap id="CPResultMap" type="org.springblade.anbiao.cheliangguanli.entity.VehicleCP">

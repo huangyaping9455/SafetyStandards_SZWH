@@ -20,6 +20,7 @@
         <result column="avd_business_license_no" property="avdBusinessLicenseNo"/>
         <result column="avd_economic_type" property="avdEconomicType"/>
         <result column="avd_nature_business" property="avdNatureBusiness"/>
+        <result column="avd_operation_organization_mode" property="avdOperationOrganizationMode"/>
         <result column="avd_valid_until" property="avdValidUntil"/>
         <result column="avd_remarks" property="avdRemarks"/>
         <result column="avd_enclosure" property="avdEnclosure"/>

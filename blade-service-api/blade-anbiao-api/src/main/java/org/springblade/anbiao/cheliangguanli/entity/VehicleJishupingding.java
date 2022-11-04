@@ -95,5 +95,19 @@ public class VehicleJishupingding extends BaseEntity {
     @ApiModelProperty(value = "更新人姓名")
     private String avjUpdateByName;
 
+	@ApiModelProperty(value = "行驶里程记录")
+	private String avjDrivingMileage;
+
+	@ApiModelProperty(value = "其他检测/二级维护竣工质量检测")
+	private String avjQualityInspection;
+
+	@ApiModelProperty(value = "车辆技术等级")
+	private String avjVehicleTechnicalGrade;
+
+	@ApiModelProperty(value = "车辆类型等级")
+	private String avjVehicleTypeClass;
+
+
+
 
 }

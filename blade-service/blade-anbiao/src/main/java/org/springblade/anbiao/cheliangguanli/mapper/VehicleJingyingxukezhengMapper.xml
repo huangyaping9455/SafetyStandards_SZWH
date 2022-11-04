@@ -9,6 +9,7 @@
         <result column="avj_license_no" property="avjLicenseNo"/>
         <result column="avj_business_license" property="avjBusinessLicense"/>
         <result column="avj_operation_deadline" property="avjOperationDeadline"/>
+        <result column="avj_operating_line_name" property="avjOperatingLineName"/>
         <result column="avj_starting_point" property="avjStartingPoint"/>
         <result column="avj_ending" property="avjEnding"/>
         <result column="avj_departure_station_name" property="avjDepartureStationName"/>

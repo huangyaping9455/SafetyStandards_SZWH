@@ -64,6 +64,9 @@ public class VehicleJingyingxukezheng extends BaseEntity {
      */
     @ApiModelProperty(value = "经营截至日期")
     private LocalDate avjOperationDeadline;
+
+    @ApiModelProperty(value = "经营许可线路名称")
+	private String avjOperatingLineName;
     /**
      * 起点
      */
@@ -72,7 +75,7 @@ public class VehicleJingyingxukezheng extends BaseEntity {
     /**
      * 讫点
      */
-    @ApiModelProperty(value = "讫点")
+    @ApiModelProperty(value = "终点")
     private String avjEnding;
     /**
      * 始发站名

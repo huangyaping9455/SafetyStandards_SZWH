@@ -119,6 +119,12 @@ public class VehicleDaoluyunshuzheng extends BaseEntity {
      */
     @ApiModelProperty(value = "经营范围")
     private String avdNatureBusiness;
+
+	/**
+	 * 经营组织方式
+	 */
+	@ApiModelProperty(value = "经营组织方式")
+	private String avdOperationOrganizationMode;
     /**
      * 有效期至
      */
