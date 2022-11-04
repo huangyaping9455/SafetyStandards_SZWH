@@ -189,7 +189,7 @@ public class VehicleController {
 
 	@PostMapping("/addSave")
 	@ApiLog("新增-车辆资料管理【新版】")
-	@ApiOperation(value = "新增-车辆资料管理", notes = "传入Vehicle", position = 3)
+	@ApiOperation(value = "新增-车辆资料管理【新版】", notes = "传入Vehicle", position = 30)
 	public R addSave(@RequestBody Vehicle vehicle,BladeUser user) {
     	R r = new R();
     	return r;
