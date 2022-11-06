@@ -3,6 +3,7 @@ package org.springblade.anbiao.cheliangguanli.controller;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSON;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -17,6 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.util.TextUtils;
 import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.page.VehiclePage;
+import org.springblade.anbiao.cheliangguanli.service.IVehicleBiangengjiluService;
 import org.springblade.anbiao.cheliangguanli.service.IVehiclePhoneService;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
@@ -26,6 +28,7 @@ import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.common.tool.CheckPhoneUtil;
 import org.springblade.common.tool.DateUtils;
+import org.springblade.common.tool.JSONUtils;
 import org.springblade.common.tool.RegexUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
@@ -68,6 +71,7 @@ public class VehicleController {
 	private ISysClient iSysClient;
 	private IDictClient iDictClient;
 	private IVehiclePhoneService vehiclePhoneService;
+	private IVehicleBiangengjiluService vehicleBiangengjiluService;
 
     @PostMapping("/list")
 	@ApiLog("分页-车辆资料管理")
@@ -190,8 +194,71 @@ public class VehicleController {
 	@PostMapping("/addSave")
 	@ApiLog("新增-车辆资料管理【新版】")
 	@ApiOperation(value = "新增-车辆资料管理【新版】", notes = "传入Vehicle", position = 30)
-	public R addSave(@RequestBody Vehicle vehicle,BladeUser user) {
+	public R addSave(@RequestBody VehicleInfo v,BladeUser user) {
     	R r = new R();
+		VehicleVO vehicleVO = vehicleService.selectCPYS(v.getCheliangpaizhao(),v.getChepaiyanse());
+		if(vehicleVO!=null){
+			r.setMsg(vehicleVO.getCheliangpaizhao()+"该车已存在");
+			r.setCode(500);
+			return r;
+		}
+//		Vehicle v = new Vehicle();
+//		v.setDeptId(vehicle.getDeptId());
+		String jsonObject = JSONUtils.obj2StringPretty(v);
+		Vehicle vehicle = JSONUtils.string2Obj(jsonObject,Vehicle.class);
+		vehicle.setCaozuoren(user.getUserName());
+		vehicle.setCaozuorenid(user.getUserId());
+		vehicle.setCaozuoshijian(LocalDateTime.now());
+		vehicle.setCreatetime(LocalDateTime.now());
+		if("".equals(vehicle.getRuhushijian())){
+			vehicle.setRuhushijian(null);
+		}
+		if("".equals(vehicle.getZhucedengjishijian())){
+			vehicle.setZhucedengjishijian(null);
+		}
+		if("".equals(vehicle.getGuohushijian())){
+			vehicle.setGuohushijian(null);
+		}
+		if("".equals(vehicle.getTuishishijian())){
+			vehicle.setTuishishijian(null);
+		}
+		if("".equals(vehicle.getQiangzhibaofeishijian())){
+			vehicle.setQiangzhibaofeishijian(null);
+		}
+		if("".equals(vehicle.getChuchangriqi())){
+			vehicle.setChuchangriqi(null);
+		}
+		if("".equals(vehicle.getGpsanzhuangshijian())){
+			vehicle.setGpsanzhuangshijian(null);
+		}
+
+		if(!"".equals(vehicle.getYunyingshang())){
+			String yys = StringEscapeUtils.unescapeHtml(StringEscapeUtils.unescapeHtml(vehicle.getYunyingshang()));
+			vehicle.setYunyingshang(yys);
+		}
+		String str="1";
+		//登录页
+		if(StringUtil.isNotBlank(vehicle.getCheliangzhaopian())){
+			fileUploadClient.updateCorrelation(vehicle.getCheliangzhaopian(),str);
+		}
+		boolean i = vehicleService.save(vehicle);
+		if(i==true){
+			if(v.getCheliangbiangengjilu() != null && v.getCheliangbiangengjilu().size() > 0) {
+				for(VehicleBiangengjilu biangengjilu:v.getCheliangbiangengjilu()) {
+					biangengjilu.setAvbjVehicleId(vehicle.getId());
+					biangengjilu.setAvbjDelete("0");
+					biangengjilu.setAvbjCreateByName(user.getUserName());
+					biangengjilu.setAvbjCreateByIds(user.getUserId().toString());
+					biangengjilu.setAvbjCreateTime(LocalDateTime.now());
+					vehicleBiangengjiluService.save(biangengjilu);
+				}
+			}
+			r.setMsg("新增成功");
+			r.setCode(200);
+		}else{
+			r.setMsg("新增失败");
+			r.setCode(500);
+		}
     	return r;
 	}
 
