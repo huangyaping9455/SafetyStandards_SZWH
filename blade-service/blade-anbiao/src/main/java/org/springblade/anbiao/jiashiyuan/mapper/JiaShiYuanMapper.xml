@@ -82,10 +82,6 @@ values
     <sql id="orderSql">
         <!-- 默认排序规则 -->
         order by jiashiyuanxingming
-        <if test="ids !=null and ids != ''and ids == '1'.toString()">
-            ,shuoming desc
-        </if>
-
     </sql>
 
     <select id="selectPageList" parameterType="org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage" resultType="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO">
