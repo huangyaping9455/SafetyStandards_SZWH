@@ -715,12 +715,12 @@ public class JiaShiYuanController {
 //						detal.setZhaopian(fileUploadClient.getUrl(detal.getZhaopian()));
 //					}
 					//身份证附件
-					if(StrUtil.isNotEmpty(detal.getShenfenzhengfujian()) && detal.getShenfenzhengfujian().contains("http") == false){
-						detal.setShenfenzhengfujian(fileUploadClient.getUrl(detal.getShenfenzhengfujian()));
+					if(StrUtil.isNotEmpty(shenfenzhengInfo.getShenfenzhengfujian()) && shenfenzhengInfo.getShenfenzhengfujian().contains("http") == false){
+						shenfenzhengInfo.setShenfenzhengfujian(fileUploadClient.getUrl(shenfenzhengInfo.getShenfenzhengfujian()));
 					}
 					//身份证附件反面
-					if(StrUtil.isNotEmpty(detal.getShenfenzhengfanmianfujian()) && detal.getShenfenzhengfanmianfujian().contains("http") == false){
-						detal.setShenfenzhengfanmianfujian(fileUploadClient.getUrl(detal.getShenfenzhengfanmianfujian()));
+					if(StrUtil.isNotEmpty(shenfenzhengInfo.getShenfenzhengfanmianfujian()) && shenfenzhengInfo.getShenfenzhengfanmianfujian().contains("http") == false){
+						shenfenzhengInfo.setShenfenzhengfanmianfujian(fileUploadClient.getUrl(shenfenzhengInfo.getShenfenzhengfanmianfujian()));
 					}
 
 					r.setData(shenfenzhengInfo);
