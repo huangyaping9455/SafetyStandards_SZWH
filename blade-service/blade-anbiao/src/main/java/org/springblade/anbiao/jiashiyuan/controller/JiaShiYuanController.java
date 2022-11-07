@@ -293,7 +293,7 @@ public class JiaShiYuanController {
 		}
 
 		//验证驾驶证
-		if (StringUtils.isNotBlank(jiaShiYuan.getJiashizhenghao())&&jiaShiYuan.getJiashizhenghao() != null){
+		if (StringUtils.isNotBlank(jiaShiYuan.getJiashizhenghao()) && jiaShiYuan.getJiashizhenghao() != null){
 			if (IdCardUtil.isValidCard(jiaShiYuan.getJiashizhenghao())== true){
 				jiaShiYuan.setJiashizhenghao(jiaShiYuan.getJiashizhenghao());
 				if(deail != null){
@@ -1650,6 +1650,23 @@ public class JiaShiYuanController {
 			rs.setData(drivers);
 			return rs;
 		}
+	}
+
+	@GetMapping(value = "/getJiaShiYuanByDept")
+	@ApiLog("企业-根据企业ID获取从业人员信息")
+	@ApiOperation(value = "企业-根据企业ID获取从业人员信息", notes = "传入deptId",position = 21)
+	public R<JiaShiYuan> getJiaShiYuanByDept(Integer deptId) {
+		R rs = new R();
+		List<JiaShiYuan> jiaShiYuanList = iJiaShiYuanService.getJiaShiYuanByDept(deptId);
+		if (jiaShiYuanList != null) {
+			rs.setCode(200);
+			rs.setData(jiaShiYuanList);
+			rs.setMsg("获取成功");
+		} else {
+			rs.setCode(500);
+			rs.setMsg("获取失败");
+		}
+		return rs;
 	}
 
 

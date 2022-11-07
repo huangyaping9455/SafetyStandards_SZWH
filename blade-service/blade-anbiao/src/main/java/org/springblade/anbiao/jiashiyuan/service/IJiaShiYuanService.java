@@ -122,4 +122,11 @@ public interface IJiaShiYuanService extends IService<JiaShiYuan> {
 	 */
 	DriverInfoVO selectDriverInfo(String jsyId);
 
+	/**
+	 * 根据企业ID获取驾驶员信息
+	 * @param deptId
+	 * @return
+	 */
+	List<JiaShiYuan> getJiaShiYuanByDept(Integer deptId);
+
 }

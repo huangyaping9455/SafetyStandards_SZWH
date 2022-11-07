@@ -170,5 +170,10 @@ public class JiaShiYuanServiceImpl extends ServiceImpl<JiaShiYuanMapper, JiaShiY
 		return jiaShiYuanMapper.selectDriverInfo(jsyId);
 	}
 
+	@Override
+	public List<JiaShiYuan> getJiaShiYuanByDept(Integer deptId) {
+		return jiaShiYuanMapper.getJiaShiYuanByDept(deptId);
+	}
+
 
 }

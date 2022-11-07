@@ -709,4 +709,17 @@ values
           and a.id = #{jsyId}
     </select>
 
+    <select id="getJiaShiYuanByDept" resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan">
+        select
+            distinct
+            id,jiashiyuanxingming,shenfenzhenghao,shoujihaoma
+        from
+            anbiao_jiashiyuan
+        where isdelete = 0
+        <if test="deptId != null ">
+            AND dept_id = #{deptId}
+        </if>
+    </select>
+
+
 </mapper>
