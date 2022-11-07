@@ -1,7 +1,10 @@
 package org.springblade.anbiao.jiaoyupeixun.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import feign.Param;
 import org.springblade.anbiao.jiaoyupeixun.entity.AnbiaoSafetyTrainingDetail;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,7 @@ import org.springblade.anbiao.jiaoyupeixun.entity.AnbiaoSafetyTrainingDetail;
  * @since 2022-11-01
  */
 public interface IAnbiaoSafetyTrainingDetailService extends IService<AnbiaoSafetyTrainingDetail> {
+
+	void deleteByAadAstIds(String aadAstIds);
 
 }

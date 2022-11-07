@@ -4,12 +4,14 @@ package org.springblade.anbiao.jiaoyupeixun.controller;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamineInfo;
 import org.springblade.anbiao.jiaoyupeixun.entity.AnbiaoSafetyTraining;
 import org.springblade.anbiao.jiaoyupeixun.entity.AnbiaoSafetyTrainingDetail;
 import org.springblade.anbiao.jiaoyupeixun.page.AnbiaoSafetyTrainingPage;
@@ -71,10 +73,38 @@ public class AnbiaoSafetyTrainingController {
 			train.setAstDelete("0");
 			boolean i = service.save(train);
 			if(i){
-				r.setMsg("新增成功");
-				r.setCode(200);
-				r.setSuccess(true);
-				return r;
+				deail = service.getBaseMapper().selectOne(trainQueryWrapper);
+				if(deail != null) {
+					List<AnbiaoSafetyTrainingDetail> safetyTrainingDetailList = train.getSafetyTrainingDetailList();
+					AnbiaoSafetyTraining finalDeail = deail;
+					safetyTrainingDetailList.forEach(item-> {
+						AnbiaoSafetyTrainingDetail safetyTrainingDetail = new AnbiaoSafetyTrainingDetail();
+
+						QueryWrapper<AnbiaoSafetyTrainingDetail> trainingDetailQueryWrapper = new QueryWrapper<AnbiaoSafetyTrainingDetail>();
+						trainingDetailQueryWrapper.lambda().eq(AnbiaoSafetyTrainingDetail::getAadAstIds, finalDeail.getAstIds());
+						trainingDetailQueryWrapper.lambda().eq(AnbiaoSafetyTrainingDetail::getAadApIds, item.getAadApIds());
+						trainingDetailQueryWrapper.lambda().eq(AnbiaoSafetyTrainingDetail::getAddApBeingJoined, "0");
+						AnbiaoSafetyTrainingDetail trainingDetail = detailService.getBaseMapper().selectOne(trainingDetailQueryWrapper);
+						if(trainingDetail == null) {
+							safetyTrainingDetail.setAddTime(DateUtil.now());
+							safetyTrainingDetail.setAadAstIds(finalDeail.getAstIds());
+							safetyTrainingDetail.setAadApIds(item.getAadApIds());
+							safetyTrainingDetail.setAadApName(item.getAadApName());
+							safetyTrainingDetail.setAadApType(item.getAadApType());
+							safetyTrainingDetail.setAddApBeingJoined("0");
+							boolean is = detailService.save(safetyTrainingDetail);
+							if(is){
+								r.setMsg("新增成功");
+								r.setCode(200);
+								r.setSuccess(true);
+							}else{
+								r.setMsg("新增失败");
+								r.setCode(500);
+								r.setSuccess(false);
+							}
+						}
+					});
+				}
 			}else{
 				r.setMsg("新增失败");
 				r.setCode(500);
@@ -87,10 +117,11 @@ public class AnbiaoSafetyTrainingController {
 			r.setSuccess(false);
 			return r;
 		}
+		return r;
 	}
 
 	/**
-	 * 新增
+	 * 编辑
 	 */
 	@PostMapping("/update")
 	@ApiLog("安全生产培训-编辑（线下）")
@@ -105,6 +136,36 @@ public class AnbiaoSafetyTrainingController {
 		train.setAstIds(train.getAstIds());
 		boolean i = service.updateById(train);
 		if(i){
+			detailService.deleteByAadAstIds(train.getAstIds());
+			List<AnbiaoSafetyTrainingDetail> safetyTrainingDetailList = train.getSafetyTrainingDetailList();
+			safetyTrainingDetailList.forEach(item-> {
+				AnbiaoSafetyTrainingDetail safetyTrainingDetail = new AnbiaoSafetyTrainingDetail();
+
+				QueryWrapper<AnbiaoSafetyTrainingDetail> trainingDetailQueryWrapper = new QueryWrapper<AnbiaoSafetyTrainingDetail>();
+				trainingDetailQueryWrapper.lambda().eq(AnbiaoSafetyTrainingDetail::getAadAstIds, train.getAstIds());
+				trainingDetailQueryWrapper.lambda().eq(AnbiaoSafetyTrainingDetail::getAadApIds, item.getAadApIds());
+				trainingDetailQueryWrapper.lambda().eq(AnbiaoSafetyTrainingDetail::getAddApBeingJoined, "0");
+				AnbiaoSafetyTrainingDetail trainingDetail = detailService.getBaseMapper().selectOne(trainingDetailQueryWrapper);
+				if(trainingDetail == null) {
+					safetyTrainingDetail.setAddTime(DateUtil.now());
+					safetyTrainingDetail.setAadAstIds(train.getAstIds());
+					safetyTrainingDetail.setAadApIds(item.getAadApIds());
+					safetyTrainingDetail.setAadApName(item.getAadApName());
+					safetyTrainingDetail.setAadApType(item.getAadApType());
+					safetyTrainingDetail.setAddTime(item.getAddTime());
+					safetyTrainingDetail.setAddApBeingJoined("0");
+					boolean is = detailService.save(safetyTrainingDetail);
+					if(is){
+						r.setMsg("新增成功");
+						r.setCode(200);
+						r.setSuccess(true);
+					}else{
+						r.setMsg("新增失败");
+						r.setCode(500);
+						r.setSuccess(false);
+					}
+				}
+			});
 			r.setMsg("编辑成功");
 			r.setCode(200);
 			r.setSuccess(true);
@@ -194,7 +255,5 @@ public class AnbiaoSafetyTrainingController {
 		}
 		return R.data(deail);
 	}
-
-
 
 }

@@ -7,6 +7,8 @@ import org.springblade.anbiao.jiaoyupeixun.mapper.AnbiaoSafetyTrainingDetailMapp
 import org.springblade.anbiao.jiaoyupeixun.service.IAnbiaoSafetyTrainingDetailService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 安全会议参会记录 服务实现类
@@ -19,4 +21,10 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class AnbiaoSafetyTrainingDetailServiceImpl extends ServiceImpl<AnbiaoSafetyTrainingDetailMapper, AnbiaoSafetyTrainingDetail> implements IAnbiaoSafetyTrainingDetailService {
 
+	private AnbiaoSafetyTrainingDetailMapper mapper;
+
+	@Override
+	public void deleteByAadAstIds(String aadAstIds) {
+		mapper.deleteByAadAstIds(aadAstIds);
+	}
 }
