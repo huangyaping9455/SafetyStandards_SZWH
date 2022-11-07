@@ -695,6 +695,7 @@ public class JiaShiYuanController {
 					if(StrUtil.isNotEmpty(ruzhiInfo.getAjrHeadPortrait()) && ruzhiInfo.getAjrHeadPortrait().contains("http") == false){
 						ruzhiInfo.setAjrHeadPortrait(fileUploadClient.getUrl(ruzhiInfo.getAjrHeadPortrait()));
 					}
+					ruzhiInfo.setAjrAjIds(detal.getId());
 					r.setData(ruzhiInfo);
 					r.setCode(200);
 					r.setMsg("获取成功");
@@ -771,6 +772,7 @@ public class JiaShiYuanController {
 					if(StrUtil.isNotEmpty(congyezigezhengInfo.getAjcLicence()) && congyezigezhengInfo.getAjcLicence().contains("http") == false){
 						congyezigezhengInfo.setAjcLicence(fileUploadClient.getUrl(congyezigezhengInfo.getAjcLicence()));
 					}
+					congyezigezhengInfo.setAjcAjIds(detal.getId());
 					r.setData(congyezigezhengInfo);
 					r.setCode(200);
 					r.setMsg("获取成功");
@@ -793,6 +795,7 @@ public class JiaShiYuanController {
 					if (StrUtil.isNotEmpty(tijianInfo.getAjtEnclosure()) && tijianInfo.getAjtEnclosure().contains("http") == false){
 						tijianInfo.setAjtEnclosure(fileUploadClient.getUrl(tijianInfo.getAjtEnclosure()));
 					}
+					tijianInfo.setAjtAjIds(detal.getId());
 					r.setData(tijianInfo);
 					r.setCode(200);
 					r.setMsg("获取成功");
@@ -815,6 +818,7 @@ public class JiaShiYuanController {
 					if (StrUtil.isNotEmpty(gangqianpeixunInfo.getAjgTrainingEnclosure()) && gangqianpeixunInfo.getAjgTrainingEnclosure().contains("http") == false){
 						gangqianpeixunInfo.setAjgTrainingEnclosure(fileUploadClient.getUrl(gangqianpeixunInfo.getAjgTrainingEnclosure()));
 					}
+					gangqianpeixunInfo.setAjgAjIds(detal.getId());
 					r.setData(gangqianpeixunInfo);
 					r.setCode(200);
 					r.setMsg("获取成功");
@@ -837,6 +841,7 @@ public class JiaShiYuanController {
 					if (StrUtil.isNotEmpty(wuzezhengmingInfo.getAjwEnclosure()) && wuzezhengmingInfo.getAjwEnclosure().contains("http") == false){
 						wuzezhengmingInfo.setAjwEnclosure(fileUploadClient.getUrl(wuzezhengmingInfo.getAjwEnclosure()));
 					}
+					wuzezhengmingInfo.setAjwAjIds(detal.getId());
 					r.setData(wuzezhengmingInfo);
 					r.setCode(200);
 					r.setMsg("获取成功");
@@ -864,6 +869,7 @@ public class JiaShiYuanController {
 					if (StrUtil.isNotEmpty(anquanzerenshuInfo.getAjaAutographEnclosure()) && anquanzerenshuInfo.getAjaAutographEnclosure().contains("http") == false) {
 						anquanzerenshuInfo.setAjaAutographEnclosure(fileUploadClient.getUrl(anquanzerenshuInfo.getAjaAutographEnclosure()));
 					}
+					anquanzerenshuInfo.setAjaAjIds(detal.getId());
 					r.setData(anquanzerenshuInfo);
 					r.setCode(200);
 					r.setMsg("获取成功");
@@ -879,7 +885,7 @@ public class JiaShiYuanController {
 			if (type == 9){
 				QueryWrapper<AnbiaoJiashiyuanWeihaigaozhishu> weihaigaozhishuQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanWeihaigaozhishu>();
 				weihaigaozhishuQueryWrapper.lambda().eq(AnbiaoJiashiyuanWeihaigaozhishu :: getAjwAjIds,detal.getId());
-				weihaigaozhishuQueryWrapper.lambda().eq(AnbiaoJiashiyuanWeihaigaozhishu :: getAjwAjIds, "0");
+				weihaigaozhishuQueryWrapper.lambda().eq(AnbiaoJiashiyuanWeihaigaozhishu :: getAjwDelete, "0");
 				AnbiaoJiashiyuanWeihaigaozhishu weihaigaozhishuInfo = weihaigaozhishuService.getBaseMapper().selectOne(weihaigaozhishuQueryWrapper);
 
 				if (weihaigaozhishuInfo != null){
@@ -891,6 +897,7 @@ public class JiaShiYuanController {
 					if(StrUtil.isNotEmpty(weihaigaozhishuInfo.getAjwAutographEnclosure()) && weihaigaozhishuInfo.getAjwAutographEnclosure().contains("http") == false){
 						weihaigaozhishuInfo.setAjwAutographEnclosure(fileUploadClient.getUrl(weihaigaozhishuInfo.getAjwAutographEnclosure()));
 					}
+					weihaigaozhishuInfo.setAjwAjIds(detal.getId());
 					r.setData(weihaigaozhishuInfo);
 					r.setCode(200);
 					r.setMsg("获取成功");
@@ -906,7 +913,7 @@ public class JiaShiYuanController {
 			if (type == 10){
 				QueryWrapper<AnbiaoJiashiyuanLaodonghetong> laodonghetongQueryWrapper = new QueryWrapper<>();
 				laodonghetongQueryWrapper.lambda().eq(AnbiaoJiashiyuanLaodonghetong :: getAjwAjIds,detal.getId());
-				laodonghetongQueryWrapper.lambda().eq(AnbiaoJiashiyuanLaodonghetong :: getAjwAjIds, "0");
+				laodonghetongQueryWrapper.lambda().eq(AnbiaoJiashiyuanLaodonghetong :: getAjwDelete, "0");
 				AnbiaoJiashiyuanLaodonghetong laodonghetongInfo = laodonghetongService.getBaseMapper().selectOne(laodonghetongQueryWrapper);
 
 				if (laodonghetongInfo != null){
@@ -918,6 +925,7 @@ public class JiaShiYuanController {
 					if(StrUtil.isNotEmpty(laodonghetongInfo.getAjwAutographEnclosure()) && laodonghetongInfo.getAjwAutographEnclosure().contains("http") == false){
 						laodonghetongInfo.setAjwAutographEnclosure(fileUploadClient.getUrl(laodonghetongInfo.getAjwAutographEnclosure()));
 					}
+					laodonghetongInfo.setAjwAjIds(detal.getId());
 					r.setData(laodonghetongInfo);
 					r.setCode(200);
 					r.setMsg("获取成功");
@@ -933,7 +941,7 @@ public class JiaShiYuanController {
 			if (type == 11){
 				QueryWrapper<AnbiaoJiashiyuanQita> qitaQueryWrapper = new QueryWrapper<>();
 				qitaQueryWrapper.lambda().eq(AnbiaoJiashiyuanQita :: getAjtAjIds,detal.getId());
-				qitaQueryWrapper.lambda().eq(AnbiaoJiashiyuanQita :: getAjtAjIds, "0");
+				qitaQueryWrapper.lambda().eq(AnbiaoJiashiyuanQita :: getAjtDelete, "0");
 				AnbiaoJiashiyuanQita qitaInfo = qitaService.getBaseMapper().selectOne(qitaQueryWrapper);
 
 				if (qitaInfo != null){
@@ -941,6 +949,7 @@ public class JiaShiYuanController {
 					if(StrUtil.isNotEmpty(qitaInfo.getAjtEnclosure()) && qitaInfo.getAjtEnclosure().contains("http") == false){
 						qitaInfo.setAjtEnclosure(fileUploadClient.getUrl(qitaInfo.getAjtEnclosure()));
 					}
+					qitaInfo.setAjtAjIds(detal.getId());
 					r.setData(qitaInfo);
 					r.setCode(200);
 					r.setMsg("获取成功");
