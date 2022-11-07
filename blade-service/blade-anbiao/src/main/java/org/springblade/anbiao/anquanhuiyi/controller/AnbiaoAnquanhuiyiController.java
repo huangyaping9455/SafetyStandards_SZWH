@@ -11,8 +11,11 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
+import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiDetail;
+import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiDetailService;
 import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiService;
 import org.springblade.anbiao.anquanhuiyi.page.AnQuanHuiYiPage;
+import org.springblade.anbiao.guanlijigouherenyuan.entity.Anquanhuiyi;
 import org.springblade.common.tool.DateUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 
 /**
@@ -42,6 +46,9 @@ public class AnbiaoAnquanhuiyiController {
 
 	private IFileUploadClient fileUploadClient;
 
+	private IAnbiaoAnquanhuiyiDetailService anquanhuiyiDetailService;
+
+
 	/**
 	 *新增
 	 */
@@ -55,6 +62,7 @@ public class AnbiaoAnquanhuiyiController {
 		anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getDeptId,anquanhuiyi.getDeptId());
 		anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getIsDeleted,0);
 		AnbiaoAnquanhuiyi deail = anquanhuiyiService.getBaseMapper().selectOne(anquanhuiyiQueryWrapper);
+
 
 		//验证会议开始时间
 		if (StringUtils.isNotBlank(anquanhuiyi.getHuiyikaishishijian().toString()) && !anquanhuiyi.getHuiyikaishishijian().toString().equals("null")){
@@ -139,21 +147,127 @@ public class AnbiaoAnquanhuiyiController {
 			}else {
 				anquanhuiyi.setHuiyileixing("1");
 			}
+			anquanhuiyi.setHuiyixingshi(anquanhuiyi.getHuiyileixing());
 			anquanhuiyi.setIsDeleted(0);
-			return R.status(anquanhuiyiService.save(anquanhuiyi));
-		}else {
-			if (anquanhuiyi.getHuiyileixing().equals("线上")){
-				deail.setHuiyileixing("0");
-			}else {
-				deail.setHuiyileixing("1");
+			boolean i = anquanhuiyiService.save(anquanhuiyi);
+			if (i){
+				AnbiaoAnquanhuiyi deail2 = anquanhuiyiService.getBaseMapper().selectOne(anquanhuiyiQueryWrapper);
+				if (deail2!=null){
+					List<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailList = anquanhuiyi.getAnquanhuiyiDetails();
+					for (int j = 0; j <= anquanhuiyiDetailList.size()-1; j++) {
+						AnbiaoAnquanhuiyiDetail anbiaoAnquanhuiyiDetail = new AnbiaoAnquanhuiyiDetail();
+						QueryWrapper<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailQueryWrapper = new QueryWrapper<>();
+						anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,deail2.getId());
+						AnbiaoAnquanhuiyiDetail anquanhuiyiDetail = anquanhuiyiDetailService.getBaseMapper().selectOne(anquanhuiyiDetailQueryWrapper);
+						if (anquanhuiyiDetail == null){
+							anbiaoAnquanhuiyiDetail.setAadAaIds(anquanhuiyiDetailList.get(j).getAadAaIds());
+							anbiaoAnquanhuiyiDetail.setAadApIds(anquanhuiyiDetailList.get(j).getAadApIds());
+							anbiaoAnquanhuiyiDetail.setAadApName(anquanhuiyiDetailList.get(j).getAadApName());
+							anbiaoAnquanhuiyiDetail.setAadApType(anquanhuiyiDetailList.get(j).getAadApType());
+							anbiaoAnquanhuiyiDetail.setAddApAutograph(anquanhuiyiDetailList.get(j).getAddApAutograph());
+							boolean is = anquanhuiyiDetailService.save(anbiaoAnquanhuiyiDetail);
+							if (is){
+								r.setMsg("新增成功");
+								r.setCode(200);
+								r.setSuccess(false);
+								return r;
+							}else {
+								r.setMsg("新增失败");
+								r.setCode(500);
+								r.setSuccess(false);
+								return r;
+							}
+						}
+					}
+
+
+				}else {
+					r.setMsg("新增失败");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
 			}
-			anquanhuiyi.setId(deail.getId());
-			anquanhuiyi.setCaozuoren(user.getUserName());
-			anquanhuiyi.setCaozuorenid(user.getUserId());
-			anquanhuiyi.setCaozuoshijian(DateUtil.now());
-			return R.status(anquanhuiyiService.updateById(anquanhuiyi));
+		}else {
+			r.setMsg("该会议已存在");
+			r.setCode(500);
+			r.setSuccess(false);
+			return r;
 		}
+		return r;
 	}
+
+	/**
+	 * 编辑
+	 */
+	@PostMapping("/update")
+	@ApiLog("编辑-安全会议信息")
+	@ApiOperation(value = "编辑-安全会议信息",notes = "传入jiaShiYuan")
+	public R update(@RequestBody AnbiaoAnquanhuiyi anquanhuiyi,BladeUser user){
+		R r = new R();
+		QueryWrapper<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailQueryWrapper = new QueryWrapper<>();
+		anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,anquanhuiyi.getId());
+		anquanhuiyiDetailService.getBaseMapper().deleteById(anquanhuiyiDetailQueryWrapper);
+
+		QueryWrapper<AnbiaoAnquanhuiyi> anquanhuiyiQueryWrapper = new QueryWrapper<>();
+		anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getDeptId,anquanhuiyi.getDeptId());
+		anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getIsDeleted,0);
+		AnbiaoAnquanhuiyi deail = anquanhuiyiService.getBaseMapper().selectOne(anquanhuiyiQueryWrapper);
+
+		if (deail!=null){
+			deail.setCaozuoren(user.getUserName());
+			deail.setCaozuorenid(user.getUserId());
+			deail.setCaozuoshijian(DateUtil.now());
+			//会议照片附件
+			if(StrUtil.isNotEmpty(anquanhuiyi.getHuiyizhaopian()) && anquanhuiyi.getHuiyizhaopian().contains("http") == false){
+				deail.setHuiyizhaopian(fileUploadClient.getUrl(anquanhuiyi.getHuiyizhaopian()));
+			}
+			//附件
+			if(StrUtil.isNotEmpty(anquanhuiyi.getFujian()) && anquanhuiyi.getFujian().contains("http") == false){
+				deail.setFujian(fileUploadClient.getUrl(anquanhuiyi.getFujian()));
+			}
+			int i = anquanhuiyiService.getBaseMapper().updateById(deail);
+			if (i>0) {
+				AnbiaoAnquanhuiyi anbiaoAnquanhuiyi = anquanhuiyiService.getBaseMapper().selectOne(anquanhuiyiQueryWrapper);
+				if (anbiaoAnquanhuiyi != null) {
+					List<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailList = anquanhuiyi.getAnquanhuiyiDetails();
+					for (int j = 0; j <= anquanhuiyiDetailList.size() - 1; j++) {
+						AnbiaoAnquanhuiyiDetail anbiaoAnquanhuiyiDetail = new AnbiaoAnquanhuiyiDetail();
+						QueryWrapper<AnbiaoAnquanhuiyiDetail> queryWrapper = new QueryWrapper<AnbiaoAnquanhuiyiDetail>();
+						queryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds, anbiaoAnquanhuiyi.getId());
+						AnbiaoAnquanhuiyiDetail anquanhuiyiDetail = anquanhuiyiDetailService.getBaseMapper().selectOne(queryWrapper);
+						if (anquanhuiyiDetail == null) {
+							anbiaoAnquanhuiyiDetail.setAadAaIds(anquanhuiyiDetailList.get(j).getAadAaIds());
+							anbiaoAnquanhuiyiDetail.setAadApIds(anquanhuiyiDetailList.get(j).getAadApIds());
+							anbiaoAnquanhuiyiDetail.setAadApName(anquanhuiyiDetailList.get(j).getAadApName());
+							anbiaoAnquanhuiyiDetail.setAadApType(anquanhuiyiDetailList.get(j).getAadApType());
+							anbiaoAnquanhuiyiDetail.setAddApAutograph(anquanhuiyiDetailList.get(j).getAddApAutograph());
+							boolean b = anquanhuiyiDetailService.updateById(anbiaoAnquanhuiyiDetail);
+							if (b) {
+								r.setMsg("更新成功");
+								r.setCode(200);
+								r.setSuccess(false);
+								return r;
+							} else {
+								r.setMsg("更新失败");
+								r.setCode(500);
+								r.setSuccess(false);
+								return r;
+							}
+						}
+					}
+				}
+			}
+		}else {
+			r.setMsg("更新失败");
+			r.setCode(500);
+			r.setSuccess(false);
+			return r;
+		}
+			return r;
+	}
+
+
 
 	/**
 	 * 删除
@@ -198,6 +312,17 @@ public class AnbiaoAnquanhuiyiController {
 		R r = new R();
 		AnbiaoAnquanhuiyi anquanhuiyiInfo = anquanhuiyiService.getById(Id);
 		if (anquanhuiyiInfo != null){
+			QueryWrapper<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailQueryWrapper = new QueryWrapper<>();
+			anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,Id);
+			List<AnbiaoAnquanhuiyiDetail> details = anquanhuiyiDetailService.getBaseMapper().selectList(anquanhuiyiDetailQueryWrapper);
+			for (int i = 0; i <= details.size() - 1; i++) {
+				AnbiaoAnquanhuiyiDetail anbiaoAnquanhuiyiDetail = details.get(i);
+				//参会人头像附件
+				if(StrUtil.isNotEmpty(anbiaoAnquanhuiyiDetail.getAddApHeadPortrait()) && anbiaoAnquanhuiyiDetail.getAddApHeadPortrait().contains("http") == false){
+					anbiaoAnquanhuiyiDetail.setAddApHeadPortrait(fileUploadClient.getUrl(anbiaoAnquanhuiyiDetail.getAddApHeadPortrait()));
+				}
+			}
+			anquanhuiyiInfo.setAnquanhuiyiDetails(details);
 			//照片附件
 			if(StrUtil.isNotEmpty(anquanhuiyiInfo.getFujian()) && anquanhuiyiInfo.getFujian().contains("http") == false){
 				anquanhuiyiInfo.setFujian(fileUploadClient.getUrl(anquanhuiyiInfo.getFujian()));
@@ -226,4 +351,39 @@ public class AnbiaoAnquanhuiyiController {
 		AnQuanHuiYiPage<AnbiaoAnquanhuiyi> list = anquanhuiyiService.selectPage(anQuanHuiYiPage);
 		return R.data(list);
 	}
+
+
+	/**
+	 * 签到
+	 */
+	@PostMapping("/signIn")
+	@ApiLog("签到-安全会议")
+	@ApiOperation(value = "签到-安全会议",notes = "传入AnbiaoAnquanhuiyi,AnbiaoAnquanhuiyiDetail")
+	public R SignIn(@RequestBody AnbiaoAnquanhuiyi anquanhuiyi, AnbiaoAnquanhuiyiDetail anquanhuiyiDetail, BladeUser user){
+		R r = new R();
+		QueryWrapper<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailQueryWrapper = new QueryWrapper<>();
+		anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,anquanhuiyi.getId());
+		AnbiaoAnquanhuiyiDetail detail = anquanhuiyiDetailService.getBaseMapper().selectOne(anquanhuiyiDetailQueryWrapper);
+		if (anquanhuiyi.getIsDeleted()==0){
+			if (anquanhuiyi.getHuiyileixing().equals("0")){
+				detail.setAddApAutograph(anquanhuiyiDetail.getAddApAutograph());
+				detail.setAddApHeadPortrait(anquanhuiyiDetail.getAddApHeadPortrait());
+				detail.setAadApType(anquanhuiyiDetail.getAadApType());
+				detail.setAddApBeingJoined(anquanhuiyiDetail.getAddApBeingJoined());
+				detail.setAddTime(anquanhuiyi.getHuiyikaishishijian());
+				return R.status(anquanhuiyiDetailService.updateById(detail));
+			}else {
+				r.setMsg("线下会议无需签到");
+				r.setCode(500);
+				r.setSuccess(false);
+				return r;
+			}
+		}else {
+			r.setMsg("会议不存在");
+			r.setCode(500);
+			r.setSuccess(false);
+			return r;
+		}
+	}
+
 }

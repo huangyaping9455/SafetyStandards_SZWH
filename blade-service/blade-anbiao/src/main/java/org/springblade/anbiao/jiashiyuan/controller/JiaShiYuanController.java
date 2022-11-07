@@ -83,6 +83,7 @@ public class JiaShiYuanController {
 		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShoujihaoma, jiaShiYuan.getShoujihaoma());
 		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShenfenzhenghao, jiaShiYuan.getShenfenzhenghao());
 		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId, jiaShiYuan.getDeptId());
+		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,0);
 		JiaShiYuan deail = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
 
 		//验证身份证初领日期
@@ -432,6 +433,104 @@ public class JiaShiYuanController {
 			return r;
 		}
 	}
+
+	/**
+	 * 编辑
+	 */
+	@PostMapping("/update")
+	@ApiLog("编辑-驾驶员信息")
+	@ApiOperation(value = "编辑-驾驶员信息",notes = "传入jiaShiYuan")
+	public R update(@RequestBody JiaShiYuan jiaShiYuan, BladeUser user ) throws ParseException {
+		R r = new R();
+		QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
+		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId,jiaShiYuan.getId());
+		JiaShiYuan deail = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+		if (deail !=null ){
+			//验证身份证初领日期
+			String shenfenzhengchulingriqi = jiaShiYuan.getShenfenzhengchulingriqi().toString();
+			if (StringUtils.isNotBlank(shenfenzhengchulingriqi) && !shenfenzhengchulingriqi.equals("null")){
+				if (DateUtils.isDateString(shenfenzhengchulingriqi,null) == true){
+					jiaShiYuan.setShenfenzhengchulingriqi(jiaShiYuan.getShenfenzhengchulingriqi());
+				}else {
+					r.setMsg(jiaShiYuan.getShenfenzhengchulingriqi()+",该身份证初领日期，不是时间格式；");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
+			}
+
+			//验证身份证有效截止日期
+			String shenfenzhengyouxiaoqi = jiaShiYuan.getShenfenzhengyouxiaoqi().toString();
+			if (StringUtils.isNotBlank(shenfenzhengyouxiaoqi) && !shenfenzhengyouxiaoqi.equals("null")){
+				if(DateUtils.isDateString(shenfenzhengyouxiaoqi,null) == true){
+					jiaShiYuan.setShenfenzhengyouxiaoqi(jiaShiYuan.getShenfenzhengyouxiaoqi());
+				}else {
+					r.setMsg(jiaShiYuan.getShenfenzhengchulingriqi()+",该身份证有效截止日期，不是时间格式；");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
+			}
+
+			//验证 验证身份证初领日期 不能大于 身份证有效截止日期
+			if(StringUtils.isNotBlank(shenfenzhengchulingriqi) && !shenfenzhengchulingriqi.equals("null") && StringUtils.isNotBlank(shenfenzhengyouxiaoqi) && !shenfenzhengyouxiaoqi.equals("null")){
+				int a1 = shenfenzhengchulingriqi.length();
+				int b1 = shenfenzhengyouxiaoqi.length();
+				if (a1 == b1){
+					if (a1 <= 10){
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+						if(DateUtils.belongCalendar(format.parse(shenfenzhengchulingriqi),format.parse(shenfenzhengyouxiaoqi))){
+							jiaShiYuan.setShenfenzhengchulingriqi(jiaShiYuan.getShenfenzhengchulingriqi());
+							jiaShiYuan.setShenfenzhengyouxiaoqi(jiaShiYuan.getShenfenzhengyouxiaoqi());
+						}else{
+							r.setMsg("身份证初次发放日期,不能大于身份证有效截止日期;");
+							r.setCode(500);
+							r.setSuccess(false);
+							return r;
+						}
+					}
+					if(a1 > 10){
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						if(DateUtils.belongCalendar(format.parse(shenfenzhengchulingriqi),format.parse(shenfenzhengyouxiaoqi))){
+							jiaShiYuan.setShenfenzhengchulingriqi(jiaShiYuan.getShenfenzhengchulingriqi());
+							jiaShiYuan.setShenfenzhengyouxiaoqi(jiaShiYuan.getShenfenzhengyouxiaoqi());
+						}else{
+							r.setMsg("身份证初次发放日期,不能大于身份证有效截止日期;");
+							r.setCode(500);
+							r.setSuccess(false);
+							return r;
+						}
+					}
+				}else{
+					r.setMsg("身份证初领日期与身份证有效截止日期,时间格式不一致;");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
+			}
+			deail.setShenfenzhengchulingriqi(jiaShiYuan.getShenfenzhengchulingriqi());
+			deail.setShenfenzhengyouxiaoqi(jiaShiYuan.getShenfenzhengyouxiaoqi());
+			//身份证附件
+			if(StrUtil.isNotEmpty(jiaShiYuan.getShenfenzhengfujian()) && jiaShiYuan.getShenfenzhengfujian().contains("http") == false){
+				deail.setShenfenzhengfujian(fileUploadClient.getUrl(jiaShiYuan.getShenfenzhengfujian()));
+			}
+			//身份证附件反面
+			if(StrUtil.isNotEmpty(jiaShiYuan.getShenfenzhengfanmianfujian()) && jiaShiYuan.getShenfenzhengfanmianfujian().contains("http") == false){
+				deail.setShenfenzhengfanmianfujian(fileUploadClient.getUrl(jiaShiYuan.getShenfenzhengfanmianfujian()));
+			}
+			deail.setCaozuoshijian(DateUtil.now());
+			deail.setCaozuoren(user.getUserName());
+			deail.setCaozuorenid(user.getUserId());
+			jiaShiYuanService.updateById(deail);
+		}else {
+			r.setMsg("身份证信息不存在");
+			r.setCode(500);
+			r.setSuccess(true);
+			return r;
+		}
+		return r;
+	}
+
 
 	/**
 	 * 初始化密码
