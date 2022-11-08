@@ -1,16 +1,16 @@
 package org.springblade.anbiao.jiashiyuan.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
-import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 /**
  * <p>
@@ -30,7 +30,7 @@ public class AnbiaoJiashiyuanLaodonghetong implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "劳动合同主键")
-    @TableId(value = "ajw_ids", type = IdType.AUTO)
+    @TableId(value = "ajw_ids", type = IdType.UUID)
     private String ajwIds;
 
     @ApiModelProperty(value = "驾驶员信息主键")
@@ -47,7 +47,7 @@ public class AnbiaoJiashiyuanLaodonghetong implements Serializable {
 
     @ApiModelProperty(value = "签字时间")
     @TableField("ajw_autograph_time")
-    private LocalDateTime ajwAutographTime;
+    private String ajwAutographTime;
 
     @ApiModelProperty(value = "签字人主键")
     @TableField("ajw_autograph_ids")
@@ -71,7 +71,7 @@ public class AnbiaoJiashiyuanLaodonghetong implements Serializable {
 
     @ApiModelProperty(value = "创建时间")
     @TableField("ajw_create_time")
-    private LocalDateTime ajwCreateTime;
+    private String ajwCreateTime;
 
     @ApiModelProperty(value = "创建人主键")
     @TableField("ajw_create_by_ids")
@@ -83,7 +83,7 @@ public class AnbiaoJiashiyuanLaodonghetong implements Serializable {
 
     @ApiModelProperty(value = "更新时间")
     @TableField("ajw_update_time")
-    private LocalDateTime ajwUpdateTime;
+    private String ajwUpdateTime;
 
     @ApiModelProperty(value = "更新人主键")
     @TableField("ajw_update_by_ids")

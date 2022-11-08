@@ -1,6 +1,7 @@
 package org.springblade.anbiao.jiashiyuan.controller;
 
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -56,7 +57,7 @@ public class AnbiaoJiashiyuanWuzezhengmingController {
 				wuzezhengming.setAjwCreateByName(wuzezhengming.getAjwCreateByName());
 				wuzezhengming.setAjwCreateByIds(wuzezhengming.getAjwCreateByIds());
 			}
-			wuzezhengming.setAjwCreateTime(LocalDateTime.now());
+			wuzezhengming.setAjwCreateTime(DateUtil.now());
 			wuzezhengming.setAjwDelete("0");
 			return R.status(wuzezhengmingService.save(wuzezhengming));
 		} else {
@@ -67,7 +68,7 @@ public class AnbiaoJiashiyuanWuzezhengmingController {
 				wuzezhengming.setAjwUpdateByName(wuzezhengming.getAjwUpdateByName());
 				wuzezhengming.setAjwUpdateByIds(wuzezhengming.getAjwUpdateByIds());
 			}
-			wuzezhengming.setAjwUpdateTime(LocalDateTime.now());
+			wuzezhengming.setAjwUpdateTime(DateUtil.now());
 			return R.status(wuzezhengmingService.updateById(wuzezhengming));
 		}
 	}

@@ -55,6 +55,7 @@ public class AnbiaoJiashiyuanCongyezigezhengController {
 			}
 			congyezigezheng.setAjcCreateTime(DateUtil.now());
 			congyezigezheng.setAjcDelete("0");
+			congyezigezheng.setAjcAjIds(congyezigezheng.getAjcAjIds());
 			return R.status(congyezigezhengService.save(congyezigezheng));
 		}else{
 			if(user != null){

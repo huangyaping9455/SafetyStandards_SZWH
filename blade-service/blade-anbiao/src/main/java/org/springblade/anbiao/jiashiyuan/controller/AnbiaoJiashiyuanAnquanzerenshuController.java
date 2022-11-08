@@ -57,7 +57,7 @@ public class AnbiaoJiashiyuanAnquanzerenshuController {
 				anquanzerenshu.setAjaCreateByName(anquanzerenshu.getAjaCreateByName());
 				anquanzerenshu.setAjaCreateByIds(anquanzerenshu.getAjaCreateByIds());
 			}
-			anquanzerenshu.setAjaCreateTime(LocalDateTime.now());
+			anquanzerenshu.setAjaCreateTime(DateUtil.now());
 			anquanzerenshu.setAjaDelete("0");
 			return R.status(anquanzerenshuService.save(anquanzerenshu));
 		}else{
@@ -68,7 +68,7 @@ public class AnbiaoJiashiyuanAnquanzerenshuController {
 				anquanzerenshu.setAjaUpdateByName(anquanzerenshu.getAjaUpdateByName());
 				anquanzerenshu.setAjaUpdateByIds(anquanzerenshu.getAjaUpdateByIds());
 			}
-			anquanzerenshu.setAjaUpdateTime(LocalDateTime.now());
+			anquanzerenshu.setAjaUpdateTime(DateUtil.now());
 			return R.status(anquanzerenshuService.updateById(anquanzerenshu));
 		}
 	}
