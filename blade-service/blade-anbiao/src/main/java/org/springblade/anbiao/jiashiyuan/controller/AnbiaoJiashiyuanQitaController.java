@@ -1,6 +1,7 @@
 package org.springblade.anbiao.jiashiyuan.controller;
 
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -56,7 +57,7 @@ public class AnbiaoJiashiyuanQitaController {
 				qita.setAjtCreateByName(qita.getAjtCreateByName());
 				qita.setAjtCreateByIds(qita.getAjtCreateByIds());
 			}
-			qita.setAjtCreateTime(LocalDateTime.now());
+			qita.setAjtCreateTime(DateUtil.now());
 			qita.setAjtDelete("0");
 			return R.status(qitaService.save(qita));
 		}else{
@@ -67,7 +68,7 @@ public class AnbiaoJiashiyuanQitaController {
 				qita.setAjtUpdateByName(qita.getAjtUpdateByName());
 				qita.setAjtUpdateByIds(qita.getAjtUpdateByIds());
 			}
-			qita.setAjtUpdateTime(LocalDateTime.now());
+			qita.setAjtUpdateTime(DateUtil.now());
 			return R.status(qitaService.updateById(qita));
 		}
 	}

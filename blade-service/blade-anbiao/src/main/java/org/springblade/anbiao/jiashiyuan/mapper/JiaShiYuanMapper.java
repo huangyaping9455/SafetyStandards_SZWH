@@ -131,4 +131,11 @@ public interface JiaShiYuanMapper extends BaseMapper<JiaShiYuan> {
 	 */
 	DriverInfoVO selectDriverInfo(String jsyId);
 
+	/**
+	 * 根据企业ID获取驾驶员信息
+	 * @param deptId
+	 * @return
+	 */
+	List<JiaShiYuan> getJiaShiYuanByDept(@Param("deptId") Integer deptId);
+
 }

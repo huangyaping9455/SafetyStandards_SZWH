@@ -30,7 +30,7 @@ public class AnbiaoAnquanhuiyiDetail implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "参会明细主键")
-    @TableId(value = "aad_ids", type = IdType.AUTO)
+    @TableId(value = "aad_ids", type = IdType.UUID)
     private String aadIds;
 
     @ApiModelProperty(value = "会议主键")
@@ -63,7 +63,7 @@ public class AnbiaoAnquanhuiyiDetail implements Serializable {
 
     @ApiModelProperty(value = "参会时间")
     @TableField("add_time")
-    private LocalDateTime addTime;
+    private String addTime;
 
 
 }

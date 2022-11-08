@@ -15,4 +15,12 @@
         <result column="add_time" property="addTime" />
     </resultMap>
 
+    <!--根据安全培训主键批量删除权限-->
+    <delete id="deleteByAadAstIds">
+        delete anbiao_safety_training_detail where aad_ast_ids = #{aadAstIds}
+<!--        <foreach collection="aadAstIds" item="item" index="index" open="(" close=")" separator=",">-->
+<!--            #{item}-->
+<!--        </foreach>-->
+    </delete>
+
 </mapper>

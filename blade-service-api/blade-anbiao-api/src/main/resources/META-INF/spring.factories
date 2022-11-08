@@ -6,7 +6,6 @@ net.dreamlu.mica.feign.MicaFeignAutoConfiguration=\
   org.springblade.anbiao.richenganpai.feign.IRiChengAnPaiClient
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   org.springblade.anbiao.guanlijigouherenyuan.feign.IDepartmentpostClientBack,\
-  org.springblade.anbiao.upload.feign.IFileUploadClientBack,\
   org.springblade.anbiao.chuchejiancha.entity.FileCarExamineParse,\
   org.springblade.anbiao.guanlijigouherenyuan.feign.IPersonnelClientBack,\
   org.springblade.anbiao.guanlijigouherenyuan.feign.IOrganizationsClientBack,\

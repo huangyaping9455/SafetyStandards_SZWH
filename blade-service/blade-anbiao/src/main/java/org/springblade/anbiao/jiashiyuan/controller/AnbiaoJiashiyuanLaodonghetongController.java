@@ -1,6 +1,7 @@
 package org.springblade.anbiao.jiashiyuan.controller;
 
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -56,7 +57,7 @@ public class AnbiaoJiashiyuanLaodonghetongController {
 				laodonghetong.setAjwCreateByName(laodonghetong.getAjwCreateByName());
 				laodonghetong.setAjwCreateByIds(laodonghetong.getAjwCreateByIds());
 			}
-			laodonghetong.setAjwCreateTime(LocalDateTime.now());
+			laodonghetong.setAjwCreateTime(DateUtil.now());
 			laodonghetong.setAjwDelete("0");
 			return R.status(laodonghetongService.save(laodonghetong));
 		}else{
@@ -67,7 +68,7 @@ public class AnbiaoJiashiyuanLaodonghetongController {
 				laodonghetong.setAjwUpdateByName(laodonghetong.getAjwUpdateByName());
 				laodonghetong.setAjwUpdateByIds(laodonghetong.getAjwUpdateByIds());
 			}
-			laodonghetong.setAjwUpdateTime(LocalDateTime.now());
+			laodonghetong.setAjwUpdateTime(DateUtil.now());
 			return R.status(laodonghetongService.updateById(laodonghetong));
 		}
 	}
