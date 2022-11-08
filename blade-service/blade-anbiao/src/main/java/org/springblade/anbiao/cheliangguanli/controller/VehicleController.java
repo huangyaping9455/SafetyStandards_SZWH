@@ -3,7 +3,6 @@ package org.springblade.anbiao.cheliangguanli.controller;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSON;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -22,6 +21,8 @@ import org.springblade.anbiao.cheliangguanli.service.*;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
 import org.springblade.anbiao.configure.entity.Configure;
 import org.springblade.anbiao.configure.service.IConfigureService;
+import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
+import org.springblade.anbiao.guanlijigouherenyuan.feign.IOrganizationsClient;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.common.tool.CheckPhoneUtil;
@@ -37,13 +38,11 @@ import org.springblade.system.entity.Dept;
 import org.springblade.system.entity.Dict;
 import org.springblade.system.feign.IDictClient;
 import org.springblade.system.feign.ISysClient;
-import org.springblade.system.service.IDeptService;
 import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -72,7 +71,7 @@ public class VehicleController {
 	private IDictClient iDictClient;
 	private IVehiclePhoneService vehiclePhoneService;
 	private IVehicleBiangengjiluService vehicleBiangengjiluService;
-	private IDeptService deptService;
+	private IOrganizationsClient orrganizationsClient;
 	private IVehicleDaoluyunshuzhengService daoluyunshuzhengService;
 	private IVehicleXingshizhengService xingshizhengService;
 	private IVehicleXingnengbaogaoService xingnengbaogaoService;
@@ -272,7 +271,7 @@ public class VehicleController {
 						}
 					}
 
-					Dept dept = deptService.selectByDeptId(v.getDeptId());
+					Organizations dept = orrganizationsClient.selectByDeptId(v.getDeptId().toString());
 					VehicleJishupingding jishupingding = new VehicleJishupingding();		//技术评定
 //					jishupingding.setAvjTechnicalEvaluation(v.getji);
 					VehicleDengjizhengshu dengjizhengshu = new VehicleDengjizhengshu();		//登记证书

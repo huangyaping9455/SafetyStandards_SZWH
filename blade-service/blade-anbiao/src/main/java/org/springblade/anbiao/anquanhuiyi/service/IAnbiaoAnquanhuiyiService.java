@@ -4,6 +4,8 @@ import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springblade.anbiao.anquanhuiyi.page.AnQuanHuiYiPage;
 
+import java.util.List;
+
 /**
  * <p>
  * 安全会议记录表 服务类
@@ -14,5 +16,8 @@ import org.springblade.anbiao.anquanhuiyi.page.AnQuanHuiYiPage;
  */
 public interface IAnbiaoAnquanhuiyiService extends IService<AnbiaoAnquanhuiyi> {
 
-	AnQuanHuiYiPage<AnbiaoAnquanhuiyi> selectPage(AnQuanHuiYiPage anQuanHuiYiPage);
+	AnQuanHuiYiPage<AnbiaoAnquanhuiyi> selectGetAll(AnQuanHuiYiPage anQuanHuiYiPage);
+
+
+
 }

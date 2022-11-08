@@ -324,13 +324,12 @@ public class AnbiaoAnquanhuiyiController {
 	/**
 	 * 分页
 	 */
-	@PostMapping("/list")
+	@PostMapping("/getAnquanhuiyiPage")
 	@ApiLog("分页-安全会议")
 	@ApiOperation(value = "分页-安全会议",notes = "传入AnQuanHuiYiPage")
-	public R<AnQuanHuiYiPage> getAnquanhuiyiPage(@RequestBody AnQuanHuiYiPage anQuanHuiYiPage) {
-
+	public R<AnQuanHuiYiPage<AnbiaoAnquanhuiyi>> getAnquanhuiyiPage(@RequestBody AnQuanHuiYiPage anQuanHuiYiPage) {
 		R r = new R();
-		AnQuanHuiYiPage<AnbiaoAnquanhuiyi> list = anquanhuiyiService.selectPage(anQuanHuiYiPage);
+		AnQuanHuiYiPage<AnbiaoAnquanhuiyi> list = anquanhuiyiService.selectGetAll(anQuanHuiYiPage);
 		return R.data(list);
 	}
 

@@ -27,66 +27,79 @@
         <result column="canhuirenshu" property="canhuirenshu" />
     </resultMap>
 
-    <resultMap id="AnbiaoanquanhuiyiBaseResultMap" type="org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi">
-    </resultMap>
+	<sql id="tableSql">
+		select
+			a.*,
+			b.dept_name as deptname,
+			c.aad_ids
+		from
+			anbiao_anquanhuiyi a
+		inner join  (
+			<include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+		) b on a.dept_id = b.id
+		left join anbiao_anquanhuiyi_detail c on c.aad_aa_ids = a.id
+		where a.is_deleted = 0
+			and left(a.huiyikaishishijian,10) >= #{huiyikaishishijian}
+	</sql>
 
-    <sql id="tableSql">
-    select
-        a.*,
-        b.dept_name as deptname,
-        c.*
-    from
-        anbiao_anquanhuiyi a inner join  (
-        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
-        ) b on a.dept_id = b.id
-        left join anbiao_anquanhuiyi_detail c on c.aad_aa_ids = a.id
-    where a.is_deleted = 0
-    </sql>
+	<sql id="orderSql">
+		<!-- 默认排序规则 -->
+		<if test="orderColumn == null or orderColumn == ''">
+			order by huiyijieshushijian desc
+		</if>
+		<if test="orderColumn != null and orderColumn != ''">
+			order by ${orderColumn}
+		</if>
+		<if test="orderColumn != null and orderColumn != '' and order != 0">
+			desc
+		</if>
+		<if test="orderColumn != null and orderColumn != '' and order == 0">
+			asc
+		</if>
+	</sql>
 
-    <sql id="querySql">
-        <if test="deptname != null and deptname != '' ">
-            and deptname like '%${deptname}%'
-        </if>
-        <if test="huiyikaishishijian != null and huiyikaishishijian != '' ">
-            and huiyikaishishijian = '%${huiyikaishishijian}%'
-        </if>
-    </sql>
+	<sql id="querySql">
 
-    <sql id="orderSql">
-        <!-- 默认排序规则 -->
-        ORDER BY huiyijieshushijian desc
-    </sql>
+		<if test="huiyimingcheng != null and huiyimingcheng != '' ">
+			and huiyimingcheng like '%${huiyimingcheng}%'
+		</if>
 
-    <select id="selectPage" resultMap="AnbiaoanquanhuiyiBaseResultMap"
-            parameterType="org.springblade.anbiao.anquanhuiyi.page.AnQuanHuiYiPage" >
-        <if test="size == 0" >
-            select * from (
-            <include refid="tableSql" />
-            )b
-            where 1=1
-            <include refid="querySql" />
-            <include refid="orderSql" />
-            limit ${total}
-        </if>
-        <if test="current != 0" >
-            select * from (
-            <include refid="tableSql" />
-            )b
-            where 1=1
-            <include refid="querySql" />
-            <include refid="orderSql" />
-            limit ${offsetNo},${size}
-        </if>
-    </select>
+		<if test="deptname != null and deptname != ''">
+			and deptname like '%${deptname}%'
+		</if>
 
-    <select id="selectTotal"
-            parameterType="org.springblade.anbiao.anquanhuiyi.page.AnQuanHuiYiPage"
-            resultType="int">
-        select COUNT(1) from (
-        <include refid="tableSql" />
-        )
-        where 1 = 1
-        <include refid="querySql" />
-    </select>
+	</sql>
+
+	<select timeout="600" id="selectGetAll" resultMap="BaseResultMap"
+			parameterType="org.springblade.anbiao.anquanhuiyi.page.AnQuanHuiYiPage">
+		<if test="size == 0">
+			select * from (
+			<include refid="tableSql"/>
+			)b
+			where 1=1
+			<include refid="querySql"/>
+			<include refid="orderSql"/>
+			limit ${total}
+		</if>
+		<if test="current != 0">
+			select * from (
+			<include refid="tableSql"/>
+			)b
+			where 1=1
+			<include refid="querySql"/>
+			<include refid="orderSql"/>
+			limit ${offsetNo},${size}
+		</if>
+	</select>
+
+	<select timeout="90" id="selectGetAllTotal"
+			parameterType="org.springblade.anbiao.anquanhuiyi.page.AnQuanHuiYiPage"
+			resultType="int">
+		select COUNT(1) from (
+		<include refid="tableSql"/>
+		)d where 1 = 1
+		<include refid="querySql"/>
+	</select>
+
 
 </mapper>
