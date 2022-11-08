@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.SafeInvestment.mapper.SafeInvestmentMapper">
+
+    <!--安全列表-->
+    <select id="selectList" parameterType="org.springblade.anbiao.SafeInvestment.DTO.SafeInvestmentDTO" resultType="org.springblade.anbiao.SafeInvestment.VO.SafeInvestmentVO">
+        select
+            a.asi_ids,a.asi_dept_ids,a.asi_year,a.asi_last_years_turnover,a.asi_extraction_proportion,
+            a.asi_withdrawal_amount,a.asi_accrued_amount,a.asi_amount_used,a.asi_remaining_amount,
+            a.asi_delete,a.asi_create_time,	a.asi_create_by_ids,a.asi_create_by_name,a.asi_update_time,
+            a.asi_update_by_ids,a.asi_update_by_name,b.dept_name
+        from
+            anbiao_safety_input a
+        left join (
+            <include
+                refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) b on a.asi_dept_ids = b.id
+        where a.asi_delete = 0 AND
+            a.asi_update_time between #{startTime} and #{endTime}
+    </select>
+
+    <!--安全投入详细信息-->
+    <select id="selectAll" parameterType="String" resultType="org.springblade.anbiao.SafeInvestment.VO.SafetyInvestmentDetailsVO">
+        select
+            asid_ids,asid_asi_ids,	asid_entry_name,asid_handled_by_ids,asid_handled_by_name,
+            asid_investment_scope,asid_investment_dare,asid_amount_used,asid_delete
+        from
+            anbiao_safety_input_detailed
+        where asid_asi_ids =#{rid} AND ifnull(asid_delete,0) = 0
+    </select>
+
+    <!--新增安全投入详细信息-->
+    <insert id="insertOne" parameterType="org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInput">
+        insert into anbiao_safety_input(asi_dept_ids,asi_year,asi_last_years_turnover,asi_extraction_proportion,asi_withdrawal_amount,
+            asi_accrued_amount,asi_amount_used,asi_remaining_amount,asi_delete
+        )
+        values (asi_dept_ids,asi_year,asi_last_years_turnover,asi_extraction_proportion,asi_withdrawal_amount,
+            asi_accrued_amount,asi_amount_used,asi_remaining_amount,0
+               )
+    </insert>
+
+    <insert id="insertInput" parameterType="org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInputDetailed">
+        insert into anbiao_safety_input_detailed(asid_entry_name,asid_handled_by_name,asid_investment_scope,asid_investment_dare,asid_amount_used,asid_delete)
+        values
+        <foreach collection="list" item="AnbiaoSafetyInputDetailed" separator=",">
+            (#{AnbiaoSafetyInputDetailed.asid_entry_name},
+            #{AnbiaoSafetyInputDetailed.asid_handled_by_name},
+            #{AnbiaoSafetyInputDetailed.asid_investment_scope},
+            #{AnbiaoSafetyInputDetailed.asid_investment_dare},
+            #{AnbiaoSafetyInputDetailed.asid_amount_used},
+            #{AnbiaoSafetyInputDetailed.asid_delete}
+             )
+        </foreach>
+    </insert>
+
+
+    <!--修改安全投入-->
+    <update id="updateSafe" parameterType="org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInput">
+        update anbiao_safety_input
+        <set>
+            <if test="asi_year != null">
+                asi_year = #{asi_year}
+            </if>
+            <if test="asi_extraction_proportion != null">
+                asi_extraction_proportion = #{asi_extraction_proportion}
+            </if>
+            <if test="asi_withdrawal_amount != null">
+                asi_withdrawal_amount = #{asi_withdrawal_amount}
+            </if>
+            <if test="asi_accrued_amount != null">
+                asi_accrued_amount = #{asi_accrued_amount}
+            </if>
+            <if test="asi_amount_used != null">
+                asi_amount_used = #{asi_amount_used}
+            </if>
+            <if test="asi_remaining_amount != null">
+                asi_remaining_amount = #{asi_remaining_amount}
+            </if>
+        </set>
+        where asi_dept_ids = #{asi_dept_ids}
+    </update>
+
+    <!--删除安全投入-->
+    <delete id="deleteSafe" parameterType="java.lang.String">
+        delete from anbiao_safety_input where asi_dept_ids = #{asi_dept_ids}
+    </delete>
+</mapper>
