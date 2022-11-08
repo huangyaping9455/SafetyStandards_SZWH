@@ -31,10 +31,10 @@
 
     <!--新增安全投入详细信息-->
     <insert id="insertOne" parameterType="org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInput">
-        insert into anbiao_safety_input(asi_dept_ids,asi_year,asi_last_years_turnover,asi_extraction_proportion,asi_withdrawal_amount,
+        insert into anbiao_safety_input(asi_year,asi_last_years_turnover,asi_extraction_proportion,asi_withdrawal_amount,
             asi_accrued_amount,asi_amount_used,asi_remaining_amount,asi_delete
         )
-        values (asi_dept_ids,asi_year,asi_last_years_turnover,asi_extraction_proportion,asi_withdrawal_amount,
+        values (asi_year,asi_last_years_turnover,asi_extraction_proportion,asi_withdrawal_amount,
             asi_accrued_amount,asi_amount_used,asi_remaining_amount,0
                )
     </insert>
