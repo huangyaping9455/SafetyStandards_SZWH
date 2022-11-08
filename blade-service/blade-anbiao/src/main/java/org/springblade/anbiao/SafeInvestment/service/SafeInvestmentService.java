@@ -1,10 +1,10 @@
 package org.springblade.anbiao.SafeInvestment.service;
 
-import org.springblade.anbiao.SafeInvestment.DTO.SafeInvestmentDTO;
-import org.springblade.anbiao.SafeInvestment.VO.SafeInvestmentVO;
 import org.springblade.anbiao.SafeInvestment.VO.SafetyInvestmentDetailsVO;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInput;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInputDetailed;
+import org.springblade.anbiao.SafeInvestment.page.SafelInfoPage;
+
 
 import java.util.List;
 
@@ -14,12 +14,12 @@ import java.util.List;
  */
 public interface SafeInvestmentService {
 
-	/**
-	 * 安全列表信息
-	 * @param safeInvestmentDTO
-	 * @return
-	 */
-	List<SafeInvestmentVO> selectList(SafeInvestmentDTO safeInvestmentDTO);
+//	/**
+//	 * 安全列表信息
+//	 * @param safeInvestmentDTO
+//	 * @return
+//	 */
+//	List<SafeInvestmentVO> selectList(SafeInvestmentDTO safeInvestmentDTO);
 
 	/**
 	 * 安全投入详细信息
@@ -55,4 +55,6 @@ public interface SafeInvestmentService {
 	 * @return
 	 */
 	Boolean updateSafe(AnbiaoSafetyInput anbiaoSafetyInput);
+
+	SafelInfoPage selectTotal(SafelInfoPage safelInfoPage);
 }

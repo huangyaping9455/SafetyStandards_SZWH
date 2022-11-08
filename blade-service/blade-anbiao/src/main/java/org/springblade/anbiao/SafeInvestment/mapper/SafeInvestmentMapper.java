@@ -5,6 +5,7 @@ import org.springblade.anbiao.SafeInvestment.VO.SafeInvestmentVO;
 import org.springblade.anbiao.SafeInvestment.VO.SafetyInvestmentDetailsVO;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInput;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInputDetailed;
+import org.springblade.anbiao.SafeInvestment.page.SafelInfoPage;
 
 import java.util.List;
 
@@ -16,11 +17,11 @@ public interface SafeInvestmentMapper {
 
 	/**
 	 * 安全列表
-	 * @param safeInvestmentDTO
+	 * @param safelInfoPage
 	 * @return
 	 */
-	List<SafeInvestmentVO> selectList(SafeInvestmentDTO safeInvestmentDTO);
-
+	List<SafeInvestmentVO> selectList(SafelInfoPage safelInfoPage);
+	int selectTotal(SafelInfoPage safelInfoPage);
 
 	/**
 	 * 安全投入详细信息

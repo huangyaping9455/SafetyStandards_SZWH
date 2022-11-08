@@ -3,7 +3,7 @@
 <mapper namespace="org.springblade.anbiao.SafeInvestment.mapper.SafeInvestmentMapper">
 
     <!--安全列表-->
-    <select id="selectList" parameterType="org.springblade.anbiao.SafeInvestment.DTO.SafeInvestmentDTO" resultType="org.springblade.anbiao.SafeInvestment.VO.SafeInvestmentVO">
+    <select id="selectList" parameterType="org.springblade.anbiao.SafeInvestment.page.SafelInfoPage" resultType="org.springblade.anbiao.SafeInvestment.VO.SafeInvestmentVO">
         select
             a.asi_ids,a.asi_dept_ids,a.asi_year,a.asi_last_years_turnover,a.asi_extraction_proportion,
             a.asi_withdrawal_amount,a.asi_accrued_amount,a.asi_amount_used,a.asi_remaining_amount,
@@ -81,7 +81,28 @@
     </update>
 
     <!--删除安全投入-->
-    <delete id="deleteSafe" parameterType="java.lang.String">
-        delete from anbiao_safety_input where asi_dept_ids = #{asi_dept_ids}
-    </delete>
+    <update id="deleteSafe" parameterType="java.lang.String" >
+        update anbiao_safety_input set
+            asi_delete = 1
+        WHERE asi_dept_ids = #{asi_dept_ids}
+    </update>
+
+    <sql id="tableSql">
+        select
+        a.*,
+        b.dept_name as deptName
+        from
+        anbiao_safety_input a
+        inner join  (
+        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b on a.asi_dept_ids = b.id
+        where a.asi_delete = 0
+    </sql>
+
+    <select id="selectTotal" resultType="int" parameterType="org.springblade.anbiao.SafeInvestment.page.SafelInfoPage">
+        select
+        count(1)
+        from(
+        <include refid="tableSql"/>)
+    </select>
 </mapper>
