@@ -1,17 +1,16 @@
 package org.springblade.anbiao.jiashiyuan.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 /**
  * <p>
@@ -31,7 +30,7 @@ public class AnbiaoJiashiyuanQita implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "其他主键")
-    @TableId(value = "ajt_ids", type = IdType.AUTO)
+    @TableId(value = "ajt_ids", type = IdType.UUID)
     private String ajtIds;
 
     @ApiModelProperty(value = "驾驶员信息表主键")
@@ -40,7 +39,7 @@ public class AnbiaoJiashiyuanQita implements Serializable {
 
     @ApiModelProperty(value = "上传日期")
     @TableField("ajt_physical_examination_date")
-    private LocalDate ajtPhysicalExaminationDate;
+    private String ajtPhysicalExaminationDate;
 
     @ApiModelProperty(value = "其他附件")
     @TableField("ajt_enclosure")
@@ -52,7 +51,7 @@ public class AnbiaoJiashiyuanQita implements Serializable {
 
     @ApiModelProperty(value = "创建时间")
     @TableField("ajt_create_time")
-    private LocalDateTime ajtCreateTime;
+    private String ajtCreateTime;
 
     @ApiModelProperty(value = "创建人主键")
     @TableField("ajt_create_by_ids")
@@ -64,7 +63,7 @@ public class AnbiaoJiashiyuanQita implements Serializable {
 
     @ApiModelProperty(value = "更新时间")
     @TableField("ajt_update_time")
-    private LocalDateTime ajtUpdateTime;
+    private String ajtUpdateTime;
 
     @ApiModelProperty(value = "更新人主键")
     @TableField("ajt_update_by_ids")

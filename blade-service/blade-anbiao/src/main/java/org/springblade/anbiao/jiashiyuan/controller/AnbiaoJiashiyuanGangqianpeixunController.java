@@ -1,13 +1,12 @@
 package org.springblade.anbiao.jiashiyuan.controller;
 
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
-import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanAnquanzerenshu;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanGangqianpeixun;
-import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanAnquanzerenshuService;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanGangqianpeixunService;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
@@ -15,10 +14,7 @@ import org.springblade.core.tool.api.R;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -56,7 +52,7 @@ public class AnbiaoJiashiyuanGangqianpeixunController {
 				gangqianpeixun.setAjgCreateByName(gangqianpeixun.getAjgCreateByName());
 				gangqianpeixun.setAjgCreateByIds(gangqianpeixun.getAjgCreateByIds());
 			}
-			gangqianpeixun.setAjgCreateTime(LocalDateTime.now());
+			gangqianpeixun.setAjgCreateTime(DateUtil.now());
 			gangqianpeixun.setAjgDelete("0");
 			return R.status(gangqianpeixunService.save(gangqianpeixun));
 		}else{
@@ -67,7 +63,7 @@ public class AnbiaoJiashiyuanGangqianpeixunController {
 				gangqianpeixun.setAjgUpdateByName(gangqianpeixun.getAjgUpdateByName());
 				gangqianpeixun.setAjgUpdateByIds(gangqianpeixun.getAjgUpdateByIds());
 			}
-			gangqianpeixun.setAjgUpdateTime(LocalDateTime.now());
+			gangqianpeixun.setAjgUpdateTime(DateUtil.now());
 			return R.status(gangqianpeixunService.updateById(gangqianpeixun));
 		}
 	}

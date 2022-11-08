@@ -202,18 +202,13 @@ public class AnbiaoAnquanhuiyiController {
 	 */
 	@PostMapping("/update")
 	@ApiLog("编辑-安全会议信息")
-	@ApiOperation(value = "编辑-安全会议信息",notes = "传入jiaShiYuan")
+	@ApiOperation(value = "编辑-安全会议信息",notes = "传入AnbiaoAnquanhuiyi")
 	public R update(@RequestBody AnbiaoAnquanhuiyi anquanhuiyi,BladeUser user){
 		R r = new R();
-		QueryWrapper<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailQueryWrapper = new QueryWrapper<>();
-		anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,anquanhuiyi.getId());
-		anquanhuiyiDetailService.getBaseMapper().deleteById(anquanhuiyiDetailQueryWrapper);
-
 		QueryWrapper<AnbiaoAnquanhuiyi> anquanhuiyiQueryWrapper = new QueryWrapper<>();
 		anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getDeptId,anquanhuiyi.getDeptId());
 		anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getIsDeleted,0);
 		AnbiaoAnquanhuiyi deail = anquanhuiyiService.getBaseMapper().selectOne(anquanhuiyiQueryWrapper);
-
 		if (deail!=null){
 			deail.setCaozuoren(user.getUserName());
 			deail.setCaozuorenid(user.getUserId());
@@ -230,6 +225,9 @@ public class AnbiaoAnquanhuiyiController {
 			if (i>0) {
 				AnbiaoAnquanhuiyi anbiaoAnquanhuiyi = anquanhuiyiService.getBaseMapper().selectOne(anquanhuiyiQueryWrapper);
 				if (anbiaoAnquanhuiyi != null) {
+					QueryWrapper<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailQueryWrapper = new QueryWrapper<>();
+					anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,anquanhuiyi.getId());
+					anquanhuiyiDetailService.getBaseMapper().deleteById(anquanhuiyiDetailQueryWrapper);
 					List<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailList = anquanhuiyi.getAnquanhuiyiDetails();
 					for (int j = 0; j <= anquanhuiyiDetailList.size() - 1; j++) {
 						AnbiaoAnquanhuiyiDetail anbiaoAnquanhuiyiDetail = new AnbiaoAnquanhuiyiDetail();
@@ -242,6 +240,7 @@ public class AnbiaoAnquanhuiyiController {
 							anbiaoAnquanhuiyiDetail.setAadApName(anquanhuiyiDetailList.get(j).getAadApName());
 							anbiaoAnquanhuiyiDetail.setAadApType(anquanhuiyiDetailList.get(j).getAadApType());
 							anbiaoAnquanhuiyiDetail.setAddApAutograph(anquanhuiyiDetailList.get(j).getAddApAutograph());
+							anbiaoAnquanhuiyiDetail.setAadAaIds(anbiaoAnquanhuiyi.getId());
 							boolean b = anquanhuiyiDetailService.updateById(anbiaoAnquanhuiyiDetail);
 							if (b) {
 								r.setMsg("更新成功");
@@ -259,12 +258,12 @@ public class AnbiaoAnquanhuiyiController {
 				}
 			}
 		}else {
-			r.setMsg("更新失败");
+			r.setMsg("该数据不存在");
 			r.setCode(500);
 			r.setSuccess(false);
 			return r;
 		}
-			return r;
+		return r;
 	}
 
 
@@ -359,29 +358,22 @@ public class AnbiaoAnquanhuiyiController {
 	@PostMapping("/signIn")
 	@ApiLog("签到-安全会议")
 	@ApiOperation(value = "签到-安全会议",notes = "传入AnbiaoAnquanhuiyi,AnbiaoAnquanhuiyiDetail")
-	public R SignIn(@RequestBody AnbiaoAnquanhuiyi anquanhuiyi, AnbiaoAnquanhuiyiDetail anquanhuiyiDetail, BladeUser user){
+	public R SignIn(@RequestBody AnbiaoAnquanhuiyiDetail anquanhuiyiDetail, BladeUser user){
 		R r = new R();
 		QueryWrapper<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailQueryWrapper = new QueryWrapper<>();
-		anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,anquanhuiyi.getId());
+		anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,anquanhuiyiDetail.getAadAaIds());
+		anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadApIds,anquanhuiyiDetail.getAadApIds());
 		AnbiaoAnquanhuiyiDetail detail = anquanhuiyiDetailService.getBaseMapper().selectOne(anquanhuiyiDetailQueryWrapper);
-		if (anquanhuiyi.getIsDeleted()==0){
-			if (anquanhuiyi.getHuiyileixing().equals("0")){
-				detail.setAddApAutograph(anquanhuiyiDetail.getAddApAutograph());
-				detail.setAddApHeadPortrait(anquanhuiyiDetail.getAddApHeadPortrait());
-				detail.setAadApType(anquanhuiyiDetail.getAadApType());
-				detail.setAddApBeingJoined(anquanhuiyiDetail.getAddApBeingJoined());
-				detail.setAddTime(anquanhuiyi.getHuiyikaishishijian());
-				return R.status(anquanhuiyiDetailService.updateById(detail));
-			}else {
-				r.setMsg("线下会议无需签到");
-				r.setCode(500);
-				r.setSuccess(false);
-				return r;
-			}
-		}else {
-			r.setMsg("会议不存在");
+		if (detail != null){
+			detail.setAddApAutograph(anquanhuiyiDetail.getAddApAutograph());
+			detail.setAddApHeadPortrait(anquanhuiyiDetail.getAddApHeadPortrait());
+			detail.setAadApType(anquanhuiyiDetail.getAadApType());
+			detail.setAddApBeingJoined(anquanhuiyiDetail.getAddApBeingJoined());
+			detail.setAddTime(DateUtil.now());
+			return R.status(anquanhuiyiDetailService.updateById(detail));
+		}else{
 			r.setCode(500);
-			r.setSuccess(false);
+			r.setMsg("暂无数据");
 			return r;
 		}
 	}
