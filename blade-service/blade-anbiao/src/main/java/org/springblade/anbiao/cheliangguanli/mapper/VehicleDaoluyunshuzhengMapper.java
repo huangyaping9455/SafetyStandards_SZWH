@@ -38,4 +38,5 @@ public interface VehicleDaoluyunshuzhengMapper extends BaseMapper<VehicleDaoluyu
 	 */
 	List<VehicleDaoluyunshuzhengVO> selectVehicleDaoluyunshuzhengPage(IPage page, VehicleDaoluyunshuzhengVO vehicleDaoluyunshuzheng);
 
+	VehicleDaoluyunshuzheng selectVehicleDaoluyunshuzhengByVehicleIds(String avdAvIds);
 }

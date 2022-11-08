@@ -44,6 +44,9 @@ public class VehicleDengjizhengshu extends BaseEntity {
      */
     @ApiModelProperty(value = "登记证书主键")
     private String avdIds;
+
+    @ApiModelProperty(value = "车辆主键")
+    private String avdVehicleIds;
     /**
      * 登记机构
      */

@@ -35,7 +35,11 @@
 
 
     <select id="selectVehicleDaoluyunshuzhengPage" resultMap="vehicleDaoluyunshuzhengResultMap">
-        select * from anbiao_vehicle_daoluyunshuzheng where is_deleted = 0
+        select * from anbiao_vehicle_daoluyunshuzheng where avd_delete = 0
+    </select>
+
+    <select id="selectVehicleDaoluyunshuzhengByVehicleIds" resultMap="vehicleDaoluyunshuzhengResultMap" parameterType="java.lang.String">
+        select * from anbiao_vehicle_daoluyunshuzheng where avd_av_ids=#{avdAvIds} AND avd_delete = 0 LIMIT 1
     </select>
 
 </mapper>

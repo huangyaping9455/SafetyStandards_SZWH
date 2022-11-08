@@ -20,7 +20,11 @@
 
 
     <select id="selectVehicleXingnengbaogaoPage" resultMap="vehicleXingnengbaogaoResultMap">
-        select * from anbiao_vehicle_xingnengbaogao where is_deleted = 0
+        select * from anbiao_vehicle_xingnengbaogao where avx_delete = 0
+    </select>
+
+    <select id="selectVehicleXingnengbaogaoByVehicleIds" resultMap="vehicleXingnengbaogaoResultMap" parameterType="java.lang.String">
+        select * from anbiao_vehicle_xingnengbaogao where avx_av_ids=#{avxAvIds} AND avx_delete = 0 LIMIT 1
     </select>
 
 </mapper>

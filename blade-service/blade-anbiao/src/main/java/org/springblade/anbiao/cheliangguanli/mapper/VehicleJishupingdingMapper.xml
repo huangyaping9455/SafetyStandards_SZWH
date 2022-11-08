@@ -5,6 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="vehicleJishupingdingResultMap" type="org.springblade.anbiao.cheliangguanli.entity.VehicleJishupingding">
         <id column="avj_ids" property="avjIds"/>
+        <result column="avj_vehicle_ids" property="avjVehicleIds"/>
         <result column="avj_technical_evaluation" property="avjTechnicalEvaluation"/>
         <result column="avj_technical_date" property="avjTechnicalDate"/>
         <result column="avj_enclosure" property="avjEnclosure"/>
@@ -23,7 +24,11 @@
 
 
     <select id="selectVehicleJishupingdingPage" resultMap="vehicleJishupingdingResultMap">
-        select * from anbiao_vehicle_jishupingding where is_deleted = 0
+        select * from anbiao_vehicle_jishupingding where avj_delete = 0
+    </select>
+
+    <select id="selectVehicleJishupingdingByVehicleIds" resultMap="vehicleJishupingdingResultMap" parameterType="java.lang.String">
+        select * from anbiao_vehicle_jishupingding where avj_vehicle_ids=#{avjVehicleIds} AND avj_delete = 0 LIMIT 1
     </select>
 
 </mapper>

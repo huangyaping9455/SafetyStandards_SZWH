@@ -37,4 +37,5 @@ public interface IVehicleXingnengbaogaoService extends BaseService<VehicleXingne
 	 */
 	IPage<VehicleXingnengbaogaoVO> selectVehicleXingnengbaogaoPage(IPage<VehicleXingnengbaogaoVO> page, VehicleXingnengbaogaoVO vehicleXingnengbaogao);
 
+	VehicleXingnengbaogaoVO selectVehicleXingnengbaogaoByVehicleIds(String avxAvIds);
 }

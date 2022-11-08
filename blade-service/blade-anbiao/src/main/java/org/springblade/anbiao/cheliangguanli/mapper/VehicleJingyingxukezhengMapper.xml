@@ -5,6 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="vehicleJingyingxukezhengResultMap" type="org.springblade.anbiao.cheliangguanli.entity.VehicleJingyingxukezheng">
         <id column="avj_ids" property="avjIds"/>
+        <result column="avj_vehicle_ids" property="avjVehicleIds"/>
         <result column="avj_operator_name" property="avjOperatorName"/>
         <result column="avj_license_no" property="avjLicenseNo"/>
         <result column="avj_business_license" property="avjBusinessLicense"/>
@@ -43,7 +44,11 @@
 
 
     <select id="selectVehicleJingyingxukezhengPage" resultMap="vehicleJingyingxukezhengResultMap">
-        select * from anbiao_vehicle_jingyingxukezheng where is_deleted = 0
+        select * from anbiao_vehicle_jingyingxukezheng where avj_delete = 0
+    </select>
+
+    <select id="selectVehicleJingyingxukezhengByVehicleIds" resultMap="vehicleJishupingdingResultMap" parameterType="java.lang.String">
+        select * from anbiao_vehicle_jingyingxukezheng where avj_vehicle_ids=#{avjVehicleIds} AND avj_delete = 0 LIMIT 1
     </select>
 
 </mapper>

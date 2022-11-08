@@ -38,4 +38,5 @@ public interface VehicleJingyingxukezhengMapper extends BaseMapper<VehicleJingyi
 	 */
 	List<VehicleJingyingxukezhengVO> selectVehicleJingyingxukezhengPage(IPage page, VehicleJingyingxukezhengVO vehicleJingyingxukezheng);
 
+	VehicleJingyingxukezhengVO selectVehicleJingyingxukezhengByVehicleIds(String avjVehicleIds);
 }

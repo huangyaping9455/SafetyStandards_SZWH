@@ -37,14 +37,14 @@ public class VehicleInfo implements Serializable {
 	@ApiModelProperty(value = "注册日期")
 	private LocalDate zhuceriqi;
 
-//	@ApiModelProperty(value = "经营许可证号")
-//	private String jingyingxukezhenghao;
-//
-//	@ApiModelProperty(value = "经营许可证有效期（起）")
-//	private LocalDate jyxkzyouxiaoqiStart;
-//
-//	@ApiModelProperty(value = "经营许可证有效期（止）")
-//	private LocalDate jyxkzyouxiaoqiEnd;
+	@ApiModelProperty(value = "经营许可证号")
+	private String jingyingxukezhenghao;
+
+	@ApiModelProperty(value = "经营许可证有效期（起）")
+	private LocalDate jyxkzyouxiaoqiStart;
+
+	@ApiModelProperty(value = "经营许可证有效期（止）")
+	private LocalDate jyxkzyouxiaoqiEnd;
 
 	@ApiModelProperty(value = "道路运输证号")
 	private String daoluyunshuzhenghao;
