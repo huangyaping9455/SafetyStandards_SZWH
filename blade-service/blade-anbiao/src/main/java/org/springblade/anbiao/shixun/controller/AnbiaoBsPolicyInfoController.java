@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.shixun.entity.AnbiaoBsPolicyInfo;
 import org.springblade.anbiao.shixun.page.BsPolicyInfoPage;
 import org.springblade.anbiao.shixun.service.IAnbiaoBsPolicyInfoService;
@@ -60,7 +61,6 @@ public class AnbiaoBsPolicyInfoController {
 			r.setSuccess(false);
 			return r;
 		}
-
 		QueryWrapper<AnbiaoBsPolicyInfo> bsPolicyInfoQueryWrapper = new QueryWrapper<AnbiaoBsPolicyInfo>();
 		bsPolicyInfoQueryWrapper.lambda().eq(AnbiaoBsPolicyInfo::getDeptId, bsPolicyInfo.getDeptId());
 		bsPolicyInfoQueryWrapper.lambda().eq(AnbiaoBsPolicyInfo::getIsdelete, 0);
@@ -72,6 +72,10 @@ public class AnbiaoBsPolicyInfoController {
 			bsPolicyInfo.setCaozuorenid(user.getUserId().toString());
 			bsPolicyInfo.setCaozuoshijian(DateUtil.now());
 			bsPolicyInfo.setIsdelete(0);
+			bsPolicyInfo.setShifouqiyong("启用");
+			if (StringUtils.isBlank(bsPolicyInfo.getBiaoqian())){
+				bsPolicyInfo.setBiaoqian("时讯");
+			}
 			boolean i = BsPolicyInfoService.save(bsPolicyInfo);
 			if(i){
 				r.setMsg("新增成功");
@@ -173,6 +177,47 @@ public class AnbiaoBsPolicyInfoController {
 			rs.setCode(500);
 			rs.setSuccess(false);
 			rs.setMsg("删除失败");
+		}
+		return rs;
+	}
+
+	/**
+	 * 停用、启用
+	 */
+	@GetMapping("/updateStatus")
+	@ApiLog("停用、启用")
+	@ApiOperation(value = "停用、启用", notes = "传入数据Id", position = 6)
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "Id", value = "数据Id", required = true),
+		@ApiImplicitParam(name = "status", value = "状态（启用，禁用）", required = true)
+	})
+	public R updateStatus(@RequestParam Integer Id, String status,BladeUser user) {
+		R rs = new R();
+		if(user == null){
+			rs.setMsg("未授权");
+			rs.setCode(500);
+			return rs;
+		}
+
+		AnbiaoBsPolicyInfo bsPolicyInfo = new AnbiaoBsPolicyInfo();
+		bsPolicyInfo.setCaozuoren(user.getUserName());
+		bsPolicyInfo.setCaozuorenid(user.getUserId().toString());
+		bsPolicyInfo.setCaozuoshijian(DateUtil.now());
+		bsPolicyInfo.setId(Id);
+		if("启用".equals(status)){
+			bsPolicyInfo.setShifouqiyong("启用");
+		}else{
+			bsPolicyInfo.setShifouqiyong("禁用");
+		}
+		boolean i = BsPolicyInfoService.updateById(bsPolicyInfo);
+		if(i == true){
+			rs.setCode(200);
+			rs.setSuccess(true);
+			rs.setMsg("更新成功");
+		}else{
+			rs.setCode(500);
+			rs.setSuccess(false);
+			rs.setMsg("更新失败");
 		}
 		return rs;
 	}
