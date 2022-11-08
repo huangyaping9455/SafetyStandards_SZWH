@@ -35,6 +35,9 @@ public class AnbiaoHiddenDangerPage<T> extends BasePage<T> {
 	@ApiModelProperty(value = "隐患类别")
 	private String ahdType;
 
+	@ApiModelProperty(value = "排查现场")
+	private String ahdAddress;
+
 	@ApiModelProperty(value = "排序字段")
 	private String orderColumns;
 

@@ -3,31 +3,35 @@
 <mapper namespace="org.springblade.anbiao.yinhuanpaicha.mapper.AnbiaoHiddenDangerMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="org.springblade.anbiao.yinhuanpaicha.entity.AnbiaoHiddenDanger">
-        <id column="ahd_ids" property="ahdIds" />
-        <result column="ahd_dept_ids" property="ahdDeptIds" />
-        <result column="ahd_vehicle_ids" property="ahdVehicleIds" />
-        <result column="ahd_type" property="ahdType" />
-        <result column="ahd_driver_ids" property="ahdDriverIds" />
-        <result column="ahd_driver_name" property="ahdDriverName" />
-        <result column="ahd_discoverer_ids" property="ahdDiscovererIds" />
-        <result column="ahd_discoverer_name" property="ahdDiscovererName" />
-        <result column="ahd_discovery_time" property="ahdDiscoveryTime" />
-        <result column="ahd_describe" property="ahdDescribe" />
-        <result column="ahd_hiddendanger_enclosure" property="ahdHiddendangerEnclosure" />
-        <result column="ahd_rectification_situation" property="ahdRectificationSituation" />
-        <result column="ahd_rectification_persion_ids" property="ahdRectificationPersionIds" />
-        <result column="ahd_rectification_time" property="ahdRectificationTime" />
-        <result column="ahd_rectification_persion_name" property="ahdRectificationPersionName" />
-        <result column="ahd_rectification_enclosure" property="ahdRectificationEnclosure" />
-        <result column="ahd_delete" property="ahdDelete" />
-        <result column="ahd_create_time" property="ahdCreateTime" />
-        <result column="ahd_create_by_ids" property="ahdCreateByIds" />
-        <result column="ahd_create_by_name" property="ahdCreateByName" />
-        <result column="ahd_update_time" property="ahdUpdateTime" />
-        <result column="ahd_update_by_ids" property="ahdUpdateByIds" />
-        <result column="ahd_update_by_name" property="ahdUpdateByName" />
-    </resultMap>
+	<resultMap id="BaseResultMap" type="org.springblade.anbiao.yinhuanpaicha.entity.AnbiaoHiddenDanger">
+		<id column="ahd_ids" property="ahdIds" />
+		<result column="ahd_dept_ids" property="ahdDeptIds" />
+		<result column="ahd_vehicle_ids" property="ahdVehicleIds" />
+		<result column="ahd_type" property="ahdType" />
+		<result column="ahd_driver_ids" property="ahdDriverIds" />
+		<result column="ahd_driver_name" property="ahdDriverName" />
+		<result column="ahd_discoverer_ids" property="ahdDiscovererIds" />
+		<result column="ahd_discoverer_name" property="ahdDiscovererName" />
+		<result column="ahd_discovery_time" property="ahdDiscoveryTime" />
+		<result column="ahd_describe" property="ahdDescribe" />
+		<result column="ahd_hiddendanger_enclosure" property="ahdHiddendangerEnclosure" />
+		<result column="ahd_rectification_situation" property="ahdRectificationSituation" />
+		<result column="ahd_rectification_persion_ids" property="ahdRectificationPersionIds" />
+		<result column="ahd_rectification_time" property="ahdRectificationTime" />
+		<result column="ahd_rectification_persion_name" property="ahdRectificationPersionName" />
+		<result column="ahd_rectification_enclosure" property="ahdRectificationEnclosure" />
+		<result column="ahd_delete" property="ahdDelete" />
+		<result column="ahd_create_time" property="ahdCreateTime" />
+		<result column="ahd_create_by_ids" property="ahdCreateByIds" />
+		<result column="ahd_create_by_name" property="ahdCreateByName" />
+		<result column="ahd_update_time" property="ahdUpdateTime" />
+		<result column="ahd_update_by_ids" property="ahdUpdateByIds" />
+		<result column="ahd_update_by_name" property="ahdUpdateByName" />
+		<result column="ahd_address" property="ahdAddress" />
+		<result column="ahd_audit_id" property="ahdAuditId" />
+		<result column="ahd_audit_name" property="ahdAuditName" />
+		<result column="ahd_audit_time" property="ahdAuditTime" />
+	</resultMap>
 
     <resultMap id="AnbiaoHiddenDangerVOBaseResultMap" type="org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoHiddenDangerVO">
     </resultMap>
@@ -43,7 +47,7 @@
                 <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) b on a.ahd_dept_ids = b.id
             left join anbiao_vehicle c on b.ahdVehicleIds = c.id
-        where a.ast_delete = 0
+        where a.ahd_delete = 0
             and a.ahd_discovery_time >= #{date}
     </sql>
 
@@ -57,6 +61,9 @@
         <if test="ahdType != null and ahdType != '' ">
             and ahdType = #{ahdType}
         </if>
+		<if test="ahdAddress != null and ahdAddress != '' ">
+			and ahdAddress = #{ahdAddress}
+		</if>
     </sql>
 
     <sql id="orderSql">
