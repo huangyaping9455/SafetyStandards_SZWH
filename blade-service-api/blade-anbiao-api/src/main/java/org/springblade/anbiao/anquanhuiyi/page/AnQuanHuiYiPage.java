@@ -14,11 +14,10 @@ import org.springblade.common.BasePage;
 @ApiModel(value = "AnQuanHuiYiPage对象",description = "AnQuanHuiYiPage")
 public class AnQuanHuiYiPage<T> extends BasePage<T> {
 	private static final long serialVersionUID = 1L;
+	@ApiModelProperty(value = "企业名称")
+	private String deptname;
 
-	@ApiModelProperty(value = "会议名称",required = true)
-	private Integer huiyimingcheng;
-
-	@ApiModelProperty(value = "会议日期")
-	private String huiyiriqi;
+	@ApiModelProperty(value = "会议开始时间")
+	private String huiyikaishishijian;
 
 }

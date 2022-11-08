@@ -346,6 +346,7 @@ public class AnbiaoAnquanhuiyiController {
 		QueryWrapper<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailQueryWrapper = new QueryWrapper<>();
 		anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,anquanhuiyiDetail.getAadAaIds());
 		anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadApIds,anquanhuiyiDetail.getAadApIds());
+		anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAddApBeingJoined,"0");
 		AnbiaoAnquanhuiyiDetail detail = anquanhuiyiDetailService.getBaseMapper().selectOne(anquanhuiyiDetailQueryWrapper);
 		if (detail != null){
 			detail.setAddApAutograph(anquanhuiyiDetail.getAddApAutograph());
@@ -353,6 +354,7 @@ public class AnbiaoAnquanhuiyiController {
 			detail.setAadApType(anquanhuiyiDetail.getAadApType());
 			detail.setAddApBeingJoined(anquanhuiyiDetail.getAddApBeingJoined());
 			detail.setAddTime(DateUtil.now());
+			detail.setAddApBeingJoined("1");
 			return R.status(anquanhuiyiDetailService.updateById(detail));
 		}else{
 			r.setCode(500);

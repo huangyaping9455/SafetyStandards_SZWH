@@ -122,4 +122,8 @@ public class AnbiaoAnquanhuiyi implements Serializable {
     @ApiModelProperty(value = "会议人员信息")
 	@TableField(exist = false)
 	private List<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetails;
+
+	@ApiModelProperty(value = "会议名称")
+	@TableField(exist = false)
+	private String deptname;
 }

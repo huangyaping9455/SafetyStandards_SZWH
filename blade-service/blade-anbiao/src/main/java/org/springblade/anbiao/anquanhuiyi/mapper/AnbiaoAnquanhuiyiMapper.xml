@@ -41,19 +41,14 @@
         ) b on a.dept_id = b.id
         left join anbiao_anquanhuiyi_detail c on c.aad_aa_ids = a.id
     where a.is_deleted = 0
-      and a.huiyixingshi = 1
-      and a.huiyijieshushijian >= #{date}
     </sql>
 
     <sql id="querySql">
-        <if test="huiyimingcheng != null and huiyimingcheng != '' ">
-            and huiyimingcheng like '%${huiyimingcheng}%'
+        <if test="deptname != null and deptname != '' ">
+            and deptname like '%${deptname}%'
         </if>
-        <if test="huiyiriqi != null and huiyiriqi != '' ">
-            and huiyiriqi like '%${huiyiriqi}%'
-        </if>
-        <if test="aadApIds != null and aadApIds != '' ">
-            and c.aad_ap_ids = #{aadApIds}
+        <if test="huiyikaishishijian != null and huiyikaishishijian != '' ">
+            and huiyikaishishijian = '%${huiyikaishishijian}%'
         </if>
     </sql>
 
