@@ -125,7 +125,7 @@ public class AnbiaoAnquanhuiyiController {
 			}
 		}
 
-		if (anquanhuiyi.getHuiyileixing().equals("线下")){
+		if (anquanhuiyi.getHuiyixingshi().equals("线下")){
 			if (anquanhuiyi.getHuiyikaishishijian().toString().equals(anquanhuiyi.getHuiyijieshushijian().toString())){
 				anquanhuiyi.setHuiyikaishishijian(anquanhuiyi.getHuiyikaishishijian());
 				anquanhuiyi.setHuiyijieshushijian(anquanhuiyi.getHuiyijieshushijian());
@@ -142,12 +142,11 @@ public class AnbiaoAnquanhuiyiController {
 			anquanhuiyi.setCaozuoren(user.getUserName());
 			anquanhuiyi.setCaozuorenid(user.getUserId());
 			anquanhuiyi.setCreatetime(DateUtil.now());
-			if (anquanhuiyi.getHuiyileixing().equals("线上")){
-				anquanhuiyi.setHuiyileixing("0");
+			if (anquanhuiyi.getHuiyixingshi().equals("线上")){
+				anquanhuiyi.setHuiyixingshi("0");
 			}else {
-				anquanhuiyi.setHuiyileixing("1");
+				anquanhuiyi.setHuiyixingshi("1");
 			}
-			anquanhuiyi.setHuiyixingshi(anquanhuiyi.getHuiyileixing());
 			anquanhuiyi.setIsDeleted(0);
 
 			boolean i = anquanhuiyiService.save(anquanhuiyi);
@@ -259,7 +258,7 @@ public class AnbiaoAnquanhuiyiController {
 	@ApiOperation(value = "删除-安全会议", notes = "传入Id", position = 3)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "Id", value = "数据Id", required = true),
 	})
-	public R del( String id, BladeUser user){
+	public R del( String Id, BladeUser user){
 		R r = new R();
 		AnbiaoAnquanhuiyi anquanhuiyi = new AnbiaoAnquanhuiyi();
 		if (user != null){
@@ -268,7 +267,7 @@ public class AnbiaoAnquanhuiyiController {
 		}
 		anquanhuiyi.setCaozuoshijian(DateUtil.now());
 		anquanhuiyi.setIsDeleted(1);
-		anquanhuiyi.setId(id);
+		anquanhuiyi.setId(Id);
 		boolean i = anquanhuiyiService.updateById(anquanhuiyi);
 		if (i){
 			r.setMsg("删除成功");
@@ -289,7 +288,7 @@ public class AnbiaoAnquanhuiyiController {
 	@GetMapping("/detail")
 	@ApiLog("详情-安全会议")
 	@ApiOperation(value = "详情-安全会议",notes = "传入Id")
-	@ApiImplicitParam(name = "Id",value = "ID",required = true)
+	@ApiImplicitParam(name = "Id",value = "数据ID",required = true)
 	public R detail(String Id){
 		R r = new R();
 		AnbiaoAnquanhuiyi anquanhuiyiInfo = anquanhuiyiService.getById(Id);

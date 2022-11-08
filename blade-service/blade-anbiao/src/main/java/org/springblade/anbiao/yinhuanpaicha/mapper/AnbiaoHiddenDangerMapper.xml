@@ -46,7 +46,7 @@
             inner join  (
                 <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) b on a.ahd_dept_ids = b.id
-            left join anbiao_vehicle c on b.ahdVehicleIds = c.id
+            left join anbiao_vehicle c on a.ahd_vehicle_ids = c.id
         where a.ahd_delete = 0
             and a.ahd_discovery_time >= #{date}
     </sql>

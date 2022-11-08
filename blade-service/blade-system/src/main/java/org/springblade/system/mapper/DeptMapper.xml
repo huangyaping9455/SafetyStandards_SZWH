@@ -293,7 +293,6 @@
                 blade_dept xiaji
             WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
                 AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
-                AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
                 AND shangji.id= #{deptId}
                 )a
             INNER JOIN(

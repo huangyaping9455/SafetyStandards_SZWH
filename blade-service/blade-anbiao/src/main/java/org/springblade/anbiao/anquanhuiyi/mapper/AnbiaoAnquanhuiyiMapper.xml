@@ -11,7 +11,7 @@
         <result column="caozuoshijian" property="caozuoshijian" />
         <result column="huiyimingcheng" property="huiyimingcheng" />
         <result column="huiyibianhao" property="huiyibianhao" />
-        <result column="huiyileixing" property="huiyileixing" />
+<!--        <result column="huiyileixing" property="huiyileixing" />-->
         <result column="huiyixingshi" property="huiyixingshi" />
         <result column="huiyiriqi" property="huiyiriqi" />
         <result column="zhuchiren" property="zhuchiren" />
