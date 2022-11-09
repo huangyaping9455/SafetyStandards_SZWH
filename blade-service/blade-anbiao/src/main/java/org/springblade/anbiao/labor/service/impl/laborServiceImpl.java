@@ -34,7 +34,7 @@ public class laborServiceImpl implements laborService {
 			if (laborPage.getTotal() == 0) {
 				return laborPage;
 			} else {
-				List<LaborVO> laborVOS = mapper.selectList(laborPage);
+				List<LaborVO> laborVOS = mapper.selectList(laborPage,id,startTime,endTime);
 				laborPage.setRecords(laborVOS);
 				return laborPage;
 			}
@@ -56,7 +56,7 @@ public class laborServiceImpl implements laborService {
 			}
 			laborPage.setTotal(total);
 			laborPage.setOffsetNo(offsetNo);
-			List<LaborVO> laborVOS = mapper.selectList(laborPage);
+			List<LaborVO> laborVOS = mapper.selectList(laborPage,id,startTime,endTime);
 			laborPage.setRecords(laborVOS);
 			return laborPage;
 		}

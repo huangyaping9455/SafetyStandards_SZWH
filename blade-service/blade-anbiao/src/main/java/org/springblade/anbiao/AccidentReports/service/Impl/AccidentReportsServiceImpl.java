@@ -1,8 +1,5 @@
 package org.springblade.anbiao.AccidentReports.service.Impl;
-
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import lombok.AllArgsConstructor;
+;
 import org.springblade.anbiao.AccidentReports.DTO.AccidentReportsDTO;
 import org.springblade.anbiao.AccidentReports.VO.AccidentReportsVO;
 import org.springblade.anbiao.AccidentReports.mapper.AccidentReportsMapper;
@@ -10,7 +7,7 @@ import org.springblade.anbiao.AccidentReports.page.AccidentPage;
 import org.springblade.anbiao.AccidentReports.service.AccidentReportsService;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+
 import java.util.List;
 
 /**
@@ -26,12 +23,8 @@ public class AccidentReportsServiceImpl implements AccidentReportsService {
 
 	@Override
 	public List<AccidentReportsVO> selectList(AccidentPage accidentPage) {
-		int pageSize = accidentPage.getSize();
-		int pageNum = accidentPage.getCurrent();
-		PageHelper.startPage(pageNum,pageSize);
-		List<AccidentReportsVO> accidentReportsVOS = mapper.selectList(accidentPage);
-		PageInfo<AccidentReportsVO> pageInfo = new PageInfo<>(accidentReportsVOS);
-		return pageInfo.getList();
+
+		return null;
 	}
 
 	@Override

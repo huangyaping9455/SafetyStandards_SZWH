@@ -11,14 +11,21 @@ import java.util.Date;
  * @Date :2022/11/8 18:52
  */
 @Data
-public class MaintenancePage  {
-	private String id;
+public class MaintenancePage extends BasePage {
 
 	private Date startTime;
 
 	private Date endTime;
 
-	private Integer current;
+	private Integer	dept_Id;
 
-	private Integer size;
+	private Integer	vehicle_Id;
+
+	private String maintenance_Dept_Name;
+
+	private String acb_maintenance_content;
+
+	private String	acb_repair_reason;
+
+	private String	acb_before_maintenance;
 }

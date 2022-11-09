@@ -6,16 +6,16 @@
     <!--劳保列表-->
     <select id="selectList"  resultType="org.springblade.anbiao.labor.VO.LaborVO">
         select
-        a.shigufashengshijian,a.shigufashengdidian,a.shigufenlei,a.shiguxingzhi,a.shiguzeren,
-        a.chepaihao,a.jiashiyuan,b.dept_name,a.	caichansunshi,a.jianjiejingjisunshi,a.shiguzhaopian
+        a.ali_name,a.ali_issue_date,a.ali_issue_quantity,a.ali_issue_people_number,a.ali_status,
+        a.ali_application_scope,b.dept_name as det_name
         from
-        anbiao_shigubaogao a
+        anbiao_labor_insurance a
         left join (
         <include
             refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
-        ) b on a.dept_id = b.id
-        <where> a.is_deleted = 0 AND
-            a.createtime between #{startTime} and #{endTime}
+        ) b on a.ali_dept_ids = b.id
+        <where> a.ali_delete = 0 AND
+            a.ali_create_time between #{startTime} and #{endTime}
             <if test="id !=null">
                 b.id = #{id}
             </if>
@@ -28,19 +28,19 @@
         </where>
     </select>
 
-    <!--劳保信息-->
-    <select id="selectAll" parameterType="String" resultType="org.springblade.anbiao.labor.VO.LaborVO">
-        select
-            asid_ids,asid_asi_ids,	asid_entry_name,asid_handled_by_ids,asid_handled_by_name,
-            asid_investment_scope,asid_investment_dare,asid_amount_used,asid_delete
-        from
-            anbiao_shigubaogao
-        where asid_asi_ids =#{rid} AND ifnull(asid_delete,0) = 0
-    </select>
+<!--    &lt;!&ndash;劳保信息&ndash;&gt;-->
+<!--    <select id="selectAll" parameterType="String" resultType="org.springblade.anbiao.labor.VO.LaborVO">-->
+<!--        select-->
+<!--            ali_name,ali_issue_date,	ali_issue_quantity,ali_issue_people_number,ali_status,-->
+<!--            ali_application_scope,det_name,asid_amount_used,asid_delete-->
+<!--        from-->
+<!--            anbiao_labor_insurance-->
+<!--        where asid_asi_ids =#{rid} AND ifnull(asid_delete,0) = 0-->
+<!--    </select>-->
 
     <!--新增劳保-->
     <insert id="insertOne" parameterType="org.springblade.anbiao.labor.entity.LaborEntity">
-        insert into anbiao_shigubaogao(ali_name,ali_issue_date,ali_issue_quantity,ali_issue_people_number,
+        insert into anbiao_labor_insurance(ali_name,ali_issue_date,ali_issue_quantity,ali_issue_people_number,
                                        ali_status,ali_application_scope
         )
         values (ali_name,ali_issue_date,ali_issue_quantity,ali_issue_people_number,
@@ -95,7 +95,7 @@
         a.*,
         b.dept_name as deptName
         from
-        anbiao_shigubaogao a
+        anbiao_labor_insurance a
         inner join  (
         <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) b on a.dept_id = b.id

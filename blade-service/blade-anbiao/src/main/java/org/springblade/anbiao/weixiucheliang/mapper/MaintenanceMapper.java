@@ -2,6 +2,7 @@ package org.springblade.anbiao.weixiucheliang.mapper;
 
 import org.springblade.anbiao.weixiu.DTO.MaintenanceDTO;
 import org.springblade.anbiao.weixiu.VO.MaintenanceVO;
+import org.springblade.anbiao.weixiu.entity.FittingsEntity;
 import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
 import org.springblade.anbiao.weixiu.page.MaintenancePage;
 
@@ -38,7 +39,7 @@ public interface MaintenanceMapper {
 	 * @return
 	 */
 	Boolean insertOne(MaintenanceDTO maintenanceDTO);
-
+	Boolean insertB(FittingsEntity fittingsEntity);
 
 
 	/**
@@ -47,6 +48,7 @@ public interface MaintenanceMapper {
 	 * @return
 	 */
 	Boolean updateMain(MaintenanceDTO MaintenanceDTO);
+	boolean updateB(FittingsEntity fittingsEntity);
 
 	/**
 	 * 删除
