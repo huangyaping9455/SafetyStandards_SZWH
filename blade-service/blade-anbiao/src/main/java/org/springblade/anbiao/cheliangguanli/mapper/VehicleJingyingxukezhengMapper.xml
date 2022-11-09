@@ -47,7 +47,7 @@
         select * from anbiao_vehicle_jingyingxukezheng where avj_delete = 0
     </select>
 
-    <select id="selectVehicleJingyingxukezhengByVehicleIds" resultMap="vehicleJishupingdingResultMap" parameterType="java.lang.String">
+    <select id="selectVehicleJingyingxukezhengByVehicleIds" resultMap="vehicleJingyingxukezhengResultMap" parameterType="java.lang.String">
         select * from anbiao_vehicle_jingyingxukezheng where avj_vehicle_ids=#{avjVehicleIds} AND avj_delete = 0 LIMIT 1
     </select>
 

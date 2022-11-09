@@ -253,7 +253,7 @@ public class AnbiaoAnquanhuiyiController {
 	/**
 	 * 删除
 	 */
-	@PostMapping("/del")
+	@GetMapping("/del")
 	@ApiLog("删除-安全会议")
 	@ApiOperation(value = "删除-安全会议", notes = "传入Id", position = 3)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "Id", value = "数据Id", required = true),
