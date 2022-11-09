@@ -24,7 +24,7 @@ public interface laborMapper {
 	 * @return
 	 */
 	List<LaborVO> selectList(LaborPage laborPage);
-
+	int selectTotal(LaborPage laborPage);
 
 //	/**
 //	 * 劳保详细信息

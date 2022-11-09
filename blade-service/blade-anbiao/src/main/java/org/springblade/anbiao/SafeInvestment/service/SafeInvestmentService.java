@@ -57,5 +57,5 @@ public interface SafeInvestmentService {
 	 */
 	Boolean updateSafe(AnbiaoSafetyInput anbiaoSafetyInput);
 
-	List<SafeInvestmentVO> selectPage(SafelInfoPage safelInfoPage);
+	SafelInfoPage selectPage(SafelInfoPage safelInfoPage);
 }

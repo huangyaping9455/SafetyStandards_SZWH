@@ -1,7 +1,5 @@
 package org.springblade.anbiao.SafeInvestment.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.SafeInvestment.VO.SafeInvestmentVO;
 import org.springblade.anbiao.SafeInvestment.VO.SafetyInvestmentDetailsVO;
@@ -62,14 +60,44 @@ public class SafeInvestmentServiceImpl implements SafeInvestmentService {
 	 * @return
 	 */
 	@Override
-	public List<SafeInvestmentVO> selectPage(SafelInfoPage safelInfoPage) {
-		int pageSize = safelInfoPage.getSize();
-		int pageNum = safelInfoPage.getCurrent();
-		PageHelper.startPage(pageNum,pageSize);
-		List<SafeInvestmentVO> safeInvestmentVOS = safeInvestmentMapper.selectList(safelInfoPage);
-		PageInfo<SafeInvestmentVO> pageInfo = new PageInfo(safeInvestmentVOS);
-		return pageInfo.getList();
+	public SafelInfoPage selectPage(SafelInfoPage safelInfoPage) {
+		int total = safeInvestmentMapper.selectTotal(safelInfoPage);
+		Integer safelPagetotal = 0;
+		if (safelInfoPage.getSize() == 0) {
+			if (safelInfoPage.getTotal() == 0) {
+				safelInfoPage.setTotal(total);
+			}
+			if (safelInfoPage.getTotal() == 0) {
+				return safelInfoPage;
+			} else {
+				List<SafeInvestmentVO> safeInvestmentVOS1 = safeInvestmentMapper.selectList(safelInfoPage);
+				safelInfoPage.setRecords(safeInvestmentVOS1);
+				return safelInfoPage;
+			}
+		}
+		if (total > 0) {
+			if (total % safelInfoPage.getSize() == 0) {
+				safelPagetotal = total / safelInfoPage.getSize();
+			} else {
+				safelPagetotal = total / safelInfoPage.getSize() + 1;
+			}
+		}
+		if (safelPagetotal < safelInfoPage.getCurrent()) {
+			return safelInfoPage;
+		} else {
+			safelInfoPage.setPageTotal(safelPagetotal);
+			Integer offsetNo = 0;
+			if (safelInfoPage.getCurrent() > 1) {
+				offsetNo = safelInfoPage.getSize() * (safelInfoPage.getCurrent() - 1);
+			}
+			safelInfoPage.setTotal(total);
+			safelInfoPage.setOffsetNo(offsetNo);
+			List<SafeInvestmentVO> safeInvestmentVOS1 = safeInvestmentMapper.selectList(safelInfoPage);
+			safelInfoPage.setRecords(safeInvestmentVOS1);
+			return safelInfoPage;
+		}
 	}
+
 }
 
 
