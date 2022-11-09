@@ -16,8 +16,8 @@
         ) b on a.dept_id = b.id
         <where> a.is_deleted = 0 AND
             a.createtime between #{startTime} and #{endTime}
-            <if test="dept_name !=null">
-                b.dept_name = #{dept_name}
+            <if test="id !=null">
+                b.id = #{id}
             </if>
             <if test="size==0">
                 limit ${total}

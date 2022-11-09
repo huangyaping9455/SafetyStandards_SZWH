@@ -23,7 +23,7 @@ public interface laborMapper {
 	 * @param laborPage
 	 * @return
 	 */
-	List<LaborVO> selectList(LaborPage laborPage);
+	List<LaborVO> selectList(LaborPage laborPage,String id,Date startTime,Date endTime);
 	int selectTotal(LaborPage laborPage);
 
 //	/**
