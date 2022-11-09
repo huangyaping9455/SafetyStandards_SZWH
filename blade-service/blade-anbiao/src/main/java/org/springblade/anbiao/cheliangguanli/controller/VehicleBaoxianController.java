@@ -22,6 +22,9 @@ import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxian;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianInfo;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianMingxi;
+import org.springblade.anbiao.cheliangguanli.service.IVehicleBaoxianMingxiService;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleBaoxianService;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleBaoxianVO;
 import org.springblade.common.tool.FuncUtil;
@@ -47,14 +50,16 @@ import javax.validation.Valid;
 public class VehicleBaoxianController extends BladeController {
 
 	private IVehicleBaoxianService vehicleBaoxianService;
+	private IVehicleBaoxianMingxiService vehicleBaoxianMingxiService;
 
 	/**
 	 * 详情
 	 */
 	@GetMapping("/detail")
 	@ApiOperation(value = "详情", notes = "传入vehicleBaoxian")
-	public R<VehicleBaoxian> detail(VehicleBaoxian vehicleBaoxian) {
-		VehicleBaoxian detail = vehicleBaoxianService.getOne(Condition.getQueryWrapper(vehicleBaoxian));
+	public R<VehicleBaoxianInfo> detail(String avbId) {
+//		VehicleBaoxian detail = vehicleBaoxianService.getOne(Condition.getQueryWrapper(vehicleBaoxian));
+		VehicleBaoxianInfo detail = vehicleBaoxianService.queryDetail(avbId);
 		return R.data(detail);
 	}
 
@@ -83,8 +88,15 @@ public class VehicleBaoxianController extends BladeController {
 	 */
 	@PostMapping("/save")
 	@ApiOperation(value = "新增", notes = "传入vehicleBaoxian")
-	public R save(@Valid @RequestBody VehicleBaoxian vehicleBaoxian) {
-		return R.status(vehicleBaoxianService.save(vehicleBaoxian));
+	public R save(@Valid @RequestBody VehicleBaoxianInfo vehicleBaoxian) {
+		boolean isSave = vehicleBaoxianService.save(vehicleBaoxian.getBaoxian());
+		if(vehicleBaoxian.getBaoxianMingxis() != null && vehicleBaoxian.getBaoxianMingxis().size() > 0) {
+			for (VehicleBaoxianMingxi baoxianMingxi: vehicleBaoxian.getBaoxianMingxis()) {
+				baoxianMingxi.setAvbmAvbIds(vehicleBaoxian.getBaoxian().getAvbIds());
+				vehicleBaoxianMingxiService.save(baoxianMingxi);
+			}
+		}
+		return R.status(isSave);
 	}
 
 	/**
@@ -92,18 +104,24 @@ public class VehicleBaoxianController extends BladeController {
 	 */
 	@PostMapping("/update")
 	@ApiOperation(value = "修改", notes = "传入vehicleBaoxian")
-	public R update(@Valid @RequestBody VehicleBaoxian vehicleBaoxian) {
-		return R.status(vehicleBaoxianService.updateById(vehicleBaoxian));
+	public R update(@Valid @RequestBody VehicleBaoxianInfo vehicleBaoxian) {
+		boolean isUpdate = vehicleBaoxianService.updateById(vehicleBaoxian.getBaoxian());
+		if(vehicleBaoxian.getBaoxianMingxis() != null && vehicleBaoxian.getBaoxianMingxis().size() > 0) {
+			for (VehicleBaoxianMingxi baoxianMingxi: vehicleBaoxian.getBaoxianMingxis()) {
+				vehicleBaoxianMingxiService.updateById(baoxianMingxi);
+			}
+		}
+		return R.status(isUpdate);
 	}
 
-	/**
-	 * 新增或修改 车辆保险信息主表
-	 */
-	@PostMapping("/submit")
-	@ApiOperation(value = "新增或修改", notes = "传入vehicleBaoxian")
-	public R submit(@Valid @RequestBody VehicleBaoxian vehicleBaoxian) {
-		return R.status(vehicleBaoxianService.saveOrUpdate(vehicleBaoxian));
-	}
+//	/**
+//	 * 新增或修改 车辆保险信息主表
+//	 */
+//	@PostMapping("/submit")
+//	@ApiOperation(value = "新增或修改", notes = "传入vehicleBaoxian")
+//	public R submit(@Valid @RequestBody VehicleBaoxian vehicleBaoxian) {
+//		return R.status(vehicleBaoxianService.saveOrUpdate(vehicleBaoxian));
+//	}
 
 
 	/**

@@ -21,6 +21,10 @@ import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import javax.validation.Valid;
 
+import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxianInfo;
+import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxianMingxi;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianMingxi;
+import org.springblade.anbiao.cheliangguanli.service.IJiashiyuanBaoxianMingxiService;
 import org.springblade.common.tool.FuncUtil;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
@@ -47,26 +51,28 @@ import org.springblade.core.boot.ctrl.BladeController;
 public class JiashiyuanBaoxianController extends BladeController {
 
 	private IJiashiyuanBaoxianService jiashiyuanBaoxianService;
+	private IJiashiyuanBaoxianMingxiService mingxiService;
 
 	/**
 	 * 详情
 	 */
 	@GetMapping("/detail")
 	@ApiOperation(value = "详情", notes = "传入jiashiyuanBaoxian")
-	public R<JiashiyuanBaoxian> detail(JiashiyuanBaoxian jiashiyuanBaoxian) {
-		JiashiyuanBaoxian detail = jiashiyuanBaoxianService.getOne(Condition.getQueryWrapper(jiashiyuanBaoxian));
+	public R<JiashiyuanBaoxianInfo> detail(String ajbId) {
+//		JiashiyuanBaoxian detail = jiashiyuanBaoxianService.getOne(Condition.getQueryWrapper(jiashiyuanBaoxian));
+		JiashiyuanBaoxianInfo detail = jiashiyuanBaoxianService.queryDetail(ajbId);
 		return R.data(detail);
 	}
 
-	/**
-	 * 分页 驾驶员保险信息主表
-	 */
-	@GetMapping("/list")
-	@ApiOperation(value = "分页", notes = "传入jiashiyuanBaoxian")
-	public R<IPage<JiashiyuanBaoxian>> list(JiashiyuanBaoxian jiashiyuanBaoxian, Query query) {
-		IPage<JiashiyuanBaoxian> pages = jiashiyuanBaoxianService.page(Condition.getPage(query), Condition.getQueryWrapper(jiashiyuanBaoxian));
-		return R.data(pages);
-	}
+//	/**
+//	 * 分页 驾驶员保险信息主表
+//	 */
+//	@GetMapping("/list")
+//	@ApiOperation(value = "分页", notes = "传入jiashiyuanBaoxian")
+//	public R<IPage<JiashiyuanBaoxian>> list(JiashiyuanBaoxian jiashiyuanBaoxian, Query query) {
+//		IPage<JiashiyuanBaoxian> pages = jiashiyuanBaoxianService.page(Condition.getPage(query), Condition.getQueryWrapper(jiashiyuanBaoxian));
+//		return R.data(pages);
+//	}
 
 	/**
 	 * 自定义分页 驾驶员保险信息主表
@@ -83,16 +89,29 @@ public class JiashiyuanBaoxianController extends BladeController {
 	 */
 	@PostMapping("/save")
 	@ApiOperation(value = "新增", notes = "传入jiashiyuanBaoxian")
-	public R save(@Valid @RequestBody JiashiyuanBaoxian jiashiyuanBaoxian) {
-		return R.status(jiashiyuanBaoxianService.save(jiashiyuanBaoxian));
+	public R save(@Valid @RequestBody JiashiyuanBaoxianInfo jiashiyuanBaoxian) {
+		boolean isSave = jiashiyuanBaoxianService.save(jiashiyuanBaoxian.getBaoxian());
+		if(jiashiyuanBaoxian.getBaoxianMingxis() != null && jiashiyuanBaoxian.getBaoxianMingxis().size() > 0) {
+			for (JiashiyuanBaoxianMingxi baoxianMingxi: jiashiyuanBaoxian.getBaoxianMingxis()) {
+				baoxianMingxi.setAjbmAvbIds(jiashiyuanBaoxian.getBaoxian().getAjbIds());
+				mingxiService.save(baoxianMingxi);
+			}
+		}
+		return R.status(isSave);
 	}
 
 	/**
 	 * 修改 驾驶员保险信息主表
 	 */
 	@PostMapping("/update")
-	public R update(@Valid @RequestBody JiashiyuanBaoxian jiashiyuanBaoxian) {
-		return R.status(jiashiyuanBaoxianService.updateById(jiashiyuanBaoxian));
+	public R update(@Valid @RequestBody JiashiyuanBaoxianInfo jiashiyuanBaoxian) {
+		boolean isUpdate = jiashiyuanBaoxianService.updateById(jiashiyuanBaoxian.getBaoxian());
+		if(jiashiyuanBaoxian.getBaoxianMingxis() != null && jiashiyuanBaoxian.getBaoxianMingxis().size() > 0) {
+			for (JiashiyuanBaoxianMingxi baoxianMingxi: jiashiyuanBaoxian.getBaoxianMingxis()) {
+				mingxiService.updateById(baoxianMingxi);
+			}
+		}
+		return R.status(isUpdate);
 	}
 
 	/**

@@ -16,12 +16,18 @@
 package org.springblade.anbiao.cheliangguanli.service.impl;
 
 import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxian;
+import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxianInfo;
+import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxianMingxi;
+import org.springblade.anbiao.cheliangguanli.mapper.JiashiyuanBaoxianMingxiMapper;
 import org.springblade.anbiao.cheliangguanli.vo.JiashiyuanBaoxianVO;
 import org.springblade.anbiao.cheliangguanli.mapper.JiashiyuanBaoxianMapper;
 import org.springblade.anbiao.cheliangguanli.service.IJiashiyuanBaoxianService;
 import org.springblade.core.mp.base.BaseServiceImpl;
+import org.springblade.core.mp.support.Condition;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+
+import java.util.List;
 
 /**
  * 驾驶员保险信息主表 服务实现类
@@ -32,9 +38,22 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 @Service
 public class JiashiyuanBaoxianServiceImpl extends BaseServiceImpl<JiashiyuanBaoxianMapper, JiashiyuanBaoxian> implements IJiashiyuanBaoxianService {
 
+	private JiashiyuanBaoxianMingxiMapper mingxiMapper;
 	@Override
 	public IPage<JiashiyuanBaoxianVO> selectJiashiyuanBaoxianPage(IPage<JiashiyuanBaoxianVO> page, JiashiyuanBaoxianVO jiashiyuanBaoxian) {
 		return page.setRecords(baseMapper.selectJiashiyuanBaoxianPage(page, jiashiyuanBaoxian));
+	}
+
+	@Override
+	public JiashiyuanBaoxianInfo queryDetail(String ajbId) {
+		JiashiyuanBaoxianInfo baoxianInfo = new JiashiyuanBaoxianInfo();
+		baoxianInfo.setBaoxian(baseMapper.selectById(ajbId));
+
+		JiashiyuanBaoxianMingxi mingxi = new JiashiyuanBaoxianMingxi();
+		mingxi.setAjbmAvbIds(ajbId);
+		List<JiashiyuanBaoxianMingxi> mingxiList = mingxiMapper.selectList(Condition.getQueryWrapper(mingxi));
+		baoxianInfo.setBaoxianMingxis(mingxiList);
+		return baoxianInfo;
 	}
 
 }
