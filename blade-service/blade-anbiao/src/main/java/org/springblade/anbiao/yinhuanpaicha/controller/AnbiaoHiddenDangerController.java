@@ -107,6 +107,38 @@ public class AnbiaoHiddenDangerController {
 		}
 	}
 
+	/**
+	 * 编辑
+	 */
+	@GetMapping("/audit")
+	@ApiLog("隐患排查信息-审核")
+	@ApiOperation(value = "隐患排查信息-审核", notes = "传入数据Id、是否整改((0.否,1.是))", position = 1)
+	@ApiImplicitParams({ @ApiImplicitParam(name = "Id", value = "数据Id", required = true),
+		@ApiImplicitParam(name = "status", value = "是否整改((0.否,1.是)", required = true)
+	})
+	public R audit( String Id,Integer status, BladeUser user) {
+		R r = new R();
+		AnbiaoHiddenDanger danger = new AnbiaoHiddenDanger();
+		if(user != null){
+			danger.setAhdAuditName(user.getUserName());
+			danger.setAhdAuditId(user.getUserId());
+		}
+		danger.setAhdAuditTime(DateUtil.now());
+		danger.setAhdRectificationSituation(status.toString());
+		danger.setAhdIds(Id);
+		boolean i = service.updateById(danger);
+		if(i){
+			r.setMsg("审核成功");
+			r.setCode(200);
+			r.setSuccess(true);
+			return r;
+		}else{
+			r.setMsg("审核失败");
+			r.setCode(500);
+			r.setSuccess(false);
+			return r;
+		}
+	}
 
 	@PostMapping("/getHiddenDangerPage")
 	@ApiLog("隐患排查信息-分页列表")

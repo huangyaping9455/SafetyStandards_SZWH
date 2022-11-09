@@ -1348,10 +1348,9 @@
                 WHEN ifnull(is_deleted,1) = 1 THEN '删除'
             END cheliangzhuangtai
         FROM
-	        anbiao_vehicle_enterprise
+	        anbiao_vehicle
         WHERE 1=1
             AND is_deleted=0
-            AND ifnull(cheliangzhuangtai,0) != 2
             AND dept_id= #{deptId}
     </select>
 

@@ -21,4 +21,7 @@ public class AnbiaoHiddenDangerVO extends AnbiaoHiddenDanger {
 	@ApiModelProperty(value = "车辆牌照")
 	private String cheliangpaizhao;
 
+	@ApiModelProperty(value = "驾驶员姓名")
+	private String jiashiyuanxingming;
+
 }

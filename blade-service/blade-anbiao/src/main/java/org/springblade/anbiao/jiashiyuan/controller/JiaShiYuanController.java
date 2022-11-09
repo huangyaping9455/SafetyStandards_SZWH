@@ -600,14 +600,19 @@ public class JiaShiYuanController {
 	/**
 	 *  删除
 	 */
-	@PostMapping("/del")
+	@GetMapping("/del")
 	@ApiLog("删除-驾驶员资料管理")
 	@ApiOperation(value = "删除-驾驶员资料管理", notes = "传入id", position = 3)
 	public R del(String id, BladeUser user) {
 		R r = new R();
-		JiaShiYuan detal = iJiaShiYuanService.selectByIds(id);
 		boolean i = false;
-
+		JiaShiYuan detal = iJiaShiYuanService.selectByIds(id);
+		if(detal == null){
+			r.setMsg("该数据不存在");
+			r.setCode(500);
+			r.setSuccess(false);
+			return r;
+		}
 		///入职登记表///
 		QueryWrapper<AnbiaoJiashiyuanRuzhi> ruzhiQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanRuzhi>();
 		ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrAjIds, detal.getId());
@@ -768,9 +773,11 @@ public class JiaShiYuanController {
 		i = iJiaShiYuanService.updateById(jiaShiYuan);
 		if(i){
 			r.setCode(200);
+			r.setSuccess(true);
 			r.setMsg("删除成功");
 		}else{
 			r.setCode(500);
+			r.setSuccess(false);
 			r.setMsg("删除失败");
 		}
 		return r;

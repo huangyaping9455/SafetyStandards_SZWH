@@ -37,4 +37,5 @@ public interface IVehicleDengjizhengshuService extends BaseService<VehicleDengji
 	 */
 	IPage<VehicleDengjizhengshuVO> selectVehicleDengjizhengshuPage(IPage<VehicleDengjizhengshuVO> page, VehicleDengjizhengshuVO vehicleDengjizhengshu);
 
+	VehicleDengjizhengshuVO selectVehicleDengjizhengshuByVehicleIds(String avdVehicleIds);
 }

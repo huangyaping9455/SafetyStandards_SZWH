@@ -34,6 +34,7 @@
                 <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) b on a.deptid = b.id
         where 1=1
+			and a.isdelete = 0
     </sql>
 
     <sql id="orderSql">

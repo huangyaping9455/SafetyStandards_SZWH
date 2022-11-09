@@ -38,4 +38,6 @@ public interface VehicleXingnengbaogaoMapper extends BaseMapper<VehicleXingnengb
 	 */
 	List<VehicleXingnengbaogaoVO> selectVehicleXingnengbaogaoPage(IPage page, VehicleXingnengbaogaoVO vehicleXingnengbaogao);
 
+	VehicleXingnengbaogaoVO selectVehicleXingnengbaogaoByVehicleIds(String avxAvIds);
+
 }

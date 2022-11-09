@@ -1,11 +1,11 @@
 package org.springblade.anbiao.anquanhuiyi.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.anquanhuiyi.mapper.AnbiaoAnquanhuiyiMapper;
-import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springblade.anbiao.anquanhuiyi.page.AnQuanHuiYiPage;
+import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,40 +25,40 @@ public class AnbiaoAnquanhuiyiServiceImpl extends ServiceImpl<AnbiaoAnquanhuiyiM
 	AnbiaoAnquanhuiyiMapper mapper;
 
 	@Override
-	public AnQuanHuiYiPage<AnbiaoAnquanhuiyi> selectPage(AnQuanHuiYiPage anQuanHuiYiPage) {
-		Integer total = mapper.selectTotal(anQuanHuiYiPage);
-		Integer pagetotal = 0;
-		if(anQuanHuiYiPage.getSize()==0){
-			if(anQuanHuiYiPage.getTotal()==0){
+	public AnQuanHuiYiPage<AnbiaoAnquanhuiyi> selectGetAll(AnQuanHuiYiPage anQuanHuiYiPage) {
+		Integer total = mapper.selectGetAllTotal(anQuanHuiYiPage);
+		Integer anQuanHuiYiPagetotal = 0;
+		if (anQuanHuiYiPage.getSize() == 0) {
+			if (anQuanHuiYiPage.getTotal() == 0) {
 				anQuanHuiYiPage.setTotal(total);
 			}
-			if(anQuanHuiYiPage.getTotal()==0){
+			if (anQuanHuiYiPage.getTotal() == 0) {
 				return anQuanHuiYiPage;
-			}else {
-				List<AnbiaoAnquanhuiyi> safetyTrainingList = mapper.selectPage(anQuanHuiYiPage);
-				anQuanHuiYiPage.setRecords(safetyTrainingList);
+			} else {
+				List<AnbiaoAnquanhuiyi> bsPolicyInfoList = mapper.selectGetAll(anQuanHuiYiPage);
+				anQuanHuiYiPage.setRecords(bsPolicyInfoList);
 				return anQuanHuiYiPage;
 			}
 		}
 		if (total > 0) {
-			if(total%anQuanHuiYiPage.getSize()==0){
-				pagetotal = total / anQuanHuiYiPage.getSize();
-			}else {
-				pagetotal = total / anQuanHuiYiPage.getSize() + 1;
+			if (total % anQuanHuiYiPage.getSize() == 0) {
+				anQuanHuiYiPagetotal = total / anQuanHuiYiPage.getSize();
+			} else {
+				anQuanHuiYiPagetotal = total / anQuanHuiYiPage.getSize() + 1;
 			}
 		}
-		if (pagetotal < anQuanHuiYiPage.getCurrent()) {
+		if (anQuanHuiYiPagetotal < anQuanHuiYiPage.getCurrent()) {
 			return anQuanHuiYiPage;
 		} else {
-			anQuanHuiYiPage.setPageTotal(pagetotal);
+			anQuanHuiYiPage.setPageTotal(anQuanHuiYiPagetotal);
 			Integer offsetNo = 0;
 			if (anQuanHuiYiPage.getCurrent() > 1) {
 				offsetNo = anQuanHuiYiPage.getSize() * (anQuanHuiYiPage.getCurrent() - 1);
 			}
 			anQuanHuiYiPage.setTotal(total);
 			anQuanHuiYiPage.setOffsetNo(offsetNo);
-			List<AnbiaoAnquanhuiyi> safetyTrainingList = mapper.selectPage(anQuanHuiYiPage);
-			anQuanHuiYiPage.setRecords(safetyTrainingList);
+			List<AnbiaoAnquanhuiyi> bsPolicyInfoList = mapper.selectGetAll(anQuanHuiYiPage);
+			anQuanHuiYiPage.setRecords(bsPolicyInfoList);
 			return anQuanHuiYiPage;
 		}
 	}

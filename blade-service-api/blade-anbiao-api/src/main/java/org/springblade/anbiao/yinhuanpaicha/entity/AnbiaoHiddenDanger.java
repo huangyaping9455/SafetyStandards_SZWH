@@ -1,15 +1,15 @@
 package org.springblade.anbiao.yinhuanpaicha.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 /**
  * <p>
@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author hyp
- * @since 2022-10-31
+ * @since 2022-11-08
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -77,24 +77,38 @@ public class AnbiaoHiddenDanger implements Serializable {
     @ApiModelProperty(value = "整改附件")
     private String ahdRectificationEnclosure;
 
-	@ApiModelProperty(value = "逻辑删除(0=正常,1=删除)")
-	private String ahdDelete;
+    @ApiModelProperty(value = "逻辑删除(0=正常,1=删除)")
+    private String ahdDelete;
 
-	@ApiModelProperty(value = "创建时间")
-	private String ahdCreateTime;
+    @ApiModelProperty(value = "创建时间")
+    private String ahdCreateTime;
 
-	@ApiModelProperty(value = "创建人主键")
-	private String ahdCreateByIds;
+    @ApiModelProperty(value = "创建人主键")
+    private String ahdCreateByIds;
 
-	@ApiModelProperty(value = "创建人姓名")
-	private String ahdCreateByName;
+    @ApiModelProperty(value = "创建人姓名")
+    private String ahdCreateByName;
 
-	@ApiModelProperty(value = "更新时间")
-	private String ahdUpdateTime;
+    @ApiModelProperty(value = "更新时间")
+    private String ahdUpdateTime;
 
-	@ApiModelProperty(value = "更新人主键")
-	private String ahdUpdateByIds;
+    @ApiModelProperty(value = "更新人主键")
+    private String ahdUpdateByIds;
 
-	@ApiModelProperty(value = "更新人姓名")
-	private String ahdUpdateByName;
+    @ApiModelProperty(value = "更新人姓名")
+    private String ahdUpdateByName;
+
+    @ApiModelProperty(value = "排查现场")
+    private String ahdAddress;
+
+    @ApiModelProperty(value = "审核人ID")
+    private Integer ahdAuditId;
+
+    @ApiModelProperty(value = "审核人姓名")
+    private String ahdAuditName;
+
+    @ApiModelProperty(value = "审核时间")
+    private String ahdAuditTime;
+
+
 }

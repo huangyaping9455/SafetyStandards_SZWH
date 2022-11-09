@@ -44,6 +44,9 @@ public class VehicleJishupingding extends BaseEntity {
      */
     @ApiModelProperty(value = "技术评定主键")
     private String avjIds;
+
+    @ApiModelProperty(value = "车辆主键")
+    private String avjVehicleIds;
     /**
      * 评定机构
      */

@@ -44,6 +44,9 @@ public class VehicleJingyingxukezheng extends BaseEntity {
      */
     @ApiModelProperty(value = "经营许可证主键")
     private String avjIds;
+
+    @ApiModelProperty(value = "车辆主键")
+    private String avjVehicleIds;
     /**
      * 经营者名称
      */

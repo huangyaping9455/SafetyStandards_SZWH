@@ -59,12 +59,6 @@
         </dependency>
         <dependency>
             <groupId>org.springblade</groupId>
-            <artifactId>blade-system</artifactId>
-            <version>2.1.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springblade</groupId>
             <artifactId>blade-user</artifactId>
             <version>2.1.0</version>
             <scope>compile</scope>
@@ -77,7 +71,7 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-stream-binder-kafka</artifactId>
         </dependency>
-    </dependencies>
+	</dependencies>
 
 
     <build>

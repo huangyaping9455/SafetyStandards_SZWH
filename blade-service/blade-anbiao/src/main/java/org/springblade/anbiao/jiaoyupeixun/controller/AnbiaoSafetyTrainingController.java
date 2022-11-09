@@ -4,14 +4,12 @@ package org.springblade.anbiao.jiaoyupeixun.controller;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
-import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamineInfo;
 import org.springblade.anbiao.jiaoyupeixun.entity.AnbiaoSafetyTraining;
 import org.springblade.anbiao.jiaoyupeixun.entity.AnbiaoSafetyTrainingDetail;
 import org.springblade.anbiao.jiaoyupeixun.page.AnbiaoSafetyTrainingPage;
@@ -254,6 +252,30 @@ public class AnbiaoSafetyTrainingController {
 			}
 		}
 		return R.data(deail);
+	}
+
+	/**
+	 * 签到
+	 */
+	@PostMapping("/signIn")
+	@ApiLog("签到-安全生产培训")
+	@ApiOperation(value = "签到-安全生产培训",notes = "传入AnbiaoSafetyTrainingDetail")
+	public R SignIn(@RequestBody AnbiaoSafetyTrainingDetail safetyTrainingDetail, BladeUser user){
+		R r = new R();
+		QueryWrapper<AnbiaoSafetyTrainingDetail> safetyTrainingDetailQueryWrapper = new QueryWrapper<>();
+		safetyTrainingDetailQueryWrapper.lambda().eq(AnbiaoSafetyTrainingDetail::getAadAstIds,safetyTrainingDetail.getAadAstIds());
+		safetyTrainingDetailQueryWrapper.lambda().eq(AnbiaoSafetyTrainingDetail::getAadApIds,safetyTrainingDetail.getAadApIds());
+		safetyTrainingDetailQueryWrapper.lambda().eq(AnbiaoSafetyTrainingDetail::getAddApBeingJoined,"0");
+		AnbiaoSafetyTrainingDetail detail = detailService.getBaseMapper().selectOne(safetyTrainingDetailQueryWrapper);
+		if (detail != null){
+			safetyTrainingDetail.setAddTime(DateUtil.now());
+			safetyTrainingDetail.setAddApBeingJoined("1");
+			return R.status(detailService.updateById(safetyTrainingDetail));
+		}else{
+			r.setCode(500);
+			r.setMsg("暂无数据");
+			return r;
+		}
 	}
 
 }

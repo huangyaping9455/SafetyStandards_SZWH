@@ -38,4 +38,6 @@ public interface VehicleDengjizhengshuMapper extends BaseMapper<VehicleDengjizhe
 	 */
 	List<VehicleDengjizhengshuVO> selectVehicleDengjizhengshuPage(IPage page, VehicleDengjizhengshuVO vehicleDengjizhengshu);
 
+	VehicleDengjizhengshuVO selectVehicleDengjizhengshuByVehicleIds(String avdVehicleIds);
+
 }

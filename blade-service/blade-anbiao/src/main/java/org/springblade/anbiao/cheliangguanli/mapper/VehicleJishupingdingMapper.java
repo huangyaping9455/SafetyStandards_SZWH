@@ -38,4 +38,6 @@ public interface VehicleJishupingdingMapper extends BaseMapper<VehicleJishupingd
 	 */
 	List<VehicleJishupingdingVO> selectVehicleJishupingdingPage(IPage page, VehicleJishupingdingVO vehicleJishupingding);
 
+	VehicleJishupingdingVO selectVehicleJishupingdingByVehicleIds(String avjVehicleIds);
+
 }

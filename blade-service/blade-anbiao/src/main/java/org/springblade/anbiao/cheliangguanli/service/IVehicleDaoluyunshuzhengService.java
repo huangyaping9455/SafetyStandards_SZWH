@@ -37,4 +37,5 @@ public interface IVehicleDaoluyunshuzhengService extends BaseService<VehicleDaol
 	 */
 	IPage<VehicleDaoluyunshuzhengVO> selectVehicleDaoluyunshuzhengPage(IPage<VehicleDaoluyunshuzhengVO> page, VehicleDaoluyunshuzhengVO vehicleDaoluyunshuzheng);
 
+	VehicleDaoluyunshuzheng selectVehicleDaoluyunshuzhengByVehicleIds(String avdAvIds);
 }

@@ -32,9 +32,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 @Service
 public class VehicleDengjizhengshuServiceImpl extends BaseServiceImpl<VehicleDengjizhengshuMapper, VehicleDengjizhengshu> implements IVehicleDengjizhengshuService {
 
+	VehicleDengjizhengshuMapper dengjizhengshuMapper;
 	@Override
 	public IPage<VehicleDengjizhengshuVO> selectVehicleDengjizhengshuPage(IPage<VehicleDengjizhengshuVO> page, VehicleDengjizhengshuVO vehicleDengjizhengshu) {
 		return page.setRecords(baseMapper.selectVehicleDengjizhengshuPage(page, vehicleDengjizhengshu));
 	}
+
+	@Override
+	public VehicleDengjizhengshuVO selectVehicleDengjizhengshuByVehicleIds(String avdVehicleIds) {
+		return dengjizhengshuMapper.selectVehicleDengjizhengshuByVehicleIds(avdVehicleIds);
+	}
+
 
 }
