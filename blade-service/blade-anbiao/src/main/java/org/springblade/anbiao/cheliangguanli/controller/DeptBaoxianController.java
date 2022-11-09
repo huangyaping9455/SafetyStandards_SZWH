@@ -21,6 +21,9 @@ import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import javax.validation.Valid;
 
+import org.springblade.anbiao.cheliangguanli.entity.DeptBaoxianInfo;
+import org.springblade.anbiao.cheliangguanli.entity.DeptBaoxianMingxi;
+import org.springblade.anbiao.cheliangguanli.service.IDeptBaoxianMingxiService;
 import org.springblade.common.tool.FuncUtil;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
@@ -47,26 +50,27 @@ import org.springblade.core.boot.ctrl.BladeController;
 public class DeptBaoxianController extends BladeController {
 
 	private IDeptBaoxianService deptBaoxianService;
+	private IDeptBaoxianMingxiService deptBaoxianMingxiService;
 
 	/**
 	 * 详情
 	 */
 	@GetMapping("/detail")
 	@ApiOperation(value = "详情", notes = "传入deptBaoxian")
-	public R<DeptBaoxian> detail(DeptBaoxian deptBaoxian) {
-		DeptBaoxian detail = deptBaoxianService.getOne(Condition.getQueryWrapper(deptBaoxian));
+	public R<DeptBaoxianInfo> detail(String avbId) {
+		DeptBaoxianInfo detail = deptBaoxianService.queryDetail(avbId);
 		return R.data(detail);
 	}
 
-	/**
-	 * 分页 企业保险信息主表
-	 */
-	@GetMapping("/list")
-	@ApiOperation(value = "分页", notes = "传入deptBaoxian")
-	public R<IPage<DeptBaoxian>> list(DeptBaoxian deptBaoxian, Query query) {
-		IPage<DeptBaoxian> pages = deptBaoxianService.page(Condition.getPage(query), Condition.getQueryWrapper(deptBaoxian));
-		return R.data(pages);
-	}
+//	/**
+//	 * 分页 企业保险信息主表
+//	 */
+//	@GetMapping("/list")
+//	@ApiOperation(value = "分页", notes = "传入deptBaoxian")
+//	public R<IPage<DeptBaoxian>> list(DeptBaoxian deptBaoxian, Query query) {
+//		IPage<DeptBaoxian> pages = deptBaoxianService.page(Condition.getPage(query), Condition.getQueryWrapper(deptBaoxian));
+//		return R.data(pages);
+//	}
 
 	/**
 	 * 自定义分页 企业保险信息主表
@@ -83,8 +87,15 @@ public class DeptBaoxianController extends BladeController {
 	 */
 	@PostMapping("/save")
 	@ApiOperation(value = "新增", notes = "传入deptBaoxian")
-	public R save(@Valid @RequestBody DeptBaoxian deptBaoxian) {
-		return R.status(deptBaoxianService.save(deptBaoxian));
+	public R save(@Valid @RequestBody DeptBaoxianInfo deptBaoxian) {
+		boolean isSave = deptBaoxianService.save(deptBaoxian.getBaoxian());
+		if(deptBaoxian.getMingxiList() != null && deptBaoxian.getMingxiList().size() > 0) {
+			for(DeptBaoxianMingxi mingxi:deptBaoxian.getMingxiList()) {
+				mingxi.setAvbmAvbIds(deptBaoxian.getBaoxian().getAvbIds());
+				deptBaoxianMingxiService.save(mingxi);
+			}
+		}
+		return R.status(isSave);
 	}
 
 	/**
@@ -92,8 +103,14 @@ public class DeptBaoxianController extends BladeController {
 	 */
 	@PostMapping("/update")
 	@ApiOperation(value = "修改", notes = "传入deptBaoxian")
-	public R update(@Valid @RequestBody DeptBaoxian deptBaoxian) {
-		return R.status(deptBaoxianService.updateById(deptBaoxian));
+	public R update(@Valid @RequestBody DeptBaoxianInfo deptBaoxian) {
+		boolean isUpdate = deptBaoxianService.updateById(deptBaoxian.getBaoxian());
+		if(deptBaoxian.getMingxiList() != null && deptBaoxian.getMingxiList().size() > 0) {
+			for(DeptBaoxianMingxi mingxi:deptBaoxian.getMingxiList()) {
+				deptBaoxianMingxiService.updateById(mingxi);
+			}
+		}
+		return R.status(isUpdate);
 	}
 
 	/**

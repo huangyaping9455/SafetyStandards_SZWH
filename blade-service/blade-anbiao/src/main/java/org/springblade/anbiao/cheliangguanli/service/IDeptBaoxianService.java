@@ -16,6 +16,8 @@
 package org.springblade.anbiao.cheliangguanli.service;
 
 import org.springblade.anbiao.cheliangguanli.entity.DeptBaoxian;
+import org.springblade.anbiao.cheliangguanli.entity.DeptBaoxianInfo;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianInfo;
 import org.springblade.anbiao.cheliangguanli.vo.DeptBaoxianVO;
 import org.springblade.core.mp.base.BaseService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -36,5 +38,13 @@ public interface IDeptBaoxianService extends BaseService<DeptBaoxian> {
 	 * @return
 	 */
 	IPage<DeptBaoxianVO> selectDeptBaoxianPage(IPage<DeptBaoxianVO> page, DeptBaoxianVO deptBaoxian);
+
+	/**
+	 * 查询企业保险详细信息
+	 * @param avbId
+	 * @return
+	 */
+	DeptBaoxianInfo queryDetail(String avbId);
+
 
 }

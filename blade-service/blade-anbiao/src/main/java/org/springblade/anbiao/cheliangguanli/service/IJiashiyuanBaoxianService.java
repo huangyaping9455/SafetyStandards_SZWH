@@ -16,6 +16,8 @@
 package org.springblade.anbiao.cheliangguanli.service;
 
 import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxian;
+import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxianInfo;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianInfo;
 import org.springblade.anbiao.cheliangguanli.vo.JiashiyuanBaoxianVO;
 import org.springblade.core.mp.base.BaseService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -37,4 +39,10 @@ public interface IJiashiyuanBaoxianService extends BaseService<JiashiyuanBaoxian
 	 */
 	IPage<JiashiyuanBaoxianVO> selectJiashiyuanBaoxianPage(IPage<JiashiyuanBaoxianVO> page, JiashiyuanBaoxianVO jiashiyuanBaoxian);
 
+	/**
+	 * 查询驾驶员保险详细信息
+	 * @param ajbId
+	 * @return
+	 */
+	JiashiyuanBaoxianInfo queryDetail(String ajbId);
 }

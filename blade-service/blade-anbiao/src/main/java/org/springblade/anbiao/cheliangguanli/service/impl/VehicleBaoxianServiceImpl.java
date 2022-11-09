@@ -16,12 +16,18 @@
 package org.springblade.anbiao.cheliangguanli.service.impl;
 
 import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxian;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianInfo;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianMingxi;
+import org.springblade.anbiao.cheliangguanli.mapper.VehicleBaoxianMingxiMapper;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleBaoxianVO;
 import org.springblade.anbiao.cheliangguanli.mapper.VehicleBaoxianMapper;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleBaoxianService;
 import org.springblade.core.mp.base.BaseServiceImpl;
+import org.springblade.core.mp.support.Condition;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+
+import java.util.List;
 
 /**
  * 车辆保险信息主表 服务实现类
@@ -32,9 +38,22 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 @Service
 public class VehicleBaoxianServiceImpl extends BaseServiceImpl<VehicleBaoxianMapper, VehicleBaoxian> implements IVehicleBaoxianService {
 
+	private VehicleBaoxianMingxiMapper baoxianMingxiMapper;
+
 	@Override
 	public IPage<VehicleBaoxianVO> selectVehicleBaoxianPage(IPage<VehicleBaoxianVO> page, VehicleBaoxianVO vehicleBaoxian) {
 		return page.setRecords(baseMapper.selectVehicleBaoxianPage(page, vehicleBaoxian));
+	}
+
+	@Override
+	public VehicleBaoxianInfo queryDetail(String avbId) {
+		VehicleBaoxianInfo baoxianInfo = new VehicleBaoxianInfo();
+		baoxianInfo.setBaoxian(baseMapper.selectById(avbId));
+		VehicleBaoxianMingxi mingxi = new VehicleBaoxianMingxi();
+		mingxi.setAvbmAvbIds(avbId);
+		List<VehicleBaoxianMingxi> mingxiList = baoxianMingxiMapper.selectList(Condition.getQueryWrapper(mingxi));
+		baoxianInfo.setBaoxianMingxis(mingxiList);
+		return baoxianInfo;
 	}
 
 }
