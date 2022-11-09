@@ -21,7 +21,7 @@
 
 
     <select id="selectVehicleDengjizhengshuPage" resultMap="vehicleDengjizhengshuResultMap">
-        select * from anbiao_vehicle_dengjizhengshu where is_deleted = 0
+        select * from anbiao_vehicle_dengjizhengshu where avd_delete = 0
     </select>
 
     <select id="selectVehicleDengjizhengshuByVehicleIds" resultMap="vehicleDengjizhengshuResultMap" parameterType="java.lang.String">

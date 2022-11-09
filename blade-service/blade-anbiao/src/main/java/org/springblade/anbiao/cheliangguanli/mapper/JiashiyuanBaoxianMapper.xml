@@ -57,7 +57,7 @@
         <result column="ajb_approve" property="ajbApprove"/>
         <result column="ajb_special_agreement" property="ajbSpecialAgreement"/>
         <result column="ajb_enclosure" property="ajbEnclosure"/>
-        <result column="ajb_delete" property="ajbDelete"/>
+        <result column="ajb_delete" property="isDeleted"/>
         <result column="ajb_create_time" property="ajbCreateTime"/>
         <result column="ajb_create_by_ids" property="ajbCreateByIds"/>
         <result column="ajb_create_by_name" property="ajbCreateByName"/>
@@ -68,7 +68,7 @@
 
 
     <select id="selectJiashiyuanBaoxianPage" resultMap="jiashiyuanBaoxianResultMap">
-        select * from anbiao_jiashiyuan_baoxian where is_deleted = 0
+        select * from anbiao_jiashiyuan_baoxian where ajb_delete = 0
     </select>
 
 </mapper>

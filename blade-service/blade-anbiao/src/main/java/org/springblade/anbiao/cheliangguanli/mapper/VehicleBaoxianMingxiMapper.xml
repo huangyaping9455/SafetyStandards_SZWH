@@ -24,7 +24,7 @@
 
 
     <select id="selectVehicleBaoxianMingxiPage" resultMap="vehicleBaoxianMingxiResultMap">
-        select * from anbiao_vehicle_baoxian_mingxi where is_deleted = 0
+        select * from anbiao_vehicle_baoxian_mingxi
     </select>
 
 </mapper>

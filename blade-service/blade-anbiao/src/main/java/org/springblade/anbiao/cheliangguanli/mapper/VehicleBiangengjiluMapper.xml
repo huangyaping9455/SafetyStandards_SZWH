@@ -20,7 +20,7 @@
 
 
     <select id="selectVehicleBiangengjiluPage" resultMap="vehicleBiangengjiluResultMap">
-        select * from anbiao_vehicle_biangengjilu where is_deleted = 0
+        select * from anbiao_vehicle_biangengjilu where avbj_delete = 0
     </select>
 
 </mapper>

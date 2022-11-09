@@ -309,7 +309,7 @@ public class VehicleBaoxian extends BaseEntity {
      * 逻辑删除(0=正常,1=删除)
      */
     @ApiModelProperty(value = "逻辑删除(0=正常,1=删除)")
-    private String avbDelete;
+    private Integer isDeleted;
     /**
      * 创建时间
      */

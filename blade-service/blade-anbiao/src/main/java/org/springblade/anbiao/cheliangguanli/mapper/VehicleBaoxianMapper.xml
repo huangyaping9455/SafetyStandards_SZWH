@@ -68,7 +68,7 @@
 
 
     <select id="selectVehicleBaoxianPage" resultMap="vehicleBaoxianResultMap">
-        select * from anbiao_vehicle_baoxian where is_deleted = 0
+        select * from anbiao_vehicle_baoxian where avb_delete = 0
     </select>
 
 </mapper>
