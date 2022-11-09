@@ -12,10 +12,9 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiDetail;
+import org.springblade.anbiao.anquanhuiyi.page.AnQuanHuiYiPage;
 import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiDetailService;
 import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiService;
-import org.springblade.anbiao.anquanhuiyi.page.AnQuanHuiYiPage;
-import org.springblade.anbiao.guanlijigouherenyuan.entity.Anquanhuiyi;
 import org.springblade.common.tool.DateUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
@@ -61,6 +60,10 @@ public class AnbiaoAnquanhuiyiController {
 		QueryWrapper<AnbiaoAnquanhuiyi> anquanhuiyiQueryWrapper = new QueryWrapper<>();
 		anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getDeptId,anquanhuiyi.getDeptId());
 		anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getIsDeleted,0);
+		anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getHuiyimingcheng,anquanhuiyi.getHuiyimingcheng());
+		anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getHuiyikaishishijian,anquanhuiyi.getHuiyikaishishijian());
+		anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getHuiyijieshushijian,anquanhuiyi.getHuiyijieshushijian());
+		anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getHuiyixingshi,anquanhuiyi.getHuiyixingshi());
 		AnbiaoAnquanhuiyi deail = anquanhuiyiService.getBaseMapper().selectOne(anquanhuiyiQueryWrapper);
 
 
@@ -158,6 +161,7 @@ public class AnbiaoAnquanhuiyiController {
 						AnbiaoAnquanhuiyiDetail anbiaoAnquanhuiyiDetail = new AnbiaoAnquanhuiyiDetail();
 						QueryWrapper<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailQueryWrapper = new QueryWrapper<>();
 						anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,deail2.getId());
+						anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadApIds,anquanhuiyiDetailList.get(j).getAadApIds());
 						AnbiaoAnquanhuiyiDetail anquanhuiyiDetail = anquanhuiyiDetailService.getBaseMapper().selectOne(anquanhuiyiDetailQueryWrapper);
 						if (anquanhuiyiDetail == null){
 							anbiaoAnquanhuiyiDetail.setAadAaIds(deail2.getId());
@@ -170,17 +174,13 @@ public class AnbiaoAnquanhuiyiController {
 								r.setMsg("新增成功");
 								r.setCode(200);
 								r.setSuccess(false);
-								return r;
 							}else {
 								r.setMsg("新增失败");
 								r.setCode(500);
 								r.setSuccess(false);
-								return r;
 							}
 						}
 					}
-
-
 				}else {
 					r.setMsg("新增失败");
 					r.setCode(500);
@@ -230,12 +230,10 @@ public class AnbiaoAnquanhuiyiController {
 								r.setMsg("更新成功");
 								r.setCode(200);
 								r.setSuccess(false);
-								return r;
 							} else {
 								r.setMsg("更新失败");
 								r.setCode(500);
 								r.setSuccess(false);
-								return r;
 							}
 					}
 			}
