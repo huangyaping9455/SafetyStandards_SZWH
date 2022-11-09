@@ -1,0 +1,56 @@
+package org.springblade.anbiao.AccidentReports.service.Impl;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import lombok.AllArgsConstructor;
+import org.springblade.anbiao.AccidentReports.DTO.AccidentReportsDTO;
+import org.springblade.anbiao.AccidentReports.VO.AccidentReportsVO;
+import org.springblade.anbiao.AccidentReports.mapper.AccidentReportsMapper;
+import org.springblade.anbiao.AccidentReports.page.AccidentPage;
+import org.springblade.anbiao.AccidentReports.service.AccidentReportsService;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
+
+/**
+ * @Description :
+ * @Author : long
+ * @Date :2022/11/2 13:48
+ */
+@Service
+public class AccidentReportsServiceImpl implements AccidentReportsService {
+
+
+	private AccidentReportsMapper mapper;
+
+	@Override
+	public List<AccidentReportsVO> selectList(AccidentPage accidentPage) {
+		int pageSize = accidentPage.getSize();
+		int pageNum = accidentPage.getCurrent();
+		PageHelper.startPage(pageNum,pageSize);
+		List<AccidentReportsVO> accidentReportsVOS = mapper.selectList(accidentPage);
+		PageInfo<AccidentReportsVO> pageInfo = new PageInfo<>(accidentReportsVOS);
+		return pageInfo.getList();
+	}
+
+	@Override
+	public List<AccidentReportsVO> selectAll(String rid) {
+		return mapper.selectAll(rid);
+	}
+
+	@Override
+	public Boolean insertOne(AccidentReportsDTO accidentReportsDTO) {
+		return mapper.insertOne(accidentReportsDTO);
+	}
+
+	@Override
+	public Boolean deleteAccident(String id) {
+		return mapper.deleteAcc(id);
+	}
+
+	@Override
+	public Boolean updateAccident(AccidentReportsDTO accidentReportsDTO) {
+		return mapper.updateAcc(accidentReportsDTO);
+	}
+}

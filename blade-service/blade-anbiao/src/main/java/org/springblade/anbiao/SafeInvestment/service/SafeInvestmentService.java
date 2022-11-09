@@ -1,5 +1,6 @@
 package org.springblade.anbiao.SafeInvestment.service;
 
+import org.springblade.anbiao.SafeInvestment.VO.SafeInvestmentVO;
 import org.springblade.anbiao.SafeInvestment.VO.SafetyInvestmentDetailsVO;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInput;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInputDetailed;
@@ -56,5 +57,5 @@ public interface SafeInvestmentService {
 	 */
 	Boolean updateSafe(AnbiaoSafetyInput anbiaoSafetyInput);
 
-	SafelInfoPage selectTotal(SafelInfoPage safelInfoPage);
+	List<SafeInvestmentVO> selectPage(SafelInfoPage safelInfoPage);
 }

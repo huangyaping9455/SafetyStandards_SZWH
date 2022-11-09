@@ -1,7 +1,8 @@
 package org.springblade.anbiao.SafeInvestment.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.AllArgsConstructor;
-import org.springblade.anbiao.SafeInvestment.DTO.SafeInvestmentDTO;
 import org.springblade.anbiao.SafeInvestment.VO.SafeInvestmentVO;
 import org.springblade.anbiao.SafeInvestment.VO.SafetyInvestmentDetailsVO;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInput;
@@ -9,7 +10,6 @@ import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInputDetailed;
 import org.springblade.anbiao.SafeInvestment.mapper.SafeInvestmentMapper;
 import org.springblade.anbiao.SafeInvestment.page.SafelInfoPage;
 import org.springblade.anbiao.SafeInvestment.service.SafeInvestmentService;
-import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -62,44 +62,15 @@ public class SafeInvestmentServiceImpl implements SafeInvestmentService {
 	 * @return
 	 */
 	@Override
-	public SafelInfoPage selectTotal(SafelInfoPage safelInfoPage) {
-		Integer total = safeInvestmentMapper.selectTotal(safelInfoPage);
-		Integer pagetotal = 0;
-		if(safelInfoPage.getSize()==0){
-			if(safelInfoPage.getTotal()==0){
-				safelInfoPage.setTotal(total);
-			}
-			if(safelInfoPage.getTotal()==0){
-				return safelInfoPage;
-			}else {
-				List<SafeInvestmentVO> safeInvestmentVOS = safeInvestmentMapper.selectList(safelInfoPage);
-				safelInfoPage.setRecords(safeInvestmentVOS);
-				return safelInfoPage;
-			}
-		}
-		if (total > 0) {
-			if(total%safelInfoPage.getSize()==0){
-				pagetotal = total / safelInfoPage.getSize();
-			}else {
-				pagetotal = total / safelInfoPage.getSize() + 1;
-			}
-		}
-		if (pagetotal < safelInfoPage.getCurrent()) {
-			return safelInfoPage;
-		} else {
-			safelInfoPage.setPageTotal(pagetotal);
-			Integer offsetNo = 0;
-			if (safelInfoPage.getCurrent() > 1) {
-				offsetNo = safelInfoPage.getSize() * (safelInfoPage.getCurrent() - 1);
-			}
-			safelInfoPage.setTotal(total);
-			safelInfoPage.setOffsetNo(offsetNo);
-			List<SafeInvestmentVO> safeInvestmentVOS = safeInvestmentMapper.selectList(safelInfoPage);
-			safelInfoPage.setRecords(safeInvestmentVOS);
-			return safelInfoPage;
-		}
+	public List<SafeInvestmentVO> selectPage(SafelInfoPage safelInfoPage) {
+		int pageSize = safelInfoPage.getSize();
+		int pageNum = safelInfoPage.getCurrent();
+		PageHelper.startPage(pageNum,pageSize);
+		List<SafeInvestmentVO> safeInvestmentVOS = safeInvestmentMapper.selectList(safelInfoPage);
+		PageInfo<SafeInvestmentVO> pageInfo = new PageInfo(safeInvestmentVOS);
+		return pageInfo.getList();
 	}
-	}
+}
 
 
 

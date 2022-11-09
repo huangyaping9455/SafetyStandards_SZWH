@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.SafeInvestment.DTO.SafeInvestmentDTO;
-import org.springblade.anbiao.SafeInvestment.VO.SafeInvestmentVO;
 import org.springblade.anbiao.SafeInvestment.VO.SafetyInvestmentDetailsVO;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInput;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInputDetailed;
@@ -36,7 +35,7 @@ public class SafeInvestmentController extends BladeController {
 	@ApiLog("分页 列表-安全投入")
 	@ApiOperation(value = "安全投入", notes = "传入SafeInvestmentDTO", position = 1)
 	public R saList(SafelInfoPage safelInfoPage){
-		return R.data(safeInvestmentService.selectTotal(safelInfoPage));
+		return R.data(safeInvestmentService.selectPage(safelInfoPage));
 	}
 
 

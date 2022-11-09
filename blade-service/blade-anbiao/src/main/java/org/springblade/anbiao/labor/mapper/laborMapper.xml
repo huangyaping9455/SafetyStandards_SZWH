@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.labor.mapper.laborMapper">
+
+
+    <!--劳保列表-->
+    <select id="selectList"  resultType="org.springblade.anbiao.labor.VO.LaborVO">
+        select
+        a.shigufashengshijian,a.shigufashengdidian,a.shigufenlei,a.shiguxingzhi,a.shiguzeren,
+        a.chepaihao,a.jiashiyuan,b.dept_name,a.	caichansunshi,a.jianjiejingjisunshi,a.shiguzhaopian
+        from
+        anbiao_shigubaogao a
+        left join (
+        <include
+            refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b on a.dept_id = b.id
+        <where> a.is_deleted = 0 AND
+            a.createtime between #{startTime} and #{endTime}
+            <if test="dept_name !=null">
+                b.dept_name = #{dept_name}
+            </if>
+        </where>
+    </select>
+
+    <!--劳保信息-->
+    <select id="selectAll" parameterType="String" resultType="org.springblade.anbiao.labor.VO.LaborVO">
+        select
+            asid_ids,asid_asi_ids,	asid_entry_name,asid_handled_by_ids,asid_handled_by_name,
+            asid_investment_scope,asid_investment_dare,asid_amount_used,asid_delete
+        from
+            anbiao_shigubaogao
+        where asid_asi_ids =#{rid} AND ifnull(asid_delete,0) = 0
+    </select>
+
+    <!--新增劳保-->
+    <insert id="insertOne" parameterType="org.springblade.anbiao.labor.entity.LaborEntity">
+        insert into anbiao_shigubaogao(ali_name,ali_issue_date,ali_issue_quantity,ali_issue_people_number,
+                                       ali_status,ali_application_scope
+        )
+        values (ali_name,ali_issue_date,ali_issue_quantity,ali_issue_people_number,
+                ali_status,ali_application_scope
+               )
+    </insert>
+
+    <select id="selectGrapsihVO" resultType="org.springblade.anbiao.labor.VO.graphicsVO">
+        select
+            ali_application_scope,ali_issue_quantity
+        from
+            anbiao_labor_insurance
+        where ali_name = #{ali_name}
+    </select>
+
+
+    <!--修改劳保-->
+    <update id="updateLao" parameterType="org.springblade.anbiao.labor.entity.LaborEntity">
+        update anbiao_safety_input
+        <set>
+            <if test="asi_year != null">
+                asi_year = #{asi_year}
+            </if>
+            <if test="asi_extraction_proportion != null">
+                asi_extraction_proportion = #{asi_extraction_proportion}
+            </if>
+            <if test="asi_withdrawal_amount != null">
+                asi_withdrawal_amount = #{asi_withdrawal_amount}
+            </if>
+            <if test="asi_accrued_amount != null">
+                asi_accrued_amount = #{asi_accrued_amount}
+            </if>
+            <if test="asi_amount_used != null">
+                asi_amount_used = #{asi_amount_used}
+            </if>
+            <if test="asi_remaining_amount != null">
+                asi_remaining_amount = #{asi_remaining_amount}
+            </if>
+        </set>
+        where asi_dept_ids = #{asi_dept_ids}
+    </update>
+
+    <!--删除劳保-->
+    <update id="deleteLao" parameterType="java.lang.String" >
+        update anbiao_labor_insurance set
+            ali_delete = 1
+        WHERE ali_ids = #{ali_ids}
+    </update>
+</mapper>

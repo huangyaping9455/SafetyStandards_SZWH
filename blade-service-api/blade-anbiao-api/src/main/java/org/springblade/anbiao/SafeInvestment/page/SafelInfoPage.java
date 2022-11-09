@@ -3,7 +3,6 @@ package org.springblade.anbiao.SafeInvestment.page;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.springblade.common.BasePage;
 
 import java.math.BigDecimal;
 
@@ -14,7 +13,7 @@ import java.math.BigDecimal;
  */
 @Data
 @ApiModel(value = "SsafelPage对象", description = "SsafelPage对象")
-public class SafelInfoPage extends BasePage {
+public class SafelInfoPage {
 
 	private static final long serialVersionUID = 1L;
 
@@ -38,4 +37,8 @@ public class SafelInfoPage extends BasePage {
 
 	@ApiModelProperty(value = "提取金额")
 	private BigDecimal asi_withdrawal_amount;
+
+	private Integer current;
+
+	private Integer size;
 }

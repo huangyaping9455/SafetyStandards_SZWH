@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.weixiucheliang.mapper.MaintenanceMapper">
+
+
+    <!--维修列表-->
+    <select id="selectList"  resultType="org.springblade.anbiao.weixiu.VO.MaintenanceVO">
+        select
+        a.shigufashengshijian,a.shigufashengdidian,a.shigufenlei,a.shiguxingzhi,a.shiguzeren,
+        a.chepaihao,a.jiashiyuan,b.dept_name,a.	caichansunshi,a.jianjiejingjisunshi,a.shiguzhaopian,a.caozuoshijian
+        from
+        anbiao_shigubaogao a
+        left join (
+        <include
+            refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b on a.dept_id = b.id
+        <where> a.is_deleted = 0 AND
+            a.createtime between #{startTime} and #{endTime}
+            <if test="dept_name !=null">
+                b.dept_name = #{dept_name}
+            </if>
+        </where>
+    </select>
+
+    <!--维修信息-->
+    <select id="selectAll" parameterType="String" resultType="org.springblade.anbiao.weixiu.entity.MaintenanceEntity">
+        select
+            a.det_name,a.shigufashengdidian,a.shigufashengshijian,a.shiguxingzhi,a.shigufenlei,
+            a.shiguzeren,a.chepaihao,a.jiashiyuan,a.AccidentName,a.caozuoshijian,b.shangwangcaichansunshi,a.shiguzhaopian
+        from
+            anbiao_shigubaogao a
+                left join anbiao_shiguchuli b on a.id = b.shigubaogaoid
+        where id =#{rid} AND is_deleted = 0
+    </select>
+
+    <!--新增维修-->
+    <insert id="insertOne" parameterType="org.springblade.anbiao.weixiu.DTO.MaintenanceDTO">
+        insert into anbiao_shigubaogao(dept_id,shigufashengdidian,shigufashengshijian,shiguxingzhi,shigufenlei,
+                                       shiguzeren,chepaihao,jiashiyuan,siwang,shoushang,caichansunshi,jianjiejingjisunshi,
+                                       shiguzhaopian,fujian,shigugaikuang,is_deleted
+        )
+        values (dept_id,shigufashengdidian,shigufashengshijian,shiguxingzhi,shigufenlei,
+                shiguzeren,chepaihao,jiashiyuan,siwang,shoushang,caichansunshi,jianjiejingjisunshi,
+                shiguzhaopian,fujian,shigugaikuang,0
+               )
+    </insert>
+
+    <insert id="insertB" parameterType="org.springblade.anbiao.weixiu.DTO.MaintenanceDTO">
+        insert into anbiao_shiguchuli()
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shigubaogaoid !=null">
+                shigubaogaoid,
+            </if>
+            <if test="shangwangcaichansunshi !=null">
+                shangwangcaichansunshi,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shigubaogaoid !=null">
+                #{shigubaogaoid},
+            </if>
+            <if test="shangwangcaichansunshi !=null">
+                #{shangwangcaichansunshi},
+            </if>
+        </trim>
+    </insert>
+
+    <!--修改事故-->
+    <update id="updateMain" parameterType="org.springblade.anbiao.weixiu.entity.MaintenanceEntity">
+        update anbiao_safety_input
+        <set>
+            <if test="dept_id != null">
+                dept_id = #{dept_id}
+            </if>
+            <if test="	caozuoshijian != null">
+                caozuoshijian = #{	caozuoshijian}
+            </if>
+            <if test="	shigufashengdidian != null">
+                shigufashengdidian = #{	shigufashengdidian}
+            </if>
+            <if test="shigufenlei != null">
+                shigufenlei = #{shigufenlei}
+            </if>
+            <if test="shiguzeren != null">
+                shiguzeren = #{shiguzeren}
+            </if>
+            <if test="chepaihao != null">
+                chepaihao = #{chepaihao}
+            </if>
+            <if test="	jiashiyuan">
+                jiashiyuan = #{	jiashiyuan}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--删除事故-->
+    <delete id="deleteMain" parameterType="java.lang.Integer">
+        delete from anbiao_cheliang_baoyangweixiu where id = #{id}
+    </delete>
+</mapper>

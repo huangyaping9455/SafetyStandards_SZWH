@@ -17,6 +17,12 @@
             ) b on a.asi_dept_ids = b.id
         where a.asi_delete = 0 AND
             a.asi_update_time between #{startTime} and #{endTime}
+        <if test="size==0">
+           limit ${total}
+        </if>
+        <if test="current != 0">
+           limit ${offsetNo},${size}
+        </if>
     </select>
 
     <!--安全投入详细信息-->
@@ -98,11 +104,36 @@
         ) b on a.asi_dept_ids = b.id
         where a.asi_delete = 0
     </sql>
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by asi_create_time desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order == 0">
+            asc
+        </if>
+    </sql>
 
-    <select id="selectTotal" resultType="int" parameterType="org.springblade.anbiao.SafeInvestment.page.SafelInfoPage">
-        select
-        count(1)
-        from(
-        <include refid="tableSql"/>)
+
+
+<!--    <select id="selectTotal1" resultType="int" parameterType="org.springblade.anbiao.SafeInvestment.page.SafelInfoPage">-->
+<!--        select-->
+<!--        count(1)-->
+<!--        from(-->
+<!--        <include refid="tableSql"/>)-->
+<!--        where 1=1-->
+<!--    </select>-->
+    <select id="selectTotal"
+            parameterType="org.springblade.anbiao.SafeInvestment.page.SafelInfoPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql"/>
+        )d where 1 = 1
     </select>
 </mapper>
