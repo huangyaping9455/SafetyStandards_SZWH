@@ -38,9 +38,9 @@ public class laborController {
 	@PostMapping("list")
 	@ApiLog("列表-劳保用品信息")
 	@ApiOperation(value = "劳保用品信息", notes = "传入LaborPage ", position = 1)
-	public R saList(LaborPage laborPage){
-		List<LaborVO> laborVOS = service.selectList(laborPage);
-		return R.data(laborVOS);
+	public R saList(LaborPage laborPage,String id,Date startTime,Date endTime){
+		LaborPage laborPage1 = service.selectList(laborPage, id, startTime, endTime);
+		return R.data(laborPage1);
 	}
 
 //

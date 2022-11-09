@@ -1,6 +1,9 @@
 package org.springblade.anbiao.labor.page;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springblade.common.BasePage;
 
 import java.util.Date;
@@ -11,15 +14,26 @@ import java.util.Date;
  * @Date :2022/11/8 18:51
  */
 @Data
-public class LaborPage{
+@EqualsAndHashCode(callSuper = true)
+@ApiModel(value = "劳保分页对象", description = "劳保分页对象")
+public class LaborPage extends BasePage{
 
-	private String id;
+	@ApiModelProperty(value = "企业名")
+	private String ali_name;
 
-	private Date startTime;
+	@ApiModelProperty(value = "时间")
+	private Date ali_issue_date;
 
-	private Date endTime;
+	@ApiModelProperty(value = "数量")
+	private Integer ali_issue_quantity;
 
-	private Integer current;
+	@ApiModelProperty(value = "发放人数")
+	private Integer ali_issue_people_number;
 
-	private Integer size;
+	@ApiModelProperty(value = "发放人")
+	private String ali_application_scope;
+
+	@ApiModelProperty(value = "发放状态")
+	private String ali_status;
+
 }

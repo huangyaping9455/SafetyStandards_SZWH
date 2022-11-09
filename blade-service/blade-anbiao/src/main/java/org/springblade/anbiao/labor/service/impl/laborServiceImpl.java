@@ -1,8 +1,6 @@
 package org.springblade.anbiao.labor.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import org.springblade.anbiao.SafeInvestment.VO.SafeInvestmentVO;
+
 import org.springblade.anbiao.labor.DTO.laborDTO;
 import org.springblade.anbiao.labor.VO.LaborVO;
 import org.springblade.anbiao.labor.VO.graphicsVO;
@@ -12,7 +10,6 @@ import org.springblade.anbiao.labor.service.laborService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -27,13 +24,43 @@ public class laborServiceImpl implements laborService {
 	private laborMapper mapper;
 
 	@Override
-	public List<LaborVO> selectList(LaborPage laborPage) {
-		int pageSize = laborPage.getSize();
-		int pageNum = laborPage.getCurrent();
-		PageHelper.startPage(pageNum,pageSize);
-		List<LaborVO> laborVOS = mapper.selectList(laborPage);
-		PageInfo<LaborVO> pageInfo = new PageInfo(laborVOS);
-		return pageInfo.getList();
+	public LaborPage selectList(LaborPage laborPage,String id,Date startTime,Date endTime) {
+		int total = mapper.selectTotal(laborPage);
+		Integer safelPagetotal = 0;
+		if (laborPage.getSize() == 0) {
+			if (laborPage.getTotal() == 0) {
+				laborPage.setTotal(total);
+			}
+			if (laborPage.getTotal() == 0) {
+				return laborPage;
+			} else {
+				List<LaborVO> laborVOS = mapper.selectList(laborPage);
+				laborPage.setRecords(laborVOS);
+				return laborPage;
+			}
+		}
+		if (total > 0) {
+			if (total % laborPage.getSize() == 0) {
+				safelPagetotal = total / laborPage.getSize();
+			} else {
+				safelPagetotal = total / laborPage.getSize() + 1;
+			}
+		}
+		if (safelPagetotal < laborPage.getCurrent()) {
+			return laborPage;
+		} else {
+			laborPage.setPageTotal(safelPagetotal);
+			Integer offsetNo = 0;
+			if (laborPage.getCurrent() > 1) {
+				offsetNo = laborPage.getSize() * (laborPage.getCurrent() - 1);
+			}
+			laborPage.setTotal(total);
+			laborPage.setOffsetNo(offsetNo);
+			List<LaborVO> laborVOS = mapper.selectList(laborPage);
+			laborPage.setRecords(laborVOS);
+			return laborPage;
+		}
+
 	}
 
 

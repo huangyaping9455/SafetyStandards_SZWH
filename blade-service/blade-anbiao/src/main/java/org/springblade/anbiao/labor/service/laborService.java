@@ -19,7 +19,7 @@ public interface laborService {
 	 * @param
 	 * @return
 	 */
-	List<LaborVO> selectList(LaborPage laborPage);
+	LaborPage selectList(LaborPage laborPage,String id,Date startTime,Date endTime);
 
 //	/**
 //	 * 劳保详细信息
