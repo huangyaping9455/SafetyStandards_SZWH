@@ -19,7 +19,7 @@
 
 
     <select id="selectVehicleHegezhengPage" resultMap="vehicleHegezhengResultMap">
-        select * from anbiao_vehicle_hegezheng where is_deleted = 0
+        select * from anbiao_vehicle_hegezheng where avh_delete = 0
     </select>
 
 </mapper>

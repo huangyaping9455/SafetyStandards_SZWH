@@ -58,15 +58,15 @@ public class VehicleBaoxianController extends BladeController {
 		return R.data(detail);
 	}
 
-	/**
-	 * 分页 车辆保险信息主表
-	 */
-	@GetMapping("/list")
-	@ApiOperation(value = "分页", notes = "传入vehicleBaoxian")
-	public R<IPage<VehicleBaoxian>> list(VehicleBaoxian vehicleBaoxian, Query query) {
-		IPage<VehicleBaoxian> pages = vehicleBaoxianService.page(Condition.getPage(query), Condition.getQueryWrapper(vehicleBaoxian));
-		return R.data(pages);
-	}
+//	/**
+//	 * 分页 车辆保险信息主表
+//	 */
+//	@GetMapping("/list")
+//	@ApiOperation(value = "分页", notes = "传入vehicleBaoxian")
+//	public R<IPage<VehicleBaoxian>> list(VehicleBaoxian vehicleBaoxian, Query query) {
+//		IPage<VehicleBaoxian> pages = vehicleBaoxianService.page(Condition.getPage(query), Condition.getQueryWrapper(vehicleBaoxian));
+//		return R.data(pages);
+//	}
 
 	/**
 	 * 自定义分页 车辆保险信息主表

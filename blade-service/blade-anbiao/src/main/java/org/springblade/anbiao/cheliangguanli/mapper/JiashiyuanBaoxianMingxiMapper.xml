@@ -24,7 +24,7 @@
 
 
     <select id="selectJiashiyuanBaoxianMingxiPage" resultMap="jiashiyuanBaoxianMingxiResultMap">
-        select * from anbiao_jiashiyuan_baoxian_mingxi where is_deleted = 0
+        select * from anbiao_jiashiyuan_baoxian_mingxi
     </select>
 
 </mapper>

@@ -23,7 +23,7 @@
 
 
     <select id="selectVehicleInspectionItemsPage" resultMap="vehicleInspectionItemsResultMap">
-        select * from anbiao_vehicle_inspection_items where is_deleted = 0
+        select * from anbiao_vehicle_inspection_items where vit_delete = 0
     </select>
 
 </mapper>
