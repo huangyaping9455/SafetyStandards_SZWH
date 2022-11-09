@@ -8,7 +8,7 @@ import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
 import org.springblade.anbiao.weixiu.page.MaintenancePage;
 import org.springblade.anbiao.weixiucheliang.service.MaintenanceService;
 import org.springblade.anbiao.weixiucheliang.service.impl.MaintenanceServiceImpl;
-import org.springblade.anbiao.weixiupeijian.service.RepairPartsService;
+//import org.springblade.anbiao.weixiupeijian.service.RepairPartsService;
 import org.springblade.core.tool.api.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,33 +28,33 @@ import java.util.List;
 @RequestMapping("/anbiao/Repair/")
 public class MaintenanceController {
 
-	private MaintenanceService service;
-
-	@PostMapping("list")
-	public R saList(MaintenancePage maintenancePage){
-		List<MaintenanceVO> maintenanceVOS = service.selectList(maintenancePage);
-		return R.data(maintenanceVOS);
-	}
-
-
-	@PostMapping("all")
-	public R selectALL(@Param("rid") String rid){
-		List<MaintenanceEntity> maintenanceEntities = service.selectAll(rid);
-		return R.data(maintenanceEntities);
-	}
-
-	@PostMapping("insert")
-	public R insert(MaintenanceDTO maintenanceDTO){
-		return R.status(service.insertOne(maintenanceDTO));
-	}
-
-	@PostMapping("delete")
-	public R delete(@Param("id") String id){
-		return R.status( service.deleteAccident(id));
-	}
-
-	@PostMapping("update")
-	public R update(MaintenanceDTO maintenanceDTO){
-		return R.status(service.updateAccident(maintenanceDTO));
-	}
+//	private MaintenanceService service;
+//
+//	@PostMapping("list")
+//	public R saList(MaintenancePage maintenancePage){
+//		List<MaintenanceVO> maintenanceVOS = service.selectList(maintenancePage);
+//		return R.data(maintenanceVOS);
+//	}
+//
+//
+//	@PostMapping("all")
+//	public R selectALL(@Param("rid") String rid){
+//		List<MaintenanceEntity> maintenanceEntities = service.selectAll(rid);
+//		return R.data(maintenanceEntities);
+//	}
+//
+//	@PostMapping("insert")
+//	public R insert(MaintenanceDTO maintenanceDTO){
+//		return R.status(service.insertOne(maintenanceDTO));
+//	}
+//
+//	@PostMapping("delete")
+//	public R delete(@Param("id") String id){
+//		return R.status( service.deleteAccident(id));
+//	}
+//
+//	@PostMapping("update")
+//	public R update(MaintenanceDTO maintenanceDTO){
+//		return R.status(service.updateAccident(maintenanceDTO));
+//	}
 }
