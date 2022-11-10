@@ -6,6 +6,7 @@
     <resultMap id="jiashiyuanBaoxianMingxiResultMap" type="org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxianMingxi">
         <id column="ajbm_ids" property="ajbmIds"/>
         <result column="ajbm_avb_ids" property="ajbmAvbIds"/>
+        <result column="ajbm_name" property="ajbmName"/>
         <result column="ajbm_risk" property="ajbmRisk"/>
         <result column="ajbm_increase_insurance" property="ajbmIncreaseInsurance"/>
         <result column="ajbm_correction_date" property="ajbmCorrectionDate"/>

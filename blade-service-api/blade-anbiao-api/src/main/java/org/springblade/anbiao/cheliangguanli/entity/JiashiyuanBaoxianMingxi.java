@@ -51,6 +51,9 @@ public class JiashiyuanBaoxianMingxi implements Serializable {
      */
     @ApiModelProperty(value = "保险主表主键")
     private String ajbmAvbIds;
+
+    @ApiModelProperty(value = "保险险种名称")
+    private String ajbmName;
     /**
      * 险别(安责险、意外险、其他险种)
      */

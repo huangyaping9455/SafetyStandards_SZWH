@@ -6,6 +6,7 @@
     <resultMap id="deptBaoxianMingxiResultMap" type="org.springblade.anbiao.cheliangguanli.entity.DeptBaoxianMingxi">
         <id column="avbm_ids" property="avbmIds"/>
         <result column="avbm_avb_ids" property="avbmAvbIds"/>
+        <result column="avbm_name" property="avbmName"/>
         <result column="avbm_risk" property="avbmRisk"/>
         <result column="avbm_increase_insurance" property="avbmIncreaseInsurance"/>
         <result column="avbm_correction_date" property="avbmCorrectionDate"/>

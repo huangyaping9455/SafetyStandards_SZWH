@@ -44,6 +44,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -533,9 +534,9 @@ public class VehicleController {
 			return r;
 		}
 
-    	Vehicle vehicle = new Vehicle();
-    	vehicle.setId(vd.getVehicleId());
-		Vehicle vehicleVO = vehicleService.getOne(Condition.getQueryWrapper(vehicle));
+//    	Vehicle vehicle = new Vehicle();
+//    	vehicle.setId(vd.getVehicleId());
+		Vehicle vehicleVO = vehicleService.getById(vd.getVehicleId());
     	if(vehicleVO == null) {
 			r.setMsg("未搜索到您需更新的车辆信息，请查证信息是否正确！");
 			r.setCode(500);
@@ -560,15 +561,26 @@ public class VehicleController {
 		}
 
     	if(vd.getDaoluyunshuzheng() != null) {
-    		VehicleDaoluyunshuzheng daoluyunshuzheng = daoluyunshuzhengService.selectVehicleDaoluyunshuzhengByVehicleIds(vd.getVehicleId());
-			daoluyunshuzheng.setAvdRoadTransportCertificateNo(vd.getDaoluyunshuzheng().getAvdRoadTransportCertificateNo());
-			daoluyunshuzheng.setAvdIssueDate(vd.getDaoluyunshuzheng().getAvdIssueDate());
-			daoluyunshuzheng.setAvdValidUntil(vd.getDaoluyunshuzheng().getAvdValidUntil());
-			daoluyunshuzheng.setAvdEnclosure(vd.getDaoluyunshuzheng().getAvdEnclosure());
-			daoluyunshuzheng.setAvdUpdateByName(user.getUserName());
-			daoluyunshuzheng.setAvdUpdateByIds(user.getUserId().toString());
-			daoluyunshuzheng.setAvdUpdateTime(LocalDateTime.now());
-			if(daoluyunshuzhengService.updateById(daoluyunshuzheng)) {
+
+			String jsonObject = JSONUtils.obj2StringPretty(vd.getDaoluyunshuzheng());
+			VehicleDaoluyunshuzheng dlysz = JSONUtils.string2Obj(jsonObject,VehicleDaoluyunshuzheng.class);
+
+			VehicleDaoluyunshuzheng vdlysz = new VehicleDaoluyunshuzheng();
+			vdlysz.setAvdAvIds(vd.getVehicleId());
+			vdlysz.setAvdDelete("0");
+
+    		VehicleDaoluyunshuzheng daoluyunshuzheng = daoluyunshuzhengService.getOne(Condition.getQueryWrapper(vdlysz));
+    		if(daoluyunshuzheng != null) {
+				dlysz.setAvdUpdateByName(user.getUserName());
+				dlysz.setAvdUpdateByIds(user.getUserId().toString());
+				dlysz.setAvdUpdateTime(LocalDateTime.now());
+			} else {
+				dlysz.setAvdCreateByName(user.getUserName());
+				dlysz.setAvdCreateByIds(user.getUserId().toString());
+				dlysz.setAvdCreateTime(LocalDateTime.now());
+			}
+
+			if(daoluyunshuzhengService.saveOrUpdate(dlysz)) {
 				stringBuilder.append("更新道路运输证信息成功！"+"\r\n");
 			} else {
 				stringBuilder.append("更新道路运输证信息失败！"+"\r\n");

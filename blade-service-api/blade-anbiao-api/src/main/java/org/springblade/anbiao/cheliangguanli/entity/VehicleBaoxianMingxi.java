@@ -21,6 +21,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
+import io.swagger.annotations.Api;
 import org.springblade.core.mp.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -51,6 +53,9 @@ public class VehicleBaoxianMingxi implements Serializable {
      */
     @ApiModelProperty(value = "保险主表主键")
     private String avbmAvbIds;
+
+    @ApiModelProperty(value = "保险险种名称")
+    private String avbmName;
     /**
      * 险别(车损险、交强险、乘坐险、商三险、自燃险、货物险、危险品、车船税、承运人险)
      */

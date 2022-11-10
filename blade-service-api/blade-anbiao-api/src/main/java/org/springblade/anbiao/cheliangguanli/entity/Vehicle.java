@@ -287,6 +287,7 @@ public class Vehicle implements Serializable {
 	@ApiModelProperty(value = "终端类型")
 	private Integer zhongduanleixing;
 
+	@TableField(exist = false)
 	@ApiModelProperty(value = "企业安全负责人电话")
 	private String securityofficertelephone;
 

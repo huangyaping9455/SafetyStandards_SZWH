@@ -51,6 +51,9 @@ public class DeptBaoxianMingxi implements Serializable {
      */
     @ApiModelProperty(value = "保险主表主键")
     private String avbmAvbIds;
+
+    @ApiModelProperty(value = "保险险种名称")
+    private String avbmName;
     /**
      * 险别(车损险、交强险、乘坐险、商三险、自燃险、货物险、危险品、车船税、承运人险)
      */
