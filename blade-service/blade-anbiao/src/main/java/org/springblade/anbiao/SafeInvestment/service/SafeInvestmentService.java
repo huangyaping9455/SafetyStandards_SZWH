@@ -20,7 +20,7 @@ public interface SafeInvestmentService {
 //	 * @param safeInvestmentDTO
 //	 * @return
 //	 */
-//	List<SafeInvestmentVO> selectList(SafeInvestmentDTO safeInvestmentDTO);
+//	List<SafeInvestmentVO> selectPage(SafeInvestmentDTO safeInvestmentDTO);
 
 	/**
 	 * 安全投入详细信息
@@ -41,7 +41,7 @@ public interface SafeInvestmentService {
 	 * @param
 	 * @return
 	 */
-	Boolean insert(List<AnbiaoSafetyInputDetailed> inputDetailedList);
+	Boolean insert(AnbiaoSafetyInputDetailed anbiaoSafetyInputDetailed);
 
 	/**
 	 * 删除

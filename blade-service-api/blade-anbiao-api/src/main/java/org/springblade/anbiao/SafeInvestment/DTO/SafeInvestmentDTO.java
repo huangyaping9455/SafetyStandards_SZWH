@@ -9,6 +9,7 @@ import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInputDetailed;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +31,14 @@ public class SafeInvestmentDTO implements Serializable {
 	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
 	private Date endTime;
 
-	private AnbiaoSafetyInput anbiaoSafetyInput;
+	private String asi_dept_ids;
+	private Integer asi_year;
+	private String asi_accrued_amount;
+	private String asi_withdrawal_amount;
+	private String asi_extraction_proportion;
+	private String asi_amount_used;
+	private String asi_remaining_amount;
+	private String deptId;
 
 	private List<AnbiaoSafetyInputDetailed> inputDetailedList;
 

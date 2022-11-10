@@ -29,7 +29,7 @@ public interface SafeInvestmentMapper {
 	 * @param
 	 * @return
 	 */
-	List<SafetyInvestmentDetailsVO> selectAll(String rid );
+	List<SafetyInvestmentDetailsVO> selectAll(String asid_asi_ids );
 
 
 	/**
@@ -44,7 +44,7 @@ public interface SafeInvestmentMapper {
 	 * @param
 	 * @return
 	 */
-	Boolean insertInput(List<AnbiaoSafetyInputDetailed> inputDetailedList);
+	Boolean insertInput(AnbiaoSafetyInputDetailed anbiaoSafetyInputDetailed);
 
 	/**
 	 * 修改安全投入列表  后台管理

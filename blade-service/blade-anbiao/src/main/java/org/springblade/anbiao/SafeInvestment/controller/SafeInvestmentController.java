@@ -3,6 +3,7 @@ package org.springblade.anbiao.SafeInvestment.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.SafeInvestment.DTO.SafeInvestmentDTO;
 import org.springblade.anbiao.SafeInvestment.VO.SafetyInvestmentDetailsVO;
@@ -13,11 +14,10 @@ import org.springblade.anbiao.SafeInvestment.service.impl.SafeInvestmentServiceI
 import org.springblade.core.boot.ctrl.BladeController;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.tool.api.R;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author long
@@ -35,24 +35,36 @@ public class SafeInvestmentController extends BladeController {
 	@ApiLog("分页 列表-安全投入")
 	@ApiOperation(value = "安全投入", notes = "传入SafeInvestmentDTO", position = 1)
 	public R saList(SafelInfoPage safelInfoPage){
-		return R.data(safeInvestmentService.selectPage(safelInfoPage));
+		SafelInfoPage safelInfoPage1 = safeInvestmentService.selectPage(safelInfoPage);
+		return R.data(safelInfoPage1);
 	}
 
 
 	@PostMapping("all")
 	@ApiLog("列表-安全投入详情")
 	@ApiOperation(value = "安全投入详情", notes = "rid", position = 2)
-	public R selectALL(@Param("rid") String rid){
-		List<SafetyInvestmentDetailsVO> safetyInvestmentDetailsVOS = safeInvestmentService.selectAll(rid);
+	public R selectALL(String asid_asi_ids){
+		List<SafetyInvestmentDetailsVO> safetyInvestmentDetailsVOS = safeInvestmentService.selectAll(asid_asi_ids);
 		return R.data(safetyInvestmentDetailsVOS);
 	}
 
 	@PostMapping("insert")
 	@ApiLog("新增-安全投入详情")
-	@ApiOperation(value = "安全投入详情", notes = "SafeInvestmentDTO ", position = 3)
-	public R insert(SafeInvestmentDTO safeInvestmentDTO){
+	@ApiOperation(value = "新增安全投入", notes = "SafeInvestmentDTO ", position = 3)
+	public R insert(@RequestBody SafeInvestmentDTO safeInvestmentDTO){
 		R rs = new R();
-		AnbiaoSafetyInput anbiaoSafetyInput = safeInvestmentDTO.getAnbiaoSafetyInput();
+		AnbiaoSafetyInput anbiaoSafetyInput = new AnbiaoSafetyInput();
+		String s = UUID.randomUUID().toString().replace("-", "");
+		anbiaoSafetyInput.setAsi_ids(s);
+		anbiaoSafetyInput.setAsi_update_by_ids(safeInvestmentDTO.getDeptId());
+		anbiaoSafetyInput.setAsi_year(safeInvestmentDTO.getAsi_year());
+		anbiaoSafetyInput.setAsi_accrued_amount(NumberUtils.createBigDecimal(safeInvestmentDTO.getAsi_accrued_amount()));
+		anbiaoSafetyInput.setAsi_withdrawal_amount(NumberUtils.createBigDecimal(safeInvestmentDTO.getAsi_withdrawal_amount()));
+		anbiaoSafetyInput.setAsi_extraction_proportion((safeInvestmentDTO.getAsi_extraction_proportion()));
+		anbiaoSafetyInput.setAsi_amount_used(NumberUtils.createBigDecimal(safeInvestmentDTO.getAsi_amount_used()));
+		anbiaoSafetyInput.setAsi_remaining_amount(NumberUtils.createBigDecimal(safeInvestmentDTO.getAsi_remaining_amount()));
+		anbiaoSafetyInput.setAsi_dept_ids(safeInvestmentDTO.getAsi_dept_ids());
+
 		Boolean aBoolean = false;
 		if(anbiaoSafetyInput!=null){
 			 aBoolean = safeInvestmentService.insertOne(anbiaoSafetyInput);
@@ -61,7 +73,17 @@ public class SafeInvestmentController extends BladeController {
 		List<AnbiaoSafetyInputDetailed> inputDetailedList = safeInvestmentDTO.getInputDetailedList();
 		Boolean insert = false;
 		if(inputDetailedList!=null){
-			insert = safeInvestmentService.insert(inputDetailedList);
+			for (AnbiaoSafetyInputDetailed list : inputDetailedList) {
+				String uuid1 = UUID.randomUUID().toString().replace("-", "");
+				AnbiaoSafetyInputDetailed anbiaoSafetyInputDetailed = new AnbiaoSafetyInputDetailed();
+				anbiaoSafetyInputDetailed.setAsid_ids(uuid1);
+				anbiaoSafetyInputDetailed.setAsid_entry_name(list.getAsid_entry_name());
+				anbiaoSafetyInputDetailed.setAsid_handled_by_name(list.getAsid_handled_by_name());
+				anbiaoSafetyInputDetailed.setAsid_investment_scope(list.getAsid_investment_scope());
+				anbiaoSafetyInputDetailed.setAsid_investment_dare(list.getAsid_investment_dare());
+				anbiaoSafetyInputDetailed.setAsid_amount_used(list.getAsid_amount_used());
+				insert = safeInvestmentService.insert(anbiaoSafetyInputDetailed);
+			}
 		}
 		if(aBoolean&&insert){
 			rs.setCode(200);
@@ -77,15 +99,15 @@ public class SafeInvestmentController extends BladeController {
 
 	@PostMapping("delete")
 	@ApiLog("删除-安全投入详情")
-	@ApiOperation(value = "安全投入详情", notes = "asi_dept_ids ", position = 4)
+	@ApiOperation(value = "删除安全投入", notes = "asi_dept_ids ", position = 4)
 	public R delete(@Param("asi_dept_ids") String asi_dept_ids){
 		return R.status(safeInvestmentService.delete(asi_dept_ids));
 	}
 
 	@PostMapping("update")
 	@ApiLog("修改-安全投入详情")
-	@ApiOperation(value = "安全投入详情", notes = "AnbiaoSafetyInput ", position = 5)
-	public R update(AnbiaoSafetyInput anbiaoSafetyInput){
+	@ApiOperation(value = "修改安全投入", notes = "AnbiaoSafetyInput ", position = 5)
+	public R update(@RequestBody AnbiaoSafetyInput anbiaoSafetyInput){
 		return R.status(safeInvestmentService.updateSafe(anbiaoSafetyInput));
 	}
 

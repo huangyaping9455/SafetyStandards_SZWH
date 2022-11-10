@@ -46,4 +46,6 @@ public class SafelInfoPage extends BasePage {
 	@ApiModelProperty(value = "结束时间")
 	private Date endTime;
 
+	@ApiModelProperty(value = "单位id",required = true)
+	private Integer deptId;
 }

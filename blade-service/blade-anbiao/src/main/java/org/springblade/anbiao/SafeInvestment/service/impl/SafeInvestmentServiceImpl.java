@@ -1,6 +1,8 @@
 package org.springblade.anbiao.SafeInvestment.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.AllArgsConstructor;
+import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.SafeInvestment.VO.SafeInvestmentVO;
 import org.springblade.anbiao.SafeInvestment.VO.SafetyInvestmentDetailsVO;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInput;
@@ -29,8 +31,8 @@ public class SafeInvestmentServiceImpl implements SafeInvestmentService {
 	 * @return
 	 */
 	@Override
-	public List<SafetyInvestmentDetailsVO> selectAll(String rid) {
-		return safeInvestmentMapper.selectAll(rid);
+	public List<SafetyInvestmentDetailsVO> selectAll(String asid_asi_ids) {
+		return safeInvestmentMapper.selectAll(asid_asi_ids);
 	}
 
 	@Override
@@ -39,8 +41,8 @@ public class SafeInvestmentServiceImpl implements SafeInvestmentService {
 	}
 
 	@Override
-	public Boolean insert(List<AnbiaoSafetyInputDetailed> inputDetailedList) {
-		return safeInvestmentMapper.insertInput(inputDetailedList);
+	public Boolean insert(AnbiaoSafetyInputDetailed anbiaoSafetyInputDetailed) {
+		return safeInvestmentMapper.insertInput(anbiaoSafetyInputDetailed);
 	}
 
 	@Override
