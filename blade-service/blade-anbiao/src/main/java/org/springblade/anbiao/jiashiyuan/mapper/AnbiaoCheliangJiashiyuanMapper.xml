@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.jiashiyuan.mapper.AnbiaoCheliangJiashiyuanMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuan">
+        <id column="id" property="id" />
+        <result column="vehid" property="vehid" />
+        <result column="jiashiyuanid" property="jiashiyuanid" />
+        <result column="createtime" property="createtime" />
+        <result column="type" property="type" />
+    </resultMap>
+
+    <select id="SelectByJiashiyuanID" resultType="org.springblade.anbiao.jiashiyuan.vo.CheliangJiashiyuanVO">
+        SELECT v.cheliangpaizhao,cj.jiashiyuanid,cj.vehid FROM `anbiao_vehicle` v,anbiao_cheliang_jiashiyuan cj
+        WHERE cj.jiashiyuanid= #{jiashiyuanid}
+          and cj.vehid=v.id
+    </select>
+</mapper>
