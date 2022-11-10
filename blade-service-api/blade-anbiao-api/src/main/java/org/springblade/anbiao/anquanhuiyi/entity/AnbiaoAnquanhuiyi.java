@@ -67,9 +67,9 @@ public class AnbiaoAnquanhuiyi implements Serializable {
     @TableField("huiyixingshi")
     private String huiyixingshi;
 
-    @ApiModelProperty(value = "会议日期")
-    @TableField("huiyiriqi")
-    private String huiyiriqi;
+//    @ApiModelProperty(value = "会议日期")
+//    @TableField("huiyiriqi")
+//    private String huiyiriqi;
 
     @ApiModelProperty(value = "主持人")
     @TableField("zhuchiren")

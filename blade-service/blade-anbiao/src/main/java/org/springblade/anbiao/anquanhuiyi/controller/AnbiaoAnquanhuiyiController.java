@@ -147,8 +147,10 @@ public class AnbiaoAnquanhuiyiController {
 			anquanhuiyi.setCreatetime(DateUtil.now());
 			if (anquanhuiyi.getHuiyixingshi().equals("线上")){
 				anquanhuiyi.setHuiyixingshi("0");
-			}else {
+			}else if (anquanhuiyi.getHuiyixingshi().equals("线下")){
 				anquanhuiyi.setHuiyixingshi("1");
+			}else {
+				anquanhuiyi.setHuiyixingshi(anquanhuiyi.getHuiyixingshi());
 			}
 			anquanhuiyi.setIsDeleted(0);
 
