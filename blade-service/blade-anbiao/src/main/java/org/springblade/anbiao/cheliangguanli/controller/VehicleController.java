@@ -202,8 +202,8 @@ public class VehicleController {
 	}
 
 	@PostMapping("/addSave")
-	@ApiLog("编辑-车辆资料管理【新版】")
-	@ApiOperation(value = "新增-车辆资料管理【新版】", notes = "传入Vehicle", position = 30)
+	@ApiLog("新增-车辆资料管理【新版】")
+	@ApiOperation(value = "新增-车辆资料管理【新版】", notes = "传入VehicleInfo", position = 30)
 	public R addSave(@RequestBody VehicleInfo v,BladeUser user) {
 		R r = new R();
 
@@ -373,7 +373,7 @@ public class VehicleController {
 
 	@PostMapping("/updateSave")
 	@ApiLog("编辑-车辆资料管理【新版】")
-	@ApiOperation(value = "编辑-车辆资料管理【新版】", notes = "传入Vehicle", position = 31)
+	@ApiOperation(value = "编辑-车辆资料管理【新版】", notes = "传入VehicleInfo", position = 31)
 	public R updateSave(@RequestBody VehicleInfo v,BladeUser user) {
     	R r = new R();
 
@@ -561,16 +561,20 @@ public class VehicleController {
 		}
 
     	if(vd.getDaoluyunshuzheng() != null) {
-
-			String jsonObject = JSONUtils.obj2StringPretty(vd.getDaoluyunshuzheng());
-			VehicleDaoluyunshuzheng dlysz = JSONUtils.string2Obj(jsonObject,VehicleDaoluyunshuzheng.class);
+			VehicleDaoluyunshuzheng dlysz = vd.getDaoluyunshuzheng();
+			dlysz.setAvdAvIds(vd.getVehicleId());
+			dlysz.setAvdPlateNo(vehicleVO.getCheliangpaizhao());
+			dlysz.setAvdPlateColor(vehicleVO.getChepaiyanse());
+			dlysz.setAvdVehicleType(vehicleVO.getShiyongxingzhi());
+			dlysz.setAvdBusinessOwner(vehicleVO.getChezhu());
+			dlysz.setAvdDelete("0");
 
 			VehicleDaoluyunshuzheng vdlysz = new VehicleDaoluyunshuzheng();
 			vdlysz.setAvdAvIds(vd.getVehicleId());
 			vdlysz.setAvdDelete("0");
-
     		VehicleDaoluyunshuzheng daoluyunshuzheng = daoluyunshuzhengService.getOne(Condition.getQueryWrapper(vdlysz));
     		if(daoluyunshuzheng != null) {
+				dlysz.setAvdIds(daoluyunshuzheng.getAvdIds());
 				dlysz.setAvdUpdateByName(user.getUserName());
 				dlysz.setAvdUpdateByIds(user.getUserId().toString());
 				dlysz.setAvdUpdateTime(LocalDateTime.now());
