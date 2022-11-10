@@ -1,5 +1,6 @@
 package org.springblade.anbiao.cheliangguanli.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -35,6 +36,7 @@ public class VehicleInfo implements Serializable {
 	private String chezhudianhua;
 
 	@ApiModelProperty(value = "车辆变更记录")
+	@TableField(exist = false)
 	private List<VehicleBiangengjilu> cheliangbiangengjilu;
 
 	@ApiModelProperty(value = "注册日期")

@@ -15,13 +15,14 @@
  */
 package org.springblade.anbiao.cheliangguanli.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.AllArgsConstructor;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleBiangengjilu;
-import org.springblade.anbiao.cheliangguanli.vo.VehicleBiangengjiluVO;
 import org.springblade.anbiao.cheliangguanli.mapper.VehicleBiangengjiluMapper;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleBiangengjiluService;
-import org.springblade.core.mp.base.BaseServiceImpl;
+import org.springblade.anbiao.cheliangguanli.vo.VehicleBiangengjiluVO;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 
 /**
  * 车辆变更记录 服务实现类
@@ -30,7 +31,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
  * @since 2022-11-06
  */
 @Service
-public class VehicleBiangengjiluServiceImpl extends BaseServiceImpl<VehicleBiangengjiluMapper, VehicleBiangengjilu> implements IVehicleBiangengjiluService {
+@AllArgsConstructor
+public class VehicleBiangengjiluServiceImpl extends ServiceImpl<VehicleBiangengjiluMapper, VehicleBiangengjilu> implements IVehicleBiangengjiluService {
 
 	@Override
 	public IPage<VehicleBiangengjiluVO> selectVehicleBiangengjiluPage(IPage<VehicleBiangengjiluVO> page, VehicleBiangengjiluVO vehicleBiangengjilu) {
