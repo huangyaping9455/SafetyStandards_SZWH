@@ -1,9 +1,13 @@
 package org.springblade.anbiao.chuchejiancha.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamineInfo;
+import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamineInfoRemark;
 import org.springblade.anbiao.chuchejiancha.mapper.AnbiaoCarExamineInfoMapper;
+import org.springblade.anbiao.chuchejiancha.mapper.AnbiaoCarExamineInfoRemarkMapper;
+import org.springblade.anbiao.chuchejiancha.page.AnBiaoCheckCarPage;
 import org.springblade.anbiao.chuchejiancha.page.AnbiaoCarExamineInfoPage;
 import org.springblade.anbiao.chuchejiancha.service.IAnbiaoCarExamineInfoService;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,8 @@ import java.util.List;
 public class AnbiaoCarExamineInfoServiceImpl extends ServiceImpl<AnbiaoCarExamineInfoMapper, AnbiaoCarExamineInfo> implements IAnbiaoCarExamineInfoService {
 
 	private AnbiaoCarExamineInfoMapper mapper;
+
+	private AnbiaoCarExamineInfoRemarkMapper remarkMapper;
 
 	@Override
 	public AnbiaoCarExamineInfoPage<AnbiaoCarExamineInfo> selectCarExamineInfoPage(AnbiaoCarExamineInfoPage anbiaoCarExamineInfoPage) {
@@ -57,6 +63,19 @@ public class AnbiaoCarExamineInfoServiceImpl extends ServiceImpl<AnbiaoCarExamin
 		return anbiaoCarExamineInfoPage;
 	}
 
+	@Override
+	public List<AnbiaoCarExamineInfo> selectAnBiaoCheckCarALLPage(AnBiaoCheckCarPage anbiaoCarExamineInfoPage) {
+		List<AnbiaoCarExamineInfo> infoList = mapper.selectAnBiaoCheckCarALLPage(anbiaoCarExamineInfoPage);
+		if(infoList.size()>0){
+			infoList.forEach(item-> {
+				QueryWrapper<AnbiaoCarExamineInfoRemark> remarkQueryWrapper = new QueryWrapper<AnbiaoCarExamineInfoRemark>();
+				remarkQueryWrapper.lambda().eq(AnbiaoCarExamineInfoRemark::getExamid,item.getId());
+				List<AnbiaoCarExamineInfoRemark> examineInfoRemarkList = remarkMapper.selectList(remarkQueryWrapper);
+				item.setAnbiaoCarExamineInfoRemarkList(examineInfoRemarkList);
+			});
+		}
+		return infoList;
+	}
 
 
 }

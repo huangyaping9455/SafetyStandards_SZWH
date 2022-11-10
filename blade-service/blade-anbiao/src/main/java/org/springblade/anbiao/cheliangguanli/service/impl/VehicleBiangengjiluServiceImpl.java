@@ -15,17 +15,14 @@
  */
 package org.springblade.anbiao.cheliangguanli.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.AllArgsConstructor;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleBiangengjilu;
-import org.springblade.anbiao.cheliangguanli.vo.VehicleBiangengjiluVO;
 import org.springblade.anbiao.cheliangguanli.mapper.VehicleBiangengjiluMapper;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleBiangengjiluService;
-import org.springblade.core.mp.base.BaseServiceImpl;
+import org.springblade.anbiao.cheliangguanli.vo.VehicleBiangengjiluVO;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-
-import javax.validation.constraints.NotEmpty;
-import java.util.List;
 
 /**
  * 车辆变更记录 服务实现类
@@ -34,6 +31,7 @@ import java.util.List;
  * @since 2022-11-06
  */
 @Service
+@AllArgsConstructor
 public class VehicleBiangengjiluServiceImpl extends ServiceImpl<VehicleBiangengjiluMapper, VehicleBiangengjilu> implements IVehicleBiangengjiluService {
 
 	@Override
@@ -41,8 +39,4 @@ public class VehicleBiangengjiluServiceImpl extends ServiceImpl<VehicleBiangengj
 		return page.setRecords(baseMapper.selectVehicleBiangengjiluPage(page, vehicleBiangengjilu));
 	}
 
-	@Override
-	public boolean deleteLogic(@NotEmpty List<Integer> ids) {
-		return false;
-	}
 }

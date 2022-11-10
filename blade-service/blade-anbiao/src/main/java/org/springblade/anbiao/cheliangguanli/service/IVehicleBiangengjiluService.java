@@ -15,10 +15,10 @@
  */
 package org.springblade.anbiao.cheliangguanli.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.IService;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleBiangengjilu;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleBiangengjiluVO;
-import org.springblade.core.mp.base.BaseService;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 
 /**
  * 车辆变更记录 服务类
@@ -26,7 +26,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
  * @author Blade
  * @since 2022-11-06
  */
-public interface IVehicleBiangengjiluService extends BaseService<VehicleBiangengjilu> {
+public interface IVehicleBiangengjiluService extends IService<VehicleBiangengjilu> {
 
 	/**
 	 * 自定义分页

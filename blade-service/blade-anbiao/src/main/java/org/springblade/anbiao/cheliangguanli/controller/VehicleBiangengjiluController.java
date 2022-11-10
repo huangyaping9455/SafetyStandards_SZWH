@@ -112,7 +112,7 @@ public class VehicleBiangengjiluController extends BladeController {
 	@PostMapping("/remove")
 	@ApiOperation(value = "逻辑删除", notes = "传入ids")
 	public R remove(@ApiParam(value = "主键集合", required = true) @RequestParam String ids) {
-		return R.status(vehicleBiangengjiluService.deleteLogic(FuncUtil.toLongList(ids)));
+		return R.status(vehicleBiangengjiluService.removeById(ids));
 	}
 
 

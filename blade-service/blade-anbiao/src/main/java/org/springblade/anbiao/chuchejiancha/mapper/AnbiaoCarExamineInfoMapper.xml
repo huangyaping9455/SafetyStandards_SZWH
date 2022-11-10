@@ -68,4 +68,39 @@
         <include refid="queryDeptYHSql" />
     </select>
 
+
+    <!-- 查询出车检查列表 -->
+    <sql id="tableAnBiaoCheckCarSql">
+        select
+            b.dept_name as deptName,a.*,right(a.date,2) as dateShow
+        from
+            anbiao_car_examine_info a
+            inner join  (
+                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) b on a.deptid = b.id
+        where a.isdelete = 0
+        <if test="deptName != null and deptName != ''">
+            and b.dept_name like '%${deptName}%'
+        </if>
+
+        <if test="vehId != null and vehId != ''">
+            and a.vehId = #{vehId}
+        </if>
+
+        <if test="date != null and date != ''">
+            and year(a.date) = left(#{date},4)
+            and month(a.date) = right(#{date},2)
+        </if>
+        <if test="createId != null and createId != ''">
+            and a.createid = #{createId}
+        </if>
+        order by left(a.date,10) asc
+    </sql>
+
+    <select timeout="600" id="selectAnBiaoCheckCarALLPage" resultMap="AnbiaoCarExamineInfoResultMap"
+            parameterType="org.springblade.anbiao.chuchejiancha.page.AnBiaoCheckCarPage">
+            <include refid="tableAnBiaoCheckCarSql"/>
+    </select>
+
+
 </mapper>

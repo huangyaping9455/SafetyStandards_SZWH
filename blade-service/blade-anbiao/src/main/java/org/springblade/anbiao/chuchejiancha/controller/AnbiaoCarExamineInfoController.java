@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamine;
 import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamineInfo;
 import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamineInfoRemark;
+import org.springblade.anbiao.chuchejiancha.page.AnBiaoCheckCarPage;
 import org.springblade.anbiao.chuchejiancha.page.AnbiaoCarExamineInfoPage;
 import org.springblade.anbiao.chuchejiancha.service.IAnbiaoCarExamineInfoRemarkService;
 import org.springblade.anbiao.chuchejiancha.service.IAnbiaoCarExamineInfoService;
@@ -446,6 +447,20 @@ public class AnbiaoCarExamineInfoController {
 			}
 		}
 		return rs;
+	}
+
+	@PostMapping("/getCarExamineInfoDateList")
+	@ApiLog("安全检查数据-日历统计表")
+	@ApiOperation(value = "安全检查数据-日历统计表", notes = "传入AnBiaoCheckCarPage", position = 8)
+	public R getCarExamineInfoDateList(@RequestBody AnBiaoCheckCarPage carExamineInfoPage, BladeUser user) {
+		R rs = new R();
+		if(user == null){
+			rs.setMsg("未授权");
+			rs.setCode(500);
+			return rs;
+		}
+		List<AnbiaoCarExamineInfo> list= iAnbiaoCarExamineInfoService.selectAnBiaoCheckCarALLPage(carExamineInfoPage);
+		return R.data(list);
 	}
 
 }
