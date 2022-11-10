@@ -21,9 +21,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import javax.validation.Valid;
 
-import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxianInfo;
-import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxianMingxi;
-import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianMingxi;
+import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.service.IJiashiyuanBaoxianMingxiService;
 import org.springblade.common.tool.FuncUtil;
 import org.springblade.core.mp.support.Condition;
@@ -33,10 +31,13 @@ import org.springblade.core.tool.utils.Func;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxian;
 import org.springblade.anbiao.cheliangguanli.vo.JiashiyuanBaoxianVO;
 import org.springblade.anbiao.cheliangguanli.service.IJiashiyuanBaoxianService;
 import org.springblade.core.boot.ctrl.BladeController;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 驾驶员保险信息主表 控制器
@@ -130,7 +131,16 @@ public class JiashiyuanBaoxianController extends BladeController {
 	@PostMapping("/remove")
 	@ApiOperation(value = "逻辑删除", notes = "传入ids")
 	public R remove(@ApiParam(value = "主键集合", required = true) @RequestParam String ids) {
-		return R.status(jiashiyuanBaoxianService.deleteLogic(FuncUtil.toLongList(ids)));
+		String[] idsss = ids.split(",");
+		List<JiashiyuanBaoxian> deptBaoxians = new ArrayList<>();
+		for(String id:idsss) {
+			JiashiyuanBaoxian baoxian = new JiashiyuanBaoxian();
+			baoxian.setAjbIds(id);
+			baoxian.setAjbDelete("1");
+			baoxian.setAjbUpdateTime(LocalDateTime.now());
+			deptBaoxians.add(baoxian);
+		}
+		return R.status(jiashiyuanBaoxianService.updateBatchById(deptBaoxians));
 	}
 
 

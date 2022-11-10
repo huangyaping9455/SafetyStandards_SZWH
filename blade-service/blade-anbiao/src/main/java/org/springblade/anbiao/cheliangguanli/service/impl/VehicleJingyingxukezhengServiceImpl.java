@@ -15,6 +15,7 @@
  */
 package org.springblade.anbiao.cheliangguanli.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleJingyingxukezheng;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleJingyingxukezhengVO;
 import org.springblade.anbiao.cheliangguanli.mapper.VehicleJingyingxukezhengMapper;
@@ -23,6 +24,9 @@ import org.springblade.core.mp.base.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import javax.validation.constraints.NotEmpty;
+import java.util.List;
+
 /**
  * 车辆经营许可证 服务实现类
  *
@@ -30,7 +34,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
  * @since 2022-10-28
  */
 @Service
-public class VehicleJingyingxukezhengServiceImpl extends BaseServiceImpl<VehicleJingyingxukezhengMapper, VehicleJingyingxukezheng> implements IVehicleJingyingxukezhengService {
+public class VehicleJingyingxukezhengServiceImpl extends ServiceImpl<VehicleJingyingxukezhengMapper, VehicleJingyingxukezheng> implements IVehicleJingyingxukezhengService {
 
 	VehicleJingyingxukezhengMapper jingyingxukezhengMapper;
 	@Override
@@ -44,4 +48,8 @@ public class VehicleJingyingxukezhengServiceImpl extends BaseServiceImpl<Vehicle
 	}
 
 
+	@Override
+	public boolean deleteLogic(@NotEmpty List<Integer> ids) {
+		return false;
+	}
 }

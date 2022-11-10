@@ -15,6 +15,8 @@
  */
 package org.springblade.anbiao.cheliangguanli.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -33,15 +35,15 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @Data
 @TableName("anbiao_vehicle_jishupingding")
-@EqualsAndHashCode(callSuper = true)
 @ApiModel(value = "VehicleJishupingding对象", description = "车辆技术评定信息")
-public class VehicleJishupingding extends BaseEntity {
+public class VehicleJishupingding implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * 技术评定主键
      */
+	@TableId(value = "avj_ids", type = IdType.UUID)
     @ApiModelProperty(value = "技术评定主键")
     private String avjIds;
 

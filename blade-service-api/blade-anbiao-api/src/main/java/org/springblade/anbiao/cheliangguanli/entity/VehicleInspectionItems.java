@@ -34,9 +34,8 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @Data
 @TableName("anbiao_vehicle_inspection_items")
-@EqualsAndHashCode(callSuper = true)
 @ApiModel(value = "VehicleInspectionItems对象", description = "车辆安全检查项目")
-public class VehicleInspectionItems extends BaseEntity {
+public class VehicleInspectionItems implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

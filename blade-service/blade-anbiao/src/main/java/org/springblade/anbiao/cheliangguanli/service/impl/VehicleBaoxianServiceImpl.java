@@ -15,6 +15,7 @@
  */
 package org.springblade.anbiao.cheliangguanli.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxian;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianInfo;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianMingxi;
@@ -27,6 +28,7 @@ import org.springblade.core.mp.support.Condition;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
@@ -36,7 +38,7 @@ import java.util.List;
  * @since 2022-10-28
  */
 @Service
-public class VehicleBaoxianServiceImpl extends BaseServiceImpl<VehicleBaoxianMapper, VehicleBaoxian> implements IVehicleBaoxianService {
+public class VehicleBaoxianServiceImpl extends ServiceImpl<VehicleBaoxianMapper, VehicleBaoxian> implements IVehicleBaoxianService {
 
 	private VehicleBaoxianMingxiMapper baoxianMingxiMapper;
 
@@ -56,4 +58,8 @@ public class VehicleBaoxianServiceImpl extends BaseServiceImpl<VehicleBaoxianMap
 		return baoxianInfo;
 	}
 
+	@Override
+	public boolean deleteLogic(@NotEmpty List<Integer> ids) {
+		return false;
+	}
 }

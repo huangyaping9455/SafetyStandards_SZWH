@@ -15,6 +15,7 @@
  */
 package org.springblade.anbiao.cheliangguanli.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleJishupingding;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleJishupingdingVO;
 import org.springblade.anbiao.cheliangguanli.mapper.VehicleJishupingdingMapper;
@@ -23,6 +24,9 @@ import org.springblade.core.mp.base.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import javax.validation.constraints.NotEmpty;
+import java.util.List;
+
 /**
  * 车辆技术评定信息 服务实现类
  *
@@ -30,7 +34,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
  * @since 2022-10-28
  */
 @Service
-public class VehicleJishupingdingServiceImpl extends BaseServiceImpl<VehicleJishupingdingMapper, VehicleJishupingding> implements IVehicleJishupingdingService {
+public class VehicleJishupingdingServiceImpl extends ServiceImpl<VehicleJishupingdingMapper, VehicleJishupingding> implements IVehicleJishupingdingService {
 
 	private VehicleJishupingdingMapper jishupingdingMapper;
 
@@ -44,4 +48,8 @@ public class VehicleJishupingdingServiceImpl extends BaseServiceImpl<VehicleJish
 		return jishupingdingMapper.selectVehicleJishupingdingByVehicleIds(avjVehicleIds);
 	}
 
+	@Override
+	public boolean deleteLogic(@NotEmpty List<Integer> ids) {
+		return false;
+	}
 }

@@ -21,6 +21,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import javax.validation.Valid;
 
+import org.springblade.anbiao.cheliangguanli.entity.VehicleDengjizhengshu;
 import org.springblade.common.tool.FuncUtil;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
@@ -33,6 +34,10 @@ import org.springblade.anbiao.cheliangguanli.entity.VehicleHegezheng;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleHegezhengVO;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleHegezhengService;
 import org.springblade.core.boot.ctrl.BladeController;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 车辆合格证书 控制器
@@ -112,7 +117,16 @@ public class VehicleHegezhengController extends BladeController {
 	@PostMapping("/remove")
 	@ApiOperation(value = "逻辑删除", notes = "传入ids")
 	public R remove(@ApiParam(value = "主键集合", required = true) @RequestParam String ids) {
-		return R.status(vehicleHegezhengService.deleteLogic(FuncUtil.toLongList(ids)));
+		String[] idsss = ids.split(",");
+		List<VehicleHegezheng> deptBaoxians = new ArrayList<>();
+		for(String id:idsss) {
+			VehicleHegezheng baoxian = new VehicleHegezheng();
+			baoxian.setAvhIds(id);
+			baoxian.setAvhDelete("1");
+			baoxian.setAvhUpdateTime(LocalDateTime.now());
+			deptBaoxians.add(baoxian);
+		}
+		return R.status(vehicleHegezhengService.updateBatchById(deptBaoxians));
 	}
 
 

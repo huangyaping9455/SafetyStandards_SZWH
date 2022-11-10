@@ -15,6 +15,8 @@
  */
 package org.springblade.anbiao.cheliangguanli.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -33,15 +35,15 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @Data
 @TableName("anbiao_dept_baoxian_mingxi")
-@EqualsAndHashCode(callSuper = true)
 @ApiModel(value = "DeptBaoxianMingxi对象", description = "企业保险信息明细")
-public class DeptBaoxianMingxi extends BaseEntity {
+public class DeptBaoxianMingxi implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * 保险明细主键
      */
+	@TableId(value = "avbm_ids", type = IdType.UUID)
     @ApiModelProperty(value = "保险明细主键")
     private String avbmIds;
     /**

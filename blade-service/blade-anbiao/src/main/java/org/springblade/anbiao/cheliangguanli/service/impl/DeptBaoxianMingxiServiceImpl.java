@@ -15,6 +15,7 @@
  */
 package org.springblade.anbiao.cheliangguanli.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springblade.anbiao.cheliangguanli.entity.DeptBaoxianMingxi;
 import org.springblade.anbiao.cheliangguanli.vo.DeptBaoxianMingxiVO;
 import org.springblade.anbiao.cheliangguanli.mapper.DeptBaoxianMingxiMapper;
@@ -23,6 +24,9 @@ import org.springblade.core.mp.base.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import javax.validation.constraints.NotEmpty;
+import java.util.List;
+
 /**
  * 车辆保险信息明细 服务实现类
  *
@@ -30,11 +34,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
  * @since 2022-10-31
  */
 @Service
-public class DeptBaoxianMingxiServiceImpl extends BaseServiceImpl<DeptBaoxianMingxiMapper, DeptBaoxianMingxi> implements IDeptBaoxianMingxiService {
+public class DeptBaoxianMingxiServiceImpl extends ServiceImpl<DeptBaoxianMingxiMapper, DeptBaoxianMingxi> implements IDeptBaoxianMingxiService {
 
 	@Override
 	public IPage<DeptBaoxianMingxiVO> selectDeptBaoxianMingxiPage(IPage<DeptBaoxianMingxiVO> page, DeptBaoxianMingxiVO deptBaoxianMingxi) {
 		return page.setRecords(baseMapper.selectDeptBaoxianMingxiPage(page, deptBaoxianMingxi));
 	}
 
+	@Override
+	public boolean deleteLogic(@NotEmpty List<Integer> ids) {
+		return false;
+	}
 }

@@ -15,6 +15,7 @@
  */
 package org.springblade.anbiao.cheliangguanli.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleInspectionItems;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleInspectionItemsVO;
 import org.springblade.anbiao.cheliangguanli.mapper.VehicleInspectionItemsMapper;
@@ -23,6 +24,9 @@ import org.springblade.core.mp.base.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import javax.validation.constraints.NotEmpty;
+import java.util.List;
+
 /**
  * 车辆安全检查项目 服务实现类
  *
@@ -30,11 +34,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
  * @since 2022-10-28
  */
 @Service
-public class VehicleInspectionItemsServiceImpl extends BaseServiceImpl<VehicleInspectionItemsMapper, VehicleInspectionItems> implements IVehicleInspectionItemsService {
+public class VehicleInspectionItemsServiceImpl extends ServiceImpl<VehicleInspectionItemsMapper, VehicleInspectionItems> implements IVehicleInspectionItemsService {
 
 	@Override
 	public IPage<VehicleInspectionItemsVO> selectVehicleInspectionItemsPage(IPage<VehicleInspectionItemsVO> page, VehicleInspectionItemsVO vehicleInspectionItems) {
 		return page.setRecords(baseMapper.selectVehicleInspectionItemsPage(page, vehicleInspectionItems));
 	}
 
+	@Override
+	public boolean deleteLogic(@NotEmpty List<Integer> ids) {
+		return false;
+	}
 }
