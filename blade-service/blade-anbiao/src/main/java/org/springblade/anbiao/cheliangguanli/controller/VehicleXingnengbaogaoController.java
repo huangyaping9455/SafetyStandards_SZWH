@@ -63,6 +63,15 @@ public class VehicleXingnengbaogaoController extends BladeController {
 		return R.data(detail);
 	}
 
+	@GetMapping("/queryByVehicle")
+	@ApiOperation(value = "根据车辆ID查询性能报告详情", notes = "根据车辆ID查询性能报告详情")
+	public R<VehicleXingnengbaogao> queryByVehicle(String vehicleId) {
+		VehicleXingnengbaogao qXlbg = new VehicleXingnengbaogao();
+		qXlbg.setAvxAvIds(vehicleId);
+		qXlbg.setAvxDelete("0");
+		return R.data(vehicleXingnengbaogaoService.getOne(Condition.getQueryWrapper(qXlbg)));
+	}
+
 	/**
 	 * 分页 车辆综合性能检测报告
 	 */

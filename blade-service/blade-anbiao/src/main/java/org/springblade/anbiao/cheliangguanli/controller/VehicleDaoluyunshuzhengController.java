@@ -22,6 +22,7 @@ import lombok.AllArgsConstructor;
 import javax.validation.Valid;
 
 import org.springblade.anbiao.cheliangguanli.entity.DeptBaoxian;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianInfo;
 import org.springblade.common.tool.FuncUtil;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
@@ -61,6 +62,15 @@ public class VehicleDaoluyunshuzhengController extends BladeController {
 	public R<VehicleDaoluyunshuzheng> detail(VehicleDaoluyunshuzheng vehicleDaoluyunshuzheng) {
 		VehicleDaoluyunshuzheng detail = vehicleDaoluyunshuzhengService.getOne(Condition.getQueryWrapper(vehicleDaoluyunshuzheng));
 		return R.data(detail);
+	}
+
+	@GetMapping("/queryByVehicle")
+	@ApiOperation(value = "根据车辆ID查询道路运输证详情", notes = "根据车辆ID查询道路运输证详情")
+	public R<VehicleDaoluyunshuzheng> queryByDept(String vehicleId) {
+		VehicleDaoluyunshuzheng qDlysz = new VehicleDaoluyunshuzheng();
+		qDlysz.setAvdAvIds(vehicleId);
+		qDlysz.setAvdDelete("0");
+		return R.data(vehicleDaoluyunshuzhengService.getOne(Condition.getQueryWrapper(qDlysz)));
 	}
 
 	/**

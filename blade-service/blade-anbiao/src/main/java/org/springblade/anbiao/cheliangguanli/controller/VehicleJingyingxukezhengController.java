@@ -21,6 +21,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import javax.validation.Valid;
 
+import org.springblade.anbiao.cheliangguanli.entity.VehicleDengjizhengshu;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleInspectionItems;
 import org.springblade.common.tool.FuncUtil;
 import org.springblade.core.mp.support.Condition;
@@ -61,6 +62,15 @@ public class VehicleJingyingxukezhengController extends BladeController {
 	public R<VehicleJingyingxukezheng> detail(VehicleJingyingxukezheng vehicleJingyingxukezheng) {
 		VehicleJingyingxukezheng detail = vehicleJingyingxukezhengService.getOne(Condition.getQueryWrapper(vehicleJingyingxukezheng));
 		return R.data(detail);
+	}
+
+	@GetMapping("/queryByVehicle")
+	@ApiOperation(value = "根据车辆ID查询经营许可证详情", notes = "根据车辆ID查询经营许可证详情")
+	public R<VehicleJingyingxukezheng> queryByVehicle(String vehicleId) {
+		VehicleJingyingxukezheng qJyxkz = new VehicleJingyingxukezheng();
+		qJyxkz.setAvjVehicleIds(vehicleId);
+		qJyxkz.setAvjDelete("0");
+		return R.data(vehicleJingyingxukezhengService.getOne(Condition.getQueryWrapper(qJyxkz)));
 	}
 
 	/**

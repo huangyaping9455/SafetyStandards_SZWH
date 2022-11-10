@@ -63,6 +63,15 @@ public class VehicleXingshizhengController extends BladeController {
 		return R.data(detail);
 	}
 
+	@GetMapping("/queryByVehicle")
+	@ApiOperation(value = "根据车辆ID查询行驶证详情", notes = "根据车辆ID查询行驶证详情")
+	public R<VehicleXingshizheng> queryByVehicle(String vehicleId) {
+		VehicleXingshizheng qXsz = new VehicleXingshizheng();
+		qXsz.setAvxAvIds(vehicleId);
+		qXsz.setAvxDelete("0");
+		return R.data(vehicleXingshizhengService.getOne(Condition.getQueryWrapper(qXsz)));
+	}
+
 	/**
 	 * 分页 车辆行驶证信息
 	 */

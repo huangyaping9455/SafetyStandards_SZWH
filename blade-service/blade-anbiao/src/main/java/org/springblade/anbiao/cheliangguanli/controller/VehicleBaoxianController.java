@@ -21,9 +21,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxian;
-import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianInfo;
-import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianMingxi;
+import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleBaoxianMingxiService;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleBaoxianService;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleBaoxianVO;
@@ -61,6 +59,24 @@ public class VehicleBaoxianController extends BladeController {
 //		VehicleBaoxian detail = vehicleBaoxianService.getOne(Condition.getQueryWrapper(vehicleBaoxian));
 		VehicleBaoxianInfo detail = vehicleBaoxianService.queryDetail(avbId);
 		return R.data(detail);
+	}
+
+	@GetMapping("/queryByVehicle")
+	@ApiOperation(value = "根据被保险车辆ID查询保险详情", notes = "根据被保险车辆ID查询保险详情")
+	public R<VehicleBaoxianInfo> queryByDept(String vehicleId) {
+		R r = new R();
+		VehicleBaoxian vehicleBaoxian = new VehicleBaoxian();
+		vehicleBaoxian.setAvbAvIds(vehicleId);
+		vehicleBaoxian.setIsDeleted(0);
+		VehicleBaoxian baoxian = vehicleBaoxianService.getOne(Condition.getQueryWrapper(vehicleBaoxian));
+		if(baoxian != null) {
+			VehicleBaoxianInfo detail = vehicleBaoxianService.queryDetail(baoxian.getAvbIds());
+			return R.data(detail);
+		} else {
+			r.setCode(500);
+			r.setMsg("未查询到车辆保险信息！");
+			return r;
+		}
 	}
 
 //	/**

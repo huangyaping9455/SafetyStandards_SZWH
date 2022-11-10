@@ -63,6 +63,15 @@ public class VehicleDengjizhengshuController extends BladeController {
 		return R.data(detail);
 	}
 
+	@GetMapping("/queryByVehicle")
+	@ApiOperation(value = "根据车辆ID查询登记证书详情", notes = "根据车辆ID查询登记证书详情")
+	public R<VehicleDengjizhengshu> queryByVehicle(String vehicleId) {
+		VehicleDengjizhengshu qDjzs = new VehicleDengjizhengshu();
+		qDjzs.setAvdVehicleIds(vehicleId);
+		qDjzs.setAvdDelete("0");
+		return R.data(vehicleDengjizhengshuService.getOne(Condition.getQueryWrapper(qDjzs)));
+	}
+
 	/**
 	 * 分页 车辆登记证书
 	 */

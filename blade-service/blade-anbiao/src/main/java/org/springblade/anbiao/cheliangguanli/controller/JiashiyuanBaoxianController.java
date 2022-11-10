@@ -23,6 +23,8 @@ import javax.validation.Valid;
 
 import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.service.IJiashiyuanBaoxianMingxiService;
+import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
+import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.common.tool.FuncUtil;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
@@ -53,6 +55,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 
 	private IJiashiyuanBaoxianService jiashiyuanBaoxianService;
 	private IJiashiyuanBaoxianMingxiService mingxiService;
+	private IJiaShiYuanService jiaShiYuanService;
 
 	/**
 	 * 详情
@@ -63,6 +66,24 @@ public class JiashiyuanBaoxianController extends BladeController {
 //		JiashiyuanBaoxian detail = jiashiyuanBaoxianService.getOne(Condition.getQueryWrapper(jiashiyuanBaoxian));
 		JiashiyuanBaoxianInfo detail = jiashiyuanBaoxianService.queryDetail(ajbId);
 		return R.data(detail);
+	}
+
+	@GetMapping("/queryByDriver")
+	@ApiOperation(value = "根据被保险人ID查询保险详情", notes = "根据被保险人ID查询保险详情")
+	public R<JiashiyuanBaoxianInfo> queryByDept(String driverId) {
+		R r = new R();
+		JiashiyuanBaoxian deptBaoxian = new JiashiyuanBaoxian();
+		deptBaoxian.setAjbInsureIds(driverId);
+		deptBaoxian.setAjbDelete("0");
+		JiashiyuanBaoxian baoxian = jiashiyuanBaoxianService.getOne(Condition.getQueryWrapper(deptBaoxian));
+		if(baoxian != null) {
+			JiashiyuanBaoxianInfo detail = jiashiyuanBaoxianService.queryDetail(baoxian.getAjbIds());
+			return R.data(detail);
+		} else {
+			r.setCode(500);
+			r.setMsg("未查询到人员保险信息！");
+			return r;
+		}
 	}
 
 //	/**

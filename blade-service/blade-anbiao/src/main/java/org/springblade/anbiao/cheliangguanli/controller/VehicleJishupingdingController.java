@@ -63,6 +63,15 @@ public class VehicleJishupingdingController extends BladeController {
 		return R.data(detail);
 	}
 
+	@GetMapping("/queryByVehicle")
+	@ApiOperation(value = "根据车辆ID查询技术评定详情", notes = "根据车辆ID查询技术评定详情")
+	public R<VehicleJishupingding> queryByVehicle(String vehicleId) {
+		VehicleJishupingding qJspd = new VehicleJishupingding();
+		qJspd.setAvjVehicleIds(vehicleId);
+		qJspd.setAvjDelete("0");
+		return R.data(vehicleJishupingdingService.getOne(Condition.getQueryWrapper(qJspd)));
+	}
+
 	/**
 	 * 分页 车辆技术评定信息
 	 */

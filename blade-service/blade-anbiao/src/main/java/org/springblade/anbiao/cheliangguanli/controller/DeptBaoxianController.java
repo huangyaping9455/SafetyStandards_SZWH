@@ -24,6 +24,8 @@ import javax.validation.Valid;
 import org.springblade.anbiao.cheliangguanli.entity.DeptBaoxianInfo;
 import org.springblade.anbiao.cheliangguanli.entity.DeptBaoxianMingxi;
 import org.springblade.anbiao.cheliangguanli.service.IDeptBaoxianMingxiService;
+import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
+import org.springblade.anbiao.guanlijigouherenyuan.feign.IOrganizationsClient;
 import org.springblade.common.tool.FuncUtil;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
@@ -55,6 +57,7 @@ public class DeptBaoxianController extends BladeController {
 
 	private IDeptBaoxianService deptBaoxianService;
 	private IDeptBaoxianMingxiService deptBaoxianMingxiService;
+	private IOrganizationsClient orrganizationsClient;
 
 	/**
 	 * 详情
@@ -64,6 +67,24 @@ public class DeptBaoxianController extends BladeController {
 	public R<DeptBaoxianInfo> detail(String avbId) {
 		DeptBaoxianInfo detail = deptBaoxianService.queryDetail(avbId);
 		return R.data(detail);
+	}
+
+	@GetMapping("/queryByDept")
+	@ApiOperation(value = "根据被保险企业ID查询保险详情", notes = "根据被保险企业ID查询保险详情")
+	public R<DeptBaoxianInfo> queryByDept(String deptId) {
+		R r = new R();
+		DeptBaoxian deptBaoxian = new DeptBaoxian();
+		deptBaoxian.setAvbInsureIds(deptId);
+		deptBaoxian.setAvbDelete("0");
+		DeptBaoxian baoxian =deptBaoxianService.getOne(Condition.getQueryWrapper(deptBaoxian));
+		if(baoxian != null) {
+			DeptBaoxianInfo detail = deptBaoxianService.queryDetail(baoxian.getAvbIds());
+			return R.data(detail);
+		} else {
+			r.setCode(500);
+			r.setMsg("未查询到企业保险信息！");
+			return r;
+		}
 	}
 
 //	/**

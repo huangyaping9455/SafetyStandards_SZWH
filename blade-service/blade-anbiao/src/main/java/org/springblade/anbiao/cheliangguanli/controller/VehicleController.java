@@ -591,12 +591,27 @@ public class VehicleController {
 			}
 		}
     	if(vd.getXingnengbaogao() != null) {
-    		VehicleXingnengbaogao xingnengbaogao = xingnengbaogaoService.selectVehicleXingnengbaogaoByVehicleIds(vd.getVehicleId());
-    		xingnengbaogao.setAvxEnclosure(vd.getXingnengbaogao().getAvxEnclosure());
-			xingnengbaogao.setAvxUpdateByName(user.getUserName());
-			xingnengbaogao.setAvxUpdateByIds(user.getUserId().toString());
-			xingnengbaogao.setAvxUpdateTime(LocalDateTime.now());
-			if(xingnengbaogaoService.updateById(xingnengbaogao)) {
+    		VehicleXingnengbaogao xlbg = vd.getXingnengbaogao();
+			xlbg.setAvxAvIds(vd.getVehicleId());
+			xlbg.setAvxDelete("0");
+
+			VehicleXingnengbaogao qXlbg = new VehicleXingnengbaogao();
+			qXlbg.setAvxAvIds(vd.getVehicleId());
+			qXlbg.setAvxDelete("0");
+    		VehicleXingnengbaogao xingnengbaogao = xingnengbaogaoService.getOne(Condition.getQueryWrapper(qXlbg));
+
+    		if(xingnengbaogao != null) {
+				xlbg.setAvxIds(xingnengbaogao.getAvxIds());
+				xlbg.setAvxUpdateByName(user.getUserName());
+				xlbg.setAvxUpdateByIds(user.getUserId().toString());
+				xlbg.setAvxUpdateTime(LocalDateTime.now());
+			} else {
+				xlbg.setAvxCreateByName(user.getUserName());
+				xlbg.setAvxCreateByIds(user.getUserId().toString());
+				xlbg.setAvxCreateTime(LocalDateTime.now());
+			}
+
+			if(xingnengbaogaoService.saveOrUpdate(xlbg)) {
 				stringBuilder.append("更新性能报告成功！"+"\r\n");
 			} else {
 				stringBuilder.append("更新性能报告失败！"+"\r\n");
@@ -604,12 +619,25 @@ public class VehicleController {
 		}
 
 		if(vd.getJishupingding() != null) {
-			VehicleJishupingding jishupingding = jishupingdingService.selectVehicleJishupingdingByVehicleIds(vd.getVehicleId());
-			jishupingding.setAvjEnclosure(vd.getXingnengbaogao().getAvxEnclosure());
-			jishupingding.setAvjUpdateByName(user.getUserName());
-			jishupingding.setAvjUpdateByIds(user.getUserId().toString());
-			jishupingding.setAvjUpdateTime(LocalDateTime.now());
-			if(jishupingdingService.updateById(jishupingding)) {
+			VehicleJishupingding jspd = vd.getJishupingding();
+			jspd.setAvjVehicleIds(vd.getVehicleId());
+			jspd.setAvjDelete("0");
+
+			VehicleJishupingding qJspd = new VehicleJishupingding();
+			qJspd.setAvjVehicleIds(vd.getVehicleId());
+			qJspd.setAvjDelete("0");
+			VehicleJishupingding jishupingding = jishupingdingService.getOne(Condition.getQueryWrapper(qJspd));
+			if(jishupingding != null) {
+				jspd.setAvjIds(jishupingding.getAvjIds());
+				jspd.setAvjUpdateByName(user.getUserName());
+				jspd.setAvjUpdateByIds(user.getUserId().toString());
+				jspd.setAvjUpdateTime(LocalDateTime.now());
+			} else {
+				jspd.setAvjCreateByName(user.getUserName());
+				jspd.setAvjCreateByIds(user.getUserId().toString());
+				jspd.setAvjCreateTime(LocalDateTime.now());
+			}
+			if(jishupingdingService.saveOrUpdate(jspd)) {
 				stringBuilder.append("更新技术评定报告成功！"+"\r\n");
 			} else {
 				stringBuilder.append("更新技术评定报告失败！"+"\r\n");
@@ -617,12 +645,25 @@ public class VehicleController {
 		}
 
 		if(vd.getDengjizhengshu() != null) {
-			VehicleDengjizhengshu dengjizhengshu = dengjizhengshuService.selectVehicleDengjizhengshuByVehicleIds(vd.getVehicleId());
-			dengjizhengshu.setAvdEnclosure(vd.getXingnengbaogao().getAvxEnclosure());
-			dengjizhengshu.setAvdUpdateByName(user.getUserName());
-			dengjizhengshu.setAvdUpdateByIds(user.getUserId().toString());
-			dengjizhengshu.setAvdUpdateTime(LocalDateTime.now());
-			if(dengjizhengshuService.updateById(dengjizhengshu)) {
+			VehicleDengjizhengshu djzs = vd.getDengjizhengshu();
+			djzs.setAvdVehicleIds(vd.getVehicleId());
+			djzs.setAvdDelete("0");
+
+			VehicleDengjizhengshu qDjzs = new VehicleDengjizhengshu();
+			qDjzs.setAvdVehicleIds(vd.getVehicleId());
+			qDjzs.setAvdDelete("0");
+			VehicleDengjizhengshu dengjizhengshu = dengjizhengshuService.getOne(Condition.getQueryWrapper(qDjzs));
+			if(dengjizhengshu != null) {
+				djzs.setAvdIds(dengjizhengshu.getAvdIds());
+				djzs.setAvdUpdateByName(user.getUserName());
+				djzs.setAvdUpdateByIds(user.getUserId().toString());
+				djzs.setAvdUpdateTime(LocalDateTime.now());
+			} else {
+				djzs.setAvdCreateByName(user.getUserName());
+				djzs.setAvdCreateByIds(user.getUserId().toString());
+				djzs.setAvdCreateTime(LocalDateTime.now());
+			}
+			if(dengjizhengshuService.saveOrUpdate(dengjizhengshu)) {
 				stringBuilder.append("更新登记证书成功！"+"\r\n");
 			} else {
 				stringBuilder.append("更新登记证书失败！"+"\r\n");
