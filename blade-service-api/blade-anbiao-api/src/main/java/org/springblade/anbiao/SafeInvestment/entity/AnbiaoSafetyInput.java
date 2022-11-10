@@ -17,9 +17,7 @@ import java.util.Date;
 @Data
 @TableName("anbiao_safety_input")
 public class AnbiaoSafetyInput implements Serializable {
-	private static final long serialVersionUID = 1L;
 
-	@TableId(value = "asi_ids",type = IdType.UUID)
 	private String asi_ids;
 
 	private String asi_dept_ids;
@@ -28,7 +26,7 @@ public class AnbiaoSafetyInput implements Serializable {
 
 	private BigDecimal asi_last_years_turnover;
 
-	private BigDecimal asi_extraction_proportion;
+	private String asi_extraction_proportion;
 
 	private BigDecimal asi_withdrawal_amount;
 
