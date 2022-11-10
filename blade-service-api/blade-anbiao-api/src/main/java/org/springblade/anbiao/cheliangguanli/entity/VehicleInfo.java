@@ -25,8 +25,11 @@ public class VehicleInfo implements Serializable {
 	@ApiModelProperty(value = "车牌颜色",required = true)
 	private String chepaiyanse;
 
+	@ApiModelProperty(value = "驾驶员主键")
+	private String jiashiyuanid;
+
 	@ApiModelProperty(value = "车主姓名",required = true)
-	private String chezhuxingming;
+	private String chezhu;
 
 	@ApiModelProperty(value = "车主电话",required = true)
 	private String chezhudianhua;

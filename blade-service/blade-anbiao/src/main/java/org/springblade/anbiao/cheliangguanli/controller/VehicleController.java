@@ -46,6 +46,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -223,16 +224,21 @@ public class VehicleController {
 		vehicle.setCaozuorenid(user.getUserId());
 		vehicle.setCaozuoshijian(LocalDateTime.now());
 		vehicle.setCreatetime(LocalDateTime.now());
-		if("".equals(v.getZhuceriqi())){
-			vehicle.setZhucedengjishijian(null);
-		} else {
+		vehicle.setJiashiyuanxingming(v.getChezhu());
+		vehicle.setJiashiyuandianhua(v.getChezhudianhua());
+		if(v.getZhuceriqi() != null && !v.getZhuceriqi().equals("") && v.getZhuceriqi().toString().length() > 0) {
 			vehicle.setZhucedengjishijian(v.getZhuceriqi().toString());
-		}
-		if("".equals(v.getCheliangchuchangriqi())){
-			vehicle.setChuchangriqi(null);
 		} else {
-			vehicle.setChuchangriqi(v.getCheliangchuchangriqi());
+			vehicle.setZhucedengjishijian(null);
 		}
+
+		if(v.getCheliangchuchangriqi() != null && !v.getCheliangchuchangriqi().equals("") && v.getCheliangchuchangriqi().toString().length() > 0) {
+			vehicle.setChuchangriqi(v.getCheliangchuchangriqi());
+		} else {
+			vehicle.setChuchangriqi(null);
+		}
+
+
 		if("".equals(vehicle.getGpsanzhuangshijian())){
 			vehicle.setGpsanzhuangshijian(null);
 		}
@@ -242,11 +248,12 @@ public class VehicleController {
 			vehicle.setYunyingshang(yys);
 		}
 		String str="1";
-		//登录页
-		if(StringUtil.isNotBlank(vehicle.getCheliangzhaopian())){
-			fileUploadClient.updateCorrelation(vehicle.getCheliangzhaopian(),str);
-		}
+//		//登录页
+//		if(StringUtil.isNotBlank(vehicle.getCheliangzhaopian())){
+//			fileUploadClient.updateCorrelation(vehicle.getCheliangzhaopian(),str);
+//		}
 		boolean i = vehicleService.save(vehicle);
+
 		if(i==true){
 			new Thread(new Runnable() {
 				@Override
@@ -258,6 +265,7 @@ public class VehicleController {
 							biangengjilu.setAvbjCreateByName(user.getUserName());
 							biangengjilu.setAvbjCreateByIds(user.getUserId().toString());
 							biangengjilu.setAvbjCreateTime(LocalDateTime.now());
+							biangengjilu.setAvbjUpdateTime(LocalDateTime.now());
 							vehicleBiangengjiluService.save(biangengjilu);
 						}
 					}
@@ -363,7 +371,7 @@ public class VehicleController {
 	}
 
 	@PostMapping("/updateSave")
-	@ApiLog("新增-车辆资料管理【新版】")
+	@ApiLog("编辑-车辆资料管理【新版】")
 	@ApiOperation(value = "编辑-车辆资料管理【新版】", notes = "传入Vehicle", position = 31)
 	public R updateSave(@RequestBody VehicleInfo v,BladeUser user) {
     	R r = new R();
@@ -404,11 +412,11 @@ public class VehicleController {
 			String yys = StringEscapeUtils.unescapeHtml(StringEscapeUtils.unescapeHtml(vehicle.getYunyingshang()));
 			vehicle.setYunyingshang(yys);
 		}
-		String str="1";
-		//登录页
-		if(StringUtil.isNotBlank(vehicle.getCheliangzhaopian())){
-			fileUploadClient.updateCorrelation(vehicle.getCheliangzhaopian(),str);
-		}
+//		String str="1";
+//		//登录页
+//		if(StringUtil.isNotBlank(vehicle.getCheliangzhaopian())){
+//			fileUploadClient.updateCorrelation(vehicle.getCheliangzhaopian(),str);
+//		}
 		boolean i = vehicleService.updateById(vehicle);
 		if(i==true){
 			new Thread(new Runnable() {

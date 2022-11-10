@@ -15,10 +15,14 @@
  */
 package org.springblade.anbiao.cheliangguanli.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 import org.springblade.core.mp.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,62 +41,64 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "VehicleBiangengjilu对象", description = "车辆变更记录")
 public class VehicleBiangengjilu extends BaseEntity {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-  private String avbjIds;
+	@TableId(value = "avbj_ids", type = IdType.UUID)
+	@ApiModelProperty(value = "车辆变更记录主键")
+	private String avbjIds;
 
-  @ApiModelProperty(value = "车辆主键")
-  private String avbjVehicleId;
-    /**
-     * 车辆牌照
-     */
-    @ApiModelProperty(value = "车辆牌照")
-    private String avbjLicensePlate;
-    /**
-     * 颜色
-     */
-    @ApiModelProperty(value = "颜色")
-    private String avbjLicenseColour;
-    /**
-     * 变更日期
-     */
-    @ApiModelProperty(value = "变更日期")
-    private LocalDate avbjChangeDate;
-    /**
-     * 逻辑删除(0=正常,1=删除)
-     */
-    @ApiModelProperty(value = "逻辑删除(0=正常,1=删除)")
-    private String avbjDelete;
-    /**
-     * 创建时间
-     */
-    @ApiModelProperty(value = "创建时间")
-    private LocalDateTime avbjCreateTime;
-    /**
-     * 创建人主键
-     */
-    @ApiModelProperty(value = "创建人主键")
-    private String avbjCreateByIds;
-    /**
-     * 创建人姓名
-     */
-    @ApiModelProperty(value = "创建人姓名")
-    private String avbjCreateByName;
-    /**
-     * 更新时间
-     */
-    @ApiModelProperty(value = "更新时间")
-    private LocalDateTime avbjUpdateTime;
-    /**
-     * 更新人主键
-     */
-    @ApiModelProperty(value = "更新人主键")
-    private String avbjUpdateByIds;
-    /**
-     * 更新人姓名
-     */
-    @ApiModelProperty(value = "更新人姓名")
-    private String avbjUpdateByName;
+	@ApiModelProperty(value = "车辆主键")
+	private String avbjVehicleId;
+	/**
+	 * 车辆牌照
+	 */
+	@ApiModelProperty(value = "车辆牌照")
+	private String avbjLicensePlate;
+	/**
+	 * 颜色
+	 */
+	@ApiModelProperty(value = "颜色")
+	private String avbjLicenseColour;
+	/**
+	 * 变更日期
+	 */
+	@ApiModelProperty(value = "变更日期")
+	private LocalDate avbjChangeDate;
+	/**
+	 * 逻辑删除(0=正常,1=删除)
+	 */
+	@ApiModelProperty(value = "逻辑删除(0=正常,1=删除)")
+	private String avbjDelete;
+	/**
+	 * 创建时间
+	 */
+	@ApiModelProperty(value = "创建时间")
+	private LocalDateTime avbjCreateTime;
+	/**
+	 * 创建人主键
+	 */
+	@ApiModelProperty(value = "创建人主键")
+	private String avbjCreateByIds;
+	/**
+	 * 创建人姓名
+	 */
+	@ApiModelProperty(value = "创建人姓名")
+	private String avbjCreateByName;
+	/**
+	 * 更新时间
+	 */
+	@ApiModelProperty(value = "更新时间")
+	private LocalDateTime avbjUpdateTime;
+	/**
+	 * 更新人主键
+	 */
+	@ApiModelProperty(value = "更新人主键")
+	private String avbjUpdateByIds;
+	/**
+	 * 更新人姓名
+	 */
+	@ApiModelProperty(value = "更新人姓名")
+	private String avbjUpdateByName;
 
 
 }
