@@ -311,7 +311,7 @@ public class VehicleBaoxian implements Serializable {
      * 逻辑删除(0=正常,1=删除)
      */
     @ApiModelProperty(value = "逻辑删除(0=正常,1=删除)")
-    private Integer isDeleted;
+    private Integer avbDelete;
     /**
      * 创建时间
      */

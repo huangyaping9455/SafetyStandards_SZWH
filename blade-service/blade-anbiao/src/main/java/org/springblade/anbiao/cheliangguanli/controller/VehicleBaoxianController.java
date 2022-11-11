@@ -65,9 +65,12 @@ public class VehicleBaoxianController extends BladeController {
 	@ApiOperation(value = "根据被保险车辆ID查询保险详情", notes = "根据被保险车辆ID查询保险详情")
 	public R<VehicleBaoxianInfo> queryByDept(String vehicleId) {
 		R r = new R();
+
+
+
 		VehicleBaoxian vehicleBaoxian = new VehicleBaoxian();
 		vehicleBaoxian.setAvbAvIds(vehicleId);
-		vehicleBaoxian.setIsDeleted(0);
+		vehicleBaoxian.setAvbDelete(0);
 		VehicleBaoxian baoxian = vehicleBaoxianService.getOne(Condition.getQueryWrapper(vehicleBaoxian));
 		if(baoxian != null) {
 			VehicleBaoxianInfo detail = vehicleBaoxianService.queryDetail(baoxian.getAvbIds());
