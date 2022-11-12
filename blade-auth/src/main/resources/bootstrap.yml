@@ -11,9 +11,9 @@ fileserver:
 alarmserver:
   address-path: ${alarmserver.dev.address}
 wechatserver:
-#  appId: wx77ab38d2018a7dad
+#  appId: wx2893c20e8065e5af
   appId: ${wechatserver.dev.appId}
-#  secret: fb5f638eb339e0c82bffddbbfe63147a
+#  secret: 9f4a2eade46f2d8e52a5d290cd2833e4
   secret: ${wechatserver.dev.secret}
   qyAppId: wxdf3d89ad7f43450c
   qySecret: 479d5adac8b4393557827a4af8e11568
