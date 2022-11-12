@@ -56,6 +56,10 @@ public class AuthInfoConfig {
 	private String loginPhotoApp;
 	@Getter
 	@Setter
+	@ApiModelProperty(value = "微信OPENID")
+	private String openid;
+	@Getter
+	@Setter
 	@ApiModelProperty(value = "显示地图地区")
 	private String diqu;
 	@Getter

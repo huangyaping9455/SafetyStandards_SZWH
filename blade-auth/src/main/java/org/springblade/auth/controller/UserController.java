@@ -52,16 +52,17 @@ public class UserController {
 	@PostMapping("/manageLogin")
 	@ApiLog("小程序--登陆（企管端）")
 	@ApiOperation(value = "小程序--登录（企管端）", notes = "传入code，账号", position = 1)
-	public R manageLogin(@ApiParam(value = "账号", required = false) @RequestParam String name,
-						 @ApiParam(value = "密码", required = false) @RequestParam String password,
-						 @ApiParam(value = "微信code", required = false) @RequestParam String code,
-						 @ApiParam(value = "encryptedData", required = false) @RequestParam String encryptedData,
-						 @ApiParam(value = "iv", required = false) @RequestParam String iv) {
+	public R manageLogin(@ApiParam(value = "账号", required = false) String name,
+						 @ApiParam(value = "密码", required = false) String password,
+						 @ApiParam(value = "微信code", required = false) String code,
+						 @ApiParam(value = "encryptedData", required = false) String encryptedData,
+						 @ApiParam(value = "iv", required = false) String iv) {
 		R rs = new R();
 		//返回accessToken
 		AuthInfoConfig info = new AuthInfoConfig();
 		String cellphone = "";
 		String openId = "";
+
 		if(StringUtils.isBlank(name) && StringUtils.isBlank(password) && StringUtils.isBlank(code)) {
 			rs.setMsg("参数不能为空！");
 			rs.setCode(500);
@@ -69,7 +70,7 @@ public class UserController {
 			return rs;
 		} else if(StringUtils.isNotBlank(code)) {
 			WeChatUtil weChatUtil = new WeChatUtil();
-			String jsonId = weChatUtil.getopenid(wechatServer.getAppId(),code,wechatServer.getSecret());
+			String jsonId = weChatUtil.getopenid(wechatServer.getQyAppId(),code,wechatServer.getQySecret());
 			JSONObject jsonObject = JSONObject.parseObject(jsonId);
 			String openid = (String) jsonObject.get("openid");
 			if(StringUtils.isNotBlank(openid)) {
@@ -130,6 +131,7 @@ public class UserController {
 
 				info.setAccount(user.getAccount());
 				info.setUserName(user.getName());
+				info.setOpenid(user.getOpenid());
 				info.setAuthority("administrator");
 				info.setAccessToken(accessToken);
 				info.setTokenType(SecureUtil.BEARER);
@@ -357,12 +359,14 @@ public class UserController {
 				errMsg = "该账户已经绑定";
 			} else {
 				WeChatUtil weChatUtil = new WeChatUtil();
-				String jsonId = weChatUtil.getopenid(wechatServer.getAppId(),code,wechatServer.getSecret());
+				String jsonId = weChatUtil.getopenid(wechatServer.getQyAppId(),code,wechatServer.getQySecret());
 				JSONObject jsonObject = JSONObject.parseObject(jsonId);
+				System.err.println(jsonObject);
 				//可将返回值类型改为String，然后直接return jsonObject
 				String openid = (String) jsonObject.get("openid");
 				if(openid != null && !"".equals(openid)){
 					client.bindDriverOpenId(loginName,openid);
+					rs.setData(openid);
 					rs.setCode(200);
 					rs.setSuccess(true);
 					errMsg = "绑定成功";
