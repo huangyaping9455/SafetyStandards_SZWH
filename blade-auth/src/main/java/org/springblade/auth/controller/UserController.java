@@ -306,7 +306,8 @@ public class UserController {
 					personnelClient.bindDriverOpenId(loginName,openid);
 					rs.setCode(200);
 					rs.setSuccess(true);
-					errMsg = "绑定成功";
+					rs.setMsg("绑定成功");
+					return rs;
 				}else{
 					rs.setMsg("微信登录失败，请重新登录!");
 					rs.setCode(500);
@@ -324,7 +325,6 @@ public class UserController {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		rs.setMsg(errMsg);
 		return rs;
 	}
 

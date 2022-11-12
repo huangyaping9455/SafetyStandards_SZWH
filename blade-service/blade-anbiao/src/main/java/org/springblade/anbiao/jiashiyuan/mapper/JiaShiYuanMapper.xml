@@ -676,9 +676,9 @@ values
     <select id="getDriver" resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan">
         select * from anbiao_jiashiyuan
         where isdelete = 0
-          and shoujihaoma = #{shoujihaoma}
-        <if test="denglumima != null and denglumima != '' ">
-          and denglumima = #{denglumima}
+          and shoujihaoma = #{account}
+        <if test="password != null and password != '' ">
+          and denglumima = #{password}
         </if>
            LIMIT 1
     </select>

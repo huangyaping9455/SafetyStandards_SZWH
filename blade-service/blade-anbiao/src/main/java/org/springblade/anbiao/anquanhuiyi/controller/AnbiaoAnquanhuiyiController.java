@@ -303,6 +303,15 @@ public class AnbiaoAnquanhuiyiController {
 					anbiaoAnquanhuiyiDetail.setAddApHeadPortrait(fileUploadClient.getUrl(anbiaoAnquanhuiyiDetail.getAddApHeadPortrait()));
 				}
 			}
+			anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,Id);
+			anquanhuiyiDetailQueryWrapper.groupBy("aad_ap_type");
+			details = anquanhuiyiDetailService.getBaseMapper().selectList(anquanhuiyiDetailQueryWrapper);
+			String leixing = "";
+			for (int i = 0; i <= details.size() - 1; i++) {
+				leixing += details.get(i).getAadApType()+",";
+			};
+			System.out.println(leixing);
+			anquanhuiyiInfo.setType(leixing);
 			anquanhuiyiInfo.setAnquanhuiyiDetails(details);
 			//照片附件
 			if(StrUtil.isNotEmpty(anquanhuiyiInfo.getFujian()) && anquanhuiyiInfo.getFujian().contains("http") == false){

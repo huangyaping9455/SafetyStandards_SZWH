@@ -23,7 +23,9 @@ import org.springblade.anbiao.configure.entity.Configure;
 import org.springblade.anbiao.configure.service.IConfigureService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.feign.IOrganizationsClient;
+import org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuan;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.jiashiyuan.service.IAnbiaoCheliangJiashiyuanService;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.common.tool.CheckPhoneUtil;
 import org.springblade.common.tool.DateUtils;
@@ -82,6 +84,7 @@ public class VehicleController {
 	private IVehicleDengjizhengshuService dengjizhengshuService;
 	private IVehicleJishupingdingService jishupingdingService;
 	private IVehicleHegezhengService hegezhengService;
+	private IAnbiaoCheliangJiashiyuanService cheliangJiashiyuanService;
 
     @PostMapping("/list")
 	@ApiLog("分页-车辆资料管理")
@@ -124,6 +127,13 @@ public class VehicleController {
 		//行驶证附件
 		if(StrUtil.isNotEmpty(detail.getXingshifujian()) && detail.getXingshifujian().contains("http") == false){
 			detail.setXingshifujian(fileUploadClient.getUrl(detail.getXingshifujian()));
+		}
+		QueryWrapper<VehicleBiangengjilu> biangengjiluQueryWrapper = new QueryWrapper<VehicleBiangengjilu>();
+		biangengjiluQueryWrapper.lambda().eq(VehicleBiangengjilu::getAvbjVehicleId,detail.getId());
+		biangengjiluQueryWrapper.lambda().eq(VehicleBiangengjilu::getAvbjDelete,"0");
+		List<VehicleBiangengjilu> deail = vehicleBiangengjiluService.getBaseMapper().selectList(biangengjiluQueryWrapper);
+		if(deail != null){
+			detail.setCheliangbiangengjilu(deail);
 		}
         return R.data(detail);
     }
@@ -321,12 +331,20 @@ public class VehicleController {
 					xingshizheng.setAvxEngineNo(v.getFadongjihao());
 					xingshizheng.setAvxRegisterDate(v.getZhuceriqi());
 					xingshizheng.setAvxIssueDate(v.getZhuceriqi());
-					xingshizheng.setAvxAuthorizedSeatingCapacity(Integer.parseInt(v.getHedingzaikeshu()));
-					xingshizheng.setAvxTotalMass(Integer.parseInt(v.getZongzhiliang()));
-					xingshizheng.setAvxApprovedLoadCapacity(Integer.parseInt(v.getHedingzaizhiliang()));
+					if(v.getHedingzaikeshu() != null){
+						xingshizheng.setAvxAuthorizedSeatingCapacity(Integer.parseInt(v.getHedingzaikeshu()));
+					}
+					if(v.getZongzhiliang() != null){
+						xingshizheng.setAvxTotalMass(Integer.parseInt(v.getZongzhiliang()));
+					}
+					if(v.getHedingzaizhiliang() != null){
+						xingshizheng.setAvxApprovedLoadCapacity(Integer.parseInt(v.getHedingzaizhiliang()));
+					}
 					xingshizheng.setAvxCurbWeight(0);		//整备质量
 					xingshizheng.setAvxOverallDimensions(v.getWaikuochicun());
-					xingshizheng.setAvxQuasiTractiveMass(Integer.parseInt(v.getZhunqianyinzongzhiliang()));
+					if(v.getZhunqianyinzongzhiliang() != null){
+						xingshizheng.setAvxQuasiTractiveMass(Integer.parseInt(v.getZhunqianyinzongzhiliang()));
+					}
 					xingshizheng.setAvxDelete("0");
 					xingshizheng.setAvxCreateByName(user.getUserName());
 					xingshizheng.setAvxCreateByIds(user.getUserId().toString());
@@ -360,6 +378,19 @@ public class VehicleController {
 					daoluyunshuzheng.setAvdCreateTime(LocalDateTime.now());
 					daoluyunshuzhengService.save(daoluyunshuzheng);
 
+					//新增-车辆-驾驶员绑定信息
+					AnbiaoCheliangJiashiyuan cheliangJiashiyuan = new AnbiaoCheliangJiashiyuan();
+					QueryWrapper<AnbiaoCheliangJiashiyuan> cheliangJiashiyuanQueryWrapper = new QueryWrapper<>();
+					cheliangJiashiyuanQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuan::getJiashiyuanid,vehicle.getJiashiyuanid());
+					cheliangJiashiyuanQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuan::getVehid,vehicle.getId());
+					AnbiaoCheliangJiashiyuan deail = cheliangJiashiyuanService.getBaseMapper().selectOne(cheliangJiashiyuanQueryWrapper);
+					if (deail == null){
+						cheliangJiashiyuan.setJiashiyuanid(vehicle.getJiashiyuanid());
+						cheliangJiashiyuan.setVehid(vehicle.getId());
+						cheliangJiashiyuan.setCreatetime(DateUtil.now());
+						cheliangJiashiyuanService.save(cheliangJiashiyuan);
+					}
+
 				}
 			}).start();
 			r.setMsg("新增成功");
@@ -384,8 +415,8 @@ public class VehicleController {
 		}
 
 		VehicleVO vehicleVO = vehicleService.selectCPYS(v.getCheliangpaizhao(),v.getChepaiyanse());
-		if(vehicleVO!=null){
-			r.setMsg(vehicleVO.getCheliangpaizhao()+"该车已存在");
+		if(vehicleVO == null){
+			r.setMsg(vehicleVO.getCheliangpaizhao()+"该车不存在");
 			r.setCode(500);
 			return r;
 		}
@@ -398,7 +429,9 @@ public class VehicleController {
 		if("".equals(v.getZhuceriqi())){
 			vehicle.setZhucedengjishijian(null);
 		} else {
-			vehicle.setZhucedengjishijian(v.getZhuceriqi().toString());
+			if(v.getZhuceriqi() != null){
+				vehicle.setZhucedengjishijian(v.getZhuceriqi().toString());
+			}
 		}
 		if("".equals(v.getCheliangchuchangriqi())){
 			vehicle.setChuchangriqi(null);
@@ -430,7 +463,15 @@ public class VehicleController {
 							biangengjilu.setAvbjCreateByName(user.getUserName());
 							biangengjilu.setAvbjCreateByIds(user.getUserId().toString());
 							biangengjilu.setAvbjCreateTime(LocalDateTime.now());
-							vehicleBiangengjiluService.save(biangengjilu);
+
+							QueryWrapper<VehicleBiangengjilu> biangengjiluQueryWrapper = new QueryWrapper<VehicleBiangengjilu>();
+							biangengjiluQueryWrapper.lambda().eq(VehicleBiangengjilu::getAvbjVehicleId,vehicle.getId());
+							biangengjiluQueryWrapper.lambda().eq(VehicleBiangengjilu::getAvbjDelete,"0");
+							biangengjiluQueryWrapper.lambda().eq(VehicleBiangengjilu::getAvbjLicensePlate,vehicle.getCheliangpaizhao());
+							VehicleBiangengjilu deail = vehicleBiangengjiluService.getBaseMapper().selectOne(biangengjiluQueryWrapper);
+							if(deail == null){
+								vehicleBiangengjiluService.save(biangengjilu);
+							}
 						}
 					}
 
@@ -448,16 +489,31 @@ public class VehicleController {
 					dengjizhengshuService.updateById(dengjizhengshu);
 
 					VehicleJingyingxukezheng jingyingxukezheng = jingyingxukezhengService.selectVehicleJingyingxukezhengByVehicleIds(v.getId());		//经营许可证
-					jingyingxukezheng.setAvjVehicleIds(dept.getId());
-					jingyingxukezheng.setAvjOperatorName(dept.getDeptName());
-					jingyingxukezheng.setAvjLicenseNo(v.getJingyingxukezhenghao());
-					jingyingxukezheng.setAvjBusinessLicense(v.getJingyingxukezhenghao());
-					jingyingxukezheng.setAvjOperationDeadline(v.getJyxkzyouxiaoqiEnd());
-					jingyingxukezheng.setAvjOperatingLineName(v.getJingyingluxian());
-					jingyingxukezheng.setAvjUpdateByName(user.getUserName());
-					jingyingxukezheng.setAvjUpdateByIds(user.getUserId().toString());
-					jingyingxukezheng.setAvjUpdateTime(LocalDateTime.now());
-					jingyingxukezhengService.updateById(jingyingxukezheng);
+					if(jingyingxukezheng == null){
+						jingyingxukezheng = new VehicleJingyingxukezheng();
+						jingyingxukezheng.setAvjDelete("0");
+						jingyingxukezheng.setAvjVehicleIds(v.getId());
+						jingyingxukezheng.setAvjOperatorName(dept.getDeptName());
+						jingyingxukezheng.setAvjLicenseNo(v.getJingyingxukezhenghao());
+						jingyingxukezheng.setAvjBusinessLicense(v.getJingyingxukezhenghao());
+						jingyingxukezheng.setAvjOperationDeadline(v.getJyxkzyouxiaoqiEnd());
+						jingyingxukezheng.setAvjOperatingLineName(v.getJingyingluxian());
+						jingyingxukezheng.setAvjUpdateByName(user.getUserName());
+						jingyingxukezheng.setAvjUpdateByIds(user.getUserId().toString());
+						jingyingxukezheng.setAvjUpdateTime(LocalDateTime.now());
+						jingyingxukezhengService.save(jingyingxukezheng);
+					}else{
+						jingyingxukezheng.setAvjVehicleIds(v.getId());
+						jingyingxukezheng.setAvjOperatorName(dept.getDeptName());
+						jingyingxukezheng.setAvjLicenseNo(v.getJingyingxukezhenghao());
+						jingyingxukezheng.setAvjBusinessLicense(v.getJingyingxukezhenghao());
+						jingyingxukezheng.setAvjOperationDeadline(v.getJyxkzyouxiaoqiEnd());
+						jingyingxukezheng.setAvjOperatingLineName(v.getJingyingluxian());
+						jingyingxukezheng.setAvjUpdateByName(user.getUserName());
+						jingyingxukezheng.setAvjUpdateByIds(user.getUserId().toString());
+						jingyingxukezheng.setAvjUpdateTime(LocalDateTime.now());
+						jingyingxukezhengService.updateById(jingyingxukezheng);
+					}
 
 					VehicleXingnengbaogao xingnengbaogao = xingnengbaogaoService.selectVehicleXingnengbaogaoByVehicleIds(v.getId());		//性能报告
 					xingnengbaogao.setAvxUpdateByName(user.getUserName());
@@ -476,12 +532,21 @@ public class VehicleController {
 					xingshizheng.setAvxEngineNo(v.getFadongjihao());
 					xingshizheng.setAvxRegisterDate(v.getZhuceriqi());
 					xingshizheng.setAvxIssueDate(v.getZhuceriqi());
-					xingshizheng.setAvxAuthorizedSeatingCapacity(Integer.parseInt(v.getHedingzaikeshu()));
-					xingshizheng.setAvxTotalMass(Integer.parseInt(v.getZongzhiliang()));
-					xingshizheng.setAvxApprovedLoadCapacity(Integer.parseInt(v.getHedingzaizhiliang()));
+					if(v.getHedingzaikeshu() != null){
+						xingshizheng.setAvxAuthorizedSeatingCapacity(Integer.parseInt(v.getHedingzaikeshu()));
+					}
+					if(v.getZongzhiliang() != null){
+						xingshizheng.setAvxTotalMass(Integer.parseInt(v.getZongzhiliang()));
+					}
+					if(v.getHedingzaizhiliang() != null){
+						xingshizheng.setAvxApprovedLoadCapacity(Integer.parseInt(v.getHedingzaizhiliang()));
+					}
+
 					xingshizheng.setAvxCurbWeight(0);		//整备质量
 					xingshizheng.setAvxOverallDimensions(v.getWaikuochicun());
-					xingshizheng.setAvxQuasiTractiveMass(Integer.parseInt(v.getZhunqianyinzongzhiliang()));
+					if(v.getZhunqianyinzongzhiliang() != null){
+						xingshizheng.setAvxQuasiTractiveMass(Integer.parseInt(v.getZhunqianyinzongzhiliang()));
+					}
 					xingshizheng.setAvxUpdateByName(user.getUserName());
 					xingshizheng.setAvxUpdateByIds(user.getUserId().toString());
 					xingshizheng.setAvxUpdateTime(LocalDateTime.now());
@@ -544,8 +609,10 @@ public class VehicleController {
 		}
     	StringBuilder stringBuilder = new StringBuilder();
     	if(vd.getXingshizheng() != null) {
-    		VehicleXingshizheng xingshizheng = xingshizhengService.selectVehicleJishupingdingByVehicleIds(vd.getVehicleId());
-    		xingshizheng.setAvxFileNo(vd.getXingshizheng().getAvxFileNo());
+    		VehicleXingshizheng xingshizheng = vd.getXingshizheng();
+    		xingshizheng.setAvxFileNo(vehicleVO.getCheliangpaizhao());
+			xingshizheng.setAvxVehicleType(vehicleVO.getShiyongxingzhi());
+			xingshizheng.setAvxOwner(vehicleVO.getChezhu());
 			xingshizheng.setAvxRegisterDate(vd.getXingshizheng().getAvxRegisterDate());
 			xingshizheng.setAvxValidUntil(vd.getXingshizheng().getAvxValidUntil());
 			xingshizheng.setAvxOriginalEnclosure(vd.getXingshizheng().getAvxOriginalEnclosure());

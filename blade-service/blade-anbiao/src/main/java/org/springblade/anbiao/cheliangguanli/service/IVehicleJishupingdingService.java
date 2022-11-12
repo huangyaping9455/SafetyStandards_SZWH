@@ -37,5 +37,5 @@ public interface IVehicleJishupingdingService extends BaseService<VehicleJishupi
 	 */
 	IPage<VehicleJishupingdingVO> selectVehicleJishupingdingPage(IPage<VehicleJishupingdingVO> page, VehicleJishupingdingVO vehicleJishupingding);
 
-	VehicleJishupingdingVO selectVehicleJishupingdingByVehicleIds(String avjVehicleIds);
+	VehicleJishupingding selectVehicleJishupingdingByVehicleIds(String avjVehicleIds);
 }

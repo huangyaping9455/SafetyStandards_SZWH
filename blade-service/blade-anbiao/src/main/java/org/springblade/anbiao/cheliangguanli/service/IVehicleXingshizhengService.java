@@ -37,5 +37,5 @@ public interface IVehicleXingshizhengService extends BaseService<VehicleXingshiz
 	 */
 	IPage<VehicleXingshizhengVO> selectVehicleXingshizhengPage(IPage<VehicleXingshizhengVO> page, VehicleXingshizhengVO vehicleXingshizheng);
 
-	VehicleXingshizhengVO selectVehicleJishupingdingByVehicleIds(String avxAvIds);
+	VehicleXingshizheng selectVehicleJishupingdingByVehicleIds(String avxAvIds);
 }

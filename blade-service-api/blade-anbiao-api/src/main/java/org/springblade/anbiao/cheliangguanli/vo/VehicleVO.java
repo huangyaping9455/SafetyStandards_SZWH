@@ -1,10 +1,14 @@
 package org.springblade.anbiao.cheliangguanli.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleBiangengjilu;
+
+import java.util.List;
 
 /**
  * 视图实体类
@@ -21,5 +25,9 @@ public class VehicleVO extends Vehicle {
 
 	@ApiModelProperty(value = "预警/超期提醒说明")
 	private String shuoming;
+
+	@ApiModelProperty(value = "车辆变更记录")
+	@TableField(exist = false)
+	private List<VehicleBiangengjilu> cheliangbiangengjilu;
 
 }
