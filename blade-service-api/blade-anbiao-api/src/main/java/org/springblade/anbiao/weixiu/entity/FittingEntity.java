@@ -30,8 +30,6 @@ public class FittingEntity {
 	@TableField(exist = false)
 	private Long peijianID;
 
-
-
 	private Long peijianid;
 	private String danjia;
 	private String 	beizhu;

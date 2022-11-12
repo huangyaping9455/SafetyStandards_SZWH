@@ -17,12 +17,12 @@
             refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) b on a.dept_id = b.id
         <where> a.is_deleted = 0
-         <if test="asiYear!=null">
-             a.createtime between #{asiYear} and #{asiYear}
+         <if test="asiYear!=null and asiYear!=''">
+             AND a.shigufashengshijian = #{asiYear}
          </if>
 
         <if test="deptName !=null">
-            b.dept_name = #{deptName}
+            AND b.dept_name = #{deptName}
         </if>
            limit ${total}
         </where>
@@ -39,12 +39,12 @@
                 refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) b on a.dept_id = b.id
             <where> a.is_deleted = 0
-            <if test="asiYear!=null">
-                a.createtime between #{asiYear} and #{asiYear}
+            <if test="asiYear!=null and asiYear!=''">
+                AND  a.shigufashengshijian = #{asiYear}
             </if>
 
             <if test="deptName !=null">
-                b.dept_name = #{deptName}
+                AND  b.dept_name = #{deptName}
             </if>
            limit ${offsetNo},${size}
         </where>
@@ -279,7 +279,7 @@
     <sql id="orderSql">
         <!-- 默认排序规则 -->
         <if test="orderColumn == null or orderColumn == ''">
-            order by createtime desc
+            order by shigufashengshijian desc
         </if>
         <if test="orderColumn != null and orderColumn != ''">
             order by ${orderColumn}

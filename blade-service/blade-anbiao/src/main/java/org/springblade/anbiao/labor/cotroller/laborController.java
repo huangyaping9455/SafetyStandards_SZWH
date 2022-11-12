@@ -143,7 +143,7 @@ public class laborController {
 					labor1.setAlrPersonName(list.getAadApName());
 					labor1.setAlrPersonIds(list.getAadApIds());
 					labor1.setAlrIds(list.getAlrIds());
-					labor1.setAlrAliIds(list.getAlrAliIds());
+					labor1.setAlrAliIds(laborEntity.getAliIds());
 					labor1.setAliApplicationScope(list.getAadApType());
 					boolean b = lingquService.save(labor1);
 					if (b) {

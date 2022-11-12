@@ -36,7 +36,7 @@ public class AccidentReportsController {
 
 	@PostMapping("list")
 	@ApiLog("列表-事故")
-	@ApiOperation(value = "事故信息", notes = "传入AccidentPage", position = 1)
+	@ApiOperation(value = "分页事故信息", notes = "传入AccidentPage", position = 1)
 	public R saList(@RequestBody AccidentPage accidentPage){
 		return R.data( service.selectList(accidentPage));
 	}
@@ -44,7 +44,7 @@ public class AccidentReportsController {
 
 	@PostMapping("all")
 	@ApiLog("列表-事故详细信息")
-	@ApiOperation(value = "事故详细信息", notes = "传入id", position = 2)
+	@ApiOperation(value = "事故详细信息列表", notes = "传入id", position = 2)
 	public R selectALL(@RequestBody AccidentPage accidentPage){
 		AccidentReportsVO incidentHandlingEntities = service.selectAll(accidentPage);
 		return R.data(incidentHandlingEntities);
@@ -52,7 +52,7 @@ public class AccidentReportsController {
 
 	@PostMapping("insert")
 	@ApiLog("新增-事故详细信息")
-	@ApiOperation(value = "事故详细信息", notes = "传入AccidentReportsDTO", position = 3)
+	@ApiOperation(value = "新增事故详细信息", notes = "传入AccidentReportsDTO", position = 3)
 	public R insert(@RequestBody AccidentReportsDTO accidentReportsDTO){
 		String replace = UUID.randomUUID().toString().replace("-", "");
 		accidentReportsDTO.setId(replace);
@@ -61,14 +61,14 @@ public class AccidentReportsController {
 
 	@PostMapping("delete")
 	@ApiLog("删除-事故详细信息")
-	@ApiOperation(value = "事故详细信息", notes = "传入id", position = 4)
+	@ApiOperation(value = "删除事故详细信息", notes = "传入id", position = 4)
 	public R delete(@RequestBody AccidentPage accidentPage){
 		return R.status( service.deleteAccident(accidentPage));
 	}
 
 	@PostMapping("update")
 	@ApiLog("修改-事故详细信息")
-	@ApiOperation(value = "事故详细信息", notes = "传入AccidentReportsDTO", position = 5)
+	@ApiOperation(value = "修改事故详细信息", notes = "传入AccidentReportsDTO", position = 5)
 	public R update(@RequestBody AccidentReportsDTO accidentReportsDTO ){
 		return R.status(service.updateAccident(accidentReportsDTO));
 	}

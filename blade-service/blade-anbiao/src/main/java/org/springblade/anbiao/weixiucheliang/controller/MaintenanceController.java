@@ -1,6 +1,7 @@
 package org.springblade.anbiao.weixiucheliang.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.labor.entity.Labor;
 import org.springblade.anbiao.labor.entity.LaborEntity;
@@ -12,6 +13,7 @@ import org.springblade.anbiao.weixiu.page.MaintenancePage;
 import org.springblade.anbiao.weixiucheliang.mapper.MaintenanceMapper;
 import org.springblade.anbiao.weixiucheliang.service.FittingService;
 import org.springblade.anbiao.weixiucheliang.service.MaintenanceService;
+import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.tool.api.R;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +42,8 @@ public class MaintenanceController {
 	private FittingService fittingService;
 
 	@PostMapping("list")
+	@ApiLog("查询-维修列表")
+	@ApiOperation(value = "查询维修列表", notes = "MaintenancePage ", position = 1)
 	public R saList(@RequestBody MaintenancePage maintenancePage){
 		MaintenancePage maintenancePage1 = service.selectList(maintenancePage);
 		return R.data(maintenancePage1);
@@ -47,6 +51,8 @@ public class MaintenanceController {
 
 
 	@PostMapping("all")
+	@ApiLog("查询-配件")
+	@ApiOperation(value = "查询维修", notes = "MaintenancePage ", position = 2)
 	public R selectALL(@RequestBody MaintenancePage maintenancePage){
 		MaintenanceEntity maintenanceEntities = service.selectAll(maintenancePage);
 		List<FittingsEntity> fittingsEntity = service.selectC(maintenancePage);
@@ -55,6 +61,8 @@ public class MaintenanceController {
 	}
 
 	@PostMapping("insert")
+	@ApiLog("添加-配件")
+	@ApiOperation(value = "添加维修", notes = "MaintenanceEntity ", position = 3)
 	public R insert(@RequestBody MaintenanceEntity maintenanceDTO){
 		R rs = new R();
 		Boolean aBoolean1 = service.insertOne(maintenanceDTO);
@@ -90,11 +98,15 @@ public class MaintenanceController {
 	}
 
 	@PostMapping("delete")
+	@ApiLog("删除-配件")
+	@ApiOperation(value = "删除维修", notes = "MaintenancePage ", position = 4)
 	public R delete(@RequestBody MaintenancePage maintenancePage){
 		return R.status( service.deleteAccident(maintenancePage));
 	}
 
 	@PostMapping("update")
+	@ApiLog("修改-配件")
+	@ApiOperation(value = "修改维修", notes = "MaintenanceEntity ", position = 5)
 	public R update(@RequestBody MaintenanceEntity maintenanceEntity){
 		if(maintenanceEntity.getMaintainDictId() ==3){
 			R r = new R();
@@ -144,7 +156,7 @@ public class MaintenanceController {
 						fitting.setCaozuorenid(maintenanceEntity.getCaozuorenid());
 						fitting.setCaozuoren(maintenanceEntity.getCaozuoren());
 						fitting.setCailiaomingcheng(list.getAwpName());
-						fitting.setPeijianid(list.getPeijianID());
+						fitting.setPeijianid(list.getPeijianId());
 						fitting.setXiaoji(list.getAwpModel());
 						fitting.setShuliang(String.valueOf(fittingEntities.size()));
 						fitting.setBeizhu(list.getAwpRemarks());
