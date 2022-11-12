@@ -6,7 +6,9 @@
     <resultMap id="vehicleBaoxianResultMap" type="org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxian">
         <id column="avb_ids" property="avbIds"/>
         <result column="avb_policy_no" property="avbPolicyNo"/>
+        <result column="avb_dept_ids" property="avbDeptIds"/>
         <result column="avb_insured_ids" property="avbInsuredIds"/>
+        <result column="avb_certificate_number" property="avbCertificateNumber"/>
         <result column="avb_insured_name" property="avbInsuredName"/>
         <result column="avb_insured_contacts" property="avbInsuredContacts"/>
         <result column="avb_insured_contact_number" property="avbInsuredContactNumber"/>

@@ -52,11 +52,23 @@ public class JiashiyuanBaoxian implements Serializable {
      */
     @ApiModelProperty(value = "保单号")
     private String ajbPolicyNo;
+
+	/**
+	 * 被保险人所属企业
+	 */
+	@ApiModelProperty(value = "被保险人所属企业")
+    private Long ajbDeptIds;
     /**
      * 被保险人主键
      */
     @ApiModelProperty(value = "被保险人主键")
     private String ajbInsuredIds;
+
+	/**
+	 * 被保险人证件号码
+	 */
+	@ApiModelProperty(value = "被保险人证件号码")
+	private String ajbCertificateNumber;
     /**
      * 被保险人姓名
      */
