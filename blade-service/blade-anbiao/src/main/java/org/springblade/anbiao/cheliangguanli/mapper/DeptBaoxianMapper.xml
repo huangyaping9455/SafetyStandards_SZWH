@@ -13,6 +13,7 @@
         <result column="avb_insured_contact_address" property="avbInsuredContactAddress"/>
         <result column="avb_insure_ids" property="avbInsureIds"/>
         <result column="avb_insure_name" property="avbInsureName"/>
+        <result column="avbcertificateNumber" property="avb_certificate_number"/>
         <result column="avb_insure_contacts" property="avbInsureContacts"/>
         <result column="avb_insure_contact_number" property="avbInsureContactNumber"/>
         <result column="avb_insure_contact_address" property="avbInsureContactAddress"/>

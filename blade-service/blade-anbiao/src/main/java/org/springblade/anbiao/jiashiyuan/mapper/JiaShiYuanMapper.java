@@ -113,7 +113,7 @@ public interface JiaShiYuanMapper extends BaseMapper<JiaShiYuan> {
 	 * @param password
 	 * @return
 	 */
-	JiaShiYuan getDriver(String account, String password);
+	JiaShiYuan getDriver(@Param("account") String account,@Param("password")  String password);
 
 	JiaShiYuan selectDriverByopenId(String openid);
 

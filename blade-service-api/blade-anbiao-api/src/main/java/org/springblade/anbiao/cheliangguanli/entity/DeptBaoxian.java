@@ -57,6 +57,12 @@ public class DeptBaoxian implements Serializable {
      */
     @ApiModelProperty(value = "被保险人主键")
     private String avbInsuredIds;
+
+	/**
+	 * 被保险人证件号码
+	 */
+	@ApiModelProperty(value = "被保险人证件号码")
+	private String avbcertificateNumber;
     /**
      * 被保险人姓名
      */

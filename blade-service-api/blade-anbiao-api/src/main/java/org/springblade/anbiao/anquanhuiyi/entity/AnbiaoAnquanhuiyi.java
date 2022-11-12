@@ -130,4 +130,8 @@ public class AnbiaoAnquanhuiyi implements Serializable {
 	@ApiModelProperty(value = "参会明细主键")
 	@TableField(exist = false)
 	private String aadIds;
+
+	@ApiModelProperty(value = "参会人员类别")
+	@TableField(exist = false)
+	private String type;
 }

@@ -6,7 +6,9 @@
     <resultMap id="jiashiyuanBaoxianResultMap" type="org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxian">
         <id column="ajb_ids" property="ajbIds"/>
         <result column="ajb_policy_no" property="ajbPolicyNo"/>
+        <result column="ajb_dept_ids" property="ajbDeptIds"/>
         <result column="ajb_insured_ids" property="ajbInsuredIds"/>
+        <result column="ajb_certificate_number" property="ajbCertificateNumber"/>
         <result column="ajb_insured_name" property="ajbInsuredName"/>
         <result column="ajb_insured_contacts" property="ajbInsuredContacts"/>
         <result column="ajb_insured_contact_number" property="ajbInsuredContactNumber"/>
@@ -57,7 +59,7 @@
         <result column="ajb_approve" property="ajbApprove"/>
         <result column="ajb_special_agreement" property="ajbSpecialAgreement"/>
         <result column="ajb_enclosure" property="ajbEnclosure"/>
-        <result column="ajb_delete" property="isDeleted"/>
+        <result column="ajb_delete" property="ajbDelete"/>
         <result column="ajb_create_time" property="ajbCreateTime"/>
         <result column="ajb_create_by_ids" property="ajbCreateByIds"/>
         <result column="ajb_create_by_name" property="ajbCreateByName"/>

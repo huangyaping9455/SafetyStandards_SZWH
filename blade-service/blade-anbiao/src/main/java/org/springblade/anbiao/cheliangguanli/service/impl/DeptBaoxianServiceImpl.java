@@ -16,6 +16,7 @@
 package org.springblade.anbiao.cheliangguanli.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.AllArgsConstructor;
 import org.springblade.anbiao.cheliangguanli.entity.DeptBaoxian;
 import org.springblade.anbiao.cheliangguanli.entity.DeptBaoxianInfo;
 import org.springblade.anbiao.cheliangguanli.entity.DeptBaoxianMingxi;
@@ -37,6 +38,7 @@ import java.util.List;
  * @author Blade
  * @since 2022-10-31
  */
+@AllArgsConstructor
 @Service
 public class DeptBaoxianServiceImpl extends ServiceImpl<DeptBaoxianMapper, DeptBaoxian> implements IDeptBaoxianService {
 

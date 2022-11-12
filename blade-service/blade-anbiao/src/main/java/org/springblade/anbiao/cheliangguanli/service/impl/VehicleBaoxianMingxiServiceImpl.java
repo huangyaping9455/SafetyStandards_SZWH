@@ -16,6 +16,7 @@
 package org.springblade.anbiao.cheliangguanli.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.AllArgsConstructor;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianMingxi;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleBaoxianMingxiVO;
 import org.springblade.anbiao.cheliangguanli.mapper.VehicleBaoxianMingxiMapper;
@@ -33,6 +34,7 @@ import java.util.List;
  * @author Blade
  * @since 2022-10-28
  */
+@AllArgsConstructor
 @Service
 public class VehicleBaoxianMingxiServiceImpl extends ServiceImpl<VehicleBaoxianMingxiMapper, VehicleBaoxianMingxi> implements IVehicleBaoxianMingxiService {
 

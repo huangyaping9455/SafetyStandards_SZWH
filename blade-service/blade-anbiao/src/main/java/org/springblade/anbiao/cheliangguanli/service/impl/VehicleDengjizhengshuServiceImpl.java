@@ -45,7 +45,7 @@ public class VehicleDengjizhengshuServiceImpl extends ServiceImpl<VehicleDengjiz
 	}
 
 	@Override
-	public VehicleDengjizhengshuVO selectVehicleDengjizhengshuByVehicleIds(String avdVehicleIds) {
+	public VehicleDengjizhengshu selectVehicleDengjizhengshuByVehicleIds(String avdVehicleIds) {
 		return dengjizhengshuMapper.selectVehicleDengjizhengshuByVehicleIds(avdVehicleIds);
 	}
 

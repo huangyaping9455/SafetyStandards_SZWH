@@ -139,11 +139,11 @@ public class UserController  {
 	@ApiLog("密码修改")
 	@ApiOperation(value = "密码修改", notes = "传入userId与新就密码值", position = 6)
 	public R updatePassword(BladeUser bladeUser,@ApiParam(value = "userId", required = true) @RequestParam String userId,
+							@ApiParam(value = "account", required = true) @RequestParam String account,
 							@ApiParam(value = "passWord", required = true) @RequestParam String passWord,
 							@ApiParam(value = "oldpassWord", required = true) @RequestParam String oldpassWord) {
 		R r = new R();
-		System.out.println(DigestUtil.encrypt(oldpassWord));
-		UserInfo userInfo = userService.userInfo(userId,DigestUtil.encrypt(oldpassWord));
+		UserInfo userInfo = userService.userInfo(account,DigestUtil.encrypt(oldpassWord));
 		if(userInfo.getUser()==null){
 			r.setSuccess(false);
 			r.setMsg("原密码不正确");

@@ -16,6 +16,7 @@
 package org.springblade.anbiao.cheliangguanli.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.AllArgsConstructor;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleInspectionDetailed;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleInspectionDetailedVO;
 import org.springblade.anbiao.cheliangguanli.mapper.VehicleInspectionDetailedMapper;
@@ -34,6 +35,7 @@ import java.util.List;
  * @since 2022-10-28
  */
 @Service
+@AllArgsConstructor
 public class VehicleInspectionDetailedServiceImpl extends ServiceImpl<VehicleInspectionDetailedMapper, VehicleInspectionDetailed> implements IVehicleInspectionDetailedService {
 
 	@Override
