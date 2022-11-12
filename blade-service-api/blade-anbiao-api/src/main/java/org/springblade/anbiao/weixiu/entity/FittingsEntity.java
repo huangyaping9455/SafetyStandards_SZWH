@@ -27,8 +27,23 @@ public class FittingsEntity {
 	private BigDecimal awpPurchasePrice;
 	private BigDecimal 	awpUnitPrice;
 	private String awpRemarks;
+	private Long peijianId;
 	@TableField(exist = false)
 	private Long peijianID;
 
-	private Long peijianId;
+	public Long getPeijianId() {
+		return peijianId;
+	}
+
+	public void setPeijianId(Long peijianId) {
+		this.peijianId = peijianId;
+	}
+
+	public Long getPeijianID() {
+		return peijianID;
+	}
+
+	public void setPeijianID(Long peijianID) {
+		this.peijianID = peijianID;
+	}
 }

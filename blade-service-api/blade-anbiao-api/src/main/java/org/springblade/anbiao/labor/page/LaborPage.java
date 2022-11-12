@@ -20,7 +20,7 @@ import java.util.Date;
 @ApiModel(value = "劳保分页对象", description = "劳保分页对象")
 public class LaborPage extends BasePage{
 
-	@ApiModelProperty(value = "企业名")
+	@ApiModelProperty(value = "物品名")
 	private String aliName;
 
 	@DateTimeFormat(pattern="yyyy-MM-dd")

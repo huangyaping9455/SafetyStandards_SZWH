@@ -17,7 +17,7 @@
             c.cheliangpaizhao AS carNum,
             d.jiashiyuanxingming AS driverName,
             a.maintain_Dict_Id AS maintainDictId,
-            a.maintenance_Dept_Name AS maintenanceDeptName
+            a.maintenance_Dept_Name AS maintenanceDeptName,
             b.dept_name AS deptName
             FROM
             anbiao_cheliang_baoyangweixiu a
@@ -28,14 +28,14 @@
             refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) b on a.dept_Id = b.id
         <where> a.is_Deleted = 0
-            <if test="asiYear!=null">
+            <if test="asiYear!=null and asiYear!=''">
                 AND  a.send_Date between #{asiYear} and #{asiYear}
             </if>
-            <if test="deptName!=null">
-                b.dept_name= #{deptName}
+            <if test="deptName!=null and deptName!=''">
+                AND b.dept_name= #{deptName}
             </if>
-            <if test="carNum!=null">
-                a.chepaihao = #{carNum}
+            <if test="carNum!=null and carNum!=''">
+                AND c.cheliangpaizhao = #{carNum}
             </if>
                limit ${total}
         </where>
@@ -64,11 +64,14 @@
                     refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
                 ) b on a.dept_Id = b.id
                 <where> a.is_Deleted = 0
-                    <if test="asiYear!=null">
+                    <if test="asiYear!=null and asiYear!=''">
                         AND  a.send_Date between #{asiYear} and #{asiYear}
                     </if>
-                    <if test="deptName!=null">
-                        b.dept_name= #{deptName}
+                    <if test="deptName!=null and deptName!=''">
+                        AND b.dept_name= #{deptName}
+                    </if>
+                    <if test="carNum!=null and carNum!=''">
+                        AND c.cheliangpaizhao = #{carNum}
                     </if>
                     limit ${offsetNo},${size}
                 </where>
@@ -98,7 +101,6 @@
             anbiao_cheliang_baoyangweixiu a
         LEFT JOIN anbiao_vehicle c ON a.vehicle_Id = c.id
         LEFT JOIN anbiao_jiashiyuan d ON  a.driver_Id = d.id
-        LEFT JOIN anbiao_weixiucailiaomingxi e ON e.weihuid = a.id
         inner join (
         <include
             refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
@@ -117,12 +119,12 @@
             a.awp_remarks AS awpRemarks,
             a.awp_unit_price AS awpUnitPrice,
             a.awp_purchase_price AS awpPurchasePrice,
-            b.peijianID AS peijianID
+            b.peijianid AS peijianID
         FROM
             anbiao_weixiu_peijian a
         <if test="id!=null">
-            LEFT JOIN  anbiao_weixiucailiaomingxi b on a.awp_ids = b.peijianID
-            where  b.weihuid = #{id}
+            LEFT JOIN  anbiao_weixiucailiaomingxi b on a.awp_ids = b.peijianid
+            where b.weihuid = #{id}
         </if>
     </select>
 
@@ -175,7 +177,7 @@
             <if test="caozuoshijian!=null">
                 caozuoshijian,
             </if>
-            <if test="peijianID !=null">
+            <if test="peijianid !=null">
                 peijianid,
             </if>
             isdelete
@@ -215,8 +217,8 @@
             <if test="caozuoshijian!=null">
                 #{caozuoshijian},
             </if>
-            <if test="peijianID !=null">
-                #{peijianID},
+            <if test="peijianid !=null">
+                #{peijianid},
             </if>
             0
         </trim>
@@ -314,13 +316,14 @@
 
     <sql id="tableSql">
         select
-        a.*,
+        a.*,c.cheliangpaizhao,
         b.dept_name as deptName
         from
         anbiao_cheliang_baoyangweixiu a
         inner join  (
         <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) b on a.dept_Id = b.id
+        LEFT JOIN anbiao_vehicle c ON a.vehicle_Id = c.id
         where a.is_Deleted = 0
     </sql>
 
@@ -351,6 +354,9 @@
         </if>
         <if test="deptName!=null and deptName!=''">
             AND d.deptName= #{deptName}
+        </if>
+        <if test="carNum!=null and carNum!=''">
+           AND d.cheliangpaizhao = #{carNum}
         </if>
     </select>
 

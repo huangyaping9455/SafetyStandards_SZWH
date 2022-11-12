@@ -34,7 +34,7 @@ public class SafeInvestmentController extends BladeController {
 
 	@PostMapping("list")
 	@ApiLog("分页 列表-安全投入")
-	@ApiOperation(value = "安全投入", notes = "传入SafeInvestmentDTO", position = 1)
+	@ApiOperation(value = "安全投入分页", notes = "传入SafeInvestmentDTO", position = 1)
 	public R saList(@RequestBody SafelInfoPage safelInfoPage) {
 		SafelInfoPage safelInfoPage1 = safeInvestmentService.selectPage(safelInfoPage);
 		return R.data(safelInfoPage1);
