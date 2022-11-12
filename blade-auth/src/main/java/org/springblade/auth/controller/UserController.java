@@ -16,6 +16,7 @@ import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.common.configurationBean.WechatServer;
 import org.springblade.common.tool.WeChatUtil;
 import org.springblade.core.log.annotation.ApiLog;
+import org.springblade.core.secure.BladeUser;
 import org.springblade.core.secure.utils.SecureUtil;
 import org.springblade.core.tool.api.R;
 import org.springblade.core.tool.utils.DigestUtil;
@@ -327,6 +328,19 @@ public class UserController {
 		}
 		return rs;
 	}
+
+	@GetMapping("/removeDriverBD")
+	@ApiLog("注销解绑-微信（司机端）")
+	@ApiOperation(value = "注销解绑-微信（司机端）", notes = "传入账号", position = 2)
+	public R removeDriverBD(String loginName) {
+		R rs = new R();
+		personnelClient.bindDriverOpenId(loginName,"");
+		rs.setCode(200);
+		rs.setSuccess(true);
+		rs.setMsg("注销解绑成功");
+		return rs;
+	}
+
 
 	@GetMapping("/updateUserDeptBD")
 	@ApiLog("确认绑定-微信（企业端）")
