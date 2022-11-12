@@ -1,5 +1,6 @@
 package org.springblade.anbiao.labor.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import org.springblade.anbiao.labor.DTO.laborDTO;
 import org.springblade.anbiao.labor.VO.graphicsVO;
 import org.springblade.anbiao.labor.entity.Labor;
@@ -14,7 +15,7 @@ import java.util.List;
  * @Author : long
  * @Date :2022/11/3 21:40
  */
-public interface laborService {
+public interface laborService extends IService<LaborEntity> {
 	/**
 	 * 劳保列表信息
 	 *

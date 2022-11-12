@@ -1,6 +1,7 @@
 package org.springblade.anbiao.labor.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -18,7 +19,7 @@ import java.util.List;
 @Data
 @TableName("anbiao_labor_insurance")
 public class LaborEntity {
-
+	@TableId(value = "ali_ids")
 	private String 	aliIds;
 	private Integer aliDeptIds;
 	private String aliName;
@@ -40,7 +41,10 @@ public class LaborEntity {
 	private Date aliUpdateTime;
 	private String aliUpdateByIds;
 	private String aliUpdateByName;
-
+	@TableField(exist = false)
 	private String deptId;
+    @TableField(exist = false)
+	private List<LaborlingquEntity> labolingqu;
+	@TableField(exist = false)
 	private List<Labor> labor;
 }

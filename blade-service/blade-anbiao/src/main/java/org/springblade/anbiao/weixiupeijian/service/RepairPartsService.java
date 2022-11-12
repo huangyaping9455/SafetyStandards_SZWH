@@ -1,5 +1,6 @@
 package org.springblade.anbiao.weixiupeijian.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import org.springblade.anbiao.weixiu.DTO.MaintenanceDTO;
 import org.springblade.anbiao.weixiu.entity.FittingsEntity;
 import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
@@ -11,7 +12,7 @@ import java.util.List;
  * @Author : long
  * @Date :2022/11/4 14:28
  */
-public interface RepairPartsService {
+public interface RepairPartsService  extends IService<FittingsEntity> {
 	/**
 	 * 维修列表信息
 	 *

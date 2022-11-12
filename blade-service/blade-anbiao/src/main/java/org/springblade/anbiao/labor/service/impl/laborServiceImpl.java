@@ -1,6 +1,7 @@
 package org.springblade.anbiao.labor.service.impl;
 
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.labor.DTO.laborDTO;
 import org.springblade.anbiao.labor.VO.LaborVO;
@@ -8,6 +9,7 @@ import org.springblade.anbiao.labor.VO.graphicsVO;
 import org.springblade.anbiao.labor.entity.Labor;
 import org.springblade.anbiao.labor.entity.LaborEntity;
 import org.springblade.anbiao.labor.entity.LaborlingquEntity;
+import org.springblade.anbiao.labor.mapper.LaborlingquMapper;
 import org.springblade.anbiao.labor.mapper.laborMapper;
 import org.springblade.anbiao.labor.page.LaborPage;
 import org.springblade.anbiao.labor.service.laborService;
@@ -23,7 +25,7 @@ import java.util.List;
  */
 @Service
 @AllArgsConstructor
-public class laborServiceImpl implements laborService {
+public class laborServiceImpl extends ServiceImpl<laborMapper,LaborEntity> implements laborService {
 
 	private laborMapper laborMapper;
 

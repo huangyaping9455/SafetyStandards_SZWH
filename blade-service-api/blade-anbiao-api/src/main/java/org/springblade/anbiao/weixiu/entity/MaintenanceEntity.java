@@ -1,10 +1,10 @@
 package org.springblade.anbiao.weixiu.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import org.springblade.anbiao.weixiu.DTO.FittingDTO;
 
 import java.util.List;
 
@@ -17,8 +17,12 @@ import java.util.List;
 @TableName("anbiao_cheliang_baoyangweixiu")
 public class MaintenanceEntity {
 
+	@TableId(value = "id",type = IdType.AUTO)
 	private Long id;
+	@TableField(exist = false)
 	private Integer	depID;
+
+	private Integer	deptId;
 	private String  driverId;
 	private String	vehicleId;
 	private Integer maintainDictId;
@@ -50,6 +54,8 @@ public class MaintenanceEntity {
 	private String acbBillAttachment;
 	private String	acbBeforeMaintenance;
 	private String acbAfterMaintenance;
-
+	@TableField(exist = false)
 	private List<FittingsEntity> fittingDTOS;
+	@TableField(exist = false)
+	private List<FittingEntity> fittingEntities;
 }

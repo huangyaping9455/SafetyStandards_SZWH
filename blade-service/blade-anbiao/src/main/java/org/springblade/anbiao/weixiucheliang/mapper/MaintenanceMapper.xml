@@ -138,7 +138,7 @@
                )
     </insert>
 
-    <insert id="insertB" parameterType="org.springblade.anbiao.weixiu.DTO.FittingDTO">
+    <insert id="insertB" parameterType="org.springblade.anbiao.weixiu.entity.FittingEntity">
         insert into anbiao_weixiucailiaomingxi
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,
@@ -176,7 +176,7 @@
                 caozuoshijian,
             </if>
             <if test="peijianID !=null">
-                peijianID,
+                peijianid,
             </if>
             isdelete
         </trim>
@@ -262,7 +262,7 @@
         </set>
         where id = ${id}
     </update>
-    <update id="updateB" parameterType="org.springblade.anbiao.weixiu.DTO.FittingDTO">
+    <update id="updateB" parameterType="org.springblade.anbiao.weixiu.entity.FittingEntity">
         update anbiao_weixiucailiaomingxi
         <set>
             <if test="cailiaomingcheng !=null">

@@ -15,6 +15,7 @@ import java.util.Date;
 @Data
 @TableName("anbiao_labor_receive")
 public class LaborlingquEntity {
+	@TableId(value = "alr_ids",type = IdType.UUID)
 	private String  alrIds;
 	private String 	alrAliIds;
 	private String  alrPersonIds;
@@ -30,4 +31,5 @@ public class LaborlingquEntity {
 	private String alrUpdateByIds;
 	private String 	alrUpdateByName;
 	private String asiDeptIds;
+	private String aliApplicationScope;
 }

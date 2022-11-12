@@ -26,7 +26,7 @@ public class SafeInvestmentDTO implements Serializable {
 
 
 	private String asiIds;
-	private String asiDeptIds;
+	private Integer asiDeptIds;
 	private Integer asiYear;
 	private String asiAccruedAmount;
 	private String asiWithdrawalAmount;

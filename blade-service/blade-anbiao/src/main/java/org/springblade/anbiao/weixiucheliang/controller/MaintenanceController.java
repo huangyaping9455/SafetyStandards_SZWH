@@ -1,11 +1,16 @@
 package org.springblade.anbiao.weixiucheliang.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.AllArgsConstructor;
-import org.springblade.anbiao.weixiu.DTO.FittingDTO;
+import org.springblade.anbiao.labor.entity.Labor;
+import org.springblade.anbiao.labor.entity.LaborEntity;
+import org.springblade.anbiao.labor.entity.LaborlingquEntity;
+import org.springblade.anbiao.weixiu.entity.FittingEntity;
 import org.springblade.anbiao.weixiu.entity.FittingsEntity;
 import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
 import org.springblade.anbiao.weixiu.page.MaintenancePage;
 import org.springblade.anbiao.weixiucheliang.mapper.MaintenanceMapper;
+import org.springblade.anbiao.weixiucheliang.service.FittingService;
 import org.springblade.anbiao.weixiucheliang.service.MaintenanceService;
 import org.springblade.core.tool.api.R;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +37,8 @@ public class MaintenanceController {
 
 	private MaintenanceMapper mapper;
 
+	private FittingService fittingService;
+
 	@PostMapping("list")
 	public R saList(@RequestBody MaintenancePage maintenancePage){
 		MaintenancePage maintenancePage1 = service.selectList(maintenancePage);
@@ -56,7 +63,7 @@ public class MaintenanceController {
 			Boolean aBoolean = false;
 			for (FittingsEntity list : fittingDTOS) {
 				String replace = UUID.randomUUID().toString().replace("-", "");
-				FittingDTO fittingDTO = new FittingDTO();
+				FittingEntity fittingDTO = new FittingEntity();
 				Long id = maintenanceDTO.getId();
 				fittingDTO.setId(replace);
 				fittingDTO.setWeihuid(id);
@@ -65,7 +72,7 @@ public class MaintenanceController {
 				fittingDTO.setXinghao(list.getAwpModel());
 				fittingDTO.setCaozuoshijian(now());
 				fittingDTO.setBeizhu(list.getAwpRemarks());
-				fittingDTO.setPeijianID(list.getAwpIds());
+				fittingDTO.setPeijianid(list.getAwpIds());
 				aBoolean = mapper.insertB(fittingDTO);
 			}
 
@@ -90,21 +97,78 @@ public class MaintenanceController {
 	@PostMapping("update")
 	public R update(@RequestBody MaintenanceEntity maintenanceEntity){
 		if(maintenanceEntity.getMaintainDictId() ==3){
-			List<FittingsEntity> fittingDTOS = maintenanceEntity.getFittingDTOS();
-			Boolean aBoolean = false;
-			for (FittingsEntity list : fittingDTOS) {
-				FittingDTO fittingDTO = new FittingDTO();
-				fittingDTO.setCaozuorenid(maintenanceEntity.getCaozuorenid());
-				fittingDTO.setCailiaomingcheng(list.getAwpName());
-				fittingDTO.setXinghao(list.getAwpModel());
-				fittingDTO.setCaozuoshijian(now());
-				fittingDTO.setBeizhu(list.getAwpRemarks());
-				fittingDTO.setWeihuid(maintenanceEntity.getId());
-				aBoolean = mapper.updateB(fittingDTO);
+			R r = new R();
+			QueryWrapper<MaintenanceEntity> maintenanceEntityQueryWrapper = new QueryWrapper<>();
+			maintenanceEntityQueryWrapper.lambda().eq(MaintenanceEntity::getId, maintenanceEntity.getId());
+			MaintenanceEntity maintenanceEntity1 = service.getBaseMapper().selectOne(maintenanceEntityQueryWrapper);
+			if (maintenanceEntity1 != null) {
+				maintenanceEntity1.setId(maintenanceEntity.getId());
+				maintenanceEntity1.setDeptId(maintenanceEntity.getDepID());
+				maintenanceEntity1.setDriverId(maintenanceEntity.getDriverId());
+				maintenanceEntity1.setVehicleId(maintenanceEntity.getVehicleId());
+				maintenanceEntity1.setMaintainDictId(maintenanceEntity.getMaintainDictId());
+				maintenanceEntity1.setExpectedCompletion(maintenanceEntity.getExpectedCompletion());
+				maintenanceEntity1.setSendDate(maintenanceEntity.getSendDate());
+				maintenanceEntity1.setAcbAfterMaintenance(maintenanceEntity.getAcbAfterMaintenance());
+				maintenanceEntity1.setActualCompletionDate(maintenanceEntity.getActualCompletionDate());
+				maintenanceEntity1.setInRangeMileage(maintenanceEntity.getInRangeMileage());
+				maintenanceEntity1.setInTheOil(maintenanceEntity1.getInTheOil());
+				maintenanceEntity1.setNextMaintenanceDate(maintenanceEntity.getNextMaintenanceDate());
+				maintenanceEntity1.setNextMaintenanceMileage(maintenanceEntity.getNextMaintenanceMileage());
+				maintenanceEntity1.setMaintenanceDeptName(maintenanceEntity.getMaintenanceDeptName());
+				maintenanceEntity1.setFujian(maintenanceEntity.getFujian());
+				maintenanceEntity1.setSendRepairPersonId(maintenanceEntity.getSendRepairPersonId());
+				maintenanceEntity1.setPickUpVehicleDate(maintenanceEntity.getPickUpVehicleDate());
+				maintenanceEntity1.setPickUpVehicleDriverId(maintenanceEntity.getPickUpVehicleDriverId());
+				maintenanceEntity1.setCaozuoren(maintenanceEntity.getCaozuoren());
+				maintenanceEntity1.setCaozuorenid(maintenanceEntity.getCaozuorenid());
+				maintenanceEntity1.setCaozuoshijian(now());
+				maintenanceEntity1.setRemark(maintenanceEntity.getRemark());
+				maintenanceEntity1.setSubtotalOfMaterialQuantity(maintenanceEntity.getSubtotalOfMaterialQuantity());
+				maintenanceEntity1.setSubtotalOfWarrantyItems(maintenanceEntity.getSubtotalOfWarrantyItems());
+				maintenanceEntity1.setMaterialSubtotal(maintenanceEntity.getMaterialSubtotal());
+				maintenanceEntity1.setCreatetime(now());
+				maintenanceEntity1.setCreateperson(maintenanceEntity.getCreateperson());
+				maintenanceEntity1.setCreateid(maintenanceEntity.getCreateid());
+				maintenanceEntity1.setAcbMaintenanceContent(maintenanceEntity.getAcbMaintenanceContent());
+				maintenanceEntity1.setAcbRepairReason(maintenanceEntity.getAcbRepairReason());
+				int i = service.getBaseMapper().updateById(maintenanceEntity1);
+				if (i > 0) {
+					QueryWrapper<FittingEntity> fittingEntityQueryWrapper = new QueryWrapper<>();
+					fittingEntityQueryWrapper.lambda().eq(FittingEntity::getWeihuid, maintenanceEntity.getId());
+					fittingService.getBaseMapper().delete(fittingEntityQueryWrapper);
+					List<FittingsEntity> fittingEntities = maintenanceEntity.getFittingDTOS();
+					for (FittingsEntity list : fittingEntities) {
+						FittingEntity fitting = new FittingEntity();
+						fitting.setWeihuid(maintenanceEntity.getId());
+						fitting.setCaozuorenid(maintenanceEntity.getCaozuorenid());
+						fitting.setCaozuoren(maintenanceEntity.getCaozuoren());
+						fitting.setCailiaomingcheng(list.getAwpName());
+						fitting.setPeijianid(list.getPeijianID());
+						fitting.setXiaoji(list.getAwpModel());
+						fitting.setShuliang(String.valueOf(fittingEntities.size()));
+						fitting.setBeizhu(list.getAwpRemarks());
+						fitting.setIsdelete(maintenanceEntity.getIsDeleted().toString());
+						boolean b = fittingService.save(fitting);
+						if (b) {
+							r.setMsg("更新成功");
+							r.setCode(200);
+							r.setSuccess(false);
+						} else {
+							r.setMsg("更新失败");
+							r.setCode(500);
+							r.setSuccess(false);
+						}
+
+					}
+				}
+			} else {
+				r.setMsg("该数据不存在");
+				r.setCode(500);
+				r.setSuccess(false);
+				return r;
 			}
-			if(!aBoolean){
-				return R.success("修改失败");
-			}
+			return r;
 		}
 		return R.status(service.updateAccident(maintenanceEntity));
 	}

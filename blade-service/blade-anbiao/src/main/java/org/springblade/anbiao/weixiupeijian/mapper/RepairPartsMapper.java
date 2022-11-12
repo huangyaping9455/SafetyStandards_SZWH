@@ -1,5 +1,7 @@
 package org.springblade.anbiao.weixiupeijian.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.mapstruct.Mapper;
 import org.springblade.anbiao.weixiu.DTO.MaintenanceDTO;
 import org.springblade.anbiao.weixiu.VO.MaintenanceVO;
 import org.springblade.anbiao.weixiu.entity.FittingsEntity;
@@ -13,7 +15,8 @@ import java.util.List;
  * @Author : long
  * @Date :2022/11/4 14:30
  */
-public interface RepairPartsMapper {
+@Mapper
+public interface RepairPartsMapper extends BaseMapper<FittingsEntity> {
 	/**
 	 * 配件列表
 	 * @param

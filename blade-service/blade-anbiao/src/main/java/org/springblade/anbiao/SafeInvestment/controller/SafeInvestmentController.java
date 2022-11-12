@@ -65,7 +65,7 @@ public class SafeInvestmentController extends BladeController {
 		anbiaoSafetyInput.setAsi_extraction_proportion(NumberUtils.createBigDecimal(replace));
 		anbiaoSafetyInput.setAsi_amount_used(NumberUtils.createBigDecimal(safeInvestmentDTO.getAsiAmountUsed()));
 		anbiaoSafetyInput.setAsi_remaining_amount(NumberUtils.createBigDecimal(safeInvestmentDTO.getAsiRemainingAmount()));
-		anbiaoSafetyInput.setAsi_dept_ids(safeInvestmentDTO.getAsiDeptIds());
+		anbiaoSafetyInput.setAsi_dept_ids(safeInvestmentDTO.getAsiDeptIds().toString());
 		anbiaoSafetyInput.setAsi_last_years_turnover(NumberUtils.createBigDecimal(safeInvestmentDTO.getAsiLastYearsTurnover()));
 		Boolean aBoolean = false;
 		if (anbiaoSafetyInput != null) {

@@ -1,6 +1,7 @@
 package org.springblade.anbiao.weixiucheliang.service.impl;
 
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.weixiu.VO.MaintenanceVO;
 import org.springblade.anbiao.weixiu.entity.FittingsEntity;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 @Service
 @AllArgsConstructor
-public class MaintenanceServiceImpl implements MaintenanceService {
+public class MaintenanceServiceImpl extends ServiceImpl<MaintenanceMapper,MaintenanceEntity> implements MaintenanceService {
 	private MaintenanceMapper partsMapper;
 
 	@Override

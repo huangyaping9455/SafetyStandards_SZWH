@@ -1,5 +1,7 @@
 package org.springblade.anbiao.labor.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.mapstruct.Mapper;
 import org.springblade.anbiao.labor.DTO.laborDTO;
 import org.springblade.anbiao.labor.VO.LaborVO;
 import org.springblade.anbiao.labor.VO.graphicsVO;
@@ -17,7 +19,8 @@ import java.util.List;
  * @Author : long
  * @Date :2022/11/3 21:40
  */
-public interface laborMapper {
+@Mapper
+public interface laborMapper extends BaseMapper<LaborEntity> {
 	/**
 	 * 劳保列表
 	 *

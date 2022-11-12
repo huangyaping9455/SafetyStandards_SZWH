@@ -1,10 +1,10 @@
 package org.springblade.anbiao.weixiupeijian.service.impl;
 
 
+
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springblade.anbiao.weixiu.DTO.MaintenanceDTO;
 import org.springblade.anbiao.weixiu.entity.FittingsEntity;
-import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
 import org.springblade.anbiao.weixiupeijian.mapper.RepairPartsMapper;
 import org.springblade.anbiao.weixiupeijian.service.RepairPartsService;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Service
 @AllArgsConstructor
-public class RepairPartsServiceImpl implements RepairPartsService {
+public class RepairPartsServiceImpl extends ServiceImpl<RepairPartsMapper,FittingsEntity> implements RepairPartsService {
 	private RepairPartsMapper partsMapper;
 
 	@Override

@@ -1,6 +1,7 @@
 package org.springblade.anbiao.weixiu.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 @Data
 @TableName("anbiao_weixiu_peijian")
 public class FittingsEntity {
+	@TableId(value = "awp_ids",type = IdType.AUTO)
 	private Long awpIds;
 	private Long awpFsIds;
 	private Integer id;
@@ -25,5 +27,8 @@ public class FittingsEntity {
 	private BigDecimal awpPurchasePrice;
 	private BigDecimal 	awpUnitPrice;
 	private String awpRemarks;
-	private Integer peijianID;
+	@TableField(exist = false)
+	private Long peijianID;
+
+	private Long peijianId;
 }

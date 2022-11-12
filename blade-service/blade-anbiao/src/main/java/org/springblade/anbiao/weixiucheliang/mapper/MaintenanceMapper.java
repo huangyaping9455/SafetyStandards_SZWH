@@ -1,7 +1,8 @@
 package org.springblade.anbiao.weixiucheliang.mapper;
 
-import org.springblade.anbiao.weixiu.DTO.FittingDTO;
-import org.springblade.anbiao.weixiu.DTO.MaintenanceDTO;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.mapstruct.Mapper;
+import org.springblade.anbiao.weixiu.entity.FittingEntity;
 import org.springblade.anbiao.weixiu.VO.MaintenanceVO;
 import org.springblade.anbiao.weixiu.entity.FittingsEntity;
 import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
@@ -14,7 +15,8 @@ import java.util.List;
  * @Author : long
  * @Date :2022/11/4 14:33
  */
-public interface MaintenanceMapper {
+@Mapper
+public interface MaintenanceMapper extends BaseMapper<MaintenanceEntity> {
 	/**
 	 * 维修列表
 	 *
@@ -42,7 +44,7 @@ public interface MaintenanceMapper {
 	 * @return
 	 */
 	Boolean insertOne(MaintenanceEntity maintenanceEntity);
-	Boolean insertB(FittingDTO fittingDTO);
+	Boolean insertB(FittingEntity fittingDTO);
 
 
 	/**
@@ -51,7 +53,7 @@ public interface MaintenanceMapper {
 	 * @return
 	 */
 	Boolean updateMain(MaintenanceEntity maintenanceEntity);
-	boolean updateB(FittingDTO fittingDTO);
+	boolean updateB(FittingEntity fittingDTO);
 
 	/**
 	 * 删除
