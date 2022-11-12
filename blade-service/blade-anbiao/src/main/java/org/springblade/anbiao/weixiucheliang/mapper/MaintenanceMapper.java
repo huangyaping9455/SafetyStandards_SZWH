@@ -1,12 +1,12 @@
 package org.springblade.anbiao.weixiucheliang.mapper;
 
+import org.springblade.anbiao.weixiu.DTO.FittingDTO;
 import org.springblade.anbiao.weixiu.DTO.MaintenanceDTO;
 import org.springblade.anbiao.weixiu.VO.MaintenanceVO;
 import org.springblade.anbiao.weixiu.entity.FittingsEntity;
 import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
 import org.springblade.anbiao.weixiu.page.MaintenancePage;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,17 +29,20 @@ public interface MaintenanceMapper {
 	 * 维修详细信息
 	 *
 	 * @param
+	 * @param maintenancePage
 	 * @return
 	 */
-	List<MaintenanceEntity> selectAll(String id );
+	MaintenanceEntity selectAll(MaintenancePage maintenancePage );
 
+	List<FittingsEntity> selectC(MaintenancePage maintenancePage);
+	int selectTotal(MaintenancePage maintenancePage);
 
 	/**
 	 * 新增维修详细信息
 	 * @return
 	 */
-	Boolean insertOne(MaintenanceDTO maintenanceDTO);
-	Boolean insertB(FittingsEntity fittingsEntity);
+	Boolean insertOne(MaintenanceEntity maintenanceEntity);
+	Boolean insertB(FittingDTO fittingDTO);
 
 
 	/**
@@ -47,13 +50,13 @@ public interface MaintenanceMapper {
 	 * @param
 	 * @return
 	 */
-	Boolean updateMain(MaintenanceDTO MaintenanceDTO);
-	boolean updateB(FittingsEntity fittingsEntity);
+	Boolean updateMain(MaintenanceEntity maintenanceEntity);
+	boolean updateB(FittingDTO fittingDTO);
 
 	/**
 	 * 删除
 	 * @param
 	 * @return
 	 */
-	Boolean deleteMain(String id);
+	Boolean deleteMain(MaintenancePage maintenancePage);
 }

@@ -1,8 +1,14 @@
 package org.springblade.anbiao.labor.DTO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springblade.anbiao.labor.entity.Labor;
+import org.springblade.anbiao.labor.entity.LaborEntity;
+import org.springblade.anbiao.labor.page.LaborPage;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Description : 劳保
@@ -11,11 +17,17 @@ import java.util.Date;
  */
 @Data
 public class laborDTO {
-	private String ali_dept_ids;
-	private String ali_name;
-	private Date ali_issue_date;
-	private Integer ali_issue_quantity;
-	private Integer ali_issue_people_number;
-	private String ali_status;
-	private String ali_application_scope;
+	private Integer aliDeptIds;
+	private String aliName;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+	private Date aliIssueDate;
+	private String 	aliIds;
+	private Integer aliIssueDuantity;
+	private Integer aliIssuePeopleNumber;
+	private String aliStatus;
+	private String aliApplicationScope;
+	private Integer aliIssueQuantity;
+	private LaborEntity laborEntity;
+	private List<Labor> labor;
 }

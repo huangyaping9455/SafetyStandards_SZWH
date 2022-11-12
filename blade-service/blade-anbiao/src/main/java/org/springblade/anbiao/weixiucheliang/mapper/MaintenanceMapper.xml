@@ -4,56 +4,144 @@
 
 
     <!--维修列表-->
-    <select id="selectList" parameterType="org.springblade.anbiao.weixiu.entity.MaintenanceEntity" resultType="org.springblade.anbiao.weixiu.VO.MaintenanceVO">
-        select
-        a.vehicle_Id,a.driver_Id,a.acb_maintenance_content,a.acb_repair_reason,a.send_Date,a.acb_before_maintenance,
-        a.maintain_Dict_Id,a.maintenance_Dept_Name,b.dept_name
-        from
-        anbiao_cheliang_baoyangweixiu a
-        left join (
+    <select id="selectList" parameterType="org.springblade.anbiao.weixiu.page.MaintenancePage" resultType="org.springblade.anbiao.weixiu.VO.MaintenanceVO">
+        <if test="size==0">
+            SELECT
+            a.driver_Id AS driverId,
+            a.acb_maintenance_content AS acbMaintenanceContent,
+            a.acb_repair_reason AS acbRepairReason,
+            a.send_Date AS sendDate,
+            a.acb_before_maintenance AS acbBeforeMaintenance,
+            a.id AS Id,
+            a.dept_Id AS dept_Id,
+            c.cheliangpaizhao AS carNum,
+            d.jiashiyuanxingming AS driverName,
+            a.maintain_Dict_Id AS maintainDictId,
+            a.maintenance_Dept_Name AS maintenanceDeptName
+            b.dept_name AS deptName
+            FROM
+            anbiao_cheliang_baoyangweixiu a
+            LEFT JOIN anbiao_vehicle c ON a.vehicle_Id = c.id
+            LEFT JOIN anbiao_jiashiyuan d ON  a.driver_Id = d.id
+            inner join (
         <include
             refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) b on a.dept_Id = b.id
-        <where> a.is_Deleted = 0 AND
-            a.createtime between #{startTime} and #{endTime}
-            <if test="dept_Id !=null">
-                b.id = #{dept_Id}
+        <where> a.is_Deleted = 0
+            <if test="asiYear!=null">
+                AND  a.send_Date between #{asiYear} and #{asiYear}
             </if>
-            <if test="size==0">
-                limit ${total}
+            <if test="deptName!=null">
+                b.dept_name= #{deptName}
             </if>
-            <if test="current != 0">
-                limit ${offsetNo},${size}
+            <if test="carNum!=null">
+                a.chepaihao = #{carNum}
             </if>
+               limit ${total}
         </where>
+        </if>
+
+            <if test="current != 0">
+                SELECT
+                a.driver_Id AS driverId,
+                a.acb_maintenance_content AS acbMaintenanceContent,
+                a.acb_repair_reason AS acbRepairReason,
+                a.send_Date AS sendDate,
+                a.acb_before_maintenance AS acbBeforeMaintenance,
+                a.id AS Id,
+                a.dept_Id AS dept_Id,
+                c.cheliangpaizhao AS carNum,
+                d.jiashiyuanxingming AS driverName,
+                a.maintain_Dict_Id AS maintainDictId,
+                a.maintenance_Dept_Name AS maintenanceDeptName,
+                b.dept_name AS deptName
+                FROM
+                anbiao_cheliang_baoyangweixiu a
+                LEFT JOIN anbiao_vehicle c ON a.vehicle_Id = c.id
+                LEFT JOIN anbiao_jiashiyuan d ON  a.driver_Id = d.id
+                inner join (
+                <include
+                    refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+                ) b on a.dept_Id = b.id
+                <where> a.is_Deleted = 0
+                    <if test="asiYear!=null">
+                        AND  a.send_Date between #{asiYear} and #{asiYear}
+                    </if>
+                    <if test="deptName!=null">
+                        b.dept_name= #{deptName}
+                    </if>
+                    limit ${offsetNo},${size}
+                </where>
+           </if>
     </select>
 
     <!--维修信息-->
-    <select id="selectAll" parameterType="String" resultType="org.springblade.anbiao.weixiu.entity.MaintenanceEntity">
-        select
-            a.det_name,a.shigufashengdidian,a.shigufashengshijian,a.shiguxingzhi,a.shigufenlei,
-            a.shiguzeren,a.chepaihao,a.jiashiyuan,a.AccidentName,a.caozuoshijian,b.shangwangcaichansunshi,a.shiguzhaopian
-        from
-            anbiao_shigubaogao a
-                left join anbiao_shiguchuli b on a.id = b.shigubaogaoid
-        where id =#{rid} AND is_deleted = 0
+    <select id="selectAll" parameterType="org.springblade.anbiao.weixiu.page.MaintenancePage" resultType="org.springblade.anbiao.weixiu.entity.MaintenanceEntity">
+        SELECT
+            a.driver_Id AS driverId,
+            a.acb_maintenance_content AS acbMaintenanceContent,
+            a.acb_repair_reason AS acbRepairReason,
+            a.send_Date AS sendDate,
+            a.acb_before_maintenance AS acbBeforeMaintenance,
+            a.id AS Id,
+            a.dept_Id AS depID,
+            a.vehicle_Id AS vehicleId,
+            c.cheliangpaizhao AS carNum,
+            d.jiashiyuanxingming AS driverName,
+            a.maintain_Dict_Id AS maintainDictId,
+            a.maintenance_Dept_Name AS maintenanceDeptName,
+            a.acb_bill_attachment AS acbBillAttachment,
+            a.acb_before_maintenance AS acbBeforeMaintenance,
+            a.acb_after_maintenance AS acbAfterMaintenance,
+            b.dept_name AS deptName
+        FROM
+            anbiao_cheliang_baoyangweixiu a
+        LEFT JOIN anbiao_vehicle c ON a.vehicle_Id = c.id
+        LEFT JOIN anbiao_jiashiyuan d ON  a.driver_Id = d.id
+        LEFT JOIN anbiao_weixiucailiaomingxi e ON e.weihuid = a.id
+        inner join (
+        <include
+            refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b on a.dept_Id = b.id
+        where a.id =#{id} AND a.is_Deleted = 0
+    </select>
+
+    <select id="selectC"  parameterType="org.springblade.anbiao.weixiu.page.MaintenancePage" resultType="org.springblade.anbiao.weixiu.entity.FittingsEntity">
+        SELECT
+            a.awp_ids AS awpIds,
+            a.awp_name AS awpName,
+            a.awp_unit AS awpUnit,
+            a.awp_model AS awpModel,
+            a.awp_fs_ids AS awpFsIds,
+            a.awp_fs_name AS awpFsName,
+            a.awp_remarks AS awpRemarks,
+            a.awp_unit_price AS awpUnitPrice,
+            a.awp_purchase_price AS awpPurchasePrice,
+            b.peijianID AS peijianID
+        FROM
+            anbiao_weixiu_peijian a
+        <if test="id!=null">
+            LEFT JOIN  anbiao_weixiucailiaomingxi b on a.awp_ids = b.peijianID
+            where  b.weihuid = #{id}
+        </if>
     </select>
 
     <!--新增维修-->
-    <insert id="insertOne" parameterType="org.springblade.anbiao.weixiu.DTO.MaintenanceDTO">
+    <insert id="insertOne" parameterType="org.springblade.anbiao.weixiu.entity.MaintenanceEntity" keyProperty="id" useGeneratedKeys="true">
         insert into anbiao_cheliang_baoyangweixiu(dept_Id,vehicle_Id,driver_Id,send_Date,acb_maintenance_content,
                                        maintenance_Dept_Name,maintain_Dict_Id,acb_repair_reason,acb_before_maintenance,
-                                                  acb_after_maintenance,is_Deleted
+                                                acb_after_maintenance,is_Deleted,acb_bill_attachment
         )
-        values (dept_Id,vehicle_Id,driver_Id,send_Date,acb_maintenance_content,
-                maintenance_Dept_Name,maintain_Dict_Id,acb_repair_reason,acb_before_maintenance,
-                acb_after_maintenance,is_Deleted,0
+        values (#{depID},#{vehicleId},#{driverId},#{sendDate},#{acbMaintenanceContent},
+                #{maintenanceDeptName},#{maintainDictId},#{acbRepairReason},#{acbBeforeMaintenance},
+                #{acbAfterMaintenance},0,#{acbBillAttachment}
                )
     </insert>
 
-    <insert id="insertB" parameterType="org.springblade.anbiao.weixiu.entity.FittingsEntity">
-        insert into anbiao_weixiucailiaomingxi()
+    <insert id="insertB" parameterType="org.springblade.anbiao.weixiu.DTO.FittingDTO">
+        insert into anbiao_weixiucailiaomingxi
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
             <if test="cailiaomingcheng !=null">
                 cailiaomingcheng,
             </if>
@@ -78,26 +166,30 @@
             <if test="xiaoji!=null">
                 xiaoji,
             </if>
-            isdelete,
             <if test="createtime!=null">
                 createtime,
             </if>
             <if test="caozuorenid!=null">
-                caozuorenid,
+                caozuorenid ,
             </if>
             <if test="caozuoshijian!=null">
-                caozuoshijian
+                caozuoshijian,
             </if>
+            <if test="peijianID !=null">
+                peijianID,
+            </if>
+            isdelete
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id},
             <if test="cailiaomingcheng !=null">
-                #{cailiaomingcheng},
+                 #{cailiaomingcheng},
             </if>
             <if test="weihuid !=null">
-                #{weihuid},
+                 #{weihuid},
             </if>
             <if test="caozuoren !=null">
-                #{caozuoren}
+                #{caozuoren},
             </if>
             <if test="xinghao !=null">
                 #{xinghao},
@@ -106,24 +198,27 @@
                 #{shuliang},
             </if>
             <if test="danjia!=null">
-                #{danjia},
+                 #{danjia},
             </if>
             <if test="beizhu!=null">
-                #{beizhu},
+                 #{beizhu},
             </if>
             <if test="xiaoji!=null">
-                #{xiaoji},
+                 #{xiaoji},
             </if>
-            0,
             <if test="createtime!=null">
-                #{createtime},
+               #{createtime},
             </if>
             <if test="caozuorenid!=null">
-               ${caozuorenid} ,
+                  ${caozuorenid} ,
             </if>
             <if test="caozuoshijian!=null">
-                #{caozuoshijian}
+                #{caozuoshijian},
             </if>
+            <if test="peijianID !=null">
+                #{peijianID},
+            </if>
+            0
         </trim>
     </insert>
 
@@ -131,89 +226,87 @@
     <update id="updateMain" parameterType="org.springblade.anbiao.weixiu.entity.MaintenanceEntity">
         update anbiao_cheliang_baoyangweixiu
         <set>
-            <if test="dept_Id != null">
-                dept_Id = #{dept_Id}
+            <if test="depID != null">
+                dept_Id = #{depID},
             </if>
-            <if test="	vehicle_Id != null">
-                vehicle_Id = #{vehicle_Id}
+            <if test="vehicleId != null">
+                vehicle_Id = #{vehicleId},
             </if>
-            <if test="	driver_Id != null">
-                driver_Id = #{driver_Id}
+            <if test="driverId != null">
+                driver_Id = #{driverId},
             </if>
-            <if test="send_Date != null">
-                send_Date = #{send_Date}
+            <if test="sendDate != null">
+                send_Date = #{sendDate},
             </if>
-            <if test="acb_maintenance_content != null">
-                acb_maintenance_content = #{acb_maintenance_content}
+            <if test="acbMaintenanceContent != null">
+                acb_maintenance_content = #{acbMaintenanceContent},
             </if>
-            <if test="maintenance_Dept_Name != null">
-                maintenance_Dept_Name = #{maintenance_Dept_Name}
+            <if test="maintenanceDeptName != null">
+                maintenance_Dept_Name = #{maintenanceDeptName},
             </if>
-            <if test="	maintain_Dict_Id">
-                maintain_Dict_Id = #{maintain_Dict_Id}
+            <if test="maintainDictId !=null">
+                maintain_Dict_Id = #{maintainDictId},
             </if>
-            <if test="	acb_repair_reason">
-                acb_repair_reason = #{acb_repair_reason}
+            <if test="acbRepairReason !=null">
+                acb_repair_reason = #{acbRepairReason},
             </if>
-            <if test="	acb_before_maintenance">
-                acb_before_maintenance = #{acb_before_maintenance}
+            <if test="acbBeforeMaintenance !=null">
+                acb_before_maintenance = #{acbBeforeMaintenance},
             </if>
-            <if test="	acb_after_maintenance">
-                acb_after_maintenance = #{acb_after_maintenance}
+            <if test="acbAfterMaintenance!=null">
+                acb_after_maintenance = #{acbAfterMaintenance},
             </if>
-            <if test="is_Deleted!=null">
-                is_Deleted = #{is_Deleted}
+            <if test="acbBillAttachment!=null">
+                acb_bill_attachment =#{acbBillAttachment}
             </if>
         </set>
-        where id = #{id}
+        where id = ${id}
     </update>
-    <update id="updateB" parameterType="org.springblade.anbiao.weixiu.entity.FittingsEntity">
+    <update id="updateB" parameterType="org.springblade.anbiao.weixiu.DTO.FittingDTO">
         update anbiao_weixiucailiaomingxi
         <set>
             <if test="cailiaomingcheng !=null">
-                #{cailiaomingcheng},
+                cailiaomingcheng = #{cailiaomingcheng},
             </if>
             <if test="weihuid !=null">
-                #{weihuid},
+                weihuid = #{weihuid},
             </if>
             <if test="caozuoren !=null">
-                #{caozuoren}
+                caozuoren = #{caozuoren},
             </if>
             <if test="xinghao !=null">
-                #{xinghao},
+                xinghao = #{xinghao},
             </if>
             <if test="shuliang !=null">
-                #{shuliang},
+                shuliang = #{shuliang},
             </if>
             <if test="danjia!=null">
-                #{danjia},
+                danjia = #{danjia},
             </if>
             <if test="beizhu!=null">
-                #{beizhu},
+                beizhu = #{beizhu},
             </if>
             <if test="xiaoji!=null">
-                #{xiaoji},
-            </if>
-            <if test="isdelete!=null">
-                ${isdelete},
+                xiaoji = #{xiaoji},
             </if>
             <if test="createtime!=null">
-                #{createtime},
+                createtime = #{createtime},
             </if>
             <if test="caozuorenid!=null">
-                ${caozuorenid} ,
+                caozuorenid =  ${caozuorenid} ,
             </if>
             <if test="caozuoshijian!=null">
-                #{caozuoshijian}
+                caozuoshijian = #{caozuoshijian}
             </if>
         </set>
+        where weihuid = ${weihuid}
     </update>
 
 
 
 
     <!--删除维修-->
-    <delete id="deleteMain" parameterType="java.lang.Integer">
+    <delete id="deleteMain" parameterType="org.springblade.anbiao.weixiu.page.MaintenancePage">
         update anbiao_cheliang_baoyangweixiu set
             is_Deleted = 1
         WHERE id = #{id}
@@ -224,19 +317,41 @@
         a.*,
         b.dept_name as deptName
         from
-        anbiao_shigubaogao a
+        anbiao_cheliang_baoyangweixiu a
         inner join  (
         <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
-        ) b on a.dept_id = b.id
-        where a.is_deleted = 0
+        ) b on a.dept_Id = b.id
+        where a.is_Deleted = 0
+    </sql>
+
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by createtime desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order == 0">
+            asc
+        </if>
     </sql>
 
     <select id="selectTotal"
-            parameterType="org.springblade.anbiao.labor.page.LaborPage"
+            parameterType="org.springblade.anbiao.weixiu.page.MaintenancePage"
             resultType="int">
         select COUNT(1) from (
         <include refid="tableSql"/>
         )d where 1 = 1
+        <if test="asiYear!=null and asiYear!=''">
+            AND d.send_Date = #{asiYear}
+        </if>
+        <if test="deptName!=null and deptName!=''">
+            AND d.deptName= #{deptName}
+        </if>
     </select>
 
 

@@ -42,7 +42,7 @@ public class Richenganpai implements Serializable {
      */
     @ApiModelProperty(value = "主键id")
     @TableId(value = "id", type = IdType.AUTO)
-  private Integer id;
+  	private Integer id;
     /**
      * 单位di
      */

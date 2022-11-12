@@ -1,5 +1,7 @@
 package org.springblade.anbiao.SafeInvestment.service;
 
+import org.springblade.anbiao.SafeInvestment.DTO.SafeInvestmentDTO;
+import org.springblade.anbiao.SafeInvestment.VO.SafeAllVO;
 import org.springblade.anbiao.SafeInvestment.VO.SafeInvestmentVO;
 import org.springblade.anbiao.SafeInvestment.VO.SafetyInvestmentDetailsVO;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInput;
@@ -22,12 +24,14 @@ public interface SafeInvestmentService {
 //	 */
 //	List<SafeInvestmentVO> selectPage(SafeInvestmentDTO safeInvestmentDTO);
 
+	List<AnbiaoSafetyInputDetailed> selectd(SafeInvestmentDTO safeInvestmentDTO);
+
 	/**
 	 * 安全投入详细信息
 	 * @param
 	 * @return
 	 */
-	List<SafetyInvestmentDetailsVO> selectAll(String rid );
+	SafeAllVO selectAll(SafeInvestmentDTO safeInvestmentDTO );
 
 	/**
 	 * 新增 安全投入信息
@@ -45,17 +49,18 @@ public interface SafeInvestmentService {
 
 	/**
 	 * 删除
-	 * @param asi_dept_ids
+	 * @param
 	 * @return
 	 */
-	Boolean delete(String asi_dept_ids);
+	Boolean delete(SafeInvestmentDTO safeInvestmentDTO);
 
 	/**
 	 * 修改
-	 * @param anbiaoSafetyInput
+	 * @param
 	 * @return
 	 */
-	Boolean updateSafe(AnbiaoSafetyInput anbiaoSafetyInput);
+	Boolean updateSafe(SafeInvestmentDTO safeInvestmentDTO);
+	Boolean updateSafede(SafetyInvestmentDetailsVO safetyInvestmentDetailsVO);
 
 	SafelInfoPage selectPage(SafelInfoPage safelInfoPage);
 }

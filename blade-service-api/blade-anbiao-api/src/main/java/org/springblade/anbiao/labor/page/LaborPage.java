@@ -1,10 +1,12 @@
 package org.springblade.anbiao.labor.page;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springblade.common.BasePage;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -19,21 +21,38 @@ import java.util.Date;
 public class LaborPage extends BasePage{
 
 	@ApiModelProperty(value = "企业名")
-	private String ali_name;
+	private String aliName;
 
-	@ApiModelProperty(value = "时间")
-	private Date ali_issue_date;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+	private Date aliIssueDate;
 
 	@ApiModelProperty(value = "数量")
-	private Integer ali_issue_quantity;
+	private Integer aliIssueQuantity;
 
 	@ApiModelProperty(value = "发放人数")
 	private Integer ali_issue_people_number;
 
 	@ApiModelProperty(value = "发放人")
-	private String ali_application_scope;
+	private String aliApplicationScope;
 
 	@ApiModelProperty(value = "发放状态")
-	private String ali_status;
+	private String aliStatus;
 
+	@ApiModelProperty(value = "单位id",required = true)
+	private Integer deptId;
+
+	@ApiModelProperty(value = "开始时间")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+	private String asiYear;
+
+	@ApiModelProperty(value = "企业名称")
+	private String deptName;
+
+	private String 	aliIds;
+
+	private String Name;
+	@ApiModelProperty(value = "企业id")
+	private String ali_dept_ids;
 }

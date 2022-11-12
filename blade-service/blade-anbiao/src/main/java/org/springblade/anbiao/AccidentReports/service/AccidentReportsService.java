@@ -20,7 +20,7 @@ public interface AccidentReportsService {
 	 * @param accidentPage
 	 * @return
 	 */
-	List<AccidentReportsVO> selectList(AccidentPage accidentPage);
+	AccidentPage selectList(AccidentPage accidentPage);
 
 	/**
 	 * 事故报告详细信息
@@ -28,7 +28,7 @@ public interface AccidentReportsService {
 	 * @param
 	 * @return
 	 */
-	List<AccidentReportsVO> selectAll(String rid);
+	AccidentReportsVO selectAll(AccidentPage accidentPage);
 
 	/**
 	 * 新增 事故报告
@@ -40,10 +40,10 @@ public interface AccidentReportsService {
 
 	/**
 	 * 删除
-	 * @param id
+	 * @param
 	 * @return
 	 */
-	Boolean deleteAccident(String id);
+	Boolean deleteAccident(AccidentPage accidentPage);
 
 	/**
 	 * 修改

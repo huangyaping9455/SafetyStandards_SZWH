@@ -19,7 +19,7 @@ import java.util.List;
  * @since 2022-11-01
  */
 @Service
-@AllArgsConstructor
+//@AllArgsConstructor
 public class AnbiaoAnquanhuiyiServiceImpl extends ServiceImpl<AnbiaoAnquanhuiyiMapper, AnbiaoAnquanhuiyi> implements IAnbiaoAnquanhuiyiService {
 
 	AnbiaoAnquanhuiyiMapper mapper;

@@ -1,11 +1,8 @@
 package org.springblade.anbiao.weixiucheliang.service;
 
-import org.springblade.anbiao.weixiu.DTO.MaintenanceDTO;
-import org.springblade.anbiao.weixiu.VO.MaintenanceVO;
+import org.springblade.anbiao.weixiu.entity.FittingsEntity;
 import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
 import org.springblade.anbiao.weixiu.page.MaintenancePage;
-
-
 
 import java.util.List;
 
@@ -23,33 +20,41 @@ public interface MaintenanceService {
 	 * @param maintenancePage
 	 * @return
 	 */
-	List<MaintenanceVO> selectList(MaintenancePage maintenancePage);
+	MaintenancePage selectList(MaintenancePage maintenancePage);
 
 	/**
 	 * 维修详细信息
 	 * @param
 	 * @return
 	 */
-	List<MaintenanceEntity> selectAll(String rid);
+	MaintenanceEntity selectAll(MaintenancePage maintenancePage);
+
+	/**
+	 * 配件
+	 *
+	 * @param maintenancePage
+	 * @return
+	 */
+	List<FittingsEntity> selectC(MaintenancePage maintenancePage);
 
 	/**
 	 * 新增 维修
 	 * @param
 	 * @return
 	 */
-	Boolean insertOne(MaintenanceDTO maintenanceDTO);
+	Boolean insertOne(MaintenanceEntity maintenanceDTO);
 
 
 	/**
 	 * 删除
-	 * @param id
+	 * @param
 	 * @return
 	 */
-	Boolean deleteAccident(String id);
+	Boolean deleteAccident(MaintenancePage maintenancePage);
 
 	/**
 	 * 修改
 	 * @return
 	 */
-	Boolean updateAccident(MaintenanceDTO maintenanceDTO);
+	Boolean updateAccident(MaintenanceEntity maintenanceEntity);
 }

@@ -9,13 +9,20 @@ import lombok.Data;
  */
 @Data
 public class MaintenanceVO {
-	private String det_name;
-	private String card;
+
+	private Long Id;
+	private String deptName;
+	private String carNum;
+	private Integer	dept_Id;
+	private String cheliangpaizhao;
 	private String driverName;
-	private String acb_maintenance_content;
-	private String	acb_repair_reason;
-	private String	acb_before_maintenance;
-	private Integer maintain_Dict_Id;
-	private String send_Date;
-	private String maintenance_Dept_Name;
+	private String acbMaintenanceContent;
+	private String	acbRepairReason;
+	private String	acbBeforeMaintenance;
+	private String driverId;
+	private String acbBillAttachment;
+	private Integer maintainDictId;
+	private String acbAfterMaintenance;
+	private String sendDate;
+	private String maintenanceDeptName;
 }

@@ -1,6 +1,7 @@
 package org.springblade.anbiao.AccidentReports.VO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -13,7 +14,8 @@ import java.util.Date;
  */
 @Data
 public class AccidentReportsVO {
-	private String det_name;
+	private String id;
+	private String deptName;
 	private String 	shigufashengdidian;
 	private Date shigufashengshijian;
 	private String shiguxingzhi;
@@ -22,11 +24,17 @@ public class AccidentReportsVO {
 	private String 	chepaihao;
 	private String jiashiyuan;
 	private String AccidentName;
+	private Integer siwang;
+	private String shigugaikuang;
+	@ApiModelProperty(value = "单位id",required = true)
+	private Integer deptId;
 	@JsonFormat(shape = JsonFormat.Shape.STRING , pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Shanghai")
 	private Date caozuoshijian;
+	private String fujian;
 	private BigDecimal jianjiejingjisunshi;
 	private BigDecimal caichansunshi;
 	private String shangwangcaichansunshi;
 	private String shiguzhaopian;
 	private String shiguzhijieyuanyin;
+	private Integer shoushang;
 }

@@ -11,11 +11,12 @@ import java.util.Date;
  */
 @Data
 public class LaborVO {
-	private String ali_name;
-	private Date ali_issue_date;
-	private Integer ali_issue_quantity;
-	private Integer ali_issue_people_number;
-	private String ali_status;
-	private String ali_application_scope;
-	private String det_name;
+	private String aliName;
+	private Date aliIssueDate;
+	private Integer aliIssueQuantity;
+	private Integer aliIssuePeopleNumber;
+	private String aliStatus;
+	private String aliApplicationScope;
+	private String detName;
+	private String 	aliIds;
 }

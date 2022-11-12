@@ -20,15 +20,16 @@ public interface AccidentReportsMapper {
 	 * @return
 	 */
 	List<AccidentReportsVO> selectList(AccidentPage accidentPage);
-//	int selectTotal();
+	int selectTotal(AccidentPage accidentPage);
 
 	/**
 	 * 事故报告详细信息
 	 *
 	 * @param
+	 * @param accidentPage
 	 * @return
 	 */
-	List<AccidentReportsVO> selectAll(String id );
+	AccidentReportsVO selectAll(AccidentPage accidentPage);
 
 
 	/**
@@ -51,5 +52,5 @@ public interface AccidentReportsMapper {
 	 * @param
 	 * @return
 	 */
-	Boolean deleteAcc(String id);
+	Boolean deleteAcc(AccidentPage accidentPage);
 }

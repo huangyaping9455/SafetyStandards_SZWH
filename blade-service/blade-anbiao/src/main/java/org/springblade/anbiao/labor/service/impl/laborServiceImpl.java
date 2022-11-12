@@ -1,16 +1,19 @@
 package org.springblade.anbiao.labor.service.impl;
 
 
+import lombok.AllArgsConstructor;
 import org.springblade.anbiao.labor.DTO.laborDTO;
 import org.springblade.anbiao.labor.VO.LaborVO;
 import org.springblade.anbiao.labor.VO.graphicsVO;
+import org.springblade.anbiao.labor.entity.Labor;
+import org.springblade.anbiao.labor.entity.LaborEntity;
+import org.springblade.anbiao.labor.entity.LaborlingquEntity;
 import org.springblade.anbiao.labor.mapper.laborMapper;
 import org.springblade.anbiao.labor.page.LaborPage;
 import org.springblade.anbiao.labor.service.laborService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,14 +22,15 @@ import java.util.List;
  * @Date :2022/11/3 21:40
  */
 @Service
+@AllArgsConstructor
 public class laborServiceImpl implements laborService {
 
-	private laborMapper mapper;
+	private laborMapper laborMapper;
 
 	@Override
-	public LaborPage selectList(LaborPage laborPage,String id,Date startTime,Date endTime) {
-		int total = mapper.selectTotal(laborPage);
-		Integer safelPagetotal = 0;
+	public LaborPage selectPage(LaborPage laborPage) {
+		int total = laborMapper.selectTotal(laborPage);
+		Integer LaborPagetotal = 0;
 		if (laborPage.getSize() == 0) {
 			if (laborPage.getTotal() == 0) {
 				laborPage.setTotal(total);
@@ -34,44 +38,58 @@ public class laborServiceImpl implements laborService {
 			if (laborPage.getTotal() == 0) {
 				return laborPage;
 			} else {
-				List<LaborVO> laborVOS = mapper.selectList(laborPage,id,startTime,endTime);
+				List<LaborVO> laborVOS = laborMapper.selectList(laborPage);
 				laborPage.setRecords(laborVOS);
 				return laborPage;
 			}
 		}
 		if (total > 0) {
 			if (total % laborPage.getSize() == 0) {
-				safelPagetotal = total / laborPage.getSize();
+				LaborPagetotal = total / laborPage.getSize();
 			} else {
-				safelPagetotal = total / laborPage.getSize() + 1;
+				LaborPagetotal = total / laborPage.getSize() + 1;
 			}
 		}
-		if (safelPagetotal < laborPage.getCurrent()) {
+		if (LaborPagetotal < laborPage.getCurrent()) {
 			return laborPage;
 		} else {
-			laborPage.setPageTotal(safelPagetotal);
+			laborPage.setPageTotal(LaborPagetotal);
 			Integer offsetNo = 0;
 			if (laborPage.getCurrent() > 1) {
 				offsetNo = laborPage.getSize() * (laborPage.getCurrent() - 1);
 			}
 			laborPage.setTotal(total);
 			laborPage.setOffsetNo(offsetNo);
-			List<LaborVO> laborVOS = mapper.selectList(laborPage,id,startTime,endTime);
+			List<LaborVO> laborVOS = laborMapper.selectList(laborPage);
 			laborPage.setRecords(laborVOS);
 			return laborPage;
 		}
+	}
 
+	@Override
+	public LaborEntity selectAll(LaborPage laborPage) {
+		return laborMapper.selectAll(laborPage);
+	}
+
+	@Override
+	public List<Labor> selectC(LaborPage laborPage) {
+		return laborMapper.selectC(laborPage);
 	}
 
 
 	@Override
 	public Boolean insertOne(laborDTO laborDTO) {
-		return mapper.insertOne(laborDTO);
+		return laborMapper.insertOne(laborDTO);
+	}
+
+	@Override
+	public Boolean insertA(Labor labor) {
+		return laborMapper.insertA(labor);
 	}
 
 	@Override
 	public graphicsVO selectGraphics(String ali_name) {
-		graphicsVO graphicsVO = mapper.selectGrapsihVO(ali_name);
+		graphicsVO graphicsVO = laborMapper.selectGrapsihVO(ali_name);
 		Integer number = graphicsVO.getAli_issue_people_number();
 		Integer quantity = graphicsVO.getAli_issue_quantity();
 		/**计算百分比**/
@@ -91,12 +109,22 @@ public class laborServiceImpl implements laborService {
 
 
 	@Override
-	public Boolean deleteAccident(String ali_ids) {
-		return mapper.deleteLao(ali_ids);
+	public Boolean deleteAccident(laborDTO laborDTO) {
+		return laborMapper.deleteLao(laborDTO);
 	}
 
 	@Override
-	public Boolean updateAccident(laborDTO laborDTO) {
-		return mapper.updateLao(laborDTO);
+	public Boolean updateAccident(LaborEntity laborEntity) {
+		return laborMapper.updateLao(laborEntity);
+	}
+
+	@Override
+	public Boolean updateA(Labor labor) {
+		return laborMapper.updateA(labor);
+	}
+
+	@Override
+	public Boolean updateL(LaborlingquEntity laborlingqu) {
+		return laborMapper.updateL(laborlingqu);
 	}
 }

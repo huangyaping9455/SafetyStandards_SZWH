@@ -1,6 +1,8 @@
 package org.springblade.anbiao.AccidentReports.DTO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -12,9 +14,16 @@ import java.util.Date;
  */
 @Data
 public class AccidentReportsDTO {
-	private String det_name;
+	private String id;
+	private String detName;
+	private Integer deptId;
 	private String 	shigufashengdidian;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
 	private Date shigufashengshijian;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+	private Date caozuoshijian;
 	private String shiguxingzhi;
 	private String shigufenlei;
 	private String shiguzeren;
@@ -29,4 +38,5 @@ public class AccidentReportsDTO {
 	private String shigugaikuang;
 	private String shangwangcaichansunshi;
 	private String shigubaogaoid;
+	private String ali_delete;
 }

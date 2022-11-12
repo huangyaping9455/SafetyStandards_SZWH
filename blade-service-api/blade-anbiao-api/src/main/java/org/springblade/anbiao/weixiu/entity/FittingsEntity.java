@@ -15,15 +15,15 @@ import java.math.BigDecimal;
 @Data
 @TableName("anbiao_weixiu_peijian")
 public class FittingsEntity {
-	@TableId(value = "id", type = IdType.UUID)
-	private Long awp_ids;
-	private Long awp_fs_ids;
-	private String awp_fs_name;
-	private String	awp_name;
-	private String awp_model;
-	private String	awp_unit;
-	private BigDecimal awp_purchase_price;
-	private BigDecimal 	awp_unit_price;
-	private String awp_remarks;
-
+	private Long awpIds;
+	private Long awpFsIds;
+	private Integer id;
+	private String awpFsName;
+	private String	awpName;
+	private String awpModel;
+	private String	awpUnit;
+	private BigDecimal awpPurchasePrice;
+	private BigDecimal 	awpUnitPrice;
+	private String awpRemarks;
+	private Integer peijianID;
 }

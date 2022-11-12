@@ -1,11 +1,12 @@
 package org.springblade.anbiao.labor.service;
 
 import org.springblade.anbiao.labor.DTO.laborDTO;
-import org.springblade.anbiao.labor.VO.LaborVO;
 import org.springblade.anbiao.labor.VO.graphicsVO;
+import org.springblade.anbiao.labor.entity.Labor;
+import org.springblade.anbiao.labor.entity.LaborEntity;
+import org.springblade.anbiao.labor.entity.LaborlingquEntity;
 import org.springblade.anbiao.labor.page.LaborPage;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,17 +17,19 @@ import java.util.List;
 public interface laborService {
 	/**
 	 * 劳保列表信息
+	 *
 	 * @param
 	 * @return
 	 */
-	LaborPage selectList(LaborPage laborPage,String id,Date startTime,Date endTime);
+	LaborPage selectPage(LaborPage laborPage);
 
-//	/**
-//	 * 劳保详细信息
-//	 * @param
-//	 * @return
-//	 */
-//	List<LaborVO> selectAll();
+	/**
+	 * 查询信息
+	 * @param laborPage
+	 * @return
+	 */
+	LaborEntity selectAll(LaborPage laborPage);
+	List<Labor> selectC(LaborPage laborPage);
 
 	/**
 	 * 新增 劳保
@@ -34,6 +37,7 @@ public interface laborService {
 	 * @return
 	 */
 	Boolean insertOne(laborDTO laborDTO);
+	Boolean insertA(Labor labor);
 
 	/**
 	 * 返回劳保图形统计
@@ -42,14 +46,16 @@ public interface laborService {
 
 	/**
 	 * 删除
-	 * @param id
+	 * @param
 	 * @return
 	 */
-	Boolean deleteAccident(String id);
+	Boolean deleteAccident(laborDTO laborDTO);
 
 	/**
 	 * 修改
 	 * @return
 	 */
-	Boolean updateAccident(laborDTO laborDTO);
+	Boolean updateAccident(LaborEntity laborEntity);
+	Boolean updateA(Labor labor);
+	Boolean updateL(LaborlingquEntity laborlingqu);
 }

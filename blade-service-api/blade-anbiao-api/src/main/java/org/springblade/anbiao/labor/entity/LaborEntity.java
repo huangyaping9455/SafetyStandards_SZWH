@@ -3,9 +3,12 @@ package org.springblade.anbiao.labor.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Description :
@@ -15,24 +18,29 @@ import java.util.Date;
 @Data
 @TableName("anbiao_labor_insurance")
 public class LaborEntity {
-	@TableId(value = "asi_ids",type = IdType.UUID)
-	private String 	ali_ids;
-	private Integer ali_dept_ids;
-	private String ali_name;
-	private Date ali_issue_date;
-	private Integer ali_issue_quantity;
-	private Integer ali_collected_amount;
-	private Integer ali_collected_quantity;
-	private Integer ali_issue_people_number;
-	private Date ali_valid_from;
-	private Date ali_expiry_date;
-	private String ali_status;
-	private String ali_application_scope;
-	private String ali_delete;
-	private Date ali_create_time;
-	private String ali_create_by_ids;
-	private String ali_create_by_name;
-	private Date ali_update_time;
-	private String ali_update_by_ids;
-	private String ali_update_by_name;
+
+	private String 	aliIds;
+	private Integer aliDeptIds;
+	private String aliName;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+	private String aliIssueDate;
+	private Integer aliIssueQuantity;
+	private Integer aliCollectedAmount;
+	private Integer aliCollectedQuantity;
+	private Integer aliIssuePeopleNumber;
+	private Date aliValidFrom;
+	private Date aliExpiryDate;
+	private String aliStatus;
+	private String aliApplicationScope;
+	private String aliDelete;
+	private Date aliCreateTime;
+	private String aliCreateByIds;
+	private String aliCreateByName;
+	private Date aliUpdateTime;
+	private String aliUpdateByIds;
+	private String aliUpdateByName;
+
+	private String deptId;
+	private List<Labor> labor;
 }

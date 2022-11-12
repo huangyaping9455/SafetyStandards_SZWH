@@ -1,8 +1,8 @@
 package org.springblade.anbiao.SafeInvestment.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.AllArgsConstructor;
-import org.apache.ibatis.annotations.Param;
+import org.springblade.anbiao.SafeInvestment.DTO.SafeInvestmentDTO;
+import org.springblade.anbiao.SafeInvestment.VO.SafeAllVO;
 import org.springblade.anbiao.SafeInvestment.VO.SafeInvestmentVO;
 import org.springblade.anbiao.SafeInvestment.VO.SafetyInvestmentDetailsVO;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInput;
@@ -11,6 +11,7 @@ import org.springblade.anbiao.SafeInvestment.mapper.SafeInvestmentMapper;
 import org.springblade.anbiao.SafeInvestment.page.SafelInfoPage;
 import org.springblade.anbiao.SafeInvestment.service.SafeInvestmentService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -25,14 +26,22 @@ public class SafeInvestmentServiceImpl implements SafeInvestmentService {
 	private SafeInvestmentMapper safeInvestmentMapper;
 
 
+	@Override
+	public List<AnbiaoSafetyInputDetailed> selectd(SafeInvestmentDTO safeInvestmentDTO) {
+		return safeInvestmentMapper.selectd(safeInvestmentDTO);
+	}
+
 	/**
 	 * 安全投入详细信息
 	 * @param
 	 * @return
 	 */
 	@Override
-	public List<SafetyInvestmentDetailsVO> selectAll(String asid_asi_ids) {
-		return safeInvestmentMapper.selectAll(asid_asi_ids);
+	public SafeAllVO selectAll(SafeInvestmentDTO safeInvestmentDTO) {
+		List<SafetyInvestmentDetailsVO> safetyInvestmentDetailsVOS = safeInvestmentMapper.selectAll(safeInvestmentDTO);
+		SafeAllVO safeAllVO = safeInvestmentMapper.selectA(safeInvestmentDTO);
+		safeAllVO.setSafetyInvestmentDetailsVOS(safetyInvestmentDetailsVOS);
+		return safeAllVO;
 	}
 
 	@Override
@@ -46,13 +55,18 @@ public class SafeInvestmentServiceImpl implements SafeInvestmentService {
 	}
 
 	@Override
-	public Boolean delete(String asi_dept_ids) {
-		return safeInvestmentMapper.deleteSafe(asi_dept_ids);
+	public Boolean delete(SafeInvestmentDTO safeInvestmentDTO) {
+		return safeInvestmentMapper.deleteSafe(safeInvestmentDTO);
 	}
 
 	@Override
-	public Boolean updateSafe(AnbiaoSafetyInput anbiaoSafetyInput) {
-		return safeInvestmentMapper.updateSafe(anbiaoSafetyInput);
+	public Boolean updateSafe(SafeInvestmentDTO safeInvestmentDTO) {
+		return safeInvestmentMapper.updateSafe(safeInvestmentDTO);
+	}
+
+	@Override
+	public Boolean updateSafede(SafetyInvestmentDetailsVO safetyInvestmentDetailsVO) {
+		return safeInvestmentMapper.updateSafede(safetyInvestmentDetailsVO);
 	}
 
 	/**
