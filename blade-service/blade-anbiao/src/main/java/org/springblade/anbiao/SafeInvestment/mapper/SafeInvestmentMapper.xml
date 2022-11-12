@@ -4,104 +4,186 @@
 
     <!--安全列表-->
     <select id="selectList" parameterType="org.springblade.anbiao.SafeInvestment.page.SafelInfoPage" resultType="org.springblade.anbiao.SafeInvestment.VO.SafeInvestmentVO">
-        select
-            a.asi_ids,a.asi_dept_ids,a.asi_year,a.asi_last_years_turnover,a.asi_extraction_proportion,
-            a.asi_withdrawal_amount,a.asi_accrued_amount,a.asi_amount_used,a.asi_remaining_amount,
-            a.asi_delete,a.asi_create_time,	a.asi_create_by_ids,a.asi_create_by_name,a.asi_update_time,
-            a.asi_update_by_ids,a.asi_update_by_name,b.dept_name
+        <if test="size==0">
+            select
+            a.asi_ids AS asiIds,a.asi_dept_ids AS asiDeptIds,a.asi_year AS asiYear,a.asi_last_years_turnover AS asiLastYearsTurnover,a.asi_extraction_proportion AS asiExtractionProportion,
+            a.asi_withdrawal_amount AS asiWithdrawalAmount,a.asi_accrued_amount AS asiAccruedAmount,a.asi_amount_used AS asiAmountUsed,a.asi_remaining_amount AS asiRemainingAmount,
+            a.asi_delete AS asiDelete,a.asi_create_time AS asiCreateTime,a.asi_create_by_ids AS asiCreateByIds,a.asi_create_by_name AS asiCreateByName,a.asi_update_time AS asiUpdateTime,
+            a.asi_update_by_ids AS asiUpdateByIds,a.asi_update_by_name AS asiUpdateByName,b.dept_name AS deptName
         from
             anbiao_safety_input a
         inner join (
             <include
                 refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) b on a.asi_dept_ids = b.id
-        where a.asi_delete = 0 AND
-            a.asi_update_time between #{startTime} and #{endTime}
-        <if test="size==0">
+        where ifnull( a.asi_delete , 0 ) = 0
+            <if test="asiYear!=null and asiYear!=''">
+              AND  a.asi_year= #{asiYear}
+            </if>
+            <if test="deptName!=null and deptName!=''">
+                AND  b.dept_name= #{deptName}
+            </if>
            limit ${total}
         </if>
         <if test="current != 0">
-           limit ${offsetNo},${size}
+            select
+            a.asi_ids AS asiIds,a.asi_dept_ids AS asiDeptIds,a.asi_year AS asiYear,a.asi_last_years_turnover AS asiLastYearsTurnover,a.asi_extraction_proportion AS asiExtractionProportion,
+            a.asi_withdrawal_amount AS asiWithdrawalAmount,a.asi_accrued_amount AS asiAccruedAmount,a.asi_amount_used AS asiAmountUsed,a.asi_remaining_amount AS asiRemainingAmount,
+            a.asi_delete AS asiDelete,a.asi_create_time AS asiCreateTime,a.asi_create_by_ids AS asiCreateByIds,a.asi_create_by_name AS asiCreateByName,a.asi_update_time AS asiUpdateTime,
+            a.asi_update_by_ids AS asiUpdateByIds,a.asi_update_by_name AS asiUpdateByName,b.dept_name AS deptName
+            from
+            anbiao_safety_input a
+            inner join (
+            <include
+                refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) b on a.asi_dept_ids = b.id
+            where ifnull( a.asi_delete , 0 ) = 0
+            <if test="asiYear!=null and asiYear!=''">
+             AND   a.asi_year= #{asiYear}
+            </if>
+            <if test="deptName!=null and deptName!=''">
+                AND  b.dept_name= #{deptName}
+            </if>
+            limit ${offsetNo},${size}
         </if>
     </select>
 
     <!--安全投入详细信息-->
-    <select id="selectAll"  resultType="org.springblade.anbiao.SafeInvestment.VO.SafetyInvestmentDetailsVO">
+    <select id="selectAll" parameterType="org.springblade.anbiao.SafeInvestment.DTO.SafeInvestmentDTO" resultType="org.springblade.anbiao.SafeInvestment.VO.SafetyInvestmentDetailsVO">
         SELECT
-        asid_ids,
-        asid_asi_ids,
-        asid_entry_name,
-        asid_handled_by_ids,
-        asid_handled_by_name,
-        asid_investment_scope,
-        asid_investment_dare,
-        asid_amount_used,
-        asid_delete
+        asid_ids AS asidIds,
+        asid_asi_ids AS asidAsiIds,
+        asid_entry_name AS asidEntryName,
+        asid_handled_by_ids AS asidHandledByIds,
+        asid_handled_by_name AS asidHandledByName,
+        asid_investment_scope AS asidInvestmentScope,
+        asid_investment_dare AS asidInvestmentDare,
+        asid_amount_used AS asidAmountUsed,
+        asid_delete AS asidDelete
         FROM
         anbiao_safety_input_detailed
-        WHERE
-        <if test = "_parameter!= null and _parameter!= ''" >
-            asid_asi_ids = #{asid_asi_ids}
+        <where>
+        <if test = "asiIds!= null and asiIds!= ''" >
+            asid_asi_ids = #{asiIds} AND
         </if>
-        AND ifnull( asid_delete, 0 ) = 0
+         ifnull( asid_delete, 0 ) = 0
+        </where>
     </select>
+
+    <select id="selectA" parameterType="org.springblade.anbiao.SafeInvestment.DTO.SafeInvestmentDTO"  resultType="org.springblade.anbiao.SafeInvestment.VO.SafeAllVO">
+        SELECT
+        asi_ids AS asiIds,
+        asi_dept_ids AS asiDeptIds,
+        asi_year AS asiYear,
+        asi_last_years_turnover AS asiLastYearsTurnover,
+        asi_extraction_proportion AS asiExtractionProportion,
+        asi_withdrawal_amount AS asiWithdrawalAmount,
+        asi_accrued_amount AS asiAccruedAmount,
+        asi_amount_used AS asiAmountUsed,
+        asi_remaining_amount AS asiRemainingAmount,
+        asi_delete AS asiDelete
+        FROM
+        anbiao_safety_input
+        <where>
+        <if test = "asiIds!= null and asiIds!= ''" >
+            asi_ids = #{asiIds} AND
+        </if>
+        ifnull( asi_delete, 0 ) = 0
+        </where>
+    </select>
+
 
     <!--新增安全投入详细信息-->
     <insert id="insertOne" parameterType="org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInput">
-        insert IGNORE into anbiao_safety_input(asi_ids,asi_year,asi_last_years_turnover,asi_extraction_proportion,asi_withdrawal_amount,
-            asi_accrued_amount,asi_amount_used,asi_remaining_amount,asi_delete
+        insert  into anbiao_safety_input(asi_ids,asi_dept_ids,asi_year,asi_last_years_turnover,asi_extraction_proportion,asi_withdrawal_amount,
+            asi_accrued_amount,asi_amount_used,asi_remaining_amount,asi_delete,	asi_create_time
         )
-        values (asi_ids,asi_year,asi_last_years_turnover,asi_extraction_proportion,asi_withdrawal_amount,
-            asi_accrued_amount,asi_amount_used,asi_remaining_amount,asi_delete
+        values (#{asi_ids},#{asi_dept_ids},#{asi_year},#{asi_last_years_turnover},#{asi_extraction_proportion},#{asi_withdrawal_amount},
+            #{asi_accrued_amount},#{asi_amount_used},#{asi_remaining_amount},0,now()
                )
     </insert>
 
     <insert id="insertInput" parameterType="org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInputDetailed">
-        insert into anbiao_safety_input_detailed(asid_ids,asid_entry_name,asid_handled_by_name,asid_investment_scope,asid_investment_dare,asid_amount_used,asid_delete)
+        insert  into anbiao_safety_input_detailed(asid_ids,asid_asi_ids,asid_entry_name,asid_handled_by_name,asid_handled_by_ids,asid_investment_scope,asid_investment_dare,asid_amount_used,asid_delete)
         values
-            (#{asid_entry_name},
-             #{asid_ids},
-            #{asid_handled_by_name},
-            #{asid_investment_scope},
-            #{asid_investment_dare},
-            #{asid_amount_used},
-            #{asid_delete}
+            (#{asidIds},
+            #{asidAsiIds},
+            #{asidEntryName},
+            #{asidHandledByName},
+            #{asidInvestmentScope},
+            #{asidHandledByIds},
+            #{asidInvestmentDare},
+            #{asidAmountUsed},
+            0
              )
 
     </insert>
 
+    <select id="selectd" parameterType="org.springblade.anbiao.SafeInvestment.DTO.SafeInvestmentDTO" resultType="org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInputDetailed">
+        select asid_asi_ids AS asidAsiIds from anbiao_safety_input_detailed where asid_asi_ids = #{asiIds}
+    </select>
+
 
     <!--修改安全投入-->
-    <update id="updateSafe" parameterType="org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInput">
+    <update id="updateSafe" parameterType="org.springblade.anbiao.SafeInvestment.DTO.SafeInvestmentDTO">
         update anbiao_safety_input
         <set>
-            <if test="asi_year != null">
-                asi_year = #{asi_year}
+            <if test="asiYear != null">
+                asi_year = #{asiYear},
             </if>
-            <if test="asi_extraction_proportion != null">
-                asi_extraction_proportion = #{asi_extraction_proportion}
+            <if test="asiExtractionProportion != null">
+                asi_extraction_proportion = #{asiExtractionProportion},
             </if>
-            <if test="asi_withdrawal_amount != null">
-                asi_withdrawal_amount = #{asi_withdrawal_amount}
+            <if test="asiWithdrawalAmount != null">
+                asi_withdrawal_amount = #{asiWithdrawalAmount},
             </if>
-            <if test="asi_accrued_amount != null">
-                asi_accrued_amount = #{asi_accrued_amount}
+            <if test="asiAccruedAmount != null">
+                asi_accrued_amount = #{asiAccruedAmount},
             </if>
-            <if test="asi_amount_used != null">
-                asi_amount_used = #{asi_amount_used}
+            <if test="asiAmountUsed != null">
+                asi_amount_used = #{asiAmountUsed},
             </if>
-            <if test="asi_remaining_amount != null">
-                asi_remaining_amount = #{asi_remaining_amount}
+            <if test="asiRemainingAmount != null">
+                asi_remaining_amount = #{asiRemainingAmount},
+            </if>
+            <if test="asiLastYearsTurnover != null">
+                asi_last_years_turnover = #{asiLastYearsTurnover},
+            </if>
+            <if test="asiDeptIds != null">
+                asi_dept_ids = #{asiDeptIds}
             </if>
         </set>
-        where asi_dept_ids = #{asi_dept_ids}
+        where asi_ids = #{asiIds}
+    </update>
+    <update id="updateSafede" parameterType="org.springblade.anbiao.SafeInvestment.VO.SafetyInvestmentDetailsVO">
+        update anbiao_safety_input_detailed
+        <set>
+            <if test="asidEntryName != null">
+                asid_entry_name = #{asidHandledByName},
+            </if>
+            <if test="asidHandledByName != null">
+                asid_handled_by_name = #{asidHandledByName},
+            </if>
+            <if test="asidInvestmentScope != null">
+                asid_investment_scope = #{asidInvestmentScope},
+            </if>
+            <if test="asidInvestmentDare != null">
+                asid_investment_dare = #{asidInvestmentDare},
+            </if>
+            <if test="asidAmountUsed != null">
+                asid_amount_used = #{asidAmountUsed},
+            </if>
+            asid_handled_by_ids = #{asidHandledByIds}
+        </set>
+        where asid_asi_ids = #{asidIds}
     </update>
 
+
     <!--删除安全投入-->
-    <update id="deleteSafe" parameterType="java.lang.String" >
+    <update id="deleteSafe" parameterType="org.springblade.anbiao.SafeInvestment.DTO.SafeInvestmentDTO" >
         update anbiao_safety_input set
-            asi_delete = 1
-        WHERE asi_dept_ids = #{asi_dept_ids}
+            asi_delete = 1,asi_update_by_ids = #{deptId}
+        WHERE asi_ids = #{asiIds}
     </update>
 
     <sql id="tableSql">
@@ -145,6 +227,12 @@
             resultType="int">
         select COUNT(1) from (
         <include refid="tableSql"/>
-        )d where 1 = 1
+        )b where 1 = 1
+        <if test="asiYear!=null and asiYear!=''">
+            AND b.asi_year = #{asiYear}
+        </if>
+        <if test="deptName!=null and deptName!=''">
+        AND  b.deptName= #{deptName}
+        </if>
     </select>
 </mapper>

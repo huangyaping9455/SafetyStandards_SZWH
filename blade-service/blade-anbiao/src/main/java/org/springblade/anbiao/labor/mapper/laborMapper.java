@@ -1,11 +1,15 @@
 package org.springblade.anbiao.labor.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.mapstruct.Mapper;
 import org.springblade.anbiao.labor.DTO.laborDTO;
 import org.springblade.anbiao.labor.VO.LaborVO;
 import org.springblade.anbiao.labor.VO.graphicsVO;
+import org.springblade.anbiao.labor.entity.Labor;
+import org.springblade.anbiao.labor.entity.LaborEntity;
+import org.springblade.anbiao.labor.entity.LaborlingquEntity;
 import org.springblade.anbiao.labor.page.LaborPage;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,7 +19,8 @@ import java.util.List;
  * @Author : long
  * @Date :2022/11/3 21:40
  */
-public interface laborMapper {
+@Mapper
+public interface laborMapper extends BaseMapper<LaborEntity> {
 	/**
 	 * 劳保列表
 	 *
@@ -23,9 +28,11 @@ public interface laborMapper {
 	 * @param laborPage
 	 * @return
 	 */
-	List<LaborVO> selectList(LaborPage laborPage,String id,Date startTime,Date endTime);
+	List<LaborVO> selectList(LaborPage laborPage);
 	int selectTotal(LaborPage laborPage);
 
+	LaborEntity selectAll(LaborPage laborPage);
+	List<Labor> selectC(LaborPage laborPage);
 //	/**
 //	 * 劳保详细信息
 //	 *
@@ -45,7 +52,7 @@ public interface laborMapper {
 	 * @return
 	 */
 	Boolean insertOne(laborDTO laborDTO);
-
+	Boolean insertA(Labor laborDTO);
 
 
 	/**
@@ -53,12 +60,14 @@ public interface laborMapper {
 	 * @param
 	 * @return
 	 */
-	Boolean updateLao(laborDTO laborDTO);
+	Boolean updateLao(LaborEntity laborEntity);
 
+	Boolean updateL(LaborlingquEntity laborlingqu);
+	Boolean updateA(Labor labor);
 	/**
 	 * 删除
 	 * @param
 	 * @return
 	 */
-	Boolean deleteLao(String ali_ids);
+	Boolean deleteLao(laborDTO laborDTO);
 }

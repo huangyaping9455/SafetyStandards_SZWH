@@ -3,6 +3,7 @@ package org.springblade.anbiao.SafeInvestment.page;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springblade.common.BasePage;
 
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ import java.util.Date;
  * @Date :2022/11/8 17:24
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @ApiModel(value = "SsafelPage对象", description = "SsafelPage对象")
 public class SafelInfoPage extends BasePage {
 
@@ -41,10 +43,8 @@ public class SafelInfoPage extends BasePage {
 	private BigDecimal asi_withdrawal_amount;
 
 	@ApiModelProperty(value = "开始时间")
-	private Date startTime;
+	private String asiYear;
 
-	@ApiModelProperty(value = "结束时间")
-	private Date endTime;
 
 	@ApiModelProperty(value = "单位id",required = true)
 	private Integer deptId;

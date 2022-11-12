@@ -1,11 +1,13 @@
 package org.springblade.anbiao.SafeInvestment.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @Description :
@@ -17,21 +19,23 @@ import java.io.Serializable;
 public class AnbiaoSafetyInputDetailed implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String asid_ids;
+	private String asidIds;
 
-	private String asid_asi_ids;
+	private String asidAsiIds;
 
-	private String asid_entry_name;
+	private String asidEntryName;
 
-	private String asid_handled_by_ids;
+	private String asidHandledByIds;
 
-	private String asid_handled_by_name;
+	private String asidHandledByName;
 
-	private String asid_investment_scope;
+	private String asidInvestmentScope;
 
-	private String asid_investment_dare;
+	@DateTimeFormat(pattern="yyyy")
+	@JsonFormat(pattern = "yyyy",timezone = "GMT+8")
+	private Date asidInvestmentDare;
 
-	private String 	asid_amount_used;
+	private String 	asidAmountUsed;
 
-	private String asid_delete;
+	private String asidDelete;
 }

@@ -15,7 +15,7 @@ import java.util.Date;
 @TableName("anbiao_shigubaogao")
 public class AccidentReportsEntity {
 	private String id;
-	private Integer dept_id;
+	private Integer deptId;
 	private String  caozuoren;
 	private Integer caozuorenid;
 	private Date caozuoshijian;

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springblade.anbiao.SafeInvestment.VO.SafetyInvestmentDetailsVO;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInput;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInputDetailed;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,23 +24,19 @@ import java.util.List;
 @AllArgsConstructor
 public class SafeInvestmentDTO implements Serializable {
 
-	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
-	@DateTimeFormat(pattern="yyyy-MM-dd")
-	private Date startTime;
 
-	@DateTimeFormat(pattern="yyyy-MM-dd")
-	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
-	private Date endTime;
-
-	private String asi_dept_ids;
-	private Integer asi_year;
-	private String asi_accrued_amount;
-	private String asi_withdrawal_amount;
-	private String asi_extraction_proportion;
-	private String asi_amount_used;
-	private String asi_remaining_amount;
+	private String asiIds;
+	private Integer asiDeptIds;
+	private Integer asiYear;
+	private String asiAccruedAmount;
+	private String asiWithdrawalAmount;
+	private String asiExtractionProportion;
+	private String asiAmountUsed;
+	private String asiNemainingAmount;
+	private String asiRemainingAmount;
+	private String asiLastYearsTurnover;
 	private String deptId;
 
-	private List<AnbiaoSafetyInputDetailed> inputDetailedList;
+	private List<SafetyInvestmentDetailsVO> safetyInvestmentDetailsVOS;
 
 }

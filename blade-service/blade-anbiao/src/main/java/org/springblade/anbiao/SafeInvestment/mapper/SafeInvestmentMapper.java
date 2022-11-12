@@ -1,6 +1,7 @@
 package org.springblade.anbiao.SafeInvestment.mapper;
 
 import org.springblade.anbiao.SafeInvestment.DTO.SafeInvestmentDTO;
+import org.springblade.anbiao.SafeInvestment.VO.SafeAllVO;
 import org.springblade.anbiao.SafeInvestment.VO.SafeInvestmentVO;
 import org.springblade.anbiao.SafeInvestment.VO.SafetyInvestmentDetailsVO;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInput;
@@ -27,10 +28,11 @@ public interface SafeInvestmentMapper {
 	 * 安全投入详细信息
 	 *
 	 * @param
+	 * @param safeInvestmentDTO
 	 * @return
 	 */
-	List<SafetyInvestmentDetailsVO> selectAll(String asid_asi_ids );
-
+	List<SafetyInvestmentDetailsVO> selectAll(SafeInvestmentDTO safeInvestmentDTO );
+	SafeAllVO selectA(SafeInvestmentDTO safeInvestmentDTO );
 
 	/**
 	 * 新增安全投入详细信息
@@ -48,15 +50,18 @@ public interface SafeInvestmentMapper {
 
 	/**
 	 * 修改安全投入列表  后台管理
-	 * @param anbiaoSafetyInput
+	 * @param
 	 * @return
 	 */
-	Boolean updateSafe(AnbiaoSafetyInput anbiaoSafetyInput);
+	Boolean updateSafe(SafeInvestmentDTO safeInvestmentDTO);
+	Boolean updateSafede(SafetyInvestmentDetailsVO safetyInvestmentDetailsVO);
+
+	List<AnbiaoSafetyInputDetailed> selectd(SafeInvestmentDTO safeInvestmentDTO);
 
 	/**
 	 * 删除
-	 * @param asi_dept_ids
+	 * @param
 	 * @return
 	 */
-	Boolean deleteSafe(String asi_dept_ids);
+	Boolean deleteSafe(SafeInvestmentDTO safeInvestmentDTO);
 }

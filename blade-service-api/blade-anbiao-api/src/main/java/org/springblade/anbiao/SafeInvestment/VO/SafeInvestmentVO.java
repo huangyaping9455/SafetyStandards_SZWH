@@ -15,38 +15,38 @@ import java.util.Date;
 @Data
 public class SafeInvestmentVO {
 
-	private String asi_ids;
+	private String asiIds;
 
-	private String asi_dept_ids;
+	private String asiDeptIds;
 
-	private String dept_name;
+	private String deptName;
 
-	private Integer asi_year;
+	private Integer asiYear;
 
-	private BigDecimal asi_last_years_turnover;
+	private BigDecimal asiLastYearsTurnover;
 
-	private BigDecimal asi_extraction_proportion;
+	private BigDecimal asiExtractionProportion;
 
-	private BigDecimal asi_withdrawal_amount;
+	private BigDecimal asiWithdrawalAmount;
 
-	private BigDecimal asi_accrued_amount;
+	private BigDecimal asiAccruedAmount;
 
-	private BigDecimal asi_amount_used;
+	private BigDecimal asiAmountUsed;
 
-	private BigDecimal asi_remaining_amount;
+	private BigDecimal asiRemainingAmount;
 
-	private char asi_delete;
+	private char asiDelete;
 
-	private Date asi_create_time;
+	private Date asiCreateTime;
 
-	private String asi_create_by_ids;
+	private String asiCreateByIds;
 
-	private String 	asi_create_by_name;
+	private String 	asiCreateByName;
 
-	private Date asi_update_time;
+	private Date asiUpdateTime;
 
-	private String asi_update_by_ids;
+	private String asiUpdateByIds;
 
-	private String asi_update_by_name;
+	private String asiUpdateByName;
 
 }

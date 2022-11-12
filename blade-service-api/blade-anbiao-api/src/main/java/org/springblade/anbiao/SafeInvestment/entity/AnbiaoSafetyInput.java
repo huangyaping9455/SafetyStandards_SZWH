@@ -26,7 +26,7 @@ public class AnbiaoSafetyInput implements Serializable {
 
 	private BigDecimal asi_last_years_turnover;
 
-	private String asi_extraction_proportion;
+	private BigDecimal asi_extraction_proportion;
 
 	private BigDecimal asi_withdrawal_amount;
 

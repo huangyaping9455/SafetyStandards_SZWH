@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.weixiupeijian.mapper.RepairPartsMapper">
+
+
+    <!--维修配件-->
+    <select id="selectList" resultType="org.springblade.anbiao.weixiu.entity.FittingsEntity">
+        SELECT
+            a.awp_ids AS awpIds,
+            a.awp_name AS awpName,
+            a.awp_unit AS awpUnit,
+            a.awp_model AS awpModel,
+            a.awp_fs_ids AS awpFsIds,
+            a.awp_fs_name AS awpFsName,
+            a.awp_remarks AS awpRemarks,
+            a.awp_unit_price AS awpUnitPrice,
+            a.awp_purchase_price AS awpPurchasePrice
+        FROM
+            anbiao_weixiu_peijian a
+    </select>
+
+</mapper>

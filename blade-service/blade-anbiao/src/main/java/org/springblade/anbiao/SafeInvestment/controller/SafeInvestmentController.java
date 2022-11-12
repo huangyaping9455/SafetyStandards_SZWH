@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.SafeInvestment.DTO.SafeInvestmentDTO;
+import org.springblade.anbiao.SafeInvestment.VO.SafeAllVO;
 import org.springblade.anbiao.SafeInvestment.VO.SafetyInvestmentDetailsVO;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInput;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInputDetailed;
@@ -34,7 +35,7 @@ public class SafeInvestmentController extends BladeController {
 	@PostMapping("list")
 	@ApiLog("分页 列表-安全投入")
 	@ApiOperation(value = "安全投入", notes = "传入SafeInvestmentDTO", position = 1)
-	public R saList(SafelInfoPage safelInfoPage){
+	public R saList(@RequestBody SafelInfoPage safelInfoPage) {
 		SafelInfoPage safelInfoPage1 = safeInvestmentService.selectPage(safelInfoPage);
 		return R.data(safelInfoPage1);
 	}
@@ -42,54 +43,57 @@ public class SafeInvestmentController extends BladeController {
 
 	@PostMapping("all")
 	@ApiLog("列表-安全投入详情")
-	@ApiOperation(value = "安全投入详情", notes = "rid", position = 2)
-	public R selectALL(String asid_asi_ids){
-		List<SafetyInvestmentDetailsVO> safetyInvestmentDetailsVOS = safeInvestmentService.selectAll(asid_asi_ids);
-		return R.data(safetyInvestmentDetailsVOS);
+	@ApiOperation(value = "安全投入详情", notes = "SafeInvestmentDTO", position = 2)
+	public R selectALL(@RequestBody SafeInvestmentDTO safeInvestmentDTO) {
+		SafeAllVO safeAllVO = safeInvestmentService.selectAll(safeInvestmentDTO);
+		return R.data(safeAllVO);
 	}
 
 	@PostMapping("insert")
 	@ApiLog("新增-安全投入详情")
 	@ApiOperation(value = "新增安全投入", notes = "SafeInvestmentDTO ", position = 3)
-	public R insert(@RequestBody SafeInvestmentDTO safeInvestmentDTO){
+	public R insert(@RequestBody SafeInvestmentDTO safeInvestmentDTO) {
 		R rs = new R();
 		AnbiaoSafetyInput anbiaoSafetyInput = new AnbiaoSafetyInput();
 		String s = UUID.randomUUID().toString().replace("-", "");
 		anbiaoSafetyInput.setAsi_ids(s);
 		anbiaoSafetyInput.setAsi_update_by_ids(safeInvestmentDTO.getDeptId());
-		anbiaoSafetyInput.setAsi_year(safeInvestmentDTO.getAsi_year());
-		anbiaoSafetyInput.setAsi_accrued_amount(NumberUtils.createBigDecimal(safeInvestmentDTO.getAsi_accrued_amount()));
-		anbiaoSafetyInput.setAsi_withdrawal_amount(NumberUtils.createBigDecimal(safeInvestmentDTO.getAsi_withdrawal_amount()));
-		anbiaoSafetyInput.setAsi_extraction_proportion((safeInvestmentDTO.getAsi_extraction_proportion()));
-		anbiaoSafetyInput.setAsi_amount_used(NumberUtils.createBigDecimal(safeInvestmentDTO.getAsi_amount_used()));
-		anbiaoSafetyInput.setAsi_remaining_amount(NumberUtils.createBigDecimal(safeInvestmentDTO.getAsi_remaining_amount()));
-		anbiaoSafetyInput.setAsi_dept_ids(safeInvestmentDTO.getAsi_dept_ids());
-
+		anbiaoSafetyInput.setAsi_year(safeInvestmentDTO.getAsiYear());
+		anbiaoSafetyInput.setAsi_accrued_amount(NumberUtils.createBigDecimal(safeInvestmentDTO.getAsiAccruedAmount()));
+		anbiaoSafetyInput.setAsi_withdrawal_amount(NumberUtils.createBigDecimal(safeInvestmentDTO.getAsiWithdrawalAmount()));
+		String replace = safeInvestmentDTO.getAsiExtractionProportion().replace("%", "");
+		anbiaoSafetyInput.setAsi_extraction_proportion(NumberUtils.createBigDecimal(replace));
+		anbiaoSafetyInput.setAsi_amount_used(NumberUtils.createBigDecimal(safeInvestmentDTO.getAsiAmountUsed()));
+		anbiaoSafetyInput.setAsi_remaining_amount(NumberUtils.createBigDecimal(safeInvestmentDTO.getAsiRemainingAmount()));
+		anbiaoSafetyInput.setAsi_dept_ids(safeInvestmentDTO.getAsiDeptIds().toString());
+		anbiaoSafetyInput.setAsi_last_years_turnover(NumberUtils.createBigDecimal(safeInvestmentDTO.getAsiLastYearsTurnover()));
 		Boolean aBoolean = false;
-		if(anbiaoSafetyInput!=null){
-			 aBoolean = safeInvestmentService.insertOne(anbiaoSafetyInput);
+		if (anbiaoSafetyInput != null) {
+			aBoolean = safeInvestmentService.insertOne(anbiaoSafetyInput);
 		}
 
-		List<AnbiaoSafetyInputDetailed> inputDetailedList = safeInvestmentDTO.getInputDetailedList();
-		Boolean insert = false;
-		if(inputDetailedList!=null){
-			for (AnbiaoSafetyInputDetailed list : inputDetailedList) {
+		List<SafetyInvestmentDetailsVO> detailsVOList = safeInvestmentDTO.getSafetyInvestmentDetailsVOS();
+		Boolean insert = true;
+		if (detailsVOList != null) {
+			for (SafetyInvestmentDetailsVO list : detailsVOList) {
 				String uuid1 = UUID.randomUUID().toString().replace("-", "");
 				AnbiaoSafetyInputDetailed anbiaoSafetyInputDetailed = new AnbiaoSafetyInputDetailed();
-				anbiaoSafetyInputDetailed.setAsid_ids(uuid1);
-				anbiaoSafetyInputDetailed.setAsid_entry_name(list.getAsid_entry_name());
-				anbiaoSafetyInputDetailed.setAsid_handled_by_name(list.getAsid_handled_by_name());
-				anbiaoSafetyInputDetailed.setAsid_investment_scope(list.getAsid_investment_scope());
-				anbiaoSafetyInputDetailed.setAsid_investment_dare(list.getAsid_investment_dare());
-				anbiaoSafetyInputDetailed.setAsid_amount_used(list.getAsid_amount_used());
+				anbiaoSafetyInputDetailed.setAsidIds(uuid1);
+				anbiaoSafetyInputDetailed.setAsidAsiIds(s);
+				anbiaoSafetyInputDetailed.setAsidEntryName(list.getAsidEntryName());
+				anbiaoSafetyInputDetailed.setAsidHandledByName(list.getAsidHandledByName());
+				anbiaoSafetyInputDetailed.setAsidInvestmentScope(list.getAsidInvestmentScope());
+				anbiaoSafetyInputDetailed.setAsidInvestmentDare(list.getAsidInvestmentDare());
+				anbiaoSafetyInputDetailed.setAsidAmountUsed(list.getAsidAmountUsed());
+				anbiaoSafetyInputDetailed.setAsidHandledByIds(safeInvestmentDTO.getDeptId());
 				insert = safeInvestmentService.insert(anbiaoSafetyInputDetailed);
 			}
 		}
-		if(aBoolean&&insert){
+		if (aBoolean && insert) {
 			rs.setCode(200);
 			rs.setSuccess(true);
 			rs.setMsg("新增成功");
-		}else {
+		} else {
 			rs.setCode(500);
 			rs.setSuccess(false);
 			rs.setMsg("新增失败");
@@ -99,16 +103,59 @@ public class SafeInvestmentController extends BladeController {
 
 	@PostMapping("delete")
 	@ApiLog("删除-安全投入详情")
-	@ApiOperation(value = "删除安全投入", notes = "asi_dept_ids ", position = 4)
-	public R delete(@Param("asi_dept_ids") String asi_dept_ids){
-		return R.status(safeInvestmentService.delete(asi_dept_ids));
+	@ApiOperation(value = "删除安全投入", notes = "SafeInvestmentDTO ", position = 4)
+	public R delete(@RequestBody SafeInvestmentDTO safeInvestmentDTO) {
+		return R.status(safeInvestmentService.delete(safeInvestmentDTO));
 	}
 
 	@PostMapping("update")
 	@ApiLog("修改-安全投入详情")
 	@ApiOperation(value = "修改安全投入", notes = "AnbiaoSafetyInput ", position = 5)
-	public R update(@RequestBody AnbiaoSafetyInput anbiaoSafetyInput){
-		return R.status(safeInvestmentService.updateSafe(anbiaoSafetyInput));
+	public R update(@RequestBody SafeInvestmentDTO safeInvestmentDTO) {
+		R rs = new R();
+		List<SafetyInvestmentDetailsVO> detailsVOList = safeInvestmentDTO.getSafetyInvestmentDetailsVOS();
+		Boolean update = true;
+		Boolean insert = true;
+		if (detailsVOList != null) {
+			List<AnbiaoSafetyInputDetailed> selectd = safeInvestmentService.selectd(safeInvestmentDTO);
+			if (selectd != null&&selectd.size()!=0) {
+				for (SafetyInvestmentDetailsVO list : detailsVOList) {
+					SafetyInvestmentDetailsVO safetyInvestmentDetailsVO = new SafetyInvestmentDetailsVO();
+					safetyInvestmentDetailsVO.setAsidEntryName(list.getAsidEntryName());
+					safetyInvestmentDetailsVO.setAsidHandledByName(list.getAsidHandledByName());
+					safetyInvestmentDetailsVO.setAsidInvestmentScope(list.getAsidInvestmentScope());
+					safetyInvestmentDetailsVO.setAsidInvestmentDare(list.getAsidInvestmentDare());
+					safetyInvestmentDetailsVO.setAsidAmountUsed(list.getAsidAmountUsed());
+					safetyInvestmentDetailsVO.setAsidHandledByIds(safeInvestmentDTO.getDeptId());
+					safetyInvestmentDetailsVO.setAsidIds(safeInvestmentDTO.getAsiIds());
+					update = safeInvestmentService.updateSafede(safetyInvestmentDetailsVO);
+				}
+			} else {
+				for (SafetyInvestmentDetailsVO list : detailsVOList) {
+					String uuid1 = UUID.randomUUID().toString().replace("-", "");
+					AnbiaoSafetyInputDetailed anbiaoSafetyInputDetailed = new AnbiaoSafetyInputDetailed();
+					anbiaoSafetyInputDetailed.setAsidIds(uuid1);
+					anbiaoSafetyInputDetailed.setAsidAsiIds(safeInvestmentDTO.getAsiIds());
+					anbiaoSafetyInputDetailed.setAsidEntryName(list.getAsidEntryName());
+					anbiaoSafetyInputDetailed.setAsidHandledByName(list.getAsidHandledByName());
+					anbiaoSafetyInputDetailed.setAsidInvestmentScope(list.getAsidInvestmentScope());
+					anbiaoSafetyInputDetailed.setAsidInvestmentDare(list.getAsidInvestmentDare());
+					anbiaoSafetyInputDetailed.setAsidAmountUsed(list.getAsidAmountUsed());
+					anbiaoSafetyInputDetailed.setAsidHandledByIds(safeInvestmentDTO.getDeptId());
+					insert = safeInvestmentService.insert(anbiaoSafetyInputDetailed);
+				}
+			}
+			Boolean aBoolean = safeInvestmentService.updateSafe(safeInvestmentDTO);
+			if (aBoolean && update && insert) {
+				rs.setCode(200);
+				rs.setSuccess(true);
+				rs.setMsg("修改成功");
+			} else {
+				rs.setCode(500);
+				rs.setSuccess(false);
+				rs.setMsg("修改失败");
+			}
+		}
+		return rs;
 	}
-
 }

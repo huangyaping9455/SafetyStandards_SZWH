@@ -5,48 +5,188 @@
 
     <!--事故列表-->
     <select id="selectList" parameterType="org.springblade.anbiao.AccidentReports.page.AccidentPage" resultType="org.springblade.anbiao.AccidentReports.VO.AccidentReportsVO">
+        <if test="size==0">
         select
         a.shigufashengshijian,a.shigufashengdidian,a.shigufenlei,a.shiguxingzhi,a.shiguzeren,
-        a.chepaihao,a.jiashiyuan,b.dept_name,a.	caichansunshi,a.jianjiejingjisunshi,a.shiguzhaopian,a.caozuoshijian
+        a.chepaihao,a.jiashiyuan,b.dept_name AS deptName,a.caichansunshi,a.jianjiejingjisunshi,
+        a.shiguzhaopian,a.caozuoshijian,a.id
         from
         anbiao_shigubaogao a
-        left join (
+        inner join (
         <include
             refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) b on a.dept_id = b.id
-        <where> a.is_deleted = 0 AND
-        a.createtime between #{startTime} and #{endTime}
-        <if test="dept_name !=null">
-            b.dept_name = #{dept_name}
+        <where> a.is_deleted = 0
+         <if test="asiYear!=null">
+             a.createtime between #{asiYear} and #{asiYear}
+         </if>
+
+        <if test="deptName !=null">
+            b.dept_name = #{deptName}
         </if>
+           limit ${total}
         </where>
+        </if>
+        <if test="current != 0">
+            select
+            a.shigufashengshijian,a.shigufashengdidian,a.shigufenlei,a.shiguxingzhi,a.shiguzeren,
+            a.chepaihao,a.jiashiyuan,b.dept_name AS deptName,a.caichansunshi,a.jianjiejingjisunshi,
+            a.shiguzhaopian,a.caozuoshijian,a.id
+            from
+            anbiao_shigubaogao a
+            inner join (
+            <include
+                refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) b on a.dept_id = b.id
+            <where> a.is_deleted = 0
+            <if test="asiYear!=null">
+                a.createtime between #{asiYear} and #{asiYear}
+            </if>
+
+            <if test="deptName !=null">
+                b.dept_name = #{deptName}
+            </if>
+           limit ${offsetNo},${size}
+        </where>
+        </if>
     </select>
 
     <!--事故信息-->
-    <select id="selectAll" parameterType="String" resultType="org.springblade.anbiao.AccidentReports.VO.AccidentReportsVO">
-        select
-            a.det_name,a.shigufashengdidian,a.shigufashengshijian,a.shiguxingzhi,a.shigufenlei,
-            a.shiguzeren,a.chepaihao,a.jiashiyuan,a.AccidentName,a.caozuoshijian,b.shangwangcaichansunshi,a.shiguzhaopian
-        from
-            anbiao_shigubaogao a
-        left join anbiao_shiguchuli b on a.id = b.shigubaogaoid
-        where id =#{rid} AND is_deleted = 0
+    <select id="selectAll" parameterType="org.springblade.anbiao.AccidentReports.page.AccidentPage" resultType="org.springblade.anbiao.AccidentReports.VO.AccidentReportsVO">
+        SELECT
+        a.shigufashengdidian,
+        a.shigufashengshijian,
+        a.shiguxingzhi,
+        a.shigufenlei,
+        c.dept_name AS deptName,
+        a.shiguzeren,
+        a.chepaihao,
+        a.jiashiyuan,
+        a.caozuoshijian,
+        a.shiguzhaopian,
+        a.id,
+        a.siwang,
+        a.shoushang,
+        a.jianjiejingjisunshi,
+        a.caichansunshi,
+        a.dept_id AS deptId,
+        a.fujian,
+        a.shigugaikuang
+        FROM
+        anbiao_shigubaogao a
+        INNER JOIN ( <include refid = "org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId" /> ) c ON a.dept_id = c.id
+        WHERE
+        a.id = #{id} AND a.is_deleted = 0
     </select>
 
     <!--新增事故-->
-    <insert id="insertOne" parameterType="org.springblade.anbiao.AccidentReports.DTO.AccidentReportsDTO">
-        insert into anbiao_shigubaogao(dept_id,shigufashengdidian,shigufashengshijian,shiguxingzhi,shigufenlei,
-                                       shiguzeren,chepaihao,jiashiyuan,siwang,shoushang,caichansunshi,jianjiejingjisunshi,
-                                       shiguzhaopian,fujian,shigugaikuang,is_deleted
-        )
-        values (dept_id,shigufashengdidian,shigufashengshijian,shiguxingzhi,shigufenlei,
-                shiguzeren,chepaihao,jiashiyuan,siwang,shoushang,caichansunshi,jianjiejingjisunshi,
-                shiguzhaopian,fujian,shigugaikuang,0
-               )
+    <insert id="insertOne"  parameterType="org.springblade.anbiao.AccidentReports.DTO.AccidentReportsDTO">
+        insert into anbiao_shigubaogao
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="deptId !=null">
+                dept_id,
+            </if>
+            <if test="shigufashengdidian !=null">
+                shigufashengdidian,
+            </if>
+            <if test="jianjiejingjisunshi !=null">
+                jianjiejingjisunshi,
+            </if>
+            <if test="shigufashengshijian !=null">
+                shigufashengshijian,
+            </if>
+            <if test="shiguxingzhi !=null">
+                shiguxingzhi,
+            </if>
+            <if test="shigufenlei !=null">
+                shigufenlei,
+            </if>
+            <if test="shiguzeren !=null">
+                shiguzeren,
+            </if>
+            <if test="chepaihao !=null">
+                chepaihao,
+            </if>
+            <if test="jiashiyuan !=null">
+                jiashiyuan,
+            </if>
+            <if test="siwang !=null">
+                siwang,
+            </if>
+            <if test="shoushang !=null">
+                shoushang,
+            </if>
+            <if test="caichansunshi !=null">
+                caichansunshi,
+            </if>
+            <if test="shiguzhaopian !=null">
+                shiguzhaopian,
+            </if>
+            <if test="fujian !=null">
+                fujian,
+            </if>
+            <if test="shigugaikuang !=null">
+                shigugaikuang,
+            </if>
+            is_deleted
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id !=null">
+                #{id},
+            </if>
+            <if test="deptId !=null">
+                #{deptId},
+            </if>
+            <if test="shigufashengdidian !=null">
+                #{shigufashengdidian},
+            </if>
+            <if test="jianjiejingjisunshi !=null">
+                #{jianjiejingjisunshi},
+            </if>
+            <if test="shigufashengshijian !=null">
+                #{shigufashengshijian},
+            </if>
+            <if test="shiguxingzhi !=null">
+                #{shiguxingzhi},
+            </if>
+            <if test="shigufenlei !=null">
+                #{shigufenlei},
+            </if>
+            <if test="shiguzeren !=null">
+                #{shiguzeren},
+            </if>
+            <if test="chepaihao !=null">
+                #{chepaihao},
+            </if>
+            <if test="jiashiyuan !=null">
+                #{jiashiyuan},
+            </if>
+            <if test="siwang !=null">
+                #{siwang},
+            </if>
+            <if test="shoushang !=null">
+                #{shoushang},
+            </if>
+            <if test="caichansunshi !=null">
+                #{caichansunshi},
+            </if>
+            <if test="shiguzhaopian !=null">
+                #{shiguzhaopian},
+            </if>
+            <if test="fujian !=null">
+                #{fujian},
+            </if>
+            <if test="shigugaikuang !=null">
+                #{shigugaikuang},
+            </if>
+             0
+        </trim>
     </insert>
 
     <insert id="insertB" parameterType="org.springblade.anbiao.AccidentReports.DTO.AccidentReportsDTO">
-        insert into anbiao_shiguchuli()
+        insert into anbiao_shiguchuli
         <trim prefix="(" suffix=")" suffixOverrides=",">
         <if test="shigubaogaoid !=null">
             shigubaogaoid,
@@ -67,73 +207,103 @@
 
     <!--修改事故-->
     <update id="updateAcc" parameterType="org.springblade.anbiao.AccidentReports.entity.AccidentReportsEntity">
-        update anbiao_safety_input
+        update anbiao_shigubaogao
         <set>
-            <if test="dept_id != null">
-                dept_id = #{dept_id}
+            <if test="deptId !=null">
+                dept_id = #{deptId},
             </if>
-            <if test="	caozuoshijian != null">
-                caozuoshijian = #{	caozuoshijian}
+            <if test="shigufashengdidian !=null">
+                shigufashengdidian = #{shigufashengdidian},
             </if>
-            <if test="	shigufashengdidian != null">
-                shigufashengdidian = #{	shigufashengdidian}
+            <if test="jianjiejingjisunshi !=null">
+                jianjiejingjisunshi= #{jianjiejingjisunshi},
             </if>
-            <if test="shigufenlei != null">
-                shigufenlei = #{shigufenlei}
+            <if test="shigufashengshijian !=null">
+                shigufashengshijian = #{shigufashengshijian},
             </if>
-            <if test="shiguzeren != null">
-                shiguzeren = #{shiguzeren}
+            <if test="shiguxingzhi !=null">
+                shiguxingzhi = #{shiguxingzhi},
             </if>
-            <if test="chepaihao != null">
-                chepaihao = #{chepaihao}
+            <if test="shigufenlei !=null">
+                shigufenlei = #{shigufenlei},
             </if>
-            <if test="	jiashiyuan">
-                jiashiyuan = #{	jiashiyuan}
+            <if test="shiguzeren !=null">
+                shiguzeren = #{shiguzeren},
+            </if>
+            <if test="chepaihao !=null">
+                chepaihao = #{chepaihao},
+            </if>
+            <if test="jiashiyuan !=null">
+                jiashiyuan = #{jiashiyuan},
+            </if>
+            <if test="siwang !=null">
+                siwang = #{siwang},
+            </if>
+            <if test="shoushang !=null">
+                shoushang = #{shoushang},
+            </if>
+            <if test="caichansunshi !=null">
+                caichansunshi = #{caichansunshi},
+            </if>
+            <if test="shiguzhaopian !=null">
+                shiguzhaopian = #{shiguzhaopian},
+            </if>
+            <if test="fujian !=null">
+                fujian = #{fujian},
+            </if>
+            <if test="shigugaikuang !=null">
+                shigugaikuang = #{shigugaikuang},
             </if>
         </set>
         where id = #{id}
     </update>
 
     <!--删除事故-->
-    <update id="deleteAcc" parameterType="java.lang.String" >
+    <update id="deleteAcc" parameterType="org.springblade.anbiao.AccidentReports.page.AccidentPage" >
         update anbiao_shigubaogao set
             is_deleted = 1
         WHERE id = #{id}
     </update>
 
-<!--    <sql id="tableSql">-->
-<!--        select-->
-<!--        a.*,-->
-<!--        b.dept_name as deptName-->
-<!--        from-->
-<!--        anbiao_shigubaogao a-->
-<!--        inner join  (-->
-<!--        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>-->
-<!--        ) b on a.dept_id = b.id-->
-<!--        where a.is_deleted = 0-->
-<!--    </sql>-->
-<!--    <sql id="orderSql">-->
-<!--        &lt;!&ndash; 默认排序规则 &ndash;&gt;-->
-<!--        <if test="orderColumn == null or orderColumn == ''">-->
-<!--            order by createtime desc-->
-<!--        </if>-->
-<!--        <if test="orderColumn != null and orderColumn != ''">-->
-<!--            order by ${orderColumn}-->
-<!--        </if>-->
-<!--        <if test="orderColumn != null and orderColumn != '' and order != 0">-->
-<!--            desc-->
-<!--        </if>-->
-<!--        <if test="orderColumn != null and orderColumn != '' and order == 0">-->
-<!--            asc-->
-<!--        </if>-->
-<!--    </sql>-->
+    <sql id="tableSql">
+        select
+        a.*,
+        b.dept_name as deptName
+        from
+        anbiao_shigubaogao a
+        inner join  (
+        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b on a.dept_id = b.id
+        where a.is_deleted = 0
+    </sql>
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by createtime desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order == 0">
+            asc
+        </if>
+    </sql>
 
-<!--    <select id="selectTotal"-->
-<!--            parameterType="org.springblade.anbiao.AccidentReports.page.AccidentPage"-->
-<!--            resultType="int">-->
-<!--        select COUNT(1) from (-->
-<!--        <include refid="tableSql"/>-->
-<!--        )d where 1 = 1-->
-<!--    </select>-->
+    <select id="selectTotal"
+            parameterType="org.springblade.anbiao.AccidentReports.page.AccidentPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql"/>
+        )d where 1 = 1
+        <if test="asiYear!=null and asiYear!=''">
+            AND d.shigufashengshijian= #{asiYear}
+        </if>
+        <if test="deptName!=null and deptName!=''">
+            AND d.deptName= #{deptName}
+        </if>
+    </select>
 
 </mapper>

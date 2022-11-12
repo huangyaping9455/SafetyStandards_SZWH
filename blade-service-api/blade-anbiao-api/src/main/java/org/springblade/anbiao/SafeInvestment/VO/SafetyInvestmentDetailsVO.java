@@ -1,6 +1,10 @@
 package org.springblade.anbiao.SafeInvestment.VO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 /**
  * 明细返回
@@ -11,21 +15,22 @@ import lombok.Data;
 public class SafetyInvestmentDetailsVO {
 
 
-	private String asid_ids;
+	private String asidIds;
 
-	private String asid_asi_ids;
+	private String asidAsiIds;
 
-	private String asid_entry_name;
+	private String asidEntryName;
 
-	private String asid_handled_by_ids;
+	private String asidHandledByIds;
 
-	private String asid_handled_by_name;
+	private String asidHandledByName;
 
-	private String asid_investment_scope;
+	private String asidInvestmentScope;
+	@DateTimeFormat(pattern="yyyy")
+	@JsonFormat(pattern = "yyyy",timezone = "GMT+8")
+	private Date asidInvestmentDare;
 
-	private String asid_investment_dare;
+	private String 	asidAmountUsed;
 
-	private String 	asid_amount_used;
-
-	private String asid_delete;
+	private String asidDelete;
 }

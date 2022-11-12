@@ -36,7 +36,4 @@ public class JiaShiYuanPage<T> extends BasePage<T> {
 	@ApiModelProperty(value = "所属地市")
 	private String areaName;
 
-
-
-
 }
