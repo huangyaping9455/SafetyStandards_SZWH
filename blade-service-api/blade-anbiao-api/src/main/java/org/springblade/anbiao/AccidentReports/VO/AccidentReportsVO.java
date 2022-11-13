@@ -3,6 +3,7 @@ package org.springblade.anbiao.AccidentReports.VO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -17,6 +18,8 @@ public class AccidentReportsVO {
 	private String id;
 	private String deptName;
 	private String 	shigufashengdidian;
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
 	private Date shigufashengshijian;
 	private String shiguxingzhi;
 	private String shigufenlei;

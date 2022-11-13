@@ -235,7 +235,7 @@
             <if test="jianjiejingjisunshi !=null and jianjiejingjisunshi !=''">
                 jianjiejingjisunshi= #{jianjiejingjisunshi},
             </if>
-            <if test="shigufashengshijian !=null and shigufashengshijian !=''">
+            <if test="shigufashengshijian !=null ">
                 shigufashengshijian = #{shigufashengshijian},
             </if>
             <if test="shiguxingzhi !=null and shiguxingzhi !=''">
@@ -262,16 +262,16 @@
             <if test="caichansunshi !=null and caichansunshi !=''">
                 caichansunshi = #{caichansunshi},
             </if>
-            <if test="shiguzhaopian1 !=null and shiguzhaopian1 !=''">
+            <if test="shiguzhaopian1 !=null  ">
                 shiguzhaopian1 = #{shiguzhaopian1},
             </if>
-            <if test="shiguzhaopian2 !=null and shiguzhaopian2 !=''">
+            <if test="shiguzhaopian2 !=null ">
                 shiguzhaopian2 = #{shiguzhaopian2},
             </if>
-            <if test="shiguzhaopian3 !=null and shiguzhaopian3 !=''">
+            <if test="shiguzhaopian3 !=null ">
                 shiguzhaopian3 = #{shiguzhaopian3},
             </if>
-            <if test="fujian !=null and fujian !=''">
+            <if test="fujian !=null ">
                 fujian = #{fujian},
             </if>
             <if test="shigugaikuang !=null and shigugaikuang !=''">
