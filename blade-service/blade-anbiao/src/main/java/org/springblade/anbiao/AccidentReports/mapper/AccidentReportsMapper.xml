@@ -6,12 +6,14 @@
     <!--事故列表-->
     <select id="selectList" parameterType="org.springblade.anbiao.AccidentReports.page.AccidentPage" resultType="org.springblade.anbiao.AccidentReports.VO.AccidentReportsVO">
         <if test="size==0">
-        select
-        a.shigufashengshijian,a.shigufashengdidian,a.shigufenlei,a.shiguxingzhi,a.shiguzeren,
-        a.chepaihao,a.jiashiyuan,b.dept_name AS deptName,a.caichansunshi,a.jianjiejingjisunshi,
-        a.shiguzhaopian,a.caozuoshijian,a.id
-        from
-        anbiao_shigubaogao a
+            select
+            a.shigufashengshijian,a.shigufashengdidian,a.shigufenlei,a.shiguxingzhi,a.shiguzeren,
+            a.chepaihao,a.jiashiyuan,b.dept_name AS deptName,a.caichansunshi,a.jianjiejingjisunshi,
+            a.shiguzhaopian1,
+            a.shiguzhaopian2,
+            a.shiguzhaopian3,a.caozuoshijian,a.id
+            from
+            anbiao_shigubaogao a
         inner join (
         <include
             refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
@@ -31,7 +33,9 @@
             select
             a.shigufashengshijian,a.shigufashengdidian,a.shigufenlei,a.shiguxingzhi,a.shiguzeren,
             a.chepaihao,a.jiashiyuan,b.dept_name AS deptName,a.caichansunshi,a.jianjiejingjisunshi,
-            a.shiguzhaopian,a.caozuoshijian,a.id
+            a.shiguzhaopian1,
+            a.shiguzhaopian2,
+            a.shiguzhaopian3,a.caozuoshijian,a.id
             from
             anbiao_shigubaogao a
             inner join (
@@ -63,7 +67,9 @@
         a.chepaihao,
         a.jiashiyuan,
         a.caozuoshijian,
-        a.shiguzhaopian,
+        a.shiguzhaopian1,
+        a.shiguzhaopian2,
+        a.shiguzhaopian3,
         a.id,
         a.siwang,
         a.shoushang,
@@ -84,13 +90,13 @@
         insert into anbiao_shigubaogao
         <trim prefix="(" suffix=")" suffixOverrides=",">
             id,
-            <if test="deptId !=null">
+            <if test="deptId !=null and deptId !=''">
                 dept_id,
             </if>
-            <if test="shigufashengdidian !=null">
+            <if test="shigufashengdidian !=null and shigufashengdidian !=''">
                 shigufashengdidian,
             </if>
-            <if test="jianjiejingjisunshi !=null">
+            <if test="jianjiejingjisunshi !=null and jianjiejingjisunshi !=''">
                 jianjiejingjisunshi,
             </if>
             <if test="shigufashengshijian !=null">
@@ -120,29 +126,34 @@
             <if test="caichansunshi !=null">
                 caichansunshi,
             </if>
-            <if test="shiguzhaopian !=null">
-                shiguzhaopian,
+            <if test="shiguzhaopian1 !=null and shiguzhaopian1 !=''">
+                shiguzhaopian1,
             </if>
-            <if test="fujian !=null">
+            <if test="shiguzhaopian2 !=null and shiguzhaopian2 !=''">
+                shiguzhaopian2,
+            </if>
+            <if test="shiguzhaopian3 !=null and shiguzhaopian3 !=''">
+                shiguzhaopian3,
+            </if>
+            <if test="fujian !=null and fujian !=''">
                 fujian,
             </if>
-            <if test="shigugaikuang !=null">
+            <if test="shigugaikuang !=null and shigugaikuang !=''">
                 shigugaikuang,
             </if>
             is_deleted
 
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id !=null">
                 #{id},
-            </if>
-            <if test="deptId !=null">
+
+            <if test="deptId !=null and shiguzhaopian1 !=''">
                 #{deptId},
             </if>
-            <if test="shigufashengdidian !=null">
+            <if test="shigufashengdidian !=null and shigufashengdidian !=''">
                 #{shigufashengdidian},
             </if>
-            <if test="jianjiejingjisunshi !=null">
+            <if test="jianjiejingjisunshi !=null and jianjiejingjisunshi !=''">
                 #{jianjiejingjisunshi},
             </if>
             <if test="shigufashengshijian !=null">
@@ -172,13 +183,19 @@
             <if test="caichansunshi !=null">
                 #{caichansunshi},
             </if>
-            <if test="shiguzhaopian !=null">
-                #{shiguzhaopian},
+            <if test="shiguzhaopian1 !=null and shiguzhaopian1 !=''">
+                #{shiguzhaopian1},
             </if>
-            <if test="fujian !=null">
+            <if test="shiguzhaopian2 !=null and shiguzhaopian2 !=''">
+                #{shiguzhaopian2},
+            </if>
+            <if test="shiguzhaopian3 !=null and shiguzhaopian3 !=''">
+               #{shiguzhaopian3},
+            </if>
+            <if test="fujian !=null and fujian !=''">
                 #{fujian},
             </if>
-            <if test="shigugaikuang !=null">
+            <if test="shigugaikuang !=null and shigugaikuang !=''">
                 #{shigugaikuang},
             </if>
              0
@@ -215,43 +232,49 @@
             <if test="shigufashengdidian !=null">
                 shigufashengdidian = #{shigufashengdidian},
             </if>
-            <if test="jianjiejingjisunshi !=null">
+            <if test="jianjiejingjisunshi !=null and jianjiejingjisunshi !=''">
                 jianjiejingjisunshi= #{jianjiejingjisunshi},
             </if>
-            <if test="shigufashengshijian !=null">
+            <if test="shigufashengshijian !=null and shigufashengshijian !=''">
                 shigufashengshijian = #{shigufashengshijian},
             </if>
-            <if test="shiguxingzhi !=null">
+            <if test="shiguxingzhi !=null and shiguxingzhi !=''">
                 shiguxingzhi = #{shiguxingzhi},
             </if>
-            <if test="shigufenlei !=null">
+            <if test="shigufenlei !=null and shigufenlei !=''">
                 shigufenlei = #{shigufenlei},
             </if>
-            <if test="shiguzeren !=null">
+            <if test="shiguzeren !=null and shiguzeren !=''">
                 shiguzeren = #{shiguzeren},
             </if>
-            <if test="chepaihao !=null">
+            <if test="chepaihao !=null and chepaihao !=''">
                 chepaihao = #{chepaihao},
             </if>
-            <if test="jiashiyuan !=null">
+            <if test="jiashiyuan !=null and jiashiyuan !=''">
                 jiashiyuan = #{jiashiyuan},
             </if>
-            <if test="siwang !=null">
+            <if test="siwang !=null and siwang !=''">
                 siwang = #{siwang},
             </if>
-            <if test="shoushang !=null">
+            <if test="shoushang !=null and shoushang !=''">
                 shoushang = #{shoushang},
             </if>
-            <if test="caichansunshi !=null">
+            <if test="caichansunshi !=null and caichansunshi !=''">
                 caichansunshi = #{caichansunshi},
             </if>
-            <if test="shiguzhaopian !=null">
-                shiguzhaopian = #{shiguzhaopian},
+            <if test="shiguzhaopian1 !=null and shiguzhaopian1 !=''">
+                shiguzhaopian1 = #{shiguzhaopian1},
             </if>
-            <if test="fujian !=null">
+            <if test="shiguzhaopian2 !=null and shiguzhaopian2 !=''">
+                shiguzhaopian2 = #{shiguzhaopian2},
+            </if>
+            <if test="shiguzhaopian3 !=null and shiguzhaopian3 !=''">
+                shiguzhaopian3 = #{shiguzhaopian3},
+            </if>
+            <if test="fujian !=null and fujian !=''">
                 fujian = #{fujian},
             </if>
-            <if test="shigugaikuang !=null">
+            <if test="shigugaikuang !=null and shigugaikuang !=''">
                 shigugaikuang = #{shigugaikuang},
             </if>
         </set>

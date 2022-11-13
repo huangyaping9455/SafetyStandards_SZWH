@@ -15,7 +15,7 @@ public class SafeAllVO {
 	private List<SafetyInvestmentDetailsVO> safetyInvestmentDetailsVOS;
 
 	private String asiIds;
-	private String asiDeptIds;
+	private Integer asiDeptIds;
 
 	private String asiYear;
 	private BigDecimal asiExtractionProportion;

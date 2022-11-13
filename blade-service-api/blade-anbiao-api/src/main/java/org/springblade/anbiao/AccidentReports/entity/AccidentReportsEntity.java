@@ -52,7 +52,9 @@ public class AccidentReportsEntity {
 	private BigDecimal jianjiejingjisunshi;
 	private String shigugaikuang;
 	private String zerenfenxi;
-	private String shiguzhaopian;
+	private String shiguzhaopian1;
+	private String shiguzhaopian2;
+	private String shiguzhaopian3;
 	private String fujian;
 	private Integer	is_deleted;
 	private Date createtime;

@@ -33,7 +33,9 @@ public class AccidentReportsDTO {
 	private Integer shoushang;
 	private BigDecimal caichansunshi;
 	private BigDecimal jianjiejingjisunshi;
-	private String shiguzhaopian;
+	private String shiguzhaopian1;
+	private String shiguzhaopian2;
+	private String shiguzhaopian3;
 	private String fujian;
 	private String shigugaikuang;
 	private String shangwangcaichansunshi;

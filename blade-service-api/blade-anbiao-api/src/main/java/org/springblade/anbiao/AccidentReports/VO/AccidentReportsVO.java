@@ -34,7 +34,9 @@ public class AccidentReportsVO {
 	private BigDecimal jianjiejingjisunshi;
 	private BigDecimal caichansunshi;
 	private String shangwangcaichansunshi;
-	private String shiguzhaopian;
+	private String shiguzhaopian1;
+	private String shiguzhaopian2;
+	private String shiguzhaopian3;
 	private String shiguzhijieyuanyin;
 	private Integer shoushang;
 }
