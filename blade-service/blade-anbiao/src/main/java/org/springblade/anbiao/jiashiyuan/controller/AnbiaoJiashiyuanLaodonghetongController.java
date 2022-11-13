@@ -6,10 +6,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanGangqianpeixun;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanLaodonghetong;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanGangqianpeixunService;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanLaodonghetongService;
+import org.springblade.common.tool.DateUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
@@ -49,6 +51,20 @@ public class AnbiaoJiashiyuanLaodonghetongController {
 		gangqianpeixunQueryWrapper.lambda().eq(AnbiaoJiashiyuanLaodonghetong::getAjwAjIds, laodonghetong.getAjwAjIds());
 		gangqianpeixunQueryWrapper.lambda().eq(AnbiaoJiashiyuanLaodonghetong::getAjwDelete, "0");
 		AnbiaoJiashiyuanLaodonghetong deail = laodonghetongService.getBaseMapper().selectOne(gangqianpeixunQueryWrapper);
+
+//		//验证签字时间
+//		String s = laodonghetong.getAjwAutographAutograph().substring(0,10);
+//		if (StringUtils.isNotBlank(s) && !s.equals("null")){
+//			if (DateUtils.isDateString(s,null) == true){
+//				laodonghetong.getAjwAutographAutograph(s);
+//			}else {
+//				r.setMsg(laodonghetong.getAjwAutographAutograph()+",该签字时间，不是时间格式；");
+//				r.setCode(500);
+//				r.setSuccess(false);
+//				return r;
+//			}
+//		}
+
 		if(deail == null){
 			if(user != null){
 				laodonghetong.setAjwCreateByName(user.getUserName());
@@ -57,6 +73,7 @@ public class AnbiaoJiashiyuanLaodonghetongController {
 				laodonghetong.setAjwCreateByName(laodonghetong.getAjwCreateByName());
 				laodonghetong.setAjwCreateByIds(laodonghetong.getAjwCreateByIds());
 			}
+			laodonghetong.setAjwAutographAutograph(DateUtil.now());
 			laodonghetong.setAjwCreateTime(DateUtil.now());
 			laodonghetong.setAjwDelete("0");
 			return R.status(laodonghetongService.save(laodonghetong));

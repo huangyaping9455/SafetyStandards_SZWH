@@ -88,12 +88,10 @@ public class JiaShiYuanController {
 		JiaShiYuan deail = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
 
 		//验证身份证初领日期
-		String shenfenzhengchulingriqi = jiaShiYuan.getShenfenzhengchulingriqi().toString();
+		String shenfenzhengchulingriqi = jiaShiYuan.getShenfenzhengchulingriqi().substring(0,10);
 		if (StringUtils.isNotBlank(shenfenzhengchulingriqi) && !shenfenzhengchulingriqi.equals("null")){
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-			String D = format.parse(shenfenzhengchulingriqi).toString();
-			if (DateUtils.isDateString(D,null) == true){
-				jiaShiYuan.setShenfenzhengchulingriqi(format.parse(jiaShiYuan.getShenfenzhengchulingriqi()).toString());
+			if (DateUtils.isDateString(shenfenzhengchulingriqi,null) == true){
+				jiaShiYuan.setShenfenzhengchulingriqi(shenfenzhengchulingriqi);
 			}else {
 				r.setMsg(jiaShiYuan.getShenfenzhengchulingriqi()+",该身份证初领日期，不是时间格式；");
 				r.setCode(500);
@@ -103,14 +101,12 @@ public class JiaShiYuanController {
 		}
 
 		//验证身份证有效截止日期
-		String shenfenzhengyouxiaoqi = jiaShiYuan.getShenfenzhengyouxiaoqi().toString();
+		String shenfenzhengyouxiaoqi = jiaShiYuan.getShenfenzhengyouxiaoqi().substring(0,10);
 		if (StringUtils.isNotBlank(shenfenzhengyouxiaoqi) && !shenfenzhengyouxiaoqi.equals("null")){
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-			String D = format.parse(shenfenzhengyouxiaoqi).toString();
-			if(DateUtils.isDateString(D,null) == true){
-				jiaShiYuan.setShenfenzhengyouxiaoqi(format.parse(jiaShiYuan.getShenfenzhengyouxiaoqi()).toString());
+			if(DateUtils.isDateString(shenfenzhengyouxiaoqi,null) == true){
+				jiaShiYuan.setShenfenzhengyouxiaoqi(shenfenzhengyouxiaoqi);
 			}else {
-				r.setMsg(jiaShiYuan.getShenfenzhengchulingriqi()+",该身份证有效截止日期，不是时间格式；");
+				r.setMsg(jiaShiYuan.getShenfenzhengyouxiaoqi()+",该身份证有效截止日期，不是时间格式；");
 				r.setCode(500);
 				r.setSuccess(false);
 				return r;
@@ -155,12 +151,10 @@ public class JiaShiYuanController {
 		}
 
 		//验证驾驶证初领日期
-		String jiashizhengchulingriqi = jiaShiYuan.getJiashizhengchulingriqi().toString();
+		String jiashizhengchulingriqi = jiaShiYuan.getJiashizhengchulingriqi().substring(0,10);
 		if (StringUtils.isNotBlank(jiashizhengchulingriqi) && !jiashizhengchulingriqi.equals("null")){
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-			String D = format.parse(jiashizhengchulingriqi).toString();
-			if (DateUtils.isDateString(D,null) == true){
-				jiaShiYuan.setJiashizhengchulingriqi(format.parse(jiaShiYuan.getJiashizhengchulingriqi()).toString());
+			if (DateUtils.isDateString(jiashizhengchulingriqi,null) == true){
+				jiaShiYuan.setJiashizhengchulingriqi(jiashizhengchulingriqi);
 			}else {
 				r.setMsg(jiaShiYuan.getJiashizhengchulingriqi()+",该驾驶证初领日期，不是时间格式；");
 				r.setCode(500);
@@ -170,12 +164,10 @@ public class JiaShiYuanController {
 		}
 
 		//验证驾驶证有效截止日期
-		String jiashizhengyouxiaoqi = jiaShiYuan.getJiashizhengyouxiaoqi().toString();
+		String jiashizhengyouxiaoqi = jiaShiYuan.getJiashizhengyouxiaoqi().substring(0,10);
 		if (StringUtils.isNotBlank(jiashizhengyouxiaoqi) && !jiashizhengyouxiaoqi.equals("null")){
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-			String D = format.parse(jiashizhengyouxiaoqi).toString();
-			if(DateUtils.isDateString(D,null) == true){
-				jiaShiYuan.setJiashizhengyouxiaoqi(format.parse(jiaShiYuan.getJiashizhengyouxiaoqi()).toString());
+			if(DateUtils.isDateString(jiashizhengyouxiaoqi,null) == true){
+				jiaShiYuan.setJiashizhengyouxiaoqi(jiashizhengyouxiaoqi);
 			}else {
 				r.setMsg(jiaShiYuan.getJiashizhengyouxiaoqi()+",该驾驶证有效截止日期，不是时间格式；");
 				r.setCode(500);
@@ -223,12 +215,10 @@ public class JiaShiYuanController {
 
 
 		//验证从业资格证初领日期
-		String congyezhengchulingriqi = jiaShiYuan.getCongyezhengchulingri().toString();
+		String congyezhengchulingriqi = jiaShiYuan.getCongyezhengchulingri().substring(0,10);
 		if (StringUtils.isNotBlank(congyezhengchulingriqi) && !congyezhengchulingriqi.equals("null")){
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-			String D = format.parse(congyezhengchulingriqi).toString();
 			if (DateUtils.isDateString(congyezhengchulingriqi,null) == true){
-				jiaShiYuan.setCongyezhengchulingri(format.parse(jiaShiYuan.getCongyezhengchulingri()).toString());
+				jiaShiYuan.setCongyezhengchulingri(congyezhengchulingriqi);
 			}else {
 				r.setMsg(jiaShiYuan.getCongyezhengchulingri()+",该从业资格证初领日期，不是时间格式；");
 				r.setCode(500);
@@ -238,12 +228,10 @@ public class JiaShiYuanController {
 		}
 
 		//验证从业资格证有效截止日期
-		String congyezhengyouxiaoqi = jiaShiYuan.getCongyezhengyouxiaoqi().toString();
+		String congyezhengyouxiaoqi = jiaShiYuan.getCongyezhengyouxiaoqi().substring(0,10);
 		if (StringUtils.isNotBlank(congyezhengyouxiaoqi) && !congyezhengyouxiaoqi.equals("null")){
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-			String D = format.parse(congyezhengyouxiaoqi).toString();
-			if(DateUtils.isDateString(D,null) == true){
-				jiaShiYuan.setCongyezhengyouxiaoqi(format.parse(jiaShiYuan.getCongyezhengyouxiaoqi()).toString());
+			if(DateUtils.isDateString(congyezhengyouxiaoqi,null) == true){
+				jiaShiYuan.setCongyezhengyouxiaoqi(congyezhengyouxiaoqi);
 			}else {
 				r.setMsg(jiaShiYuan.getCongyezhengyouxiaoqi()+",该从业资格证有效截止日期，不是时间格式；");
 				r.setCode(500);

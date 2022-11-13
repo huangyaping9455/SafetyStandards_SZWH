@@ -6,10 +6,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanLaodonghetong;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanQita;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanLaodonghetongService;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanQitaService;
+import org.springblade.common.tool.DateUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
@@ -49,6 +51,21 @@ public class AnbiaoJiashiyuanQitaController {
 		qitaQueryWrapper.lambda().eq(AnbiaoJiashiyuanQita::getAjtAjIds, qita.getAjtAjIds());
 		qitaQueryWrapper.lambda().eq(AnbiaoJiashiyuanQita::getAjtDelete, "0");
 		AnbiaoJiashiyuanQita deail =qitaService.getBaseMapper().selectOne(qitaQueryWrapper);
+
+//
+//		//验证上传日期
+//		String s = qita.getAjtPhysicalExaminationDate().substring(0,10);
+//		if (StringUtils.isNotBlank(s) && !s.equals("null")){
+//			if (DateUtils.isDateString(s,null) == true){
+//				qita.setAjtPhysicalExaminationDate(s);
+//			}else {
+//				r.setMsg(qita.getAjtPhysicalExaminationDate()+",该上传日期，不是时间格式；");
+//				r.setCode(500);
+//				r.setSuccess(false);
+//				return r;
+//			}
+//		}
+
 		if(deail == null){
 			if(user != null){
 				qita.setAjtCreateByName(user.getUserName());
@@ -57,6 +74,7 @@ public class AnbiaoJiashiyuanQitaController {
 				qita.setAjtCreateByName(qita.getAjtCreateByName());
 				qita.setAjtCreateByIds(qita.getAjtCreateByIds());
 			}
+			qita.setAjtPhysicalExaminationDate(DateUtil.now());
 			qita.setAjtCreateTime(DateUtil.now());
 			qita.setAjtDelete("0");
 			return R.status(qitaService.save(qita));

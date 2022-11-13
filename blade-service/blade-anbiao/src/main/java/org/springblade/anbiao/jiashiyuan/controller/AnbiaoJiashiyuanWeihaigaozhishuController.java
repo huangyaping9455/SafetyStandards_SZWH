@@ -57,6 +57,7 @@ public class AnbiaoJiashiyuanWeihaigaozhishuController {
 				weihaigaozhishu.setAjwCreateByName(weihaigaozhishu.getAjwCreateByName());
 				weihaigaozhishu.setAjwCreateByIds(weihaigaozhishu.getAjwCreateByIds());
 			}
+			weihaigaozhishu.setAjwAutographAutograph(DateUtil.now())
 			weihaigaozhishu.setAjwCreateTime(DateUtil.now());
 			weihaigaozhishu.setAjwDelete("0");
 			return R.status(weihaigaozhishuService.save(weihaigaozhishu));

@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanRuzhi;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanRuzhiService;
+import org.springblade.common.tool.DateUtils;
+import org.springblade.common.tool.IdCardUtil;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
@@ -17,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * <p>
@@ -46,6 +51,34 @@ public class AnbiaoJiashiyuanRuzhiController {
 		ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrAjIds, ruzhi.getAjrAjIds());
 		ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrDelete, "0");
 		AnbiaoJiashiyuanRuzhi deail = ruzhiService.getBaseMapper().selectOne(ruzhiQueryWrapper);
+		SimpleDateFormat dateFormat2=new SimpleDateFormat("yyyy-MM-dd");
+
+		//验证毕业日期
+		String s = ruzhi.getAjrGraduationDate().substring(0,10);
+		if (StringUtils.isNotBlank(s) && !s.equals("null")){
+			if (DateUtils.isDateString(s,null) == true){
+				ruzhi.setAjrGraduationDate(s);
+			}else {
+				r.setMsg(ruzhi.getAjrGraduationDate()+",该有毕业日期，不是时间格式；");
+				r.setCode(500);
+				r.setSuccess(false);
+				return r;
+			}
+		}
+
+		//验证领取驾照日期
+		String s1 = ruzhi.getAjrReceiveDrivingLicense().substring(0,10);
+		if (StringUtils.isNotBlank(s1) && !s1.equals("null")){
+			if (DateUtils.isDateString(s1,null) == true){
+				ruzhi.setAjrReceiveDrivingLicense(s1);
+			}else {
+				r.setMsg(ruzhi.getAjrReceiveDrivingLicense()+",该领取驾照日期，不是时间格式；");
+				r.setCode(500);
+				r.setSuccess(false);
+				return r;
+			}
+		}
+
 		if(deail == null){
 			if(user != null){
 				ruzhi.setAjrCreateByName(user.getUserName());
@@ -54,6 +87,13 @@ public class AnbiaoJiashiyuanRuzhiController {
 				ruzhi.setAjrCreateByName(ruzhi.getAjrCreateByName());
 				ruzhi.setAjrCreateByIds(ruzhi.getAjrCreateByIds());
 			}
+			//通过身份证获取年龄
+			Integer age = IdCardUtil.getAgeByCard(ruzhi.getAjrIdNumber());
+			ruzhi.setAjrAge(age);
+			//通过身份证获取生日日期
+			Date chushengshijian = IdCardUtil.getBirthDate(ruzhi.getAjrIdNumber());
+			ruzhi.setAjrBirth(dateFormat2.format(chushengshijian));
+			ruzhi.setAjrApproverTime(DateUtil.now());
 			ruzhi.setAjrCreateTime(DateUtil.now());
 			ruzhi.setAjrDelete("0");
 			return R.status(ruzhiService.save(ruzhi));

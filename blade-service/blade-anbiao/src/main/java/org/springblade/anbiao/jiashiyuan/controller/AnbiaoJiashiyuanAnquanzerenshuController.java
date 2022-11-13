@@ -57,6 +57,7 @@ public class AnbiaoJiashiyuanAnquanzerenshuController {
 				anquanzerenshu.setAjaCreateByName(anquanzerenshu.getAjaCreateByName());
 				anquanzerenshu.setAjaCreateByIds(anquanzerenshu.getAjaCreateByIds());
 			}
+			anquanzerenshu.setAjaAutographTime(DateUtil.now());
 			anquanzerenshu.setAjaCreateTime(DateUtil.now());
 			anquanzerenshu.setAjaDelete("0");
 			return R.status(anquanzerenshuService.save(anquanzerenshu));

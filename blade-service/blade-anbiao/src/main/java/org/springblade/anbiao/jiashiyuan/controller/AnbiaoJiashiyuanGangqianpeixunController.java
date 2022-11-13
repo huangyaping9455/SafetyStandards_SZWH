@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanGangqianpeixun;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanGangqianpeixunService;
+import org.springblade.common.tool.DateUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
@@ -44,6 +46,20 @@ public class AnbiaoJiashiyuanGangqianpeixunController {
 		gangqianpeixunQueryWrapper.lambda().eq(AnbiaoJiashiyuanGangqianpeixun::getAjgAjIds, gangqianpeixun.getAjgAjIds());
 		gangqianpeixunQueryWrapper.lambda().eq(AnbiaoJiashiyuanGangqianpeixun::getAjgDelete, "0");
 		AnbiaoJiashiyuanGangqianpeixun deail = gangqianpeixunService.getBaseMapper().selectOne(gangqianpeixunQueryWrapper);
+
+		//验证培训日期
+		String s = gangqianpeixun.getAjgTrainingDate().substring(0,10);
+		if (StringUtils.isNotBlank(s) && !s.equals("null")){
+			if (DateUtils.isDateString(s,null) == true){
+				gangqianpeixun.setAjgTrainingDate(s);
+			}else {
+				r.setMsg(gangqianpeixun.getAjgTrainingDate()+",该岗前培训日期，不是时间格式；");
+				r.setCode(500);
+				r.setSuccess(false);
+				return r;
+			}
+		}
+
 		if(deail == null){
 			if(user != null){
 				gangqianpeixun.setAjgCreateByName(user.getUserName());

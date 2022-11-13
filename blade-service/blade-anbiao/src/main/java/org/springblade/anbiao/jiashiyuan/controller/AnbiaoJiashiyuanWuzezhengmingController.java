@@ -57,6 +57,7 @@ public class AnbiaoJiashiyuanWuzezhengmingController {
 				wuzezhengming.setAjwCreateByName(wuzezhengming.getAjwCreateByName());
 				wuzezhengming.setAjwCreateByIds(wuzezhengming.getAjwCreateByIds());
 			}
+			wuzezhengming.setAjwDate(DateUtil.now());
 			wuzezhengming.setAjwCreateTime(DateUtil.now());
 			wuzezhengming.setAjwDelete("0");
 			return R.status(wuzezhengmingService.save(wuzezhengming));
