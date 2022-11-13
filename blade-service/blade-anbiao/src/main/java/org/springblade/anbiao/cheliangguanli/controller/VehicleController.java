@@ -305,6 +305,7 @@ public class VehicleController {
 					jingyingxukezheng.setAvjBusinessLicense(v.getJingyingxukezhenghao());
 					jingyingxukezheng.setAvjOperationDeadline(v.getJyxkzyouxiaoqiEnd());
 					jingyingxukezheng.setAvjOperatingLineName(v.getJingyingluxian());
+					jingyingxukezheng.setAvjEnclosure(v.getJyxkzzhaopian());
 					jingyingxukezheng.setAvjDelete("0");
 					jingyingxukezheng.setAvjCreateByName(user.getUserName());
 					jingyingxukezheng.setAvjCreateByIds(user.getUserId().toString());
@@ -372,6 +373,7 @@ public class VehicleController {
 					daoluyunshuzheng.setAvdEconomicType(v.getJingjileixing());
 					daoluyunshuzheng.setAvdOperationOrganizationMode(v.getJingyingzuzhifangshi());
 					daoluyunshuzheng.setAvdNatureBusiness(v.getJingyingfanwei());
+					daoluyunshuzheng.setAvdEnclosure(v.getDlyszzhaopian());
 					daoluyunshuzheng.setAvdDelete("0");
 					daoluyunshuzheng.setAvdCreateByName(user.getUserName());
 					daoluyunshuzheng.setAvdCreateByIds(user.getUserId().toString());

@@ -51,6 +51,9 @@ public class VehicleInfo implements Serializable {
 	@ApiModelProperty(value = "经营许可证有效期（止）")
 	private LocalDate jyxkzyouxiaoqiEnd;
 
+	@ApiModelProperty(value = "经营许可证照片")
+	private String jyxkzzhaopian;
+
 	@ApiModelProperty(value = "道路运输证号")
 	private String daoluyunshuzhenghao;
 
@@ -59,6 +62,9 @@ public class VehicleInfo implements Serializable {
 
 	@ApiModelProperty(value = "道路运输证有效期（止）")
 	private LocalDate dlyszyouxiaoqiEnd;
+
+	@ApiModelProperty(value = "道路运输证照片")
+	private String dlyszzhaopian;
 
 	@ApiModelProperty(value = "经济类型")
 	private String jingjileixing;
