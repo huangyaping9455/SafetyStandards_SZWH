@@ -280,7 +280,8 @@
         select
             DISTINCT
             a.id,
-            a.dept_name
+            a.dept_name,
+            b.jigoubianma
         from(
             SELECT
                 DISTINCT
@@ -296,7 +297,7 @@
                 AND shangji.id= #{deptId}
                 )a
             INNER JOIN(
-                select dept_id from anbiao_organization
+                select dept_id,jigoubianma from anbiao_organization
                 where isdelete = 0 and jigouleixing in ('qiye','geti')
             )b on a.id = b.dept_id
             ORDER BY a.dept_name asc

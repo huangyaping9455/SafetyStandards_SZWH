@@ -16,12 +16,15 @@
 package org.springblade.anbiao.cheliangguanli.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springblade.core.mp.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -354,6 +357,10 @@ public class VehicleBaoxian implements Serializable {
      */
     @ApiModelProperty(value = "更新人姓名")
     private String avbUpdateByName;
+
+	@ApiModelProperty(value = "车辆保险明细信息")
+	@TableField(exist = false)
+	private List<VehicleBaoxianMingxi> baoxianMingxis;
 
 
 }

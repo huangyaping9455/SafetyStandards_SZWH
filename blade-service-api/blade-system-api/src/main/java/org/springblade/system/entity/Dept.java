@@ -126,6 +126,10 @@ public class Dept implements Serializable {
 	@TableField(exist = false)
 	private Integer existChild;
 
+	@ApiModelProperty(value = "机构编码")
+	@TableField(exist = false)
+	private String jigoubianma;
+
 
 
 }
