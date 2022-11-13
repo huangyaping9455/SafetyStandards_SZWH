@@ -54,30 +54,45 @@ public class AnbiaoJiashiyuanRuzhiController {
 		SimpleDateFormat dateFormat2=new SimpleDateFormat("yyyy-MM-dd");
 
 		//验证毕业日期
-		String s = ruzhi.getAjrGraduationDate().substring(0,10);
-		if (StringUtils.isNotBlank(s) && !s.equals("null")){
-			if (DateUtils.isDateString(s,null) == true){
-				ruzhi.setAjrGraduationDate(s);
-			}else {
-				r.setMsg(ruzhi.getAjrGraduationDate()+",该有毕业日期，不是时间格式；");
-				r.setCode(500);
-				r.setSuccess(false);
-				return r;
+		if (ruzhi.getAjrGraduationDate().length()>=10){
+			String s = ruzhi.getAjrGraduationDate().substring(0,10);
+			if (StringUtils.isNotBlank(s) && !s.equals("null")){
+				if (DateUtils.isDateString(s,null) == true){
+					ruzhi.setAjrGraduationDate(s);
+				}else {
+					r.setMsg(ruzhi.getAjrGraduationDate()+",该有毕业日期，不是时间格式；");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
 			}
+		}else {
+			r.setMsg(ruzhi.getAjrGraduationDate()+",该有毕业日期，不是时间格式；");
+			r.setCode(500);
+			r.setSuccess(false);
+			return r;
 		}
 
 		//验证领取驾照日期
-		String s1 = ruzhi.getAjrReceiveDrivingLicense().substring(0,10);
-		if (StringUtils.isNotBlank(s1) && !s1.equals("null")){
-			if (DateUtils.isDateString(s1,null) == true){
-				ruzhi.setAjrReceiveDrivingLicense(s1);
-			}else {
-				r.setMsg(ruzhi.getAjrReceiveDrivingLicense()+",该领取驾照日期，不是时间格式；");
-				r.setCode(500);
-				r.setSuccess(false);
-				return r;
+		if (ruzhi.getAjrReceiveDrivingLicense().length()>=10){
+			String s1 = ruzhi.getAjrReceiveDrivingLicense().substring(0,10);
+			if (StringUtils.isNotBlank(s1) && !s1.equals("null")){
+				if (DateUtils.isDateString(s1,null) == true){
+					ruzhi.setAjrReceiveDrivingLicense(s1);
+				}else {
+					r.setMsg(ruzhi.getAjrReceiveDrivingLicense()+",该领取驾照日期，不是时间格式；");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
 			}
+		}else {
+			r.setMsg(ruzhi.getAjrReceiveDrivingLicense()+",该领取驾照日期，不是时间格式；");
+			r.setCode(500);
+			r.setSuccess(false);
+			return r;
 		}
+
 
 		if(deail == null){
 			if(user != null){

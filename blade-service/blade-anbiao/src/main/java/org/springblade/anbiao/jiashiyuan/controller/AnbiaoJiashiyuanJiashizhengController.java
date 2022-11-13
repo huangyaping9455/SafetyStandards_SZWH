@@ -65,42 +65,55 @@ public class AnbiaoJiashiyuanJiashizhengController {
 //		}
 
 		//有效期开始日期
-		String s1 = jiashizheng.getAjjValidPeriodStart().substring(0,10);
-		if (StringUtils.isNotBlank(s1) && !s1.equals("null")){
-			if (DateUtils.isDateString(s1,null) == true){
-				jiashizheng.setAjjValidPeriodStart(s1);
-			}else {
-				r.setMsg(jiashizheng.getAjjValidPeriodStart()+",该有效期开始日期，不是时间格式；");
-				r.setCode(500);
-				r.setSuccess(false);
-				return r;
+		if (jiashizheng.getAjjValidPeriodStart().length()>=10){
+			String s1 = jiashizheng.getAjjValidPeriodStart().substring(0,10);
+			if (StringUtils.isNotBlank(s1) && !s1.equals("null")){
+				if (DateUtils.isDateString(s1,null) == true){
+					jiashizheng.setAjjValidPeriodStart(s1);
+				}else {
+					r.setMsg(jiashizheng.getAjjValidPeriodStart()+",该有效期开始日期，不是时间格式；");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
 			}
+		}else {
+			r.setMsg(jiashizheng.getAjjValidPeriodStart()+",该有效期开始日期，不是时间格式；");
+			r.setCode(500);
+			r.setSuccess(false);
+			return r;
 		}
+
 
 		//有效期结束日期
-		String s2 = jiashizheng.getAjjValidPeriodEnd().substring(0,10);
-		if (StringUtils.isNotBlank(s2) && !s2.equals("null")){
-			if (DateUtils.isDateString(s2,null) == true){
-				jiashizheng.setAjjValidPeriodEnd(s2);
-			}else {
-				r.setMsg(jiashizheng.getAjjValidPeriodEnd()+",该有效期结束日期，不是时间格式；");
-				r.setCode(500);
-				r.setSuccess(false);
-				return r;
+		if (jiashizheng.getAjjValidPeriodEnd().length()>=10){
+			String s2 = jiashizheng.getAjjValidPeriodEnd().substring(0,10);
+			if (StringUtils.isNotBlank(s2) && !s2.equals("null")){
+				if (DateUtils.isDateString(s2,null) == true){
+					jiashizheng.setAjjValidPeriodEnd(s2);
+				}else {
+					r.setMsg(jiashizheng.getAjjValidPeriodEnd()+",该有效期结束日期，不是时间格式；");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
 			}
+		}else {
+			r.setMsg(jiashizheng.getAjjValidPeriodEnd()+",该有效期结束日期，不是时间格式；");
+			r.setCode(500);
+			r.setSuccess(false);
+			return r;
 		}
 
+
 		//验证 有效期开始日期 不能大于 有效期结束日期
-		if(StringUtils.isNotBlank(s1) && !s1.equals("null") && StringUtils.isNotBlank(s2) && !s2.equals("null")){
-			int a1 = s1.length();
-			int b1 = s2.length();
+		if(StringUtils.isNotBlank(jiashizheng.getAjjValidPeriodStart()) && !jiashizheng.getAjjValidPeriodStart().equals("null") && StringUtils.isNotBlank(jiashizheng.getAjjValidPeriodEnd()) && !jiashizheng.getAjjValidPeriodEnd().equals("null")){
+			int a1 = jiashizheng.getAjjValidPeriodStart().length();
+			int b1 = jiashizheng.getAjjValidPeriodEnd().length();
 			if (a1 == b1){
 				if (a1 <= 10){
 					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-					if(DateUtils.belongCalendar(format.parse(s1),format.parse(s2))){
-						jiashizheng.setAjjValidPeriodStart(s1);
-						jiashizheng.setAjjValidPeriodEnd(s2);
-					}else{
+					if(DateUtils.belongCalendar(format.parse(jiashizheng.getAjjValidPeriodStart()),format.parse(jiashizheng.getAjjValidPeriodEnd()))==false){
 						r.setMsg("驾驶证有效期开始日期,不能大于有效期结束日期;");
 						r.setCode(500);
 						r.setSuccess(false);
@@ -109,10 +122,7 @@ public class AnbiaoJiashiyuanJiashizhengController {
 				}
 				if(a1 > 10){
 					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					if(DateUtils.belongCalendar(format.parse(s1),format.parse(s2))){
-						jiashizheng.setAjjValidPeriodStart(s1);
-						jiashizheng.setAjjValidPeriodEnd(s2);
-					}else{
+					if(DateUtils.belongCalendar(format.parse(jiashizheng.getAjjValidPeriodStart()),format.parse(jiashizheng.getAjjValidPeriodEnd()))==false){
 						r.setMsg("驾驶证有效期开始日期,不能大于有效期结束日期;");
 						r.setCode(500);
 						r.setSuccess(false);
@@ -128,17 +138,25 @@ public class AnbiaoJiashiyuanJiashizhengController {
 		}
 
 		//验证下次年审日期
-		String s3 = jiashizheng.getAjjNextAnnualReview().substring(0,10);
-		if (StringUtils.isNotBlank(s3) && !s3.equals("null")){
-			if (DateUtils.isDateString(s3,null) == true){
-				jiashizheng.setAjjNextAnnualReview(s3);
-			}else {
-				r.setMsg(jiashizheng.getAjjNextAnnualReview()+",该下次年审日期，不是时间格式；");
-				r.setCode(500);
-				r.setSuccess(false);
-				return r;
+		if (jiashizheng.getAjjNextAnnualReview().length() >= 10) {
+			String s3 = jiashizheng.getAjjNextAnnualReview().substring(0,10);
+			if (StringUtils.isNotBlank(s3) && !s3.equals("null")){
+				if (DateUtils.isDateString(s3,null) == true){
+					jiashizheng.setAjjNextAnnualReview(s3);
+				}else {
+					r.setMsg(jiashizheng.getAjjNextAnnualReview()+",该下次年审日期，不是时间格式；");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
 			}
+		}else {
+			r.setMsg(jiashizheng.getAjjNextAnnualReview()+",该下次年审日期，不是时间格式；");
+			r.setCode(500);
+			r.setSuccess(false);
+			return r;
 		}
+
 
 		if(deail == null){
 			if(user != null){

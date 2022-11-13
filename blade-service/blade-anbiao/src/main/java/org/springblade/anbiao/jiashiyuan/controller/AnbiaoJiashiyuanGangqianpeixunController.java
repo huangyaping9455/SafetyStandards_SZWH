@@ -48,17 +48,25 @@ public class AnbiaoJiashiyuanGangqianpeixunController {
 		AnbiaoJiashiyuanGangqianpeixun deail = gangqianpeixunService.getBaseMapper().selectOne(gangqianpeixunQueryWrapper);
 
 		//验证培训日期
-		String s = gangqianpeixun.getAjgTrainingDate().substring(0,10);
-		if (StringUtils.isNotBlank(s) && !s.equals("null")){
-			if (DateUtils.isDateString(s,null) == true){
-				gangqianpeixun.setAjgTrainingDate(s);
-			}else {
-				r.setMsg(gangqianpeixun.getAjgTrainingDate()+",该岗前培训日期，不是时间格式；");
-				r.setCode(500);
-				r.setSuccess(false);
-				return r;
+		if (gangqianpeixun.getAjgTrainingDate().length()>=10){
+			String s = gangqianpeixun.getAjgTrainingDate().substring(0,10);
+			if (StringUtils.isNotBlank(s) && !s.equals("null")){
+				if (DateUtils.isDateString(s,null) == true){
+					gangqianpeixun.setAjgTrainingDate(s);
+				}else {
+					r.setMsg(gangqianpeixun.getAjgTrainingDate()+",该岗前培训日期，不是时间格式；");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
 			}
+		}else {
+			r.setMsg(gangqianpeixun.getAjgTrainingDate()+",该岗前培训日期，不是时间格式；");
+			r.setCode(500);
+			r.setSuccess(false);
+			return r;
 		}
+
 
 		if(deail == null){
 			if(user != null){
