@@ -62,7 +62,7 @@ public class DeptBaoxian implements Serializable {
 	 * 被保险人证件号码
 	 */
 	@ApiModelProperty(value = "被保险人证件号码")
-	private String avbcertificateNumber;
+	private String avbCertificateNumber;
     /**
      * 被保险人姓名
      */

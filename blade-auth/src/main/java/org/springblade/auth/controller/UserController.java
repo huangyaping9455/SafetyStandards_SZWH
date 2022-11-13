@@ -23,6 +23,7 @@ import org.springblade.core.tool.utils.DigestUtil;
 import org.springblade.core.tool.utils.Func;
 import org.springblade.system.entity.Dept;
 import org.springblade.system.feign.ISysClient;
+import org.springblade.system.user.entity.EnterpriseUser;
 import org.springblade.system.user.entity.User;
 import org.springblade.system.user.entity.UserInfo;
 import org.springblade.system.user.feign.IUserClient;
@@ -52,110 +53,137 @@ public class UserController {
 	@PostMapping("/manageLogin")
 	@ApiLog("小程序--登陆（企管端）")
 	@ApiOperation(value = "小程序--登录（企管端）", notes = "传入code，账号", position = 1)
-	public R manageLogin(@ApiParam(value = "账号", required = false) String name,
-						 @ApiParam(value = "密码", required = false) String password,
-						 @ApiParam(value = "微信code", required = false) String code,
-						 @ApiParam(value = "encryptedData", required = false) String encryptedData,
-						 @ApiParam(value = "iv", required = false) String iv) {
+	public R manageLogin(EnterpriseUser enterpriseUser) {
 		R rs = new R();
 		//返回accessToken
 		AuthInfoConfig info = new AuthInfoConfig();
 		String cellphone = "";
 		String openId = "";
 
-		if(StringUtils.isBlank(name) && StringUtils.isBlank(password) && StringUtils.isBlank(code)) {
-			rs.setMsg("参数不能为空！");
-			rs.setCode(500);
-			rs.setSuccess(false);
-			return rs;
-		} else if(StringUtils.isNotBlank(code)) {
-			WeChatUtil weChatUtil = new WeChatUtil();
-			String jsonId = weChatUtil.getopenid(wechatServer.getQyAppId(),code,wechatServer.getQySecret());
-			JSONObject jsonObject = JSONObject.parseObject(jsonId);
-			String openid = (String) jsonObject.get("openid");
-			if(StringUtils.isNotBlank(openid)) {
-				User user = client.getopenid(openid);
-				if(user != null) {
-					//设置jwt参数
-					Map<String, String> param = new HashMap<>(16);
-					param.put(SecureUtil.USER_ID, Func.toStr(user.getId()));
-					param.put(SecureUtil.ACCOUNT, user.getAccount());
-					param.put(SecureUtil.USER_NAME, user.getName());
-					//拼装accessToken
-					String accessToken = SecureUtil.createJWT(param, "audience", "issuser", true);
-					info.setAccount(user.getAccount());
-					info.setUserName(user.getName());
-					info.setAuthority("administrator");
-					info.setAccessToken(accessToken);
-					info.setTokenType(SecureUtil.BEARER);
-					Dept dept=sysClient.selectByJGBM("机构",user.getDeptId().toString());
-					if(dept == null){
-						rs.setMsg("该账号岗位机构不存在!");
+		if(enterpriseUser != null && !enterpriseUser.equals("")) {
+			if(enterpriseUser.getLoginType() != null && !enterpriseUser.getLoginType().equals("")) {
+				if(enterpriseUser.getLoginType().equals("0")) {
+					if(enterpriseUser.getName() != null && !enterpriseUser.getName().equals("") && enterpriseUser.getName().length() > 0
+					&& enterpriseUser.getPassword() != null && !enterpriseUser.getPassword().equals("") && enterpriseUser.getPassword().length() > 0) {
+						User user = client.login(enterpriseUser.getName(),DigestUtil.encrypt(enterpriseUser.getPassword()));
+						if(user != null){
+							//设置jwt参数
+							Map<String, String> param = new HashMap<>(16);
+							param.put(SecureUtil.USER_ID, Func.toStr(user.getId()));
+							param.put(SecureUtil.ACCOUNT, user.getAccount());
+							param.put(SecureUtil.USER_NAME, user.getName());
+							//拼装accessToken
+							String accessToken = SecureUtil.createJWT(param, "audience", "issuser", true);
+
+							info.setAccount(user.getAccount());
+							info.setUserName(user.getName());
+							info.setOpenid(user.getOpenid());
+							info.setAuthority("administrator");
+							info.setAccessToken(accessToken);
+							info.setTokenType(SecureUtil.BEARER);
+							Dept dept=sysClient.selectByJGBM("机构",user.getDeptId().toString());
+							if(dept == null){
+								rs.setMsg("该账号岗位机构不存在!");
+								rs.setCode(500);
+								rs.setSuccess(false);
+							}
+							info.setDeptId(dept.getId().toString());
+							info.setDeptName(dept.getDeptName());
+							info.setUserId(user.getId().toString());
+							//设置token过期时间
+							info.setExpiresIn(SecureUtil.getExpire());
+
+							rs.setMsg("登录成功!");
+							rs.setCode(200);
+							rs.setData(info);
+							rs.setSuccess(true);
+						}else{
+							rs.setMsg("账号、密码错误!");
+							rs.setCode(500);
+							rs.setSuccess(false);
+						}
+					} else {
+						rs.setMsg("参数不能为空！");
 						rs.setCode(500);
 						rs.setSuccess(false);
+						return rs;
 					}
-					info.setDeptId(dept.getId().toString());
-					info.setDeptName(dept.getDeptName());
-					info.setUserId(user.getId().toString());
-					//设置token过期时间
-					info.setExpiresIn(SecureUtil.getExpire());
+				} else if(enterpriseUser.getLoginType().equals("1")) {
+					if(enterpriseUser.getCode() != null && !enterpriseUser.getCode().equals("") && enterpriseUser.getCode().length() > 0) {
+						WeChatUtil weChatUtil = new WeChatUtil();
+						String jsonId = weChatUtil.getopenid(wechatServer.getQyAppId(),enterpriseUser.getCode(),wechatServer.getQySecret());
+						JSONObject jsonObject = JSONObject.parseObject(jsonId);
+						String openid = (String) jsonObject.get("openid");
+						if(StringUtils.isNotBlank(openid)) {
+							User user = client.getopenid(openid);
+							if(user != null) {
+								user = client.login(user.getAccount(),user.getPassword());
+								//设置jwt参数
+								Map<String, String> param = new HashMap<>(16);
+								param.put(SecureUtil.USER_ID, Func.toStr(user.getId()));
+								param.put(SecureUtil.ACCOUNT, user.getAccount());
+								param.put(SecureUtil.USER_NAME, user.getName());
+								//拼装accessToken
+								String accessToken = SecureUtil.createJWT(param, "audience", "issuser", true);
+								info.setAccount(user.getAccount());
+								info.setUserName(user.getName());
+								info.setAuthority("administrator");
+								info.setAccessToken(accessToken);
+								info.setTokenType(SecureUtil.BEARER);
+								Dept dept=sysClient.selectByJGBM("机构",user.getDeptId().toString());
+								if(dept == null){
+									rs.setMsg("该账号岗位机构不存在!");
+									rs.setCode(500);
+									rs.setSuccess(false);
+								}
+								info.setDeptId(dept.getId().toString());
+								info.setDeptName(dept.getDeptName());
+								info.setUserId(user.getId().toString());
+								info.setOpenid(openid);
+								//设置token过期时间
+								info.setExpiresIn(SecureUtil.getExpire());
 
-					rs.setMsg("登录成功!");
-					rs.setCode(200);
-					rs.setSuccess(true);
-					rs.setData(info);
-					return rs;
+								rs.setMsg("登录成功!");
+								rs.setCode(200);
+								rs.setSuccess(true);
+								rs.setData(info);
+								return rs;
+							} else {
+								rs.setMsg(org.springframework.util.StringUtils.isEmpty(cellphone) ? "请授权手机号登录" :  "账号不存在，请前往注册或联系管理员!");
+								rs.setCode(404);
+								rs.setSuccess(false);
+								return rs;
+							}
+						} else {
+							rs.setMsg("微信登录失败，请重新登录!");
+							rs.setCode(500);
+							rs.setSuccess(false);
+							return rs;
+						}
+					} else {
+						rs.setMsg("参数不能为空！");
+						rs.setCode(500);
+						rs.setSuccess(false);
+						return rs;
+					}
+
 				} else {
-					rs.setMsg(org.springframework.util.StringUtils.isEmpty(cellphone) ? "请授权手机号登录" :  "账号不存在，请前往注册或联系管理员!");
-					rs.setCode(404);
+					rs.setMsg("登陆方式错误！");
+					rs.setCode(500);
 					rs.setSuccess(false);
 					return rs;
 				}
 			} else {
-				rs.setMsg("微信登录失败，请重新登录!");
+				rs.setMsg("参数不能为空！");
 				rs.setCode(500);
 				rs.setSuccess(false);
 				return rs;
 			}
 		} else {
-			password = DigestUtil.encrypt(password);
-			User user = client.login(name,password);
-			if(user != null){
-				//设置jwt参数
-				Map<String, String> param = new HashMap<>(16);
-				param.put(SecureUtil.USER_ID, Func.toStr(user.getId()));
-				param.put(SecureUtil.ACCOUNT, user.getAccount());
-				param.put(SecureUtil.USER_NAME, user.getName());
-				//拼装accessToken
-				String accessToken = SecureUtil.createJWT(param, "audience", "issuser", true);
-
-				info.setAccount(user.getAccount());
-				info.setUserName(user.getName());
-				info.setOpenid(user.getOpenid());
-				info.setAuthority("administrator");
-				info.setAccessToken(accessToken);
-				info.setTokenType(SecureUtil.BEARER);
-				Dept dept=sysClient.selectByJGBM("机构",user.getDeptId().toString());
-				if(dept == null){
-					rs.setMsg("该账号岗位机构不存在!");
-					rs.setCode(500);
-					rs.setSuccess(false);
-				}
-				info.setDeptId(dept.getId().toString());
-				info.setDeptName(dept.getDeptName());
-				info.setUserId(user.getId().toString());
-				//设置token过期时间
-				info.setExpiresIn(SecureUtil.getExpire());
-
-				rs.setMsg("登录成功!");
-				rs.setCode(200);
-				rs.setData(info);
-				rs.setSuccess(true);
-			}else{
-				rs.setMsg("账号、密码错误!");
-				rs.setCode(500);
-				rs.setSuccess(false);
-			}
+			rs.setMsg("参数不能为空！");
+			rs.setCode(500);
+			rs.setSuccess(false);
+			return rs;
 		}
 		return rs;
 	}

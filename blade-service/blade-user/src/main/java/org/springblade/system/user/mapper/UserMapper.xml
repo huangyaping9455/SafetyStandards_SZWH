@@ -254,7 +254,7 @@
 
     <select id="selectByopenId" resultMap="userResultMap" >
     SELECT
-	   openid,real_name,phone,sex,account
+	   *
     FROM
         blade_user
     WHERE openid=#{param1}
