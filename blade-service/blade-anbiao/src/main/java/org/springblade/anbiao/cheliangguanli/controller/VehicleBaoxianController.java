@@ -33,6 +33,7 @@ import org.springblade.core.tool.api.R;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 车辆保险信息主表 控制器
@@ -63,18 +64,21 @@ public class VehicleBaoxianController extends BladeController {
 
 	@GetMapping("/queryByVehicle")
 	@ApiOperation(value = "根据被保险车辆ID查询保险详情", notes = "根据被保险车辆ID查询保险详情")
-	public R<VehicleBaoxianInfo> queryByDept(String vehicleId) {
+	public R<List<VehicleBaoxian>> queryByDept(String vehicleId) {
 		R r = new R();
-
-
-
 		VehicleBaoxian vehicleBaoxian = new VehicleBaoxian();
 		vehicleBaoxian.setAvbAvIds(vehicleId);
 		vehicleBaoxian.setAvbDelete(0);
-		VehicleBaoxian baoxian = vehicleBaoxianService.getOne(Condition.getQueryWrapper(vehicleBaoxian));
+		List<VehicleBaoxian> baoxian = vehicleBaoxianService.getBaseMapper().selectList(Condition.getQueryWrapper(vehicleBaoxian));
 		if(baoxian != null) {
-			VehicleBaoxianInfo detail = vehicleBaoxianService.queryDetail(baoxian.getAvbIds());
-			return R.data(detail);
+			baoxian.forEach(item-> {
+				VehicleBaoxianMingxi mingxi = new VehicleBaoxianMingxi();
+				mingxi.setAvbmAvbIds(item.getAvbIds());
+				List<VehicleBaoxianMingxi> mingxiList = vehicleBaoxianMingxiService.getBaseMapper().selectList(Condition.getQueryWrapper(mingxi));
+				item.setBaoxianMingxis(mingxiList);
+			});
+//			VehicleBaoxianInfo detail = vehicleBaoxianService.queryDetail(baoxian.getAvbIds());
+			return R.data(baoxian);
 		} else {
 			r.setCode(500);
 			r.setMsg("未查询到车辆保险信息！");

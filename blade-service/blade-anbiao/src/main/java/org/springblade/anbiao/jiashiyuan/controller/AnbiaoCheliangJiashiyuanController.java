@@ -4,6 +4,7 @@ package org.springblade.anbiao.jiashiyuan.controller;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuan;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoCheliangJiashiyuanService;
 import org.springblade.anbiao.jiashiyuan.service.impl.AnbiaoCheliangJiashiyuanServiceImpl;
 import org.springblade.anbiao.jiashiyuan.vo.CheliangJiashiyuanVO;
+import org.springblade.common.tool.JSONUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
@@ -78,10 +80,24 @@ public class AnbiaoCheliangJiashiyuanController {
 	@PostMapping("/detail")
 	@ApiLog("查询-车辆-驾驶员绑定信息")
 	@ApiOperation(value = "查询-车辆驾驶员绑定信息", notes = "传入jiashiyuanid")
-	public String detail(String jiashiyuanid,BladeUser user){
-
+	public R detail(@RequestBody String json,BladeUser user){
+		R r = new R();
+		//获取参数
+		JsonNode node = JSONUtils.string2JsonNode(json);
+		String jiashiyuanid = node.get("jiashiyuanid").asText();
 		List<CheliangJiashiyuanVO> cheliangJiashiyuanVOS = cheliangJiashiyuanServiceImpl.SelectByJiashiyuanID(jiashiyuanid);
-		return JSON.toJSONString(cheliangJiashiyuanVOS);
+		if(cheliangJiashiyuanVOS.size() > 0){
+			r.setMsg("获取成功");
+			r.setCode(200);
+			r.setSuccess(true);
+			r.setData(cheliangJiashiyuanVOS);
+		}else{
+			r.setMsg("获取成功，暂无数据");
+			r.setCode(200);
+			r.setSuccess(true);
+			r.setData("");
+		}
+		return r;
 	}
 
 	/**

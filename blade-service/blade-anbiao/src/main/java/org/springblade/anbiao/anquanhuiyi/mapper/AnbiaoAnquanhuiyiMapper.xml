@@ -13,7 +13,7 @@
         <result column="huiyibianhao" property="huiyibianhao" />
 <!--        <result column="huiyileixing" property="huiyileixing" />-->
         <result column="huiyixingshi" property="huiyixingshi" />
-        <result column="huiyiriqi" property="huiyiriqi" />
+<!--        <result column="huiyiriqi" property="huiyiriqi" />-->
         <result column="zhuchiren" property="zhuchiren" />
         <result column="jiluren" property="jiluren" />
         <result column="huiyididian" property="huiyididian" />
