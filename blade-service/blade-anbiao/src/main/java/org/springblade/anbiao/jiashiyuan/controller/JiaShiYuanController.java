@@ -305,6 +305,7 @@ public class JiaShiYuanController {
 				return r;
 			}
 		}
+		
 		//验证手机号码
 		if (StringUtils.isBlank(jiaShiYuan.getShoujihaoma())) {
 			r.setMsg("手机号码不能为空;");

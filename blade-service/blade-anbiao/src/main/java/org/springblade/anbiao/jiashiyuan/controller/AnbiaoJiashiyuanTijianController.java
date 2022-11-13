@@ -115,13 +115,13 @@ public class AnbiaoJiashiyuanTijianController {
 							r.setSuccess(false);
 							return r;
 						}
-					} else {
-						r.setMsg("体检日期与体检有效期,时间格式不一致;");
-						r.setCode(500);
-						r.setSuccess(false);
-						return r;
 					}
 				}
+			} else {
+				r.setMsg("体检日期与体检有效期,时间格式不一致;");
+				r.setCode(500);
+				r.setSuccess(false);
+				return r;
 			}
 
 		}
