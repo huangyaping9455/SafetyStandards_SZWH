@@ -68,40 +68,55 @@ public class AnbiaoAnquanhuiyiController {
 
 
 		//验证会议开始时间
-		if (StringUtils.isNotBlank(anquanhuiyi.getHuiyikaishishijian().toString()) && !anquanhuiyi.getHuiyikaishishijian().toString().equals("null")){
-			if (DateUtils.isDateString(anquanhuiyi.getHuiyikaishishijian().toString(),null) == true){
-				anquanhuiyi.setHuiyikaishishijian(anquanhuiyi.getHuiyikaishishijian());
-			}else {
-				r.setMsg(anquanhuiyi.getHuiyikaishishijian()+",该会议开始时间，不是时间格式；");
-				r.setCode(500);
-				r.setSuccess(false);
-				return r;
+		if (anquanhuiyi.getHuiyikaishishijian().length() >= 10){
+			String huiyikaishishijian = anquanhuiyi.getHuiyikaishishijian().substring(0, 10);
+			if (StringUtils.isNotBlank(huiyikaishishijian) && !huiyikaishishijian.equals("null")){
+				if (DateUtils.isDateString(huiyikaishishijian,null) == true){
+					anquanhuiyi.setHuiyikaishishijian(huiyikaishishijian);
+				}else {
+					r.setMsg(anquanhuiyi.getHuiyikaishishijian()+",该会议开始时间，不是时间格式；");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
 			}
+		}else {
+			r.setMsg(anquanhuiyi.getHuiyikaishishijian()+",该会议开始时间，不是时间格式；");
+			r.setCode(500);
+			r.setSuccess(false);
+			return r;
 		}
+
 
 		//验证会议结束时间
-		if (StringUtils.isNotBlank(anquanhuiyi.getHuiyijieshushijian().toString()) && !anquanhuiyi.getHuiyijieshushijian().toString().equals("null")){
-			if (DateUtils.isDateString(anquanhuiyi.getHuiyijieshushijian().toString(),null) == true){
-				anquanhuiyi.setHuiyijieshushijian(anquanhuiyi.getHuiyijieshushijian());
-			}else {
-				r.setMsg(anquanhuiyi.getHuiyijieshushijian()+",该会议结束时间，不是时间格式；");
-				r.setCode(500);
-				r.setSuccess(false);
-				return r;
+		if (anquanhuiyi.getHuiyijieshushijian().length() >= 10){
+			if (StringUtils.isNotBlank(anquanhuiyi.getHuiyijieshushijian()) && !anquanhuiyi.getHuiyijieshushijian().equals("null")){
+				String huiyikaishishijian = anquanhuiyi.getHuiyijieshushijian().substring(0, 10);
+				if (DateUtils.isDateString(huiyikaishishijian,null) == true){
+					anquanhuiyi.setHuiyijieshushijian(huiyikaishishijian);
+				}else {
+					r.setMsg(anquanhuiyi.getHuiyijieshushijian()+",该会议结束时间，不是时间格式；");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
 			}
+		}else {
+			r.setMsg(anquanhuiyi.getHuiyijieshushijian()+",该会议结束时间，不是时间格式；");
+			r.setCode(500);
+			r.setSuccess(false);
+			return r;
 		}
 
+
 		//验证 会议开始时间 不能大于 会议结束时间
-		if(StringUtils.isNotBlank(anquanhuiyi.getHuiyikaishishijian().toString()) && !anquanhuiyi.getHuiyikaishishijian().toString().equals("null") && StringUtils.isNotBlank(anquanhuiyi.getHuiyijieshushijian().toString()) && !anquanhuiyi.getHuiyijieshushijian().toString().equals("null")) {
-			int a1 = anquanhuiyi.getHuiyikaishishijian().toString().length();
-			int b1 = anquanhuiyi.getHuiyijieshushijian().toString().length();
+		if(StringUtils.isNotBlank(anquanhuiyi.getHuiyikaishishijian()) && !anquanhuiyi.getHuiyikaishishijian().equals("null") && StringUtils.isNotBlank(anquanhuiyi.getHuiyijieshushijian()) && !anquanhuiyi.getHuiyijieshushijian().equals("null")) {
+			int a1 = anquanhuiyi.getHuiyikaishishijian().length();
+			int b1 = anquanhuiyi.getHuiyijieshushijian().length();
 			if (a1 == b1) {
 				if (a1 <= 10) {
 					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-					if (DateUtils.belongCalendar(format.parse(anquanhuiyi.getHuiyikaishishijian().toString()), format.parse(anquanhuiyi.getHuiyijieshushijian().toString()))) {
-						anquanhuiyi.setHuiyikaishishijian(anquanhuiyi.getHuiyikaishishijian());
-						anquanhuiyi.setHuiyijieshushijian(anquanhuiyi.getHuiyijieshushijian());
-					} else {
+					if (DateUtils.belongCalendar(format.parse(anquanhuiyi.getHuiyikaishishijian()), format.parse(anquanhuiyi.getHuiyijieshushijian()))==false) {
 						r.setMsg("会议开始日期,不能大于会议结束日期;");
 						r.setCode(500);
 						r.setSuccess(false);
@@ -110,10 +125,7 @@ public class AnbiaoAnquanhuiyiController {
 				}
 				if (a1 > 10) {
 					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					if (DateUtils.belongCalendar(format.parse(anquanhuiyi.getHuiyikaishishijian().toString()), format.parse(anquanhuiyi.getHuiyijieshushijian().toString()))) {
-						anquanhuiyi.setHuiyikaishishijian(anquanhuiyi.getHuiyikaishishijian());
-						anquanhuiyi.setHuiyijieshushijian(anquanhuiyi.getHuiyijieshushijian());
-					} else {
+					if (DateUtils.belongCalendar(format.parse(anquanhuiyi.getHuiyikaishishijian()), format.parse(anquanhuiyi.getHuiyijieshushijian()))==false) {
 						r.setMsg("会议开始日期,不能大于会议结束日期;");
 						r.setCode(500);
 						r.setSuccess(false);
@@ -129,7 +141,7 @@ public class AnbiaoAnquanhuiyiController {
 		}
 
 		if (anquanhuiyi.getHuiyixingshi().equals("线下")){
-			if (anquanhuiyi.getHuiyikaishishijian().toString().equals(anquanhuiyi.getHuiyijieshushijian().toString())){
+			if (anquanhuiyi.getHuiyikaishishijian().equals(anquanhuiyi.getHuiyijieshushijian())){
 				anquanhuiyi.setHuiyikaishishijian(anquanhuiyi.getHuiyikaishishijian());
 				anquanhuiyi.setHuiyijieshushijian(anquanhuiyi.getHuiyijieshushijian());
 			}else{
