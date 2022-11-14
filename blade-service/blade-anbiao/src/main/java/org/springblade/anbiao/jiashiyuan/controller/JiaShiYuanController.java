@@ -100,13 +100,7 @@ public class JiaShiYuanController {
 					return r;
 				}
 			}
-		} else {
-			r.setMsg(jiaShiYuan.getShenfenzhengchulingriqi() + ",该身份证初领日期，不是时间格式；");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
 		}
-
 
 		//验证身份证有效截止日期
 		if (jiaShiYuan.getShenfenzhengyouxiaoqi().length() >= 10) {
@@ -121,13 +115,7 @@ public class JiaShiYuanController {
 					return r;
 				}
 			}
-		} else {
-			r.setMsg(jiaShiYuan.getShenfenzhengyouxiaoqi() + ",该身份证有效截止日期，不是时间格式；");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
 		}
-
 
 		//验证 验证身份证初领日期 不能大于 身份证有效截止日期
 		if (StringUtils.isNotBlank(jiaShiYuan.getShenfenzhengchulingriqi()) && !jiaShiYuan.getShenfenzhengchulingriqi().equals("null") && StringUtils.isNotBlank(jiaShiYuan.getShenfenzhengyouxiaoqi()) && !jiaShiYuan.getShenfenzhengyouxiaoqi().equals("null")) {
@@ -173,13 +161,7 @@ public class JiaShiYuanController {
 					return r;
 				}
 			}
-		} else {
-			r.setMsg(jiaShiYuan.getJiashizhengchulingriqi() + ",该驾驶证初领日期，不是时间格式；");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
 		}
-
 
 		//验证驾驶证有效截止日期
 		if (jiaShiYuan.getJiashizhengyouxiaoqi().length() >= 10) {
@@ -194,13 +176,7 @@ public class JiaShiYuanController {
 					return r;
 				}
 			}
-		} else {
-			r.setMsg(jiaShiYuan.getJiashizhengyouxiaoqi() + ",该驾驶证有效截止日期，不是时间格式；");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
 		}
-
 
 		//验证 驾驶证初领日期 不能大于 驾驶证有效截止日期
 		if (StringUtils.isNotBlank(jiaShiYuan.getJiashizhengchulingriqi()) && !jiaShiYuan.getJiashizhengchulingriqi().equals("null") && StringUtils.isNotBlank(jiaShiYuan.getJiashizhengyouxiaoqi()) && !jiaShiYuan.getJiashizhengyouxiaoqi().equals("null")) {
@@ -246,11 +222,6 @@ public class JiaShiYuanController {
 					return r;
 				}
 			}
-		} else {
-			r.setMsg(jiaShiYuan.getCongyezhengchulingri() + ",该从业资格证初领日期，不是时间格式；");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
 		}
 
 
@@ -267,13 +238,7 @@ public class JiaShiYuanController {
 					return r;
 				}
 			}
-		} else {
-			r.setMsg(jiaShiYuan.getCongyezhengyouxiaoqi() + ",该从业资格证有效截止日期，不是时间格式；");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
 		}
-
 
 		//验证 从业资格证初领日期 不能大于 从业资格证有效截止日期
 		if (StringUtils.isNotBlank(jiaShiYuan.getCongyezhengchulingri()) && !jiaShiYuan.getCongyezhengchulingri().equals("null") && StringUtils.isNotBlank(jiaShiYuan.getCongyezhengyouxiaoqi()) && !jiaShiYuan.getCongyezhengyouxiaoqi().equals("null")) {
@@ -298,14 +263,9 @@ public class JiaShiYuanController {
 						return r;
 					}
 				}
-			} else {
-				r.setMsg("从业资格证初领日期与从业资格证有效截止日期,时间格式不一致;");
-				r.setCode(500);
-				r.setSuccess(false);
-				return r;
 			}
 		}
-		
+
 		//验证手机号码
 		if (StringUtils.isBlank(jiaShiYuan.getShoujihaoma())) {
 			r.setMsg("手机号码不能为空;");
@@ -327,14 +287,14 @@ public class JiaShiYuanController {
 		if (StringUtils.isNotBlank(jiaShiYuan.getJiashizhenghao()) && jiaShiYuan.getJiashizhenghao() != null) {
 			if (IdCardUtil.isValidCard(jiaShiYuan.getJiashizhenghao()) == true) {
 				jiaShiYuan.setJiashizhenghao(jiaShiYuan.getJiashizhenghao());
-				if (deail != null) {
-					r.setMsg(deail.getJiashizhenghao() + "该驾驶证号已存在;");
-					r.setCode(500);
-					r.setSuccess(false);
-					return r;
-				} else {
-					jiaShiYuan.setJiashizhenghao(jiaShiYuan.getJiashizhenghao());
-				}
+//				if (deail != null) {
+//					r.setMsg(deail.getJiashizhenghao() + "该驾驶证号已存在;");
+//					r.setCode(500);
+//					r.setSuccess(false);
+//					return r;
+//				} else {
+//					jiaShiYuan.setJiashizhenghao(jiaShiYuan.getJiashizhenghao());
+//				}
 			} else {
 				r.setMsg(jiaShiYuan.getJiashizhenghao() + "该驾驶证号不合法;");
 				r.setCode(500);
@@ -346,12 +306,12 @@ public class JiaShiYuanController {
 		//验证身份证
 		if (IdCardUtil.isValidCard(jiaShiYuan.getShenfenzhenghao()) == true) {
 			jiaShiYuan.setShenfenzhenghao(jiaShiYuan.getShenfenzhenghao());
-			if (deail != null) {
-				r.setMsg(deail.getShenfenzhenghao() + "该驾驶员身份证号已存在");
-				r.setCode(500);
-				r.setSuccess(false);
-				return r;
-			} else {
+//			if (deail != null) {
+//				r.setMsg(deail.getShenfenzhenghao() + "该驾驶员身份证号已存在");
+//				r.setCode(500);
+//				r.setSuccess(false);
+//				return r;
+//			} else {
 				jiaShiYuan.setShenfenzhenghao(jiaShiYuan.getShenfenzhenghao());
 				//通过身份证获取年龄
 				Integer age = IdCardUtil.getAgeByCard(jiaShiYuan.getShenfenzhenghao());
@@ -359,7 +319,7 @@ public class JiaShiYuanController {
 				//通过身份证获取生日日期
 				Date chushengshijian = IdCardUtil.getBirthDate(jiaShiYuan.getShenfenzhenghao());
 				jiaShiYuan.setChushengshijian(dateFormat2.format(chushengshijian));
-			}
+//			}
 		} else {
 			r.setMsg(jiaShiYuan.getShenfenzhenghao() + "该驾驶员身份证号不合法");
 			r.setCode(500);
@@ -435,7 +395,7 @@ public class JiaShiYuanController {
 				if (cyzdeail == null) {
 					congyezigezheng.setAjcAjIds(jiaShiYuan.getId());
 					congyezigezheng.setAjcCertificateNo(jiaShiYuan.getCongyezigezheng());
-					congyezigezheng.setAjcIssueDate(jiaShiYuan.getCongyezhengchulingri());
+					congyezigezheng.setAjcInitialIssuing(jiaShiYuan.getCongyezhengchulingri());
 					congyezigezheng.setAjcValidUntil(jiaShiYuan.getCongyezhengyouxiaoqi());
 					congyezigezheng.setAjcLicence(jiaShiYuan.getCongyezhengfujian());
 					congyezigezheng.setAjcStatus("0");
@@ -549,7 +509,6 @@ public class JiaShiYuanController {
 					i = qitaService.save(qita);
 				}
 			}
-
 			if (i) {
 				r.setMsg("添加成功");
 				r.setCode(200);
@@ -562,10 +521,19 @@ public class JiaShiYuanController {
 				return r;
 			}
 		} else {
-			r.setMsg("该驾驶员信息已存在");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
+			jiaShiYuan.setId(deail.getId());
+			boolean i = iJiaShiYuanService.updateById(jiaShiYuan);
+			if (i) {
+				r.setMsg("更新成功");
+				r.setCode(200);
+				r.setSuccess(true);
+				return r;
+			} else {
+				r.setMsg("更新失败");
+				r.setCode(500);
+				r.setSuccess(false);
+				return r;
+			}
 		}
 	}
 

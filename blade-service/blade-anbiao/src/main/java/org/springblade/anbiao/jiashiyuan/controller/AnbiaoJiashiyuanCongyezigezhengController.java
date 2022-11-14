@@ -77,11 +77,6 @@ public class AnbiaoJiashiyuanCongyezigezhengController {
 					return r;
 				}
 			}
-		}else {
-			r.setMsg(congyezigezheng.getAjcIssueDate()+",该发证日期，不是时间格式；");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
 		}
 
 
@@ -98,13 +93,7 @@ public class AnbiaoJiashiyuanCongyezigezhengController {
 					return r;
 				}
 			}
-		}else {
-			r.setMsg(congyezigezheng.getAjcValidUntil()+",该有效期，不是时间格式；");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
 		}
-
 
 		//验证 发证日期 不能大于 有效期
 		if(StringUtils.isNotBlank(congyezigezheng.getAjcIssueDate()) && !congyezigezheng.getAjcIssueDate().equals("null") && StringUtils.isNotBlank(congyezigezheng.getAjcValidUntil()) && !congyezigezheng.getAjcValidUntil().equals("null")){
@@ -150,13 +139,7 @@ public class AnbiaoJiashiyuanCongyezigezhengController {
 					return r;
 				}
 			}
-		}else {
-			r.setMsg(congyezigezheng.getAjcNextAnnualReview()+",该下次年审日期，不是时间格式；");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
 		}
-
 
 		if(deail == null){
 			if(user != null){

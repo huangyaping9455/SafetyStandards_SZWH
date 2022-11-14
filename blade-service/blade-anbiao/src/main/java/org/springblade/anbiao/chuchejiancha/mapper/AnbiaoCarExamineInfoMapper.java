@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamineInfo;
 import org.springblade.anbiao.chuchejiancha.page.AnBiaoCheckCarPage;
 import org.springblade.anbiao.chuchejiancha.page.AnbiaoCarExamineInfoPage;
+import org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineInfoVO;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
  */
 public interface AnbiaoCarExamineInfoMapper extends BaseMapper<AnbiaoCarExamineInfo> {
 
-	List<AnbiaoCarExamineInfo> selectCarExamineInfoPage(AnbiaoCarExamineInfoPage anbiaoCarExamineInfoPage);
+	List<AnbiaoCarExamineInfoVO> selectCarExamineInfoPage(AnbiaoCarExamineInfoPage anbiaoCarExamineInfoPage);
 	int selectCarExamineInfoTotal(AnbiaoCarExamineInfoPage anbiaoCarExamineInfoPage);
 
 

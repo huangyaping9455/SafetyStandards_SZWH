@@ -67,11 +67,6 @@ public class AnbiaoJiashiyuanTijianController {
 					return r;
 				}
 			}
-		} else {
-			r.setMsg(tijian.getAjtPhysicalExaminationDate() + ",该体检日期，不是时间格式；");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
 		}
 
 		//验证体检有效期
@@ -87,11 +82,6 @@ public class AnbiaoJiashiyuanTijianController {
 					return r;
 				}
 			}
-		} else {
-			r.setMsg(tijian.getAjtTermValidity() + ",该体检有效期，不是时间格式；");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
 		}
 
 		//验证 验证体检日期 不能大于 验证体检有效期
@@ -126,29 +116,28 @@ public class AnbiaoJiashiyuanTijianController {
 
 		}
 
-				if (deail == null) {
-					if (user != null) {
-						tijian.setAjtCreateByName(user.getUserName());
-						tijian.setAjtCreateByIds(user.getUserId().toString());
-					} else {
-						tijian.setAjtCreateByName(tijian.getAjtCreateByName());
-						tijian.setAjtCreateByIds(tijian.getAjtCreateByIds());
-					}
-					tijian.setAjtCreateTime(DateUtil.now());
-					tijian.setAjtDelete("0");
-					return R.status(tijianService.save(tijian));
-				} else {
-					if (user != null) {
-						tijian.setAjtUpdateByName(user.getUserName());
-						tijian.setAjtUpdateByIds(user.getUserId().toString());
-					} else {
-						tijian.setAjtUpdateByName(tijian.getAjtUpdateByName());
-						tijian.setAjtUpdateByIds(tijian.getAjtUpdateByIds());
-					}
-					tijian.setAjtUpdateTime(DateUtil.now());
-					return R.status(tijianService.updateById(tijian));
-
-				}
+		if (deail == null) {
+			if (user != null) {
+				tijian.setAjtCreateByName(user.getUserName());
+				tijian.setAjtCreateByIds(user.getUserId().toString());
+			} else {
+				tijian.setAjtCreateByName(tijian.getAjtCreateByName());
+				tijian.setAjtCreateByIds(tijian.getAjtCreateByIds());
 			}
+			tijian.setAjtCreateTime(DateUtil.now());
+			tijian.setAjtDelete("0");
+			return R.status(tijianService.save(tijian));
+		} else {
+			if (user != null) {
+				tijian.setAjtUpdateByName(user.getUserName());
+				tijian.setAjtUpdateByIds(user.getUserId().toString());
+			} else {
+				tijian.setAjtUpdateByName(tijian.getAjtUpdateByName());
+				tijian.setAjtUpdateByIds(tijian.getAjtUpdateByIds());
+			}
+			tijian.setAjtUpdateTime(DateUtil.now());
+			return R.status(tijianService.updateById(tijian));
 		}
+	}
+}
 

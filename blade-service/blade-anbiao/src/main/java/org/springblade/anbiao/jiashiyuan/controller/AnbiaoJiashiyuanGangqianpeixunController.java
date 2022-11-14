@@ -60,13 +60,7 @@ public class AnbiaoJiashiyuanGangqianpeixunController {
 					return r;
 				}
 			}
-		}else {
-			r.setMsg(gangqianpeixun.getAjgTrainingDate()+",该岗前培训日期，不是时间格式；");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
 		}
-
 
 		if(deail == null){
 			if(user != null){

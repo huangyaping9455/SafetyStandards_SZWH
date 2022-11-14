@@ -5,6 +5,9 @@
     <resultMap id="AnbiaoCarExamineInfoResultMap" type="org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamineInfo">
     </resultMap>
 
+    <resultMap id="AnbiaoCarExamineInfoVOResultMap" type="org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineInfoVO">
+    </resultMap>
+
     <sql id="tableDeptYHSql">
         select
             a.cheliangpaizhao,
@@ -21,13 +24,26 @@
                 where date >= #{date}
             ) b on b.vehid = a.id
             left join anbiao_jiashiyuan c on b.jsyid = c.id and c.isdelete = 0
-            left join blade_dept d on a.dept_id = d.id and d.is_deleted = 0
-        where a.dept_id = #{deptId}
+            inner join  (
+                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) d on a.dept_id = d.id
+        where 1=1
+        <if test="jsyId != null and jsyId != '' ">
+           and b.jsyid = #{jsyId}
+        </if>
     </sql>
 
     <sql id="queryDeptYHSql">
+        <if test="cheliangpaizhao != null and cheliangpaizhao != '' ">
+            and cheliangpaizhao like '%${cheliangpaizhao}%'
+        </if>
+
+        <if test="deptname != null and deptname != '' ">
+            and deptname like '%${deptname}%'
+        </if>
+
         <if test="statusshow != null and statusshow != '' ">
-            and statusshow like '%${statusshow}%'
+            and statusshow = #{statusshow}
         </if>
     </sql>
 
@@ -36,7 +52,7 @@
         ORDER BY statusshow,cheliangpaizhao desc
     </sql>
 
-    <select id="selectCarExamineInfoPage" resultMap="AnbiaoCarExamineInfoResultMap"
+    <select id="selectCarExamineInfoPage" resultMap="AnbiaoCarExamineInfoVOResultMap"
             parameterType="org.springblade.anbiao.chuchejiancha.page.AnbiaoCarExamineInfoPage" >
         <if test="size == 0" >
             select * from (

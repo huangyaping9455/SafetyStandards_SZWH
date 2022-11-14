@@ -77,13 +77,7 @@ public class AnbiaoJiashiyuanJiashizhengController {
 					return r;
 				}
 			}
-		}else {
-			r.setMsg(jiashizheng.getAjjValidPeriodStart()+",该有效期开始日期，不是时间格式；");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
 		}
-
 
 		//有效期结束日期
 		if (jiashizheng.getAjjValidPeriodEnd().length()>=10){
@@ -98,13 +92,7 @@ public class AnbiaoJiashiyuanJiashizhengController {
 					return r;
 				}
 			}
-		}else {
-			r.setMsg(jiashizheng.getAjjValidPeriodEnd()+",该有效期结束日期，不是时间格式；");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
 		}
-
 
 		//验证 有效期开始日期 不能大于 有效期结束日期
 		if(StringUtils.isNotBlank(jiashizheng.getAjjValidPeriodStart()) && !jiashizheng.getAjjValidPeriodStart().equals("null") && StringUtils.isNotBlank(jiashizheng.getAjjValidPeriodEnd()) && !jiashizheng.getAjjValidPeriodEnd().equals("null")){
@@ -150,13 +138,7 @@ public class AnbiaoJiashiyuanJiashizhengController {
 					return r;
 				}
 			}
-		}else {
-			r.setMsg(jiashizheng.getAjjNextAnnualReview()+",该下次年审日期，不是时间格式；");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
 		}
-
 
 		if(deail == null){
 			if(user != null){

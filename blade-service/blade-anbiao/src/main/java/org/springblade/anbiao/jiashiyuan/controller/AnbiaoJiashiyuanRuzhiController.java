@@ -66,11 +66,6 @@ public class AnbiaoJiashiyuanRuzhiController {
 					return r;
 				}
 			}
-		}else {
-			r.setMsg(ruzhi.getAjrGraduationDate()+",该有毕业日期，不是时间格式；");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
 		}
 
 		//验证领取驾照日期
@@ -86,13 +81,7 @@ public class AnbiaoJiashiyuanRuzhiController {
 					return r;
 				}
 			}
-		}else {
-			r.setMsg(ruzhi.getAjrReceiveDrivingLicense()+",该领取驾照日期，不是时间格式；");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
 		}
-
 
 		if(deail == null){
 			if(user != null){

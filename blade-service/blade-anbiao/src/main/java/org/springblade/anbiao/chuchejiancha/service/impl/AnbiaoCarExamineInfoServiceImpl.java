@@ -10,6 +10,7 @@ import org.springblade.anbiao.chuchejiancha.mapper.AnbiaoCarExamineInfoRemarkMap
 import org.springblade.anbiao.chuchejiancha.page.AnBiaoCheckCarPage;
 import org.springblade.anbiao.chuchejiancha.page.AnbiaoCarExamineInfoPage;
 import org.springblade.anbiao.chuchejiancha.service.IAnbiaoCarExamineInfoService;
+import org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineInfoVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,13 +32,13 @@ public class AnbiaoCarExamineInfoServiceImpl extends ServiceImpl<AnbiaoCarExamin
 	private AnbiaoCarExamineInfoRemarkMapper remarkMapper;
 
 	@Override
-	public AnbiaoCarExamineInfoPage<AnbiaoCarExamineInfo> selectCarExamineInfoPage(AnbiaoCarExamineInfoPage anbiaoCarExamineInfoPage) {
+	public AnbiaoCarExamineInfoPage<AnbiaoCarExamineInfoVO> selectCarExamineInfoPage(AnbiaoCarExamineInfoPage anbiaoCarExamineInfoPage) {
 		Integer total = mapper.selectCarExamineInfoTotal(anbiaoCarExamineInfoPage);
 		if(anbiaoCarExamineInfoPage.getSize()==0){
 			if(anbiaoCarExamineInfoPage.getTotal()==0){
 				anbiaoCarExamineInfoPage.setTotal(total);
 			}
-			List<AnbiaoCarExamineInfo> infoList = mapper.selectCarExamineInfoPage(anbiaoCarExamineInfoPage);
+			List<AnbiaoCarExamineInfoVO> infoList = mapper.selectCarExamineInfoPage(anbiaoCarExamineInfoPage);
 			anbiaoCarExamineInfoPage.setRecords(infoList);
 			return anbiaoCarExamineInfoPage;
 		}
@@ -57,7 +58,7 @@ public class AnbiaoCarExamineInfoServiceImpl extends ServiceImpl<AnbiaoCarExamin
 			}
 			anbiaoCarExamineInfoPage.setTotal(total);
 			anbiaoCarExamineInfoPage.setOffsetNo(offsetNo);
-			List<AnbiaoCarExamineInfo> infoList = mapper.selectCarExamineInfoPage(anbiaoCarExamineInfoPage);
+			List<AnbiaoCarExamineInfoVO> infoList = mapper.selectCarExamineInfoPage(anbiaoCarExamineInfoPage);
 			anbiaoCarExamineInfoPage.setRecords(infoList);
 		}
 		return anbiaoCarExamineInfoPage;

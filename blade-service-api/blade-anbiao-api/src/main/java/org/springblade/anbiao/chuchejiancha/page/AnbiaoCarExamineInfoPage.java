@@ -23,8 +23,17 @@ public class AnbiaoCarExamineInfoPage<T> extends BasePage<T> {
 	@ApiModelProperty(value = "企业名称")
 	private String deptname;
 
-	@ApiModelProperty(value = "企业ID")
+	@ApiModelProperty(value = "企业ID",required = true)
 	private String deptId;
+
+	@ApiModelProperty(value = "检查时间",required = true)
+	private String date;
+
+	@ApiModelProperty(value = "驾驶员ID（司机小程序，必传）")
+	private String jsyId;
+
+	@ApiModelProperty(value = "检查状态（已完成、未完成）")
+	private String statusshow;
 
 	@ApiModelProperty(value = "车辆牌照")
 	private String cheliangpaizhao;

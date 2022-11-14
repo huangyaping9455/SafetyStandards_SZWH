@@ -17,6 +17,7 @@ import org.springblade.anbiao.chuchejiancha.page.AnbiaoCarExamineInfoPage;
 import org.springblade.anbiao.chuchejiancha.service.IAnbiaoCarExamineInfoRemarkService;
 import org.springblade.anbiao.chuchejiancha.service.IAnbiaoCarExamineInfoService;
 import org.springblade.anbiao.chuchejiancha.service.IAnbiaoCarExamineService;
+import org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineInfoVO;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
@@ -347,14 +348,14 @@ public class AnbiaoCarExamineInfoController {
 	@PostMapping("/getCarExamineInfoList")
 	@ApiLog("安全检查数据-分页列表")
 	@ApiOperation(value = "安全检查数据-分页列表", notes = "传入AnbiaoCarExamineInfoPage", position = 6)
-	public R<AnbiaoCarExamineInfoPage<AnbiaoCarExamineInfo>> getCarExamineInfoList(@RequestBody AnbiaoCarExamineInfoPage carExamineInfoPage, BladeUser user) {
+	public R<AnbiaoCarExamineInfoPage<AnbiaoCarExamineInfoVO>> getCarExamineInfoList(@RequestBody AnbiaoCarExamineInfoPage carExamineInfoPage, BladeUser user) {
 		R rs = new R();
 		if(user == null){
 			rs.setMsg("未授权");
 			rs.setCode(500);
 			return rs;
 		}
-		AnbiaoCarExamineInfoPage<AnbiaoCarExamineInfo> list= iAnbiaoCarExamineInfoService.selectCarExamineInfoPage(carExamineInfoPage);
+		AnbiaoCarExamineInfoPage<AnbiaoCarExamineInfoVO> list= iAnbiaoCarExamineInfoService.selectCarExamineInfoPage(carExamineInfoPage);
 		return R.data(list);
 	}
 
