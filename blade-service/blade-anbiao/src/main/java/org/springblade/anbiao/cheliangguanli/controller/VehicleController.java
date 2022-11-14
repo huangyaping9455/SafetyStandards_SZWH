@@ -51,6 +51,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -114,7 +115,7 @@ public class VehicleController {
     @GetMapping("/detail")
 	@ApiLog("详情-车辆资料管理")
     @ApiOperation(value = "详情-车辆资料管理", notes = "传入id", position = 2)
-    public R<VehicleVO> detail(String id) {
+    public R<VehicleInfo> detail(String id) {
         VehicleVO detail = vehicleService.selectByKey(id);
 		//车辆照片
 		if(StrUtil.isNotEmpty(detail.getCheliangzhaopian()) && detail.getCheliangzhaopian().contains("http") == false){
@@ -128,14 +129,73 @@ public class VehicleController {
 		if(StrUtil.isNotEmpty(detail.getXingshifujian()) && detail.getXingshifujian().contains("http") == false){
 			detail.setXingshifujian(fileUploadClient.getUrl(detail.getXingshifujian()));
 		}
+
+		VehicleInfo v = new VehicleInfo();
+		v.setId(detail.getId());
+		v.setDeptId(detail.getDeptId());
+		v.setCheliangpaizhao(detail.getCheliangpaizhao());
+		v.setChepaiyanse(detail.getChepaiyanse());
+		v.setJiashiyuanid(detail.getJiashiyuanid());
+		v.setChezhu(detail.getChezhu());
+		v.setChezhudianhua(detail.getChezhudianhua());
+//		v.setZhuceriqi(detail.getZhucedengjishijian());
+		v.setJingyingxukezhenghao(detail.getDaoluyunshuzheng());
+		DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		if(detail.getDaoluyunshuzhengchulingriqi() != null){
+			v.setJyxkzyouxiaoqiStart(LocalDate.parse(detail.getDaoluyunshuzhengchulingriqi(), fmt));
+		}
+		if(detail.getDaoluyunshuzhengyouxiaoqi() != null){
+			v.setJyxkzyouxiaoqiEnd(LocalDate.parse(detail.getDaoluyunshuzhengyouxiaoqi(), fmt));
+		}
+		v.setJingjileixing(detail.getJingjileixing());
+		v.setJingyingzuzhifangshi(detail.getJingyingzuzhifangshi());
+		v.setJingyingfanwei(detail.getCheliangyunyingleixing());
+		v.setJingyingluxian(detail.getTeamno());
+		v.setChelianghuodefangshi(detail.getChelianghuoqufangshi());
+		v.setWeihuzhouqi(detail.getWeihuzhouqi());
+		v.setCheliangzhaopian(detail.getCheliangzhaopian());
+		v.setCheliangleixing(detail.getShiyongxingzhi());
+		v.setCheliangxinghao(detail.getXinghao());
+		v.setCheliangyanse(detail.getCheshenyanse());
+		v.setChejiahao(detail.getChejiahao());
+		if(detail.getShifoujinkou() != null){
+			if(detail.getShifoujinkou().equals("0")){
+				v.setShifouguochan("是");
+			}else{
+				v.setShifouguochan("否");
+			}
+		}
+		v.setFadongjihao(detail.getFadongjihao());
+		v.setRanliaozhonglei(detail.getRanliaoleibie());
+		v.setFadongjixinghao(detail.getFadongjixinghao());
+		v.setPailianggonglü(detail.getPaifangbiaozhun());
+		v.setZhizaochangmingcheng(detail.getZhizhaochangshang());
+		v.setZhuanxiangxingshi(detail.getZhuanxiangfangshi());
+		v.setLunju(detail.getLunju());
+		v.setLuntaishu(detail.getLuntaishu());
+		v.setLuntaiguige(detail.getLuntaiguige());
+		v.setTongbantanhuangpianshu(detail.getGangbantanhuangpianshu());
+		v.setZhouju(detail.getZhouju());
+		v.setZhoushu(detail.getChezhoushu());
+		v.setWaikuochicun(detail.getCheliangwaikuochicun());
+		v.setHuoxiangneibuchicun(detail.getHuoxiangneibuchicun());
+		v.setZongzhiliang(detail.getZongzhiliang());
+		v.setHedingzaizhiliang(detail.getHedingzaizhiliang());
+		v.setHedingzaikeshu(detail.getHedingzaike());
+		v.setZhunqianyinzongzhiliang(detail.getZhunqianyinzongzhiliang());
+		v.setJiashishizaikeshu(detail.getJiashishizaike());
+		v.setShiyongxingzhi(detail.getShiyongxingzhi());
+		v.setCheliangchuchangriqi(detail.getChuchangriqi());
+		v.setCheliangpinpai(detail.getCheliangpinpai());
+
 		QueryWrapper<VehicleBiangengjilu> biangengjiluQueryWrapper = new QueryWrapper<VehicleBiangengjilu>();
 		biangengjiluQueryWrapper.lambda().eq(VehicleBiangengjilu::getAvbjVehicleId,detail.getId());
 		biangengjiluQueryWrapper.lambda().eq(VehicleBiangengjilu::getAvbjDelete,"0");
 		List<VehicleBiangengjilu> deail = vehicleBiangengjiluService.getBaseMapper().selectList(biangengjiluQueryWrapper);
 		if(deail != null){
-			detail.setCheliangbiangengjilu(deail);
+			v.setCheliangbiangengjilu(deail);
 		}
-        return R.data(detail);
+        return R.data(v);
     }
 
 	@GetMapping("/selectByCL")
@@ -263,6 +323,39 @@ public class VehicleController {
 //		if(StringUtil.isNotBlank(vehicle.getCheliangzhaopian())){
 //			fileUploadClient.updateCorrelation(vehicle.getCheliangzhaopian(),str);
 //		}
+
+		if("是".equals(v.getShifouguochan())){
+			vehicle.setShifoujinkou("0");
+		}else{
+			vehicle.setShifoujinkou("1");
+		}
+		vehicle.setXinghao(v.getCheliangxinghao());
+		vehicle.setCheshenyanse(v.getCheliangyanse());
+		vehicle.setRanliaoleibie(v.getRanliaozhonglei());
+		vehicle.setPaifangbiaozhun(v.getPailianggonglü());
+		vehicle.setZhizhaochangshang(v.getZhizaochangmingcheng());
+		vehicle.setZhuanxiangfangshi(v.getZhuanxiangxingshi());
+		vehicle.setGangbantanhuangpianshu(v.getTongbantanhuangpianshu());
+		vehicle.setChezhoushu(v.getZhoushu());
+		vehicle.setCheliangwaikuochicun(v.getWaikuochicun());
+		vehicle.setHedingzaike(v.getHedingzaikeshu());
+		vehicle.setJiashishizaike(v.getJiashishizaikeshu());
+		vehicle.setChuchangriqi(v.getCheliangchuchangriqi());
+		vehicle.setCheliangzhaopian(v.getCheliangzhaopian());
+		vehicle.setChelianghuoqufangshi(v.getChelianghuodefangshi());
+		vehicle.setTeamno(v.getJingyingluxian());
+		vehicle.setCheliangyunyingleixing(v.getJingyingfanwei());
+		vehicle.setJingyingzuzhifangshi(v.getJingyingzuzhifangshi());
+		vehicle.setJingjileixing(v.getJingjileixing());
+		vehicle.setDaoluyunshuzheng(v.getJingyingxukezhenghao());
+		if(v.getJyxkzyouxiaoqiStart() != null){
+			vehicle.setDaoluyunshuzhengchulingriqi(v.getJyxkzyouxiaoqiStart().toString());
+		}
+		if(v.getJyxkzyouxiaoqiEnd() != null){
+			vehicle.setDaoluyunshuzhengyouxiaoqi(v.getJyxkzyouxiaoqiEnd().toString());
+		}
+		vehicle.setCheliangpinpai(v.getCheliangpinpai());
+
 		boolean i = vehicleService.save(vehicle);
 
 		if(i==true){
@@ -448,6 +541,39 @@ public class VehicleController {
 			String yys = StringEscapeUtils.unescapeHtml(StringEscapeUtils.unescapeHtml(vehicle.getYunyingshang()));
 			vehicle.setYunyingshang(yys);
 		}
+
+		if("是".equals(v.getShifouguochan())){
+			vehicle.setShifoujinkou("0");
+		}else{
+			vehicle.setShifoujinkou("1");
+		}
+		vehicle.setXinghao(v.getCheliangxinghao());
+		vehicle.setCheshenyanse(v.getCheliangyanse());
+		vehicle.setRanliaoleibie(v.getRanliaozhonglei());
+		vehicle.setPaifangbiaozhun(v.getPailianggonglü());
+		vehicle.setZhizhaochangshang(v.getZhizaochangmingcheng());
+		vehicle.setZhuanxiangfangshi(v.getZhuanxiangxingshi());
+		vehicle.setGangbantanhuangpianshu(v.getTongbantanhuangpianshu());
+		vehicle.setChezhoushu(v.getZhoushu());
+		vehicle.setCheliangwaikuochicun(v.getWaikuochicun());
+		vehicle.setHedingzaike(v.getHedingzaikeshu());
+		vehicle.setJiashishizaike(v.getJiashishizaikeshu());
+		vehicle.setChuchangriqi(v.getCheliangchuchangriqi());
+		vehicle.setCheliangzhaopian(v.getCheliangzhaopian());
+		vehicle.setChelianghuoqufangshi(v.getChelianghuodefangshi());
+		vehicle.setTeamno(v.getJingyingluxian());
+		vehicle.setCheliangyunyingleixing(v.getJingyingfanwei());
+		vehicle.setJingyingzuzhifangshi(v.getJingyingzuzhifangshi());
+		vehicle.setJingjileixing(v.getJingjileixing());
+		vehicle.setDaoluyunshuzheng(v.getJingyingxukezhenghao());
+		if(v.getJyxkzyouxiaoqiStart() != null){
+			vehicle.setDaoluyunshuzhengchulingriqi(v.getJyxkzyouxiaoqiStart().toString());
+		}
+		if(v.getJyxkzyouxiaoqiEnd() != null){
+			vehicle.setDaoluyunshuzhengyouxiaoqi(v.getJyxkzyouxiaoqiEnd().toString());
+		}
+		vehicle.setCheliangpinpai(v.getCheliangpinpai());
+
 //		String str="1";
 //		//登录页
 //		if(StringUtil.isNotBlank(vehicle.getCheliangzhaopian())){

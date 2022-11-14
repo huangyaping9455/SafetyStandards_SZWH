@@ -37,5 +37,5 @@ public interface IVehicleJingyingxukezhengService extends BaseService<VehicleJin
 	 */
 	IPage<VehicleJingyingxukezhengVO> selectVehicleJingyingxukezhengPage(IPage<VehicleJingyingxukezhengVO> page, VehicleJingyingxukezhengVO vehicleJingyingxukezheng);
 
-	VehicleJingyingxukezhengVO selectVehicleJingyingxukezhengByVehicleIds(String avjVehicleIds);
+	VehicleJingyingxukezheng selectVehicleJingyingxukezhengByVehicleIds(String avjVehicleIds);
 }

@@ -409,5 +409,14 @@ public class Vehicle implements Serializable {
 	@ApiModelProperty(value = "驾驶室载客")
 	private String jiashishizaike;
 
+	@ApiModelProperty(value = "车辆运营类型")
+	private String cheliangyunyingleixing;
+
+	@ApiModelProperty(value = "经济类型")
+	private String jingjileixing;
+
+	@ApiModelProperty(value = "经营组织方式")
+	private String jingyingzuzhifangshi;
+
 
 }
