@@ -504,7 +504,7 @@ public class VehicleController {
 
     	if(user == null) {
     		r.setMsg("未授权");
-    		r.setCode(500);
+    		r.setCode(401);
 			return r;
 		}
 
@@ -886,7 +886,7 @@ public class VehicleController {
 
 		if(user == null) {
 			r.setMsg("未授权");
-			r.setCode(500);
+			r.setCode(401);
 			return r;
 		}
 
@@ -2459,7 +2459,7 @@ public class VehicleController {
 	public R vehicleDeptImport(@RequestParam(value = "file") MultipartFile file,BladeUser user,@RequestParam String type,@RequestParam String leixing) throws ParseException {
 		R rs = new R();
 		if (user == null) {
-			rs.setCode(500);
+			rs.setCode(401);
 			rs.setMsg("用户权限验证失败");
 			rs.setData(null);
 			rs.setSuccess(false);
@@ -3239,7 +3239,7 @@ public class VehicleController {
 	public R vehicleDeptImportOk(@RequestParam(value = "vehicles") String vehicles,BladeUser user) {
 		R rs = new R();
 		if (user == null) {
-			rs.setCode(500);
+			rs.setCode(401);
 			rs.setMsg("用户权限验证失败");
 			rs.setData(null);
 			rs.setSuccess(false);

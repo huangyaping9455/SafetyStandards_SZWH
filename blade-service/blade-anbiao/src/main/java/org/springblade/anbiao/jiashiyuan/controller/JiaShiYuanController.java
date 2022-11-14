@@ -1181,7 +1181,7 @@ public class JiaShiYuanController {
 	public R driverDeptImport(@RequestParam(value = "file") MultipartFile file, BladeUser user, @RequestParam String leixing) throws ParseException {
 		R rs = new R();
 		if (user == null) {
-			rs.setCode(500);
+			rs.setCode(401);
 			rs.setMsg("用户权限验证失败");
 			rs.setData(null);
 			rs.setSuccess(false);
@@ -1805,7 +1805,7 @@ public class JiaShiYuanController {
 		List<Map<String, Object>> lists = (List) json;
 		R rs = new R();
 		if (user == null) {
-			rs.setCode(500);
+			rs.setCode(401);
 			rs.setMsg("用户权限验证失败");
 			rs.setData(null);
 			rs.setSuccess(false);

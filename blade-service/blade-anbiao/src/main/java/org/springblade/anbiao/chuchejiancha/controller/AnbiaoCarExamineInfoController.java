@@ -352,7 +352,7 @@ public class AnbiaoCarExamineInfoController {
 		R rs = new R();
 		if(user == null){
 			rs.setMsg("未授权");
-			rs.setCode(500);
+			rs.setCode(401);
 			return rs;
 		}
 		AnbiaoCarExamineInfoPage<AnbiaoCarExamineInfoVO> list= iAnbiaoCarExamineInfoService.selectCarExamineInfoPage(carExamineInfoPage);
@@ -366,7 +366,7 @@ public class AnbiaoCarExamineInfoController {
 		R rs = new R();
 		if(user == null){
 			rs.setMsg("未授权");
-			rs.setCode(500);
+			rs.setCode(401);
 			return rs;
 		}
 
@@ -457,7 +457,7 @@ public class AnbiaoCarExamineInfoController {
 		R rs = new R();
 		if(user == null){
 			rs.setMsg("未授权");
-			rs.setCode(500);
+			rs.setCode(401);
 			return rs;
 		}
 		List<AnbiaoCarExamineInfo> list= iAnbiaoCarExamineInfoService.selectAnBiaoCheckCarALLPage(carExamineInfoPage);

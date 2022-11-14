@@ -45,7 +45,7 @@ public class AnbiaoCarExamineController extends BladeController {
 		R rs = new R();
 		if(user == null){
 			rs.setMsg("未授权");
-			rs.setCode(500);
+			rs.setCode(401);
 			return rs;
 		}
 		anbiaoCarExamine.setCreateid(user.getUserId().toString());
@@ -100,7 +100,7 @@ public class AnbiaoCarExamineController extends BladeController {
 		R rs = new R();
 		if(user == null){
 			rs.setMsg("未授权");
-			rs.setCode(500);
+			rs.setCode(401);
 			return rs;
 		}
 		anbiaoCarExamine.setUpdateid(user.getUserId().toString());
@@ -126,7 +126,7 @@ public class AnbiaoCarExamineController extends BladeController {
 		R rs = new R();
 		if(user == null){
 			rs.setMsg("未授权");
-			rs.setCode(500);
+			rs.setCode(401);
 			return rs;
 		}
 		AnbiaoCarExamine anbiaoCarExamine = new AnbiaoCarExamine();
@@ -144,7 +144,7 @@ public class AnbiaoCarExamineController extends BladeController {
 		R rs = new R();
 		if(user == null){
 			rs.setMsg("未授权");
-			rs.setCode(500);
+			rs.setCode(401);
 			return rs;
 		}
 		AnbiaoCarExamine anbiaoCarExamine = new AnbiaoCarExamine();

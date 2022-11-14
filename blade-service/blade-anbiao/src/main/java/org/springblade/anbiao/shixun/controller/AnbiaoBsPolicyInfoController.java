@@ -56,7 +56,7 @@ public class AnbiaoBsPolicyInfoController {
 	public R insert(@RequestBody AnbiaoBsPolicyInfo bsPolicyInfo, BladeUser user) {
 		R r = new R();
 		if (user == null) {
-			r.setCode(500);
+			r.setCode(401);
 			r.setMsg("未授权");
 			r.setSuccess(false);
 			return r;
@@ -123,7 +123,7 @@ public class AnbiaoBsPolicyInfoController {
 	public R update(@RequestBody AnbiaoBsPolicyInfo bsPolicyInfo, BladeUser user) {
 		R rs = new R();
 		if (user == null) {
-			rs.setCode(500);
+			rs.setCode(401);
 			rs.setMsg("未授权");
 			rs.setSuccess(false);
 			return rs;
@@ -158,7 +158,7 @@ public class AnbiaoBsPolicyInfoController {
 		R rs = new R();
 		if(user == null){
 			rs.setMsg("未授权");
-			rs.setCode(500);
+			rs.setCode(401);
 			return rs;
 		}
 
@@ -195,7 +195,7 @@ public class AnbiaoBsPolicyInfoController {
 		R rs = new R();
 		if(user == null){
 			rs.setMsg("未授权");
-			rs.setCode(500);
+			rs.setCode(401);
 			return rs;
 		}
 
