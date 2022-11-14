@@ -279,7 +279,7 @@ public class VehicleController {
 
 		if(user == null) {
 			r.setMsg("未授权");
-			r.setCode(500);
+			r.setCode(401);
 			return r;
 		}
 
