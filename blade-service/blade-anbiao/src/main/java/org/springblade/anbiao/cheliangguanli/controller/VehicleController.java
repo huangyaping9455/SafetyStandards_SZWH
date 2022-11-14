@@ -611,18 +611,28 @@ public class VehicleController {
 		}
     	StringBuilder stringBuilder = new StringBuilder();
     	if(vd.getXingshizheng() != null) {
-    		VehicleXingshizheng xingshizheng = vd.getXingshizheng();
-    		xingshizheng.setAvxFileNo(vehicleVO.getCheliangpaizhao());
-			xingshizheng.setAvxVehicleType(vehicleVO.getShiyongxingzhi());
-			xingshizheng.setAvxOwner(vehicleVO.getChezhu());
-			xingshizheng.setAvxRegisterDate(vd.getXingshizheng().getAvxRegisterDate());
-			xingshizheng.setAvxValidUntil(vd.getXingshizheng().getAvxValidUntil());
-			xingshizheng.setAvxOriginalEnclosure(vd.getXingshizheng().getAvxOriginalEnclosure());
-			xingshizheng.setAvxCopyEnclosure(vd.getXingshizheng().getAvxCopyEnclosure());
-			xingshizheng.setAvxUpdateByName(user.getUserName());
-			xingshizheng.setAvxUpdateByIds(user.getUserId().toString());
-			xingshizheng.setAvxUpdateTime(LocalDateTime.now());
-			if (xingshizhengService.saveOrUpdate(xingshizheng)) {
+    		VehicleXingshizheng xsz = vd.getXingshizheng();
+    		xsz.setAvxAvIds(vd.getVehicleId());
+    		xsz.setAvxDelete("0");
+			xsz.setAvxPlateNo(vehicleVO.getCheliangpaizhao());
+			xsz.setAvxVehicleType(vehicleVO.getShiyongxingzhi());
+			xsz.setAvxOwner(vehicleVO.getChezhu());
+
+			VehicleXingshizheng vxsz = new VehicleXingshizheng();
+			vxsz.setAvxAvIds(vd.getVehicleId());
+			vxsz.setAvxDelete("0");
+			VehicleXingshizheng xingshizheng = xingshizhengService.getOne(Condition.getQueryWrapper(vxsz));
+			if(xingshizheng != null) {
+				xsz.setAvxIds(xingshizheng.getAvxIds());
+				xsz.setAvxUpdateByName(user.getUserName());
+				xsz.setAvxUpdateByIds(user.getUserId().toString());
+				xsz.setAvxUpdateTime(LocalDateTime.now());
+			} else {
+				xsz.setAvxCreateByName(user.getUserName());
+				xsz.setAvxCreateByIds(user.getUserId().toString());
+				xsz.setAvxCreateTime(LocalDateTime.now());
+			}
+			if (xingshizhengService.saveOrUpdate(xsz)) {
 				stringBuilder.append("更新车辆行驶证信息成功！"+"\r\n");
 			} else {
 				stringBuilder.append("更新车辆行驶证信息失败！"+"\r\n");
@@ -732,7 +742,7 @@ public class VehicleController {
 				djzs.setAvdCreateByIds(user.getUserId().toString());
 				djzs.setAvdCreateTime(LocalDateTime.now());
 			}
-			if(dengjizhengshuService.saveOrUpdate(dengjizhengshu)) {
+			if(dengjizhengshuService.saveOrUpdate(djzs)) {
 				stringBuilder.append("更新登记证书成功！"+"\r\n");
 			} else {
 				stringBuilder.append("更新登记证书失败！"+"\r\n");
