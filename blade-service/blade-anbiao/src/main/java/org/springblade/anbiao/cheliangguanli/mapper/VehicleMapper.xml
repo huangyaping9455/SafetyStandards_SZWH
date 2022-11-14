@@ -284,6 +284,10 @@
             AND cheliangpaizhao like CONCAT('%',#{cheliangpaizhao},'%')
         </if>
 
+        <if test="chezhu !=null and chezhu != ''">
+            AND chezhu like CONCAT('%',#{chezhu},'%')
+        </if>
+
         <if test="zongduanid !=null and zongduanid != ''">
             AND zongduanid like CONCAT('%',#{zongduanid},'%')
         </if>

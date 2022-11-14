@@ -91,7 +91,6 @@ public class VehicleController {
 	@ApiLog("分页-车辆资料管理")
     @ApiOperation(value = "分页-车辆资料管理", notes = "传入VehiclePage", position = 1)
     public R<VehiclePage<VehicleVO>> list(@RequestBody VehiclePage vehiclepage) {
-		vehiclepage.setCheliangleixing("2");
         VehiclePage<VehicleVO> pages = vehicleService.selectVehiclePage(vehiclepage);
 //		List<VehicleVO>  list=pages.getRecords();
 //		for (int i = 0; i <list.size() ; i++) {

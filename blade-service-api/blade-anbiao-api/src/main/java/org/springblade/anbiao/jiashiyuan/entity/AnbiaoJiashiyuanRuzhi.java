@@ -95,7 +95,7 @@ public class AnbiaoJiashiyuanRuzhi implements Serializable {
 
 	@ApiModelProperty(value = "驾驶年龄")
 	@TableField("ajr_driving_experience")
-	private Integer ajrDrivingExperience;
+	private Integer ajrDrivingExperience = 0;
 
 	@ApiModelProperty(value = "健康状况")
 	@TableField("ajr_health_status")

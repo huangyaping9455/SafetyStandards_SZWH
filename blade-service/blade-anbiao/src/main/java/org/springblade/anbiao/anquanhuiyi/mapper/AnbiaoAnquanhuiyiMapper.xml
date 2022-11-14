@@ -30,14 +30,13 @@
 	<sql id="tableSql">
 		select
 			a.*,
-			b.dept_name as deptname,
-			c.aad_ids
+			b.dept_name as deptname
 		from
 			anbiao_anquanhuiyi a
 		inner join  (
 			<include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
 		) b on a.dept_id = b.id
-		left join anbiao_anquanhuiyi_detail c on c.aad_aa_ids = a.id
+<!--		left join anbiao_anquanhuiyi_detail c on c.aad_aa_ids = a.id-->
 		where a.is_deleted = 0
 			and left(a.huiyikaishishijian,10) >= #{huiyikaishishijian}
 	</sql>
