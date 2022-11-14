@@ -65,19 +65,19 @@ public class AnbiaoJiashiyuanCongyezigezhengController {
 //		}
 
 		//验证发证日期
-		if (congyezigezheng.getAjcIssueDate().length()>=10){
-			String s1 = congyezigezheng.getAjcIssueDate().substring(0,10);
-			if (StringUtils.isNotBlank(s1) && !s1.equals("null")){
-				if (DateUtils.isDateString(s1,null) == true){
-					congyezigezheng.setAjcIssueDate(s1);
-				}else {
-					r.setMsg(congyezigezheng.getAjcIssueDate()+",该发证日期，不是时间格式；");
-					r.setCode(500);
-					r.setSuccess(false);
-					return r;
-				}
-			}
-		}
+//		if (congyezigezheng.getAjcIssueDate().length()>=10){
+//			String s1 = congyezigezheng.getAjcIssueDate().substring(0,10);
+//			if (StringUtils.isNotBlank(s1) && !s1.equals("null")){
+//				if (DateUtils.isDateString(s1,null) == true){
+//					congyezigezheng.setAjcIssueDate(s1);
+//				}else {
+//					r.setMsg(congyezigezheng.getAjcIssueDate()+",该发证日期，不是时间格式；");
+//					r.setCode(500);
+//					r.setSuccess(false);
+//					return r;
+//				}
+//			}
+//		}
 
 
 		//验证有效期
@@ -127,19 +127,19 @@ public class AnbiaoJiashiyuanCongyezigezhengController {
 		}
 
 		//验证下次年审日期
-		if (congyezigezheng.getAjcNextAnnualReview().length()>=10){
-			String s3 = congyezigezheng.getAjcNextAnnualReview().substring(0,10);
-			if (StringUtils.isNotBlank(s3) && !s3.equals("null")){
-				if (DateUtils.isDateString(s3,null) == true){
-					congyezigezheng.setAjcNextAnnualReview(s3);
-				}else {
-					r.setMsg(congyezigezheng.getAjcNextAnnualReview()+",该下次年审日期，不是时间格式；");
-					r.setCode(500);
-					r.setSuccess(false);
-					return r;
-				}
-			}
-		}
+//		if (congyezigezheng.getAjcNextAnnualReview().length()>=10){
+//			String s3 = congyezigezheng.getAjcNextAnnualReview().substring(0,10);
+//			if (StringUtils.isNotBlank(s3) && !s3.equals("null")){
+//				if (DateUtils.isDateString(s3,null) == true){
+//					congyezigezheng.setAjcNextAnnualReview(s3);
+//				}else {
+//					r.setMsg(congyezigezheng.getAjcNextAnnualReview()+",该下次年审日期，不是时间格式；");
+//					r.setCode(500);
+//					r.setSuccess(false);
+//					return r;
+//				}
+//			}
+//		}
 
 		if(deail == null){
 			if(user != null){

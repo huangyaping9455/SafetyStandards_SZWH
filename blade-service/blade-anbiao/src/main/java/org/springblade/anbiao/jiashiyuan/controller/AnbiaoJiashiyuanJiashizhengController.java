@@ -126,19 +126,19 @@ public class AnbiaoJiashiyuanJiashizhengController {
 		}
 
 		//验证下次年审日期
-		if (jiashizheng.getAjjNextAnnualReview().length() >= 10) {
-			String s3 = jiashizheng.getAjjNextAnnualReview().substring(0,10);
-			if (StringUtils.isNotBlank(s3) && !s3.equals("null")){
-				if (DateUtils.isDateString(s3,null) == true){
-					jiashizheng.setAjjNextAnnualReview(s3);
-				}else {
-					r.setMsg(jiashizheng.getAjjNextAnnualReview()+",该下次年审日期，不是时间格式；");
-					r.setCode(500);
-					r.setSuccess(false);
-					return r;
-				}
-			}
-		}
+//		if (jiashizheng.getAjjNextAnnualReview().length() >= 10) {
+//			String s3 = jiashizheng.getAjjNextAnnualReview().substring(0,10);
+//			if (StringUtils.isNotBlank(s3) && !s3.equals("null")){
+//				if (DateUtils.isDateString(s3,null) == true){
+//					jiashizheng.setAjjNextAnnualReview(s3);
+//				}else {
+//					r.setMsg(jiashizheng.getAjjNextAnnualReview()+",该下次年审日期，不是时间格式；");
+//					r.setCode(500);
+//					r.setSuccess(false);
+//					return r;
+//				}
+//			}
+//		}
 
 		if(deail == null){
 			if(user != null){

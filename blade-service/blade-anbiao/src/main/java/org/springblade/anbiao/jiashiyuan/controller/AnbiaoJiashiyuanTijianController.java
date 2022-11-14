@@ -55,66 +55,66 @@ public class AnbiaoJiashiyuanTijianController {
 		AnbiaoJiashiyuanTijian deail = tijianService.getBaseMapper().selectOne(tijianQueryWrapper);
 
 		//验证体检日期
-		if (tijian.getAjtPhysicalExaminationDate().length() >= 10) {
-			String s = tijian.getAjtPhysicalExaminationDate().substring(0, 10);
-			if (StringUtils.isNotBlank(s) && !s.equals("null")) {
-				if (DateUtils.isDateString(s, null) == true) {
-					tijian.setAjtPhysicalExaminationDate(s);
-				} else {
-					r.setMsg(tijian.getAjtPhysicalExaminationDate() + ",该体检日期，不是时间格式；");
-					r.setCode(500);
-					r.setSuccess(false);
-					return r;
-				}
-			}
-		}
+//		if (tijian.getAjtPhysicalExaminationDate().length() >= 10) {
+//			String s = tijian.getAjtPhysicalExaminationDate().substring(0, 10);
+//			if (StringUtils.isNotBlank(s) && !s.equals("null")) {
+//				if (DateUtils.isDateString(s, null) == true) {
+//					tijian.setAjtPhysicalExaminationDate(s);
+//				} else {
+//					r.setMsg(tijian.getAjtPhysicalExaminationDate() + ",该体检日期，不是时间格式；");
+//					r.setCode(500);
+//					r.setSuccess(false);
+//					return r;
+//				}
+//			}
+//		}
 
 		//验证体检有效期
-		if (tijian.getAjtTermValidity().length() >= 10) {
-			String s1 = tijian.getAjtTermValidity().substring(0, 10);
-			if (StringUtils.isNotBlank(s1) && !s1.equals("null")) {
-				if (DateUtils.isDateString(s1, null) == true) {
-					tijian.setAjtTermValidity(s1);
-				} else {
-					r.setMsg(tijian.getAjtTermValidity() + ",该体检有效期，不是时间格式；");
-					r.setCode(500);
-					r.setSuccess(false);
-					return r;
-				}
-			}
-		}
+//		if (tijian.getAjtTermValidity().length() >= 10) {
+//			String s1 = tijian.getAjtTermValidity().substring(0, 10);
+//			if (StringUtils.isNotBlank(s1) && !s1.equals("null")) {
+//				if (DateUtils.isDateString(s1, null) == true) {
+//					tijian.setAjtTermValidity(s1);
+//				} else {
+//					r.setMsg(tijian.getAjtTermValidity() + ",该体检有效期，不是时间格式；");
+//					r.setCode(500);
+//					r.setSuccess(false);
+//					return r;
+//				}
+//			}
+//		}
 
 		//验证 验证体检日期 不能大于 验证体检有效期
-		if (StringUtils.isNotBlank(tijian.getAjtPhysicalExaminationDate()) && !tijian.getAjtPhysicalExaminationDate().equals("null") && StringUtils.isNotBlank(tijian.getAjtTermValidity()) && !tijian.getAjtTermValidity().equals("null")) {
-			int a1 = tijian.getAjtPhysicalExaminationDate().length();
-			int b1 = tijian.getAjtTermValidity().length();
-			if (a1 == b1) {
-				if (a1 <= 10) {
-					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-					if (DateUtils.belongCalendar(format.parse(tijian.getAjtPhysicalExaminationDate()), format.parse(tijian.getAjtTermValidity())) == false) {
-						r.setMsg("体检日期,不能大于体检有效期;");
-						r.setCode(500);
-						r.setSuccess(false);
-						return r;
-					}
-					if (a1 > 10) {
-						SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-						if (DateUtils.belongCalendar(format2.parse(tijian.getAjtPhysicalExaminationDate()), format2.parse(tijian.getAjtTermValidity())) == false) {
-							r.setMsg("体检日期,不能大于体检有效期;");
-							r.setCode(500);
-							r.setSuccess(false);
-							return r;
-						}
-					}
-				}
-			} else {
-				r.setMsg("体检日期与体检有效期,时间格式不一致;");
-				r.setCode(500);
-				r.setSuccess(false);
-				return r;
-			}
-
-		}
+//		if (StringUtils.isNotBlank(tijian.getAjtPhysicalExaminationDate()) && !tijian.getAjtPhysicalExaminationDate().equals("null") && StringUtils.isNotBlank(tijian.getAjtTermValidity()) && !tijian.getAjtTermValidity().equals("null")) {
+//			int a1 = tijian.getAjtPhysicalExaminationDate().length();
+//			int b1 = tijian.getAjtTermValidity().length();
+//			if (a1 == b1) {
+//				if (a1 <= 10) {
+//					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//					if (DateUtils.belongCalendar(format.parse(tijian.getAjtPhysicalExaminationDate()), format.parse(tijian.getAjtTermValidity())) == false) {
+//						r.setMsg("体检日期,不能大于体检有效期;");
+//						r.setCode(500);
+//						r.setSuccess(false);
+//						return r;
+//					}
+//					if (a1 > 10) {
+//						SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//						if (DateUtils.belongCalendar(format2.parse(tijian.getAjtPhysicalExaminationDate()), format2.parse(tijian.getAjtTermValidity())) == false) {
+//							r.setMsg("体检日期,不能大于体检有效期;");
+//							r.setCode(500);
+//							r.setSuccess(false);
+//							return r;
+//						}
+//					}
+//				}
+//			} else {
+//				r.setMsg("体检日期与体检有效期,时间格式不一致;");
+//				r.setCode(500);
+//				r.setSuccess(false);
+//				return r;
+//			}
+//
+//		}
 
 		if (deail == null) {
 			if (user != null) {
