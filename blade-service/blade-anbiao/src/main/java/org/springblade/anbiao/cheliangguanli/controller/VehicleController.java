@@ -622,7 +622,7 @@ public class VehicleController {
 			xingshizheng.setAvxUpdateByName(user.getUserName());
 			xingshizheng.setAvxUpdateByIds(user.getUserId().toString());
 			xingshizheng.setAvxUpdateTime(LocalDateTime.now());
-			if (xingshizhengService.updateById(xingshizheng)) {
+			if (xingshizhengService.saveOrUpdate(xingshizheng)) {
 				stringBuilder.append("更新车辆行驶证信息成功！"+"\r\n");
 			} else {
 				stringBuilder.append("更新车辆行驶证信息失败！"+"\r\n");
