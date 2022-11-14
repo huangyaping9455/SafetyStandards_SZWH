@@ -5,6 +5,11 @@ server:
 #数据源配置
 spring:
   datasource:
-    url: ${blade.datasource.prod.url}
-    username: ${blade.datasource.prod.username}
-    password: ${blade.datasource.prod.password}
+    #    url: ${blade.datasource.dev.url}
+    #    username: ${blade.datasource.dev.username}
+    #    password: ${blade.datasource.dev.password}
+
+    #测试
+    url: jdbc:mysql://rm-2vcu2m013irzt8gm5bo.mysql.cn-chengdu.rds.aliyuncs.com:3306/blade?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+    username: anbiao
+    password: Ts2022*

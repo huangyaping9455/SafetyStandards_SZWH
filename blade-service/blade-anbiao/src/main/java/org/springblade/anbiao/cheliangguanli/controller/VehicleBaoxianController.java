@@ -33,6 +33,8 @@ import org.springblade.core.tool.api.R;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -153,7 +155,16 @@ public class VehicleBaoxianController extends BladeController {
 	@PostMapping("/remove")
 	@ApiOperation(value = "逻辑删除", notes = "传入ids")
 	public R remove(@ApiParam(value = "主键集合", required = true) @RequestParam String ids) {
-		return R.status(vehicleBaoxianService.deleteLogic(FuncUtil.toLongList(ids)));
+		String[] idsss = ids.split(",");
+		List<VehicleBaoxian> vehicleBaoxians = new ArrayList<>();
+		for(String id:idsss) {
+			VehicleBaoxian baoxian = new VehicleBaoxian();
+			baoxian.setAvbIds(id);
+			baoxian.setAvbDelete(1);
+			baoxian.setAvbUpdateTime(LocalDateTime.now());
+			vehicleBaoxians.add(baoxian);
+		}
+		return R.status(vehicleBaoxianService.updateBatchById(vehicleBaoxians));
 	}
 
 
