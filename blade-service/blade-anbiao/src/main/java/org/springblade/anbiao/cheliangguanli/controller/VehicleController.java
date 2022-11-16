@@ -157,13 +157,14 @@ public class VehicleController {
 		v.setCheliangxinghao(detail.getXinghao());
 		v.setCheliangyanse(detail.getCheshenyanse());
 		v.setChejiahao(detail.getChejiahao());
-		if(detail.getShifoujinkou() != null){
-			if(detail.getShifoujinkou().equals("0")){
-				v.setShifouguochan("是");
-			}else{
-				v.setShifouguochan("否");
-			}
-		}
+		v.setShifouguochan(detail.getShifoujinkou());
+//		if(detail.getShifoujinkou() != null){
+//			if(detail.getShifoujinkou().equals("0")){
+//				v.setShifouguochan("是");
+//			}else{
+//				v.setShifouguochan("否");
+//			}
+//		}
 		v.setFadongjihao(detail.getFadongjihao());
 		v.setRanliaozhonglei(detail.getRanliaoleibie());
 		v.setFadongjixinghao(detail.getFadongjixinghao());
