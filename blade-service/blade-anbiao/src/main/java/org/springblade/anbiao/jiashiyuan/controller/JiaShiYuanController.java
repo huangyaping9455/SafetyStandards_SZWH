@@ -1995,7 +1995,7 @@ public class JiaShiYuanController {
 	@PostMapping("/driverDeptImportOk")
 	@ApiLog("企业端--驾驶员档案信息--确认导入(最新)")
 	@ApiOperation(value = "企业端--驾驶员档案信息--确认导入(最新)", notes = "drivers", position = 10)
-	public R driverDeptImportOk(@RequestBody String drivers, BladeUser user, @RequestParam Integer userId, @RequestParam String userName) {
+	public R driverDeptImportOk(@RequestParam(value = "drivers") String drivers,BladeUser user){
 		JSONArray json = JSONUtil.parseArray(drivers);
 		List<Map<String, Object>> lists = (List) json;
 		R rs = new R();
