@@ -1294,7 +1294,7 @@ public class JiaShiYuanController {
 
 
 				//验证身份证号码
-				String tmp = String.valueOf(a.get("身份证号码")).trim();
+				String tmp = String.valueOf(a.get("身份证号")).trim();
 				if (StringUtils.isNotBlank(tmp) && !tmp.equals("null")) {
 					//校验身份证号码是否合法
 					if (IdCardUtil.isValidCard(tmp) == true) {
