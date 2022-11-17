@@ -221,4 +221,8 @@ public class User extends TenantEntity {
 	@TableField(exist = false)
 	private Date lastLoginTime;
 
+
+	@TableField(exist = false)
+	private String address;
+
 }

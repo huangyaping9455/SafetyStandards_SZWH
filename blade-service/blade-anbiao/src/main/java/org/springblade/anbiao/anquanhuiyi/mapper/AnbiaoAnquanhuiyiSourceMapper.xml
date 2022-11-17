@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.anquanhuiyi.mapper.AnbiaoAnquanhuiyiSourceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiSource">
+        <id column="id" property="id" />
+        <result column="zhuti" property="zhuti" />
+        <result column="zhengwen" property="zhengwen" />
+        <result column="leixing" property="leixing" />
+        <result column="isdeleted" property="isdeleted" />
+        <result column="createid" property="createid" />
+        <result column="createtime" property="createtime" />
+        <result column="createname" property="createname" />
+        <result column="updateid" property="updateid" />
+        <result column="updatetime" property="updatetime" />
+        <result column="updatename" property="updatename" />
+        <result column="deptid" property="deptid" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, zhuti, zhengwen, leixing, isdeleted, createid, createtime, createname, updateid, updatetime, updatename, deptid
+    </sql>
+
+    <sql id="tableSql">
+        select
+            a.*,
+            b.dept_name as deptname
+        from
+            anbiao_anquanhuiyi_source a
+        inner join  (
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b on a.deptid = b.id
+        where a.isdeleted = 0
+    </sql>
+
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by zhuti desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order == 0">
+            asc
+        </if>
+    </sql>
+
+    <sql id="querySql">
+
+        <if test="zhuti != null and zhuti != '' ">
+            and zhuti like '%${zhuti}%'
+        </if>
+
+        <if test="deptname != null and deptname != ''">
+            and deptname like '%${deptname}%'
+        </if>
+
+    </sql>
+
+    <select timeout="600" id="selectGetAll" resultMap="BaseResultMap"
+            parameterType="org.springblade.anbiao.anquanhuiyi.page.AnQuanHuiYiPage">
+        <if test="size == 0">
+            select * from (
+            <include refid="tableSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="tableSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectGetAllTotal"
+            parameterType="org.springblade.anbiao.anquanhuiyi.page.AnQuanHuiYiPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql"/>
+        )d where 1 = 1
+        <include refid="querySql"/>
+    </select>
+
+</mapper>
