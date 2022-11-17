@@ -132,27 +132,28 @@ public class VehicleBaoxianController extends BladeController {
 		}
 		VehicleBaoxian baoxian = vehicleBaoxian.getBaoxian();
 		baoxian.setAvbApprove("0");
-		if(StringUtil.isNotBlank(baoxian.getAvbInsuredIds())) {		//被保险人
-			JiaShiYuan jiaShiYuan = jiaShiYuanService.selectByIds(baoxian.getAvbInsuredIds());
-			if(jiaShiYuan != null) {
-				baoxian.setAvbInsuredName(jiaShiYuan.getJiashiyuanxingming());
-				baoxian.setAvbInsuredContactNumber(jiaShiYuan.getShoujihaoma());
-				baoxian.setAvbInsuredContactAddress(jiaShiYuan.getJiatingzhuzhi());
-				baoxian.setAvbInsuredContacts(jiaShiYuan.getJiashiyuanxingming());
-				baoxian.setAvbDeptIds(new Long(jiaShiYuan.getDeptId()));
-				baoxian.setAvbCertificateNumber(jiaShiYuan.getShenfenzhenghao());
-				baoxian.setAvbDeptIds(new Long(jiaShiYuan.getDeptId()));
-			}
-		}
-		if(StringUtil.isNotBlank(baoxian.getAvbInsureIds())) {
-			Dept dept = iSysClient.getDept(Integer.parseInt(baoxian.getAvbInsureIds()));
-			if(dept != null) {
-				baoxian.setAvbInsureName(dept.getDeptName());
-				baoxian.setAvbInsureContactNumber("");
-				baoxian.setAvbInsureContactAddress("");
-				baoxian.setAvbInsureContacts(dept.getDeptName());
-			}
-		}
+		baoxian.setAvbDelete(0);
+//		if(StringUtil.isNotBlank(baoxian.getAvbInsuredIds())) {		//被保险人
+//			JiaShiYuan jiaShiYuan = jiaShiYuanService.selectByIds(baoxian.getAvbInsuredIds());
+//			if(jiaShiYuan != null) {
+//				baoxian.setAvbInsuredName(jiaShiYuan.getJiashiyuanxingming());
+//				baoxian.setAvbInsuredContactNumber(jiaShiYuan.getShoujihaoma());
+//				baoxian.setAvbInsuredContactAddress(jiaShiYuan.getJiatingzhuzhi());
+//				baoxian.setAvbInsuredContacts(jiaShiYuan.getJiashiyuanxingming());
+//				baoxian.setAvbDeptIds(new Long(jiaShiYuan.getDeptId()));
+//				baoxian.setAvbCertificateNumber(jiaShiYuan.getShenfenzhenghao());
+//				baoxian.setAvbDeptIds(new Long(jiaShiYuan.getDeptId()));
+//			}
+//		}
+//		if(StringUtil.isNotBlank(baoxian.getAvbInsureIds())) {
+//			Dept dept = iSysClient.getDept(Integer.parseInt(baoxian.getAvbInsureIds()));
+//			if(dept != null) {
+//				baoxian.setAvbInsureName(dept.getDeptName());
+//				baoxian.setAvbInsureContactNumber("");
+//				baoxian.setAvbInsureContactAddress("");
+//				baoxian.setAvbInsureContacts(dept.getDeptName());
+//			}
+//		}
 		baoxian.setAvbCreateByIds(user.getUserId()+"");
 		baoxian.setAvbCreateByName(user.getUserName());
 		baoxian.setAvbCreateTime(LocalDateTime.now());
@@ -180,27 +181,28 @@ public class VehicleBaoxianController extends BladeController {
 		}
 		VehicleBaoxian baoxian = vehicleBaoxian.getBaoxian();
 		baoxian.setAvbApprove("0");
-		if(StringUtil.isNotBlank(baoxian.getAvbInsuredIds())) {		//被保险人
-			JiaShiYuan jiaShiYuan = jiaShiYuanService.selectByIds(baoxian.getAvbInsuredIds());
-			if(jiaShiYuan != null) {
-				baoxian.setAvbInsuredName(jiaShiYuan.getJiashiyuanxingming());
-				baoxian.setAvbInsuredContactNumber(jiaShiYuan.getShoujihaoma());
-				baoxian.setAvbInsuredContactAddress(jiaShiYuan.getJiatingzhuzhi());
-				baoxian.setAvbInsuredContacts(jiaShiYuan.getJiashiyuanxingming());
-				baoxian.setAvbDeptIds(new Long(jiaShiYuan.getDeptId()));
-				baoxian.setAvbCertificateNumber(jiaShiYuan.getShenfenzhenghao());
-				baoxian.setAvbDeptIds(new Long(jiaShiYuan.getDeptId()));
-			}
-		}
-		if(StringUtil.isNotBlank(baoxian.getAvbInsureIds())) {
-			Dept dept = iSysClient.getDept(Integer.parseInt(baoxian.getAvbInsureIds()));
-			if(dept != null) {
-				baoxian.setAvbInsureName(dept.getDeptName());
-				baoxian.setAvbInsureContactNumber("");
-				baoxian.setAvbInsureContactAddress("");
-				baoxian.setAvbInsureContacts(dept.getDeptName());
-			}
-		}
+		baoxian.setAvbDelete(0);
+//		if(StringUtil.isNotBlank(baoxian.getAvbInsuredIds())) {		//被保险人
+//			JiaShiYuan jiaShiYuan = jiaShiYuanService.selectByIds(baoxian.getAvbInsuredIds());
+//			if(jiaShiYuan != null) {
+//				baoxian.setAvbInsuredName(jiaShiYuan.getJiashiyuanxingming());
+//				baoxian.setAvbInsuredContactNumber(jiaShiYuan.getShoujihaoma());
+//				baoxian.setAvbInsuredContactAddress(jiaShiYuan.getJiatingzhuzhi());
+//				baoxian.setAvbInsuredContacts(jiaShiYuan.getJiashiyuanxingming());
+//				baoxian.setAvbDeptIds(new Long(jiaShiYuan.getDeptId()));
+//				baoxian.setAvbCertificateNumber(jiaShiYuan.getShenfenzhenghao());
+//				baoxian.setAvbDeptIds(new Long(jiaShiYuan.getDeptId()));
+//			}
+//		}
+//		if(StringUtil.isNotBlank(baoxian.getAvbInsureIds())) {
+//			Dept dept = iSysClient.getDept(Integer.parseInt(baoxian.getAvbInsureIds()));
+//			if(dept != null) {
+//				baoxian.setAvbInsureName(dept.getDeptName());
+//				baoxian.setAvbInsureContactNumber("");
+//				baoxian.setAvbInsureContactAddress("");
+//				baoxian.setAvbInsureContacts(dept.getDeptName());
+//			}
+//		}
 		baoxian.setAvbUpdateByIds(user.getUserId()+"");
 		baoxian.setAvbUpdateByName(user.getUserName());
 		baoxian.setAvbUpdateTime(LocalDateTime.now());
