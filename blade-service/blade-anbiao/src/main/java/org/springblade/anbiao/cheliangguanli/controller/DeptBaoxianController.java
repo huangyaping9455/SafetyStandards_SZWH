@@ -23,14 +23,22 @@ import javax.validation.Valid;
 
 import org.springblade.anbiao.cheliangguanli.entity.DeptBaoxianInfo;
 import org.springblade.anbiao.cheliangguanli.entity.DeptBaoxianMingxi;
+import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxian;
 import org.springblade.anbiao.cheliangguanli.service.IDeptBaoxianMingxiService;
+import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.feign.IOrganizationsClient;
+import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.common.tool.FuncUtil;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
+import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
 import org.springblade.core.tool.utils.Func;
+import org.springblade.core.tool.utils.StringUtil;
+import org.springblade.system.entity.Dept;
+import org.springblade.system.feign.ISysClient;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -58,6 +66,9 @@ public class DeptBaoxianController extends BladeController {
 	private IDeptBaoxianService deptBaoxianService;
 	private IDeptBaoxianMingxiService deptBaoxianMingxiService;
 	private IOrganizationsClient orrganizationsClient;
+	private IJiaShiYuanService jiaShiYuanService;
+	private IVehicleService vehicleService;
+	private ISysClient iSysClient;
 
 	/**
 	 * 详情
@@ -112,7 +123,45 @@ public class DeptBaoxianController extends BladeController {
 	 */
 	@PostMapping("/save")
 	@ApiOperation(value = "新增", notes = "传入deptBaoxian")
-	public R save(@Valid @RequestBody DeptBaoxianInfo deptBaoxian) {
+	public R save(@Valid @RequestBody DeptBaoxianInfo deptBaoxian, BladeUser user) {
+		R r = new R();
+		if(user == null) {
+			r.setCode(401);
+			r.setMsg("未授权，请重新登录！");
+			return r;
+		}
+		DeptBaoxian baoxian = deptBaoxian.getBaoxian();
+		baoxian.setAvbApprove("0");
+		if(StringUtil.isNotBlank(baoxian.getAvbInsuredIds())) {		//被保险人
+//			JiaShiYuan jiaShiYuan = jiaShiYuanService.selectByIds(baoxian.getAvbInsuredIds());
+//			if(jiaShiYuan != null) {
+//				baoxian.setAvbInsuredName(jiaShiYuan.getJiashiyuanxingming());
+//				baoxian.setAvbInsuredContactNumber(jiaShiYuan.getShoujihaoma());
+//				baoxian.setAvbInsuredContactAddress(jiaShiYuan.getJiatingzhuzhi());
+//				baoxian.setAvbInsuredContacts(jiaShiYuan.getJiashiyuanxingming());
+//				baoxian.setAvbDeptIds(jiaShiYuan.getDeptId()+"");
+//			}
+			Dept dept = iSysClient.selectById(baoxian.getAvbInsuredIds());
+			if(dept != null) {
+				baoxian.setAvbInsuredName(dept.getDeptName());
+				baoxian.setAvbInsuredContactNumber("");
+				baoxian.setAvbInsuredContactAddress("");
+				baoxian.setAvbInsuredContacts(dept.getDeptName());
+				baoxian.setAvbCertificateNumber(dept.getTenantCode());
+			}
+		}
+		if(StringUtil.isNotBlank(baoxian.getAvbInsureIds())) {
+			Dept dept = iSysClient.getDept(Integer.parseInt(baoxian.getAvbInsureIds()));
+			if(dept != null) {
+				baoxian.setAvbInsureName(dept.getDeptName());
+				baoxian.setAvbInsureContactNumber("");
+				baoxian.setAvbInsureContactAddress("");
+				baoxian.setAvbInsureContacts(dept.getDeptName());
+			}
+		}
+		baoxian.setAvbCreateByIds(user.getUserId()+"");
+		baoxian.setAvbCreateByName(user.getUserName());
+		baoxian.setAvbCreateTime(LocalDateTime.now());
 		boolean isSave = deptBaoxianService.save(deptBaoxian.getBaoxian());
 		if(deptBaoxian.getMingxiList() != null && deptBaoxian.getMingxiList().size() > 0) {
 			for(DeptBaoxianMingxi mingxi:deptBaoxian.getMingxiList()) {
@@ -128,7 +177,52 @@ public class DeptBaoxianController extends BladeController {
 	 */
 	@PostMapping("/update")
 	@ApiOperation(value = "修改", notes = "传入deptBaoxian")
-	public R update(@Valid @RequestBody DeptBaoxianInfo deptBaoxian) {
+	public R update(@Valid @RequestBody DeptBaoxianInfo deptBaoxian,BladeUser user) {
+		R r = new R();
+		if(user == null) {
+			r.setCode(401);
+			r.setMsg("未授权，请重新登录！");
+			return r;
+		}
+		DeptBaoxian baoxian = deptBaoxian.getBaoxian();
+		baoxian.setAvbApprove("0");
+		if(StringUtil.isNotBlank(baoxian.getAvbInsuredIds())) {		//被保险人
+//			JiaShiYuan jiaShiYuan = jiaShiYuanService.selectByIds(baoxian.getAvbInsuredIds());
+//			if(jiaShiYuan != null) {
+//				baoxian.setAvbInsuredName(jiaShiYuan.getJiashiyuanxingming());
+//				baoxian.setAvbInsuredContactNumber(jiaShiYuan.getShoujihaoma());
+//				baoxian.setAvbInsuredContactAddress(jiaShiYuan.getJiatingzhuzhi());
+//				baoxian.setAvbInsuredContacts(jiaShiYuan.getJiashiyuanxingming());
+//				baoxian.setAvbDeptIds(jiaShiYuan.getDeptId()+"");
+//			}
+			Dept dept = iSysClient.selectById(baoxian.getAvbInsuredIds());
+			if(dept != null) {
+				baoxian.setAvbInsuredName(dept.getDeptName());
+				baoxian.setAvbInsuredContactNumber("");
+				baoxian.setAvbInsuredContactAddress("");
+				baoxian.setAvbInsuredContacts(dept.getDeptName());
+				baoxian.setAvbCertificateNumber(dept.getTenantCode());
+			}
+		}
+		if(StringUtil.isNotBlank(baoxian.getAvbInsureIds())) {
+			Dept dept = iSysClient.getDept(Integer.parseInt(baoxian.getAvbInsureIds()));
+			if(dept != null) {
+				baoxian.setAvbInsureName(dept.getDeptName());
+				baoxian.setAvbInsureContactNumber("");
+				baoxian.setAvbInsureContactAddress("");
+				baoxian.setAvbInsureContacts(dept.getDeptName());
+			}
+		}
+		baoxian.setAvbCreateByIds(user.getUserId()+"");
+		baoxian.setAvbCreateByName(user.getUserName());
+		baoxian.setAvbCreateTime(LocalDateTime.now());
+		boolean isSave = deptBaoxianService.save(deptBaoxian.getBaoxian());
+		if(deptBaoxian.getMingxiList() != null && deptBaoxian.getMingxiList().size() > 0) {
+			for(DeptBaoxianMingxi mingxi:deptBaoxian.getMingxiList()) {
+				mingxi.setAvbmAvbIds(deptBaoxian.getBaoxian().getAvbIds());
+				deptBaoxianMingxiService.save(mingxi);
+			}
+		}
 		boolean isUpdate = deptBaoxianService.updateById(deptBaoxian.getBaoxian());
 		if(deptBaoxian.getMingxiList() != null && deptBaoxian.getMingxiList().size() > 0) {
 			for(DeptBaoxianMingxi mingxi:deptBaoxian.getMingxiList()) {

@@ -116,7 +116,7 @@ public class VehicleInfo implements Serializable {
 	private String ranliaozhonglei;
 
 	@ApiModelProperty(value = "排量/功率")
-	private String pailianggonglü;
+	private String pailianggonglv;
 
 	@ApiModelProperty(value = "制造厂名称")
 	private String zhizaochangmingcheng;

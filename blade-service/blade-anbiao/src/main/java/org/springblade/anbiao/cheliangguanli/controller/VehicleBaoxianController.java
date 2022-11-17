@@ -24,12 +24,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleBaoxianMingxiService;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleBaoxianService;
+import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleBaoxianVO;
+import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.common.tool.FuncUtil;
 import org.springblade.core.boot.ctrl.BladeController;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
+import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
+import org.springblade.core.tool.utils.StringUtil;
+import org.springblade.system.entity.Dept;
+import org.springblade.system.feign.ISysClient;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -52,6 +59,9 @@ public class VehicleBaoxianController extends BladeController {
 
 	private IVehicleBaoxianService vehicleBaoxianService;
 	private IVehicleBaoxianMingxiService vehicleBaoxianMingxiService;
+	private IVehicleService vehicleService;
+	private IJiaShiYuanService jiaShiYuanService;
+	private ISysClient iSysClient;
 
 	/**
 	 * 详情
@@ -113,8 +123,39 @@ public class VehicleBaoxianController extends BladeController {
 	 */
 	@PostMapping("/save")
 	@ApiOperation(value = "新增", notes = "传入vehicleBaoxian")
-	public R save(@Valid @RequestBody VehicleBaoxianInfo vehicleBaoxian) {
-		boolean isSave = vehicleBaoxianService.save(vehicleBaoxian.getBaoxian());
+	public R save(@Valid @RequestBody VehicleBaoxianInfo vehicleBaoxian, BladeUser user) {
+		R r = new R();
+		if(user == null) {
+			r.setCode(401);
+			r.setMsg("未授权，请重新登录！");
+			return r;
+		}
+		VehicleBaoxian baoxian = vehicleBaoxian.getBaoxian();
+		baoxian.setAvbApprove("0");
+		if(StringUtil.isNotBlank(baoxian.getAvbInsuredIds())) {		//被保险人
+			JiaShiYuan jiaShiYuan = jiaShiYuanService.selectByIds(baoxian.getAvbInsuredIds());
+			if(jiaShiYuan != null) {
+				baoxian.setAvbInsuredName(jiaShiYuan.getJiashiyuanxingming());
+				baoxian.setAvbInsuredContactNumber(jiaShiYuan.getShoujihaoma());
+				baoxian.setAvbInsuredContactAddress(jiaShiYuan.getJiatingzhuzhi());
+				baoxian.setAvbInsuredContacts(jiaShiYuan.getJiashiyuanxingming());
+				baoxian.setAvbDeptIds(new Long(jiaShiYuan.getDeptId()));
+				baoxian.setAvbCertificateNumber(jiaShiYuan.getShenfenzhenghao());
+			}
+		}
+		if(StringUtil.isNotBlank(baoxian.getAvbInsureIds())) {
+			Dept dept = iSysClient.getDept(Integer.parseInt(baoxian.getAvbInsureIds()));
+			if(dept != null) {
+				baoxian.setAvbInsureName(dept.getDeptName());
+				baoxian.setAvbInsureContactNumber("");
+				baoxian.setAvbInsureContactAddress("");
+				baoxian.setAvbInsureContacts(dept.getDeptName());
+			}
+		}
+		baoxian.setAvbCreateByIds(user.getUserId()+"");
+		baoxian.setAvbCreateByName(user.getUserName());
+		baoxian.setAvbCreateTime(LocalDateTime.now());
+		boolean isSave = vehicleBaoxianService.save(baoxian);
 		if(vehicleBaoxian.getBaoxianMingxis() != null && vehicleBaoxian.getBaoxianMingxis().size() > 0) {
 			for (VehicleBaoxianMingxi baoxianMingxi: vehicleBaoxian.getBaoxianMingxis()) {
 				baoxianMingxi.setAvbmAvbIds(vehicleBaoxian.getBaoxian().getAvbIds());
@@ -129,8 +170,40 @@ public class VehicleBaoxianController extends BladeController {
 	 */
 	@PostMapping("/update")
 	@ApiOperation(value = "修改", notes = "传入vehicleBaoxian")
-	public R update(@Valid @RequestBody VehicleBaoxianInfo vehicleBaoxian) {
-		boolean isUpdate = vehicleBaoxianService.updateById(vehicleBaoxian.getBaoxian());
+	public R update(@Valid @RequestBody VehicleBaoxianInfo vehicleBaoxian, BladeUser user) {
+		R r = new R();
+		if(user == null) {
+			r.setCode(401);
+			r.setMsg("未授权，请重新登录！");
+			return r;
+		}
+		VehicleBaoxian baoxian = vehicleBaoxian.getBaoxian();
+		baoxian.setAvbApprove("0");
+		if(StringUtil.isNotBlank(baoxian.getAvbInsuredIds())) {		//被保险人
+			JiaShiYuan jiaShiYuan = jiaShiYuanService.selectByIds(baoxian.getAvbInsuredIds());
+			if(jiaShiYuan != null) {
+				baoxian.setAvbInsuredName(jiaShiYuan.getJiashiyuanxingming());
+				baoxian.setAvbInsuredContactNumber(jiaShiYuan.getShoujihaoma());
+				baoxian.setAvbInsuredContactAddress(jiaShiYuan.getJiatingzhuzhi());
+				baoxian.setAvbInsuredContacts(jiaShiYuan.getJiashiyuanxingming());
+				baoxian.setAvbDeptIds(new Long(jiaShiYuan.getDeptId()));
+				baoxian.setAvbCertificateNumber(jiaShiYuan.getShenfenzhenghao());
+			}
+		}
+		if(StringUtil.isNotBlank(baoxian.getAvbInsureIds())) {
+			Dept dept = iSysClient.getDept(Integer.parseInt(baoxian.getAvbInsureIds()));
+			if(dept != null) {
+				baoxian.setAvbInsureName(dept.getDeptName());
+				baoxian.setAvbInsureContactNumber("");
+				baoxian.setAvbInsureContactAddress("");
+				baoxian.setAvbInsureContacts(dept.getDeptName());
+			}
+		}
+		baoxian.setAvbUpdateByIds(user.getUserId()+"");
+		baoxian.setAvbUpdateByName(user.getUserName());
+		baoxian.setAvbUpdateTime(LocalDateTime.now());
+
+		boolean isUpdate = vehicleBaoxianService.updateById(baoxian);
 		if(vehicleBaoxian.getBaoxianMingxis() != null && vehicleBaoxian.getBaoxianMingxis().size() > 0) {
 			for (VehicleBaoxianMingxi baoxianMingxi: vehicleBaoxian.getBaoxianMingxis()) {
 				vehicleBaoxianMingxiService.updateById(baoxianMingxi);

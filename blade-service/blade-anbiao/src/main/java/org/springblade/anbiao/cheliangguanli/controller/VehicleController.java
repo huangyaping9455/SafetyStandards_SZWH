@@ -153,7 +153,7 @@ public class VehicleController {
 		v.setChelianghuodefangshi(detail.getChelianghuoqufangshi());
 		v.setWeihuzhouqi(detail.getWeihuzhouqi());
 		v.setCheliangzhaopian(detail.getCheliangzhaopian());
-		v.setCheliangleixing(detail.getShiyongxingzhi());
+		v.setCheliangleixing(detail.getCheliangleixing());
 		v.setCheliangxinghao(detail.getXinghao());
 		v.setCheliangyanse(detail.getCheshenyanse());
 		v.setChejiahao(detail.getChejiahao());
@@ -168,7 +168,7 @@ public class VehicleController {
 		v.setFadongjihao(detail.getFadongjihao());
 		v.setRanliaozhonglei(detail.getRanliaoleibie());
 		v.setFadongjixinghao(detail.getFadongjixinghao());
-		v.setPailianggonglü(detail.getPaifangbiaozhun());
+		v.setPailianggonglv(detail.getPaifangbiaozhun());
 		v.setZhizaochangmingcheng(detail.getZhizhaochangshang());
 		v.setZhuanxiangxingshi(detail.getZhuanxiangfangshi());
 		v.setLunju(detail.getLunju());
@@ -332,7 +332,7 @@ public class VehicleController {
 		vehicle.setXinghao(v.getCheliangxinghao());
 		vehicle.setCheshenyanse(v.getCheliangyanse());
 		vehicle.setRanliaoleibie(v.getRanliaozhonglei());
-		vehicle.setPaifangbiaozhun(v.getPailianggonglü());
+		vehicle.setPaifangbiaozhun(v.getPailianggonglv());
 		vehicle.setZhizhaochangshang(v.getZhizaochangmingcheng());
 		vehicle.setZhuanxiangfangshi(v.getZhuanxiangxingshi());
 		vehicle.setGangbantanhuangpianshu(v.getTongbantanhuangpianshu());
@@ -542,15 +542,17 @@ public class VehicleController {
 			vehicle.setYunyingshang(yys);
 		}
 
-		if("是".equals(v.getShifouguochan())){
-			vehicle.setShifoujinkou("0");
-		}else{
-			vehicle.setShifoujinkou("1");
-		}
+		vehicle.setShifoujinkou(v.getShifouguochan());
+
+//		if("是".equals(v.getShifouguochan())){
+//			vehicle.setShifoujinkou("0");
+//		}else{
+//			vehicle.setShifoujinkou("1");
+//		}
 		vehicle.setXinghao(v.getCheliangxinghao());
 		vehicle.setCheshenyanse(v.getCheliangyanse());
 		vehicle.setRanliaoleibie(v.getRanliaozhonglei());
-		vehicle.setPaifangbiaozhun(v.getPailianggonglü());
+		vehicle.setPaifangbiaozhun(v.getPailianggonglv());
 		vehicle.setZhizhaochangshang(v.getZhizaochangmingcheng());
 		vehicle.setZhuanxiangfangshi(v.getZhuanxiangxingshi());
 		vehicle.setGangbantanhuangpianshu(v.getTongbantanhuangpianshu());
