@@ -141,6 +141,7 @@ public class VehicleBaoxianController extends BladeController {
 				baoxian.setAvbInsuredContacts(jiaShiYuan.getJiashiyuanxingming());
 				baoxian.setAvbDeptIds(new Long(jiaShiYuan.getDeptId()));
 				baoxian.setAvbCertificateNumber(jiaShiYuan.getShenfenzhenghao());
+				baoxian.setAvbDeptIds(new Long(jiaShiYuan.getDeptId()));
 			}
 		}
 		if(StringUtil.isNotBlank(baoxian.getAvbInsureIds())) {
@@ -188,6 +189,7 @@ public class VehicleBaoxianController extends BladeController {
 				baoxian.setAvbInsuredContacts(jiaShiYuan.getJiashiyuanxingming());
 				baoxian.setAvbDeptIds(new Long(jiaShiYuan.getDeptId()));
 				baoxian.setAvbCertificateNumber(jiaShiYuan.getShenfenzhenghao());
+				baoxian.setAvbDeptIds(new Long(jiaShiYuan.getDeptId()));
 			}
 		}
 		if(StringUtil.isNotBlank(baoxian.getAvbInsureIds())) {

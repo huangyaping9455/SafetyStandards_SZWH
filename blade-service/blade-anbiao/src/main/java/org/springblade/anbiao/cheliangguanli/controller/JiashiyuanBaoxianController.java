@@ -137,6 +137,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 				baoxian.setAjbInsuredContacts(jiaShiYuan.getJiashiyuanxingming());
 				baoxian.setAjbDeptIds(new Long(jiaShiYuan.getDeptId()));
 				baoxian.setAjbCertificateNumber(jiaShiYuan.getShenfenzhenghao());
+				baoxian.setAjbDeptIds(new Long(jiaShiYuan.getDeptId()));
 			}
 		}
 		if(StringUtil.isNotBlank(baoxian.getAjbInsureIds())) {
@@ -183,6 +184,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 				baoxian.setAjbInsuredContacts(jiaShiYuan.getJiashiyuanxingming());
 				baoxian.setAjbDeptIds(new Long(jiaShiYuan.getDeptId()));
 				baoxian.setAjbCertificateNumber(jiaShiYuan.getShenfenzhenghao());
+				baoxian.setAjbDeptIds(new Long(jiaShiYuan.getDeptId()));
 			}
 		}
 		if(StringUtil.isNotBlank(baoxian.getAjbInsureIds())) {
