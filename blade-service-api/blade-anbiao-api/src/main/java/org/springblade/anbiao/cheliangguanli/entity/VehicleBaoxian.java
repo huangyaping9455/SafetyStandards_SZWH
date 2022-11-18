@@ -142,6 +142,10 @@ public class VehicleBaoxian implements Serializable {
      */
     @ApiModelProperty(value = "车辆主键")
     private String avbAvIds;
+
+    @TableField(exist = false)
+    @ApiModelProperty(value = "车辆牌照")
+    private String cheliangpaizhao;
     /**
      * 当年安全统筹金
      */

@@ -66,11 +66,14 @@
         <result column="avb_update_time" property="avbUpdateTime"/>
         <result column="avb_update_by_ids" property="avbUpdateByIds"/>
         <result column="avb_update_by_name" property="avbUpdateByName"/>
+        <result column="cheliangpaizhao" property="cheliangpaizhao"/>
     </resultMap>
 
 
     <select id="selectVehicleBaoxianPage" resultMap="vehicleBaoxianResultMap">
-        select * from anbiao_vehicle_baoxian where avb_delete = 0
+        select avb.*,av.cheliangpaizhao from anbiao_vehicle_baoxian avb
+        left join anbiao_vehicle av on av.id=avb.avb_av_ids
+        where avb.avb_delete = 0
     </select>
 
 </mapper>
