@@ -43,6 +43,7 @@ import java.util.List;
 public class VehicleBaoxianServiceImpl extends ServiceImpl<VehicleBaoxianMapper, VehicleBaoxian> implements IVehicleBaoxianService {
 
 	private VehicleBaoxianMingxiMapper baoxianMingxiMapper;
+	private VehicleBaoxianMapper baoxianMapper;
 
 	@Override
 	public IPage<VehicleBaoxianVO> selectVehicleBaoxianPage(IPage<VehicleBaoxianVO> page, VehicleBaoxianVO vehicleBaoxian) {
@@ -58,6 +59,10 @@ public class VehicleBaoxianServiceImpl extends ServiceImpl<VehicleBaoxianMapper,
 		List<VehicleBaoxianMingxi> mingxiList = baoxianMingxiMapper.selectList(Condition.getQueryWrapper(mingxi));
 		baoxianInfo.setBaoxianMingxis(mingxiList);
 		return baoxianInfo;
+	}
+
+	public VehicleBaoxian queryByMax(String avbId) {
+		return baoxianMapper.queryByMax(avbId);
 	}
 
 	@Override

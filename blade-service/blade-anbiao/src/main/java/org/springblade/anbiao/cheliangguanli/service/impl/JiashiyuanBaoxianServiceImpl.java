@@ -43,6 +43,7 @@ import java.util.List;
 public class JiashiyuanBaoxianServiceImpl extends ServiceImpl<JiashiyuanBaoxianMapper, JiashiyuanBaoxian> implements IJiashiyuanBaoxianService {
 
 	private JiashiyuanBaoxianMingxiMapper mingxiMapper;
+	private JiashiyuanBaoxianMapper baoxianMapper;
 	@Override
 	public IPage<JiashiyuanBaoxianVO> selectJiashiyuanBaoxianPage(IPage<JiashiyuanBaoxianVO> page, JiashiyuanBaoxianVO jiashiyuanBaoxian) {
 		return page.setRecords(baseMapper.selectJiashiyuanBaoxianPage(page, jiashiyuanBaoxian));
@@ -51,13 +52,17 @@ public class JiashiyuanBaoxianServiceImpl extends ServiceImpl<JiashiyuanBaoxianM
 	@Override
 	public JiashiyuanBaoxianInfo queryDetail(String ajbId) {
 		JiashiyuanBaoxianInfo baoxianInfo = new JiashiyuanBaoxianInfo();
-		baoxianInfo.setBaoxian(baseMapper.selectById(ajbId));
+		baoxianInfo.setBaoxian(baoxianMapper.selectById(ajbId));
 
 		JiashiyuanBaoxianMingxi mingxi = new JiashiyuanBaoxianMingxi();
 		mingxi.setAjbmAvbIds(ajbId);
 		List<JiashiyuanBaoxianMingxi> mingxiList = mingxiMapper.selectList(Condition.getQueryWrapper(mingxi));
 		baoxianInfo.setBaoxianMingxis(mingxiList);
 		return baoxianInfo;
+	}
+
+	public JiashiyuanBaoxian queryByMax(String driverId){
+		return baoxianMapper.queryByMax(driverId);
 	}
 
 	@Override

@@ -66,11 +66,27 @@
         <result column="ajb_update_time" property="ajbUpdateTime"/>
         <result column="ajb_update_by_ids" property="ajbUpdateByIds"/>
         <result column="ajb_update_by_name" property="ajbUpdateByName"/>
+        <result column="dept_name" property="ajbDeptName"/>
     </resultMap>
 
 
     <select id="selectJiashiyuanBaoxianPage" resultMap="jiashiyuanBaoxianResultMap">
-        select * from anbiao_jiashiyuan_baoxian where ajb_delete = 0
+        select ajb.*,bd.dept_name from anbiao_jiashiyuan_baoxian ajb
+        LEFT JOIN blade_dept bd ON bd.id = ajb.ajb_dept_ids
+        where ajb_delete = 0
+    </select>
+
+    <select id="selectById" resultMap="jiashiyuanBaoxianResultMap" parameterType="java.lang.String">
+        select ajb.*,bd.dept_name from anbiao_jiashiyuan_baoxian ajb
+        LEFT JOIN blade_dept bd ON bd.id = ajb.ajb_dept_ids
+        where ajb_delete = 0 and  ajb.ajb_ids= #{ajbIds}
+    </select>
+
+    <select id="queryByMax" resultMap="jiashiyuanBaoxianResultMap" parameterType="java.lang.String">
+        select ajb.*,bd.dept_name from anbiao_jiashiyuan_baoxian ajb
+        LEFT JOIN blade_dept bd ON bd.id = ajb.ajb_dept_ids
+        where ajb_delete = 0 and  ajb.ajb_insured_ids= #{driverId}
+        ORDER BY ajb.ajb_insurance_period_end DESC LIMIT 1
     </select>
 
 </mapper>

@@ -38,4 +38,5 @@ public interface VehicleBaoxianMapper extends BaseMapper<VehicleBaoxian> {
 	 */
 	List<VehicleBaoxianVO> selectVehicleBaoxianPage(IPage page, VehicleBaoxianVO vehicleBaoxian);
 
+    VehicleBaoxian queryByMax(String avbId);
 }

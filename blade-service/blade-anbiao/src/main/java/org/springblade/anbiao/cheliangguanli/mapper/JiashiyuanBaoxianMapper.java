@@ -38,4 +38,12 @@ public interface JiashiyuanBaoxianMapper extends BaseMapper<JiashiyuanBaoxian> {
 	 */
 	List<JiashiyuanBaoxianVO> selectJiashiyuanBaoxianPage(IPage page, JiashiyuanBaoxianVO jiashiyuanBaoxian);
 
+	/**
+	 * 自定义根据ID查询明细
+	 * @param ajbIds
+	 * @return
+	 */
+	JiashiyuanBaoxian selectById(String ajbIds);
+
+	JiashiyuanBaoxian queryByMax(String driverId);
 }

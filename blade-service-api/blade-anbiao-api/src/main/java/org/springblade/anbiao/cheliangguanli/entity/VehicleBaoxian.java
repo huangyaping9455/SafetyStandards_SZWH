@@ -61,6 +61,10 @@ public class VehicleBaoxian implements Serializable {
 	 */
 	@ApiModelProperty(value = "被保险人所属企业")
     private Long avbDeptIds;
+
+	@TableField(exist = false)
+	@ApiModelProperty(value = "被保险人所属企业名称")
+	private String avbDeptName;
     /**
      * 被保险人主键
      */

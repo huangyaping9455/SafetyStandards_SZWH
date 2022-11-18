@@ -98,15 +98,11 @@ public class VehicleBaoxianController extends BladeController {
 		}
 	}
 
-//	/**
-//	 * 分页 车辆保险信息主表
-//	 */
-//	@GetMapping("/list")
-//	@ApiOperation(value = "分页", notes = "传入vehicleBaoxian")
-//	public R<IPage<VehicleBaoxian>> list(VehicleBaoxian vehicleBaoxian, Query query) {
-//		IPage<VehicleBaoxian> pages = vehicleBaoxianService.page(Condition.getPage(query), Condition.getQueryWrapper(vehicleBaoxian));
-//		return R.data(pages);
-//	}
+	@GetMapping("/queryByMax")
+	@ApiOperation(value = "根据被保险人车辆ID查询上次保险记录", notes = "根据被保险车辆ID查询保险详情")
+	public R<VehicleBaoxian> queryByMax(String vehicleId) {
+		return R.data(vehicleBaoxianService.queryByMax(vehicleId));
+	}
 
 	/**
 	 * 自定义分页 车辆保险信息主表

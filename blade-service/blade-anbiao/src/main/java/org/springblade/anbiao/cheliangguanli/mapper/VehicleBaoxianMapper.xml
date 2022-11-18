@@ -67,13 +67,23 @@
         <result column="avb_update_by_ids" property="avbUpdateByIds"/>
         <result column="avb_update_by_name" property="avbUpdateByName"/>
         <result column="cheliangpaizhao" property="cheliangpaizhao"/>
+        <result column="dept_name" property="avbDeptName"/>
     </resultMap>
 
 
     <select id="selectVehicleBaoxianPage" resultMap="vehicleBaoxianResultMap">
-        select avb.*,av.cheliangpaizhao from anbiao_vehicle_baoxian avb
+        select avb.*,av.cheliangpaizhao,bd.dept_name from anbiao_vehicle_baoxian avb
         left join anbiao_vehicle av on av.id=avb.avb_av_ids
-        where avb.avb_delete = 0
+        LEFT JOIN blade_dept bd ON bd.id=avb.avb_dept_ids
+        where avb.avb_delete = 0;
+    </select>
+
+    <select id="queryByMax" resultMap="vehicleBaoxianResultMap" parameterType="java.lang.String">
+        select avb.*,av.cheliangpaizhao,bd.dept_name from anbiao_vehicle_baoxian avb
+        left join anbiao_vehicle av on av.id=avb.avb_av_ids
+        LEFT JOIN blade_dept bd ON bd.id=avb.avb_dept_ids
+        where avb.avb_delete = 0 and avb.avb_av_ids=#{avbId}
+        ORDER BY avb.avb_insurance_period_end DESC limit 1 ;
     </select>
 
 </mapper>

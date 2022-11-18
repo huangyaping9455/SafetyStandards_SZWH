@@ -94,6 +94,12 @@ public class JiashiyuanBaoxianController extends BladeController {
 		}
 	}
 
+	@GetMapping("/queryByMax")
+	@ApiOperation(value = "根据被保险人ID查询上次保险记录", notes = "根据被保险人ID查询上次保险记录")
+	public R<JiashiyuanBaoxian> queryByMax(String driverId) {
+		return R.data(jiashiyuanBaoxianService.queryByMax(driverId));
+	}
+
 //	/**
 //	 * 分页 驾驶员保险信息主表
 //	 */

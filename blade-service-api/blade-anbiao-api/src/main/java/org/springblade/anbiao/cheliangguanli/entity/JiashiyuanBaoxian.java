@@ -16,6 +16,7 @@
 package org.springblade.anbiao.cheliangguanli.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
@@ -58,11 +59,16 @@ public class JiashiyuanBaoxian implements Serializable {
 	 */
 	@ApiModelProperty(value = "被保险人所属企业")
     private Long ajbDeptIds;
+
+	@TableField(exist = false)
+	@ApiModelProperty(value = "被保险人所属企业名称")
+	private String ajbDeptName;
     /**
      * 被保险人主键
      */
     @ApiModelProperty(value = "被保险人主键")
     private String ajbInsuredIds;
+
 
 	/**
 	 * 被保险人证件号码

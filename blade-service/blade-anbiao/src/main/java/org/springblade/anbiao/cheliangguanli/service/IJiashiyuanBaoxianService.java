@@ -45,4 +45,6 @@ public interface IJiashiyuanBaoxianService extends BaseService<JiashiyuanBaoxian
 	 * @return
 	 */
 	JiashiyuanBaoxianInfo queryDetail(String ajbId);
+
+	JiashiyuanBaoxian queryByMax(String driverId);
 }
