@@ -1264,35 +1264,35 @@ public class JiaShiYuanController {
 			}
 
 			if (!"更新导入".equals(leixing)) {
-				//验证驾驶员性别
-				String sex = String.valueOf(a.get("性别")).trim();
-				if (StringUtils.isBlank(sex) && !sex.equals("null")) {
-					driver.setMsg("性别不能为空;");
-					driver.setImportUrl("icon_cha.png");
-					errorStr += "性别不能为空;";
-					bb++;
-				} else {
-					String[] arr = {"男", "女"};
-					boolean ss = false;
-					ss = ArrayUtils.contains(arr, sex);
-					if (ss == true) {
-						if ("男".equals(sex)) {
-							driver.setXingbie("1");
-							driver.setXingbieshow(sex);
-							driver.setImportUrl("icon_gou.png");
-						}
-						if ("女".equals(sex)) {
-							driver.setXingbie("2");
-							driver.setXingbieshow(sex);
-							driver.setImportUrl("icon_gou.png");
-						}
-					} else {
-						driver.setMsg("性别填写异常;");
-						driver.setImportUrl("icon_cha.png");
-						errorStr += "性别填写异常;";
-						bb++;
-					}
-				}
+//				//验证驾驶员性别
+//				String sex = String.valueOf(a.get("性别")).trim();
+//				if (StringUtils.isBlank(sex) && !sex.equals("null")) {
+//					driver.setMsg("性别不能为空;");
+//					driver.setImportUrl("icon_cha.png");
+//					errorStr += "性别不能为空;";
+//					bb++;
+//				} else {
+//					String[] arr = {"男", "女"};
+//					boolean ss = false;
+//					ss = ArrayUtils.contains(arr, sex);
+//					if (ss == true) {
+//						if ("男".equals(sex)) {
+//							driver.setXingbie("1");
+//							driver.setXingbieshow(sex);
+//							driver.setImportUrl("icon_gou.png");
+//						}
+//						if ("女".equals(sex)) {
+//							driver.setXingbie("2");
+//							driver.setXingbieshow(sex);
+//							driver.setImportUrl("icon_gou.png");
+//						}
+//					} else {
+//						driver.setMsg("性别填写异常;");
+//						driver.setImportUrl("icon_cha.png");
+//						errorStr += "性别填写异常;";
+//						bb++;
+//					}
+//				}
 
 
 				//验证身份证号码
@@ -1837,12 +1837,12 @@ public class JiaShiYuanController {
 //			}
 
 
-			//验证籍贯
-			String jiatingzhuzhi = String.valueOf(a.get("籍贯")).trim();
-			if (StringUtils.isNotBlank(jiatingzhuzhi) && !jiatingzhuzhi.equals("null")) {
-				driver.setJiatingzhuzhi(jiatingzhuzhi);
-				driver.setImportUrl("icon_gou.png");
-			}
+//			//验证籍贯
+//			String jiatingzhuzhi = String.valueOf(a.get("籍贯")).trim();
+//			if (StringUtils.isNotBlank(jiatingzhuzhi) && !jiatingzhuzhi.equals("null")) {
+//				driver.setJiatingzhuzhi(jiatingzhuzhi);
+//				driver.setImportUrl("icon_gou.png");
+//			}
 
 
 //			//验证备注
@@ -2033,7 +2033,7 @@ public class JiaShiYuanController {
 			String deptId = String.valueOf(a.get("deptId"));
 			driver.setDeptId(Integer.valueOf(deptId));
 			driver.setJiashiyuanxingming(String.valueOf(a.get("jiashiyuanxingming")).trim());
-			driver.setXingbie(String.valueOf(a.get("xingbie")));
+//			driver.setXingbie(String.valueOf(a.get("xingbie")));
 			String tmp = String.valueOf(a.get("shenfenzhenghao")).trim();
 			driver.setShenfenzhenghao(tmp);
 			//通过身份证获取年龄
@@ -2102,7 +2102,7 @@ public class JiaShiYuanController {
 				ruzhi.setAjrDelete("0");
 				ruzhi.setAjrAjIds(jiaShiYuan.getId());
 				ruzhi.setAjrName(jiaShiYuan.getJiashiyuanxingming());
-				ruzhi.setAjrSex(jiaShiYuan.getXingbie());
+//				ruzhi.setAjrSex(jiaShiYuan.getXingbie());
 				ruzhi.setAjrAge(Integer.valueOf(jiaShiYuan.getNianling()));
 				ruzhi.setAjrIdNumber(jiaShiYuan.getShenfenzhenghao());
 				ruzhi.setAjrApproverStatus("0");
