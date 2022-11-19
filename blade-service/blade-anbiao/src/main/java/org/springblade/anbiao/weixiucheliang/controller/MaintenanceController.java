@@ -121,6 +121,7 @@ public class MaintenanceController {
 				maintenanceEntity1.setMaintainDictId(maintenanceEntity.getMaintainDictId());
 				maintenanceEntity1.setExpectedCompletion(maintenanceEntity.getExpectedCompletion());
 				maintenanceEntity1.setSendDate(maintenanceEntity.getSendDate());
+				maintenanceEntity1.setAcbCenterMaintenance(maintenanceEntity.getAcbCenterMaintenance());
 				maintenanceEntity1.setAcbAfterMaintenance(maintenanceEntity.getAcbAfterMaintenance());
 				maintenanceEntity1.setActualCompletionDate(maintenanceEntity.getActualCompletionDate());
 				maintenanceEntity1.setInRangeMileage(maintenanceEntity.getInRangeMileage());

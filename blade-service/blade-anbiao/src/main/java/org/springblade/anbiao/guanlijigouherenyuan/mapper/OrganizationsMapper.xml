@@ -681,7 +681,13 @@
                 jingyingxukezhengchulingriqi,
             </if>
             <if test="jingyingxukezhengyouxiaoqi != null">
-                jingyingxukezhengyouxiaoqi
+                jingyingxukezhengyouxiaoqi,
+            </if>
+            <if test="yyzzksdate != null">
+                yyzzksdate,
+            </if>
+            <if test="yyzzjzdate != null">
+                yyzzjzdate
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -849,7 +855,13 @@
                 #{jingyingxukezhengchulingriqi},
             </if>
             <if test="jingyingxukezhengyouxiaoqi != null">
-                #{jingyingxukezhengyouxiaoqi}
+                #{jingyingxukezhengyouxiaoqi},
+            </if>
+            <if test="yyzzksdate != null">
+                #{yyzzksdate},
+            </if>
+            <if test="yyzzjzdate != null">
+                #{yyzzjzdate}
             </if>
         </trim>
     </insert>

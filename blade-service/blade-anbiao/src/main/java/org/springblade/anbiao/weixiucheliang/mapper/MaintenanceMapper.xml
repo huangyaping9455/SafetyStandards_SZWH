@@ -132,11 +132,11 @@
     <insert id="insertOne" parameterType="org.springblade.anbiao.weixiu.entity.MaintenanceEntity" keyProperty="id" useGeneratedKeys="true">
         insert into anbiao_cheliang_baoyangweixiu(dept_Id,vehicle_Id,driver_Id,send_Date,acb_maintenance_content,
                                        maintenance_Dept_Name,maintain_Dict_Id,acb_repair_reason,acb_before_maintenance,
-                                                acb_after_maintenance,is_Deleted,acb_bill_attachment
+                                                acb_after_maintenance,is_Deleted,acb_bill_attachment,acb_center_maintenance
         )
         values (#{depID},#{vehicleId},#{driverId},#{sendDate},#{acbMaintenanceContent},
                 #{maintenanceDeptName},#{maintainDictId},#{acbRepairReason},#{acbBeforeMaintenance},
-                #{acbAfterMaintenance},0,#{acbBillAttachment}
+                #{acbAfterMaintenance},0,#{acbBillAttachment},#{acbCenterMaintenance}
                )
     </insert>
 
