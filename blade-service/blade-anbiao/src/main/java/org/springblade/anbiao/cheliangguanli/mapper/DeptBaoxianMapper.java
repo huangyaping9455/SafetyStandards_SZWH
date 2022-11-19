@@ -38,4 +38,5 @@ public interface DeptBaoxianMapper extends BaseMapper<DeptBaoxian> {
 	 */
 	List<DeptBaoxianVO> selectDeptBaoxianPage(IPage page, DeptBaoxianVO deptBaoxian);
 
+    DeptBaoxian queryByMax(String avbInsuredIds);
 }

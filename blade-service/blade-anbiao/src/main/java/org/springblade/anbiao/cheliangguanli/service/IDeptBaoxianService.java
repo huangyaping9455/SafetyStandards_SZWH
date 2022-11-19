@@ -46,5 +46,7 @@ public interface IDeptBaoxianService extends BaseService<DeptBaoxian> {
 	 */
 	DeptBaoxianInfo queryDetail(String avbId);
 
+	DeptBaoxian queryByMax(String avbInsuredIds);
+
 
 }

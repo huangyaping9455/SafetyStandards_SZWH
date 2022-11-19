@@ -47,4 +47,6 @@ public interface IVehicleBaoxianService extends BaseService<VehicleBaoxian> {
 
 	public VehicleBaoxian queryByMax(String avbId);
 
+	public VehicleBaoxian queryById(String avbId);
+
 }

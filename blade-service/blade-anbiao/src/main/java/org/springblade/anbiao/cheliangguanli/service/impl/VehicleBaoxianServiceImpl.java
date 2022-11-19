@@ -53,7 +53,8 @@ public class VehicleBaoxianServiceImpl extends ServiceImpl<VehicleBaoxianMapper,
 	@Override
 	public VehicleBaoxianInfo queryDetail(String avbId) {
 		VehicleBaoxianInfo baoxianInfo = new VehicleBaoxianInfo();
-		baoxianInfo.setBaoxian(baseMapper.selectById(avbId));
+		baoxianInfo.setBaoxian(baoxianMapper.queryById(avbId));
+
 		VehicleBaoxianMingxi mingxi = new VehicleBaoxianMingxi();
 		mingxi.setAvbmAvbIds(avbId);
 		List<VehicleBaoxianMingxi> mingxiList = baoxianMingxiMapper.selectList(Condition.getQueryWrapper(mingxi));
@@ -63,6 +64,11 @@ public class VehicleBaoxianServiceImpl extends ServiceImpl<VehicleBaoxianMapper,
 
 	public VehicleBaoxian queryByMax(String avbId) {
 		return baoxianMapper.queryByMax(avbId);
+	}
+
+	@Override
+	public VehicleBaoxian queryById(String avbId) {
+		return baoxianMapper.queryById(avbId);
 	}
 
 	@Override

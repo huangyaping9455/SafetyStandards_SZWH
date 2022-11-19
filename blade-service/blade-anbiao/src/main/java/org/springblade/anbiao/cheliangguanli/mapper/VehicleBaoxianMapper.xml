@@ -86,4 +86,11 @@
         ORDER BY avb.avb_insurance_period_end DESC limit 1 ;
     </select>
 
+    <select id="queryById" resultMap="vehicleBaoxianResultMap" parameterType="java.lang.String">
+        select avb.*,av.cheliangpaizhao,bd.dept_name from anbiao_vehicle_baoxian avb
+        left join anbiao_vehicle av on av.id=avb.avb_av_ids
+        LEFT JOIN blade_dept bd ON bd.id=avb.avb_dept_ids
+        where avb.avb_delete = 0 and avb.avb_ids=#{avbId}
+    </select>
+
 </mapper>

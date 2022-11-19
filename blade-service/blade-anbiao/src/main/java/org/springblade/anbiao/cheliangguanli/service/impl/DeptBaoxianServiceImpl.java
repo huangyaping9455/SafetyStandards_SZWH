@@ -42,6 +42,7 @@ import java.util.List;
 @Service
 public class DeptBaoxianServiceImpl extends ServiceImpl<DeptBaoxianMapper, DeptBaoxian> implements IDeptBaoxianService {
 
+	private DeptBaoxianMapper baoxianMapper;
 	private DeptBaoxianMingxiMapper mingxiMapper;
 
 	@Override
@@ -60,6 +61,11 @@ public class DeptBaoxianServiceImpl extends ServiceImpl<DeptBaoxianMapper, DeptB
 		List<DeptBaoxianMingxi> mingxiList = mingxiMapper.selectList(Condition.getQueryWrapper(mingxi));
 		baoxianInfo.setMingxiList(mingxiList);
 		return baoxianInfo;
+	}
+
+	@Override
+	public DeptBaoxian queryByMax(String avbInsuredIds) {
+		return baoxianMapper.queryByMax(avbInsuredIds);
 	}
 
 	@Override

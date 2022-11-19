@@ -65,11 +65,20 @@
         <result column="avb_update_time" property="avbUpdateTime"/>
         <result column="avb_update_by_ids" property="avbUpdateByIds"/>
         <result column="avb_update_by_name" property="avbUpdateByName"/>
+        <result column="dept_name" property="avbDeptName"/>
     </resultMap>
 
 
     <select id="selectDeptBaoxianPage" resultMap="deptBaoxianResultMap">
-        select * from anbiao_dept_baoxian where avb_delete = 0
+        select adb.*,bd.dept_name from anbiao_dept_baoxian adb
+        LEFT JOIN blade_dept bd ON bd.id=adb.avb_dept_ids
+        where avb_delete = 0
+    </select>
+
+    <select id="queryByMax" resultMap="deptBaoxianResultMap" parameterType="java.lang.String">
+        select adb.*,bd.dept_name from anbiao_dept_baoxian adb
+        LEFT JOIN blade_dept bd ON bd.id=adb.avb_dept_ids
+        where avb_delete = 0 and adb.avb_insured_ids=#{avbInsuredIds}
     </select>
 
 </mapper>

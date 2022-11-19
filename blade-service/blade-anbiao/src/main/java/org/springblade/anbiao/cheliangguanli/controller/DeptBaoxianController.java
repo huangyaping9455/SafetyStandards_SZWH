@@ -98,6 +98,12 @@ public class DeptBaoxianController extends BladeController {
 		}
 	}
 
+	@GetMapping("/queryByMax")
+	@ApiOperation(value = "根据被保险企业ID查询上次保险记录", notes = "根据被保险企业ID查询上次保险记录")
+	public R<DeptBaoxian> queryByMax(String avbInsuredIds) {
+		return R.data(deptBaoxianService.queryByMax(avbInsuredIds));
+	}
+
 //	/**
 //	 * 分页 企业保险信息主表
 //	 */
