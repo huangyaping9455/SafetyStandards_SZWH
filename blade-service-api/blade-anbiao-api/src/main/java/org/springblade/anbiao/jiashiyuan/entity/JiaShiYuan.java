@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.models.auth.In;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -484,4 +485,7 @@ public class JiaShiYuan implements Serializable {
 
 	@ApiModelProperty(value = "openid")
 	private String openid;
+
+	@ApiModelProperty(value = "状态，默认0：在职，1：离职")
+	private Integer status;
 }

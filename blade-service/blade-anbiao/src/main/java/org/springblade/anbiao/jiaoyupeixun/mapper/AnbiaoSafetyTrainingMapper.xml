@@ -33,14 +33,12 @@
     <sql id="tableSql">
         select
             a.*,
-            b.dept_name as deptname,
-            c.*
+            b.dept_name as deptname
         from
             anbiao_safety_training a
             inner join  (
                 <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) b on a.ast_dept_ids = b.id
-            left join anbiao_safety_training_detail c on c.aad_ast_ids = a.ast_ids
         where a.ast_delete = 0
           and a.ast_training_form = 1
           and a.ast_training_end_time >= #{date}

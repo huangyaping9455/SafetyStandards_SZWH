@@ -58,7 +58,9 @@ values
         inner join  (
             <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) b on a.dept_id = b.id
-        WHERE 1=1 and ifnull(a.isdelete,0) = 0
+        WHERE 1=1
+            and ifnull(a.isdelete,0) = 0
+            and a.status = 0
     </sql>
 
     <sql id="querySql">
@@ -716,6 +718,7 @@ values
         from
             anbiao_jiashiyuan
         where isdelete = 0
+            and status = 0
         <if test="deptId != null ">
             AND dept_id = #{deptId}
         </if>

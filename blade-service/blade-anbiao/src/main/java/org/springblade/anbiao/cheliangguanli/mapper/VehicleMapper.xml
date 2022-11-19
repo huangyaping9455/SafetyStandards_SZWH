@@ -167,6 +167,16 @@
         LIMIT 1;
     </select>
 
+    <select id="selectDeptCPYS" resultMap="vehicleVOResultMap" parameterType="java.lang.String">
+        select cheliangpaizhao,zhongduanleixing from anbiao_vehicle
+        where cheliangpaizhao=#{cheliangpaizhao}
+          and chepaiyanse=#{chepaiyanse}
+          and dept_id = #{deptId}
+          and ifnull(is_deleted,0) = 0
+          and ifnull(cheliangzhuangtai,0) != 2
+        LIMIT 1;
+    </select>
+
     <!-- 车辆 删除 -->
     <update id="deleteVehicle" parameterType="java.lang.String" >
          update anbiao_vehicle set is_deleted = 1 , caozuoshijian = NOW()

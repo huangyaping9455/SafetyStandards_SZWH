@@ -338,6 +338,7 @@ public class JiaShiYuanController {
 			jiaShiYuan.setDenglumima(DigestUtil.encrypt(jiaShiYuan.getShoujihaoma().substring(jiaShiYuan.getShoujihaoma().length() - 6)));
 			jiaShiYuan.setXingbie(Integer.toString(IdCardUtil.getGender(jiaShiYuan.getShenfenzhenghao())));
 			jiaShiYuan.setIsdelete(0);
+			jiaShiYuan.setStatus(0);
 			boolean i = iJiaShiYuanService.save(jiaShiYuan);
 			if (i) {
 				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShoujihaoma, jiaShiYuan.getShoujihaoma());
@@ -2263,5 +2264,36 @@ public class JiaShiYuanController {
 		}
 	}
 
+	/**
+	 * 删除
+	 */
+	@GetMapping("/dimission")
+	@ApiLog("离职")
+	@ApiOperation(value = "离职", notes = "传入id", position = 33)
+	public R dimission(String id, BladeUser user) {
+		R r = new R();
+		if(user == null) {
+			r.setCode(401);
+			r.setMsg("未授权，请重新登录！");
+			return r;
+		}
+		JiaShiYuan jiaShiYuan = new JiaShiYuan();
+		jiaShiYuan.setStatus(1);
+		jiaShiYuan.setId(id);
+		jiaShiYuan.setCaozuorenid(user.getUserId());
+		jiaShiYuan.setCaozuoren(user.getUserName());
+		jiaShiYuan.setCaozuoshijian(DateUtil.now());
+		boolean i = iJiaShiYuanService.updateById(jiaShiYuan);
+		if(i){
+			r.setSuccess(true);
+			r.setCode(200);
+			r.setMsg("离职成功");
+		}else{
+			r.setSuccess(false);
+			r.setCode(500);
+			r.setMsg("离职失败");
+		}
+		return r;
+	}
 
 }

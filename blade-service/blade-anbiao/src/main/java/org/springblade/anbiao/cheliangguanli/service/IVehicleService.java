@@ -33,6 +33,7 @@ public interface IVehicleService extends IService<Vehicle> {
     */
 	VehicleVO selectByCPYS(String cheliangpaizhao,String chepaiyanse);
 	VehicleVO selectCPYS(String cheliangpaizhao,String chepaiyanse);
+	VehicleVO selectDeptCPYS(String cheliangpaizhao,String chepaiyanse,String deptId);
 
     /**
      * 自定义 假删除
