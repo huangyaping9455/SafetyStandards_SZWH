@@ -15,6 +15,8 @@
  */
 package org.springblade.anbiao.cheliangguanli.controller;
 
+import cn.hutool.poi.excel.ExcelReader;
+import cn.hutool.poi.excel.ExcelUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +32,7 @@ import org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuan;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.common.tool.FuncUtil;
+import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
 import org.springblade.core.secure.BladeUser;
@@ -44,10 +47,19 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springblade.anbiao.cheliangguanli.vo.JiashiyuanBaoxianVO;
 import org.springblade.anbiao.cheliangguanli.service.IJiashiyuanBaoxianService;
 import org.springblade.core.boot.ctrl.BladeController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 驾驶员保险信息主表 控制器
@@ -101,6 +113,160 @@ public class JiashiyuanBaoxianController extends BladeController {
 	public R<JiashiyuanBaoxian> queryByMax(String driverId) {
 		return R.data(jiashiyuanBaoxianService.queryByMax(driverId));
 	}
+
+	@PostMapping("/insuranceImport")
+	@ApiLog("企业端-驾驶员保险导入")
+	@ApiOperation(value = "企业端-驾驶员保险导入", notes = "file")
+	public R insuranceImport(@RequestParam(value = "file") MultipartFile file, BladeUser user) throws ParseException {
+		R r = new R();
+		if (user == null) {
+			r.setCode(401);
+			r.setMsg("用户权限验证失败");
+			r.setData(null);
+			r.setSuccess(false);
+			return r;
+		}
+		ExcelReader reader = null;
+		try {
+			reader = ExcelUtil.getReader(file.getInputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		//时间默认格式
+		SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+		//验证数据成功条数
+		int successNum = 0;
+		//验证数据错误条数
+		int failNum = 0;
+		//全局变量，只要一条数据不对，就为false
+		boolean isDataValidity = true;
+		//错误信息
+		String errorStr = "";
+
+		List<Map<String, Object>> readAll = reader.readAll();
+		if(readAll.size() > 2000) {
+			errorStr +="导入数据超过2000条，无法导入";
+			r.setMsg(errorStr);
+			r.setCode(400);
+			return  r;
+		}
+
+		List<JiashiyuanBaoxianMingxi> insurance = new ArrayList<>();
+		JiashiyuanBaoxianInfo baoxianInfo = new JiashiyuanBaoxianInfo();
+		JiashiyuanBaoxian baoxian = new JiashiyuanBaoxian();
+		for(Map<String ,Object> mmap: readAll) {
+			boolean isFail = false;
+			Dept avbInsureDept = new Dept();
+			Dept avbInsuredDept = new Dept();
+
+			String avbInsureName = String.valueOf(mmap.get("投保单位")).trim();		//投保单位
+			String avbInsuredName = String.valueOf(mmap.get("被保险单位")).trim();
+			String avbInsuredContacts = String.valueOf(mmap.get("被保险人")).trim();
+			String avbPolicyNo = String.valueOf(mmap.get("保单号")).trim();
+			String avbInsureContacts = String.valueOf(mmap.get("投保联系人")).trim();
+			String avbInsureContactNumber = String.valueOf(mmap.get("投保人联系电话")).trim();
+			String avbmRisk = String.valueOf(mmap.get("保险类别")).trim();
+			String avbmName = String.valueOf(mmap.get("保险名称")).trim();
+			String avbInsurancePeriodStart = String.valueOf(mmap.get("投保开始时间")).trim();
+			String avbInsurancePeriodEnd = String.valueOf(mmap.get("投保结束时间")).trim();
+			String daysRemaining = String.valueOf(mmap.get("剩余天数")).trim();
+			String avbmInsuranceAmount = String.valueOf(mmap.get("保额")).trim();
+			String avbmBasicPremium = String.valueOf(mmap.get("保费")).trim();
+
+			if(baoxian == null) {
+				if(StringUtil.isNotBlank(avbInsureName)) {
+					avbInsureDept = iSysClient.getDeptByName(avbInsureName);
+					baoxian.setAjbInsureIds(avbInsureDept.getId()+"");
+					baoxian.setAjbInsureName(avbInsureName);
+				} else {
+					isFail=true;
+					errorStr += "投保企业不能为空！";
+				}
+
+				//被保险人所属企业
+				if(StringUtil.isNotBlank(avbInsuredName)) {
+					avbInsuredDept = iSysClient.getDeptByName(avbInsuredName);
+					if(avbInsuredDept != null) {
+						baoxian.setAjbDeptIds(new Long(avbInsuredDept.getId()));		//被保险人所属企业
+					} else {
+						errorStr += "没有查询到被保险单位！";
+					}
+				} else {
+					isFail=true;
+					errorStr += "被保车辆不能为空！";
+				}
+				//被保险人
+				if(StringUtil.isNotBlank(avbInsuredContacts)) {
+					JiaShiYuan jsy = new JiaShiYuan();
+					jsy.setJiashiyuanxingming(avbInsuredContacts);
+					jsy.setIsdelete(0);
+					JiaShiYuan driver = jiaShiYuanService.getOne(Condition.getQueryWrapper(jsy));
+					if(driver != null) {
+						baoxian.setAjbInsuredIds(driver.getId());
+						baoxian.setAjbInsuredName(driver.getJiashiyuanxingming());
+						baoxian.setAjbInsuredContacts(driver.getJiashiyuanxingming());
+						baoxian.setAjbInsuredContactNumber(driver.getShoujihaoma());
+						baoxian.setAjbInsuredContactAddress(driver.getJiatingzhuzhi());
+					} else {
+						errorStr += "没有查询到被保险人驾驶员！";
+					}
+				} else {
+					isFail=true;
+					errorStr += "被保驾驶员不能为空！";
+				}
+				baoxian.setAjbInsureContacts(avbInsureContacts);
+				baoxian.setAjbInsureContactNumber(avbInsureContactNumber);
+				baoxian.setAjbDelete("0");
+				if(StringUtil.isNotBlank(avbInsurancePeriodStart)) {
+					baoxian.setAjbInsurancePeriodStart(dateFormat2.parse(avbInsurancePeriodStart).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+				}
+				if(StringUtil.isNotBlank(avbInsurancePeriodEnd)) {
+					baoxian.setAjbInsurancePeriodEnd(dateFormat2.parse(avbInsurancePeriodEnd).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+				}
+				if(StringUtil.isNotBlank(avbInsurancePeriodStart) && StringUtil.isNotBlank(avbInsurancePeriodEnd)) {
+					Date startTime = dateFormat2.parse(avbInsurancePeriodStart);
+					Date endTime = dateFormat2.parse(avbInsurancePeriodEnd);
+					long s = endTime.getTime() - startTime.getTime();
+					TimeUnit time = TimeUnit.DAYS;
+					long days = time.convert(s,TimeUnit.MICROSECONDS);
+					baoxian.setAjbInsuranceDays((int)days);
+				}
+				baoxian.setAjbCreateByIds(user.getUserId()+"");
+				baoxian.setAjbCreateByName(user.getUserName());
+				baoxian.setAjbCreateTime(LocalDateTime.now());
+				baoxianInfo.setBaoxian(baoxian);
+
+			}
+			JiashiyuanBaoxianMingxi mingxi = new JiashiyuanBaoxianMingxi();
+			mingxi.setAjbmRisk(avbmRisk);
+			mingxi.setAjbmName(avbmName);
+			mingxi.setAjbmBasicPremium(new BigDecimal(avbmBasicPremium));
+			mingxi.setAjbmBasicPremium(new BigDecimal(avbmInsuranceAmount));
+			insurance.add(mingxi);
+			if(isFail) {
+				failNum++;
+			} else {
+				successNum++;
+			}
+		}
+		baoxianInfo.setBaoxianMingxis(insurance);
+		if(failNum > 0) {
+			r.setCode(500);
+			r.setMsg(errorStr);
+			r.setSuccess(false);
+			r.setData(null);
+			return r;
+		} else {
+			boolean isSave = jiashiyuanBaoxianService.save(baoxian);
+			for (JiashiyuanBaoxianMingxi baoxianMingxi: insurance) {
+				baoxianMingxi.setAjbmAvbIds(baoxian.getAjbIds());
+				mingxiService.save(baoxianMingxi);
+			}
+			return R.status(isSave);
+		}
+	}
+
 
 //	/**
 //	 * 分页 驾驶员保险信息主表
