@@ -312,5 +312,12 @@ public class Organizations implements Serializable {
 	@ApiModelProperty(value = "道路许可证号")
 	private String daoluxukezhenghao;
 
+	@ApiModelProperty(value = "工商营业执照开始时间")
+	private String yyzzksdate;
+
+	@ApiModelProperty(value = "工商营业执照截止时间")
+	private String yyzzjzdate;
+
+
 
 }

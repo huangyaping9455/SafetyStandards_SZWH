@@ -51,7 +51,6 @@ public class AnbiaoCheliangJiashiyuanController {
 		cheliangJiashiyuanQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuan::getJiashiyuanid,cheliangJiashiyuan.getJiashiyuanid());
 		cheliangJiashiyuanQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuan::getVehid,cheliangJiashiyuan.getVehid());
 		AnbiaoCheliangJiashiyuan deail = cheliangJiashiyuanService.getBaseMapper().selectOne(cheliangJiashiyuanQueryWrapper);
-		System.out.println(deail);
 		if (deail == null){
 			if (cheliangJiashiyuan!=null){
 				cheliangJiashiyuan.setCreatetime(DateUtil.now());

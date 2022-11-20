@@ -78,6 +78,11 @@ public class VehicleServiceImpl extends ServiceImpl<VehicleMapper, Vehicle> impl
 	}
 
 	@Override
+	public VehicleVO selectDeptCPYS(String cheliangpaizhao, String chepaiyanse, String deptId) {
+		return vehicleMapper.selectDeptCPYS(cheliangpaizhao, chepaiyanse, deptId);
+	}
+
+	@Override
     public boolean deleleVehicle(String id) {
         return vehicleMapper.deleteVehicle(id);
     }

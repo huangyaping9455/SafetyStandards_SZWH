@@ -15,6 +15,7 @@
  */
 package org.springblade.anbiao.cheliangguanli.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -25,6 +26,7 @@ import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.service.IJiashiyuanBaoxianMingxiService;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
+import org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuan;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.common.tool.FuncUtil;
@@ -243,6 +245,84 @@ public class JiashiyuanBaoxianController extends BladeController {
 		}
 		return R.status(jiashiyuanBaoxianService.updateBatchById(deptBaoxians));
 	}
+
+	@GetMapping("/getMoveJSYList")
+	@ApiOperation(value = "根据企业ID获取已离职的驾驶员信息", notes = "传入deptId")
+	public R getMoveJSYList(String deptId,BladeUser user) {
+		R r = new R();
+		if(user == null) {
+			r.setCode(401);
+			r.setMsg("未授权，请重新登录！");
+			return r;
+		}
+		QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<JiaShiYuan>();
+		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId,deptId);
+		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getStatus,1);
+		List<JiaShiYuan> deail = jiaShiYuanService.getBaseMapper().selectList(jiaShiYuanQueryWrapper);
+		if (deail.size() < 1){
+			r.setCode(200);
+			r.setMsg("暂无数据");
+			r.setSuccess(false);
+			return r;
+		}else{
+			r.setCode(200);
+			r.setMsg("获取成功");
+			r.setSuccess(true);
+			r.setData(deail);
+			return r;
+		}
+	}
+
+	@GetMapping("/move")
+	@ApiOperation(value = "保险异动", notes = "传入保险数据ID，异动的驾驶员ID")
+	public R move(String id,String jsyid,BladeUser user) {
+		R r = new R();
+		if(user == null) {
+			r.setCode(401);
+			r.setMsg("未授权，请重新登录！");
+			return r;
+		}
+		QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<JiaShiYuan>();
+		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId,jsyid);
+		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getStatus,1);
+		JiaShiYuan deail = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+		if (deail == null){
+			r.setCode(500);
+			r.setMsg("该驾驶员未离职，不能进行保险异动！");
+			r.setSuccess(false);
+			return r;
+		}
+		JiashiyuanBaoxian baoxian = new JiashiyuanBaoxian();
+		baoxian.setAjbIds(id);
+		baoxian.setAjbApprove("0");
+		baoxian.setAjbDelete("0");
+		baoxian.setAjbUpdateByIds(user.getUserId()+"");
+		baoxian.setAjbUpdateByName(user.getUserName());
+		baoxian.setAjbUpdateTime(LocalDateTime.now());
+
+		JiaShiYuan jiaShiYuan = new JiaShiYuan();
+		jiaShiYuan.setId(jsyid);
+		jiaShiYuan.setIsdelete(0);
+		jiaShiYuan = jiaShiYuanService.getOne(Condition.getQueryWrapper(jiaShiYuan));
+		baoxian.setAjbInsureIds(jiaShiYuan.getId());
+		baoxian.setAjbCertificateNumber(jiaShiYuan.getShenfenzhenghao());
+		baoxian.setAjbInsuredName(jiaShiYuan.getJiashiyuanxingming());
+		baoxian.setAjbInsuredContacts(jiaShiYuan.getJiashiyuanxingming());
+		baoxian.setAjbInsuredContactAddress(jiaShiYuan.getJiatingzhuzhi());
+		boolean i = jiashiyuanBaoxianService.updateById(baoxian);
+		if(i){
+			r.setCode(200);
+			r.setMsg("数据验证成功");
+			r.setSuccess(true);
+			return r;
+		}else {
+			r.setCode(500);
+			r.setMsg("异动成功");
+			r.setSuccess(false);
+			return r;
+		}
+	}
+
 
 
 }
