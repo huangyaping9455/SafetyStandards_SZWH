@@ -16,6 +16,8 @@
 package org.springblade.anbiao.guanlijigouherenyuan.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import io.swagger.models.auth.In;
+import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.page.OrganizationsPage;
 import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
@@ -69,5 +71,12 @@ public interface OrganizationsMapper extends BaseMapper<Organizations> {
 	 */
 	OrganizationsVO selectParentDeptById(String deptId);
 
+	Organizations getorganizationByOne(@Param("deptId") String deptId,
+									   @Param("deptName") String deptName,
+									   @Param("jigoubianma") String jigoubianma,
+									   @Param("jigouleixing") String jigouleixing,
+									   @Param("daoluxukezhenghao") String daoluxukezhenghao);
 
+	int selectMaxId();
 }
+

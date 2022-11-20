@@ -126,4 +126,14 @@ public class OrganizationsServiceImpl extends ServiceImpl<OrganizationsMapper, O
 		return mapper.selectParentDeptById(deptId);
 	}
 
+	@Override
+	public Organizations getorganizationByOne(String deptId, String deptName, String jigoubianma, String jigouleixing, String daoluxukezhenghao) {
+		return mapper.getorganizationByOne(deptId,deptName,jigoubianma,jigouleixing,daoluxukezhenghao);
+	}
+
+	@Override
+	public int selectMaxId() {
+		return mapper.selectMaxId();
+	}
+
 }

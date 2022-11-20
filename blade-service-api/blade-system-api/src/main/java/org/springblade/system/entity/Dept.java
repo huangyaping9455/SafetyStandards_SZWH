@@ -15,10 +15,7 @@
  */
 package org.springblade.system.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -41,7 +38,7 @@ public class Dept implements Serializable {
 	 * 主键
 	 */
 	@ApiModelProperty(value = "主键")
-	@TableId(value = "id")
+	@TableId(value = "id",type = IdType.UUID)
 	private Integer id;
 
 	/**
@@ -129,7 +126,5 @@ public class Dept implements Serializable {
 	@ApiModelProperty(value = "机构编码")
 	@TableField(exist = false)
 	private String jigoubianma;
-
-
 
 }

@@ -889,4 +889,31 @@
         limit 1
     </select>
 
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        SELECT
+            max(CONVERT(dept_id,SIGNED)) AS id
+        FROM anbiao_organization
+    </select>
+
+    <select id="getorganizationByOne" resultType="org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations">
+        SELECT * FROM `anbiao_organization`
+        <where>
+            <if test="deptId != null and deptId != ''">
+                dept_id = #{deptId}
+            </if>
+            <if test="deptName != null and deptName != ''">
+                and dept_name =  #{deptName}
+            </if>
+            <if test="jigoubianma != null and jigoubianma != ''">
+                and jigoubianma = #{jigoubianma}
+            </if>
+            <if test="jigouleixing != null and jigouleixing != ''">
+                and jigouleixing = #{jigouleixing}
+            </if>
+            <if test="daoluxukezhenghao != null and daoluxukezhenghao != ''">
+                and daoluxukezhenghao = #{daoluxukezhenghao}
+            </if>
+        </where>
+    </select>
+
 </mapper>

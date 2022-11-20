@@ -16,6 +16,7 @@
 package org.springblade.anbiao.guanlijigouherenyuan.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.page.OrganizationsPage;
 import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
@@ -88,5 +89,13 @@ public interface IOrganizationsService extends IService<Organizations> {
 	 * @return
 	 */
 	OrganizationsVO selectParentDeptById(String deptId);
+
+	Organizations getorganizationByOne(@Param("deptId") String deptId,
+									   @Param("deptName") String deptName,
+									   @Param("jigoubianma") String jigoubianma,
+									   @Param("jigouleixing") String jigouleixing,
+									   @Param("daoluxukezhenghao") String daoluxukezhenghao);
+
+	int selectMaxId();
 
 }

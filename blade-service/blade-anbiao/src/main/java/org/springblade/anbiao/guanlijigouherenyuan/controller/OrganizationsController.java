@@ -2,10 +2,14 @@
 package org.springblade.anbiao.guanlijigouherenyuan.controller;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import cn.hutool.poi.excel.ExcelReader;
+import cn.hutool.poi.excel.ExcelUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -17,21 +21,36 @@ import org.springblade.anbiao.configure.entity.Configure;
 import org.springblade.anbiao.configure.service.IConfigureService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.page.OrganizationsPage;
+import org.springblade.anbiao.guanlijigouherenyuan.service.IBladeDeptService;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
 import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
+import org.springblade.anbiao.jiashiyuan.entity.*;
+import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
+import org.springblade.common.tool.DateUtils;
+import org.springblade.common.tool.IdCardUtil;
+import org.springblade.common.tool.RegexUtils;
 import org.springblade.core.boot.ctrl.BladeController;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
+import org.springblade.core.tool.utils.DigestUtil;
 import org.springblade.core.tool.utils.StringUtil;
 import org.springblade.system.entity.Dept;
+import org.springblade.system.entity.Dict;
 import org.springblade.system.feign.ISysClient;
 import org.springblade.system.user.entity.User;
 import org.springblade.system.user.feign.IUserClient;
 import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  *  控制器
@@ -47,6 +66,7 @@ public class OrganizationsController extends BladeController {
 	private ISysClient iSysClient;
 	private IFileUploadClient fileUploadClient;
 	private IVehicleService iVehicleService;
+	private IBladeDeptService bladeDeptService;
 
 	/**
 	 * 详情
@@ -483,5 +503,353 @@ public class OrganizationsController extends BladeController {
 			msg="初始化成功";
 		}
 		return R.success(msg);
+	}
+
+	/**
+	 * 机构档案信息--验证
+	 */
+	@PostMapping("/deptImport")
+	@ApiLog("机构档案信息--验证")
+	@ApiOperation(value = "机构档案信息--验证", notes = "file", position = 11)
+	public R deptImport(@RequestParam(value = "file") MultipartFile file, BladeUser user) throws ParseException {
+		R rs = new R();
+		if (user == null) {
+			rs.setCode(401);
+			rs.setMsg("用户权限验证失败");
+			rs.setData(null);
+			rs.setSuccess(false);
+			return rs;
+		}
+		ExcelReader reader = null;
+		try {
+			reader = ExcelUtil.getReader(file.getInputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
+		//时间默认格式
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		//验证数据成功条数
+		int aa = 0;
+		//验证数据错误条数
+		int bb = 0;
+		//全局变量，只要一条数据不对，就为false
+		boolean isDataValidity = true;
+		//错误信息
+		String errorStr = "";
+		int c=0;
+
+		List<Map<String, Object>> readAll = reader.readAll();
+		if (readAll.size() > 2000) {
+			errorStr += "导入数据超过2000条，无法导入！";
+			rs.setMsg(errorStr);
+			rs.setCode(400);
+			return rs;
+		}
+
+		List<Organizations> organizations = new ArrayList<>();
+		for (Map<String, Object> a : readAll) {
+			aa++;
+			Organizations organization = new Organizations();
+			SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+			c=c+1;
+			int deptids=organizationService.selectMaxId()+c;
+			organization.setDeptId(Integer.toString(deptids));
+
+			//验证单位名称不能为空
+			String deptName = String.valueOf(a.get("单位名称")).trim();
+			if (StringUtils.isBlank(deptName) && !deptName.equals("null")) {
+				organization.setMsg("单位名称不能为空;");
+				organization.setImportUrl("icon_cha.png");
+				errorStr += "单位名称不能为空;";
+				bb++;
+			} else {
+				organization.setDeptName(deptName);
+				organization.setImportUrl("icon_gou.png");
+			}
+
+			//验证统一社会信用代码不能为空
+			String jiGouBianMa = String.valueOf(a.get("统一社会信用代码")).trim();
+			if (StringUtils.isBlank(jiGouBianMa) && !jiGouBianMa.equals("null")) {
+				organization.setMsg("统一社会信用代码不能为空;");
+				organization.setImportUrl("icon_cha.png");
+				errorStr += "统一社会信用代码不能为空;";
+				bb++;
+			} else {
+				organization.setJigoubianma(jiGouBianMa);
+				organization.setImportUrl("icon_gou.png");
+			}
+
+			//验证工商营业执照开始时间
+			String yyzzksdate = String.valueOf(a.get("工商营业执照开始时间")).trim();
+			if (StringUtils.isNotBlank(yyzzksdate) && !yyzzksdate.equals("null")) {
+				if (DateUtils.isDateString(yyzzksdate, null) == true) {
+					organization.setYyzzksdate(yyzzksdate);
+					organization.setImportUrl("icon_gou.png");
+				} else {
+					organization.setMsg(yyzzksdate + ",该工商营业执照开始时间,不是时间格式;");
+					errorStr += yyzzksdate + ",该工商营业执照开始时间,不是时间格式;";
+					organization.setImportUrl("icon_cha.png");
+					bb++;
+				}
+			}
+
+			//验证工商营业执照结束时间
+			String yyzzjzdate = String.valueOf(a.get("工商营业执照结束时间")).trim();
+			if (StringUtils.isNotBlank(yyzzjzdate) && !yyzzjzdate.equals("null") ) {
+				if (DateUtils.isDateString(yyzzjzdate, null) == true) {
+					organization.setYyzzjzdate(yyzzjzdate);
+					organization.setImportUrl("icon_gou.png");
+				}
+				else if (yyzzjzdate.equals("长期")){
+					organization.setYyzzjzdate(yyzzjzdate);
+					organization.setImportUrl("icon_gou.png");
+				}
+				else {
+					organization.setMsg(yyzzjzdate + ",该工商营业执照结束时间,不是时间格式;");
+					errorStr += yyzzjzdate + ",该工商营业执照结束时间,不是时间格式;";
+					organization.setImportUrl("icon_cha.png");
+					bb++;
+				}
+			}
+
+			//验证 工商营业执照开始时间 不能大于 工商营业执照结束时间
+			if (StringUtils.isNotBlank(yyzzksdate) && !yyzzksdate.equals("null") && StringUtils.isNotBlank(yyzzjzdate) && !yyzzjzdate.equals("null") && !yyzzjzdate.equals("长期")) {
+				int a1 = yyzzksdate.length();
+				int b1 = yyzzjzdate.length();
+				if (a1 == b1) {
+					if (a1 <= 10) {
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+						if (DateUtils.belongCalendar(format.parse(yyzzksdate), format.parse(yyzzjzdate))) {
+							organization.setImportUrl("icon_gou.png");
+						} else {
+							organization.setMsg("工商营业执照开始时间,不能大于工商营业执照结束时间;");
+							errorStr += "工商营业执照开始时间,不能大于大于工商营业执照结束时间;";
+							organization.setImportUrl("icon_cha.png");
+							bb++;
+						}
+					}
+					if (a1 > 10) {
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						if (DateUtils.belongCalendar(format.parse(yyzzksdate), format.parse(yyzzjzdate))) {
+							organization.setImportUrl("icon_gou.png");
+						} else {
+							organization.setMsg("工商营业执照开始时间,不能大于工商营业执照结束时间;");
+							errorStr += "工商营业执照开始时间,不能大于大于工商营业执照结束时间;";
+							organization.setImportUrl("icon_cha.png");
+							bb++;
+						}
+					}
+				} else {
+					organization.setMsg("工商营业执照开始时间与工商营业执照结束时间,时间格式不一致;");
+					errorStr += "工商营业执照开始时间与工商营业执照结束时间,时间格式不一致;";
+					organization.setImportUrl("icon_cha.png");
+					bb++;
+				}
+			}
+
+			//验证机构类型不能为空
+			String jigouleixing = String.valueOf(a.get("机构类型")).trim();
+			if (StringUtils.isBlank(jigouleixing) && !jigouleixing.equals("null")) {
+				organization.setMsg("机构类型不能为空;");
+				organization.setImportUrl("icon_cha.png");
+				errorStr += "机构类型不能为空;";
+				bb++;
+			} else {
+				organization.setJigouleixing(jigouleixing);
+				organization.setImportUrl("icon_gou.png");
+			}
+
+			//验证道路运输许可证号不能为空
+			String daoluxukezhenghao = String.valueOf(a.get("道路运输许可证号")).trim();
+			if (StringUtils.isBlank(daoluxukezhenghao) && !daoluxukezhenghao.equals("null")) {
+				organization.setMsg("道路运输许可证号不能为空;");
+				organization.setImportUrl("icon_cha.png");
+				errorStr += "道路运输许可证号不能为空;";
+				bb++;
+			} else {
+				organization.setDaoluxukezhenghao(daoluxukezhenghao);
+				organization.setImportUrl("icon_gou.png");
+			}
+
+			//验证道路运输证有效期(起)
+			String daoluyunshuzhengkaishiriqi = String.valueOf(a.get("道路运输证有效期(起)")).trim();
+			if (StringUtils.isNotBlank(daoluyunshuzhengkaishiriqi) && !daoluyunshuzhengkaishiriqi.equals("null") ) {
+				if (DateUtils.isDateString(daoluyunshuzhengkaishiriqi, null) == true) {
+					organization.setDaoluyunshuzhengkaishiriqi(daoluyunshuzhengkaishiriqi);
+					organization.setImportUrl("icon_gou.png");
+				}
+				else {
+					organization.setMsg(yyzzjzdate + ",该道路运输证有效期(起),不是时间格式;");
+					errorStr += yyzzjzdate + ",该道路运输证有效期(起),不是时间格式;";
+					organization.setImportUrl("icon_cha.png");
+					bb++;
+				}
+			}
+
+			//验证道路运输证有效期(止)
+			String daoluyunshuzhengjieshuriqi = String.valueOf(a.get("道路运输证有效期(止)")).trim();
+			if (StringUtils.isNotBlank(daoluyunshuzhengjieshuriqi) && !daoluyunshuzhengjieshuriqi.equals("null")) {
+				if (DateUtils.isDateString(daoluyunshuzhengjieshuriqi, null) == true) {
+					organization.setDaoluyunshuzhengjieshuriqi(daoluyunshuzhengjieshuriqi);
+					organization.setImportUrl("icon_gou.png");
+				} else {
+					organization.setMsg(yyzzksdate + ",该道路运输证有效期(止),不是时间格式;");
+					errorStr += yyzzksdate + ",该道路运输证有效期(止),不是时间格式;";
+					organization.setImportUrl("icon_cha.png");
+					bb++;
+				}
+			}
+
+			//验证 道路运输证有效期(起) 不能大于 道路运输证有效期(止)
+			if (StringUtils.isNotBlank(daoluyunshuzhengkaishiriqi) && !daoluyunshuzhengkaishiriqi.equals("null") && StringUtils.isNotBlank(daoluyunshuzhengjieshuriqi) && !daoluyunshuzhengjieshuriqi.equals("null")) {
+				int a1 = daoluyunshuzhengkaishiriqi.length();
+				int b1 = daoluyunshuzhengjieshuriqi.length();
+				if (a1 == b1) {
+					if (a1 <= 10) {
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+						if (DateUtils.belongCalendar(format.parse(daoluyunshuzhengkaishiriqi), format.parse(daoluyunshuzhengjieshuriqi))) {
+							organization.setImportUrl("icon_gou.png");
+						} else {
+							organization.setMsg("道路运输证有效期(起),不能大于道路运输证有效期(止);");
+							errorStr += "道路运输证有效期(起),不能大于道路运输证有效期(止);";
+							organization.setImportUrl("icon_cha.png");
+							bb++;
+						}
+					}
+					if (a1 > 10) {
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						if (DateUtils.belongCalendar(format.parse(daoluyunshuzhengkaishiriqi), format.parse(daoluyunshuzhengjieshuriqi))) {
+							organization.setImportUrl("icon_gou.png");
+						} else {
+							organization.setMsg("道路运输证有效期(起),不能大于道路运输证有效期(止);");
+							errorStr += "道路运输证有效期(起),不能大于道路运输证有效期(止);";
+							organization.setImportUrl("icon_cha.png");
+							bb++;
+						}
+					}
+				} else {
+					organization.setMsg("道路运输证有效期(起)与道路运输证有效期(止),时间格式不一致;");
+					errorStr += "道路运输证有效期(起)与道路运输证有效期(止),时间格式不一致;";
+					organization.setImportUrl("icon_cha.png");
+					bb++;
+				}
+			}
+
+			//验证Excel导入时，是否存在重复数据
+			for (Organizations item : organizations) {
+				if (item.getDeptName().equals(deptName) && item.getJigoubianma().equals(jiGouBianMa) && item.getDaoluxukezhenghao().equals(daoluxukezhenghao)) {
+					organization.setImportUrl("icon_cha.png");
+					errorStr += organizations + "机构信息重复；";
+					organization.setMsg(organizations + "机构信息重复；");
+					bb++;
+				}
+			}
+
+			organizations.add(organization);
+		}
+
+		if (bb > 0) {
+			rs.setMsg(errorStr);
+			rs.setCode(500);
+			rs.setSuccess(false);
+			rs.setData(organizations);
+			return rs;
+		} else {
+			rs.setCode(200);
+			rs.setMsg("数据验证成功");
+			rs.setData(organizations);
+			rs.setSuccess(true);
+			return rs;
+		}
+	}
+
+	/**
+	 * 机构档案信息--确认导入
+	 *
+	 * @param
+	 */
+	@PostMapping("/driverDeptImportOK")
+	@ApiLog("机构档案信息--确认导入")
+	@ApiOperation(value = "机构档案信息--确认导入", notes = "organizations", position = 10)
+	public R driverDeptImportOk(@RequestParam(value = "organizations") String organizations,BladeUser user){
+		JSONArray json = JSONUtil.parseArray(organizations);
+		List<Map<String, Object>> lists = (List) json;
+		R rs = new R();
+		if (user == null) {
+			rs.setCode(401);
+			rs.setMsg("用户权限验证失败");
+			rs.setData(null);
+			rs.setSuccess(false);
+			return rs;
+		}
+		//时间默认格式
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		//验证数据成功条数
+		int aa = 0;
+		//验证数据错误条数
+		int bb = 0;
+		//全局变量，只要一条数据不对，就为false
+		boolean isDataValidity = true;
+		//错误信息
+		String errorStr = "";
+
+		if (lists.size() > 2000) {
+			errorStr += "导入数据超过2000条，无法导入！";
+			rs.setMsg(errorStr);
+			rs.setCode(400);
+			return rs;
+		}
+
+		for (Map<String, Object> a : lists) {
+			aa++;
+			Organizations organization = new Organizations();
+			SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+			organization.setDeptId(String.valueOf(a.get("deptId")).trim());
+			organization.setDeptName(String.valueOf(a.get("deptName")).trim());
+			organization.setJigoubianma(String.valueOf(a.get("jigoubianma")).trim());
+			organization.setYyzzksdate(String.valueOf(a.get("yyzzksdate")).trim());
+			organization.setYyzzjzdate(String.valueOf(a.get("yyzzjzdate")).trim());
+			organization.setJigouleixing(String.valueOf(a.get("jigouleixing")).trim());
+			organization.setDaoluxukezhenghao(String.valueOf(a.get("daoluxukezhenghao")).trim());
+			organization.setDaoluyunshuzhengkaishiriqi(String.valueOf(a.get("daoluyunshuzhengkaishiriqi")).trim());
+			organization.setDaoluyunshuzhengjieshuriqi(String.valueOf(a.get("daoluyunshuzhengjieshuriqi")).trim());
+			organization.setCreatetime(DateUtil.now());
+			organization.setCaozuoshijian(DateUtil.now());
+			if (user != null) {
+				organization.setCaozuoren(user.getUserName());
+				organization.setCaozuorenid(user.getUserId());
+			}
+			Organizations organizationsInfo= organizationService.getorganizationByOne(organization.getDeptId(), organization.getDeptName(), organization.getJigoubianma(), organization.getJigouleixing(), organization.getDaoluxukezhenghao());
+			if (organizationsInfo != null) {
+				organization.setId(organizationsInfo.getId());
+				isDataValidity = organizationService.updateById(organization);
+			} else {
+				String id = IdUtil.simpleUUID();
+				organization.setId(id);
+				isDataValidity = organizationService.insertOrganizationsSelective(organization);
+			}
+
+			Dept dept1 = bladeDeptService.getBaseMapper().selectById(organization.getDeptId());
+			if (dept1==null){
+				Dept dept = new Dept();
+				dept.setDeptName(organization.getDeptName());
+				dept.setFullName(organization.getDeptName());
+				dept.setId(Integer.parseInt(organization.getDeptId()));
+				bladeDeptService.save(dept);
+			}
+		}
+		if (isDataValidity == true) {
+			rs.setCode(200);
+			rs.setMsg("数据导入成功");
+			rs.setData(organizations);
+			return rs;
+		} else {
+			rs.setCode(500);
+			rs.setMsg("数据导入失败");
+			rs.setData(organizations);
+			return rs;
+		}
 	}
 }
