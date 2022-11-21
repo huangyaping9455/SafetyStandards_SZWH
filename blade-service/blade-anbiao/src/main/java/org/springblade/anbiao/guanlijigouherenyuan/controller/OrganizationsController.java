@@ -770,7 +770,7 @@ public class OrganizationsController extends BladeController {
 	 *
 	 * @param
 	 */
-	@PostMapping("/driverDeptImportOK")
+	@PostMapping("/deptImportOK")
 	@ApiLog("机构档案信息--确认导入")
 	@ApiOperation(value = "机构档案信息--确认导入", notes = "organizations", position = 10)
 	public R driverDeptImportOk(@RequestParam(value = "organizations") String organizations,BladeUser user){
