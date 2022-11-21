@@ -583,35 +583,50 @@ public class OrganizationsController extends BladeController {
 
 			//验证工商营业执照开始时间
 			String yyzzksdate = String.valueOf(a.get("工商营业执照开始时间")).trim();
-			if (StringUtils.isNotBlank(yyzzksdate) && !yyzzksdate.equals("null")) {
-				if (DateUtils.isDateString(yyzzksdate, null) == true) {
-					organization.setYyzzksdate(yyzzksdate);
-					organization.setImportUrl("icon_gou.png");
-				} else {
-					organization.setMsg(yyzzksdate + ",该工商营业执照开始时间,不是时间格式;");
-					errorStr += yyzzksdate + ",该工商营业执照开始时间,不是时间格式;";
-					organization.setImportUrl("icon_cha.png");
-					bb++;
+			if (yyzzksdate.length() >= 10){
+				yyzzksdate=yyzzksdate.substring(0,10);
+				if (StringUtils.isNotBlank(yyzzksdate) && !yyzzksdate.equals("null")) {
+					if (DateUtils.isDateString(yyzzksdate, null) == true) {
+						organization.setYyzzksdate(yyzzksdate);
+						organization.setImportUrl("icon_gou.png");
+					} else {
+						organization.setMsg(yyzzksdate + ",该工商营业执照开始时间,不是时间格式;");
+						errorStr += yyzzksdate + ",该工商营业执照开始时间,不是时间格式;";
+						organization.setImportUrl("icon_cha.png");
+						bb++;
+					}
 				}
+			}else {
+				organization.setMsg(yyzzksdate + ",该工商营业执照开始时间,不是时间格式;");
+				errorStr += yyzzksdate + ",该工商营业执照开始时间,不是时间格式;";
+				organization.setImportUrl("icon_cha.png");
+				bb++;
 			}
+
 
 			//验证工商营业执照结束时间
 			String yyzzjzdate = String.valueOf(a.get("工商营业执照结束时间")).trim();
-			if (StringUtils.isNotBlank(yyzzjzdate) && !yyzzjzdate.equals("null") ) {
-				if (DateUtils.isDateString(yyzzjzdate, null) == true) {
-					organization.setYyzzjzdate(yyzzjzdate);
-					organization.setImportUrl("icon_gou.png");
+			if (yyzzjzdate.length() >= 10 && !yyzzjzdate.equals("长期")) {
+				yyzzjzdate=yyzzjzdate.substring(0,10);
+				if (StringUtils.isNotBlank(yyzzjzdate) && !yyzzjzdate.equals("null")) {
+					if (DateUtils.isDateString(yyzzjzdate, null) == true) {
+						organization.setYyzzjzdate(yyzzjzdate);
+						organization.setImportUrl("icon_gou.png");
+					} else {
+						organization.setMsg(yyzzjzdate + ",该工商营业执照结束时间,不是时间格式;");
+						errorStr += yyzzjzdate + ",该工商营业执照结束时间,不是时间格式;";
+						organization.setImportUrl("icon_cha.png");
+						bb++;
+					}
 				}
-				else if (yyzzjzdate.equals("长期")){
-					organization.setYyzzjzdate(yyzzjzdate);
-					organization.setImportUrl("icon_gou.png");
-				}
-				else {
-					organization.setMsg(yyzzjzdate + ",该工商营业执照结束时间,不是时间格式;");
-					errorStr += yyzzjzdate + ",该工商营业执照结束时间,不是时间格式;";
-					organization.setImportUrl("icon_cha.png");
-					bb++;
-				}
+			}else if (yyzzjzdate.equals("长期")){
+				organization.setYyzzjzdate(yyzzjzdate);
+				organization.setImportUrl("icon_gou.png");
+			} else {
+				organization.setMsg(yyzzjzdate + ",该工商营业执照结束时间,不是时间格式;");
+				errorStr += yyzzjzdate + ",该工商营业执照结束时间,不是时间格式;";
+				organization.setImportUrl("icon_cha.png");
+				bb++;
 			}
 
 			//验证 工商营业执照开始时间 不能大于 工商营业执照结束时间
@@ -674,32 +689,47 @@ public class OrganizationsController extends BladeController {
 			}
 
 			//验证道路运输证有效期(起)
-			String daoluyunshuzhengkaishiriqi = String.valueOf(a.get("道路运输证有效期(起)")).trim();
-			if (StringUtils.isNotBlank(daoluyunshuzhengkaishiriqi) && !daoluyunshuzhengkaishiriqi.equals("null") ) {
-				if (DateUtils.isDateString(daoluyunshuzhengkaishiriqi, null) == true) {
-					organization.setDaoluyunshuzhengkaishiriqi(daoluyunshuzhengkaishiriqi);
-					organization.setImportUrl("icon_gou.png");
+			String daoluyunshuzhengkaishiriqi = String.valueOf(a.get("道路运输许可证有效期（起）")).trim();
+			if (daoluyunshuzhengkaishiriqi.length() >= 10) {
+				daoluyunshuzhengkaishiriqi=daoluyunshuzhengkaishiriqi.substring(0,10);
+				if (StringUtils.isNotBlank(daoluyunshuzhengkaishiriqi) && !daoluyunshuzhengkaishiriqi.equals("null")) {
+					if (DateUtils.isDateString(daoluyunshuzhengkaishiriqi, null) == true) {
+						organization.setDaoluyunshuzhengkaishiriqi(daoluyunshuzhengkaishiriqi);
+						organization.setImportUrl("icon_gou.png");
+					} else {
+						organization.setMsg(yyzzjzdate + ",该道路运输证有效期(起),不是时间格式;");
+						errorStr += yyzzjzdate + ",该道路运输证有效期(起),不是时间格式;";
+						organization.setImportUrl("icon_cha.png");
+						bb++;
+					}
 				}
-				else {
-					organization.setMsg(yyzzjzdate + ",该道路运输证有效期(起),不是时间格式;");
-					errorStr += yyzzjzdate + ",该道路运输证有效期(起),不是时间格式;";
-					organization.setImportUrl("icon_cha.png");
-					bb++;
-				}
+			}else {
+				organization.setMsg(yyzzjzdate + ",该道路运输证有效期(起),不是时间格式;");
+				errorStr += yyzzjzdate + ",该道路运输证有效期(起),不是时间格式;";
+				organization.setImportUrl("icon_cha.png");
+				bb++;
 			}
 
 			//验证道路运输证有效期(止)
-			String daoluyunshuzhengjieshuriqi = String.valueOf(a.get("道路运输证有效期(止)")).trim();
-			if (StringUtils.isNotBlank(daoluyunshuzhengjieshuriqi) && !daoluyunshuzhengjieshuriqi.equals("null")) {
-				if (DateUtils.isDateString(daoluyunshuzhengjieshuriqi, null) == true) {
-					organization.setDaoluyunshuzhengjieshuriqi(daoluyunshuzhengjieshuriqi);
-					organization.setImportUrl("icon_gou.png");
-				} else {
-					organization.setMsg(yyzzksdate + ",该道路运输证有效期(止),不是时间格式;");
-					errorStr += yyzzksdate + ",该道路运输证有效期(止),不是时间格式;";
-					organization.setImportUrl("icon_cha.png");
-					bb++;
+			String daoluyunshuzhengjieshuriqi = String.valueOf(a.get("道路运输许可证有效期（止）")).trim();
+			if (daoluyunshuzhengjieshuriqi.length() >= 10) {
+				daoluyunshuzhengjieshuriqi=daoluyunshuzhengjieshuriqi.substring(0,10);
+				if (StringUtils.isNotBlank(daoluyunshuzhengjieshuriqi) && !daoluyunshuzhengjieshuriqi.equals("null")) {
+					if (DateUtils.isDateString(daoluyunshuzhengjieshuriqi, null) == true) {
+						organization.setDaoluyunshuzhengjieshuriqi(daoluyunshuzhengjieshuriqi);
+						organization.setImportUrl("icon_gou.png");
+					} else {
+						organization.setMsg(yyzzksdate + ",该道路运输证有效期(止),不是时间格式;");
+						errorStr += yyzzksdate + ",该道路运输证有效期(止),不是时间格式;";
+						organization.setImportUrl("icon_cha.png");
+						bb++;
+					}
 				}
+			} else {
+				organization.setMsg(yyzzksdate + ",该道路运输证有效期(止),不是时间格式;");
+				errorStr += yyzzksdate + ",该道路运输证有效期(止),不是时间格式;";
+				organization.setImportUrl("icon_cha.png");
+				bb++;
 			}
 
 			//验证 道路运输证有效期(起) 不能大于 道路运输证有效期(止)
@@ -843,6 +873,7 @@ public class OrganizationsController extends BladeController {
 		if (isDataValidity == true) {
 			rs.setCode(200);
 			rs.setMsg("数据导入成功");
+			rs.setSuccess(true);
 			rs.setData(organizations);
 			return rs;
 		} else {
