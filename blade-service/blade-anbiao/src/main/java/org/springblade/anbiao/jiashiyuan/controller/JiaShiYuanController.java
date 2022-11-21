@@ -1875,6 +1875,7 @@ public class JiaShiYuanController {
 		List<JiaShiYuan> jiaShiYuanList = iJiaShiYuanService.getJiaShiYuanByDept(deptId);
 		if (jiaShiYuanList != null) {
 			rs.setCode(200);
+			rs.setSuccess(true);
 			rs.setData(jiaShiYuanList);
 			rs.setMsg("获取成功");
 		} else {
@@ -2142,6 +2143,7 @@ public class JiaShiYuanController {
 		if (isDataValidity == true) {
 			rs.setCode(200);
 			rs.setMsg("数据导入成功");
+			rs.setSuccess(true);
 			rs.setData(drivers);
 			return rs;
 		} else {
