@@ -527,7 +527,6 @@ public class OrganizationsController extends BladeController {
 			e.printStackTrace();
 		}
 
-
 		//时间默认格式
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		//验证数据成功条数
@@ -767,6 +766,13 @@ public class OrganizationsController extends BladeController {
 				}
 			}
 
+			String shangjidanwei = String.valueOf(a.get("上级单位")).trim();
+			QueryWrapper<Organizations> organizationsQueryWrapper = new QueryWrapper<>();
+			organizationsQueryWrapper.lambda().eq(Organizations::getDeptName,shangjidanwei);
+			Organizations organizations1 = organizationService.getBaseMapper().selectOne(organizationsQueryWrapper);
+			String deptId = organizations1.getDeptId();
+			organization.setParentId(deptId);
+
 			//验证Excel导入时，是否存在重复数据
 			for (Organizations item : organizations) {
 				if (item.getDeptName().equals(deptName) && item.getJigoubianma().equals(jiGouBianMa) && item.getDaoluxukezhenghao().equals(daoluxukezhenghao)) {
@@ -867,6 +873,8 @@ public class OrganizationsController extends BladeController {
 				dept.setDeptName(organization.getDeptName());
 				dept.setFullName(organization.getDeptName());
 				dept.setId(Integer.parseInt(organization.getDeptId()));
+				String treeCode=iSysClient.selectByTreeCode(organization.getParentId()).getTreeCode();
+				dept.setTreeCode(treeCode);
 				bladeDeptService.save(dept);
 			}
 		}
