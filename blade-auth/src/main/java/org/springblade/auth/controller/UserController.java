@@ -70,17 +70,22 @@ public class UserController {
 							//设置jwt参数
 							Map<String, String> param = new HashMap<>(16);
 							param.put(SecureUtil.USER_ID, Func.toStr(user.getId()));
+							param.put(SecureUtil.ROLE_ID, user.getRoleId());
+							param.put(SecureUtil.TENANT_CODE, user.getTenantCode());
 							param.put(SecureUtil.ACCOUNT, user.getAccount());
 							param.put(SecureUtil.USER_NAME, user.getName());
+							param.put(SecureUtil.ROLE_NAME, user.getPostId());
 							//拼装accessToken
 							String accessToken = SecureUtil.createJWT(param, "audience", "issuser", true);
 
 							info.setAccount(user.getAccount());
-							info.setUserName(user.getName());
-							info.setOpenid(user.getOpenid());
+							info.setPassWord(DigestUtil.encrypt(enterpriseUser.getPassword()));
+							info.setUserName(user.getRealName());
 							info.setAuthority("administrator");
+							info.setOpenid(user.getOpenid());
 							info.setAccessToken(accessToken);
 							info.setTokenType(SecureUtil.BEARER);
+							info.setPostId(user.getPostId());
 							Dept dept=sysClient.selectByJGBM("机构",user.getDeptId().toString());
 							if(dept == null){
 								rs.setMsg("该账号岗位机构不存在!");
@@ -90,8 +95,10 @@ public class UserController {
 							info.setDeptId(dept.getId().toString());
 							info.setDeptName(dept.getDeptName());
 							info.setUserId(user.getId().toString());
+							info.setPostName(sysClient.getDept(Integer.parseInt(user.getPostId())).getDeptName());
 							//设置token过期时间
 							info.setExpiresIn(SecureUtil.getExpire());
+
 
 							rs.setMsg("登录成功!");
 							rs.setCode(200);
@@ -121,15 +128,20 @@ public class UserController {
 								//设置jwt参数
 								Map<String, String> param = new HashMap<>(16);
 								param.put(SecureUtil.USER_ID, Func.toStr(user.getId()));
+								param.put(SecureUtil.ROLE_ID, user.getRoleId());
+								param.put(SecureUtil.TENANT_CODE, user.getTenantCode());
 								param.put(SecureUtil.ACCOUNT, user.getAccount());
-								param.put(SecureUtil.USER_NAME, user.getName());
+								param.put(SecureUtil.USER_NAME, user.getRealName());
+								param.put(SecureUtil.ROLE_NAME, user.getPostId());
 								//拼装accessToken
 								String accessToken = SecureUtil.createJWT(param, "audience", "issuser", true);
 								info.setAccount(user.getAccount());
-								info.setUserName(user.getName());
+								info.setPassWord(user.getPassword());
+								info.setUserName(user.getRealName());
 								info.setAuthority("administrator");
 								info.setAccessToken(accessToken);
 								info.setTokenType(SecureUtil.BEARER);
+								info.setPostId(user.getPostId());
 								Dept dept=sysClient.selectByJGBM("机构",user.getDeptId().toString());
 								if(dept == null){
 									rs.setMsg("该账号岗位机构不存在!");
@@ -139,6 +151,7 @@ public class UserController {
 								info.setDeptId(dept.getId().toString());
 								info.setDeptName(dept.getDeptName());
 								info.setUserId(user.getId().toString());
+								info.setPostName(sysClient.getDept(Integer.parseInt(user.getPostId())).getDeptName());
 								info.setOpenid(openid);
 								//设置token过期时间
 								info.setExpiresIn(SecureUtil.getExpire());
