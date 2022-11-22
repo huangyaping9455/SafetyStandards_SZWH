@@ -75,5 +75,9 @@ public class AnbiaoAnquanhuiyiSource implements Serializable {
     @TableField("deptid")
     private Integer deptid;
 
+	@ApiModelProperty(value = "企业名称")
+	@TableField(exist = false)
+	private String deptname;
+
 
 }

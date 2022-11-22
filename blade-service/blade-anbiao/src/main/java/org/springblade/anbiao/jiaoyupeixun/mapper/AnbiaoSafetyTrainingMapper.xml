@@ -49,13 +49,13 @@
             and deptname like '%${deptname}%'
         </if>
         <if test="astTrainingTopic != null and astTrainingTopic != '' ">
-            and astTrainingTopic like '%${astTrainingTopic}%'
+            and ast_training_topic like '%${astTrainingTopic}%'
         </if>
         <if test="astTrainingCategory != null and astTrainingCategory != '' ">
-            and astTrainingCategory = #{astTrainingCategory}
+            and ast_training_category = #{astTrainingCategory}
         </if>
         <if test="aadApIds != null and aadApIds != '' ">
-            and c.aad_ap_ids = #{aadApIds}
+            and aad_ap_ids = #{aadApIds}
         </if>
     </sql>
 

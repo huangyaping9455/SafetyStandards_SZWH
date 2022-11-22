@@ -1358,6 +1358,12 @@ public class VehicleController {
 			rs.setCode(500);
 			return rs;
 		}
+		if(readAll.size() < 1){
+			errorStr+="无数据导入，该excel无数据！";
+			rs.setMsg(errorStr);
+			rs.setCode(500);
+			return rs;
+		}
 
 		List<Vehicle> vehicles=new ArrayList<Vehicle>();
 		for(Map<String,Object> a:readAll){
@@ -1700,11 +1706,13 @@ public class VehicleController {
 			rs.setCode(200);
 			rs.setMsg("数据导入成功");
 			rs.setData(vehicles);
+			rs.setSuccess(true);
 			return rs;
 		} else {
 			rs.setCode(500);
 			rs.setMsg("数据导入失败");
 			rs.setData(vehicles);
+			rs.setSuccess(false);
 			return rs;
 		}
 	}

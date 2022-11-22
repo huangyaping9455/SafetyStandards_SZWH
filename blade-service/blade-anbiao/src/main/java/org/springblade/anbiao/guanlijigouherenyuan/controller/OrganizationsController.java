@@ -37,6 +37,7 @@ import org.springblade.core.tool.utils.DigestUtil;
 import org.springblade.core.tool.utils.StringUtil;
 import org.springblade.system.entity.Dept;
 import org.springblade.system.entity.Dict;
+import org.springblade.system.feign.IDictClient;
 import org.springblade.system.feign.ISysClient;
 import org.springblade.system.user.entity.User;
 import org.springblade.system.user.feign.IUserClient;
@@ -67,6 +68,7 @@ public class OrganizationsController extends BladeController {
 	private IFileUploadClient fileUploadClient;
 	private IVehicleService iVehicleService;
 	private IBladeDeptService bladeDeptService;
+	private IDictClient iDictClient;
 
 	/**
 	 * 详情
@@ -556,6 +558,29 @@ public class OrganizationsController extends BladeController {
 			int deptids=organizationService.selectMaxId()+c;
 			organization.setDeptId(Integer.toString(deptids));
 
+			//验证上级单位名称
+			String shangjidanwei = String.valueOf(a.get("上级单位")).trim();
+			if (StringUtils.isBlank(shangjidanwei) && !shangjidanwei.equals("null")) {
+				organization.setMsg("上级单位不能为空;");
+				organization.setImportUrl("icon_cha.png");
+				errorStr += "上级单位不能为空;";
+				bb++;
+			} else {
+				QueryWrapper<Organizations> organizationsQueryWrapper = new QueryWrapper<>();
+				organizationsQueryWrapper.lambda().eq(Organizations::getDeptName,shangjidanwei);
+				organizationsQueryWrapper.lambda().eq(Organizations::getIsdelete,0);
+				Organizations organizations1 = organizationService.getBaseMapper().selectOne(organizationsQueryWrapper);
+				if(organizations1 == null){
+					organization.setMsg(shangjidanwei+",该上级单位不存在;");
+					organization.setImportUrl("icon_cha.png");
+					errorStr += shangjidanwei+",该上级单位不存在;";
+					bb++;
+				}else{
+					organization.setParentId(organizations1.getDeptId());
+					organization.setImportUrl("icon_gou.png");
+				}
+			}
+
 			//验证单位名称不能为空
 			String deptName = String.valueOf(a.get("单位名称")).trim();
 			if (StringUtils.isBlank(deptName) && !deptName.equals("null")) {
@@ -595,13 +620,7 @@ public class OrganizationsController extends BladeController {
 						bb++;
 					}
 				}
-			}else {
-				organization.setMsg(yyzzksdate + ",该工商营业执照开始时间,不是时间格式;");
-				errorStr += yyzzksdate + ",该工商营业执照开始时间,不是时间格式;";
-				organization.setImportUrl("icon_cha.png");
-				bb++;
 			}
-
 
 			//验证工商营业执照结束时间
 			String yyzzjzdate = String.valueOf(a.get("工商营业执照结束时间")).trim();
@@ -621,11 +640,6 @@ public class OrganizationsController extends BladeController {
 			}else if (yyzzjzdate.equals("长期")){
 				organization.setYyzzjzdate(yyzzjzdate);
 				organization.setImportUrl("icon_gou.png");
-			} else {
-				organization.setMsg(yyzzjzdate + ",该工商营业执照结束时间,不是时间格式;");
-				errorStr += yyzzjzdate + ",该工商营业执照结束时间,不是时间格式;";
-				organization.setImportUrl("icon_cha.png");
-				bb++;
 			}
 
 			//验证 工商营业执照开始时间 不能大于 工商营业执照结束时间
@@ -671,8 +685,24 @@ public class OrganizationsController extends BladeController {
 				errorStr += "机构类型不能为空;";
 				bb++;
 			} else {
-				organization.setJigouleixing(jigouleixing);
-				organization.setImportUrl("icon_gou.png");
+				boolean ss = false;
+				List<Dict> dictVOList = iDictClient.getDictByCode("jigouleixing",null);
+				for(int i= 0;i<dictVOList.size();i++){
+					ss = dictVOList.get(i).getDictValue().equals(jigouleixing);
+					if(ss == true){
+						break;
+					}
+				}
+				if(ss == true){
+					dictVOList = iDictClient.getDictByCode("jigouleixing",jigouleixing);
+					organization.setImportUrl("icon_gou.png");
+					organization.setJigouleixing(dictVOList.get(0).getDictKey());
+				}else{
+					organization.setImportUrl("icon_cha.png");
+					errorStr += jigouleixing+",机构类型错误,请校验”;";
+					organization.setMsg(jigouleixing+",机构类型错误,请校验;");
+					bb++;
+				}
 			}
 
 			//验证道路运输许可证号不能为空
@@ -696,17 +726,12 @@ public class OrganizationsController extends BladeController {
 						organization.setDaoluyunshuzhengkaishiriqi(daoluyunshuzhengkaishiriqi);
 						organization.setImportUrl("icon_gou.png");
 					} else {
-						organization.setMsg(yyzzjzdate + ",该道路运输证有效期(起),不是时间格式;");
-						errorStr += yyzzjzdate + ",该道路运输证有效期(起),不是时间格式;";
+						organization.setMsg(daoluyunshuzhengkaishiriqi + ",该道路运输证有效期(起),不是时间格式;");
+						errorStr += daoluyunshuzhengkaishiriqi + ",该道路运输证有效期(起),不是时间格式;";
 						organization.setImportUrl("icon_cha.png");
 						bb++;
 					}
 				}
-			}else {
-				organization.setMsg(yyzzjzdate + ",该道路运输证有效期(起),不是时间格式;");
-				errorStr += yyzzjzdate + ",该道路运输证有效期(起),不是时间格式;";
-				organization.setImportUrl("icon_cha.png");
-				bb++;
 			}
 
 			//验证道路运输证有效期(止)
@@ -718,17 +743,12 @@ public class OrganizationsController extends BladeController {
 						organization.setDaoluyunshuzhengjieshuriqi(daoluyunshuzhengjieshuriqi);
 						organization.setImportUrl("icon_gou.png");
 					} else {
-						organization.setMsg(yyzzksdate + ",该道路运输证有效期(止),不是时间格式;");
-						errorStr += yyzzksdate + ",该道路运输证有效期(止),不是时间格式;";
+						organization.setMsg(daoluyunshuzhengjieshuriqi + ",该道路运输证有效期(止),不是时间格式;");
+						errorStr += daoluyunshuzhengjieshuriqi + ",该道路运输证有效期(止),不是时间格式;";
 						organization.setImportUrl("icon_cha.png");
 						bb++;
 					}
 				}
-			} else {
-				organization.setMsg(yyzzksdate + ",该道路运输证有效期(止),不是时间格式;");
-				errorStr += yyzzksdate + ",该道路运输证有效期(止),不是时间格式;";
-				organization.setImportUrl("icon_cha.png");
-				bb++;
 			}
 
 			//验证 道路运输证有效期(起) 不能大于 道路运输证有效期(止)
@@ -766,12 +786,80 @@ public class OrganizationsController extends BladeController {
 				}
 			}
 
-			String shangjidanwei = String.valueOf(a.get("上级单位")).trim();
-			QueryWrapper<Organizations> organizationsQueryWrapper = new QueryWrapper<>();
-			organizationsQueryWrapper.lambda().eq(Organizations::getDeptName,shangjidanwei);
-			Organizations organizations1 = organizationService.getBaseMapper().selectOne(organizationsQueryWrapper);
-			String deptId = organizations1.getDeptId();
-			organization.setParentId(deptId);
+			//验证经营许可证号不能为空
+			String jingyingxukezhenghao = String.valueOf(a.get("经营许可证号")).trim();
+			if (StringUtils.isNotBlank(jingyingxukezhenghao) && !jingyingxukezhenghao.equals("null")) {
+				organization.setJingyingxukezhengbianma(jingyingxukezhenghao);
+			}
+
+			//验证经营许可证有效期(起)
+			String jingyingxukezhengkaishiriqi = String.valueOf(a.get("经营许可证有效期（起）")).trim();
+			if (jingyingxukezhengkaishiriqi.length() >= 10) {
+				jingyingxukezhengkaishiriqi=jingyingxukezhengkaishiriqi.substring(0,10);
+				if (StringUtils.isNotBlank(jingyingxukezhengkaishiriqi) && !jingyingxukezhengkaishiriqi.equals("null")) {
+					if (DateUtils.isDateString(jingyingxukezhengkaishiriqi, null) == true) {
+						organization.setJingyingxukezhengchulingriqi(jingyingxukezhengkaishiriqi);
+						organization.setImportUrl("icon_gou.png");
+					} else {
+						organization.setMsg(jingyingxukezhengkaishiriqi + ",该经营许可证有效期（起）,不是时间格式;");
+						errorStr += jingyingxukezhengkaishiriqi + ",该经营许可证有效期（起）,不是时间格式;";
+						organization.setImportUrl("icon_cha.png");
+						bb++;
+					}
+				}
+			}
+
+			//验证经营许可证有效期(止)
+			String jingyingxukezhengjieshuriqi = String.valueOf(a.get("经营许可证有效期（止）")).trim();
+			if (jingyingxukezhengjieshuriqi.length() >= 10) {
+				jingyingxukezhengjieshuriqi=jingyingxukezhengjieshuriqi.substring(0,10);
+				if (StringUtils.isNotBlank(jingyingxukezhengjieshuriqi) && !jingyingxukezhengjieshuriqi.equals("null")) {
+					if (DateUtils.isDateString(jingyingxukezhengjieshuriqi, null) == true) {
+						organization.setJingyingxukezhengyouxiaoqi(jingyingxukezhengjieshuriqi);
+						organization.setImportUrl("icon_gou.png");
+					} else {
+						organization.setMsg(jingyingxukezhengjieshuriqi + ",该经营许可证有效期（止）,不是时间格式;");
+						errorStr += jingyingxukezhengjieshuriqi + ",该经营许可证有效期（止）,不是时间格式;";
+						organization.setImportUrl("icon_cha.png");
+						bb++;
+					}
+				}
+			}
+
+			//验证 经营许可证有效期(起) 不能大于 经营许可证有效期(止)
+			if (StringUtils.isNotBlank(jingyingxukezhengkaishiriqi) && !jingyingxukezhengkaishiriqi.equals("null") && StringUtils.isNotBlank(jingyingxukezhengjieshuriqi) && !jingyingxukezhengjieshuriqi.equals("null")) {
+				int a1 = jingyingxukezhengkaishiriqi.length();
+				int b1 = jingyingxukezhengjieshuriqi.length();
+				if (a1 == b1) {
+					if (a1 <= 10) {
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+						if (DateUtils.belongCalendar(format.parse(jingyingxukezhengkaishiriqi), format.parse(jingyingxukezhengjieshuriqi))) {
+							organization.setImportUrl("icon_gou.png");
+						} else {
+							organization.setMsg("经营许可证有效期（起）,不能大于经营许可证有效期（止）;");
+							errorStr += "经营许可证有效期（起）,不能大于经营许可证有效期（止）;";
+							organization.setImportUrl("icon_cha.png");
+							bb++;
+						}
+					}
+					if (a1 > 10) {
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						if (DateUtils.belongCalendar(format.parse(jingyingxukezhengkaishiriqi), format.parse(jingyingxukezhengjieshuriqi))) {
+							organization.setImportUrl("icon_gou.png");
+						} else {
+							organization.setMsg("经营许可证有效期（起）,不能大于经营许可证有效期（止）;");
+							errorStr += "经营许可证有效期（起）,不能大于经营许可证有效期（止）;";
+							organization.setImportUrl("icon_cha.png");
+							bb++;
+						}
+					}
+				} else {
+					organization.setMsg("经营许可证有效期（起）与经营许可证有效期（止）,时间格式不一致;");
+					errorStr += "经营许可证有效期（起）与经营许可证有效期（止）,时间格式不一致;";
+					organization.setImportUrl("icon_cha.png");
+					bb++;
+				}
+			}
 
 			//验证Excel导入时，是否存在重复数据
 			for (Organizations item : organizations) {
@@ -782,7 +870,6 @@ public class OrganizationsController extends BladeController {
 					bb++;
 				}
 			}
-
 			organizations.add(organization);
 		}
 
@@ -843,6 +930,7 @@ public class OrganizationsController extends BladeController {
 			Organizations organization = new Organizations();
 			SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
 			organization.setDeptId(String.valueOf(a.get("deptId")).trim());
+			organization.setParentId(String.valueOf(a.get("parentId")).trim());
 			organization.setDeptName(String.valueOf(a.get("deptName")).trim());
 			organization.setJigoubianma(String.valueOf(a.get("jigoubianma")).trim());
 			organization.setYyzzksdate(String.valueOf(a.get("yyzzksdate")).trim());
@@ -851,6 +939,9 @@ public class OrganizationsController extends BladeController {
 			organization.setDaoluxukezhenghao(String.valueOf(a.get("daoluxukezhenghao")).trim());
 			organization.setDaoluyunshuzhengkaishiriqi(String.valueOf(a.get("daoluyunshuzhengkaishiriqi")).trim());
 			organization.setDaoluyunshuzhengjieshuriqi(String.valueOf(a.get("daoluyunshuzhengjieshuriqi")).trim());
+			organization.setJingyingxukezhengbianma(String.valueOf(a.get("jingyingxukezhengbianma")).trim());
+			organization.setJingyingxukezhengchulingriqi(String.valueOf(a.get("jingyingxukezhengchulingriqi")).trim());
+			organization.setJingyingxukezhengyouxiaoqi(String.valueOf(a.get("jingyingxukezhengyouxiaoqi")).trim());
 			organization.setCreatetime(DateUtil.now());
 			organization.setCaozuoshijian(DateUtil.now());
 			if (user != null) {
@@ -873,6 +964,8 @@ public class OrganizationsController extends BladeController {
 				dept.setDeptName(organization.getDeptName());
 				dept.setFullName(organization.getDeptName());
 				dept.setId(Integer.parseInt(organization.getDeptId()));
+				dept.setExtendType("机构");
+				dept.setParentId(Integer.parseInt(organization.getParentId()));
 				String treeCode=iSysClient.selectByTreeCode(organization.getParentId()).getTreeCode();
 				dept.setTreeCode(treeCode);
 				bladeDeptService.save(dept);
