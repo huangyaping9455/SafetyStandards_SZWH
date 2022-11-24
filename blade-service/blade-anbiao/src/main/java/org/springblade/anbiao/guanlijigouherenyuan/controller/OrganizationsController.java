@@ -560,7 +560,7 @@ public class OrganizationsController extends BladeController {
 
 			//验证上级单位名称
 			String shangjidanwei = String.valueOf(a.get("上级单位")).trim();
-			if (StringUtils.isBlank(shangjidanwei) && !shangjidanwei.equals("null")) {
+			if (StringUtils.isBlank(shangjidanwei) && shangjidanwei.equals("null")) {
 				organization.setMsg("上级单位不能为空;");
 				organization.setImportUrl("icon_cha.png");
 				errorStr += "上级单位不能为空;";
@@ -621,6 +621,11 @@ public class OrganizationsController extends BladeController {
 						bb++;
 					}
 				}
+			}else {
+				organization.setMsg(yyzzksdate + ",该工商营业执照开始时间,不是时间格式;");
+				errorStr += yyzzksdate + ",该工商营业执照开始时间,不是时间格式;";
+				organization.setImportUrl("icon_cha.png");
+				bb++;
 			}
 
 			//验证工商营业执照结束时间
@@ -641,6 +646,11 @@ public class OrganizationsController extends BladeController {
 			}else if (yyzzjzdate.equals("长期")){
 				organization.setYyzzjzdate(yyzzjzdate);
 				organization.setImportUrl("icon_gou.png");
+			}else {
+				organization.setMsg(yyzzjzdate + ",该工商营业执照结束时间,不是时间格式;");
+				errorStr += yyzzjzdate + ",该工商营业执照结束时间,不是时间格式;";
+				organization.setImportUrl("icon_cha.png");
+				bb++;
 			}
 
 			//验证 工商营业执照开始时间 不能大于 工商营业执照结束时间
@@ -733,6 +743,11 @@ public class OrganizationsController extends BladeController {
 						bb++;
 					}
 				}
+			}else {
+				organization.setMsg(daoluyunshuzhengkaishiriqi + ",该道路运输证有效期(起),不是时间格式;");
+				errorStr += daoluyunshuzhengkaishiriqi + ",该道路运输证有效期(起),不是时间格式;";
+				organization.setImportUrl("icon_cha.png");
+				bb++;
 			}
 
 			//验证道路运输证有效期(止)
@@ -750,6 +765,11 @@ public class OrganizationsController extends BladeController {
 						bb++;
 					}
 				}
+			}else {
+				organization.setMsg(daoluyunshuzhengjieshuriqi + ",该道路运输证有效期(止),不是时间格式;");
+				errorStr += daoluyunshuzhengjieshuriqi + ",该道路运输证有效期(止),不是时间格式;";
+				organization.setImportUrl("icon_cha.png");
+				bb++;
 			}
 
 			//验证 道路运输证有效期(起) 不能大于 道路运输证有效期(止)
@@ -808,6 +828,11 @@ public class OrganizationsController extends BladeController {
 						bb++;
 					}
 				}
+			}else {
+				organization.setMsg(jingyingxukezhengkaishiriqi + ",该经营许可证有效期（起）,不是时间格式;");
+				errorStr += jingyingxukezhengkaishiriqi + ",该经营许可证有效期（起）,不是时间格式;";
+				organization.setImportUrl("icon_cha.png");
+				bb++;
 			}
 
 			//验证经营许可证有效期(止)
@@ -825,6 +850,11 @@ public class OrganizationsController extends BladeController {
 						bb++;
 					}
 				}
+			}else {
+				organization.setMsg(jingyingxukezhengjieshuriqi + ",该经营许可证有效期（止）,不是时间格式;");
+				errorStr += jingyingxukezhengjieshuriqi + ",该经营许可证有效期（止）,不是时间格式;";
+				organization.setImportUrl("icon_cha.png");
+				bb++;
 			}
 
 			//验证 经营许可证有效期(起) 不能大于 经营许可证有效期(止)

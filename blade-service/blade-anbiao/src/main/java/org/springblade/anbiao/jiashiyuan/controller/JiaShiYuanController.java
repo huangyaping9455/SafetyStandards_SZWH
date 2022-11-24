@@ -274,7 +274,17 @@ public class JiaShiYuanController {
 			return r;
 		} else {
 			if (RegexUtils.checkMobile(jiaShiYuan.getShoujihaoma())) {
-				jiaShiYuan.setShoujihaoma(jiaShiYuan.getShoujihaoma());
+				QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper1 = new QueryWrapper<JiaShiYuan>();
+				jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getShoujihaoma,jiaShiYuan.getShoujihaoma());
+				JiaShiYuan jiaShiYuan1 = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper1);
+				if (jiaShiYuan1!=null){
+					r.setMsg("该手机号已存在");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}else {
+					jiaShiYuan.setShoujihaoma(jiaShiYuan.getShoujihaoma());
+				}
 			} else {
 				r.setMsg("该手机号码不合法;");
 				r.setCode(500);

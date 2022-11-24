@@ -178,7 +178,7 @@
                         (SELECT TREE_CODE FROM blade_dept WHERE id = #{param1}),
                         (
                         SELECT CONCAT(
-                                    CASE  WHEN LENGTH ((SELECT max(id)+1 FROM blade_dept)) = 1 THEN '00000'
+                                    CASE        WHEN LENGTH ((SELECT max(id)+1 FROM blade_dept)) = 1 THEN '00000'
                                                 WHEN LENGTH ((SELECT max(id)+1 FROM blade_dept)) = 2 THEN '0000'
                                                 WHEN LENGTH ((SELECT max(id)+1 FROM blade_dept)) = 3 THEN '000'
                                                 WHEN LENGTH ((SELECT max(id)+1 FROM blade_dept)) = 4 THEN '00'

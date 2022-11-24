@@ -185,5 +185,16 @@ public class Personnel implements Serializable {
 	private String gwzz;
 
 
+	/**
+	 * 导入错误信息
+	 */
+	@ApiModelProperty(value = "导入错误信息")
+	@TableField(exist = false)
+	private String Msg;
+
+	@ApiModelProperty(value = "导入错误信息图标")
+	@TableField(exist = false)
+	private String importUrl;
+
 
 }
