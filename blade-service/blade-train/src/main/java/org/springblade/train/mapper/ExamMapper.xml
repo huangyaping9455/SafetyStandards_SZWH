@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.train.mapper.ExamMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.train.entity.WaitExamModel">
+        <id column="id" property="id" jdbcType="INTEGER" />
+    	<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="studyRate" property="studyRate" jdbcType="INTEGER" />
+		<result column="score" property="score" jdbcType="INTEGER" />
+		<result column="exam_duration" property="examDuration" jdbcType="INTEGER" />
+		<result column="total_scores" property="totalScores" jdbcType="INTEGER" />
+		<result column="course_status" property="courseStatus" jdbcType="INTEGER" />
+		<result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="now_time" property="nowTime" jdbcType="TIMESTAMP" />
+		<result column="max_score" property="maxScore" jdbcType="INTEGER" />
+		<result column="full_face_photo" property="fullFacePhoto" jdbcType="VARCHAR" />
+		<result column="student_id" property="studentId" jdbcType="INTEGER" />
+		<result column="source_id" property="sourceId" jdbcType="INTEGER" />
+		<result column="student_name" property="studentName" jdbcType="VARCHAR" />
+		<result column="question_count" property="questionCount" jdbcType="INTEGER" />
+		<result column="verification" property="verification" jdbcType="INTEGER" />
+	</resultMap>
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="ExamMap" type="org.springblade.train.entity.ExamQuestionModel">
+		<id column="id" property="id"/>
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="question_id" property="questionId" jdbcType="INTEGER"/>
+		<result column="question_content" property="questionContent" jdbcType="VARCHAR" />
+		<result column="category" property="category"  jdbcType="INTEGER" />
+		<result column="analysis" property="analysis" jdbcType="VARCHAR" />
+		<result column="subject_type_id" property="subjectTypeId"  jdbcType="INTEGER" />
+		<result column="subject_type_name" property="subjectTypeName" jdbcType="VARCHAR" />
+		<result column="answer_id" property="answerId" jdbcType="INTEGER" />
+		<result column="order_number" property="orderNumber" jdbcType="INTEGER"  />
+		<result column="answer_content" property="answerContent" jdbcType="VARCHAR" />
+		<result column="checked" property="checked" jdbcType="INTEGER" />
+		<result column="image_urls" property="imageUrls" jdbcType="VARCHAR"/>
+		<result column="video_urls" property="videoUrls" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="CourseTestRecordMap" type="org.springblade.train.entity.CourseTestRecord">
+		<id column="id" property="id"/>
+		<result column="duration" property="duration" jdbcType="INTEGER"/>
+		<result column="course_name" property="courseName" jdbcType="VARCHAR" />
+		<result column="course_id" property="courseId"  jdbcType="INTEGER" />
+		<result column="student_id" property="studentId"  jdbcType="INTEGER" />
+		<result column="student_name" property="studentName" jdbcType="VARCHAR" />
+		<result column="score" property="score" jdbcType="INTEGER" />
+		<result column="result" property="result" jdbcType="INTEGER"  />
+		<result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<!-- 下拉框 -->
+	<resultMap id="ApplyStudentMap" type="org.springblade.train.entity.StudentApplyModel">
+		<result column="student_id" property="studentId" jdbcType="INTEGER" />
+		<result column="student_name" property="studentName" jdbcType="VARCHAR" />
+		<result column="apply_time" property="applyTime" jdbcType="TIMESTAMP" />
+		<result column="exam_begin_time" property="examBeginTime" jdbcType="TIMESTAMP" />
+		<result column="exam_end_time" property="examEndTime" jdbcType="TIMESTAMP" />
+		<result column="score" property="score" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+	</resultMap>
+
+	<!-- 学员课程信息 -->
+	<resultMap id="CourseStudentMap" type="org.springblade.train.entity.CourseStudent">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="student_id" property="studentId" jdbcType="INTEGER" />
+		<result column="course_id" property="courseId" jdbcType="INTEGER" />
+		<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+		<result column="pay_flag" property="payFlag" jdbcType="INTEGER" />
+		<result column="course_status" property="courseStatus" jdbcType="INTEGER" />
+	</resultMap>
+
+	<!-- 线下考试管理信息列表 -->
+	<resultMap id="StudentExamMap" type="org.springblade.train.entity.StudentExamModel">
+		<result column="student_id" property="studentId" jdbcType="INTEGER" />
+		<result column="student_name" property="studentName" jdbcType="VARCHAR" />
+		<result column="apply_time" property="applyTime" jdbcType="TIMESTAMP" />
+		<result column="exam_begin_time" property="examBeginTime" jdbcType="TIMESTAMP" />
+		<result column="exam_end_time" property="examEndTime" jdbcType="TIMESTAMP" />
+		<result column="score" property="score" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="sex" property="sex" jdbcType="INTEGER" />
+		<result column="cellphone" property="cellphone" jdbcType="VARCHAR" />
+		<result column="identify_number" property="identifyNumber" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<!-- 学员课程信息 -->
+	<select id="getCourseStudentMapList" parameterType="java.util.HashMap"
+			resultMap="CourseStudentMap">
+		SELECT
+		rsc.id,
+		rsc.rel_unit_course_id AS course_id,
+		rsc.student_id,
+		rsc.course_status,
+		rsc.pay_flag,
+		rsc.order_no
+		FROM
+		relation_student_course rsc
+		INNER JOIN relation_unit_course ruc ON rsc.rel_unit_course_id = ruc.id
+		INNER JOIN base_course_ext bce ON bce.rel_unit_course_id = ruc.id
+		WHERE
+		ruc.deleted = 0 and
+		bce.score > 0
+		<if test = "studentId != null and studentId != ''">
+			and rsc.student_id = #{studentId}
+		</if>
+	</select>
+
+	<!-- 可以申请考核学生 -->
+	<select id="getApplyStudentList" parameterType="java.util.HashMap"
+			resultMap="ApplyStudentMap">
+		select bs.id as student_id,bs.realname as student_name,be.apply_time,case when be.status>0 then be.exam_begin_time else null end as exam_begin_time,case when be.status>0 then be.exam_end_time else null end as exam_end_time,be.score,case when ISNULL(be.status) then 4 else be.status end as status from base_student bs
+		INNER JOIN relation_student_course rsc on rsc.student_id =bs.id
+		LEFT JOIN biz_exam be on bs.id = be.student_id
+		where bs.deleted = 0
+		<if test = "studentId != null and studentId != ''">
+			AND bs.id  = #{studentId}
+		</if>
+		AND bs.id NOT IN (
+		SELECT
+		DISTINCT student_id
+		FROM
+		relation_student_course
+		WHERE
+		course_status = 0
+		)
+		and ( 1 = 1 or be.status is null)
+		GROUP BY
+		bs.id,bs.realname
+	</select>
+
+	<!-- 线下考试管理信息列表 -->
+	<select id="getStudentExamList" parameterType="java.util.HashMap"
+			resultMap="StudentExamMap">
+		select bs.id as student_id,bs.realname as student_name,bs.sex,bs.identify_number,bs.cellphone,be.apply_time,case when be.status>0 then be.exam_begin_time else null end as exam_begin_time,case when be.status>0 then be.exam_end_time else null end as exam_end_time,be.status,be.score from base_student bs
+		INNER JOIN biz_exam be on bs.id = be.student_id
+		WHERE 1=1
+		and bs.deleted =0
+		<if test = "unitId != null and unitId != ''">
+			and bs.unit_id =  #{unitId}
+		</if>
+		<if test = "status != null and status != ''">
+			and be.status  = #{status}
+		</if>
+		<if test = "timeStatus != null and timeStatus != ''">
+			and be.status &gt; 0
+		</if>
+		<if test = "endTime != null and endTime != ''">
+			and be.exam_begin_time &lt; '${endTime}'
+		</if>
+		<if test = "beginTime != null and beginTime != ''">
+			and be.exam_begin_time &gt; '${beginTime}'
+		</if>
+		<if test = "name != null and name != ''">
+			and bs.realname like '%${name}%'
+		</if>
+		<if test = "identifyNumber != null and identifyNumber != ''">
+			and bs.identify_number like '%${identifyNumber}%'
+		</if>
+		ORDER BY be.apply_time
+	</select>
+
+	<update id="setStudentExamStatus" parameterType="java.util.HashMap" >
+		update biz_exam set exam_begin_time = '${examBeginTime}',exam_end_time = '${examEndTime}' ,status = #{status} where student_id in (${studentIds});
+    </update>
+
+	<update id="setStudentExamCancel" parameterType="java.util.HashMap" >
+		update biz_exam set status = #{status} where student_id in (${studentIds});
+    </update>
+
+	<update id="setStudentExamScore" parameterType="java.util.HashMap" >
+		update biz_exam set score = #{score},status = #{status} where student_id = #{studentId} ;
+    </update>
+
+	<!-- 获取考题列表 -->
+	<select id="getQuestionList" parameterType="java.util.HashMap"
+			resultMap="ExamMap">
+		SELECT
+			bc.id,
+			bc.name,
+			bq.id AS question_id,
+			bq.content AS question_content,
+			bq.category,
+			bq.analysis,
+			bq.image_urls,
+			bq.video_urls,
+			bq.subject_type_id,
+			bst.name as subject_type_name,
+			ba.id as answer_id,
+			ba.content as answer_content,
+			ba.checked,
+			FLOOR(RAND() * 100) as order_number
+		FROM
+			relation_unit_course ruc
+			INNER JOIN base_course bc on bc.id = ruc.course_id
+			INNER JOIN biz_test bt ON ruc.id = bt.rel_unit_course_id
+			INNER JOIN base_question bq ON bt.question_id = bq.id
+			INNER JOIN base_answer ba ON ba.question_id = bq.id
+			INNER JOIN base_subject_type bst ON bq.subject_type_id = bst.id
+		WHERE 1 = 1
+		<if test = "sourceId != null and sourceId != ''">
+			AND ruc.id  = #{sourceId}
+		</if>
+		<if test = "ids != null and ids != ''">
+			AND bq.id in ( ${ids})
+		</if>
+			AND ruc.deleted = 0
+			AND bq.deleted = 0
+			AND ba.deleted = 0
+		ORDER BY bc.id,bq.id,order_number
+	</select>
+
+	<!-- 获取待考试列表 -->
+	<select id="getWaitExamList" parameterType="java.util.HashMap"
+			resultMap="BaseResultMap">
+		SELECT
+			ruc.id,
+			bc.id as source_id,
+			bc.name,
+			NOW() as now_time,
+			bce.begin_time,
+			100 AS studyRate,
+			bce.end_time,
+			rsc.course_status,
+			bce.exam_duration,
+			bce.score,
+			bce.total_scores,
+			bce.verification,
+			bs.full_face_photo,
+			bs.realname as student_name,
+			bs.id as student_id,
+			bt.count as question_count,
+			CASE
+			WHEN btr.score IS NULL THEN
+			0
+			ELSE
+			btr.score
+			END AS max_score
+		FROM
+			relation_unit_course ruc
+			INNER JOIN base_course bc on bc.id = ruc.course_id
+			INNER JOIN base_course_ext bce ON ruc.id = bce.rel_unit_course_id
+			INNER JOIN relation_student_course rsc ON rsc.rel_unit_course_id = ruc.id
+			INNER JOIN base_student bs ON bs.id = rsc.student_id
+			LEFT JOIN (select rel_unit_course_id as course_id,count(*) count from biz_test GROUP BY rel_unit_course_id) bt on bt.course_id = ruc.id
+			LEFT JOIN (
+				SELECT
+					student_id,
+					rel_unit_course_id as course_id,
+					max(score) AS score,
+					sum(result) AS result
+				FROM
+					biz_test_record
+				GROUP BY
+					course_id,
+					student_id
+				) btr ON btr.student_id = rsc.student_id
+				AND btr.course_id = ruc.id
+		WHERE 1 = 1
+			AND bs. STATUS = 1
+			AND bs.deleted = 0
+			AND ruc.deleted = 0
+			AND bce.score > 0
+		<if test = "studentId != null and studentId != ''">
+			AND rsc.student_id = #{studentId}
+		</if>
+			AND rsc.course_status IN (1, 2)
+			AND (
+				btr.result IS NULL
+				OR btr.result = 0
+			)
+	</select>
+
+	<!-- 获取考试记录 -->
+	<sql id="tableSql">
+		select bt.id,bt.begin_time,bt.end_time,bt.duration,bt.rel_unit_course_id as course_id,bc.name as course_name,bt.student_id,bt.score,bt.result,bs.realname as student_name from biz_test_record bt
+		INNER JOIN relation_unit_course ruc on ruc.id = bt.rel_unit_course_id
+		INNER JOIN base_course bc on ruc.course_id = bc.id
+		INNER JOIN base_student bs on bt.student_id = bs.id
+		where 1=1 and ruc.deleted=0 and bs.deleted = 0
+		<if test = "courseId != null and courseId != ''">
+			and ruc.id  = #{courseId}
+		</if>
+		<if test = "studentId != null and studentId != ''">
+			and bt.student_id = #{studentId}
+		</if>
+	</sql>
+
+	<sql id="querySql">
+	</sql>
+
+	<sql id="orderSql">
+		<!-- 默认排序规则 -->
+		<if test="orderColumn == null or orderColumn == ''">
+			order by begin_time desc
+		</if>
+		<if test="orderColumn != null and orderColumn != ''">
+			order by ${orderColumn}
+		</if>
+		<if test="orderColumn != null and orderColumn != '' and order != 0">
+			desc
+		</if>
+	</sql>
+
+	<select id="getCourseTestRecordList" resultMap="CourseTestRecordMap"
+			parameterType="org.springblade.train.page.CourseTestRecordPage">
+		<if test="size == 0">
+			select * from (
+			<include refid="tableSql"/>
+			)b
+			where 1=1
+			<include refid="querySql"/>
+			<include refid="orderSql"/>
+			limit ${total}
+		</if>
+		<if test="current != 0">
+			select * from (
+			<include refid="tableSql"/>
+			)b
+			where 1=1
+			<include refid="querySql"/>
+			<include refid="orderSql"/>
+			limit ${offsetNo},${size}
+		</if>
+	</select>
+
+	<select id="getCourseTestRecordTotal"
+			parameterType="org.springblade.train.page.CourseTestRecordPage"
+			resultType="int">
+		select COUNT(1) from (
+		<include refid="tableSql"/>
+		)d where 1 = 1
+		<include refid="querySql"/>
+	</select>
+
+	<select id="getRelUnitCourseId" resultType="Integer">
+		SELECT
+			b.id
+		FROM
+			relation_student_course a
+			INNER JOIN relation_unit_course b ON a.rel_unit_course_id = b.id
+		WHERE
+			a.student_id = #{studentId}
+			and b.deleted = 0
+			AND b.course_id = #{courseId}
+			LIMIT 1;
+	</select>
+
+</mapper>

@@ -724,5 +724,17 @@ values
         </if>
     </select>
 
+    <select id="selectJiaShiYuanTrain" resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTrain">
+        select
+        a.id,a.jiashiyuanxingming,a.shoujihaoma,a.dept_id as deptId,b.signatrue
+        from
+        anbiao_jiashiyuan a
+        inner join anbiao_jiashiyuan_signatrue b on a.id = b.jiashiyuanid
+        where a.isdelete = 0
+        <if test="deptId != null and deptId != '' ">
+            AND a.dept_id= #{deptId}
+        </if>
+    </select>
+
 
 </mapper>

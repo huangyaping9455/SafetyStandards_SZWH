@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.train.mapper.StudyRecordAnalysisMapper">
+
+    <select id="getStudyStatForDay" parameterType="HashMap" resultType="HashMap">
+        SELECT
+        <if test="type != '' and type == 1">
+            DATE_FORMAT(date,'%Y-%m-%d') as day,
+        </if>
+        <if test="type != '' and type == 2">
+            DATE_FORMAT(date,'%x年%v周') as day,
+        </if>
+        <if test="type != '' and type == 3">
+            DATE_FORMAT(date,'%Y年%m月') as day,
+        </if>
+        <if test="type != '' and type == 4">
+            DATE_FORMAT(date,'%Y') as day,
+        </if>
+        sum(total_time) as totalTime
+        FROM
+        base_study_record_analysis
+        where date BETWEEN #{startTime} AND #{endTime}
+        <if test="unitId != null and unitId != ''">
+            AND unit_id = #{unitId}
+        </if>
+        <if test="courseId != null and courseId != ''">
+            AND course_id = #{courseId}
+        </if>
+        GROUP BY day
+        ORDER BY day
+    </select>
+    <resultMap type="org.springblade.train.entity.StudyStatHoursModel" id="studyStatHoursMap">
+        <result column="hour0" property="hour0"/>
+        <result column="hour1" property="hour1"/>
+        <result column="hour2" property="hour2"/>
+        <result column="hour3" property="hour3"/>
+        <result column="hour4" property="hour4"/>
+        <result column="hour5" property="hour5"/>
+        <result column="hour6" property="hour6"/>
+        <result column="hour7" property="hour7"/>
+        <result column="hour8" property="hour8"/>
+        <result column="hour9" property="hour9"/>
+        <result column="hour10" property="hour10"/>
+        <result column="hour11" property="hour11"/>
+        <result column="hour12" property="hour12"/>
+        <result column="hour13" property="hour13"/>
+        <result column="hour14" property="hour14"/>
+        <result column="hour15" property="hour15"/>
+        <result column="hour16" property="hour16"/>
+        <result column="hour17" property="hour17"/>
+        <result column="hour18" property="hour18"/>
+        <result column="hour19" property="hour19"/>
+        <result column="hour20" property="hour20"/>
+        <result column="hour21" property="hour21"/>
+        <result column="hour22" property="hour22"/>
+        <result column="hour23" property="hour23"/>
+    </resultMap>
+    <select id="getStudyStatForHour" parameterType="HashMap" resultMap="studyStatHoursMap">
+        SELECT
+        SUM(hour0) as hour0,
+        SUM(hour1) as hour1,
+        SUM(hour2) as hour2,
+        SUM(hour3) as hour3,
+        SUM(hour4) as hour4,
+        SUM(hour5) as hour5,
+        SUM(hour6) as hour6,
+        SUM(hour7) as hour7,
+        SUM(hour8) as hour8,
+        SUM(hour9) as hour9,
+        SUM(hour10) as hour10,
+        SUM(hour11) as hour11,
+        SUM(hour12) as hour12,
+        SUM(hour13) as hour13,
+        SUM(hour14) as hour14,
+        SUM(hour15) as hour15,
+        SUM(hour16) as hour16,
+        SUM(hour17) as hour17,
+        SUM(hour18) as hour18,
+        SUM(hour19) as hour19,
+        SUM(hour20) as hour20,
+        SUM(hour21) as hour21,
+        SUM(hour22) as hour22,
+        SUM(hour23) as hour23
+        FROM
+        base_study_record_analysis
+        where date BETWEEN #{startTime} AND #{endTime}
+        <if test="unitId != null and unitId != ''">
+            AND unit_id = #{unitId}
+        </if>
+        <if test="courseId != null and courseId != ''">
+            AND course_id = #{courseId}
+        </if>
+    </select>
+
+    <!-- 课程下拉框 -->
+    <resultMap id="CourseSelectResultMap" type="org.springblade.train.entity.CourseSelectModel">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="source_id" property="sourceId" jdbcType="INTEGER" />
+        <result column="isOperation" property="isOperation" jdbcType="INTEGER" />
+    </resultMap>
+
+    <!-- 课程下拉框 -->
+    <select id="getCourseSelectList" parameterType="java.util.HashMap"
+            resultMap="CourseSelectResultMap">
+        select ruc.id,bc.name, bc.id as source_id,ruc.is_owner isOperation from relation_unit_course ruc
+        INNER JOIN base_course bc on bc.id = ruc.course_id
+        INNER JOIN base_unit bu on ruc.unit_id = bu.id
+        where 1=1 and ruc.deleted = 0
+        <if test = "name != null and name != ''">
+            AND bc.name LIKE '%${name}%'
+        </if>
+        <if test = "course_kind_id != null and course_kind_id != ''">
+            and bc.course_kind_id =#{course_kind_id}
+        </if>
+        <if test = "unit_id != null and unit_id != ''">
+            AND ruc.unit_id = #{unit_id}
+        </if>
+        <if test = "Operation != null and Operation != ''">
+            and ruc.is_owner = 1
+        </if>
+        <if test = "notOperation != null and notOperation != ''">
+            and ruc.is_owner = 0
+        </if>
+        <if test = "server_id != null and server_id != ''">
+            and bu.server_id = #{server_id}
+        </if>
+        <if test = "government_id != null and government_id != ''">
+            and bu.government_id = #{government_id}
+        </if>
+        <if test = "type != null and type != ''">
+            and bu.type = #{type}
+        </if>
+        <if test = "have != null and have != ''">
+            and ruc.id in (select rel_unit_course_id from biz_test)
+        </if>
+        <if test = "notHave != null and notHave != ''">
+            and ruc.id not in (select rel_unit_course_id from biz_test)
+        </if>
+    </select>
+
+</mapper>

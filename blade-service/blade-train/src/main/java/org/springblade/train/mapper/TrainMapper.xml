@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.train.mapper.TrainMapper">
+
+    <resultMap id="CourseInfoResultMap" type="org.springblade.train.entity.CourseInfo">
+    </resultMap>
+
+    <resultMap id="StudentInfoResultMap" type="org.springblade.train.entity.StudentInfo">
+    </resultMap>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="StudentProveResultMap" type="org.springblade.train.entity.StudentProve">
+        <id column="id" property="id"/>
+        <result column="realname" property="realName"/>
+        <result column="sex" property="sex"/>
+        <result column="full_face_photo" property="fullFacePhoto"/>
+        <result column="identify_number" property="identifyNumber"/>
+        <result column="station" property="station"/>
+        <result column="unitName" property="unitName"/>
+        <result column="courseName" property="courseName"/>
+        <result column="examScore" property="examScore"/>
+        <result column="examTime" property="examTime"/>
+        <result column="result" property="result"/>
+        <result column="studyDuration" property="studyDuration"/>
+        <result column="finishStudyTime" property="finishStudyTime"/>
+    </resultMap>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="StudentProveDetailResultMap" type="org.springblade.train.entity.StudentProveDetail">
+        <id column="id" property="id"/>
+        <result column="original_name" property="coursewareName"/>
+        <result column="begin_time" property="beginTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="duration" property="duration"/>
+        <result column="valid" property="valid"/>
+    </resultMap>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.train.entity.StudentStatistics">
+        <id column="id" property="id"/>
+        <result column="studentId" property="studentId"/>
+        <result column="realname" property="realname"/>
+        <result column="station" property="station"/>
+        <result column="sex" property="sex"/>
+        <result column="courseId" property="courseId"/>
+        <result column="name" property="courseName"/>
+        <result column="serviceId" property="serviceId"/>
+        <result column="serviceName" property="serviceName"/>
+        <result column="unitId" property="unitId"/>
+        <result column="simple_name" property="unitName"/>
+        <result column="courseBeginTime" property="courseBeginTime"/>
+        <result column="courseEndTime" property="courseEndTime"/>
+        <result column="studyType" property="studyType"/>
+        <result column="score" property="score"/>
+        <result column="finishscore" property="finishscore"/>
+        <result column="verification" property="verification"/>
+        <result column="duration" property="duration"/>
+        <result column="studyDuration" property="studyDuration"/>
+        <result column="finishExam" property="finishExam"/>
+        <result column="plateNumber" property="plateNumber"/>
+        <result column="fullFacePhoto" property="fullFacePhoto"/>
+        <result column="identifyNumber" property="identifyNumber"/>
+    </resultMap>
+
+    <select id="getQYCourseList" resultType="org.springblade.train.entity.Train">
+        select
+            a.id,a.`name` as account
+        from
+            base_course a,base_courseware b,relation_course_courseware c,base_course_kind d,base_unit e,relation_unit_course f
+        where a.id = c.course_id
+            and b.id = c.courseware_id
+            and d.id = a.course_kind_id
+            and f.course_id = a.id
+            and f.unit_id = e.id
+            and f.deleted = 0
+        <if test = "name != null and name != ''">
+            and d.name = #{name}
+        </if>
+        <if test = "id != null and id != ''">
+            and e.id = #{id}
+        </if>
+        GROUP BY a.id,a.`name`
+    </select>
+
+    <!--根据企业名称获取企业相关信息-->
+    <select id="getUnitByName" resultType="org.springblade.train.entity.Unit">
+        select * from base_unit where full_name = #{name} and deleted = 0 limit 1
+    </select>
+
+    <!--根据学员姓名获取学员相关信息-->
+    <select id="getStudentByName" resultType="org.springblade.train.entity.Student">
+        select * from base_student where realname = #{driverName} and unit_id in(select id from base_unit where full_name = #{deptName}) and deleted = 0 limit 1
+    </select>
+
+    <!--根据报警类型、企业ID获取课程相关信息-->
+    <select id="getCourseExt" resultType="org.springblade.train.entity.CourseExt">
+        select bc.id as kcid,bc.`name` as kcname,ruc.unit_id,bce.* from base_course bc
+        inner join relation_unit_course ruc on ruc.course_id = bc.id
+        inner join base_course_ext bce on ruc.id = bce.rel_unit_course_id
+        left join base_course_kind bck on bck.id = bc.course_kind_id
+        where bc.course_kind_id in(
+            select id from base_course_kind where name = #{alarmType}
+            )
+            and ruc.unit_id = #{deptId}
+    </select>
+
+    <!-- 查询课程列表 -->
+    <select id="getCourseALLList" resultType="org.springblade.train.entity.Course" parameterType="java.util.HashMap">
+        SELECT
+        ruc.id,
+        bc.created_by,
+        bc.created_time,
+        bc.updated_by,
+        bc.updated_time,
+        bc.name,
+        0 as area_id,
+        bc.advertise_image,
+        bc.keyword,
+        bc.description,
+        bc.memo,
+        ruc.deleted,
+        ruc.status,
+        bc.source_type,
+        bc.course_type,
+        bc.id as source_id,
+        bc.name as source_name,
+        ruc.unit_id,
+        bu.full_name,
+        bu.simple_name,
+        '' as area_name,
+        bce.begin_time,
+        bce.end_time,
+        bce.course_fee,
+        bce.score,
+        bce.study_type,
+        bce.verification,
+        bce.exam_duration,
+        bce.total_scores,
+        bce.price,
+        bu.server_id ,
+        buu.full_name as server_name ,
+        bq.count as question_count,
+        bt.count as test_count,
+        bc.course_kind_id as course_kind_id,
+        bck.name as course_kind_name,
+        bu.trade_kind_id as trade_kind_id,
+        btk.name as trade_kind_name,
+        ruc.is_owner as isOperation
+        FROM
+        relation_unit_course ruc
+        INNER JOIN base_course bc on bc.id = ruc.course_id
+        INNER JOIN base_unit bu on ruc.unit_id = bu.id
+        LEFT JOIN base_course_ext bce on ruc.id = bce.rel_unit_course_id
+        LEFT JOIN base_unit buu on bu.server_id = buu.id
+        LEFT JOIN base_course_kind bck on bck.id = bc.course_kind_id
+        LEFT JOIN base_trade_kind btk on btk.id = bu.trade_kind_id
+        LEFT JOIN (select course_id , count(*) as count from base_question where deleted = 0 GROUP BY course_id) bq on bq.course_id = bc.id
+        LEFT JOIN (select rel_unit_course_id as course_id , count(*) as count from biz_test GROUP BY rel_unit_course_id) bt on bt.course_id = ruc.id
+        WHERE 1=1
+        AND ruc.deleted = 0 and bu.deleted =0 AND bc.id = #{id}
+<!--        <if test = "name != null and name != ''">-->
+<!--            AND bc.name LIKE '%${name}%'-->
+<!--        </if>-->
+<!--        <if test = "fullName != null and fullName != ''">-->
+<!--            AND bc.name = '${fullName}'-->
+<!--        </if>-->
+<!--        <if test = "id != null and id != ''">-->
+<!--            AND ruc.id = #{id}-->
+<!--        </if>-->
+<!--        <if test = "unit_id != null and unit_id != ''">-->
+<!--            AND ruc.unit_id = #{unit_id}-->
+<!--        </if>-->
+<!--        <if test = "Operation != null and Operation != ''">-->
+<!--            and ruc.is_owner = 1-->
+<!--        </if>-->
+<!--        <if test = "notOperation != null and notOperation != ''">-->
+<!--            and ruc.is_owner = 0-->
+<!--        </if>-->
+<!--        <if test = "server_id != null and server_id != ''">-->
+<!--            and bu.server_id = #{server_id}-->
+<!--        </if>-->
+<!--        <if test = "type != null and type != ''">-->
+<!--            and bu.type = #{type}-->
+<!--        </if>-->
+<!--        <if test = "source_id != null and source_id != ''">-->
+<!--            AND bc.id = #{source_id}-->
+<!--        </if>-->
+<!--        <if test = "course_kind_id != null and course_kind_id != ''">-->
+<!--            AND bc.course_kind_id = #{course_kind_id}-->
+<!--        </if>-->
+        order by ruc.id desc
+    </select>
+
+    <!-- 查询学习统计情况 -->
+    <select id="getStudyInfo" resultType="org.springblade.train.entity.StudyCountInfo" parameterType="String">
+        SELECT
+        DISTINCT
+            t1.id as unitId,
+            t1.simple_name as unitName,
+            t2.name as tradeKindName,
+            zc.student_count as registerNumber,
+            ss.shouldLearnNumber,
+            (
+            SELECT
+                count(*)
+            FROM
+                ( SELECT count(*), rel_unit_course_id, student_id FROM biz_study_record bsr GROUP BY rel_unit_course_id, bsr.student_id ) a
+                INNER JOIN relation_student_course b ON a.student_id = b.student_id
+                    AND a.rel_unit_course_id = b.rel_unit_course_id
+                INNER JOIN relation_unit_course ruc2 ON ruc2.id = a.rel_unit_course_id
+                INNER JOIN base_student bs ON bs.id = a.student_id
+                    AND bs.unit_id = ruc2.unit_id
+                WHERE
+                    bs.deleted = 0
+                AND ruc2.unit_id = t1.id
+                AND ruc2.id = t5.id
+            ) as inStudyNumber,
+            t7.serviceCourseCount+t7.unitCourseCount+t7.egovCourseCount as courseNumber,
+            jr.student_count as todayNumber
+        FROM
+            base_unit t1
+            INNER JOIN base_trade_kind t2 ON t1.trade_kind_id = t2.id
+            INNER JOIN relation_unit_course t5 ON t5.unit_id = t1.id
+            INNER JOIN(
+                SELECT
+                    bs.unit_id,
+                    rsc.rel_unit_course_id,
+                    count(*) as shouldLearnNumber
+                FROM
+                    base_student bs
+                INNER JOIN relation_student_course rsc ON bs.id = rsc.student_id
+                WHERE
+                    bs.deleted = 0
+                GROUP BY
+                    bs.unit_id,
+                    rsc.rel_unit_course_id
+                )ss on ss.unit_id = t1.id and ss.rel_unit_course_id = t5.id
+            INNER JOIN (
+                SELECT
+                    unit_id,
+					SUM(IFNULL((case when bc.source_type = 1 then 1 end ),0)) AS serviceCourseCount,
+					SUM(IFNULL((case when bc.source_type = 2 then 1 end ),0)) AS unitCourseCount,
+					SUM(IFNULL((case when bc.source_type = 3 then 1 end ),0)) AS egovCourseCount
+                FROM
+                    relation_unit_course ruc
+                    INNER JOIN base_course bc ON bc.id = ruc.course_id
+                    LEFT JOIN base_course_ext bce ON ruc.id = bce.rel_unit_course_id
+                WHERE
+                    ruc.deleted = 0
+                    AND ruc.STATUS = 1
+                <if test = "unitId != null and unitId != 0">
+                    AND ruc.unit_id = #{unitId}
+                </if>
+                GROUP BY
+                    unit_id
+                ) t7 ON t7.unit_id = t1.id
+                INNER JOIN relation_student_course t4 ON t5.id = t4.rel_unit_course_id
+                INNER JOIN (select unit_id,count(id) as student_count from base_student where deleted=0 GROUP BY unit_id) as zc on zc.unit_id = t1.id
+                LEFT JOIN (
+                    select
+                    <if test = "unitId != null and unitId != 0">
+                        ${unitId} as unit_id,
+                    </if>
+                        IFNULL(COUNT(a.id),0) as student_count
+                    from
+                        biz_study_record a
+                        INNER JOIN base_student b on a.student_id = b.id
+                    where 1=1
+                    <if test = "unitId != null and unitId != 0">
+                        and unit_id = #{unitId}
+                    </if>
+                      AND b.deleted = 0
+                      AND LEFT(a.end_time,10) = LEFT(NOW(),10)
+                ) as jr on jr.unit_id = t1.id
+            WHERE
+                t1.deleted = 0
+                  AND t5.deleted = 0
+                  AND t5.STATUS = 1
+            <if test = "unitId != null and unitId != 0">
+                AND t1.id = #{unitId}
+            </if>
+            limit 1
+    </select>
+
+    <sql id="tableSql">
+        select
+            bc.id,
+            ruc.id as courseId,
+            bc.name as courseName,
+            bc.source_type as sourceType,
+            bce.begin_time as beginTime,
+            bce.end_time as endTime,
+            bce.study_type as studyType,
+            bce.verification,
+            bce.score,
+            bu.simple_name as unitName,
+            (select simple_name from base_unit where id = (
+            select server_id from base_unit where id = bu.id)) as serverName,
+            (select count(*) from base_student where deleted = 0 and unit_id = bu.id) as studentCount,
+            (select count(*) from base_student bs
+            inner join relation_student_course rsc on bs.id = rsc.student_id
+            where bs.deleted = 0 and rsc.rel_unit_course_id = ruc.id and bs.unit_id = bu.id) as shouldLearnNumber,
+            (select count(*) from (
+            select count(*),rel_unit_course_id,student_id from biz_study_record bsr
+            group by rel_unit_course_id,bsr.student_id) a
+            INNER JOIN relation_student_course b on a.student_id = b.student_id and a.rel_unit_course_id = b.rel_unit_course_id
+            inner join relation_unit_course ruc2 on ruc2.id = a.rel_unit_course_id
+            INNER JOIN base_student bs on bs.id = a.student_id and bs.unit_id = ruc2.unit_id
+            where bs.deleted=0  and ruc2.unit_id = bu.id and ruc2.id = ruc.id ) as inStudyNumber,
+            (select count(*)
+            from relation_student_course rsc
+            inner join relation_unit_course ruc2 on ruc2.id = rsc.rel_unit_course_id
+            INNER JOIN base_student bs on bs.id = rsc.student_id and bs.unit_id = ruc2.unit_id
+            where bs.deleted = 0 and rsc.course_status = 1 and rsc.rel_unit_course_id = ruc.id and ruc2.unit_id = bu.id
+            ) as finishStudyCount,
+            (select count(*)
+            from relation_student_course rsc
+            inner join relation_unit_course ruc2 on ruc2.id = rsc.rel_unit_course_id
+            INNER JOIN base_student bs on bs.id = rsc.student_id and bs.unit_id = ruc2.unit_id
+            where  bs.deleted = 0 and rsc.course_status = 3 and rsc.rel_unit_course_id = ruc.id and ruc2.unit_id = bu.id
+            ) as finishExamCount,
+            (select count(*) from relation_student_course rsc
+            inner join relation_unit_course ruc2 on ruc2.id = rsc.rel_unit_course_id
+            inner join base_course_ext bce2 on bce2.rel_unit_course_id = ruc2.id
+            INNER JOIN base_student bs on bs.id = rsc.student_id and bs.unit_id = ruc2.unit_id
+            where bs.deleted = 0 and rsc.course_status = 0 and rsc.rel_unit_course_id = ruc.id and ruc2.unit_id = bu.id and bce2.end_time &lt; now()
+            ) as unfinishedNumber
+        from
+            base_course bc
+            inner join relation_unit_course ruc on bc.id = ruc.course_id
+            inner join base_unit bu on ruc.unit_id = bu.id
+            inner join base_course_ext bce on bce.rel_unit_course_id = ruc.id
+        where ruc.deleted = 0
+            and ruc.status = 1
+            and bu.deleted=0
+        <if test = "unitId != null and unitId != 0">
+            and ruc.unit_id = #{unitId}
+        </if>
+    </sql>
+
+    <sql id="querySql">
+
+        <if test="courseName !=null and courseName != ''">
+            AND courseName like CONCAT('%',#{courseName},'%')
+        </if>
+
+    </sql>
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        order by courseName
+    </sql>
+
+    <select id="selectCourseInfoPage" resultMap="CourseInfoResultMap"
+            parameterType="org.springblade.train.page.CourseInfoPage">
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectCourseInfoTotal"
+            parameterType="org.springblade.train.page.CourseInfoPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql" />
+        )d
+        where 1 = 1
+        <include refid="querySql" />
+    </select>
+
+    <!-- 根据课程ID查询课件信息 -->
+    <select id="getCoursewareInfo" resultType="org.springblade.train.entity.CoursewareInfo" parameterType="String">
+        select
+            rc.alias_name as coursewareName,
+            rc.course_id as courseId,
+            rc.courseware_id as coursewareId,
+            bc.original_name as originalName,
+            bc.code,
+            bc.course_type as courseType,
+            bc.duration,
+            bc.media_url as mediaUrl,
+            bc.source_file as sourceFile
+        from
+            relation_course_courseware rc
+        INNER JOIN base_courseware bc on bc.id = rc.courseware_id
+        INNER JOIN relation_unit_course ruc ON rc.course_id = ruc.course_id
+        where 1=1
+            AND bc.deleted = 0
+        <if test = "courseId != null and courseId != 0">
+            AND ruc.id = #{courseId}
+        </if>
+    </select>
+
+    <!-- 根据课程ID查询课件总学时 -->
+    <select id="getCoursewareDuration" resultType="org.springblade.train.entity.CoursewareInfo" parameterType="String">
+        select
+            sum(bc.duration) duration
+        from
+            relation_course_courseware rc
+            INNER JOIN base_courseware bc on bc.id = rc.courseware_id
+            INNER JOIN relation_unit_course ruc ON rc.course_id = ruc.course_id
+        where 1=1
+            AND bc.deleted = 0
+        <if test = "courseId != null and courseId != 0">
+            AND ruc.id = #{courseId}
+        </if>
+    </select>
+
+    <sql id="tableStudentSql">
+        select
+            rsc.id,
+            bs.id as studentId,
+            bs.realname,
+            bs.station,
+            bs.sex,
+            ruc.id as courseId,
+            bc.name,
+            bs.plate_number as plateNumber,
+            bu.id as unitId,
+            bu.simple_name,
+            (select id from base_unit where id = (
+            select server_id from base_unit where id = ruc.unit_id)) as serviceId,
+            (select simple_name from base_unit where id = (
+            select server_id from base_unit where id = ruc.unit_id)) as serviceName,
+            bce.begin_time as courseBeginTime,bce.end_time as courseEndTime,bce.study_type as studyType,bce.verification,bce.score,
+            ifnull(bsr.studyDuration,0) as studyDuration,ifnull(btr.finishExam,0) as finishExam,
+            (select ifnull(sum(bcw1.duration),0)
+            from base_courseware bcw1
+            inner join relation_course_courseware rcc1 on rcc1.courseware_id = bcw1.id
+            where rcc1.course_id = bc.id) as duration
+        from
+            base_student bs
+            inner join relation_student_course rsc on bs.id = rsc.student_id
+            inner join relation_unit_course ruc on rsc.rel_unit_course_id = ruc.id
+            inner join base_course bc on bc.id = ruc.course_id
+            inner join base_course_ext bce on bce.rel_unit_course_id = ruc.id
+            inner join base_unit bu on ruc.unit_id = bu.id
+            left join (select ifnull(sum(duration),0) as studyDuration ,student_id, rel_unit_course_id from biz_study_record WHERE valid =1 GROUP BY student_id,rel_unit_course_id) bsr on bsr.student_id = bs.id and bsr.rel_unit_course_id = ruc.id
+            left join (select count(1) as finishExam,student_id, rel_unit_course_id from biz_test_record where result = 1 and valid = 1 GROUP BY student_id,rel_unit_course_id) btr on btr.rel_unit_course_id = ruc.id and btr.student_id = bs.id
+        where bs.deleted = 0
+            and bu.deleted = 0
+            and ruc.deleted = 0
+            and ruc.status = 1
+        <if test = "unitId != null and unitId != 0">
+            and ruc.unit_id = #{unitId}
+        </if>
+        <if test = "courseId != null and courseId != 0">
+            and bc.id = #{courseId}
+        </if>
+    </sql>
+
+    <sql id="queryStudentSql">
+
+        <if test="realname !=null and realname != ''">
+            AND realname like CONCAT('%',#{realname},'%')
+        </if>
+
+    </sql>
+    <sql id="orderStudentSql">
+        <!-- 默认排序规则 -->
+        order by realname
+    </sql>
+
+    <!--学员情况统计-->
+    <select id="selectStudentInfoPage" resultMap="StudentInfoResultMap"
+            parameterType="org.springblade.train.page.CourseInfoPage">
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableStudentSql" />
+            )b
+            where 1=1
+            <include refid="queryStudentSql" />
+            <include refid="orderStudentSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableStudentSql" />
+            )b
+            where 1=1
+            <include refid="queryStudentSql" />
+            <include refid="orderStudentSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectStudentInfoTotal"
+            parameterType="org.springblade.train.page.CourseInfoPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableStudentSql" />
+        )d
+        where 1 = 1
+        <include refid="queryStudentSql" />
+    </select>
+
+    <!-- 查询学员证明 -->
+    <select id="getStudentProveInfo" resultMap="StudentProveResultMap">
+        select
+            bs.id,
+            bs.realname,
+            bs.cellphone,
+            bs.plate_number as platenumber,
+            bs.sex,
+            bs.full_face_photo,
+            bs.identify_number,
+            bs.station,
+            bu.simple_name as unitName,
+            bc.name as courseName,
+            btr.score as examScore,btr.begin_time as examTime, if(bce.score = 0,1,btr.result) as result,
+            (select ifnull(sum(duration),0) from biz_study_record bsr
+            where bsr.student_id = bs.id and bsr.rel_unit_course_id = ruc.id and valid = 1) as studyDuration,
+            bsr.begintime as StudyTime,
+            bsr.endtime as finishStudyTime,
+            bce.score
+        from
+            base_student bs
+            inner join base_unit bu on bu.id = bs.unit_id
+            inner join relation_unit_course ruc on ruc.unit_id = bu.id
+            inner join base_course bc on ruc.course_id = bc.id
+            INNER JOIN base_course_ext  bce on bce.rel_unit_course_id = ruc.id
+            LEFT JOIN biz_test_record btr on btr.student_id = bs.id and btr.rel_unit_course_id = ruc.id
+            LEFT JOIN(
+                select student_id,rel_unit_course_id,min(begin_time) as begintime,max(end_time) as endtime from biz_study_record bsr
+                where valid = 1
+                group by student_id,rel_unit_course_id
+            )as bsr on bsr.student_id = bs.id and bsr.rel_unit_course_id = ruc.id
+        where bu.server_id != 0
+            and ruc.deleted = 0
+            and ruc.status = 1
+        <if test = "unitId != null and unitId != 0">
+            and bu.id = #{unitId}
+        </if>
+        <if test = "courseId != null and courseId != 0">
+            and bc.id = #{courseId}
+        </if>
+        <if test = "studentId != null and studentId != 0">
+            and bs.id = #{studentId}
+        </if>
+        order by btr.end_time desc
+		limit 1
+    </select>
+
+    <!-- 查询学员证明详情 -->
+    <select id="getStudentProveDetailList" resultMap="StudentProveDetailResultMap">
+        select
+            bcw.id,bcw.original_name,
+            bsr.begin_time,bsr.end_time,bsr.duration,bsr.valid
+        from
+            biz_study_record bsr
+            inner join base_student bs on bsr.student_id = bs.id
+            inner join relation_unit_course ruc on ruc.id = bsr.rel_unit_course_id
+            inner join base_course bc on ruc.course_id = bc.id
+            inner join base_courseware bcw on bsr.courseware_id = bcw.id
+        <where>
+            bsr.valid = 1
+            <if test = "courseId != null and courseId != 0">
+                and bc.id = #{courseId}
+            </if>
+            <if test = "studentId != null and studentId != 0">
+                and bs.id = #{studentId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 安全培训汇总 -->
+    <select id="getStudentAllList" resultMap="BaseResultMap">
+        select
+        rsc.id,
+        bs.id as studentId,
+        bs.realname,
+        bs.station,
+        bs.sex,
+        ruc.id as courseId,
+        bc.name,
+        bs.plate_number as plateNumber,
+        bu.id as unitId,
+        bu.simple_name,
+        (select id from base_unit where id = (
+        select server_id from base_unit where id = ruc.unit_id)) as serviceId,
+        (select simple_name from base_unit where id = (select server_id from base_unit where id = ruc.unit_id)) as serviceName,
+        LEFT(bce.begin_time,10) as courseBeginTime,
+        LEFT(bce.end_time,10) as courseEndTime,
+        bce.study_type as studyType,
+        bce.verification,
+        btr.score as finishscore,
+        bce.score,
+        ifnull(bsr.studyDuration,0) as studyDuration,ifnull(btr.finishExam,0) as finishExam,
+        (select ifnull(sum(bcw1.duration),0) from base_courseware bcw1 inner join relation_course_courseware rcc1 on rcc1.courseware_id = bcw1.id where rcc1.course_id = bc.id) as duration,
+        bs.full_face_photo as fullFacePhoto,
+        bs.identify_number as identifyNumber,
+        (select a.photo_url from biz_snapshot as a where a.student_id =bs.id and a.rel_unit_course_id = ruc.id ORDER BY create_time limit 1) as photoUrl,
+        bc.description
+        from
+        base_student bs
+        inner join relation_student_course rsc on bs.id = rsc.student_id
+        inner join relation_unit_course ruc on rsc.rel_unit_course_id = ruc.id
+        inner join base_course bc on bc.id = ruc.course_id
+        inner join base_course_ext bce on bce.rel_unit_course_id = ruc.id
+        inner join base_unit bu on ruc.unit_id = bu.id
+        left join (select ifnull(sum(duration),0) as studyDuration ,student_id, rel_unit_course_id from biz_study_record WHERE valid =1 GROUP BY student_id,rel_unit_course_id) bsr on bsr.student_id = bs.id and bsr.rel_unit_course_id = ruc.id
+        left join (select count(1) as finishExam,student_id, rel_unit_course_id,MAX(score) as score from biz_test_record where result = 1 and valid = 1 GROUP BY student_id,rel_unit_course_id) btr on btr.rel_unit_course_id = ruc.id and btr.student_id = bs.id
+        where bs.deleted = 0 and bu.deleted = 0 and  ruc.deleted = 0 and ruc.status = 1
+        <if test = "unitId != null and unitId != 0">
+            and ruc.unit_id = #{unitId}
+        </if>
+        <if test = "courseId != null and courseId != 0">
+            and bc.id = #{courseId}
+        </if>
+    </select>
+
+</mapper>

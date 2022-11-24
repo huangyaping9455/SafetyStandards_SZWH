@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.train.mapper.UnitStatisticsMapper">
+
+    <!--根据数据权限汇总企业数量-->
+    <select id="summaryStats" resultType="org.springblade.train.entity.UnitStatisticsSummaryModel" >
+        select * from proc_unit_study_count
+	    where unit_id = #{unitId}
+    </select>
+
+    <resultMap id="UnitStatisticsListModelMap" type="org.springblade.train.entity.UnitStatisticsListModel">
+    </resultMap>
+
+    <!--根据参数查询企业统计分析列表-->
+    <sql id="tableSql">
+        select
+            unit_id,
+            unitName,
+            tradeKindName,
+            count(DISTINCT courseId )as courseNumber,
+            Max(totalNumber) AS totalNumber,
+            count(DISTINCT student_id) as totalParticipateNumber,
+            SUM(completedNumber) AS completedNumber,
+            SUM(outstandingNumber) AS outstandingNumber,
+            SUM(overdue_number) AS overdue_number
+        from
+            proc_unit_study_info
+        where 1=1
+        <if test="unitId != null and unitId !=''">
+            AND unit_id = #{unitId, jdbcType=INTEGER}
+        </if>
+        <if test="courseId != null and courseId !=''">
+            AND courseId = #{courseId, jdbcType=INTEGER}
+        </if>
+        <if test="tradeKindId != null and tradeKindId !=''">
+            AND trade_kind_id = #{tradeKindId, jdbcType=INTEGER}
+        </if>
+        GROUP BY unit_id,unitName,tradeKindName
+    </sql>
+
+    <sql id="querySql">
+    </sql>
+
+    <sql id="orderSql">
+        <if test="orderColumn == null or orderColumn == ''">
+            order by courseNumber desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <select id="getUnitStatisticsList" resultMap="UnitStatisticsListModelMap"
+            parameterType="org.springblade.train.page.UnitStatisticsPage">
+        <if test="size == 0">
+            select * from (
+            <include refid="tableSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="tableSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="getUnitStatisticsListTotal"
+            parameterType="org.springblade.train.page.UnitStatisticsPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql"/>
+        )d where 1 = 1
+        <include refid="querySql"/>
+    </select>
+
+    <resultMap id="UnitStatisticsDetailListModelMap" type="org.springblade.train.entity.UnitStatisticsDetailListModel">
+    </resultMap>
+
+    <!--根据参数查询企业统计分析详情列表-->
+    <sql id="tableDetailSql">
+       select * from proc_unit_study_deail_info
+        where 1=1
+        <if test="unitId != null and unitId !=''">
+            AND unit_id = #{unitId, jdbcType=INTEGER}
+        </if>
+    </sql>
+
+    <sql id="queryDetailSql">
+    </sql>
+
+    <sql id="orderDetailSql">
+        <if test="orderColumn == null or orderColumn == ''">
+            order by totalParticipateNumber desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <select id="getUnitStatisticsDetailList" resultMap="UnitStatisticsDetailListModelMap"
+            parameterType="org.springblade.train.page.UnitStatisticsPage">
+        <if test="size == 0">
+            select * from (
+            <include refid="tableDetailSql"/>
+            )b
+            where 1=1
+            <include refid="queryDetailSql"/>
+            <include refid="orderDetailSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="tableDetailSql"/>
+            )b
+            where 1=1
+            <include refid="queryDetailSql"/>
+            <include refid="orderDetailSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="getUnitStatisticsDetailListTotal"
+            parameterType="org.springblade.train.page.UnitStatisticsPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableDetailSql"/>
+        )d where 1 = 1
+        <include refid="queryDetailSql"/>
+    </select>
+
+
+</mapper>

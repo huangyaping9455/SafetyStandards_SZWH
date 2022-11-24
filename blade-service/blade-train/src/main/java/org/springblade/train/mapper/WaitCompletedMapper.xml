@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.train.mapper.WaitCompletedMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.train.entity.WaitCompletedCourse">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="relUnitCourseId" property="relUnitCourseId"/>
+        <result column="description" property="description"/>
+        <result column="advertise_image" property="advertiseImage"/>
+        <result column="begin_time" property="beginTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="verification" property="verification"/>
+        <result column="videoCount" property="videoCount"/>
+        <result column="fileCount" property="fileCount"/>
+        <result column="directCount" property="directCount"/>
+        <result column="duration" property="duration"/>
+        <result column="studyDuration" property="studyDuration"/>
+        <result column="course_status" property="courseStatus"/>
+        <result column="price" property="price"/>
+    </resultMap>
+
+    <!--通用查询映射结果 -->
+   <resultMap id="CoursewareMap" type="org.springblade.train.entity.Courseware">
+       <id column="id" property="id"/>
+       <result column="original_name" property="originalName"/>
+       <result column="course_type" property="courseType"/>
+       <result column="advertise_image" property="advertiseImage"/>
+       <result column="source_file" property="sourceFile"/>
+       <result column="media_url" property="mediaUrl"/>
+       <result column="description" property="description"/>
+       <result column="duration" property="duration"/>
+       <result column="studyDuration" property="studyDuration"/>
+       <result column="coursewareBeginTime" property="coursewareBeginTime"/>
+       <result column="coursewareEndTime" property="coursewareEndTime"/>
+       <result column="start_time" property="startTime"/>
+       <result column="end_time" property="endTime"/>
+       <result column="exercisesCount" property="exercisesCount"/>
+       <result column="nowTime" property="nowTime"/>
+   </resultMap>
+
+    <!--通用查询映射结果 -->
+   <resultMap id="ExercisesMap" type="org.springblade.train.entity.Exercises">
+       <id column="id" property="id"/>
+       <result column="courseware_id" property="coursewareId"/>
+       <result column="content" property="content"/>
+       <result column="category" property="category"/>
+       <result column="analysis" property="analysis"/>
+       <result column="video_urls" property="videoUrls"/>
+       <result column="image_urls" property="imageUrls"/>
+       <collection property="exerciseAnswerList" ofType="org.springblade.train.entity.ExerciseAnswer">
+           <id column="answerId" property="id"/>
+           <result column="order_number" property="orderNumber"/>
+           <result column="answerContent" property="content"/>
+           <result column="checked" property="checked"/>
+       </collection>
+   </resultMap>
+
+    <!--查询待完成课程 -->
+   <select id="getCourseList" resultType="org.springblade.train.entity.WaitCompletedCourse">
+       select
+       bc.id,bc.name,bc.description,bc.advertise_image,
+       ruc.id as relUnitCourseId,
+       bce.begin_time,bce.end_time,bce.verification,bce.price,
+       rsc.course_status,
+       (select count(*)
+       from base_courseware bcw
+       inner join relation_course_courseware rcc on bcw.id = rcc.courseware_id
+       where rcc.course_id = bc.id and bcw.course_type = 1 and bcw.status = 3) as videoCount,
+       (select count(*)
+       from base_courseware bcw
+       left join relation_course_courseware rcc on bcw.id = rcc.courseware_id
+       where rcc.course_id = bc.id and bcw.course_type = 2 and bcw.status = 3) as fileCount,
+       (select count(*)
+       from base_courseware bcw
+       left join relation_course_courseware rcc on bcw.id = rcc.courseware_id
+       where rcc.course_id = bc.id and bcw.course_type = 3 and bcw.status = 3) as directCount,
+       ifnull((select sum(bsr.duration)
+       from biz_study_record bsr
+       inner join relation_unit_course ruc on ruc.id = bsr.rel_unit_course_id
+       where ruc.course_id = bc.id and ruc.id = rsc.rel_unit_course_id and bsr.student_id = bs.id and bsr.valid = 1)
+       ,0) as studyDuration,
+       ifnull((select sum(bcw.duration)
+       from base_courseware bcw
+       left join relation_course_courseware rcc on bcw.id = rcc.courseware_id
+       where rcc.course_id = bc.id and bcw.status = 3)
+       ,0) as duration
+       from base_course bc
+       inner join relation_unit_course ruc on ruc.course_id = bc.id
+       inner join base_course_ext bce on ruc.id = bce.rel_unit_course_id
+       inner join relation_student_course rsc on ruc.id = rsc.rel_unit_course_id
+       left join base_student bs on rsc.student_id = bs.id
+       where bs.id = #{studentId}
+       and ruc.status = 1
+       and ruc.deleted = 0
+       and bc.course_type = #{courseType}
+       <if test="isPay != 3">
+           <if test="courseKind != null and courseKind != '' ">
+               and bc.course_kind_id = #{courseKind}
+           </if>
+           <if test="courseKind == null or courseKind == '' ">
+               and bc.course_kind_id in(
+               select id from base_course_kind where name in ('超速报警','疲劳驾驶报警','夜间行驶报警','异常车辆报警','24小时不在线报警','接打电话报警','分神驾驶报警','抽烟报警','生理疲劳报警','驾驶员异常报警')
+               )
+           </if>
+       </if>
+
+       <if test="isPay == 1">
+           and rsc.pay_flag in (0,2)
+       </if>
+       <if test="isPay == 2">
+           and rsc.pay_flag = 1
+       </if>
+       <if test="isPay == 3">
+           and rsc.pay_flag in (0,1,2)
+       </if>
+       <if test="courseId != null and courseId != '' and courseId != 0 ">
+           and bc.id = #{courseId}
+       </if>
+    </select>
+
+    <!--查询待完成课程级别 -->
+    <select id="getCourseLevelList" resultType="org.springblade.train.entity.WaitCompletedCourse">
+       select
+       bc.id,bc.name,bc.description,bc.advertise_image,
+       ruc.id as relUnitCourseId,
+       bce.begin_time,bce.end_time,bce.verification,bce.price,
+       rsc.course_status,
+       (select count(*)
+       from base_courseware bcw
+       inner join relation_course_courseware rcc on bcw.id = rcc.courseware_id
+       where rcc.course_id = bc.id and bcw.course_type = 1 and bcw.status = 3) as videoCount,
+       (select count(*)
+       from base_courseware bcw
+       left join relation_course_courseware rcc on bcw.id = rcc.courseware_id
+       where rcc.course_id = bc.id and bcw.course_type = 2 and bcw.status = 3) as fileCount,
+       (select count(*)
+       from base_courseware bcw
+       left join relation_course_courseware rcc on bcw.id = rcc.courseware_id
+       where rcc.course_id = bc.id and bcw.course_type = 3 and bcw.status = 3) as directCount,
+       ifnull((select sum(bsr.duration)
+       from biz_study_record bsr
+       inner join relation_unit_course ruc on ruc.id = bsr.rel_unit_course_id
+       where ruc.course_id = bc.id and bsr.student_id = bs.id and bsr.valid = 1)
+       ,0) as studyDuration,
+       ifnull((select sum(bcw.duration)
+       from base_courseware bcw
+       left join relation_course_courseware rcc on bcw.id = rcc.courseware_id
+       where rcc.course_id = bc.id and bcw.status = 3)
+       ,0) as duration
+       from base_course bc
+       inner join relation_unit_course ruc on ruc.course_id = bc.id
+       inner join base_course_ext bce on ruc.id = bce.rel_unit_course_id
+       inner join base_course_level bcl on bcl.id = ruc.course_level
+       inner join relation_student_course rsc on ruc.id = rsc.rel_unit_course_id
+       left join base_student bs on rsc.student_id = bs.id
+       where bs.id = #{studentId} and ruc.status = 1 and ruc.deleted = 0 and bc.course_type = #{courseType} and ruc.course_level = #{level}
+       <if test="isPay == 1">
+           and rsc.pay_flag in (0,2)
+       </if>
+       <if test="isPay == 2">
+           and rsc.pay_flag = 1
+       </if>
+    </select>
+
+    <!--查询课件 -->
+   <select id="getCourseWareList" resultType="org.springblade.train.entity.Courseware">
+       select
+       bcw.id,bcw.original_name,bcw.course_type,bcw.advertise_image,bcw.duration,bcw.source_file,bcw.description,
+       bcw.start_time,bcw.end_time,bcw.media_url,
+       bcwe.begin_time as coursewareBeginTime,bcwe.end_time as coursewareEndTime,now() as nowTime,
+       ifnull((select sum(bsr.duration) from biz_study_record bsr
+           where bsr.rel_unit_course_id = ruc.id and bsr.courseware_id = bcw.id and bsr.student_id = bs.id and bsr.valid = 1
+       ),0) as studyDuration,
+       ifnull((select count(be.id)
+       from base_exercises be
+       where be.deleted = 0 and be.courseware_id = bcw.id),0) as exercisesCount,
+       ifnull((select count(*) from biz_study_record
+       where valid = 0 and student_id = bs.id and rel_unit_course_id = ruc.id and courseware_id = bcw.id), 0) as checkCount
+       from base_courseware bcw
+       inner join relation_course_courseware rcc on bcw.id = rcc.courseware_id
+       inner join base_course bc on bc.id = rcc.course_id
+       inner join relation_unit_course ruc on ruc.course_id = bc.id
+       inner join relation_student_course rsc on ruc.id = rsc.rel_unit_course_id
+       inner join base_student bs on rsc.student_id = bs.id
+       inner join base_courseware_ext bcwe on bcw.id = bcwe.courseware_id and ruc.id = bcwe.rel_unit_course_id
+       where ruc.id = #{relUnitCourseId} and bs.id = #{studentId}
+       <if test="courseId != null and courseId != '' ">
+           and bcw.id = #{courseId}
+       </if>
+        and ruc.status = 1 and ruc.deleted = 0 and bcw.status = 3 and bcw.deleted = 0
+    </select>
+
+    <!--查询练习题 -->
+   <select id="getExercisesList" resultType="org.springblade.train.entity.Exercises">
+        select * from base_exercises
+        where deleted = 0
+            and courseware_id = #{coursewareId}
+   </select>
+
+    <select id="getExerciseAnswerList" resultType="org.springblade.train.entity.ExerciseAnswer">
+       select * from base_exercise_answer
+       where deleted = 0
+            and exercise_id = #{coursewareId}
+   </select>
+
+   <select id="getCourseDuration" resultType="java.lang.Integer">
+       select ifnull(sum(duration),0)
+       from base_course bc
+       inner join relation_unit_course ruc on bc.id = ruc.course_id
+       inner join relation_course_courseware rcc on bc.id = rcc.course_id
+       inner join base_courseware bcw on rcc.courseware_id = bcw.id
+       where ruc.id = #{relUnitCourseId} and ruc.status = 1 and ruc.deleted = 0 and bcw.status = 3 and bcw.deleted = 0
+   </select>
+
+   <select id="getStudyDuration" resultType="java.lang.Integer">
+       select ifnull(sum(duration),0)
+       from biz_study_record bsr
+       where valid = 1 and student_id = #{studentId} and rel_unit_course_id = #{relUnitCourseId}
+   </select>
+
+   <update id="saveBeginStudyTime">
+       update relation_student_course set begin_time = #{beginTime}
+       where course_status = 0 and student_id = #{studentId} and rel_unit_course_id = #{relUnitCourseId}
+   </update>
+
+   <update id="saveEndStudyTime">
+       update relation_student_course set course_status = 1, end_time = #{endTime}
+       where course_status = 0 and student_id = #{studentId} and rel_unit_course_id = #{relUnitCourseId}
+   </update>
+
+   <select id="checkOrder" resultType="java.util.HashMap">
+       select rsc.order_no,bs.name,bs.description,bce.price
+       from base_course bs
+       left join relation_unit_course ruc on ruc.course_id = bs.id
+       left join base_course_ext bce on ruc.id = bce.rel_unit_course_id
+       left join relation_student_course rsc on rsc.rel_unit_course_id = ruc.id
+       where rsc.student_id = #{studentId} and ruc.id = #{relUnitCourseId}
+   </select>
+
+   <update id="handler">
+       update relation_student_course set pay_flag = 2,pay_time = now()
+       where order_no = #{orderNo}
+   </update>
+
+    <!-- 根据数据时间查询课件信息 -->
+    <select id="selectCoursewareByTime" resultType="org.springblade.train.entity.Courseware">
+        select * from base_courseware
+        where created_time >= #{date}
+          and deleted = 0
+          and `status` = 3
+    </select>
+    <!-- 根据课件ID编辑课件视频地址 -->
+    <update id="updateCoursewareById">
+        update base_courseware set source_file = #{sourceFile}
+        where id = #{id}
+    </update>
+
+</mapper>

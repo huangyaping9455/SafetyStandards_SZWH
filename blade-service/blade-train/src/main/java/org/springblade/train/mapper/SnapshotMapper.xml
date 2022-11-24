@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.train.mapper.SnapshotMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="trainResultMap" type="org.springblade.train.entity.Snapshot">
+    </resultMap>
+
+    <insert id="insertSnapshotSelective" parameterType="org.springblade.train.entity.Snapshot" >
+        insert into biz_snapshot
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test=" studentId != null and studentId != '' ">
+                student_id,
+            </if>
+            <if test="relUnitCourseId != null and relUnitCourseId != '' ">
+                rel_unit_course_id,
+            </if>
+            <if test="coursewareId != null and coursewareId != '' ">
+                courseware_id,
+            </if>
+            <if test="photoUrl != null and photoUrl != '' ">
+                photo_url,
+            </if>
+            <if test="createTime != null and createTime != '' ">
+                create_time
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test=" studentId != null and studentId != '' ">
+                #{studentId},
+            </if>
+            <if test="relUnitCourseId != null and relUnitCourseId != '' ">
+                #{relUnitCourseId},
+            </if>
+            <if test="coursewareId != null and coursewareId != '' ">
+                #{coursewareId},
+            </if>
+            <if test="photoUrl != null and photoUrl != '' ">
+                #{photoUrl},
+            </if>
+            <if test="createTime != null and createTime != '' ">
+                #{createTime}
+            </if>
+        </trim>
+    </insert>
+
+</mapper>

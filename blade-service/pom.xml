@@ -21,6 +21,7 @@
         <module>blade-user</module>
         <module>blade-anbiao</module>
         <module>blade-upload</module>
+        <module>blade-train</module>
     </modules>
 
     <dependencies>

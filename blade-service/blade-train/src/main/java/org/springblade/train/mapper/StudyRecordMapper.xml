@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.train.mapper.StudyRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.train.entity.StudyRecord">
+        <id column="id" property="id"/>
+        <result column="begin_time" property="beginTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="duration" property="duration"/>
+        <result column="valid" property="valid"/>
+        <result column="check_time" property="checkTime"/>
+        <result column="studentId" property="studentId"/>
+        <result column="rel_unit_course_id" property="relUnitCourseId"/>
+        <result column="coursewareId" property="coursewareId"/>
+        <association property="student" javaType="org.springblade.train.entity.Student">
+            <id column="studentId" property="id"/>
+            <result column="realname" property="realName"/>
+            <result column="sex" property="sex"/>
+            <result column="station" property="station"/>
+            <result column="simple_name" property="unitName"/>
+        </association>
+        <association property="course" javaType="org.springblade.train.entity.Course">
+            <id column="courseId" property="id"/>
+            <result column="courseName" property="name"/>
+            <result column="source_type" property="sourceType"/>
+            <result column="courseBeginTime" property="beginTime"/>
+            <result column="courseEndTime" property="endTime"/>
+            <result column="study_type" property="studyType"/>
+            <result column="verification" property="verification"/>
+            <result column="score" property="score"/>
+        </association>
+        <association property="courseware" javaType="org.springblade.train.entity.Courseware">
+            <id column="coursewareId" property="id"/>
+            <result column="original_name" property="originalName"/>
+            <result column="cw_duration" property="duration"/>
+        </association>
+    </resultMap>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="StudyRecordMap" type="org.springblade.train.entity.StudyRecordApp">
+        <result column="courseName" property="courseName"/>
+        <result column="original_name" property="coursewareName"/>
+        <result column="begin_time" property="beginTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="valid" property="valid"/>
+        <result column="duration" property="duration"/>
+        <result column="studyDuration" property="studyDuration"/>
+        <result column="current_duration" property="currentDuration"/>
+    </resultMap>
+
+    <insert id="insertStudyRecordSelective" parameterType="org.springblade.train.entity.StudyRecord" >
+        insert into biz_study_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test=" studentId != null and studentId != '' ">
+                student_id,
+            </if>
+            <if test="relUnitCourseId != null and relUnitCourseId != '' ">
+                rel_unit_course_id,
+            </if>
+            <if test="coursewareId != null and coursewareId != '' ">
+                courseware_id,
+            </if>
+            <if test="beginTime != null and beginTime != '' ">
+                begin_time,
+            </if>
+            <if test="endTime != null and endTime != '' ">
+                end_time,
+            </if>
+            <if test="duration != null and duration != '' ">
+                duration,
+            </if>
+            <if test="valid != null and valid != '' ">
+                valid,
+            </if>
+            <if test="checkTime != null and checkTime != '' ">
+                check_time,
+            </if>
+            <if test="playProgress != null and playProgress != '' ">
+                play_progress
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test=" studentId != null and studentId != '' ">
+                #{studentId},
+            </if>
+            <if test="relUnitCourseId != null and relUnitCourseId != '' ">
+                #{relUnitCourseId},
+            </if>
+            <if test="coursewareId != null and coursewareId != '' ">
+                #{coursewareId},
+            </if>
+            <if test="beginTime != null and beginTime != '' ">
+                #{beginTime},
+            </if>
+            <if test="endTime != null and endTime != '' ">
+                #{endTime},
+            </if>
+            <if test="duration != null and duration != '' ">
+                #{duration},
+            </if>
+            <if test="valid != null and valid != '' ">
+                #{valid},
+            </if>
+            <if test="checkTime != null and checkTime != '' ">
+                #{checkTime},
+            </if>
+            <if test="playProgress != null and playProgress != '' ">
+                #{playProgress}
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 查询学习记录 -->
+    <sql id="tableSql">
+        select
+            bc.name as courseName,bcw.original_name,
+            bsr.begin_time,bsr.end_time,bsr.valid,bcw.duration,
+            bsr.duration as current_duration,
+            (select ifnull(sum(duration),0) from biz_study_record where student_id = bs.id and rel_unit_course_id = ruc.id and courseware_id = bcw.id and valid = 1) as studyDuration
+		from biz_study_record bsr
+		inner join base_student bs on bsr.student_id = bs.id
+		inner join relation_unit_course ruc on bsr.rel_unit_course_id = ruc.id
+		inner join base_course bc on ruc.course_id = bc.id
+		inner join base_course_ext bce on ruc.id = bce.rel_unit_course_id
+		inner join base_courseware bcw on bsr.courseware_id = bcw.id
+		where 1=1
+        <if test = "studentId != null and studentId != 0">
+            and bs.id = #{studentId}
+        </if>
+    </sql>
+
+    <sql id="querySql">
+    </sql>
+
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by begin_time desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <select id="getAppStudyRecordList" resultMap="StudyRecordMap"
+            parameterType="org.springblade.train.page.StudyRecordPage">
+        <if test="size == 0">
+            select * from (
+                <include refid="tableSql"/>
+                )b
+            where 1=1
+                <include refid="querySql"/>
+                <include refid="orderSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+                <include refid="tableSql"/>
+            )b
+        where 1=1
+            <include refid="querySql"/>
+            <include refid="orderSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="getAppStudyRecordListTotal"
+            parameterType="org.springblade.train.page.StudyRecordPage"
+            resultType="int">
+        select COUNT(1) from (
+            <include refid="tableSql"/>
+        )d where 1 = 1
+        <include refid="querySql"/>
+    </select>
+
+    <!-- 查询上次学习记录 -->
+    <select id="getStudyRecordList" resultType="org.springblade.train.entity.StudyRecord">
+        select * from biz_study_record
+        where 1=1
+        <if test = "studentId != null and studentId != 0">
+            and student_id = #{studentId}
+        </if>
+        <if test = "courseId != null and courseId != 0">
+            and rel_unit_course_id = #{courseId}
+        </if>
+        <if test = "coursewareId != null and coursewareId != 0">
+            and courseware_id = #{coursewareId}
+        </if>
+    </select>
+
+
+</mapper>

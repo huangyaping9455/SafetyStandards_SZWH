@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.train.mapper.CourseStudentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="CourseStudentMap" type="org.springblade.train.entity.CourseStudent">
+    </resultMap>
+
+    <insert id="insertCourseStudentSelective" parameterType="org.springblade.train.entity.CourseStudent" >
+        insert into relation_student_course
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test=" studentId != null and studentId != '' ">
+                student_id,
+            </if>
+            <if test="courseId != null and courseId != '' ">
+                rel_unit_course_id,
+            </if>
+            <if test="courseStatus != null and courseStatus != '' ">
+                course_status,
+            </if>
+            <if test="begin_time != null and begin_time != '' ">
+                begin_time,
+            </if>
+            <if test="end_time != null and end_time != '' ">
+                end_time,
+            </if>
+            <if test="payFlag != null and payFlag != '' ">
+                pay_flag,
+            </if>
+            <if test="orderNo != null and orderNo != '' ">
+                order_no,
+            </if>
+                assign_date,
+            <if test="pay_time != null and pay_time != '' ">
+                pay_time,
+            </if>
+            <if test="total_pay != null and total_pay != '' ">
+                total_pay
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test=" studentId != null and studentId != '' ">
+                #{studentId},
+            </if>
+            <if test="courseId != null and courseId != '' ">
+                #{courseId},
+            </if>
+            <if test="courseStatus != null and courseStatus != '' ">
+                #{courseStatus},
+            </if>
+            <if test="begin_time != null and begin_time != '' ">
+                #{begin_time},
+            </if>
+            <if test="end_time != null and end_time != '' ">
+                #{end_time},
+            </if>
+            <if test="payFlag != null and payFlag != '' ">
+                #{payFlag},
+            </if>
+            <if test="orderNo != null and orderNo != '' ">
+                #{orderNo},
+            </if>
+                now(),
+            <if test="pay_time != null and pay_time != '' ">
+                #{pay_time},
+            </if>
+            <if test="total_pay != null and total_pay != '' ">
+                #{total_pay}
+            </if>
+        </trim>
+    </insert>
+
+</mapper>

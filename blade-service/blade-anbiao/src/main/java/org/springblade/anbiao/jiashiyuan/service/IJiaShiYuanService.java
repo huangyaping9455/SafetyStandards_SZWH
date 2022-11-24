@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTrain;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.vo.DriverInfoVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
@@ -128,5 +129,12 @@ public interface IJiaShiYuanService extends IService<JiaShiYuan> {
 	 * @return
 	 */
 	List<JiaShiYuan> getJiaShiYuanByDept(Integer deptId);
+
+	/**
+	 * 根据企业ID获取驾驶员签名
+	 * @param deptId
+	 * @return
+	 */
+	List<JiaShiYuanTrain> selectJiaShiYuanTrain(@Param("deptId") Integer deptId);
 
 }

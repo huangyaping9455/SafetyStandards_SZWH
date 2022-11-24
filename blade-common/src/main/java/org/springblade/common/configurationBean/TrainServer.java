@@ -19,6 +19,16 @@ public class TrainServer {
 	private String fileserver;
 
 	/**
+	 * 视频转码地址
+	 */
+	private String videoServer;
+
+	/**
+	 * 视频转码上传地址
+	 */
+	private String uploadVideoServer;
+
+	/**
 	 * 是否启用人脸识别
 	 */
 	private boolean enable;

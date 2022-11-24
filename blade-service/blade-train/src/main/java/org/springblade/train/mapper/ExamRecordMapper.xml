@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.train.mapper.ExamRecordMapper">
+
+    <resultMap id="BaseResultMap" type="org.springblade.train.entity.ExamRecord">
+        <id column="id" property="id"/>
+        <result column="begin_time" property="beginTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="duration" property="duration"/>
+        <result column="score" property="score"/>
+        <result column="result" property="result"/>
+        <result column="valid" property="valid"/>
+        <result column="studentId" property="studentId"/>
+        <result column="checkTime" property="checkTime"/>
+        <result column="rel_unit_course_id" property="relUnitCourseId"/>
+        <association property="student" javaType="org.springblade.train.entity.Student">
+            <id column="studentId" property="id"/>
+            <result column="realname" property="realName"/>
+            <result column="sex" property="sex"/>
+            <result column="unitName" property="unitName"/>
+            <result column="station" property="station"/>
+        </association>
+        <association property="course" javaType="org.springblade.train.entity.Course">
+            <id column="courseId" property="id"/>
+            <result column="courseName" property="name"/>
+            <result column="source_type" property="sourceType"/>
+            <result column="courseBeginTime" property="beginTime"/>
+            <result column="courseEndTime" property="endTime"/>
+            <result column="study_type" property="studyType"/>
+            <result column="verification" property="verification"/>
+            <result column="score" property="score"/>
+        </association>
+    </resultMap>
+
+    <!-- 查询考试记录 -->
+    <select id="getExamRecordList" resultMap="BaseResultMap">
+        select
+        btr.id,btr.begin_time,btr.end_time,btr.duration,btr.score,btr.result,
+        bs.id as studentId,bs.realname,bs.sex,bs.station,
+        bc.name as courseName,bc.source_type,
+        bce.begin_time as courseBeginTime,bce.end_time as courseEndTime,bce.study_type,bce.verification,bce.score,
+        ruc.id as rel_unit_course_id,
+        bu.simple_name as unitName ,
+        btr.check_Time as checkTime,
+        btr.valid
+        from biz_test_record btr
+        inner join base_student bs on btr.student_id = bs.id
+        inner join relation_unit_course ruc on btr.rel_unit_course_id = ruc.id
+        inner join base_course bc on ruc.course_id = bc.id
+        inner join base_course_ext bce on ruc.id = bce.rel_unit_course_id
+        inner join base_unit bu on ruc.unit_id = bu.id
+        where bs.deleted = 0 and ruc.deleted = 0 and bu.deleted = 0
+        <if test = "studyType != null and studyType != 0">
+            and bce.study_type = #{studyType}
+        </if>
+        <if test = "courseId != null and courseId != 0">
+            and bc.id in (select course_id from relation_unit_course where id = #{courseId})
+        </if>
+        <if test="unitIdList != null">
+            and ruc.unit_id in
+            <foreach collection="unitIdList" separator="," open="(" close=")" item="unitIdItem">
+                #{unitIdItem}
+            </foreach>
+        </if>
+        <if test = "realName != null and realName != ''">
+            and bs.realname LIKE CONCAT('%', #{realName, jdbcType=VARCHAR}, '%')
+        </if>
+        order by btr.begin_time desc
+    </select>
+
+</mapper>

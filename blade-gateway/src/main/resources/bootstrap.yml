@@ -9,6 +9,7 @@ blade:
     blade-anbiao: blade-anbiao
     blade-upload: blade-upload
     blade-user: blade-user
+    blade-train: blade-train
 
 spring:
   cloud:
@@ -44,6 +45,11 @@ spring:
         uri: lb://${blade.service.blade-anbiao}
         predicates:
         - Path=/${blade.service.blade-anbiao}/**
+      # 教育培训模块
+      - id: ${blade.service.blade-train}
+        uri: lb://${blade.service.blade-train}
+        predicates:
+        - Path=/${blade.service.blade-train}/**
       # 附件
       - id: ${blade.service.blade-upload}
         uri: lb://${blade.service.blade-upload}

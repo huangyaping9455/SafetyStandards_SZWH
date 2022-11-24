@@ -21,6 +21,7 @@
         <module>blade-user-api</module>
         <module>blade-anbiao-api</module>
         <module>blade-upload-api</module>
+        <module>blade-train-api</module>
     </modules>
 
     <dependencies>
