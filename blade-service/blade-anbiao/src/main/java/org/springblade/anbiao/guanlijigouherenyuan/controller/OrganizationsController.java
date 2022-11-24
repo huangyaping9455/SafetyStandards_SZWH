@@ -576,6 +576,7 @@ public class OrganizationsController extends BladeController {
 					errorStr += shangjidanwei+",该上级单位不存在;";
 					bb++;
 				}else{
+					organization.setParentName(shangjidanwei);
 					organization.setParentId(organizations1.getDeptId());
 					organization.setImportUrl("icon_gou.png");
 				}

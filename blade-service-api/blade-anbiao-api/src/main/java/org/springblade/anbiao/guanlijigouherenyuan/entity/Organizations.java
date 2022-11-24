@@ -258,6 +258,10 @@ public class Organizations implements Serializable {
 	@TableField(exist = false)
 	private String parentId;
 
+	@ApiModelProperty(value = "上级名称")
+	@TableField(exist = false)
+	private String parentName;
+
 	@ApiModelProperty(value = "运营类型")
 	private String yunyingleixing;
 

@@ -76,6 +76,7 @@ public class AnbiaoBsPolicyInfoController {
 			if (StringUtils.isBlank(bsPolicyInfo.getBiaoqian())){
 				bsPolicyInfo.setBiaoqian("时讯");
 			}
+			bsPolicyInfo.setFangwenliang("0");
 			boolean i = BsPolicyInfoService.save(bsPolicyInfo);
 			if(i){
 				r.setMsg("新增成功");

@@ -172,5 +172,18 @@ public class Personnel implements Serializable {
 	@ApiModelProperty(value = "其他附件反面")
 	private String qitafanmianfujian;
 
+	@ApiModelProperty(value = "企业名称")
+	@TableField(exist = false)
+	private String deptName;
+
+	@ApiModelProperty(value = "岗位名称")
+	@TableField(exist = false)
+	private String postName;
+
+	@ApiModelProperty(value = "岗位职责")
+	@TableField(exist = false)
+	private String gwzz;
+
+
 
 }

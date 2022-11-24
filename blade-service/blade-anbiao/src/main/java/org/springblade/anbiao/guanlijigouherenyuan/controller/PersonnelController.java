@@ -20,6 +20,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -27,8 +28,12 @@ import lombok.AllArgsConstructor;
 import org.springblade.anbiao.configure.entity.Configure;
 import org.springblade.anbiao.configure.service.IConfigureService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.AnBiaoLogin;
+import org.springblade.anbiao.guanlijigouherenyuan.entity.Departmentpost;
+import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Personnel;
 import org.springblade.anbiao.guanlijigouherenyuan.page.PersonnelPage;
+import org.springblade.anbiao.guanlijigouherenyuan.service.IDepartmentpostService;
+import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IPersonnelService;
 import org.springblade.anbiao.guanlijigouherenyuan.vo.PersonnelVO;
 import org.springblade.core.boot.ctrl.BladeController;
@@ -72,42 +77,124 @@ public class PersonnelController extends BladeController {
 
 	private IFileUploadClient fileUploadClient;
 
+	private IOrganizationsService organizationService;
+
+	private IDepartmentpostService departmentpostService;
+
 	/**
 	 * 详情
 	 */
 	@GetMapping("/detail")
 	@ApiLog("详情-人员管理")
 	@ApiOperation(value = "详情-人员管理", notes = "传入id", position = 1)
-	public R detail(String id) {
+	public R detail(String id,String userId,String postId) {
 		R r = new R();
-		Personnel deail = personnelService.getById(id);
-		if(deail != null){
-			//身份证正面
-			if (StrUtil.isNotEmpty(deail.getShenfenzhengfujian()) && deail.getShenfenzhengfujian().contains("http") == false) {
-				deail.setShenfenzhengfujian(fileUploadClient.getUrl(deail.getShenfenzhengfujian()));
+		if(StringUtil.isNotBlank(id) && id != ""){
+			Personnel deail = personnelService.getById(id);
+			if(deail != null){
+				//身份证正面
+				if (StrUtil.isNotEmpty(deail.getShenfenzhengfujian()) && deail.getShenfenzhengfujian().contains("http") == false) {
+					deail.setShenfenzhengfujian(fileUploadClient.getUrl(deail.getShenfenzhengfujian()));
+				}
+				//身份证反面
+				if (StrUtil.isNotEmpty(deail.getShenfenzhengfanmianfujian()) && deail.getShenfenzhengfanmianfujian().contains("http") == false) {
+					deail.setShenfenzhengfanmianfujian(fileUploadClient.getUrl(deail.getShenfenzhengfanmianfujian()));
+				}
+				//其他证件正面
+				if (StrUtil.isNotEmpty(deail.getQitazhengmianfujian()) && deail.getQitazhengmianfujian().contains("http") == false) {
+					deail.setQitazhengmianfujian(fileUploadClient.getUrl(deail.getQitazhengmianfujian()));
+				}
+				//其他证件反面
+				if (StrUtil.isNotEmpty(deail.getQitafanmianfujian()) && deail.getQitafanmianfujian().contains("http") == false) {
+					deail.setQitafanmianfujian(fileUploadClient.getUrl(deail.getQitafanmianfujian()));
+				}
+
+				QueryWrapper<Organizations> organizationsQueryWrapper = new QueryWrapper<>();
+				organizationsQueryWrapper.lambda().eq(Organizations::getDeptId,deail.getDeptId());
+				organizationsQueryWrapper.lambda().eq(Organizations::getIsdelete,0);
+				Organizations organizations1 = organizationService.getBaseMapper().selectOne(organizationsQueryWrapper);
+				if(organizations1 != null){
+					deail.setDeptName(organizations1.getDeptName());
+				}
+
+				QueryWrapper<Departmentpost> departmentpostQueryWrapper = new QueryWrapper<Departmentpost>();
+				departmentpostQueryWrapper.lambda().eq(Departmentpost::getDeptId,deail.getPostId());
+				departmentpostQueryWrapper.lambda().eq(Departmentpost::getIsDeleted,0);
+				Departmentpost departmentpost = departmentpostService.getBaseMapper().selectOne(departmentpostQueryWrapper);
+				if(departmentpost != null){
+					deail.setPostName(departmentpost.getMingcheng());
+					deail.setGwzz(departmentpost.getGangweizhize());
+				}
+				r.setMsg("获取成功");
+				r.setData(deail);
+				r.setCode(200);
+				r.setSuccess(true);
+				return r;
+			}else{
+				r.setMsg("获取成功，暂无数据");
+				r.setCode(200);
+				r.setSuccess(true);
+				return r;
 			}
-			//身份证反面
-			if (StrUtil.isNotEmpty(deail.getShenfenzhengfanmianfujian()) && deail.getShenfenzhengfanmianfujian().contains("http") == false) {
-				deail.setShenfenzhengfanmianfujian(fileUploadClient.getUrl(deail.getShenfenzhengfanmianfujian()));
-			}
-			//其他证件正面
-			if (StrUtil.isNotEmpty(deail.getQitazhengmianfujian()) && deail.getQitazhengmianfujian().contains("http") == false) {
-				deail.setQitazhengmianfujian(fileUploadClient.getUrl(deail.getQitazhengmianfujian()));
-			}
-			//其他证件反面
-			if (StrUtil.isNotEmpty(deail.getQitafanmianfujian()) && deail.getQitafanmianfujian().contains("http") == false) {
-				deail.setQitafanmianfujian(fileUploadClient.getUrl(deail.getQitafanmianfujian()));
-			}
-			r.setMsg("获取成功");
-			r.setData(deail);
-			r.setCode(200);
-			r.setSuccess(true);
-			return r;
 		}else{
-			r.setMsg("获取成功，暂无数据");
-			r.setCode(200);
-			r.setSuccess(true);
-			return r;
+			QueryWrapper<Personnel> personnelQueryWrapper = new QueryWrapper<Personnel>();
+			personnelQueryWrapper.lambda().eq(Personnel::getUserid,userId);
+			personnelQueryWrapper.lambda().eq(Personnel::getPostId,postId);
+			personnelQueryWrapper.lambda().eq(Personnel::getIsDeleted,0);
+			Personnel per = personnelService.getBaseMapper().selectOne(personnelQueryWrapper);
+			if(per != null){
+				Personnel deail = personnelService.getById(per.getId());
+				if(deail != null){
+					//身份证正面
+					if (StrUtil.isNotEmpty(deail.getShenfenzhengfujian()) && deail.getShenfenzhengfujian().contains("http") == false) {
+						deail.setShenfenzhengfujian(fileUploadClient.getUrl(deail.getShenfenzhengfujian()));
+					}
+					//身份证反面
+					if (StrUtil.isNotEmpty(deail.getShenfenzhengfanmianfujian()) && deail.getShenfenzhengfanmianfujian().contains("http") == false) {
+						deail.setShenfenzhengfanmianfujian(fileUploadClient.getUrl(deail.getShenfenzhengfanmianfujian()));
+					}
+					//其他证件正面
+					if (StrUtil.isNotEmpty(deail.getQitazhengmianfujian()) && deail.getQitazhengmianfujian().contains("http") == false) {
+						deail.setQitazhengmianfujian(fileUploadClient.getUrl(deail.getQitazhengmianfujian()));
+					}
+					//其他证件反面
+					if (StrUtil.isNotEmpty(deail.getQitafanmianfujian()) && deail.getQitafanmianfujian().contains("http") == false) {
+						deail.setQitafanmianfujian(fileUploadClient.getUrl(deail.getQitafanmianfujian()));
+					}
+
+					QueryWrapper<Organizations> organizationsQueryWrapper = new QueryWrapper<>();
+					organizationsQueryWrapper.lambda().eq(Organizations::getDeptId,deail.getDeptId());
+					organizationsQueryWrapper.lambda().eq(Organizations::getIsdelete,0);
+					Organizations organizations1 = organizationService.getBaseMapper().selectOne(organizationsQueryWrapper);
+					if(organizations1 != null){
+						deail.setDeptName(organizations1.getDeptName());
+					}
+
+					QueryWrapper<Departmentpost> departmentpostQueryWrapper = new QueryWrapper<Departmentpost>();
+					departmentpostQueryWrapper.lambda().eq(Departmentpost::getDeptId,deail.getPostId());
+					departmentpostQueryWrapper.lambda().eq(Departmentpost::getIsDeleted,0);
+					Departmentpost departmentpost = departmentpostService.getBaseMapper().selectOne(departmentpostQueryWrapper);
+					if(departmentpost != null){
+						deail.setPostName(departmentpost.getMingcheng());
+						deail.setGwzz(departmentpost.getGangweizhize());
+					}
+					r.setMsg("获取成功");
+					r.setData(deail);
+					r.setCode(200);
+					r.setSuccess(true);
+					return r;
+				}else{
+					r.setMsg("获取成功，暂无数据");
+					r.setCode(200);
+					r.setSuccess(true);
+					return r;
+				}
+			}else {
+				r.setMsg("该人员信息不存在");
+				r.setCode(500);
+				r.setSuccess(false);
+				return r;
+			}
 		}
 	}
 
