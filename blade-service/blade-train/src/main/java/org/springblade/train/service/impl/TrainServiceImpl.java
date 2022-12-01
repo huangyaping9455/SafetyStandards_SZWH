@@ -301,6 +301,11 @@ public class TrainServiceImpl extends ServiceImpl<TrainMapper, Train> implements
 		return studentStatisticsList;
 	}
 
+	@Override
+	public List<CourseKind> getCourseKindList(String name) {
+		return trainMapper.getCourseKindList(name);
+	}
+
 	private void formatStudent(List<Student> students){
 		// 查询服务商列表存入临时HashMap
 		HashMap<Integer, Unit> serviceMap = new HashMap<Integer, Unit>();

@@ -66,15 +66,16 @@
         select
             a.id,a.`name` as account
         from
-            base_course a,base_courseware b,relation_course_courseware c,base_course_kind d,base_unit e,relation_unit_course f
+<!--            base_course a,base_courseware b,relation_course_courseware c,base_course_kind d,base_unit e,relation_unit_course f-->
+            base_course a,base_courseware b,relation_course_courseware c,base_unit e,relation_unit_course f
         where a.id = c.course_id
             and b.id = c.courseware_id
-            and d.id = a.course_kind_id
+<!--            and d.id = a.course_kind_id-->
             and f.course_id = a.id
             and f.unit_id = e.id
             and f.deleted = 0
         <if test = "name != null and name != ''">
-            and d.name = #{name}
+<!--            and d.name = #{name}-->
         </if>
         <if test = "id != null and id != ''">
             and e.id = #{id}
@@ -620,6 +621,20 @@
         </if>
         <if test = "courseId != null and courseId != 0">
             and bc.id = #{courseId}
+        </if>
+    </select>
+
+    <resultMap id="SelectResultMap" type="org.springblade.train.entity.CourseKind">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!-- 课程类型下拉框 -->
+    <select id="getCourseKindList" resultMap="SelectResultMap" parameterType="java.lang.String">
+        select id,name from base_course_kind
+        where 1=1
+        <if test = "name != null and name != ''">
+            AND name LIKE '%${name}%'
         </if>
     </select>
 

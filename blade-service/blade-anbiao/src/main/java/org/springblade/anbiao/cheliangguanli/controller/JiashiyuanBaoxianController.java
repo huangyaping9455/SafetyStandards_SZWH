@@ -465,25 +465,19 @@ public class JiashiyuanBaoxianController extends BladeController {
 		baoxian.setAjbUpdateByIds(user.getUserId()+"");
 		baoxian.setAjbUpdateByName(user.getUserName());
 		baoxian.setAjbUpdateTime(LocalDateTime.now());
-
-		JiaShiYuan jiaShiYuan = new JiaShiYuan();
-		jiaShiYuan.setId(jsyid);
-		jiaShiYuan.setIsdelete(0);
-		jiaShiYuan = jiaShiYuanService.getOne(Condition.getQueryWrapper(jiaShiYuan));
-		baoxian.setAjbInsureIds(jiaShiYuan.getId());
-		baoxian.setAjbCertificateNumber(jiaShiYuan.getShenfenzhenghao());
-		baoxian.setAjbInsuredName(jiaShiYuan.getJiashiyuanxingming());
-		baoxian.setAjbInsuredContacts(jiaShiYuan.getJiashiyuanxingming());
-		baoxian.setAjbInsuredContactAddress(jiaShiYuan.getJiatingzhuzhi());
+		baoxian.setAjbCertificateNumber(deail.getShenfenzhenghao());
+		baoxian.setAjbInsuredName(deail.getJiashiyuanxingming());
+		baoxian.setAjbInsuredContacts(deail.getJiashiyuanxingming());
+		baoxian.setAjbInsuredContactAddress(deail.getJiatingzhuzhi());
 		boolean i = jiashiyuanBaoxianService.updateById(baoxian);
 		if(i){
 			r.setCode(200);
-			r.setMsg("数据验证成功");
+			r.setMsg("异动成功");
 			r.setSuccess(true);
 			return r;
 		}else {
 			r.setCode(500);
-			r.setMsg("异动成功");
+			r.setMsg("异动失败");
 			r.setSuccess(false);
 			return r;
 		}

@@ -37,31 +37,31 @@ public class AnbiaoAnquanhuiyiDetail implements Serializable {
     @TableField("aad_aa_ids")
     private String aadAaIds;
 
-    @ApiModelProperty(value = "参会人主键")
+    @ApiModelProperty(value = "参会人主键",required = true)
     @TableField("aad_ap_ids")
     private String aadApIds;
 
-    @ApiModelProperty(value = "参会人名称")
+    @ApiModelProperty(value = "参会人名称",required = true)
     @TableField("aad_ap_name")
     private String aadApName;
 
-    @ApiModelProperty(value = "参会人员类别(0=安全管理员,1=从业人员)")
+    @ApiModelProperty(value = "参会人员类别(0=安全管理员,1=从业人员)",required = true)
     @TableField("aad_ap_type")
     private String aadApType;
 
-    @ApiModelProperty(value = "参会人头像")
+    @ApiModelProperty(value = "参会人头像",required = true)
     @TableField("add_ap_head_portrait")
     private String addApHeadPortrait;
 
-    @ApiModelProperty(value = "参会人签名")
+    @ApiModelProperty(value = "参会人签名",required = true)
     @TableField("add_ap_autograph")
     private String addApAutograph;
 
     @ApiModelProperty(value = "是否参会(0=否,1=是)")
     @TableField("add_ap_being_joined")
-    private String addApBeingJoined;
+    private String addApBeingJoined = "0";
 
-    @ApiModelProperty(value = "参会时间")
+    @ApiModelProperty(value = "参会时间",required = true)
     @TableField("add_time")
     private String addTime;
 

@@ -30,6 +30,9 @@ public class AnQuanHuiYiPage<T> extends BasePage<T> {
 	@ApiModelProperty(value = "会议主题")
 	private String zhuti;
 
+	@ApiModelProperty(value = "驾驶员ID")
+	private String aadApIds;
+
 	@ApiModelProperty(value = "排序字段")
 	private String orderColumns;
 

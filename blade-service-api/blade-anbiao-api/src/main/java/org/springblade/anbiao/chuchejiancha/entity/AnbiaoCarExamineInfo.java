@@ -34,15 +34,15 @@ public class AnbiaoCarExamineInfo implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    @ApiModelProperty(value = "车辆ID")
+    @ApiModelProperty(value = "车辆ID",required = true)
     @TableField("vehid")
     private String vehid;
 
-    @ApiModelProperty(value = "企业ID")
+    @ApiModelProperty(value = "企业ID",required = true)
     @TableField("deptid")
     private Integer deptid;
 
-    @ApiModelProperty(value = "数据状态，0：正常，1：异常，2：审核通过，3：审核驳回，4：已整改，5：归档")
+    @ApiModelProperty(value = "数据状态，0：正常，1：异常，2：审核通过，3：审核驳回，4：已整改，5：归档",required = true)
     @TableField("status")
     private Integer status;
 
@@ -50,7 +50,7 @@ public class AnbiaoCarExamineInfo implements Serializable {
     @TableField("type")
     private Integer type;
 
-    @ApiModelProperty(value = "检查时间")
+    @ApiModelProperty(value = "检查时间",required = true)
     @TableField("date")
     private String date;
 
@@ -62,11 +62,11 @@ public class AnbiaoCarExamineInfo implements Serializable {
     @TableField("isdelete")
     private Integer isdelete;
 
-    @ApiModelProperty(value = "驾驶员ID")
+    @ApiModelProperty(value = "驾驶员ID",required = true)
     @TableField("jsyid")
     private String jsyid;
 
-    @ApiModelProperty(value = "创建时间")
+    @ApiModelProperty(value = "创建时间",required = true)
     @TableField("createtime")
     private String createtime;
 
@@ -78,7 +78,7 @@ public class AnbiaoCarExamineInfo implements Serializable {
     @TableField("fujianremark")
     private String fujianremark;
 
-    @ApiModelProperty(value = "检查人电子签名")
+    @ApiModelProperty(value = "检查人电子签名",required = true)
     @TableField("jcrsignatrue")
     private String jcrsignatrue;
 
@@ -142,7 +142,7 @@ public class AnbiaoCarExamineInfo implements Serializable {
 	@TableField("createid")
 	private String createid;
 
-	@ApiModelProperty(value = "检查人名称")
+	@ApiModelProperty(value = "检查人名称",required = true)
 	@TableField("createname")
 	private String createname;
 

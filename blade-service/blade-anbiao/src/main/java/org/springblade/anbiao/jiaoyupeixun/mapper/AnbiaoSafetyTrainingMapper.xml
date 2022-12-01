@@ -34,14 +34,23 @@
         select
             a.*,
             b.dept_name as deptname
+        <if test="aadApIds != null and aadApIds != '' ">
+            ,case when IFNULL(c.add_time,'') != '' then 1 else 0 end as status
+        </if>
         from
             anbiao_safety_training a
             inner join  (
                 <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) b on a.ast_dept_ids = b.id
+        <if test="aadApIds != null and aadApIds != '' ">
+            left join anbiao_safety_training_detail c on c.aad_ast_ids = a.ast_ids
+        </if>
         where a.ast_delete = 0
           and a.ast_training_form = 1
           and a.ast_training_end_time >= #{date}
+        <if test="aadApIds != null and aadApIds != '' ">
+            and aad_ap_ids = #{aadApIds}
+        </if>
     </sql>
 
     <sql id="querySql">
@@ -53,9 +62,6 @@
         </if>
         <if test="astTrainingCategory != null and astTrainingCategory != '' ">
             and ast_training_category = #{astTrainingCategory}
-        </if>
-        <if test="aadApIds != null and aadApIds != '' ">
-            and aad_ap_ids = #{aadApIds}
         </if>
     </sql>
 

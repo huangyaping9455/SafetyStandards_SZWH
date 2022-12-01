@@ -18,4 +18,7 @@ public class AnbiaoSafetyTrainingVO extends AnbiaoSafetyTraining {
 	@ApiModelProperty(value = "企业名称")
 	private String deptname;
 
+	@ApiModelProperty(value = "状态，0：未签到，1：已签到")
+	private Integer status;
+
 }

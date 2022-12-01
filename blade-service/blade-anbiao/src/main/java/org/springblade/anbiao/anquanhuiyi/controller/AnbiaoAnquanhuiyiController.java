@@ -15,6 +15,10 @@ import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiDetail;
 import org.springblade.anbiao.anquanhuiyi.page.AnQuanHuiYiPage;
 import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiDetailService;
 import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiService;
+import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
+import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
+import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
+import org.springblade.anbiao.jiaoyupeixun.entity.AnbiaoSafetyTrainingDetail;
 import org.springblade.common.tool.DateUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
@@ -46,6 +50,8 @@ public class AnbiaoAnquanhuiyiController {
 	private IFileUploadClient fileUploadClient;
 
 	private IAnbiaoAnquanhuiyiDetailService anquanhuiyiDetailService;
+
+	private IOrganizationsService organizationService;
 
 
 	/**
@@ -300,13 +306,25 @@ public class AnbiaoAnquanhuiyiController {
 	@GetMapping("/detail")
 	@ApiLog("详情-安全会议")
 	@ApiOperation(value = "详情-安全会议",notes = "传入Id")
-	@ApiImplicitParam(name = "Id",value = "数据ID",required = true)
-	public R detail(String Id){
+	@ApiImplicitParams({ @ApiImplicitParam(name = "Id", value = "数据Id", required = true),
+		@ApiImplicitParam(name = "jsyId", value = "驾驶员Id")})
+	public R detail(String Id,String jsyId){
 		R r = new R();
 		AnbiaoAnquanhuiyi anquanhuiyiInfo = anquanhuiyiService.getById(Id);
 		if (anquanhuiyiInfo != null){
+			QueryWrapper<Organizations> organizationsVOQueryWrapper = new QueryWrapper<Organizations>();
+			organizationsVOQueryWrapper.lambda().eq(Organizations::getDeptId,anquanhuiyiInfo.getDeptId());
+			organizationsVOQueryWrapper.lambda().eq(Organizations::getIsdelete,0);
+			Organizations organizationsVO = organizationService.getBaseMapper().selectOne(organizationsVOQueryWrapper);
+			if(organizationsVO != null){
+				anquanhuiyiInfo.setDeptname(organizationsVO.getDeptName());
+			}
 			QueryWrapper<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailQueryWrapper = new QueryWrapper<>();
 			anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,Id);
+			//司机端只能看到自己的详情
+			if(StringUtils.isNotEmpty(jsyId)){
+				anquanhuiyiDetailQueryWrapper.lambda().like(StringUtils.isNotEmpty(jsyId), AnbiaoAnquanhuiyiDetail::getAadApIds, jsyId);
+			}
 			List<AnbiaoAnquanhuiyiDetail> details = anquanhuiyiDetailService.getBaseMapper().selectList(anquanhuiyiDetailQueryWrapper);
 			for (int i = 0; i <= details.size() - 1; i++) {
 				AnbiaoAnquanhuiyiDetail anbiaoAnquanhuiyiDetail = details.get(i);

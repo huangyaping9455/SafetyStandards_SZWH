@@ -20,6 +20,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springblade.train.entity.*;
 import org.springblade.train.page.CourseInfoPage;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -126,4 +127,13 @@ public interface TrainMapper extends BaseMapper<Train> {
 	 * @return
 	 */
 	List<StudentStatistics> getStudentAllList(@Param("unitId") Integer unitId,@Param("courseId") Integer courseId);
+
+	/**
+	 * 获取课程类型下拉框
+	 * @param name
+	 * @return
+	 */
+	List<CourseKind> getCourseKindList(@Param("name") String name);
+
+
 }

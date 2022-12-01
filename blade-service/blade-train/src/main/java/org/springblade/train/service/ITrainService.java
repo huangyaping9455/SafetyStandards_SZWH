@@ -166,4 +166,15 @@ public interface ITrainService extends IService<Train> {
 	 * @return
 	 */
 	List<StudentStatistics> getStudentAllList(Integer unitId, Integer courseId,Integer deptId);
+
+	/**
+	 * 获取课程类型下拉框
+	 * @param name
+	 * @return
+	 */
+	List<CourseKind> getCourseKindList(String name);
+
+
+
+
 }

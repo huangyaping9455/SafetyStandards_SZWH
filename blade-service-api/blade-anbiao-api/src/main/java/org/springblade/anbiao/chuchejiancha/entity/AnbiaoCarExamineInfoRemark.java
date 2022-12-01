@@ -36,19 +36,19 @@ public class AnbiaoCarExamineInfoRemark implements Serializable {
     @TableField("examid")
     private Integer examid;
 
-    @ApiModelProperty(value = "数据状态，0：正常,，1：异常")
+    @ApiModelProperty(value = "数据状态，0：正常,，1：异常",required = true)
     @TableField("status")
     private Integer status;
 
-	@ApiModelProperty(value = "检查项ID")
+	@ApiModelProperty(value = "检查项ID",required = true)
 	@TableField("xiangid")
 	private Integer xiangid;
 
-    @ApiModelProperty(value = "创建者")
+    @ApiModelProperty(value = "创建者",required = true)
     @TableField("createid")
     private String createid;
 
-    @ApiModelProperty(value = "创建时间")
+    @ApiModelProperty(value = "创建时间",required = true)
     @TableField("createtime")
     private String createtime;
 
@@ -60,7 +60,7 @@ public class AnbiaoCarExamineInfoRemark implements Serializable {
     @TableField("updatetime")
     private String updatetime;
 
-    @ApiModelProperty(value = "异常图片")
+    @ApiModelProperty(value = "异常图片",required = true)
     @TableField("flgimg")
     private String flgimg;
 
@@ -68,7 +68,7 @@ public class AnbiaoCarExamineInfoRemark implements Serializable {
     @TableField("trueimg")
     private String trueimg;
 
-    @ApiModelProperty(value = "异常情况")
+    @ApiModelProperty(value = "异常情况",required = true)
     @TableField("flgremark")
     private String flgremark;
 
@@ -80,7 +80,7 @@ public class AnbiaoCarExamineInfoRemark implements Serializable {
 	@TableField("zgshijian")
 	private String zgshijian;
 
-	@ApiModelProperty(value = "检查项名称")
+	@ApiModelProperty(value = "检查项名称",required = true)
 	@TableField(exist = false)
 	private String xiangname;
 

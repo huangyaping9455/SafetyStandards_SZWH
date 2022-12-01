@@ -60,7 +60,7 @@ values
         ) b on a.dept_id = b.id
         WHERE 1=1
             and ifnull(a.isdelete,0) = 0
-            and a.status = 0
+<!--            and a.status = 0-->
     </sql>
 
     <sql id="querySql">

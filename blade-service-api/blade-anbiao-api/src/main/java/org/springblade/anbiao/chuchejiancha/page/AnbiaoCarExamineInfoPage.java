@@ -29,7 +29,7 @@ public class AnbiaoCarExamineInfoPage<T> extends BasePage<T> {
 	@ApiModelProperty(value = "检查时间",required = true)
 	private String date;
 
-	@ApiModelProperty(value = "驾驶员ID（司机小程序，必传）")
+	@ApiModelProperty(value = "驾驶员ID（司机小程序，必传）",required = true)
 	private String jsyId;
 
 	@ApiModelProperty(value = "检查状态（已完成、未完成）")

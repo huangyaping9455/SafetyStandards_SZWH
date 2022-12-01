@@ -287,4 +287,109 @@ public class AuthController {
 		return R.data(info);
 	}
 
+//	@PostMapping("centerSignIn")
+//	@ApiLog("web端--一键登录")
+//	@ApiOperation(value = "web端--一键登录", notes = "传入账号:name,密码:password", position = 2)
+//	public R<AuthInfoConfig> centerSignIn(
+//		@ApiParam(value = "账号", required = true) @RequestParam String name,
+//		@ApiParam(value = "密码", required = true) @RequestParam String password,
+//		HttpServletResponse response) throws Exception {
+//		R r = new R();
+//		User user;
+//		//解密相关参数
+//		name = AesTwo.aesDecrypt(name, fileServer.getKey());
+//		password = AesTwo.aesDecrypt(password, fileServer.getKey());
+//
+//		//去掉多余的双引号
+//		name = name.replaceAll("\\\"", "");
+//		password = password.replaceAll("\\\"", "");
+//
+//		name = name.trim();
+//		//根据登录用户名查询是否存在该用户
+//		user = client.selectByName(name);
+//		String errMsg="";
+//		//返回accessToken
+//		AuthInfoConfig info=new AuthInfoConfig();
+//		//验证用户
+//		if(user !=null){
+//			user = client.login(name, password);
+//			System.out.println(user);
+//			//判断该账号是否有默认岗位，若无，则自动添加默认岗位
+//			if(user == null || StringUtils.isBlank(user.getPostId())){
+//				Post post = new Post();
+//				List<Post> postList = sysClient.selectByUserId(user.getId());
+//				post.setPostId(postList.get(0).getPostId());
+//				post.setUserId(user.getId());
+//				sysClient.updateIsdefault(post);
+//				Dept dept=sysClient.selectByJGBM("机构",user.getPostId());
+//				if(dept == null){
+//					errMsg = "该账号岗位机构不存在";
+//					return R.fail(errMsg);
+//				}
+//				user = client.login(user.getId().toString(), DigestUtil.encrypt(password));
+//			}
+//
+//			//清除锁定数据
+//			user.setIsLocked(0);
+//			user.setLoginErrorCount(0);
+//			user.setLastLoginErrorTime(null);
+//			//修改用户
+//			client.updateLocked(user.getIsLocked(),user.getLoginErrorCount(),null,user.getId().toString());
+//
+//			//设置jwt参数
+//			Map<String, String> param = new HashMap<>(16);
+//			param.put(SecureUtil.USER_ID, Func.toStr(user.getId()));
+//			param.put(SecureUtil.ROLE_ID, user.getRoleId());
+//			param.put(SecureUtil.TENANT_CODE, user.getTenantCode());
+//			param.put(SecureUtil.ACCOUNT, user.getAccount());
+//			param.put(SecureUtil.USER_NAME, user.getRealName());
+//			param.put(SecureUtil.ROLE_NAME, user.getPostId());
+//			//拼装accessToken
+//			String accessToken = SecureUtil.createJWT(param, "audience", "issuser", true);
+//
+//			info.setAccount(user.getAccount());
+//			info.setPassWord(password);
+//			info.setUserName(user.getRealName());
+//			info.setAuthority("administrator");
+//			info.setAccessToken(accessToken);
+//			info.setTokenType(SecureUtil.BEARER);
+//			info.setPostId(user.getPostId());
+//			Dept dept=sysClient.selectByJGBM("机构",user.getPostId());
+//			if(dept == null){
+//				errMsg = "该账号岗位机构不存在";
+//				return R.fail(errMsg);
+//			}
+//			info.setDeptId(dept.getId().toString());
+//			info.setDeptName(dept.getDeptName());
+//			info.setUserId(user.getId().toString());
+//			info.setPostName(sysClient.getDept(Integer.parseInt(user.getPostId())).getDeptName());
+//			//根据单位id获取企业基本信息
+//			Organizations organization=orrganizationsClient.selectByDeptId(dept.getId().toString());
+//			if(organization!=null){
+//				//获取配置logo
+//				if(StrUtil.isNotEmpty(organization.getLogoPhoto())){
+//					info.setLogoPhoto(fileUploadClient.getUrlUrl(organization.getLogoPhoto()));
+//				}else{
+//					if (!StringUtils.isBlank(alarmServer.getAddressPath())){
+//						info.setLogoPhoto(fileServer.getUrlPrefix()+fileServer.getPhotoLogo()+"/index_"+alarmServer.getAddressPath()+".png");
+//					}else{
+//						info.setLogoPhoto(fileServer.getUrlPrefix()+fileServer.getPhotoLogo()+"/index.png");
+//					}
+//				}
+//			}else{
+//				if (!StringUtils.isBlank(alarmServer.getAddressPath())){
+//					info.setLogoPhoto(fileServer.getUrlPrefix()+fileServer.getPhotoLogo()+"/index_"+alarmServer.getAddressPath()+".png");
+//				}else{
+//					info.setLogoPhoto(fileServer.getUrlPrefix()+fileServer.getPhotoLogo()+"/index.png");
+//				}
+//			}
+//			info.setUrlPrefix(fileServer.getUrlPrefix());
+//			//设置token过期时间
+//			info.setExpiresIn(SecureUtil.getExpire());
+//			return R.data(info);
+//		}else{
+//			return R.fail("该账号不存在");
+//		}
+//	}
+
 }

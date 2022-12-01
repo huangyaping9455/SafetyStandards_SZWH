@@ -35,25 +35,25 @@ public class AnbiaoSafetyTraining implements Serializable {
     @TableId(value = "ast_ids", type = IdType.UUID)
     private String astIds;
 
-    @ApiModelProperty(value = "企业主键")
+    @ApiModelProperty(value = "企业主键",required = true)
     private String astDeptIds;
 
-    @ApiModelProperty(value = "培训主题")
+    @ApiModelProperty(value = "培训主题",required = true)
     private String astTrainingTopic;
 
-    @ApiModelProperty(value = "培训类别(0=岗前培训,1=日常培训)")
+    @ApiModelProperty(value = "培训类别(0=岗前培训,1=日常培训)",required = true)
     private String astTrainingCategory;
 
-    @ApiModelProperty(value = "培训形式(0=线上,1=线下)默认1")
+    @ApiModelProperty(value = "培训形式(0=线上,1=线下)默认1",required = true)
     private String astTrainingForm;
 
-    @ApiModelProperty(value = "培训开始时间")
+    @ApiModelProperty(value = "培训开始时间",required = true)
     private String astTrainingStartTime;
 
-    @ApiModelProperty(value = "培训结束时间")
+    @ApiModelProperty(value = "培训结束时间",required = true)
     private String astTrainingEndTime;
 
-    @ApiModelProperty(value = "培训时长(单位：小时)")
+    @ApiModelProperty(value = "培训时长(单位：小时)",required = true)
     private String astTrainingDuration;
 
     @ApiModelProperty(value = "应参加人数")
@@ -98,6 +98,10 @@ public class AnbiaoSafetyTraining implements Serializable {
 	@ApiModelProperty(value = "参加培训人员明细List")
 	@TableField(exist = false)
 	private List<AnbiaoSafetyTrainingDetail> safetyTrainingDetailList;
+
+	@ApiModelProperty(value = "企业名称")
+	@TableField(exist = false)
+	private String deptName;
 
 
 }

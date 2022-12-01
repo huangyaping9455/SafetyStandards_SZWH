@@ -109,7 +109,8 @@
                 end as zhuangtai,
             u.create_time as createTimes,
             u.update_time as updateTimes,
-            ux.jiatingdizhi as address
+            ux.jiatingdizhi as address,
+            u.password
         from
             blade_user u
             INNER JOIN anbiao_personnel ux on ux.userid = u.id and ux.is_deleted = 0

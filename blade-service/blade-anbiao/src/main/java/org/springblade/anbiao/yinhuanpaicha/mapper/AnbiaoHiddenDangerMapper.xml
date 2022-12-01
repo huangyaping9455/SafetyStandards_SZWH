@@ -61,11 +61,14 @@
             and cheliangpaizhao like '%${cheliangpaizhao}%'
         </if>
         <if test="ahdType != null and ahdType != '' ">
-            and ahdType = #{ahdType}
+            and ahd_type = #{ahdType}
         </if>
-		<if test="ahdAddress != null and ahdAddress != '' ">
-			and ahdAddress = #{ahdAddress}
+		<if test="ahdAddress != null and ahdAddress != '' and ahdAddress == '车辆设备' ">
+			and ahd_address = #{ahdAddress}
 		</if>
+        <if test="ahdAddress != null and ahdAddress != '' and ahdAddress != '车辆设备' ">
+            and ahd_address != #{ahdAddress}
+        </if>
     </sql>
 
     <sql id="orderSql">

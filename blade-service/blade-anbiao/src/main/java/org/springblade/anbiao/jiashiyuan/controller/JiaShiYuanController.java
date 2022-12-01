@@ -363,7 +363,9 @@ public class JiaShiYuanController {
 				ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrDelete, "0");
 				AnbiaoJiashiyuanRuzhi rzdeail = ruzhiService.getBaseMapper().selectOne(ruzhiQueryWrapper);
 				if (rzdeail == null) {
-					ruzhi.setAjrDrivingExperience(Integer.parseInt(jiaShiYuan.getJialing()));
+					if(jiaShiYuan.getJialing() != null){
+						ruzhi.setAjrDrivingExperience(Integer.parseInt(jiaShiYuan.getJialing()));
+					}
 					ruzhi.setAjrCreateByName(jiaShiYuan.getCaozuoren());
 					ruzhi.setAjrCreateByIds(jiaShiYuan.getCaozuorenid().toString());
 					ruzhi.setAjrCreateTime(jiaShiYuan.getCaozuoshijian());

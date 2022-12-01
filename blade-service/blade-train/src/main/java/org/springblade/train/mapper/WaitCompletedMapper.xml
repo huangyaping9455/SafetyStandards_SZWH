@@ -60,41 +60,43 @@
     <!--查询待完成课程 -->
    <select id="getCourseList" resultType="org.springblade.train.entity.WaitCompletedCourse">
        select
-       bc.id,bc.name,bc.description,bc.advertise_image,
-       ruc.id as relUnitCourseId,
-       bce.begin_time,bce.end_time,bce.verification,bce.price,
-       rsc.course_status,
-       (select count(*)
-       from base_courseware bcw
-       inner join relation_course_courseware rcc on bcw.id = rcc.courseware_id
-       where rcc.course_id = bc.id and bcw.course_type = 1 and bcw.status = 3) as videoCount,
-       (select count(*)
-       from base_courseware bcw
-       left join relation_course_courseware rcc on bcw.id = rcc.courseware_id
-       where rcc.course_id = bc.id and bcw.course_type = 2 and bcw.status = 3) as fileCount,
-       (select count(*)
-       from base_courseware bcw
-       left join relation_course_courseware rcc on bcw.id = rcc.courseware_id
-       where rcc.course_id = bc.id and bcw.course_type = 3 and bcw.status = 3) as directCount,
-       ifnull((select sum(bsr.duration)
-       from biz_study_record bsr
-       inner join relation_unit_course ruc on ruc.id = bsr.rel_unit_course_id
-       where ruc.course_id = bc.id and ruc.id = rsc.rel_unit_course_id and bsr.student_id = bs.id and bsr.valid = 1)
-       ,0) as studyDuration,
-       ifnull((select sum(bcw.duration)
-       from base_courseware bcw
-       left join relation_course_courseware rcc on bcw.id = rcc.courseware_id
-       where rcc.course_id = bc.id and bcw.status = 3)
-       ,0) as duration
-       from base_course bc
-       inner join relation_unit_course ruc on ruc.course_id = bc.id
-       inner join base_course_ext bce on ruc.id = bce.rel_unit_course_id
-       inner join relation_student_course rsc on ruc.id = rsc.rel_unit_course_id
-       left join base_student bs on rsc.student_id = bs.id
+           bc.id,bc.name,bc.description,bc.advertise_image,
+           ruc.id as relUnitCourseId,
+           bce.begin_time,bce.end_time,bce.verification,bce.price,
+           rsc.course_status,
+           (select count(*)
+           from base_courseware bcw
+           inner join relation_course_courseware rcc on bcw.id = rcc.courseware_id
+           where rcc.course_id = bc.id and bcw.course_type = 1 and bcw.status = 3) as videoCount,
+           (select count(*)
+           from base_courseware bcw
+           left join relation_course_courseware rcc on bcw.id = rcc.courseware_id
+           where rcc.course_id = bc.id and bcw.course_type = 2 and bcw.status = 3) as fileCount,
+           (select count(*)
+           from base_courseware bcw
+           left join relation_course_courseware rcc on bcw.id = rcc.courseware_id
+           where rcc.course_id = bc.id and bcw.course_type = 3 and bcw.status = 3) as directCount,
+           ifnull((select sum(bsr.duration)
+           from biz_study_record bsr
+           inner join relation_unit_course ruc on ruc.id = bsr.rel_unit_course_id
+           where ruc.course_id = bc.id and ruc.id = rsc.rel_unit_course_id and bsr.student_id = bs.id and bsr.valid = 1)
+           ,0) as studyDuration,
+           ifnull((select sum(bcw.duration)
+           from base_courseware bcw
+           left join relation_course_courseware rcc on bcw.id = rcc.courseware_id
+           where rcc.course_id = bc.id and bcw.status = 3)
+           ,0) as duration,
+           bs.id as studentId
+       from
+            base_course bc
+           inner join relation_unit_course ruc on ruc.course_id = bc.id
+           inner join base_course_ext bce on ruc.id = bce.rel_unit_course_id
+           inner join relation_student_course rsc on ruc.id = rsc.rel_unit_course_id
+           left join base_student bs on rsc.student_id = bs.id
        where bs.id = #{studentId}
-       and ruc.status = 1
-       and ruc.deleted = 0
-       and bc.course_type = #{courseType}
+           and ruc.status = 1
+           and ruc.deleted = 0
+           and bc.course_type = #{courseType}
        <if test="isPay != 3">
            <if test="courseKind != null and courseKind != '' ">
                and bc.course_kind_id = #{courseKind}

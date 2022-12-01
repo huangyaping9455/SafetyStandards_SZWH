@@ -35,25 +35,25 @@ public class AnbiaoSafetyTrainingDetail implements Serializable {
     @ApiModelProperty(value = "安全培训主键")
     private String aadAstIds;
 
-    @ApiModelProperty(value = "参培人主键")
+    @ApiModelProperty(value = "参培人主键",required = true)
     private String aadApIds;
 
-    @ApiModelProperty(value = "参培人名称")
+    @ApiModelProperty(value = "参培人名称",required = true)
     private String aadApName;
 
-    @ApiModelProperty(value = "参培人员类别(0=安全管理员,1=从业人员)")
+    @ApiModelProperty(value = "参培人员类别(0=安全管理员,1=从业人员)",required = true)
     private String aadApType;
 
-    @ApiModelProperty(value = "参培人头像")
+    @ApiModelProperty(value = "参培人头像",required = true)
     private String addApHeadPortrait;
 
-    @ApiModelProperty(value = "参培人签名")
+    @ApiModelProperty(value = "参培人签名",required = true)
     private String addApAutograph;
 
     @ApiModelProperty(value = "是否参培(0=否,1=是)")
     private String addApBeingJoined;
 
-    @ApiModelProperty(value = "参培时间")
+    @ApiModelProperty(value = "参培时间",required = true)
     private String addTime;
 
 

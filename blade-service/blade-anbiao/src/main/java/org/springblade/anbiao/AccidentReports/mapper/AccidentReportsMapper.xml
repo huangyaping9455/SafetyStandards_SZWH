@@ -20,12 +20,17 @@
         ) b on a.dept_id = b.id
         <where> a.is_deleted = 0
          <if test="asiYear!=null and asiYear!=''">
-             AND a.shigufashengshijian = #{asiYear}
+             AND a.shigufashengshijian >= #{asiYear}
          </if>
 
         <if test="deptName !=null">
             AND b.dept_name = #{deptName}
         </if>
+
+        <if test="jiashiyuan !=null">
+            AND a.jiashiyuan = #{jiashiyuan}
+        </if>
+
            limit ${total}
         </where>
         </if>
@@ -50,6 +55,11 @@
             <if test="deptName !=null">
                 AND  b.dept_name = #{deptName}
             </if>
+
+            <if test="jiashiyuan !=null">
+                AND a.jiashiyuan = #{jiashiyuan}
+            </if>
+
            limit ${offsetNo},${size}
         </where>
         </if>

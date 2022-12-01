@@ -10,6 +10,8 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
+import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
 import org.springblade.anbiao.jiaoyupeixun.entity.AnbiaoSafetyTraining;
 import org.springblade.anbiao.jiaoyupeixun.entity.AnbiaoSafetyTrainingDetail;
 import org.springblade.anbiao.jiaoyupeixun.page.AnbiaoSafetyTrainingPage;
@@ -43,6 +45,8 @@ public class AnbiaoSafetyTrainingController {
 	private IAnbiaoSafetyTrainingDetailService detailService;
 
 	private IFileUploadClient fileUploadClient;
+
+	private IOrganizationsService organizationService;
 
 
 	/**
@@ -225,6 +229,14 @@ public class AnbiaoSafetyTrainingController {
 	public R getById(String Id,String jsyId) {
 		AnbiaoSafetyTraining deail = service.getById(Id);
 		if(deail != null) {
+			QueryWrapper<Organizations> organizationsVOQueryWrapper = new QueryWrapper<Organizations>();
+			organizationsVOQueryWrapper.lambda().eq(Organizations::getDeptId,deail.getAstDeptIds());
+			organizationsVOQueryWrapper.lambda().eq(Organizations::getIsdelete,0);
+			Organizations organizationsVO = organizationService.getBaseMapper().selectOne(organizationsVOQueryWrapper);
+			if(organizationsVO != null){
+				deail.setDeptName(organizationsVO.getDeptName());
+			}
+
 			//现场照片(以英文分号分割)
 			if (StrUtil.isNotEmpty(deail.getAstSitePhotos()) && deail.getAstSitePhotos().contains("http") == false) {
 				deail.setAstSitePhotos(fileUploadClient.getUrl(deail.getAstSitePhotos()));

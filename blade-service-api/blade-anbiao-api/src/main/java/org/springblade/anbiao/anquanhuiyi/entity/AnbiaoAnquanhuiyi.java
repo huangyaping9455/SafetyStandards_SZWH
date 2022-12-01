@@ -35,7 +35,7 @@ public class AnbiaoAnquanhuiyi implements Serializable {
     @TableId(value = "id", type = IdType.UUID)
     private String id;
 
-    @ApiModelProperty(value = "企业主键")
+    @ApiModelProperty(value = "企业主键",required = true)
     @TableField("dept_id")
     private Integer deptId;
 
@@ -51,7 +51,7 @@ public class AnbiaoAnquanhuiyi implements Serializable {
     @TableField("caozuoshijian")
     private String caozuoshijian;
 
-    @ApiModelProperty(value = "会议名称")
+    @ApiModelProperty(value = "会议名称",required = true)
     @TableField("huiyimingcheng")
     private String huiyimingcheng;
 
@@ -63,7 +63,7 @@ public class AnbiaoAnquanhuiyi implements Serializable {
 //    @TableField("huiyileixing")
 //    private String huiyileixing;
 
-    @ApiModelProperty(value = "会议形式(0=线上,1=线上)")
+    @ApiModelProperty(value = "会议形式(0=线上,1=线上)",required = true)
     @TableField("huiyixingshi")
     private String huiyixingshi;
 
@@ -83,11 +83,11 @@ public class AnbiaoAnquanhuiyi implements Serializable {
     @TableField("huiyididian")
     private String huiyididian;
 
-    @ApiModelProperty(value = "会议开始时间")
+    @ApiModelProperty(value = "会议开始时间",required = true)
     @TableField("huiyikaishishijian")
     private String huiyikaishishijian;
 
-    @ApiModelProperty(value = "会议结束时间")
+    @ApiModelProperty(value = "会议结束时间",required = true)
     @TableField("huiyijieshushijian")
     private String huiyijieshushijian;
 
@@ -134,4 +134,8 @@ public class AnbiaoAnquanhuiyi implements Serializable {
 	@ApiModelProperty(value = "参会人员类别")
 	@TableField(exist = false)
 	private String type;
+
+	@ApiModelProperty(value = "状态，0：未签到，1：已签到")
+	@TableField(exist = false)
+	private Integer status;
 }

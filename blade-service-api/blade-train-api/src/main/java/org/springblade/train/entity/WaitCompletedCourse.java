@@ -40,4 +40,6 @@ public class WaitCompletedCourse implements Serializable {
 	private Integer courseStatus;
 	//课程价格
 	private float price;
+	//学员ID
+	private Integer studentId;
 }

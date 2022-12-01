@@ -50,17 +50,21 @@ public class AnbiaoCheliangJiashiyuanDailyController {
 		for (int i = 0; i <= cheliangJiashiyuanDailies.size() - 1; i++) {
 			String createtime = cheliangJiashiyuanDailies.get(i).getCreatetime().substring(0, 10);
 			if (createtime.equals(substring)) {
-				r.setMsg("记录已存在");
-				r.setCode(500);
-				r.setSuccess(false);
-				return r;
+//				r.setMsg("记录已存在");
+//				r.setCode(500);
+//				r.setSuccess(false);
+//				return r;
+				r.setMsg("保存成功");
+				r.setCode(200);
+				r.setSuccess(true);
+			}else{
+				cheliangJiashiyuanDaily.setCreatetime(DateUtil.now());
+				cheliangJiashiyuanDailyService.save(cheliangJiashiyuanDaily);
+				r.setMsg("保存成功");
+				r.setCode(200);
+				r.setSuccess(true);
 			}
 		}
-		cheliangJiashiyuanDaily.setCreatetime(DateUtil.now());
-		cheliangJiashiyuanDailyService.save(cheliangJiashiyuanDaily);
-		r.setMsg("新增成功");
-		r.setCode(200);
-		r.setSuccess(true);
 		return r;
 	}
 

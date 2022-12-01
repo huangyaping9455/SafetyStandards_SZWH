@@ -52,7 +52,8 @@ public class FileUploadServiceImpl extends ServiceImpl<FileUploadMapper, FileUpl
 	@Override
 	public String getUrl(String str) {
 		List<String> list = StrSpliter.split(str, ',', 0, true, true);
-		String log="[";
+//		String log="[";
+		String log="";
 		for (int i = 0; i <list.size() ; i++) {
 			FileUpload files=fileUploadMapper.selectByFileName(list.get(i));
 			String ids= files.getId();
@@ -60,12 +61,14 @@ public class FileUploadServiceImpl extends ServiceImpl<FileUploadMapper, FileUpl
 			String name= files.getFileName();
 			String savename= files.getFileSaveName();
 			if(i==0){
-				log=log+"{\"name\":\""+name+"\",\"url\":\""+url+"\",\"id\":\""+ids+"\",\"savename\":\""+savename+"\"}";
+//				log=log+"{\"name\":\""+name+"\",\"url\":\""+url+"\",\"id\":\""+ids+"\",\"savename\":\""+savename+"\"}";
+				log+=url+",";
 			}else{
-				log=log+",{\"name\":\""+name+"\",\"url\":\""+url+"\",\"id\":\""+ids+"\",\"savename\":\""+savename+"\"}";
+				log+=url+",";
+//				log=log+",{\"name\":\""+name+"\",\"url\":\""+url+"\",\"id\":\""+ids+"\",\"savename\":\""+savename+"\"}";
 			}
 		}
-		return log+"]";
+		return log;
 	}
 
 	@Override

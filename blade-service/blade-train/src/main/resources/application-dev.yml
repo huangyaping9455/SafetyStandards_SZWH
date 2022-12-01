@@ -37,8 +37,8 @@ spring:
 
 trainserver:
   file-server: ${trainserver.dev.fileServer}
-  video-server: ${trainserver.dev.videoServer}
-  uploadVideo-server: ${trainserver.dev.uploadVideoServer}
+#  video-server: ${trainserver.dev.videoServer}
+#  uploadVideo-server: ${trainserver.dev.uploadVideoServer}
   client-id: QEbLaP18zPu8mkKrtethmgt4
   client-secret: yUnHQD6PDHrnFu3noGC9t7v8oilaT2m1
   access-token-url: https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials
@@ -49,6 +49,6 @@ trainserver:
   search-face-url: https://aip.baidubce.com/rest/2.0/face/v3/search?access_token=
   user-get-url: https://aip.baidubce.com/rest/2.0/face/v3/faceset/user/get?access_token=
   image-type: BASE64
-  face-platform-id: henanote
+  face-platform-id: swhote
   search-score: 50
   enable: true

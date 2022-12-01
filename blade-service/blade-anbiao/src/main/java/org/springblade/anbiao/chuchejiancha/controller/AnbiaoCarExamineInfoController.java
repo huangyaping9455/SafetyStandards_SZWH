@@ -24,6 +24,7 @@ import org.springblade.core.tool.api.R;
 import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +59,7 @@ public class AnbiaoCarExamineInfoController {
 
 		anbiaoCarExamineInfo.setIsdelete(0);
 		anbiaoCarExamineInfo.setCreatetime(DateUtil.now());
+		anbiaoCarExamineInfo.setDate(DateUtil.now().substring(0,10));
 
 		QueryWrapper<AnbiaoCarExamineInfo> examineQueryWrapper = new QueryWrapper<AnbiaoCarExamineInfo>();
 //		examineQueryWrapper.lambda().eq(AnbiaoCarExamineInfo::getType, anbiaoCarExamineInfo.getType());

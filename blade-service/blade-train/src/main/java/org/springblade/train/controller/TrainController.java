@@ -52,28 +52,27 @@ public class TrainController extends BladeController {
 	@Autowired
 	private RedisUtil redisUtil;
 
-	@GetMapping("/getRedis")
-	public void getRedis() {
-		String account = "11111";
-		AccountVo accountVo = new AccountVo();
-		accountVo.setAccountCode("11111");
-		accountVo.setAccountType("1");
-		redisUtil.set("account:" + accountVo.getAccountCode(), JSONObject.toJSONString(accountVo), -1);
-		if (redisUtil.hasKey("account:" + account)) {
-			AccountVo bean = redisUtil.getBean("account:" + account, AccountVo.class);
-			System.out.println("-------------->存在" + bean);
-		} else {
-			System.out.println("-------------->不存在");
-		}
-	}
+//	@GetMapping("/getRedis")
+//	public void getRedis() {
+//		String account = "11111";
+//		AccountVo accountVo = new AccountVo();
+//		accountVo.setAccountCode("11111");
+//		accountVo.setAccountType("1");
+//		redisUtil.set("account:" + accountVo.getAccountCode(), JSONObject.toJSONString(accountVo), -1);
+//		if (redisUtil.hasKey("account:" + account)) {
+//			AccountVo bean = redisUtil.getBean("account:" + account, AccountVo.class);
+//			System.out.println("-------------->存在" + bean);
+//		} else {
+//			System.out.println("-------------->不存在");
+//		}
+//	}
 
 	@GetMapping("/getQYCourseList")
-	@ApiOperation(value = "教育--根据企业名称、报警类型获取课程列表", notes = "教育--根据企业名称、报警类型获取课程列表", position = 1)
+	@ApiOperation(value = "教育--根据企业名称获取课程列表", notes = "教育--根据企业名称获取课程列表", position = 1)
 	@ApiImplicitParams({
-		@ApiImplicitParam(name = "type", value = "报警类型", required = true),
 		@ApiImplicitParam(name = "deptName", value = "企业名称", required = true)
 	})
-	public R<List<Train>> getQYCourseList(String type,String deptName) {
+	public R<List<Train>> getQYCourseList(String deptName) {
 		R rs = new R();
 		//根据企业名称查询教育平台是否包含该企业
 		Unit unit = trainService.getUnitByName(deptName);
@@ -83,7 +82,7 @@ public class TrainController extends BladeController {
 			rs.setMsg("当前所属单位未在教育系统中");
 			return rs;
 		}
-		List<Train> list = trainService.getQYCourseList(type,unit.getId().toString());
+		List<Train> list = trainService.getQYCourseList(null,unit.getId().toString());
 		if(list != null){
 			rs.setData(list);
 			rs.setCode(200);

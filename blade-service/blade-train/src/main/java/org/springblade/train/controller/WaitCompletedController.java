@@ -15,6 +15,7 @@
  */
 package org.springblade.train.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -75,17 +76,34 @@ public class WaitCompletedController extends BaseController {
     @GetMapping("/getCourseList")
     @ApiOperation(value = "教育--获取待完成课程", notes = "教育--获取待完成课程", position = 1)
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "studentId", value = "学员ID", required = true),
-        @ApiImplicitParam(name = "courseId", value = "课程ID", required = false)
+        @ApiImplicitParam(name = "driverName", value = "驾驶员名称", required = true),
+		@ApiImplicitParam(name = "deptName", value = "企业名称", required = true),
+		@ApiImplicitParam(name = "courseName", value = "课程类型", required = true)
     })
-    public R getCourseList(int studentId,int courseId) throws Exception {
+    public R getCourseList(String driverName,String deptName,String courseName) throws Exception {
         R rs = new R();
         int isPay = 3;
         int courseType = 1;
-        Integer courseKind = null;
+		int courseId = 0;
         try {
+			//根据学员姓名、企业名称获取培训的学员ID
+			Unit unitDeail = trainService.getUnitByName(deptName);
+			QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<Student>();
+			studentQueryWrapper.lambda().eq(Student::getRealName, driverName);
+			studentQueryWrapper.lambda().eq(Student::getUnitId, unitDeail.getId());
+			studentQueryWrapper.lambda().eq(Student::getDeleted, "0");
+			Student studentDeail = studentService.getBaseMapper().selectOne(studentQueryWrapper);
+			if(studentDeail == null){
+				rs.setCode(200);
+				rs.setMsg("暂无数据");
+				rs.setSuccess(true);
+				rs.setData(null);
+				return rs;
+			}
+			List<CourseKind> courseKindList = trainService.getCourseKindList(courseName);
+			int courseKind = courseKindList.get(0).getId();
             //查询信息
-            List<WaitCompletedCourse> courseList = waitCompletedService.getCourseList(studentId, isPay, courseType, courseKind,courseId);
+            List<WaitCompletedCourse> courseList = waitCompletedService.getCourseList(studentDeail.getId(), isPay, courseType, courseKind,courseId);
             if (courseList != null) {
                 rs.setCode(200);
                 rs.setMsg("查询待完成课程成功");
@@ -344,9 +362,11 @@ public class WaitCompletedController extends BaseController {
                 rs.setSuccess(true);
                 rs.setData(duration);
             }else{
-                rs.setCode(500);
-                rs.setMsg("查询上一次视频播放进度失败");
-                rs.setSuccess(false);
+				int duration = 0;
+                rs.setCode(200);
+                rs.setMsg("查询上一次视频播放进度成功");
+                rs.setSuccess(true);
+				rs.setData(duration);
             }
         } catch (Exception e) {
             e.printStackTrace();
