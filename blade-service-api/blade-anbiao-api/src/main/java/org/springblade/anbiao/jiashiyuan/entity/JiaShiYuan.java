@@ -488,4 +488,39 @@ public class JiaShiYuan implements Serializable {
 
 	@ApiModelProperty(value = "状态，默认0：在职，1：离职")
 	private Integer status;
+
+	/**
+	 * 劳动合同开始日期
+	 */
+	@ApiModelProperty(value = "劳动合同开始日期")
+	@TableField(exist = false)
+	private String laodonghetongkaishiriqi;
+
+	/**
+	 * 劳动合同结束日期
+	 */
+	@ApiModelProperty(value = "车牌颜色")
+	@TableField(exist = false)
+	private String laodonghetongjieshuriqi;
+
+	/**
+	 * 安全生产责任书：起始日期
+	 */
+	@ApiModelProperty(value = "安全生产责任书：起始日期")
+	@TableField(exist = false)
+	private String anquanzerenshuqishiriqi;
+
+	/**
+	 * 岗位危险告知书：起始日期
+	 */
+	@ApiModelProperty(value = "岗位危险告知书：起始日期")
+	@TableField(exist = false)
+	private String gangweigaozhishuqishiriqi;
+
+	/**
+	 * 无重大责任事故：起始日期
+	 */
+	@ApiModelProperty(value = "无重大责任事故：起始日期")
+	@TableField(exist = false)
+	private String wuzhongdazerenshiguqishiriqi;
 }

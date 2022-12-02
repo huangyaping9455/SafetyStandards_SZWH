@@ -146,4 +146,5 @@ public interface JiaShiYuanMapper extends BaseMapper<JiaShiYuan> {
 	 */
 	List<JiaShiYuanTrain> selectJiaShiYuanTrain(@Param("deptId") Integer deptId);
 
+	int selectMaxId();
 }
