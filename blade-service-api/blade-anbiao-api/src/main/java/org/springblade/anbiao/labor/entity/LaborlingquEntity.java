@@ -21,13 +21,13 @@ public class LaborlingquEntity {
 	private String  alrPersonIds;
 	private String 	alrPersonName;
 	private Integer alrReceiptsNumber;
-	private Date  alrReceiptDate;
+	private String  alrReceiptDate;
 	private String alrPersonAutograph;
 	private String 	alrDelete;
-	private Date alrCreateTime;
+	private String alrCreateTime;
 	private String 	alrCreateByIds;
 	private String alrCreateByName;
-	private Date	alrUpdateTime;
+	private String	alrUpdateTime;
 	private String alrUpdateByIds;
 	private String 	alrUpdateByName;
 	private String asiDeptIds;

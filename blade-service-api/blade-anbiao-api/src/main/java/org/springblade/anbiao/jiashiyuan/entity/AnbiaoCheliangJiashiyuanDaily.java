@@ -39,5 +39,8 @@ public class AnbiaoCheliangJiashiyuanDaily implements Serializable {
     @ApiModelProperty(value = "操作时间")
     private String createtime;
 
+	@ApiModelProperty(value = "挂车车辆ID")
+	private String gvehid;
+
 
 }

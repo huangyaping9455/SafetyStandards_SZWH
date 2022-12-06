@@ -126,49 +126,44 @@
     </update>
 
     <update id="updateL" parameterType="org.springblade.anbiao.labor.entity.LaborlingquEntity">
-        update 	anbiao_labor_receive
+        update anbiao_labor_receive
         <set>
-            <if test="alrAliIds != null">
-                alr_ali_ids = #{alrAliIds}
-            </if>
-            <if test="alrPersonIds != null">
-                alr_person_ids = #{alrPersonIds}
-            </if>
             <if test="alrPersonName != null">
-                alr_person_name = #{alrPersonName}
+                alr_person_name = #{alrPersonName},
             </if>
             <if test="alrReceiptsNumber != null">
-                alr_receipts_number = #{alrReceiptsNumber}
+                alr_receipts_number = #{alrReceiptsNumber},
             </if>
             <if test="alrReceiptDate != null">
-                alr_receipt_date = #{alrReceiptDate}
+                alr_receipt_date = #{alrReceiptDate},
             </if>
             <if test="alrPersonAutograph != null">
-                alr_person_autograph = #{alrPersonAutograph}
+                alr_person_autograph = #{alrPersonAutograph},
             </if>
             <if test="alrDelete!= null">
-                alr_delete = #{alrDelete}
+                alr_delete = #{alrDelete},
             </if>
             <if test="alrCreateTime != null">
-                alr_create_time = #{alrCreateTime}
+                alr_create_time = #{alrCreateTime},
             </if>
             <if test="alrCreateByIds != null">
-                alr_create_by_ids = #{alrCreateByIds}
+                alr_create_by_ids = #{alrCreateByIds},
             </if>
             <if test="alrCreateByName != null">
-                alr_create_by_name = #{alrCreateByName}
+                alr_create_by_name = #{alrCreateByName},
             </if>
             <if test="alrUpdateTime != null">
-                alr_update_time = #{alrUpdateTime}
+                alr_update_time = #{alrUpdateTime},
             </if>
             <if test="alrUpdateByIds != null">
-                alr_update_by_ids = #{alrUpdateByIds}
+                alr_update_by_ids = #{alrUpdateByIds},
             </if>
             <if test="alrUpdateByName != null">
                 alr_update_by_name = #{alrUpdateByName}
             </if>
         </set>
-        where alr_ali_ids = #{alrIds}
+        where alr_ali_ids = #{alrAliIds}
+            and alr_person_ids = #{alrPersonIds}
     </update>
 
     <!--修改劳保-->

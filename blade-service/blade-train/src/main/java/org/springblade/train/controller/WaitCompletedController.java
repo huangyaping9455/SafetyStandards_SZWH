@@ -25,6 +25,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springblade.common.configurationBean.TrainServer;
 import org.springblade.core.tool.api.R;
+import org.springblade.core.tool.utils.StringUtil;
 import org.springblade.train.config.BaseController;
 import org.springblade.train.config.FacePostProcessor;
 import org.springblade.train.config.JSONUtils;
@@ -105,6 +106,11 @@ public class WaitCompletedController extends BaseController {
             //查询信息
             List<WaitCompletedCourse> courseList = waitCompletedService.getCourseList(studentDeail.getId(), isPay, courseType, courseKind,courseId);
             if (courseList != null) {
+				courseList.forEach(item-> {
+					if(StringUtil.isNotBlank(item.getAdvertiseImage())){
+						item.setAdvertiseImage(trainServer.getFileserver()+item.getAdvertiseImage());
+					}
+				});
                 rs.setCode(200);
                 rs.setMsg("查询待完成课程成功");
                 rs.setSuccess(true);
@@ -171,6 +177,18 @@ public class WaitCompletedController extends BaseController {
 //                    }
                     resultList.add(cm);
                 });
+
+				resultList.forEach(item-> {
+					if(StringUtil.isNotBlank(item.getAdvertiseImage())){
+						item.setAdvertiseImage(trainServer.getFileserver()+item.getAdvertiseImage());
+					}
+					if(StringUtil.isNotBlank(item.getSourceFile())){
+						item.setSourceFile(trainServer.getFileserver()+item.getSourceFile());
+					}
+					if(StringUtil.isNotBlank(item.getMediaUrl())){
+						item.setMediaUrl(trainServer.getFileserver()+item.getMediaUrl());
+					}
+				});
                 rs.setCode(200);
                 rs.setMsg("查询课件成功");
                 rs.setSuccess(true);
@@ -380,8 +398,7 @@ public class WaitCompletedController extends BaseController {
     @PostMapping("/searchUser")
     @ApiOperation(value = "教育--人脸验证", notes = "教育- -人脸验证", position = 7)
     @ApiImplicitParams({
-        @ApiImplicitParam(name = "studentId", value = "学员ID", required = true),
-        @ApiImplicitParam(name = "json", value = "数据对象", required = true)
+        @ApiImplicitParam(name = "json", value = "数据对象（需包含学员ID、图片URL）", required = true)
     })
     public R searchUser(@RequestBody String json) throws Exception{
         R rs = new R();

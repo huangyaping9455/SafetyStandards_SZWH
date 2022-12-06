@@ -190,6 +190,8 @@
         <if test = "coursewareId != null and coursewareId != 0">
             and courseware_id = #{coursewareId}
         </if>
+        order by end_time desc
+        limit 1
     </select>
 
 

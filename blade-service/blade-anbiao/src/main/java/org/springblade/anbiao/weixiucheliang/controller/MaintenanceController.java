@@ -87,11 +87,21 @@ public class MaintenanceController {
 			if (aBoolean && aBoolean1 ) {
 				rs.setCode(200);
 				rs.setSuccess(true);
-				rs.setMsg("修改成功");
+				rs.setMsg("新增成功");
 			} else {
 				rs.setCode(500);
 				rs.setSuccess(false);
-				rs.setMsg("修改失败");
+				rs.setMsg("新增失败");
+			}
+		}else{
+			if ( aBoolean1 ) {
+				rs.setCode(200);
+				rs.setSuccess(true);
+				rs.setMsg("新增成功");
+			} else {
+				rs.setCode(500);
+				rs.setSuccess(false);
+				rs.setMsg("新增失败");
 			}
 		}
 		return rs;

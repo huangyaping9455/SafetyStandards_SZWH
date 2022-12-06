@@ -21,7 +21,10 @@ import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import javax.validation.Valid;
 
+import org.springblade.anbiao.cheliangguanli.entity.VehicleDaoluyunshuzheng;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleJishupingding;
+import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
+import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
 import org.springblade.common.tool.FuncUtil;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
@@ -53,6 +56,8 @@ public class VehicleXingnengbaogaoController extends BladeController {
 
 	private IVehicleXingnengbaogaoService vehicleXingnengbaogaoService;
 
+	private IVehicleService vehicleService;
+
 	/**
 	 * 详情
 	 */
@@ -69,7 +74,12 @@ public class VehicleXingnengbaogaoController extends BladeController {
 		VehicleXingnengbaogao qXlbg = new VehicleXingnengbaogao();
 		qXlbg.setAvxAvIds(vehicleId);
 		qXlbg.setAvxDelete("0");
-		return R.data(vehicleXingnengbaogaoService.getOne(Condition.getQueryWrapper(qXlbg)));
+		VehicleXingnengbaogao xingnengbaogao= vehicleXingnengbaogaoService.getOne(Condition.getQueryWrapper(qXlbg));
+		if(xingnengbaogao != null){
+			VehicleVO detail = vehicleService.selectByKey(vehicleId);
+			xingnengbaogao.setAvxFileNo(detail.getCheliangpaizhao());
+		}
+		return R.data(xingnengbaogao);
 	}
 
 	/**

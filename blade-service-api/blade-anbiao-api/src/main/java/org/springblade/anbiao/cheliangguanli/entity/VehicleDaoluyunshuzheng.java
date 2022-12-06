@@ -16,6 +16,7 @@
 package org.springblade.anbiao.cheliangguanli.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
@@ -177,6 +178,10 @@ public class VehicleDaoluyunshuzheng implements Serializable {
      */
     @ApiModelProperty(value = "更新人姓名")
     private String avdUpdateByName;
+
+	@ApiModelProperty(value = "车辆牌照")
+	@TableField(exist = false)
+	private String avxPlateNo;
 
 
 }

@@ -25,7 +25,8 @@ public class AnbiaoCheliangJiashiyuanServiceImpl extends ServiceImpl<AnbiaoCheli
 	private AnbiaoCheliangJiashiyuanMapper anbiaoCheliangJiashiyuanMapper;
 
 	@Override
-	public List<CheliangJiashiyuanVO> SelectByJiashiyuanID(String jiashiyuanid) {
-		return anbiaoCheliangJiashiyuanMapper.SelectByJiashiyuanID(jiashiyuanid);
+	public List<CheliangJiashiyuanVO> SelectByJiashiyuanID(String jiashiyuanid,String shiyongxingzhi) {
+		return anbiaoCheliangJiashiyuanMapper.SelectByJiashiyuanID(jiashiyuanid,shiyongxingzhi);
 	}
+
 }

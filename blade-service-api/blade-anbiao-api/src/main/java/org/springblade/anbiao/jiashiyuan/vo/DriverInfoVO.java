@@ -58,4 +58,10 @@ public class DriverInfoVO {
 	@ApiModelProperty(value = "openID")
 	private String openid;
 
+	@ApiModelProperty(value = "车辆牌照")
+	private String cheliangpaizhao;
+
+	@ApiModelProperty(value = "挂车车辆牌照")
+	private String guacheliangpaizhao;
+
 }

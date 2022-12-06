@@ -18,6 +18,7 @@ import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,23 +79,30 @@ public class AnbiaoCheliangJiashiyuanController {
 	 */
 	@PostMapping("/detail")
 	@ApiLog("查询-车辆-驾驶员绑定信息")
-	@ApiOperation(value = "查询-车辆驾驶员绑定信息", notes = "传入jiashiyuanid")
+	@ApiOperation(value = "查询-车辆驾驶员绑定信息", notes = "传入jiashiyuanid、shiyongxingzhi")
 	public R detail(@RequestBody String json,BladeUser user){
 		R r = new R();
-		//获取参数
-		JsonNode node = JSONUtils.string2JsonNode(json);
-		String jiashiyuanid = node.get("jiashiyuanid").asText();
-		List<CheliangJiashiyuanVO> cheliangJiashiyuanVOS = cheliangJiashiyuanServiceImpl.SelectByJiashiyuanID(jiashiyuanid);
-		if(cheliangJiashiyuanVOS.size() > 0){
-			r.setMsg("获取成功");
-			r.setCode(200);
-			r.setSuccess(true);
-			r.setData(cheliangJiashiyuanVOS);
-		}else{
-			r.setMsg("获取成功，暂无数据");
-			r.setCode(200);
-			r.setSuccess(true);
-			r.setData("");
+		try {
+			//获取参数
+			JsonNode node = JSONUtils.string2JsonNode(json);
+			String jiashiyuanid = node.get("jiashiyuanid").asText();
+//			System.out.println(node.get("shiyongxingzhi").asText());
+//			String shiyongxingzhi = node.get("shiyongxingzhi").asText();
+			String shiyongxingzhi = null;
+			List<CheliangJiashiyuanVO> cheliangJiashiyuanVOS = cheliangJiashiyuanServiceImpl.SelectByJiashiyuanID(jiashiyuanid,shiyongxingzhi);
+			if(cheliangJiashiyuanVOS.size() > 0){
+				r.setMsg("获取成功");
+				r.setCode(200);
+				r.setSuccess(true);
+				r.setData(cheliangJiashiyuanVOS);
+			}else{
+				r.setMsg("获取成功，暂无数据");
+				r.setCode(200);
+				r.setSuccess(true);
+				r.setData("");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return r;
 	}

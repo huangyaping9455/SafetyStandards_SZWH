@@ -17,7 +17,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper=false)
 @TableName("biz_test_record")
 public class CourseTestRecord implements Serializable {
-	
+
 	/**
 	 * serialVersionUID
 	 */
@@ -62,7 +62,7 @@ public class CourseTestRecord implements Serializable {
 	private int duration ;
 
 	/** 考试分数 */
-	@TableField("score")
+	@TableField(value = "score")
 	private int score ;
 
 	/** 考试结果 */

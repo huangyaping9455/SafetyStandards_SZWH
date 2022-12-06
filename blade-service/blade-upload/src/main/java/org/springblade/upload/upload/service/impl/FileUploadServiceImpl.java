@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springblade.common.constant.FilePathConstant;
+import org.springblade.common.tool.StringUtil;
 import org.springblade.upload.upload.entity.FileUpload;
 import org.springblade.upload.upload.mapper.FileUploadMapper;
 import org.springblade.upload.upload.service.FileUploadService;
@@ -68,6 +69,11 @@ public class FileUploadServiceImpl extends ServiceImpl<FileUploadMapper, FileUpl
 //				log=log+",{\"name\":\""+name+"\",\"url\":\""+url+"\",\"id\":\""+ids+"\",\"savename\":\""+savename+"\"}";
 			}
 		}
+		//先获取最后一个  - 所在的位置
+		int indexs = log.lastIndexOf(",");
+		//获取从0到最后一个 / 之间的字符
+		String str3 = log.substring(0, indexs);
+		log = str3;
 		return log;
 	}
 

@@ -23,14 +23,13 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.modelmapper.TypeToken;
+import org.springblade.common.configurationBean.TrainServer;
 import org.springblade.core.tool.api.R;
+import org.springblade.core.tool.utils.StringUtil;
 import org.springblade.train.config.BaseController;
 import org.springblade.train.entity.*;
 import org.springblade.train.page.CourseTestRecordPage;
-import org.springblade.train.service.IBizExamService;
-import org.springblade.train.service.ICourseStudentService;
-import org.springblade.train.service.ICourseTestRecordService;
-import org.springblade.train.service.IExamService;
+import org.springblade.train.service.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
@@ -56,18 +55,44 @@ public class ExamController extends BaseController {
 
 	private ICourseTestRecordService courseTestRecordService;
 
+	private ITrainService trainService;
+
+	private IStudentService studentService;
+
+	private TrainServer trainServer;
+
 	@GetMapping("/getWaitExamList")
-	@ApiOperation(value = "教育--根据学员ID获取待考试详情", notes = "教育--根据学员ID获取待考试详情", position = 1)
+	@ApiOperation(value = "教育--根据驾驶员名称、企业名称获取待考试详情", notes = "教育--根据驾驶员名称、企业名称获取待考试详情", position = 1)
 	@ApiImplicitParams({
-		@ApiImplicitParam(name = "studentId", value = "学员ID", required = true)
+		@ApiImplicitParam(name = "driverName", value = "驾驶员名称", required = true),
+		@ApiImplicitParam(name = "deptName", value = "企业名称", required = true)
 	})
-	public R getWaitExamList(int studentId) throws Exception{
+	public R getWaitExamList(String driverName,String deptName) throws Exception{
 		R rs = new R();
 		try {
+			//根据学员姓名、企业名称获取培训的学员ID
+			Unit unitDeail = trainService.getUnitByName(deptName);
+			QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<Student>();
+			studentQueryWrapper.lambda().eq(Student::getRealName, driverName);
+			studentQueryWrapper.lambda().eq(Student::getUnitId, unitDeail.getId());
+			studentQueryWrapper.lambda().eq(Student::getDeleted, "0");
+			Student studentDeail = studentService.getBaseMapper().selectOne(studentQueryWrapper);
+			if(studentDeail == null){
+				rs.setCode(200);
+				rs.setMsg("暂无数据");
+				rs.setSuccess(true);
+				rs.setData(null);
+				return rs;
+			}
 			HashMap<String, Object> map = new HashMap<>();
-			map.put("studentId", studentId);
+			map.put("studentId", studentDeail.getId());
 			List<WaitExamModel> waitExamModelList = examService.getWaitExamList(map);
 			if(waitExamModelList != null){
+				waitExamModelList.forEach(item-> {
+					if(StringUtil.isNotBlank(item.getFullFacePhoto())){
+						item.setFullFacePhoto(trainServer.getFileserver()+item.getFullFacePhoto());
+					}
+				});
 				rs.setData(waitExamModelList);
 				rs.setCode(200);
 				rs.setSuccess(true);
@@ -300,11 +325,26 @@ public class ExamController extends BaseController {
 	public R getCourseTestRecord(@RequestBody CourseTestRecordPage courseTestRecordPage) throws Exception{
 		R rs = new R();
 		try {
+			//根据学员姓名、企业名称获取培训的学员ID
+			Unit unitDeail = trainService.getUnitByName(courseTestRecordPage.getDeptName());
+			QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<Student>();
+			studentQueryWrapper.lambda().eq(Student::getRealName, courseTestRecordPage.getStudentName());
+			studentQueryWrapper.lambda().eq(Student::getUnitId, unitDeail.getId());
+			studentQueryWrapper.lambda().eq(Student::getDeleted, "0");
+			Student studentDeail = studentService.getBaseMapper().selectOne(studentQueryWrapper);
+			if(studentDeail == null){
+				rs.setCode(200);
+				rs.setMsg("暂无数据");
+				rs.setSuccess(true);
+				rs.setData(null);
+				return rs;
+			}
+			courseTestRecordPage.setStudentId(studentDeail.getId());
 			//设置分页查询
 			CourseTestRecordPage courseTestRecordList = examService.getCourseTestRecordList(courseTestRecordPage);
-			List<CourseTestRecord> resultList = this.modelMapper.map(courseTestRecordList, new TypeToken<List<CourseTestRecord>>() {}.getType());
-			if(resultList != null){
-				rs.setData(resultList);
+//			List<CourseTestRecord> resultList = this.modelMapper.map(courseTestRecordList, new TypeToken<List<CourseTestRecord>>() {}.getType());
+			if(courseTestRecordList != null){
+				rs.setData(courseTestRecordList);
 				rs.setCode(200);
 				rs.setSuccess(true);
 				rs.setMsg("获取考试记录详情成功");

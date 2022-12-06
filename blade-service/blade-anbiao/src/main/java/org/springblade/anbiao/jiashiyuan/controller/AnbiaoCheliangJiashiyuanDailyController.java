@@ -46,23 +46,35 @@ public class AnbiaoCheliangJiashiyuanDailyController {
 		QueryWrapper<AnbiaoCheliangJiashiyuanDaily> cheliangJiashiyuanDailyQueryWrapper = new QueryWrapper<>();
 		cheliangJiashiyuanDailyQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuanDaily::getJiashiyuanid, cheliangJiashiyuanDaily.getJiashiyuanid());
 		cheliangJiashiyuanDailyQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuanDaily::getVehid, cheliangJiashiyuanDaily.getVehid());
+		cheliangJiashiyuanDailyQueryWrapper.lambda().ge(AnbiaoCheliangJiashiyuanDaily::getCreatetime, substring);
 		List<AnbiaoCheliangJiashiyuanDaily> cheliangJiashiyuanDailies = cheliangJiashiyuanDailyService.getBaseMapper().selectList(cheliangJiashiyuanDailyQueryWrapper);
-		for (int i = 0; i <= cheliangJiashiyuanDailies.size() - 1; i++) {
-			String createtime = cheliangJiashiyuanDailies.get(i).getCreatetime().substring(0, 10);
-			if (createtime.equals(substring)) {
-//				r.setMsg("记录已存在");
-//				r.setCode(500);
-//				r.setSuccess(false);
-//				return r;
-				r.setMsg("保存成功");
-				r.setCode(200);
-				r.setSuccess(true);
-			}else{
-				cheliangJiashiyuanDaily.setCreatetime(DateUtil.now());
-				cheliangJiashiyuanDailyService.save(cheliangJiashiyuanDaily);
-				r.setMsg("保存成功");
-				r.setCode(200);
-				r.setSuccess(true);
+		if(cheliangJiashiyuanDailies.size() < 1){
+			cheliangJiashiyuanDaily.setCreatetime(DateUtil.now());
+			cheliangJiashiyuanDailyService.save(cheliangJiashiyuanDaily);
+			r.setMsg("保存成功");
+			r.setCode(200);
+			r.setSuccess(true);
+		}else{
+			for (int i = 0; i <= cheliangJiashiyuanDailies.size() - 1; i++) {
+				String createtime = cheliangJiashiyuanDailies.get(i).getCreatetime().substring(0, 10);
+				if (createtime.equals(substring)) {
+	//				r.setMsg("记录已存在");
+	//				r.setCode(500);
+	//				r.setSuccess(false);
+	//				return r;
+					cheliangJiashiyuanDaily.setCreatetime(DateUtil.now());
+					cheliangJiashiyuanDaily.setId(cheliangJiashiyuanDaily.getId());
+					cheliangJiashiyuanDailyService.updateById(cheliangJiashiyuanDaily);
+					r.setMsg("保存成功");
+					r.setCode(200);
+					r.setSuccess(true);
+				}else{
+					cheliangJiashiyuanDaily.setCreatetime(DateUtil.now());
+					cheliangJiashiyuanDailyService.save(cheliangJiashiyuanDaily);
+					r.setMsg("保存成功");
+					r.setCode(200);
+					r.setSuccess(true);
+				}
 			}
 		}
 		return r;
@@ -103,15 +115,26 @@ public class AnbiaoCheliangJiashiyuanDailyController {
 	 * 根据人员id查询每日绑定车辆信息
 	 */
 	@PostMapping("/detail")
-	@ApiLog("查询-车辆-驾驶员绑定每日信息")
-	@ApiOperation(value = "查询-车辆-驾驶员绑定每日信息", notes = "传入jiashiyuanid")
-	public List detail(String jiashiyuanid,BladeUser user){
-
+	@ApiLog("查询-车辆-驾驶员绑定每日信息（当前）")
+	@ApiOperation(value = "查询-车辆-驾驶员绑定每日信息（当前）", notes = "传入jiashiyuanid")
+	public R<List<AnbiaoCheliangJiashiyuanDaily>> detail(String jiashiyuanid,BladeUser user){
 		R r = new R();
 		QueryWrapper<AnbiaoCheliangJiashiyuanDaily> cheliangJiashiyuanDailyQueryWrapper = new QueryWrapper<>();
 		cheliangJiashiyuanDailyQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuanDaily::getJiashiyuanid,jiashiyuanid);
+		cheliangJiashiyuanDailyQueryWrapper.lambda().orderByDesc(AnbiaoCheliangJiashiyuanDaily::getCreatetime);
+		cheliangJiashiyuanDailyQueryWrapper.last(" limit 1");
 		List<AnbiaoCheliangJiashiyuanDaily> anbiaoCheliangJiashiyuanDailies = cheliangJiashiyuanDailyService.getBaseMapper().selectList(cheliangJiashiyuanDailyQueryWrapper);
-		return anbiaoCheliangJiashiyuanDailies;
-
+		if (anbiaoCheliangJiashiyuanDailies != null){
+			r.setData(anbiaoCheliangJiashiyuanDailies);
+			r.setSuccess(true);
+			r.setCode(200);
+			r.setMsg("获取成功");
+		}else{
+			r.setData(null);
+			r.setSuccess(true);
+			r.setCode(200);
+			r.setMsg("获取成功，暂无数据");
+		}
+		return r;
 	}
 }

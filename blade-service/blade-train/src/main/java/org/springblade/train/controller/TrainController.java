@@ -23,6 +23,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleDriver;
 import org.springblade.anbiao.cheliangguanli.feign.IVehiclepostClientBack;
+import org.springblade.common.configurationBean.TrainServer;
 import org.springblade.core.boot.ctrl.BladeController;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.tool.api.R;
@@ -48,6 +49,8 @@ public class TrainController extends BladeController {
 	private ITrainService trainService;
 
 	private IVehiclepostClientBack vehiclepostClientBack;
+
+	private TrainServer trainServer;
 
 	@Autowired
 	private RedisUtil redisUtil;

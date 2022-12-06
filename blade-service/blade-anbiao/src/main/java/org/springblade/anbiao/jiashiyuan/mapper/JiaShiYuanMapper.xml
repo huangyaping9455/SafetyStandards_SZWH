@@ -702,11 +702,26 @@ values
 
     <select id="selectDriverInfo" resultType="org.springblade.anbiao.jiashiyuan.vo.DriverInfoVO">
         select
-            a.id,a.dept_id as deptId,d.dept_name as deptName,a.jiashiyuanxingming,a.shenfenzhenghao,a.shoujihaoma,a.openid,b.ajr_head_portrait as zhaopian
+            a.id,a.dept_id as deptId,d.dept_name as deptName,a.jiashiyuanxingming,a.shenfenzhenghao,
+            a.shoujihaoma,a.openid,b.ajr_head_portrait as zhaopian,d.cheliangpaizhao,e.cheliangpaizhao as guacheliangpaizhao
         from
             anbiao_jiashiyuan a
             left join blade_dept d on d.id = a.dept_id and d.is_deleted = 0
             left join anbiao_jiashiyuan_ruzhi b on a.id = b.ajr_aj_ids and b.ajr_delete = 0
+            left join (
+                select a.jiashiyuanid,b.cheliangpaizhao from anbiao_cheliang_jiashiyuan_daily a,anbiao_vehicle b
+                where a.jiashiyuanid = #{jsyId}
+                  and a.vehid = b.id
+                ORDER BY a.createtime desc
+                limit 1
+            ) d on d.jiashiyuanid = a.id
+            left join (
+                select a.jiashiyuanid,b.cheliangpaizhao from anbiao_cheliang_jiashiyuan_daily a,anbiao_vehicle b
+                where a.jiashiyuanid = #{jsyId}
+                  and a.gvehid = b.id
+                ORDER BY a.createtime desc
+                    limit 1
+            ) e on e.jiashiyuanid = a.id
         where a.isdelete = 0
           and a.id = #{jsyId}
     </select>

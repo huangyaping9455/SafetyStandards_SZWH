@@ -27,6 +27,7 @@ public class FacePostProcessor {
 	@Autowired
 	private FaceProperties faceProperties;
 
+	@Autowired
     private TrainServer trainServer;
 
     /**
@@ -111,6 +112,9 @@ public class FacePostProcessor {
             return token.toString();
         }
         String url = trainServer.getAccessTokenUrl();
+		if(url == null){
+			url = "https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials";
+		}
         url = url +"&client_id="+trainServer.getClientId();
         url = url +"&client_secret="+trainServer.getClientSecret();
         try {

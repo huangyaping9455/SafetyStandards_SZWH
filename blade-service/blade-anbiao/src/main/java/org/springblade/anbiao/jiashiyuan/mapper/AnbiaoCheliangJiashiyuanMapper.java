@@ -19,5 +19,5 @@ import java.util.Map;
  */
 @Mapper
 public interface AnbiaoCheliangJiashiyuanMapper extends BaseMapper<AnbiaoCheliangJiashiyuan> {
-	public List<CheliangJiashiyuanVO> SelectByJiashiyuanID(String jiashiyuanid);
+	public List<CheliangJiashiyuanVO> SelectByJiashiyuanID(String jiashiyuanid,String shiyongxingzhi);
 }

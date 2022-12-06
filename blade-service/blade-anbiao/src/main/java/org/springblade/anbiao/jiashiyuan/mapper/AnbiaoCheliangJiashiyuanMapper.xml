@@ -15,5 +15,8 @@
         SELECT v.cheliangpaizhao,cj.jiashiyuanid,cj.vehid FROM `anbiao_vehicle` v,anbiao_cheliang_jiashiyuan cj
         WHERE cj.jiashiyuanid= #{jiashiyuanid}
           and cj.vehid=v.id
+        <if test="shiyongxingzhi != null and shiyongxingzhi != '' ">
+          and v.shiyongxingzhi = #{shiyongxingzhi}
+        </if>
     </select>
 </mapper>

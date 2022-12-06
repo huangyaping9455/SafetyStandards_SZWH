@@ -170,7 +170,7 @@ public class laborController {
 	@PostMapping("updatel")
 	@ApiLog("修改-劳保用品信息")
 	@ApiOperation(value = "劳保用品领取", notes = "传入LaborlingquEntity", position = 5)
-	public R update(LaborlingquEntity laborlingqu) {
+	public R update(@RequestBody LaborlingquEntity laborlingqu) {
 		return R.status(service.updateL(laborlingqu));
 	}
 }

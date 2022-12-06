@@ -23,6 +23,9 @@ import javax.validation.Valid;
 
 import org.springblade.anbiao.cheliangguanli.entity.DeptBaoxian;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianInfo;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleDengjizhengshu;
+import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
+import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
 import org.springblade.common.tool.FuncUtil;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
@@ -54,6 +57,8 @@ public class VehicleDaoluyunshuzhengController extends BladeController {
 
 	private IVehicleDaoluyunshuzhengService vehicleDaoluyunshuzhengService;
 
+	private IVehicleService vehicleService;
+
 	/**
 	 * 详情
 	 */
@@ -70,7 +75,12 @@ public class VehicleDaoluyunshuzhengController extends BladeController {
 		VehicleDaoluyunshuzheng qDlysz = new VehicleDaoluyunshuzheng();
 		qDlysz.setAvdAvIds(vehicleId);
 		qDlysz.setAvdDelete("0");
-		return R.data(vehicleDaoluyunshuzhengService.getOne(Condition.getQueryWrapper(qDlysz)));
+		VehicleDaoluyunshuzheng daoluyunshuzheng= vehicleDaoluyunshuzhengService.getOne(Condition.getQueryWrapper(qDlysz));
+		if(daoluyunshuzheng != null){
+			VehicleVO detail = vehicleService.selectByKey(vehicleId);
+			daoluyunshuzheng.setAvxPlateNo(detail.getCheliangpaizhao());
+		}
+		return R.data(daoluyunshuzheng);
 	}
 
 	/**

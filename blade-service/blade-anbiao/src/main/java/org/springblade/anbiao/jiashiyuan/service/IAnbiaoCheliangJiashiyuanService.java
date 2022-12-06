@@ -18,5 +18,5 @@ import java.util.List;
  */
 @Service
 public interface IAnbiaoCheliangJiashiyuanService extends IService<AnbiaoCheliangJiashiyuan>  {
-	public List<CheliangJiashiyuanVO> SelectByJiashiyuanID(String jiashiyuanid);
+	public List<CheliangJiashiyuanVO> SelectByJiashiyuanID(String jiashiyuanid,String shiyongxingzhi);
 }
