@@ -87,8 +87,8 @@ public class AnbiaoCheliangJiashiyuanController {
 			JsonNode node = JSONUtils.string2JsonNode(json);
 			String jiashiyuanid = node.get("jiashiyuanid").asText();
 //			System.out.println(node.get("shiyongxingzhi").asText());
-//			String shiyongxingzhi = node.get("shiyongxingzhi").asText();
-			String shiyongxingzhi = null;
+			String shiyongxingzhi = node.get("shiyongxingzhi").asText();
+//			String shiyongxingzhi = null;
 			List<CheliangJiashiyuanVO> cheliangJiashiyuanVOS = cheliangJiashiyuanServiceImpl.SelectByJiashiyuanID(jiashiyuanid,shiyongxingzhi);
 			if(cheliangJiashiyuanVOS.size() > 0){
 				r.setMsg("获取成功");

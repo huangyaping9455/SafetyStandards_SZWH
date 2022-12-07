@@ -282,12 +282,14 @@ public class WaitCompletedController extends BaseController {
                 rs.setCode(500);
                 rs.setMsg("学习时间异常，请重新学习");
                 rs.setSuccess(false);
+				return rs;
             }
-            if (StringUtils.isEmpty(studyRecord.getPlayProgress()) && studyRecord.getPlayProgress() == 0) {
+            if (StringUtils.isEmpty(studyRecord.getPlayProgress()) || studyRecord.getPlayProgress() == 0) {
                 log.info("学习进度异常");
                 rs.setCode(500);
                 rs.setMsg("学习时间异常，请重新学习");
                 rs.setSuccess(false);
+				return rs;
             }
             int studentId = studyRecord.getStudentId();
             log.info("学员ID："+studentId);
@@ -323,19 +325,21 @@ public class WaitCompletedController extends BaseController {
                 rs.setCode(200);
                 rs.setMsg("保存学习记录成功");
                 rs.setSuccess(true);
+				return rs;
             } else {
                 log.info("保存学习记录失败");
                 rs.setCode(500);
                 rs.setMsg("保存学习记录失败");
                 rs.setSuccess(false);
+				return rs;
             }
         } catch (Exception e) {
             e.printStackTrace();
             rs.setCode(500);
             rs.setMsg("保存学习记录失败");
             rs.setSuccess(false);
+			return rs;
         }
-        return rs;
     }
 
     @PostMapping("/getStudyRecord")

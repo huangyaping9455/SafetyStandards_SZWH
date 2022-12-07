@@ -97,10 +97,11 @@
            and ruc.status = 1
            and ruc.deleted = 0
            and bc.course_type = #{courseType}
+       <if test="courseKind != null and courseKind != '' ">
+           and bc.course_kind_id = #{courseKind}
+       </if>
        <if test="isPay != 3">
-           <if test="courseKind != null and courseKind != '' ">
-               and bc.course_kind_id = #{courseKind}
-           </if>
+
            <if test="courseKind == null or courseKind == '' ">
                and bc.course_kind_id in(
                select id from base_course_kind where name in ('超速报警','疲劳驾驶报警','夜间行驶报警','异常车辆报警','24小时不在线报警','接打电话报警','分神驾驶报警','抽烟报警','生理疲劳报警','驾驶员异常报警')

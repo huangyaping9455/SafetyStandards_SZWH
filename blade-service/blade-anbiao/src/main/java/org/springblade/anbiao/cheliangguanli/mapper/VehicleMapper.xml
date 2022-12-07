@@ -491,31 +491,31 @@
             a.createtime,a.id,REPLACE(a.cheliangpaizhao, '\\n', '') cheliangpaizhao,a.chepaiyanse,a.shiyongxingzhi,
             a.zongduanid,a.terminalprotocoltype,a.videochannelnum,a.platformconnectiontype
         from
-        anbiao_vehicle a
+            anbiao_vehicle a
         inner join (
-        SELECT
-        DISTINCT
-        xiaji.id,
-        xiaji.parent_id,
-        xiaji.dept_name,
-        xiaji.is_deleted
-        FROM
-        blade_dept shangji,
-        blade_dept xiaji
-        WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
-            AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
-            AND shangji.id = 5609
-        ) b on a.dept_id = b.id
-        where 1=1
-        <if test="caozuoshijian !=null and caozuoshijian != '' ">
-            and (a.createtime &gt; #{caozuoshijian} or a.caozuoshijian &gt; #{caozuoshijian})
-            and ifnull(a.cheliangzhuangtai,0) != 2
-        </if>
+            SELECT
+                DISTINCT
+                xiaji.id,
+                xiaji.parent_id,
+                xiaji.dept_name,
+                xiaji.is_deleted
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+                AND shangji.id = 5609
+            ) b on a.dept_id = b.id
+            where 1=1
+            <if test="caozuoshijian !=null and caozuoshijian != '' ">
+                and (a.createtime &gt; #{caozuoshijian} or a.caozuoshijian &gt; #{caozuoshijian})
+                and ifnull(a.cheliangzhuangtai,0) != 2
+            </if>
 
-        <if test=" caozuoshijian == null or caozuoshijian == '' ">
-            and ifnull(a.cheliangzhuangtai,0) = 0
-            and ifnull(a.is_deleted,0) = 0
-        </if>
+            <if test=" caozuoshijian == null or caozuoshijian == '' ">
+                and ifnull(a.cheliangzhuangtai,0) = 0
+                and ifnull(a.is_deleted,0) = 0
+            </if>
         ) a
         order by a.caozuoshijian asc
     </select>

@@ -71,7 +71,7 @@ public class AnbiaoCarExamineInfoController {
 		examineQueryWrapper.lambda().eq(AnbiaoCarExamineInfo::getJsyid, anbiaoCarExamineInfo.getJsyid());
 		AnbiaoCarExamineInfo deail = iAnbiaoCarExamineInfoService.getBaseMapper().selectOne(examineQueryWrapper);
 		if(deail == null){
-			if(anbiaoCarExamineInfo.getStatus() == 0){
+			if(anbiaoCarExamineInfo.getStatus() == 0 || anbiaoCarExamineInfo.getStatus() == 6){
 				anbiaoCarExamineInfo.setStatus(0);
 				anbiaoCarExamineInfo.setIsdelete(0);
 				ii = iAnbiaoCarExamineInfoService.save(anbiaoCarExamineInfo);

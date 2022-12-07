@@ -188,7 +188,9 @@ public class TrainServiceImpl extends ServiceImpl<TrainMapper, Train> implements
 				List<CourseInfo> courseInfoList = trainMapper.selectCourseInfoPage(courseInfoPage);
 				courseInfoList.forEach(item-> {
 					CoursewareInfo coursewareInfo = trainMapper.getCoursewareDuration(item.getId());
-					item.setDuration(coursewareInfo.getDuration());
+					if(coursewareInfo != null){
+						item.setDuration(coursewareInfo.getDuration());
+					}
 				});
 				courseInfoPage.setRecords(courseInfoList);
 				return courseInfoPage;
@@ -213,7 +215,9 @@ public class TrainServiceImpl extends ServiceImpl<TrainMapper, Train> implements
 			List<CourseInfo> courseInfoList = trainMapper.selectCourseInfoPage(courseInfoPage);
 			courseInfoList.forEach(item-> {
 				CoursewareInfo coursewareInfo = trainMapper.getCoursewareDuration(item.getId());
-				item.setDuration(coursewareInfo.getDuration());
+				if(coursewareInfo != null){
+					item.setDuration(coursewareInfo.getDuration());
+				}
 			});
 			courseInfoPage.setRecords(courseInfoList);
 		}

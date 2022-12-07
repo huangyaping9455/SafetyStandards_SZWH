@@ -15,6 +15,7 @@
  */
 package org.springblade.system.feign;
 
+import org.apache.ibatis.annotations.Param;
 import org.springblade.core.launch.constant.AppConstant;
 import org.springblade.system.entity.Dept;
 import org.springblade.system.entity.Post;
@@ -224,5 +225,15 @@ public interface ISysClient {
 
 	@GetMapping(API_PREFIX + "/getByName")
 	List<Dept> getByName(@RequestParam("deptname") String deptname);
+
+	/**
+	 * 根据企业ID获取下级所有企业（企业、个体）
+	 * @param deptId
+	 * @return
+	 */
+	@GetMapping(API_PREFIX + "/getQiYeList")
+	List<Dept> getQiYeList(@RequestParam("deptId") Integer deptId);
+
+
 
 }

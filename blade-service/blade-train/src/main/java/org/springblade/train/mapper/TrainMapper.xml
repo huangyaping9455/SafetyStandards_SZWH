@@ -634,7 +634,7 @@
         select id,name from base_course_kind
         where 1=1
         <if test = "name != null and name != ''">
-            AND name LIKE '%${name}%'
+            AND name = #{name}
         </if>
     </select>
 

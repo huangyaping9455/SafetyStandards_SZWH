@@ -63,7 +63,7 @@ public class AnbiaoCheliangJiashiyuanDailyController {
 	//				r.setSuccess(false);
 	//				return r;
 					cheliangJiashiyuanDaily.setCreatetime(DateUtil.now());
-					cheliangJiashiyuanDaily.setId(cheliangJiashiyuanDaily.getId());
+					cheliangJiashiyuanDaily.setId(cheliangJiashiyuanDailies.get(i).getId());
 					cheliangJiashiyuanDailyService.updateById(cheliangJiashiyuanDaily);
 					r.setMsg("保存成功");
 					r.setCode(200);

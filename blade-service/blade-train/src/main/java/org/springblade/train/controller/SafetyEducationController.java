@@ -26,6 +26,7 @@ import org.springblade.common.configurationBean.TrainServer;
 import org.springblade.common.tool.JSONUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.tool.api.R;
+import org.springblade.system.feign.ISysClient;
 import org.springblade.train.config.BaseController;
 import org.springblade.train.entity.*;
 import org.springblade.train.page.CourseInfoPage;
@@ -50,6 +51,8 @@ public class SafetyEducationController extends BaseController {
 	private ITrainService iTrainService;
 
 	private IWaitCompletedService waitCompletedService;
+
+	private ISysClient sysClient;
 
     @GetMapping("/getFileServer")
     @ApiOperation(value = "教育--获取文件地址", notes = "教育--获取文件地址", position = 0)
@@ -317,9 +320,13 @@ public class SafetyEducationController extends BaseController {
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "deptName", value = "企业名称", required = true)
 	})
-	public R<List<Train>> getUnitByName(String deptName) {
+	public R<List<Train>> getUnitByName(String deptName,String deptId) {
 		R rs = new R();
 		//根据企业名称查询教育平台是否包含该企业
+//		List<Dept> deptList = sysClient.getQiYeList(Integer.parseInt(deptId));
+//		deptList.forEach(item-> {
+//
+//		});
 		Unit unit = iTrainService.getUnitByName(deptName);
 		if(unit == null){
 			rs.setCode(500);

@@ -149,4 +149,9 @@ public class ISysClientFallback implements ISysClient {
 		return null;
 	}
 
+	@Override
+	public List<Dept> getQiYeList(Integer deptId) {
+		return null;
+	}
+
 }

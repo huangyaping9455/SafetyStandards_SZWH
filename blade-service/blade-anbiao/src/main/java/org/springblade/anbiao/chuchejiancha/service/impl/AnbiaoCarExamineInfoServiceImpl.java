@@ -3,6 +3,9 @@ package org.springblade.anbiao.chuchejiancha.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
+import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
+import org.springblade.anbiao.cheliangguanli.mapper.VehicleMapper;
+import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamine;
 import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamineInfo;
 import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamineInfoRemark;
 import org.springblade.anbiao.chuchejiancha.mapper.AnbiaoCarExamineInfoMapper;
@@ -31,6 +34,8 @@ public class AnbiaoCarExamineInfoServiceImpl extends ServiceImpl<AnbiaoCarExamin
 
 	private AnbiaoCarExamineInfoRemarkMapper remarkMapper;
 
+	private VehicleMapper vehicleMapper;
+
 	@Override
 	public AnbiaoCarExamineInfoPage<AnbiaoCarExamineInfoVO> selectCarExamineInfoPage(AnbiaoCarExamineInfoPage anbiaoCarExamineInfoPage) {
 		Integer total = mapper.selectCarExamineInfoTotal(anbiaoCarExamineInfoPage);
@@ -39,6 +44,24 @@ public class AnbiaoCarExamineInfoServiceImpl extends ServiceImpl<AnbiaoCarExamin
 				anbiaoCarExamineInfoPage.setTotal(total);
 			}
 			List<AnbiaoCarExamineInfoVO> infoList = mapper.selectCarExamineInfoPage(anbiaoCarExamineInfoPage);
+			if(anbiaoCarExamineInfoPage.getJsyId() != null){
+				infoList.forEach(item-> {
+					if(item.getCheliangpaizhao() == null || item.getChepaiyanse() == null){
+						QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<Vehicle>();
+						vehicleQueryWrapper.lambda().eq(Vehicle::getId, item.getVehid());
+						vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel, 0);
+						Vehicle deail = vehicleMapper.selectOne(vehicleQueryWrapper);
+						item.setCheliangpaizhao(deail.getCheliangpaizhao());
+						item.setChepaiyanse(deail.getChepaiyanse());
+					}
+					if(item.getStatusshow() == null){
+						item.setStatusshow("未完成");
+					}
+					if(item.getStatus() == 6){
+						item.setStatusshow("已完成");
+					}
+				});
+			}
 			anbiaoCarExamineInfoPage.setRecords(infoList);
 			return anbiaoCarExamineInfoPage;
 		}
@@ -59,6 +82,24 @@ public class AnbiaoCarExamineInfoServiceImpl extends ServiceImpl<AnbiaoCarExamin
 			anbiaoCarExamineInfoPage.setTotal(total);
 			anbiaoCarExamineInfoPage.setOffsetNo(offsetNo);
 			List<AnbiaoCarExamineInfoVO> infoList = mapper.selectCarExamineInfoPage(anbiaoCarExamineInfoPage);
+			if(anbiaoCarExamineInfoPage.getJsyId() != null){
+				infoList.forEach(item-> {
+					if(item.getCheliangpaizhao() == null || item.getChepaiyanse() == null){
+						QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<Vehicle>();
+						vehicleQueryWrapper.lambda().eq(Vehicle::getId, item.getVehid());
+						vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel, 0);
+						Vehicle deail = vehicleMapper.selectOne(vehicleQueryWrapper);
+						item.setCheliangpaizhao(deail.getCheliangpaizhao());
+						item.setChepaiyanse(deail.getChepaiyanse());
+					}
+					if(item.getStatusshow() == null){
+						item.setStatusshow("未完成");
+					}
+					if(item.getStatus() != null && item.getStatus() == 6){
+						item.setStatusshow("已完成");
+					}
+				});
+			}
 			anbiaoCarExamineInfoPage.setRecords(infoList);
 		}
 		return anbiaoCarExamineInfoPage;

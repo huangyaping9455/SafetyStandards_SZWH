@@ -195,4 +195,10 @@ public class SysClient implements ISysClient {
 		return deptService.getByName(deptname);
 	}
 
+	@Override
+	@GetMapping(API_PREFIX + "/getQiYeList")
+	public List<Dept> getQiYeList(Integer deptId) {
+		return deptService.QiYeList(deptId);
+	}
+
 }

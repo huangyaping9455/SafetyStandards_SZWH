@@ -9,27 +9,93 @@
     </resultMap>
 
     <sql id="tableDeptYHSql">
+        <if test="jsyId != null and jsyId != '' ">
+            select
+                a.day as date,
+                case when IFNULL(b.vehid,'') = '' then (
+                select vehid from anbiao_cheliang_jiashiyuan_daily where jiashiyuanid = #{jsyId} ORDER BY createtime desc limit 1 )
+                else b.vehid end as vehid,
+                b.cheliangpaizhao,
+                b.chepaiyanse,
+                b.jiashiyuanxingming,
+                b.shoujihaoma,
+                b.deptname,
+                b.id,
+                b.jsyid,
+                b.`status`,
+                b.type,
+                b.vehimg,
+                b.remark,
+                b.fujianremark,
+                b.jcrsignatrue,
+                b.address,
+                b.statusshow
+            from
+                help_topic_time a
+            LEFT JOIN(
+                select
+                    a.id as vehid,
+                    a.cheliangpaizhao,
+                    a.chepaiyanse,
+                    c.jiashiyuanxingming,
+                    c.shoujihaoma,
+                    d.dept_name as deptname,
+                    b.id,
+                    b.jsyid,
+                    b.`status`,
+                    b.type,
+                    b.date,
+                    b.vehimg,
+                    b.remark,
+                    b.fujianremark,
+                    b.jcrsignatrue,
+                    b.address,
+                    case when IFNULL(b.id,'') = '' then '未完成' else '已完成' end as statusshow
+                from
+                    anbiao_vehicle a
+                left join (
+                    select * from anbiao_car_examine_info
+                    where left(date,7) = left(#{date},7)
+                ) b on b.vehid = a.id
+            left join anbiao_jiashiyuan c on b.jsyid = c.id and c.isdelete = 0
+            inner join  (
+                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+                ) d on a.dept_id = d.id
+            where 1=1
+                and b.jsyid = #{jsyId}
+            )b on a.day = b.date
+            where a.day &lt;= left(NOW(),10)
+        </if>
+        <if test="jsyId == null or jsyId == '' ">
         select
+            a.id as vehid,
             a.cheliangpaizhao,
             a.chepaiyanse,
             c.jiashiyuanxingming,
             c.shoujihaoma,
             d.dept_name as deptname,
-            b.*,
+            b.id,
+            b.jsyid,
+            b.`status`,
+            b.type,
+            b.date,
+            b.vehimg,
+            b.remark,
+            b.fujianremark,
+            b.jcrsignatrue,
+            b.address,
             case when IFNULL(b.id,'') = '' then '未完成' else '已完成' end as statusshow
         from
             anbiao_vehicle a
             left join (
                 select * from anbiao_car_examine_info
-                where date >= #{date}
+                where left(date,7) = left(#{date},7)
             ) b on b.vehid = a.id
             left join anbiao_jiashiyuan c on b.jsyid = c.id and c.isdelete = 0
             inner join  (
                 <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) d on a.dept_id = d.id
         where 1=1
-        <if test="jsyId != null and jsyId != '' ">
-           and b.jsyid = #{jsyId}
         </if>
     </sql>
 
@@ -49,7 +115,7 @@
 
     <sql id="orderDeptYHSql">
         <!-- 默认排序规则 -->
-        ORDER BY statusshow,cheliangpaizhao desc
+        ORDER BY date desc,statusshow,cheliangpaizhao desc
     </sql>
 
     <select id="selectCarExamineInfoPage" resultMap="AnbiaoCarExamineInfoVOResultMap"
