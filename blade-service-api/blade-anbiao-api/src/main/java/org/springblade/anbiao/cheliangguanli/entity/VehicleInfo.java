@@ -149,16 +149,16 @@ public class VehicleInfo implements Serializable {
 	private String huoxiangneibuchicun;
 
 	@ApiModelProperty(value = "总质量")
-	private String zongzhiliang;
+	private String zongzhiliang="0";
 
 	@ApiModelProperty(value = "核定载质量")
-	private String hedingzaizhiliang;
+	private String hedingzaizhiliang="0";
 
 	@ApiModelProperty(value = "核定载客数")
-	private String hedingzaikeshu;
+	private String hedingzaikeshu="0";
 
 	@ApiModelProperty(value = "准牵引总质量")
-	private String zhunqianyinzongzhiliang;
+	private String zhunqianyinzongzhiliang="0";
 
 	@ApiModelProperty(value = "驾驶室载客数")
 	private String jiashishizaikeshu;
@@ -168,5 +168,8 @@ public class VehicleInfo implements Serializable {
 
 	@ApiModelProperty(value = "车辆出厂日期")
 	private String cheliangchuchangriqi;
+
+	@ApiModelProperty(value = "强制报废时间")
+	private String qiangzhibaofeishijian;
 
 }

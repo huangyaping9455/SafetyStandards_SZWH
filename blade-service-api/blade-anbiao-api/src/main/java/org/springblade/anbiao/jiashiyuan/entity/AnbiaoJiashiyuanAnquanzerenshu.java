@@ -93,5 +93,8 @@ public class AnbiaoJiashiyuanAnquanzerenshu implements Serializable {
     @TableField("aja_update_by_name")
     private String ajaUpdateByName;
 
+	@ApiModelProperty(value = "起始日期")
+	@TableField("aja_start_date")
+	private String ajaStartDate;
 
 }

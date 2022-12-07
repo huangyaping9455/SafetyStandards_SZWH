@@ -137,4 +137,5 @@ public interface IJiaShiYuanService extends IService<JiaShiYuan> {
 	 */
 	List<JiaShiYuanTrain> selectJiaShiYuanTrain(@Param("deptId") Integer deptId);
 
+	int selectMaxId();
 }

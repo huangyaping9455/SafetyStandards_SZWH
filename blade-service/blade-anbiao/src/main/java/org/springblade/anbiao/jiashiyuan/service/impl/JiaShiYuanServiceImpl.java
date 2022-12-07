@@ -181,5 +181,10 @@ public class JiaShiYuanServiceImpl extends ServiceImpl<JiaShiYuanMapper, JiaShiY
 		return jiaShiYuanMapper.selectJiaShiYuanTrain(deptId);
 	}
 
+	@Override
+	public int selectMaxId() {
+		return jiaShiYuanMapper.selectMaxId();
+	}
+
 
 }

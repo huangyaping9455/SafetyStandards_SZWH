@@ -93,5 +93,7 @@ public class AnbiaoJiashiyuanWeihaigaozhishu implements Serializable {
     @TableField("ajw_update_by_name")
     private String ajwUpdateByName;
 
-
+	@ApiModelProperty(value = "起始日期")
+	@TableField("ajw_start_date")
+	private String ajwStartDate;
 }

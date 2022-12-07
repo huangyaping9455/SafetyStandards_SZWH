@@ -291,6 +291,11 @@ public class VehicleController {
 		}
 		String jsonObject = JSONUtils.obj2StringPretty(v);
 		Vehicle vehicle = JSONUtils.string2Obj(jsonObject,Vehicle.class);
+		if (v.getQiangzhibaofeishijian() !=null && !v.getQiangzhibaofeishijian().equals("") && v.getQiangzhibaofeishijian().toString().length() > 0){
+			vehicle.setQiangzhibaofeishijian(null);
+		}else {
+			vehicle.setQiangzhibaofeishijian(v.getQiangzhibaofeishijian());
+		}
 		vehicle.setCaozuoren(user.getUserName());
 		vehicle.setCaozuorenid(user.getUserId());
 		vehicle.setCaozuoshijian(LocalDateTime.now());

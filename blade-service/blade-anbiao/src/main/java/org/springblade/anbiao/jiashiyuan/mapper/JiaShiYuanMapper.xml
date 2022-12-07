@@ -304,6 +304,22 @@ values
                 dept_id,
             </if>
 
+            <if test="shenfenzhengchulingriqi != null and shenfenzhengchulingriqi != '' ">
+                shenfenzhengchulingriqi,
+            </if>
+
+            <if test="shenfenzhengyouxiaoqi != null and shenfenzhengyouxiaoqi != '' ">
+                shenfenzhengyouxiaoqi,
+            </if>
+
+            <if test="jiashizhenghao != null and jiashizhenghao != '' ">
+                jiashizhenghao,
+            </if>
+
+            <if test="tijianriqi != null and tijianriqi != '' ">
+                tijianriqi,
+            </if>
+
             <if test="jiashiyuanxingming != null and jiashiyuanxingming != '' ">
                 jiashiyuanxingming,
             </if>
@@ -413,6 +429,22 @@ values
 
             <if test="deptId != null and deptId != '' ">
                 #{deptId},
+            </if>
+
+            <if test="shenfenzhengchulingriqi != null and shenfenzhengchulingriqi != '' ">
+                #{shenfenzhengchulingriqi},
+            </if>
+
+            <if test="shenfenzhengyouxiaoqi != null and shenfenzhengyouxiaoqi != '' ">
+                #{shenfenzhengyouxiaoqi},
+            </if>
+
+            <if test="jiashizhenghao != null and jiashizhenghao != '' ">
+                #{jiashizhenghao},
+            </if>
+
+            <if test="tijianriqi != null and tijianriqi != '' ">
+                #{tijianriqi},
             </if>
 
             <if test="jiashiyuanxingming != null and jiashiyuanxingming != '' ">
@@ -749,6 +781,12 @@ values
         <if test="deptId != null and deptId != '' ">
             AND a.dept_id= #{deptId}
         </if>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        SELECT
+            max(CONVERT(dept_id,SIGNED)) AS id
+        FROM anbiao_jiashiyuan
     </select>
 
 
