@@ -58,6 +58,9 @@ public class AnbiaoHiddenDangerController {
 				danger.setAhdCreateByName(user.getUserName());
 				danger.setAhdCreateByIds(user.getUserId().toString());
 			}
+			if (danger.getAhdAddress() == null){
+				danger.setAhdAddress("车辆设备");
+			}
 			danger.setAhdCreateTime(DateUtil.now());
 			boolean i = service.save(danger);
 			if(i){

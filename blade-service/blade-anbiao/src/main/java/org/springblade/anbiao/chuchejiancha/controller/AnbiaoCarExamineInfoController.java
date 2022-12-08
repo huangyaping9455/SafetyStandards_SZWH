@@ -18,6 +18,14 @@ import org.springblade.anbiao.chuchejiancha.service.IAnbiaoCarExamineInfoRemarkS
 import org.springblade.anbiao.chuchejiancha.service.IAnbiaoCarExamineInfoService;
 import org.springblade.anbiao.chuchejiancha.service.IAnbiaoCarExamineService;
 import org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineInfoVO;
+import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
+import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
+import org.springblade.anbiao.weixiu.entity.FittingEntity;
+import org.springblade.anbiao.weixiu.entity.FittingsEntity;
+import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
+import org.springblade.anbiao.weixiucheliang.service.MaintenanceService;
+import org.springblade.anbiao.yinhuanpaicha.entity.AnbiaoHiddenDanger;
+import org.springblade.anbiao.yinhuanpaicha.service.IAnbiaoHiddenDangerService;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
@@ -27,6 +35,9 @@ import org.springframework.web.bind.annotation.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
+import static cn.hutool.core.date.DateUtil.now;
 
 /**
  * <p>
@@ -49,6 +60,12 @@ public class AnbiaoCarExamineInfoController {
 	private IFileUploadClient fileUploadClient;
 
 	private IAnbiaoCarExamineService iAnbiaoCarExamineService;
+
+	private MaintenanceService maintenanceService;
+
+	private IOrganizationsService organizationsService;
+
+	private IAnbiaoHiddenDangerService hiddenDangerService;
 
 	@PostMapping("/saveCarExamineInfo")
 	@ApiLog("安全检查数据-新增")
@@ -92,6 +109,7 @@ public class AnbiaoCarExamineInfoController {
 					if (deail != null) {
 						List<AnbiaoCarExamineInfoRemark> examineInfos = anbiaoCarExamineInfo.getAnbiaoCarExamineInfoRemarkList();
 						AnbiaoCarExamineInfo finalDeail = deail;
+						OrganizationsVO dept = organizationsService.selectByDeptId(deail.getDeptid().toString());
 						examineInfos.forEach(item-> {
 							AnbiaoCarExamineInfoRemark remark = new AnbiaoCarExamineInfoRemark();
 							remark.setExamid(finalDeail.getId());
@@ -105,6 +123,44 @@ public class AnbiaoCarExamineInfoController {
 							remark.setCreateid(finalDeail.getJsyid());
 							boolean is = iAnbiaoCarExamineInfoRemarkService.save(remark);
 							if (is == true) {
+								new Thread(new Runnable() {
+									@Override
+									public void run() {
+										//向隐患登记、维修登记档案信息表中添加数据；
+										MaintenanceEntity maintenanceDTO = new MaintenanceEntity();
+										maintenanceDTO.setDeptId(finalDeail.getDeptid());
+										maintenanceDTO.setDepID(finalDeail.getDeptid());
+										maintenanceDTO.setVehicleId(finalDeail.getVehid());
+										maintenanceDTO.setDriverId(finalDeail.getJsyid());
+										maintenanceDTO.setSendDate(finalDeail.getDate());
+										maintenanceDTO.setMaintainDictId(0);
+										maintenanceDTO.setAcbMaintenanceContent(finalDeail.getRemark());
+										maintenanceDTO.setAcbRepairReason(remark.getFlgremark());
+										maintenanceDTO.setMaintenanceDeptName(dept.getDeptName());
+										maintenanceDTO.setAcbBeforeMaintenance(remark.getFlgimg());
+										maintenanceDTO.setCreateid(finalDeail.getJsyid());
+										maintenanceDTO.setCreatetime(DateUtil.now());
+										maintenanceService.insertOne(maintenanceDTO);
+
+										AnbiaoHiddenDanger danger = new AnbiaoHiddenDanger();
+										danger.setAhdDelete("0");
+										danger.setAhdRectificationSituation("0");
+										danger.setAhdCreateTime(DateUtil.now());
+										danger.setAhdDeptIds(finalDeail.getDeptid().toString());
+										danger.setAhdVehicleIds(finalDeail.getVehid());
+										danger.setAhdType("0");
+										danger.setAhdDriverIds(finalDeail.getJsyid());
+										danger.setAhdDriverName(finalDeail.getCreatename());
+										danger.setAhdDiscovererName(finalDeail.getCreatename());
+										danger.setAhdDiscoveryTime(finalDeail.getDate());
+										danger.setAhdHiddendangerEnclosure(remark.getFlgimg());
+										danger.setAhdCreateTime(DateUtil.now());
+										danger.setAhdCreateByIds(finalDeail.getJsyid());
+										danger.setAhdDescribe(remark.getFlgremark());
+										danger.setAhdAddress("车辆设备");
+										hiddenDangerService.save(danger);
+									}
+								}).start();
 								rs.setCode(200);
 								rs.setSuccess(true);
 								rs.setMsg("新增成功");

@@ -48,7 +48,7 @@ public class MaintenanceEntity {
 	private Integer isDeleted;
 	private String	createtime;
 	private String createperson;
-	private Integer	createid;
+	private String	createid;
 	private String acbMaintenanceContent;
 	private String	acbRepairReason;
 	private String acbBillAttachment;

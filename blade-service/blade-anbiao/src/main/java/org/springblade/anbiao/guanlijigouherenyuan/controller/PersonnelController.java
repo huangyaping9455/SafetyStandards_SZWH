@@ -306,7 +306,7 @@ public class PersonnelController extends BladeController {
 				fileUploadClient.updateCorrelation(personnel.getFujian(),"1");
 			}
 //			personnelService.saveOrUpdate(personnel);
-			personnelService.insertSelective(personnel);
+			flag = personnelService.insertSelective(personnel);
 			code=R.status(flag).getCode();
 			obj=R.status(flag).getData();
 			if(flag==true){
