@@ -1,17 +1,17 @@
 package org.springblade.anbiao.risk.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
-import java.time.LocalDate;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -60,7 +60,7 @@ public class AnbiaoRiskDetail implements Serializable {
 
     @ApiModelProperty(value = "发现日期")
     @TableField("ard_discovery_date")
-    private LocalDate ardDiscoveryDate;
+    private String ardDiscoveryDate;
 
     @ApiModelProperty(value = "是否整改(0=未整改,1=已整改)")
     @TableField("ard_is_rectification")
