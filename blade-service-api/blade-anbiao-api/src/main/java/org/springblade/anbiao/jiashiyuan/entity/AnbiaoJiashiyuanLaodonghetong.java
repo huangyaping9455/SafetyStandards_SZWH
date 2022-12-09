@@ -100,4 +100,20 @@ public class AnbiaoJiashiyuanLaodonghetong implements Serializable {
 	@ApiModelProperty(value = "结束时间")
 	@TableField("ajw_end_date")
 	private String ajwEndDate;
+
+	@ApiModelProperty(value = "企业名称")
+	@TableField(exist = false)
+	private String deptName;
+
+	@ApiModelProperty(value = "地址")
+	@TableField(exist = false)
+	private String driverAddress;
+
+	@ApiModelProperty(value = "身份证号")
+	@TableField(exist = false)
+	private String driverNo;
+
+	@ApiModelProperty(value = "联系电话")
+	@TableField(exist = false)
+	private String driverPhone;
 }

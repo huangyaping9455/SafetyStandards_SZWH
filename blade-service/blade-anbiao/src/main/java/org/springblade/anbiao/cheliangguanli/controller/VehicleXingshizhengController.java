@@ -22,11 +22,16 @@ import lombok.AllArgsConstructor;
 import javax.validation.Valid;
 
 import org.springblade.anbiao.cheliangguanli.entity.VehicleXingnengbaogao;
+import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
+import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
+import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
+import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
 import org.springblade.common.tool.FuncUtil;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
 import org.springblade.core.tool.api.R;
 import org.springblade.core.tool.utils.Func;
+import org.springblade.system.vo.DeptVO;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -53,6 +58,10 @@ public class VehicleXingshizhengController extends BladeController {
 
 	private IVehicleXingshizhengService vehicleXingshizhengService;
 
+	private IOrganizationsService organizationsService;
+
+	private IVehicleService vehicleService;
+
 	/**
 	 * 详情
 	 */
@@ -69,7 +78,13 @@ public class VehicleXingshizhengController extends BladeController {
 		VehicleXingshizheng qXsz = new VehicleXingshizheng();
 		qXsz.setAvxAvIds(vehicleId);
 		qXsz.setAvxDelete("0");
-		return R.data(vehicleXingshizhengService.getOne(Condition.getQueryWrapper(qXsz)));
+		VehicleXingshizheng xingshizheng = vehicleXingshizhengService.getOne(Condition.getQueryWrapper(qXsz));
+		if(xingshizheng != null){
+			VehicleVO detail = vehicleService.selectByKey(vehicleId);
+			OrganizationsVO dept = organizationsService.selectByDeptId(detail.getDeptId().toString());
+			xingshizheng.setDeptName(dept.getDeptName());
+		}
+		return R.data(xingshizheng);
 	}
 
 	/**

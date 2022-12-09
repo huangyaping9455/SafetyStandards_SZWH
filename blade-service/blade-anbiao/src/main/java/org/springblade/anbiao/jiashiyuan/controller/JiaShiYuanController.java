@@ -16,8 +16,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.util.TextUtils;
 import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
+import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
 import org.springblade.anbiao.configure.service.IConfigureService;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IBladeDeptService;
+import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
 import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.service.*;
@@ -1054,6 +1056,17 @@ public class JiaShiYuanController {
 						laodonghetongInfo.setAjwAutographEnclosure(fileUploadClient.getUrl(laodonghetongInfo.getAjwAutographEnclosure()));
 					}
 					laodonghetongInfo.setAjwAjIds(detal.getId());
+					laodonghetongInfo.setDeptName(detal.getDeptName());
+					QueryWrapper<AnbiaoJiashiyuanRuzhi> ruzhiQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanRuzhi>();
+					ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrAjIds, detal.getId());
+					ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrDelete, "0");
+					AnbiaoJiashiyuanRuzhi ruzhiInfo = ruzhiService.getBaseMapper().selectOne(ruzhiQueryWrapper);
+					if (ruzhiInfo != null) {
+						laodonghetongInfo.setDriverAddress(ruzhiInfo.getAjrAddress());
+					}
+					laodonghetongInfo.setDriverNo(detal.getShenfenzhenghao());
+					laodonghetongInfo.setDriverPhone(detal.getShoujihaoma());
+
 					r.setData(laodonghetongInfo);
 					r.setCode(200);
 					r.setMsg("获取成功");
