@@ -88,7 +88,7 @@ public class AnbiaoRiskDetail implements Serializable {
 
     @ApiModelProperty(value = "整改时间")
     @TableField("ard_rectification_date")
-    private LocalDateTime ardRectificationDate;
+    private String ardRectificationDate;
 
     @ApiModelProperty(value = "模块名称")
     @TableField("ard_modular_name")

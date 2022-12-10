@@ -16,4 +16,8 @@
         <result column="extend_type" property="extendType" />
     </resultMap>
 
+    <select id="MaxId" resultType="java.lang.Integer">
+        SELECT MAX(id) FROM `blade_dept`
+    </select>
+
 </mapper>

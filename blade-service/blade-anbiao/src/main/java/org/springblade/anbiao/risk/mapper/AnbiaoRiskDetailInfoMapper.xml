@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.risk.mapper.AnbiaoRiskDetailInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.risk.entity.AnbiaoRiskDetailInfo">
+        <id column="ard_ids" property="ardIds" />
+        <result column="ard_risk_ids" property="ardRiskIds" />
+        <result column="ard_rectification_by_ids" property="ardRectificationByIds" />
+        <result column="ard_rectification_by_name" property="ardRectificationByName" />
+        <result column="ard_rectification_date" property="ardRectificationDate" />
+        <result column="ard_rectification_field" property="ardRectificationField" />
+        <result column="ard_rectification_value" property="ardRectificationValue" />
+        <result column="ard_rectification_field_type" property="ardRectificationFieldType" />
+    </resultMap>
+
+</mapper>

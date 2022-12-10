@@ -1,5 +1,6 @@
 package org.springblade.anbiao.guanlijigouherenyuan.service.impl;
 
+import lombok.AllArgsConstructor;
 import org.springblade.system.entity.Dept;
 import org.springblade.anbiao.guanlijigouherenyuan.mapper.BladeDeptMapper;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IBladeDeptService;
@@ -15,6 +16,13 @@ import org.springframework.stereotype.Service;
  * @since 2022-11-20
  */
 @Service
+@AllArgsConstructor
 public class BladeDeptServiceImpl extends ServiceImpl<BladeDeptMapper, Dept> implements IBladeDeptService {
 
+	private BladeDeptMapper bladeDeptMapper;
+
+	@Override
+	public int MaxId() {
+		return bladeDeptMapper.MaxId();
+	}
 }

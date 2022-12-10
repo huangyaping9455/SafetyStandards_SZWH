@@ -20,7 +20,6 @@ import java.util.List;
 @AllArgsConstructor
 public class AccidentReportsServiceImpl implements AccidentReportsService {
 
-
 	private AccidentReportsMapper mapper;
 
 	@Override

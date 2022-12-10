@@ -12,5 +12,5 @@ import org.springblade.system.entity.Dept;
  * @since 2022-11-20
  */
 public interface IBladeDeptService extends IService<Dept> {
-
+	int MaxId();
 }

@@ -1,5 +1,6 @@
 package org.springblade.anbiao.guanlijigouherenyuan.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.springblade.system.entity.Dept;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -11,6 +12,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author lmh
  * @since 2022-11-20
  */
+@Mapper
 public interface BladeDeptMapper extends BaseMapper<Dept> {
-
+	int MaxId();
 }
