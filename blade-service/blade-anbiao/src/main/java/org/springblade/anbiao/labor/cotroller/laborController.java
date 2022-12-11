@@ -1,5 +1,6 @@
 package org.springblade.anbiao.labor.cotroller;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -171,6 +172,13 @@ public class laborController {
 	@ApiLog("修改-劳保用品信息")
 	@ApiOperation(value = "劳保用品领取", notes = "传入LaborlingquEntity", position = 5)
 	public R update(@RequestBody LaborlingquEntity laborlingqu) {
+		QueryWrapper<LaborlingquEntity> laborQueryWrapper = new QueryWrapper<LaborlingquEntity>();
+		laborQueryWrapper.lambda().eq(LaborlingquEntity::getAlrAliIds, laborlingqu.getAlrAliIds());
+		laborQueryWrapper.lambda().eq(LaborlingquEntity::getAlrPersonIds, laborlingqu.getAlrPersonIds());
+		LaborlingquEntity laborEntity1 = lingquService.getBaseMapper().selectOne(laborQueryWrapper);
+		laborlingqu.setAlrIds(laborEntity1.getAlrIds());
+		laborlingqu.setAlrUpdateByIds(laborlingqu.getAlrPersonIds());
+		laborlingqu.setAlrUpdateTime(DateUtil.now());
 		return R.status(service.updateL(laborlingqu));
 	}
 }

@@ -1,6 +1,7 @@
 package org.springblade.anbiao.labor.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -30,6 +31,7 @@ public class LaborlingquEntity {
 	private String	alrUpdateTime;
 	private String alrUpdateByIds;
 	private String 	alrUpdateByName;
+	@TableField(exist = false)
 	private String asiDeptIds;
 	private String aliApplicationScope;
 }

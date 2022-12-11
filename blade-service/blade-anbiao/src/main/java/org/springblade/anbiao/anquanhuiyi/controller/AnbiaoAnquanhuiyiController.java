@@ -394,8 +394,9 @@ public class AnbiaoAnquanhuiyiController {
 			detail.setAddApBeingJoined("1");
 			return R.status(anquanhuiyiDetailService.updateById(detail));
 		}else{
-			r.setCode(500);
-			r.setMsg("暂无数据");
+			r.setCode(200);
+			r.setMsg("已签到");
+			r.setSuccess(false);
 			return r;
 		}
 	}

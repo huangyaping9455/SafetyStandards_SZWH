@@ -1000,6 +1000,7 @@ public class JiaShiYuanController {
 						anquanzerenshuInfo.setAjaAutographEnclosure(fileUploadClient.getUrl(anquanzerenshuInfo.getAjaAutographEnclosure()));
 					}
 					anquanzerenshuInfo.setAjaAjIds(detal.getId());
+					anquanzerenshuInfo.setDeptName(detal.getDeptName());
 					r.setData(anquanzerenshuInfo);
 					r.setCode(200);
 					r.setMsg("获取成功");

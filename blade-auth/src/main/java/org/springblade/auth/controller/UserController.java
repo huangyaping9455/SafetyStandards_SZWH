@@ -369,6 +369,7 @@ public class UserController {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
+		rs.setMsg(errMsg);
 		return rs;
 	}
 
