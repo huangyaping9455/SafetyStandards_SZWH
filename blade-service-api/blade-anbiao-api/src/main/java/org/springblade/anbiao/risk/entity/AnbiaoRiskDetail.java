@@ -110,5 +110,10 @@ public class AnbiaoRiskDetail implements Serializable {
     @TableField("ard_rectification_enclosure")
     private String ardRectificationEnclosure;
 
-
+	/**
+	 * 驾驶员姓名
+	 */
+	@ApiModelProperty(value = "驾驶员姓名",required = true)
+	@TableField(exist = false)
+	private String jiashiyuanxingming;
 }

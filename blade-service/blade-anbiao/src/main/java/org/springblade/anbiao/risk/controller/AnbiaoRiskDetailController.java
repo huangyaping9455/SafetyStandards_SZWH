@@ -423,12 +423,19 @@ public class AnbiaoRiskDetailController {
 	@ApiOperation(value = "详情-风险统计信息", notes = "传入jiaShiYuan", position = 1)
 	public R detail(String id,String deptId,BladeUser user) {
 		R r=new R();
+		QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
+		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId,id);
+		JiaShiYuan jiaShiYuan = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+		String jiashiyuanxingming = jiaShiYuan.getJiashiyuanxingming();
 		QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
 		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,id);
 		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,deptId);
 		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,0);
 		List<AnbiaoRiskDetail> anbiaoRiskDetails = riskDetailService.getBaseMapper().selectList(riskDetailQueryWrapper);
-
+		for (AnbiaoRiskDetail anbiaoRiskDetail:
+			anbiaoRiskDetails) {
+			anbiaoRiskDetail.setJiashiyuanxingming(jiashiyuanxingming);
+		}
 		if (anbiaoRiskDetails.size()!=0){
 			r.setMsg("查询成功");
 			r.setCode(200);
