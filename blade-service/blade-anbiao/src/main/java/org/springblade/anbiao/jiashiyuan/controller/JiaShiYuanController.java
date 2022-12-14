@@ -281,9 +281,8 @@ public class JiaShiYuanController {
 				jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getShoujihaoma,jiaShiYuan.getShoujihaoma());
 				JiaShiYuan jiaShiYuan1 = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper1);
 				if (jiaShiYuan1!=null){
-					r.setMsg("该手机号已存在");
-					r.setCode(500);
-					r.setSuccess(false);
+					r.setCode(200);
+					r.setSuccess(true);
 					return r;
 				}else {
 					jiaShiYuan.setShoujihaoma(jiaShiYuan.getShoujihaoma());
