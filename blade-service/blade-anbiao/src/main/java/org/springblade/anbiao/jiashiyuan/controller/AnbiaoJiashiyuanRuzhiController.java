@@ -162,14 +162,14 @@ public class AnbiaoJiashiyuanRuzhiController {
 	public R driverAudit( String headPortrait,String ajrId,BladeUser user ){
 		R r = new R();
 		QueryWrapper<AnbiaoJiashiyuanRuzhi> jiashiyuanRuzhiQueryWrapper = new QueryWrapper<>();
-		jiashiyuanRuzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrIds,ajrId);
+		jiashiyuanRuzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrAjIds,ajrId);
 		jiashiyuanRuzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrDelete, "0");
 		AnbiaoJiashiyuanRuzhi deail = ruzhiService.getBaseMapper().selectOne(jiashiyuanRuzhiQueryWrapper);
-
-			deail.setAjrHeadPortrait(headPortrait);
-			deail.setAjrUpdateByName(user.getUserName());
-			deail.setAjrUpdateByIds(user.getUserId().toString());
-			deail.setAjrUpdateTime(DateUtil.now());
-			return R.status(ruzhiService.updateById(deail));
-		}
+		deail.setAjrHeadPortrait(headPortrait);
+		deail.setAjrUpdateByName(user.getUserName());
+		deail.setAjrUpdateByIds(user.getUserId().toString());
+		deail.setAjrUpdateTime(DateUtil.now());
+		deail.setAjrIds(deail.getAjrIds());
+		return R.status(ruzhiService.updateById(deail));
+	}
 }

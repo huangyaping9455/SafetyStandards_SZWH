@@ -123,9 +123,10 @@ public class WaitCompletedController extends BaseController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            rs.setCode(500);
-            rs.setMsg("查询待完成课程失败");
-            rs.setSuccess(false);
+			rs.setCode(200);
+			rs.setMsg("暂无数据");
+			rs.setSuccess(true);
+			rs.setData(null);
         }
         return rs;
     }

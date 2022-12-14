@@ -86,6 +86,7 @@ public class AnbiaoJiashiyuanLaodonghetongController {
 				laodonghetong.setAjwUpdateByIds(laodonghetong.getAjwUpdateByIds());
 			}
 			laodonghetong.setAjwUpdateTime(DateUtil.now());
+			laodonghetong.setAjwAutographTime(DateUtil.now());
 			return R.status(laodonghetongService.updateById(laodonghetong));
 		}
 	}

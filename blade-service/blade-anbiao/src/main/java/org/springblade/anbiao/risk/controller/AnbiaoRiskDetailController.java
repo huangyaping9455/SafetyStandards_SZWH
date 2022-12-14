@@ -3,6 +3,7 @@ package org.springblade.anbiao.risk.controller;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.protostuff.Request;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,6 +24,7 @@ import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetailInfo;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailInfoService;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
+import org.springblade.common.tool.JSONUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
@@ -453,9 +455,14 @@ public class AnbiaoRiskDetailController {
 	@PostMapping("/update")
 	@ApiLog("处理-风险统计信息")
 	@ApiOperation(value = "处理-风险统计信息", notes = "传入ardIds", position = 1)
-	public R deal(String ardIds,String date,String fujian,BladeUser user){
+	public R deal(@RequestBody String json,BladeUser user){
 		R r=new R();
 		int aa=0;
+		//获取参数
+		JsonNode node = JSONUtils.string2JsonNode(json);
+		String ardIds = node.get("ardIds").asText();
+		String date = node.get("date").asText();
+		String fujian = node.get("fujian").asText();
 		QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
 		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIds,ardIds);
 		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
@@ -672,7 +679,7 @@ public class AnbiaoRiskDetailController {
 			r.setCode(200);
 			r.setSuccess(true);
 		}else {
-			r.setMsg("风处理失败");
+			r.setMsg("风险处理失败");
 			r.setCode(500);
 			r.setSuccess(false);
 		}
