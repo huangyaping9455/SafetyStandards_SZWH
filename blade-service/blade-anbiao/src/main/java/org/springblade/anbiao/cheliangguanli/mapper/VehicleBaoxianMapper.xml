@@ -76,7 +76,7 @@
         left join anbiao_vehicle av on av.id=avb.avb_av_ids
         LEFT JOIN blade_dept bd ON bd.id=avb.avb_dept_ids
         <where>
-                avb.avb_delete = 0;
+                avb.avb_delete = 0
             <if test="avbAvIds != null">
                 and avb.avb_av_ids= #{avbAvIds}
             </if>

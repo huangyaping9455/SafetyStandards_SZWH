@@ -70,6 +70,7 @@ public class AnbiaoJiashiyuanAnquanzerenshuController {
 				anquanzerenshu.setAjaUpdateByIds(anquanzerenshu.getAjaUpdateByIds());
 			}
 			anquanzerenshu.setAjaUpdateTime(DateUtil.now());
+			anquanzerenshu.setAjaAutographTime(DateUtil.now());
 			return R.status(anquanzerenshuService.updateById(anquanzerenshu));
 		}
 	}
