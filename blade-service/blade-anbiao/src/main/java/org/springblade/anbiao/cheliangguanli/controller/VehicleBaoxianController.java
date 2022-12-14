@@ -121,8 +121,8 @@ public class VehicleBaoxianController extends BladeController {
 	 */
 	@GetMapping("/page")
 	@ApiOperation(value = "分页", notes = "传入vehicleBaoxian")
-	public R<IPage<VehicleBaoxianVO>> page(VehicleBaoxianVO vehicleBaoxian, Query query) {
-		IPage<VehicleBaoxianVO> pages = vehicleBaoxianService.selectVehicleBaoxianPage(Condition.getPage(query), vehicleBaoxian);
+	public R<IPage<VehicleBaoxianVO>> page(VehicleBaoxianVO vehicleBaoxian, Query query,String avbAvIds) {
+		IPage<VehicleBaoxianVO> pages = vehicleBaoxianService.selectVehicleBaoxianPage(Condition.getPage(query), vehicleBaoxian,avbAvIds);
 		return R.data(pages);
 	}
 

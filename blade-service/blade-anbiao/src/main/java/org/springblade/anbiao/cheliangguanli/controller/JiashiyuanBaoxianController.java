@@ -283,8 +283,8 @@ public class JiashiyuanBaoxianController extends BladeController {
 	 */
 	@GetMapping("/page")
 	@ApiOperation(value = "分页", notes = "传入jiashiyuanBaoxian")
-	public R<IPage<JiashiyuanBaoxianVO>> page(JiashiyuanBaoxianVO jiashiyuanBaoxian, Query query) {
-		IPage<JiashiyuanBaoxianVO> pages = jiashiyuanBaoxianService.selectJiashiyuanBaoxianPage(Condition.getPage(query), jiashiyuanBaoxian);
+	public R<IPage<JiashiyuanBaoxianVO>> page(JiashiyuanBaoxianVO jiashiyuanBaoxian, Query query,String ajbInsuredIds) {
+		IPage<JiashiyuanBaoxianVO> pages = jiashiyuanBaoxianService.selectJiashiyuanBaoxianPage(Condition.getPage(query), jiashiyuanBaoxian,ajbInsuredIds);
 		return R.data(pages);
 	}
 

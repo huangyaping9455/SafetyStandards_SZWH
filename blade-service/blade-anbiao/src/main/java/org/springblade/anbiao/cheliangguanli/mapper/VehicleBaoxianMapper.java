@@ -36,7 +36,7 @@ public interface VehicleBaoxianMapper extends BaseMapper<VehicleBaoxian> {
 	 * @param vehicleBaoxian
 	 * @return
 	 */
-	List<VehicleBaoxianVO> selectVehicleBaoxianPage(IPage page, VehicleBaoxianVO vehicleBaoxian);
+	List<VehicleBaoxianVO> selectVehicleBaoxianPage(IPage page, VehicleBaoxianVO vehicleBaoxian,String avbAvIds);
 
     VehicleBaoxian queryByMax(String avbId);
 

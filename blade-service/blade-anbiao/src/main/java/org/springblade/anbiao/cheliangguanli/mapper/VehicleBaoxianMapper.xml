@@ -75,7 +75,12 @@
         select avb.*,av.cheliangpaizhao,bd.dept_name from anbiao_vehicle_baoxian avb
         left join anbiao_vehicle av on av.id=avb.avb_av_ids
         LEFT JOIN blade_dept bd ON bd.id=avb.avb_dept_ids
-        where avb.avb_delete = 0;
+        <where>
+                avb.avb_delete = 0;
+            <if test="avbAvIds != null">
+                and avb.avb_av_ids= #{avbAvIds}
+            </if>
+        </where>
     </select>
 
     <select id="queryByMax" resultMap="vehicleBaoxianResultMap" parameterType="java.lang.String">

@@ -37,7 +37,7 @@ public interface IJiashiyuanBaoxianService extends BaseService<JiashiyuanBaoxian
 	 * @param jiashiyuanBaoxian
 	 * @return
 	 */
-	IPage<JiashiyuanBaoxianVO> selectJiashiyuanBaoxianPage(IPage<JiashiyuanBaoxianVO> page, JiashiyuanBaoxianVO jiashiyuanBaoxian);
+	IPage<JiashiyuanBaoxianVO> selectJiashiyuanBaoxianPage(IPage<JiashiyuanBaoxianVO> page, JiashiyuanBaoxianVO jiashiyuanBaoxian,String ajbInsuredIds);
 
 	/**
 	 * 查询驾驶员保险详细信息
