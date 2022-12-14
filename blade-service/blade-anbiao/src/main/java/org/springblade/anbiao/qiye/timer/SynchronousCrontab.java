@@ -44,8 +44,8 @@ public class SynchronousCrontab {
 		organizationsQueryWrapper.lambda().eq(Organizations::getIsdelete,0);
 		organizationsQueryWrapper.lambda().eq(Organizations::getJigouleixing,"qiye");
 		List<Organizations> organizationsList = organizationsService.getBaseMapper().selectList(organizationsQueryWrapper);
-		for (int i = 0; i <= organizationsList.size(); i++) {
-			Integer deptId = Integer.parseInt(organizationsList.get(i).getDeptId());
+		for (Organizations organizations:organizationsList) {
+			Integer deptId = Integer.parseInt(organizations.getDeptId());
 			QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper1 = new QueryWrapper<>();
 			jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getDeptId,deptId);
 			jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getIsdelete,0);
@@ -74,9 +74,17 @@ public class SynchronousCrontab {
 				if (deail.getShenfenzhengyouxiaoqi()==null){
 					riskDetail.setArdContent("身份证有效期缺项");
 					riskDetail.setArdType("缺项");
-					int insert = riskDetailService.getBaseMapper().insert(riskDetail);
-					if (insert > 0) {
-						aa++;
+					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,riskDetail.getArdDeptIds());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,riskDetail.getArdAssociationValue());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,riskDetail.getArdContent());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+					AnbiaoRiskDetail riskDetail1 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+					if (riskDetail1==null) {
+						int insert = riskDetailService.getBaseMapper().insert(riskDetail);
+						if (insert > 0) {
+							aa++;
+						}
 					}
 				}else {
 					Date shenfenzhengyouxiaoqi = formatter.parse(deail.getShenfenzhengyouxiaoqi());
@@ -115,10 +123,18 @@ public class SynchronousCrontab {
 					}else {
 						riskDetail.setArdType("正常");
 					}
-					if (riskDetail.getArdType().equals("预警") || riskDetail.getArdType().equals("逾期")) {
-						int insert = riskDetailService.getBaseMapper().insert(riskDetail);
-						if (insert > 0) {
-							aa++;
+					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,riskDetail.getArdDeptIds());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,riskDetail.getArdAssociationValue());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,riskDetail.getArdContent());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+					AnbiaoRiskDetail riskDetail1 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+					if (riskDetail1==null){
+						if (riskDetail.getArdType().equals("预警") || riskDetail.getArdType().equals("逾期")) {
+							int insert = riskDetailService.getBaseMapper().insert(riskDetail);
+							if (insert > 0) {
+								aa++;
+							}
 						}
 					}
 				}
@@ -137,9 +153,17 @@ public class SynchronousCrontab {
 				if (deail.getJiashizhengyouxiaoqi()==null){
 					riskDetail2.setArdContent("驾驶证有效截止日期缺项");
 					riskDetail2.setArdType("缺项");
-					int insert2 = riskDetailService.getBaseMapper().insert(riskDetail2);
-					if (insert2 > 0) {
-						aa++;
+					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,riskDetail2.getArdDeptIds());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,riskDetail2.getArdAssociationValue());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,riskDetail2.getArdContent());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+					AnbiaoRiskDetail riskDetail1 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+					if(riskDetail1==null){
+						int insert2 = riskDetailService.getBaseMapper().insert(riskDetail2);
+						if (insert2 > 0) {
+							aa++;
+						}
 					}
 				}else {
 					Date jiashizhengyouxiaoqi = formatter.parse(deail.getJiashizhengyouxiaoqi());
@@ -178,10 +202,18 @@ public class SynchronousCrontab {
 					}else {
 						riskDetail2.setArdType("正常");
 					}
-					if (riskDetail2.getArdType().equals("预警") || riskDetail2.getArdType().equals("逾期")) {
-						int insert2 = riskDetailService.getBaseMapper().insert(riskDetail2);
-						if (insert2 > 0) {
-							aa++;
+					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,riskDetail2.getArdDeptIds());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,riskDetail2.getArdAssociationValue());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,riskDetail2.getArdContent());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+					AnbiaoRiskDetail riskDetail1 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+					if (riskDetail1==null){
+						if (riskDetail2.getArdType().equals("预警") || riskDetail2.getArdType().equals("逾期")) {
+							int insert2 = riskDetailService.getBaseMapper().insert(riskDetail2);
+							if (insert2 > 0) {
+								aa++;
+							}
 						}
 					}
 				}
@@ -200,9 +232,17 @@ public class SynchronousCrontab {
 				if (deail.getCongyezhengyouxiaoqi()==null){
 					riskDetail3.setArdContent("从业资格证有效期缺项");
 					riskDetail3.setArdType("缺项");
-					int insert3 = riskDetailService.getBaseMapper().insert(riskDetail3);
-					if (insert3 > 0) {
-						aa++;
+					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,riskDetail3.getArdDeptIds());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,riskDetail3.getArdAssociationValue());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,riskDetail3.getArdContent());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+					AnbiaoRiskDetail riskDetail1 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+					if (riskDetail1==null){
+						int insert3 = riskDetailService.getBaseMapper().insert(riskDetail3);
+						if (insert3 > 0) {
+							aa++;
+						}
 					}
 				}else {
 					Date congyezhengyouxiaoqi = formatter.parse(deail.getCongyezhengyouxiaoqi());
@@ -241,10 +281,18 @@ public class SynchronousCrontab {
 					}else {
 						riskDetail3.setArdType("正常");
 					}
-					if (riskDetail3.getArdType().equals("预警") || riskDetail3.getArdType().equals("逾期")) {
-						int insert3 = riskDetailService.getBaseMapper().insert(riskDetail3);
-						if (insert3 > 0) {
-							aa++;
+					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,riskDetail3.getArdDeptIds());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,riskDetail3.getArdAssociationValue());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,riskDetail3.getArdContent());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+					AnbiaoRiskDetail riskDetail1 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+					if (riskDetail1==null){
+						if (riskDetail3.getArdType().equals("预警") || riskDetail3.getArdType().equals("逾期")) {
+							int insert3 = riskDetailService.getBaseMapper().insert(riskDetail3);
+							if (insert3 > 0) {
+								aa++;
+							}
 						}
 					}
 				}
@@ -263,9 +311,17 @@ public class SynchronousCrontab {
 				if (deail.getTijianyouxiaoqi()==null){
 					riskDetail4.setArdContent("体检有效期缺项");
 					riskDetail4.setArdType("缺项");
-					int insert4 = riskDetailService.getBaseMapper().insert(riskDetail4);
-					if (insert4 > 0) {
-						aa++;
+					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,riskDetail4.getArdDeptIds());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,riskDetail4.getArdAssociationValue());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,riskDetail4.getArdContent());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+					AnbiaoRiskDetail riskDetail1 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+					if (riskDetail1==null){
+						int insert4 = riskDetailService.getBaseMapper().insert(riskDetail4);
+						if (insert4 > 0) {
+							aa++;
+						}
 					}
 				}else {
 					Date tijianyouxiaoqi = formatter.parse(deail.getTijianyouxiaoqi());
@@ -305,14 +361,21 @@ public class SynchronousCrontab {
 					}else {
 						riskDetail4.setArdType("正常");
 					}
-					if (riskDetail4.getArdType().equals("预警") || riskDetail4.getArdType().equals("逾期")) {
-						int insert4 = riskDetailService.getBaseMapper().insert(riskDetail4);
-						if (insert4 > 0) {
-							aa++;
+					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,riskDetail4.getArdDeptIds());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,riskDetail4.getArdAssociationValue());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,riskDetail4.getArdContent());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+					AnbiaoRiskDetail riskDetail1 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+					if (riskDetail1==null){
+						if (riskDetail4.getArdType().equals("预警") || riskDetail4.getArdType().equals("逾期")) {
+							int insert4 = riskDetailService.getBaseMapper().insert(riskDetail4);
+							if (insert4 > 0) {
+								aa++;
+							}
 						}
 					}
 				}
-
 			}
 		}
 	}
