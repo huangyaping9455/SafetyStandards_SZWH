@@ -64,4 +64,10 @@ public class DriverInfoVO {
 	@ApiModelProperty(value = "挂车车辆牌照")
 	private String guacheliangpaizhao;
 
+	@ApiModelProperty(value = "车辆ID")
+	private String vehid;
+
+	@ApiModelProperty(value = "挂车ID")
+	private String guacheid;
+
 }
