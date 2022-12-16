@@ -14,5 +14,9 @@ public class StudyRecordPage extends BasePage {
 
 	@ApiModelProperty(value = "学员ID")
 	private Integer studentId;
+	@ApiModelProperty(value = "企业名称")
+	private String deptName;
+	@ApiModelProperty(value = "学员姓名")
+	private String driverName;
 
 }

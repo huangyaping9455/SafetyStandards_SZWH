@@ -1,13 +1,11 @@
 package org.springblade.anbiao.jiashiyuan.mapper;
 
-import lombok.AllArgsConstructor;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuan;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springblade.anbiao.jiashiyuan.vo.CheliangJiashiyuanVO;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -19,5 +17,5 @@ import java.util.Map;
  */
 @Mapper
 public interface AnbiaoCheliangJiashiyuanMapper extends BaseMapper<AnbiaoCheliangJiashiyuan> {
-	public List<CheliangJiashiyuanVO> SelectByJiashiyuanID(String jiashiyuanid,String shiyongxingzhi);
+	public List<CheliangJiashiyuanVO> SelectByJiashiyuanID(String shiyongxingzhi,int deptId);
 }

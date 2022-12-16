@@ -50,7 +50,7 @@ trainserver:
   user-get-url: https://aip.baidubce.com/rest/2.0/face/v3/faceset/user/get?access_token=
   image-type: BASE64
   face-platform-id: swhote
-  search-score: 50
+  search-score: 35
   enable: true
 
 

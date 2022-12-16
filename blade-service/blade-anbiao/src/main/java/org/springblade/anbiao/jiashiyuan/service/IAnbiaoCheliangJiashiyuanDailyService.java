@@ -13,4 +13,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IAnbiaoCheliangJiashiyuanDailyService extends IService<AnbiaoCheliangJiashiyuanDaily> {
 
+	AnbiaoCheliangJiashiyuanDaily SelectByID(String shiyongxingzhi,String jiashiyuanid);
+
 }

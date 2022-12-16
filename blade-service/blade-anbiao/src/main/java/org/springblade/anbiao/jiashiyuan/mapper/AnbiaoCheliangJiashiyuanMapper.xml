@@ -12,11 +12,50 @@
     </resultMap>
 
     <select id="SelectByJiashiyuanID" resultType="org.springblade.anbiao.jiashiyuan.vo.CheliangJiashiyuanVO">
-        SELECT v.cheliangpaizhao,cj.jiashiyuanid,cj.vehid FROM `anbiao_vehicle` v,anbiao_cheliang_jiashiyuan cj
-        WHERE cj.jiashiyuanid= #{jiashiyuanid}
-          and cj.vehid=v.id
-        <if test="shiyongxingzhi != null and shiyongxingzhi != '' ">
-          and v.shiyongxingzhi = #{shiyongxingzhi}
+<!--        SELECT v.cheliangpaizhao,cj.jiashiyuanid,cj.vehid FROM `anbiao_vehicle` v,anbiao_cheliang_jiashiyuan cj-->
+<!--        WHERE cj.jiashiyuanid= #{jiashiyuanid}-->
+<!--          and cj.vehid=v.id-->
+<!--        <if test="shiyongxingzhi != null and shiyongxingzhi != '' ">-->
+<!--          and v.shiyongxingzhi = #{shiyongxingzhi}-->
+<!--        </if>-->
+
+        <if test="shiyongxingzhi == '车头' ">
+            SELECT
+                v.cheliangpaizhao,v.id as vehid,cj.vstatus as status,cj.jiashiyuanid
+            FROM
+                `anbiao_vehicle` v
+            left join (
+                select
+                    vehid,jiashiyuanid,max(createtime) createtime,vstatus
+                from
+                    anbiao_cheliang_jiashiyuan_daily
+                where vstatus = 1
+                    GROUP BY vehid,jiashiyuanid,vstatus
+                ) cj on cj.vehid=v.id
+            where v.shiyongxingzhi = '车头'
+                and v.is_deleted = 0
+                and v.dept_id = #{deptId}
+            order by cj.vstatus
         </if>
+
+        <if test="shiyongxingzhi == '挂车' ">
+            SELECT
+                v.cheliangpaizhao,v.id as vehid,cj.gstatus as status,cj.jiashiyuanid
+            FROM
+                `anbiao_vehicle` v
+            left join (
+                select
+                    jiashiyuanid,gvehid,max(createtime) createtime,gstatus
+                from
+                    anbiao_cheliang_jiashiyuan_daily
+                where gstatus = 1
+                    GROUP BY jiashiyuanid,gvehid,gstatus
+                ) cj on cj.gvehid=v.id
+            where v.shiyongxingzhi = '挂车'
+                and v.is_deleted = 0
+                and v.dept_id = #{deptId}
+            order by cj.gstatus
+        </if>
+
     </select>
 </mapper>

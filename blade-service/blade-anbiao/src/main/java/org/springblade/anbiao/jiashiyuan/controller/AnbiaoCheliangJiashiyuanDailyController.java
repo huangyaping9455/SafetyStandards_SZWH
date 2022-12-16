@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuanDaily;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoCheliangJiashiyuanDailyService;
+import org.springblade.common.tool.StringUtil;
+import org.springblade.common.tool.StringUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
@@ -50,6 +52,24 @@ public class AnbiaoCheliangJiashiyuanDailyController {
 		List<AnbiaoCheliangJiashiyuanDaily> cheliangJiashiyuanDailies = cheliangJiashiyuanDailyService.getBaseMapper().selectList(cheliangJiashiyuanDailyQueryWrapper);
 		if(cheliangJiashiyuanDailies.size() < 1){
 			cheliangJiashiyuanDaily.setCreatetime(DateUtil.now());
+			if(cheliangJiashiyuanDaily.getVehid() != null && StringUtils.isNotEmpty(cheliangJiashiyuanDaily.getVehid())){
+				AnbiaoCheliangJiashiyuanDaily ss = cheliangJiashiyuanDailyService.SelectByID("车头",cheliangJiashiyuanDaily.getJiashiyuanid());
+				if(ss != null){
+					ss.setVstatus(0);
+					ss.setUpdatetime(DateUtil.now());
+					cheliangJiashiyuanDailyService.updateById(ss);
+				}
+				cheliangJiashiyuanDaily.setVstatus(1);
+			}
+			if(cheliangJiashiyuanDaily.getGvehid() != null && StringUtils.isNotEmpty(cheliangJiashiyuanDaily.getGvehid())){
+				AnbiaoCheliangJiashiyuanDaily ss = cheliangJiashiyuanDailyService.SelectByID("挂车",cheliangJiashiyuanDaily.getJiashiyuanid());
+				if(ss != null) {
+					ss.setGstatus(0);
+					ss.setUpdatetime(DateUtil.now());
+					cheliangJiashiyuanDailyService.updateById(ss);
+				}
+				cheliangJiashiyuanDaily.setGstatus(1);
+			}
 			cheliangJiashiyuanDailyService.save(cheliangJiashiyuanDaily);
 			r.setMsg("保存成功");
 			r.setCode(200);
@@ -58,19 +78,31 @@ public class AnbiaoCheliangJiashiyuanDailyController {
 			for (int i = 0; i <= cheliangJiashiyuanDailies.size() - 1; i++) {
 				String createtime = cheliangJiashiyuanDailies.get(i).getCreatetime().substring(0, 10);
 				if (createtime.equals(substring)) {
-	//				r.setMsg("记录已存在");
-	//				r.setCode(500);
-	//				r.setSuccess(false);
-	//				return r;
 					cheliangJiashiyuanDaily.setCreatetime(DateUtil.now());
 					cheliangJiashiyuanDaily.setId(cheliangJiashiyuanDailies.get(i).getId());
+					if(cheliangJiashiyuanDailies.get(i).getVehid() != null && StringUtils.isNotEmpty(cheliangJiashiyuanDailies.get(i).getVehid())){
+						AnbiaoCheliangJiashiyuanDaily ss = cheliangJiashiyuanDailyService.SelectByID("车头",cheliangJiashiyuanDaily.getJiashiyuanid());
+						if(ss != null){
+							ss.setVstatus(0);
+							ss.setUpdatetime(DateUtil.now());
+							cheliangJiashiyuanDailyService.updateById(ss);
+						}
+						cheliangJiashiyuanDaily.setVstatus(1);
+					}
+					if(cheliangJiashiyuanDailies.get(i).getGvehid() != null && StringUtils.isNotEmpty(cheliangJiashiyuanDailies.get(i).getGvehid())){
+						AnbiaoCheliangJiashiyuanDaily ss = cheliangJiashiyuanDailyService.SelectByID("挂车",cheliangJiashiyuanDaily.getJiashiyuanid());
+						if(ss != null) {
+							ss.setGstatus(0);
+							ss.setUpdatetime(DateUtil.now());
+							cheliangJiashiyuanDailyService.updateById(ss);
+						}
+						cheliangJiashiyuanDaily.setGstatus(1);
+					}
 					cheliangJiashiyuanDailyService.updateById(cheliangJiashiyuanDaily);
 					r.setMsg("保存成功");
 					r.setCode(200);
 					r.setSuccess(true);
 				}else{
-					cheliangJiashiyuanDaily.setCreatetime(DateUtil.now());
-					cheliangJiashiyuanDailyService.save(cheliangJiashiyuanDaily);
 					r.setMsg("保存成功");
 					r.setCode(200);
 					r.setSuccess(true);

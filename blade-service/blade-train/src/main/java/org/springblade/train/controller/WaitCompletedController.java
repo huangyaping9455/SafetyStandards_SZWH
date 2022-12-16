@@ -24,6 +24,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springblade.common.configurationBean.TrainServer;
+import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
 import org.springblade.core.tool.utils.StringUtil;
 import org.springblade.train.config.BaseController;
@@ -348,9 +349,24 @@ public class WaitCompletedController extends BaseController {
     @ApiImplicitParams({
         @ApiImplicitParam(name = "studyRecordPage", value = "数据对象", required = true)
     })
-    public R getStudyRecord(@RequestBody StudyRecordPage studyRecordPage) {
+    public R getStudyRecord(@RequestBody StudyRecordPage studyRecordPage, BladeUser user) {
         R rs = new R();
         try {
+			//根据学员姓名、企业名称获取培训的学员ID
+			Unit unitDeail = trainService.getUnitByName(studyRecordPage.getDeptName());
+			QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<Student>();
+			studentQueryWrapper.lambda().eq(Student::getRealName, studyRecordPage.getDriverName());
+			studentQueryWrapper.lambda().eq(Student::getUnitId, unitDeail.getId());
+			studentQueryWrapper.lambda().eq(Student::getDeleted, "0");
+			Student studentDeail = studentService.getBaseMapper().selectOne(studentQueryWrapper);
+			if(studentDeail == null){
+				rs.setCode(200);
+				rs.setMsg("暂无数据");
+				rs.setSuccess(true);
+				rs.setData(null);
+				return rs;
+			}
+			studyRecordPage.setStudentId(studentDeail.getId());
             StudyRecordPage studyRecordList = trainService.getAppStudyRecordList(studyRecordPage);
             if(studyRecordList != null){
                 rs.setCode(200);

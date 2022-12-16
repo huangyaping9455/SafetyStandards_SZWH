@@ -745,6 +745,8 @@ values
                 select a.jiashiyuanid,b.cheliangpaizhao,a.vehid from anbiao_cheliang_jiashiyuan_daily a,anbiao_vehicle b
                 where a.jiashiyuanid = #{jsyId}
                   and a.vehid = b.id
+                  and a.vstatus = 1
+<!--                  and b.shiyongxingzhi = '车头'-->
                 ORDER BY a.createtime desc
                 limit 1
             ) d on d.jiashiyuanid = a.id
@@ -752,6 +754,8 @@ values
                 select a.jiashiyuanid,b.cheliangpaizhao,a.vehid from anbiao_cheliang_jiashiyuan_daily a,anbiao_vehicle b
                 where a.jiashiyuanid = #{jsyId}
                   and a.gvehid = b.id
+                  and a.gstatus = 1
+<!--                  and b.shiyongxingzhi = '挂车'-->
                 ORDER BY a.createtime desc
                     limit 1
             ) e on e.jiashiyuanid = a.id

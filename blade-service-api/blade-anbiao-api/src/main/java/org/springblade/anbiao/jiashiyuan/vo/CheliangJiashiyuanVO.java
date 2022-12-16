@@ -18,4 +18,7 @@ public class CheliangJiashiyuanVO {
 	@ApiModelProperty(value = "车辆牌照")
 	private String cheliangpaizhao;
 
+	@ApiModelProperty(value = "是否被绑定，1：已绑定")
+	private int status = 0;
+
 }

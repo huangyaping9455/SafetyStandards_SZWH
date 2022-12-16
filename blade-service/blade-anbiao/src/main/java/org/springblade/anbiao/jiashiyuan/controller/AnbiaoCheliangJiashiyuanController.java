@@ -9,7 +9,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuan;
+import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoCheliangJiashiyuanService;
+import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.anbiao.jiashiyuan.service.impl.AnbiaoCheliangJiashiyuanServiceImpl;
 import org.springblade.anbiao.jiashiyuan.vo.CheliangJiashiyuanVO;
 import org.springblade.common.tool.JSONUtils;
@@ -39,6 +41,8 @@ public class AnbiaoCheliangJiashiyuanController {
 	private IAnbiaoCheliangJiashiyuanService cheliangJiashiyuanService;
 
 	private AnbiaoCheliangJiashiyuanServiceImpl cheliangJiashiyuanServiceImpl;
+
+	private IJiaShiYuanService jiaShiYuanService;
 
 	/**
 	 * 新增
@@ -86,11 +90,23 @@ public class AnbiaoCheliangJiashiyuanController {
 			//获取参数
 			JsonNode node = JSONUtils.string2JsonNode(json);
 			String jiashiyuanid = node.get("jiashiyuanid").asText();
-//			System.out.println(node.get("shiyongxingzhi").asText());
 			String shiyongxingzhi = node.get("shiyongxingzhi").asText();
-//			String shiyongxingzhi = null;
-			List<CheliangJiashiyuanVO> cheliangJiashiyuanVOS = cheliangJiashiyuanServiceImpl.SelectByJiashiyuanID(jiashiyuanid,shiyongxingzhi);
+
+			QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<JiaShiYuan>();
+			jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId,jiashiyuanid);
+			jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,0);
+			JiaShiYuan deail = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+			Integer deptId = null;
+			if(deail != null){
+				deptId = deail.getDeptId();
+			}
+			List<CheliangJiashiyuanVO> cheliangJiashiyuanVOS = cheliangJiashiyuanServiceImpl.SelectByJiashiyuanID(shiyongxingzhi,deptId);
 			if(cheliangJiashiyuanVOS.size() > 0){
+				cheliangJiashiyuanVOS.forEach(item-> {
+					if (item.getJiashiyuanid() != null && item.getJiashiyuanid().equals(jiashiyuanid)) {
+						item.setStatus(-1);
+					}
+				});
 				r.setMsg("获取成功");
 				r.setCode(200);
 				r.setSuccess(true);

@@ -13,4 +13,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface AnbiaoCheliangJiashiyuanDailyMapper extends BaseMapper<AnbiaoCheliangJiashiyuanDaily> {
 
+
+	AnbiaoCheliangJiashiyuanDaily SelectByID(String shiyongxingzhi,String jiashiyuanid);
+
 }

@@ -70,6 +70,7 @@ public class AnbiaoJiashiyuanWeihaigaozhishuController {
 				weihaigaozhishu.setAjwUpdateByIds(weihaigaozhishu.getAjwUpdateByIds());
 			}
 			weihaigaozhishu.setAjwUpdateTime(DateUtil.now());
+			weihaigaozhishu.setAjwAutographAutograph(DateUtil.now());
 			return R.status(weihaigaozhishuService.updateById(weihaigaozhishu));
 		}
 	}
