@@ -24,6 +24,10 @@ import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.service.*;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
+import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
+import org.springblade.anbiao.risk.entity.AnbiaoRiskDetailInfo;
+import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailInfoService;
+import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.common.constant.CommonConstant;
 import org.springblade.common.tool.DateUtils;
 import org.springblade.common.tool.IdCardUtil;
@@ -76,6 +80,8 @@ public class JiaShiYuanController {
 	private IAnbiaoJiashiyuanQitaService qitaService;
 	private IJiaShiYuanService jiaShiYuanService;
 	private IBladeDeptService deptService;
+	private IAnbiaoRiskDetailService riskDetailService;
+	private IAnbiaoRiskDetailInfoService detailInfoService;
 
 	@PostMapping("/insert")
 	@ApiLog("新增-驾驶员资料管理")
@@ -91,31 +97,35 @@ public class JiaShiYuanController {
 		JiaShiYuan deail = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
 
 		//验证身份证初领日期
-		if (jiaShiYuan.getShenfenzhengchulingriqi().length() >= 10) {
-			String shenfenzhengchulingriqi = jiaShiYuan.getShenfenzhengchulingriqi().substring(0, 10);
-			if (StringUtils.isNotBlank(shenfenzhengchulingriqi) && !shenfenzhengchulingriqi.equals("null")) {
-				if (DateUtils.isDateString(shenfenzhengchulingriqi, null) == true) {
-					jiaShiYuan.setShenfenzhengchulingriqi(shenfenzhengchulingriqi);
-				} else {
-					r.setMsg(jiaShiYuan.getShenfenzhengchulingriqi() + ",该身份证初领日期，不是时间格式；");
-					r.setCode(500);
-					r.setSuccess(false);
-					return r;
+		if (StringUtils.isNotBlank(jiaShiYuan.getShenfenzhengchulingriqi()) && !jiaShiYuan.getShenfenzhengchulingriqi().equals("null")) {
+			if (jiaShiYuan.getShenfenzhengchulingriqi().length() >= 10) {
+				String shenfenzhengchulingriqi = jiaShiYuan.getShenfenzhengchulingriqi().substring(0, 10);
+				if (StringUtils.isNotBlank(shenfenzhengchulingriqi) && !shenfenzhengchulingriqi.equals("null")) {
+					if (DateUtils.isDateString(shenfenzhengchulingriqi, null) == true) {
+						jiaShiYuan.setShenfenzhengchulingriqi(shenfenzhengchulingriqi);
+					} else {
+						r.setMsg(jiaShiYuan.getShenfenzhengchulingriqi() + ",该身份证初领日期，不是时间格式；");
+						r.setCode(500);
+						r.setSuccess(false);
+						return r;
+					}
 				}
 			}
 		}
 
 		//验证身份证有效截止日期
-		if (jiaShiYuan.getShenfenzhengyouxiaoqi().length() >= 10) {
-			String shenfenzhengyouxiaoqi = jiaShiYuan.getShenfenzhengyouxiaoqi().substring(0, 10);
-			if (StringUtils.isNotBlank(shenfenzhengyouxiaoqi) && !shenfenzhengyouxiaoqi.equals("null")) {
-				if (DateUtils.isDateString(shenfenzhengyouxiaoqi, null) == true) {
-					jiaShiYuan.setShenfenzhengyouxiaoqi(shenfenzhengyouxiaoqi);
-				} else {
-					r.setMsg(jiaShiYuan.getShenfenzhengyouxiaoqi() + ",该身份证有效截止日期，不是时间格式；");
-					r.setCode(500);
-					r.setSuccess(false);
-					return r;
+		if (StringUtils.isNotBlank(jiaShiYuan.getShenfenzhengyouxiaoqi()) && !jiaShiYuan.getShenfenzhengyouxiaoqi().equals("null")) {
+			if (jiaShiYuan.getShenfenzhengyouxiaoqi().length() >= 10) {
+				String shenfenzhengyouxiaoqi = jiaShiYuan.getShenfenzhengyouxiaoqi().substring(0, 10);
+				if (StringUtils.isNotBlank(shenfenzhengyouxiaoqi) && !shenfenzhengyouxiaoqi.equals("null")) {
+					if (DateUtils.isDateString(shenfenzhengyouxiaoqi, null) == true) {
+						jiaShiYuan.setShenfenzhengyouxiaoqi(shenfenzhengyouxiaoqi);
+					} else {
+						r.setMsg(jiaShiYuan.getShenfenzhengyouxiaoqi() + ",该身份证有效截止日期，不是时间格式；");
+						r.setCode(500);
+						r.setSuccess(false);
+						return r;
+					}
 				}
 			}
 		}
@@ -152,36 +162,40 @@ public class JiaShiYuanController {
 		}
 
 		//验证驾驶证初领日期
-		if (jiaShiYuan.getJiashizhengchulingriqi().length() >= 10) {
-			String jiashizhengchulingriqi = jiaShiYuan.getJiashizhengchulingriqi().substring(0, 10);
-			if (StringUtils.isNotBlank(jiashizhengchulingriqi) && !jiashizhengchulingriqi.equals("null")) {
-				if (DateUtils.isDateString(jiashizhengchulingriqi, null) == true) {
-					jiaShiYuan.setJiashizhengchulingriqi(jiashizhengchulingriqi);
-				} else {
-					r.setMsg(jiaShiYuan.getJiashizhengchulingriqi() + ",该驾驶证初领日期，不是时间格式；");
-					r.setCode(500);
-					r.setSuccess(false);
-					return r;
-				}
-			}
-		}
-
-		//验证驾驶证有效截止日期
-		if (jiaShiYuan.getJiashizhengyouxiaoqi().length() >= 10 || jiaShiYuan.getJiashizhengyouxiaoqi().equals("长期")) {
-			if (!jiaShiYuan.getJiashizhengyouxiaoqi().equals("长期")) {
-				String jiashizhengyouxiaoqi = jiaShiYuan.getJiashizhengyouxiaoqi().substring(0, 10);
-				if (StringUtils.isNotBlank(jiashizhengyouxiaoqi) && !jiashizhengyouxiaoqi.equals("null")) {
-					if (DateUtils.isDateString(jiashizhengyouxiaoqi, null) == true) {
-						jiaShiYuan.setJiashizhengyouxiaoqi(jiashizhengyouxiaoqi);
+		if (StringUtils.isNotBlank(jiaShiYuan.getJiashizhengchulingriqi()) && !jiaShiYuan.getJiashizhengchulingriqi().equals("null")) {
+			if (jiaShiYuan.getJiashizhengchulingriqi().length() >= 10) {
+				String jiashizhengchulingriqi = jiaShiYuan.getJiashizhengchulingriqi().substring(0, 10);
+				if (StringUtils.isNotBlank(jiashizhengchulingriqi) && !jiashizhengchulingriqi.equals("null")) {
+					if (DateUtils.isDateString(jiashizhengchulingriqi, null) == true) {
+						jiaShiYuan.setJiashizhengchulingriqi(jiashizhengchulingriqi);
 					} else {
-						r.setMsg(jiaShiYuan.getJiashizhengyouxiaoqi() + ",该驾驶证有效截止日期，不是时间格式；");
+						r.setMsg(jiaShiYuan.getJiashizhengchulingriqi() + ",该驾驶证初领日期，不是时间格式；");
 						r.setCode(500);
 						r.setSuccess(false);
 						return r;
 					}
 				}
-			}else if (jiaShiYuan.getJiashizhengyouxiaoqi().equals("长期")){
-				jiaShiYuan.setJiashizhengyouxiaoqi(jiaShiYuan.getJiashizhengyouxiaoqi());
+			}
+		}
+
+		//验证驾驶证有效截止日期
+		if (StringUtils.isNotBlank(jiaShiYuan.getJiashizhengyouxiaoqi()) && !jiaShiYuan.getJiashizhengyouxiaoqi().equals("null")) {
+			if (jiaShiYuan.getJiashizhengyouxiaoqi().length() >= 10 || jiaShiYuan.getJiashizhengyouxiaoqi().equals("长期")) {
+				if (!jiaShiYuan.getJiashizhengyouxiaoqi().equals("长期")) {
+					String jiashizhengyouxiaoqi = jiaShiYuan.getJiashizhengyouxiaoqi().substring(0, 10);
+					if (StringUtils.isNotBlank(jiashizhengyouxiaoqi) && !jiashizhengyouxiaoqi.equals("null")) {
+						if (DateUtils.isDateString(jiashizhengyouxiaoqi, null) == true) {
+							jiaShiYuan.setJiashizhengyouxiaoqi(jiashizhengyouxiaoqi);
+						} else {
+							r.setMsg(jiaShiYuan.getJiashizhengyouxiaoqi() + ",该驾驶证有效截止日期，不是时间格式；");
+							r.setCode(500);
+							r.setSuccess(false);
+							return r;
+						}
+					}
+				} else if (jiaShiYuan.getJiashizhengyouxiaoqi().equals("长期")) {
+					jiaShiYuan.setJiashizhengyouxiaoqi(jiaShiYuan.getJiashizhengyouxiaoqi());
+				}
 			}
 		}
 
@@ -217,32 +231,35 @@ public class JiaShiYuanController {
 		}
 
 		//验证从业资格证初领日期
-		if (jiaShiYuan.getCongyezhengchulingri().length() >= 10) {
-			String congyezhengchulingriqi = jiaShiYuan.getCongyezhengchulingri().substring(0, 10);
-			if (StringUtils.isNotBlank(congyezhengchulingriqi) && !congyezhengchulingriqi.equals("null")) {
-				if (DateUtils.isDateString(congyezhengchulingriqi, null) == true) {
-					jiaShiYuan.setCongyezhengchulingri(congyezhengchulingriqi);
-				} else {
-					r.setMsg(jiaShiYuan.getCongyezhengchulingri() + ",该从业资格证初领日期，不是时间格式；");
-					r.setCode(500);
-					r.setSuccess(false);
-					return r;
+		if (StringUtils.isNotBlank(jiaShiYuan.getCongyezhengchulingri()) && !jiaShiYuan.getCongyezhengchulingri().equals("null")) {
+			if (jiaShiYuan.getCongyezhengchulingri().length() >= 10) {
+				String congyezhengchulingriqi = jiaShiYuan.getCongyezhengchulingri().substring(0, 10);
+				if (StringUtils.isNotBlank(congyezhengchulingriqi) && !congyezhengchulingriqi.equals("null")) {
+					if (DateUtils.isDateString(congyezhengchulingriqi, null) == true) {
+						jiaShiYuan.setCongyezhengchulingri(congyezhengchulingriqi);
+					} else {
+						r.setMsg(jiaShiYuan.getCongyezhengchulingri() + ",该从业资格证初领日期，不是时间格式；");
+						r.setCode(500);
+						r.setSuccess(false);
+						return r;
+					}
 				}
 			}
 		}
 
-
 		//验证从业资格证有效截止日期
-		if (jiaShiYuan.getCongyezhengyouxiaoqi().length() >= 10) {
-			String congyezhengyouxiaoqi = jiaShiYuan.getCongyezhengyouxiaoqi().substring(0, 10);
-			if (StringUtils.isNotBlank(congyezhengyouxiaoqi) && !congyezhengyouxiaoqi.equals("null")) {
-				if (DateUtils.isDateString(congyezhengyouxiaoqi, null) == true) {
-					jiaShiYuan.setCongyezhengyouxiaoqi(congyezhengyouxiaoqi);
-				} else {
-					r.setMsg(jiaShiYuan.getCongyezhengyouxiaoqi() + ",该从业资格证有效截止日期，不是时间格式；");
-					r.setCode(500);
-					r.setSuccess(false);
-					return r;
+		if (StringUtils.isNotBlank(jiaShiYuan.getCongyezhengyouxiaoqi()) && !jiaShiYuan.getCongyezhengyouxiaoqi().equals("null")) {
+			if (jiaShiYuan.getCongyezhengyouxiaoqi().length() >= 10) {
+				String congyezhengyouxiaoqi = jiaShiYuan.getCongyezhengyouxiaoqi().substring(0, 10);
+				if (StringUtils.isNotBlank(congyezhengyouxiaoqi) && !congyezhengyouxiaoqi.equals("null")) {
+					if (DateUtils.isDateString(congyezhengyouxiaoqi, null) == true) {
+						jiaShiYuan.setCongyezhengyouxiaoqi(congyezhengyouxiaoqi);
+					} else {
+						r.setMsg(jiaShiYuan.getCongyezhengyouxiaoqi() + ",该从业资格证有效截止日期，不是时间格式；");
+						r.setCode(500);
+						r.setSuccess(false);
+						return r;
+					}
 				}
 			}
 		}
@@ -339,7 +356,7 @@ public class JiaShiYuanController {
 			r.setSuccess(false);
 			return r;
 		}
-
+		JiaShiYuan jiaShiYuan1=jiaShiYuan;
 		//新增
 		if (deail == null) {
 			if (StringUtils.isBlank(jiaShiYuan.getJiashiyuanleixing())) {
@@ -525,6 +542,7 @@ public class JiaShiYuanController {
 					qita.setAjtAjIds(jiaShiYuan.getId());
 					i = qitaService.save(qita);
 				}
+
 			}
 			if (i) {
 				r.setMsg("添加成功");
@@ -539,6 +557,134 @@ public class JiaShiYuanController {
 			}
 		} else {
 			jiaShiYuan.setId(deail.getId());
+
+			//身份证有效期风险
+			AnbiaoRiskDetailInfo anbiaoRiskDetailInfo = new AnbiaoRiskDetailInfo();
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,jiaShiYuan.getDeptId());
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,jiaShiYuan.getId());
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"身份证有效截止日期");
+			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+			if (riskDetail!=null && StringUtils.isNotBlank(jiaShiYuan1.getShenfenzhengyouxiaoqi()) && !jiaShiYuan1.getShenfenzhengyouxiaoqi().equals("null")) {
+				riskDetail.setArdIsRectification("1");
+				riskDetail.setArdRectificationByIds(user.getUserId().toString());
+				riskDetail.setArdRectificationByName(user.getUserName());
+				riskDetail.setArdRectificationDate(DateUtil.now());
+				riskDetail.setArdModularName("身份证有效截止日期");
+				riskDetail.setArdRectificationField("shenfenzhengyouxiaoqi");
+				riskDetail.setArdRectificationValue(jiaShiYuan1.getShenfenzhengyouxiaoqi());
+				riskDetail.setArdRectificationFieldType("String");
+				riskDetail.setArdRectificationEnclosure(jiaShiYuan1.getShenfenzhengfujian());
+				boolean b = riskDetailService.updateById(riskDetail);
+				if (b == true) {
+					//整改内容
+					anbiaoRiskDetailInfo.setArdRiskIds(riskDetail.getArdIds().toString());
+					anbiaoRiskDetailInfo.setArdRectificationByIds(user.getUserId().toString());
+					anbiaoRiskDetailInfo.setArdRectificationByName(user.getUserName());
+					anbiaoRiskDetailInfo.setArdRectificationDate(DateUtil.now());
+					anbiaoRiskDetailInfo.setArdRectificationField("shenfenzhengyouxiaoqi");
+					anbiaoRiskDetailInfo.setArdRectificationValue(jiaShiYuan1.getShenfenzhengyouxiaoqi());
+					anbiaoRiskDetailInfo.setArdRectificationFieldType("String");
+					detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo);
+				}
+			}
+
+			//驾驶证有效期风险
+			AnbiaoRiskDetailInfo anbiaoRiskDetailInfo2 = new AnbiaoRiskDetailInfo();
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper2 = new QueryWrapper<>();
+			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,jiaShiYuan.getDeptId());
+			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,jiaShiYuan.getId());
+			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdTitle,"驾驶证有效截止日期");
+			AnbiaoRiskDetail riskDetail2 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper2);
+			if (riskDetail2!=null && StringUtils.isNotBlank(jiaShiYuan1.getJiashizhengyouxiaoqi()) && !jiaShiYuan1.getJiashizhengyouxiaoqi().equals("null")) {
+				riskDetail2.setArdIsRectification("1");
+				riskDetail2.setArdRectificationByIds(user.getUserId().toString());
+				riskDetail2.setArdRectificationByName(user.getUserName());
+				riskDetail2.setArdRectificationDate(DateUtil.now());
+				riskDetail2.setArdModularName("驾驶证有效截止日期");
+				riskDetail2.setArdRectificationField("jiashizhengyouxiaoqi");
+				riskDetail2.setArdRectificationValue(jiaShiYuan1.getJiashizhengyouxiaoqi());
+				riskDetail2.setArdRectificationFieldType("String");
+				riskDetail2.setArdRectificationEnclosure(jiaShiYuan1.getJiashizhengfujian());
+				boolean b = riskDetailService.updateById(riskDetail2);
+				if (b == true) {
+					//整改内容
+					anbiaoRiskDetailInfo2.setArdRiskIds(riskDetail2.getArdIds().toString());
+					anbiaoRiskDetailInfo2.setArdRectificationByIds(user.getUserId().toString());
+					anbiaoRiskDetailInfo2.setArdRectificationByName(user.getUserName());
+					anbiaoRiskDetailInfo2.setArdRectificationDate(DateUtil.now());
+					anbiaoRiskDetailInfo2.setArdRectificationField("jiashizhengyouxiaoqi");
+					anbiaoRiskDetailInfo2.setArdRectificationValue(jiaShiYuan1.getJiashizhengyouxiaoqi());
+					anbiaoRiskDetailInfo2.setArdRectificationFieldType("String");
+					detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo2);
+				}
+			}
+
+			//从业资格证有效期风险
+			AnbiaoRiskDetailInfo anbiaoRiskDetailInfo3 = new AnbiaoRiskDetailInfo();
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper3 = new QueryWrapper<>();
+			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,jiaShiYuan.getDeptId());
+			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,jiaShiYuan.getId());
+			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdTitle,"从业资格证有效截止日期");
+			AnbiaoRiskDetail riskDetail3 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper3);
+			if (riskDetail3!=null && StringUtils.isNotBlank(jiaShiYuan1.getCongyezhengyouxiaoqi()) && !jiaShiYuan1.getCongyezhengyouxiaoqi().equals("null")) {
+				riskDetail3.setArdIsRectification("1");
+				riskDetail3.setArdRectificationByIds(user.getUserId().toString());
+				riskDetail3.setArdRectificationByName(user.getUserName());
+				riskDetail3.setArdRectificationDate(DateUtil.now());
+				riskDetail3.setArdModularName("从业资格证有效截止日期");
+				riskDetail3.setArdRectificationField("congyezhengyouxiaoqi");
+				riskDetail3.setArdRectificationValue(jiaShiYuan1.getCongyezhengyouxiaoqi());
+				riskDetail3.setArdRectificationFieldType("String");
+				riskDetail3.setArdRectificationEnclosure(jiaShiYuan1.getCongyezhengfujian());
+				boolean b = riskDetailService.updateById(riskDetail3);
+				if (b == true) {
+					//整改内容
+					anbiaoRiskDetailInfo3.setArdRiskIds(riskDetail3.getArdIds().toString());
+					anbiaoRiskDetailInfo3.setArdRectificationByIds(user.getUserId().toString());
+					anbiaoRiskDetailInfo3.setArdRectificationByName(user.getUserName());
+					anbiaoRiskDetailInfo3.setArdRectificationDate(DateUtil.now());
+					anbiaoRiskDetailInfo3.setArdRectificationField("congyezhengyouxiaoqi");
+					anbiaoRiskDetailInfo3.setArdRectificationValue(jiaShiYuan1.getCongyezhengyouxiaoqi());
+					anbiaoRiskDetailInfo3.setArdRectificationFieldType("String");
+					detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo3);
+				}
+			}
+
+			//体检有效期风险
+			AnbiaoRiskDetailInfo anbiaoRiskDetailInfo4 = new AnbiaoRiskDetailInfo();
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper4 = new QueryWrapper<>();
+			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,jiaShiYuan.getDeptId());
+			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,jiaShiYuan.getId());
+			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdTitle,"体检有效截止日期");
+			AnbiaoRiskDetail riskDetail4 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper4);
+			if (riskDetail4!=null && StringUtils.isNotBlank(jiaShiYuan1.getTijianyouxiaoqi()) && !jiaShiYuan1.getTijianyouxiaoqi().equals("null")) {
+				riskDetail4.setArdIsRectification("1");
+				riskDetail4.setArdRectificationByIds(user.getUserId().toString());
+				riskDetail4.setArdRectificationByName(user.getUserName());
+				riskDetail4.setArdRectificationDate(DateUtil.now());
+				riskDetail4.setArdModularName("体检有效截止日期");
+				riskDetail4.setArdRectificationField("tijianyouxiaoqi");
+				riskDetail4.setArdRectificationValue(jiaShiYuan1.getTijianyouxiaoqi());
+				riskDetail4.setArdRectificationFieldType("String");
+				boolean b = riskDetailService.updateById(riskDetail4);
+				if (b == true) {
+					//整改内容
+					anbiaoRiskDetailInfo4.setArdRiskIds(riskDetail4.getArdIds().toString());
+					anbiaoRiskDetailInfo4.setArdRectificationByIds(user.getUserId().toString());
+					anbiaoRiskDetailInfo4.setArdRectificationByName(user.getUserName());
+					anbiaoRiskDetailInfo4.setArdRectificationDate(DateUtil.now());
+					anbiaoRiskDetailInfo4.setArdRectificationField("tijianyouxiaoqi");
+					anbiaoRiskDetailInfo4.setArdRectificationValue(jiaShiYuan1.getTijianyouxiaoqi());
+					anbiaoRiskDetailInfo4.setArdRectificationFieldType("String");
+					detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo4);
+				}
+			}
+
 			boolean i = iJiaShiYuanService.updateById(jiaShiYuan);
 			if (i) {
 				r.setMsg("更新成功");
@@ -1649,18 +1795,23 @@ public class JiaShiYuanController {
 			//验证驾驶证：结束日期
 			String jiashizhengyouxiaoqi = String.valueOf(a.get("驾驶证：结束日期")).trim();
 			if (StringUtils.isNotBlank(jiashizhengyouxiaoqi) && !jiashizhengyouxiaoqi.equals("null")) {
-				if (jiashizhengyouxiaoqi.length() >= 10) {
-					jiashizhengyouxiaoqi = jiashizhengyouxiaoqi.substring(0, 10);
-					if (StringUtils.isNotBlank(jiashizhengyouxiaoqi) && !jiashizhengyouxiaoqi.equals("null")) {
-						if (DateUtils.isDateString(jiashizhengyouxiaoqi, null) == true) {
-							driver.setJiashizhengyouxiaoqi(jiashizhengyouxiaoqi);
-							driver.setImportUrl("icon_gou.png");
-						} else {
-							driver.setMsg(jiashizhengyouxiaoqi + ",该驾驶证结束日期,不是时间格式;");
-							errorStr += jiashizhengyouxiaoqi + ",该驾驶证结束日期,不是时间格式;";
-							driver.setImportUrl("icon_cha.png");
-							bb++;
+				if (jiashizhengyouxiaoqi.length() >= 10 || jiashizhengyouxiaoqi.equals("长期")) {
+					if (!jiashizhengyouxiaoqi.equals("长期")) {
+						jiashizhengyouxiaoqi = jiashizhengyouxiaoqi.substring(0, 10);
+						if (StringUtils.isNotBlank(jiashizhengyouxiaoqi) && !jiashizhengyouxiaoqi.equals("null")) {
+							if (DateUtils.isDateString(jiashizhengyouxiaoqi, null) == true) {
+								driver.setJiashizhengyouxiaoqi(jiashizhengyouxiaoqi);
+								driver.setImportUrl("icon_gou.png");
+							} else {
+								driver.setMsg(jiashizhengyouxiaoqi + ",该驾驶证结束日期,不是时间格式;");
+								errorStr += jiashizhengyouxiaoqi + ",该驾驶证结束日期,不是时间格式;";
+								driver.setImportUrl("icon_cha.png");
+								bb++;
+							}
 						}
+					}else if (jiashizhengyouxiaoqi.equals("长期")){
+						driver.setJiashizhengyouxiaoqi(jiashizhengyouxiaoqi);
+						driver.setImportUrl("icon_gou.png");
 					}
 				} else {
 					driver.setMsg(jiashizhengyouxiaoqi + ",该驾驶证结束日期,不是时间格式;");
@@ -2152,6 +2303,7 @@ public class JiaShiYuanController {
 			//通过身份证获取年龄
 			Integer age = IdCardUtil.getAgeByCard(tmp);
 			driver.setNianling(age.toString());
+
 			//通过身份证获取生日日期
 			Date chushengshijian = IdCardUtil.getBirthDate(tmp);
 			String shoujihaoma = String.valueOf(a.get("shoujihaoma")).trim();
