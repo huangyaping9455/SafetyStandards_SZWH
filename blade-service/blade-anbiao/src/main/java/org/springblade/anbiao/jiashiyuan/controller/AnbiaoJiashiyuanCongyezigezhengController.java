@@ -9,6 +9,10 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanCongyezigezheng;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanCongyezigezhengService;
+import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
+import org.springblade.anbiao.risk.entity.AnbiaoRiskDetailInfo;
+import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailInfoService;
+import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.common.tool.DateUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
@@ -37,6 +41,8 @@ import java.text.SimpleDateFormat;
 public class AnbiaoJiashiyuanCongyezigezhengController {
 
 	private IAnbiaoJiashiyuanCongyezigezhengService congyezigezhengService;
+	private IAnbiaoRiskDetailService riskDetailService;
+	private IAnbiaoRiskDetailInfoService detailInfoService;
 
 	/**
 	 * 新增
@@ -163,6 +169,38 @@ public class AnbiaoJiashiyuanCongyezigezhengController {
 				congyezigezheng.setAjcUpdateByIds(congyezigezheng.getAjcUpdateByIds());
 			}
 			congyezigezheng.setAjcUpdateTime(DateUtil.now());
+
+			//从业资格证有效期风险
+			AnbiaoRiskDetailInfo anbiaoRiskDetailInfo3 = new AnbiaoRiskDetailInfo();
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper3 = new QueryWrapper<>();
+			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,congyezigezheng.getAjcAjIds());
+			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdTitle,"从业资格证有效截止日期");
+			AnbiaoRiskDetail riskDetail3 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper3);
+			if (riskDetail3!=null && StringUtils.isNotBlank(congyezigezheng.getAjcValidUntil()) && !congyezigezheng.getAjcValidUntil().equals("null")) {
+				riskDetail3.setArdIsRectification("1");
+				riskDetail3.setArdRectificationByIds(user.getUserId().toString());
+				riskDetail3.setArdRectificationByName(user.getUserName());
+				riskDetail3.setArdRectificationDate(DateUtil.now());
+				riskDetail3.setArdModularName("从业资格证有效截止日期");
+				riskDetail3.setArdRectificationField("congyezhengyouxiaoqi");
+				riskDetail3.setArdRectificationValue(congyezigezheng.getAjcValidUntil());
+				riskDetail3.setArdRectificationFieldType("String");
+				riskDetail3.setArdRectificationEnclosure(congyezigezheng.getAjcLicence());
+				boolean b = riskDetailService.updateById(riskDetail3);
+				if (b == true) {
+					//整改内容
+					anbiaoRiskDetailInfo3.setArdRiskIds(riskDetail3.getArdIds().toString());
+					anbiaoRiskDetailInfo3.setArdRectificationByIds(user.getUserId().toString());
+					anbiaoRiskDetailInfo3.setArdRectificationByName(user.getUserName());
+					anbiaoRiskDetailInfo3.setArdRectificationDate(DateUtil.now());
+					anbiaoRiskDetailInfo3.setArdRectificationField("congyezhengyouxiaoqi");
+					anbiaoRiskDetailInfo3.setArdRectificationValue(congyezigezheng.getAjcValidUntil());
+					anbiaoRiskDetailInfo3.setArdRectificationFieldType("String");
+					detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo3);
+				}
+			}
+
 			return R.status(congyezigezhengService.updateById(congyezigezheng));
 		}
 	}
