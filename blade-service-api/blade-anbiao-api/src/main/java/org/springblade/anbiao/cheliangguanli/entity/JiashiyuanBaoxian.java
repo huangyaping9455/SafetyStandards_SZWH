@@ -361,5 +361,9 @@ public class JiashiyuanBaoxian implements Serializable {
     @ApiModelProperty(value = "更新人姓名")
     private String ajbUpdateByName;
 
+	@ApiModelProperty(value = "投保人企业主键")
+	private String ajbInsureDeptid;
+
+
 
 }

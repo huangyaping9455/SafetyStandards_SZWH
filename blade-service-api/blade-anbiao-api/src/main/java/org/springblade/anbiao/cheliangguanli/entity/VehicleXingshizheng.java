@@ -198,6 +198,8 @@ public class VehicleXingshizheng implements Serializable {
     @ApiModelProperty(value = "更新人姓名")
     private String avxUpdateByName;
 
+	@ApiModelProperty(value = "强制报废日期")
+	private String avxBaofeiTime;
 
 	@ApiModelProperty(value = "企业名称")
 	@TableField(exist = false)

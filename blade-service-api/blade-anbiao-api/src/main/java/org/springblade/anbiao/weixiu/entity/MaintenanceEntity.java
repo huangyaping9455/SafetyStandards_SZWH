@@ -55,6 +55,7 @@ public class MaintenanceEntity {
 	private String	acbBeforeMaintenance;
 	private String acbAfterMaintenance;
 	private String acbCenterMaintenance;
+	private String acbCost;
 
 	@TableField(exist = false)
 	private List<FittingsEntity> fittingDTOS;

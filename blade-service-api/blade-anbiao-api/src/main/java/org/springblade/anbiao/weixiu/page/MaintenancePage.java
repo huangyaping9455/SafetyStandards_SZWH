@@ -43,4 +43,6 @@ public class MaintenancePage extends BasePage {
 
 	private String	acbBeforeMaintenance;
 
+	private String driverId;
+
 }

@@ -32,7 +32,7 @@
                 where vstatus = 1
                     GROUP BY vehid,jiashiyuanid,vstatus
                 ) cj on cj.vehid=v.id
-            where v.shiyongxingzhi = '车头'
+            where v.cheliangpaizhao not like '%挂%'
                 and v.is_deleted = 0
                 and v.dept_id = #{deptId}
             order by cj.vstatus
@@ -51,7 +51,7 @@
                 where gstatus = 1
                     GROUP BY jiashiyuanid,gvehid,gstatus
                 ) cj on cj.gvehid=v.id
-            where v.shiyongxingzhi = '挂车'
+            where v.cheliangpaizhao like '%挂%'
                 and v.is_deleted = 0
                 and v.dept_id = #{deptId}
             order by cj.gstatus

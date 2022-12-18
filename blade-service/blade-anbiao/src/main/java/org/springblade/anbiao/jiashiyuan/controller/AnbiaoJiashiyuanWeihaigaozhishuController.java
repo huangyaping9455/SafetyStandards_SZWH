@@ -57,7 +57,7 @@ public class AnbiaoJiashiyuanWeihaigaozhishuController {
 				weihaigaozhishu.setAjwCreateByName(weihaigaozhishu.getAjwCreateByName());
 				weihaigaozhishu.setAjwCreateByIds(weihaigaozhishu.getAjwCreateByIds());
 			}
-			weihaigaozhishu.setAjwAutographAutograph(DateUtil.now());
+			weihaigaozhishu.setAjwAutographTime(DateUtil.now());
 			weihaigaozhishu.setAjwCreateTime(DateUtil.now());
 			weihaigaozhishu.setAjwDelete("0");
 			return R.status(weihaigaozhishuService.save(weihaigaozhishu));
@@ -70,7 +70,7 @@ public class AnbiaoJiashiyuanWeihaigaozhishuController {
 				weihaigaozhishu.setAjwUpdateByIds(weihaigaozhishu.getAjwUpdateByIds());
 			}
 			weihaigaozhishu.setAjwUpdateTime(DateUtil.now());
-			weihaigaozhishu.setAjwAutographAutograph(DateUtil.now());
+			weihaigaozhishu.setAjwAutographTime(DateUtil.now());
 			return R.status(weihaigaozhishuService.updateById(weihaigaozhishu));
 		}
 	}

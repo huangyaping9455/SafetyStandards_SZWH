@@ -39,4 +39,6 @@ public class AccidentPage extends BasePage{
 	private String jiashiyuan;
 
 	private String deptName;
+
+	private String driverId;
 }

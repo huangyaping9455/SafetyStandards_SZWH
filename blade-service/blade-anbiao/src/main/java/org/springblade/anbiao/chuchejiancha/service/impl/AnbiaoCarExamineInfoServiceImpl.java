@@ -54,6 +54,14 @@ public class AnbiaoCarExamineInfoServiceImpl extends ServiceImpl<AnbiaoCarExamin
 						item.setCheliangpaizhao(deail.getCheliangpaizhao());
 						item.setChepaiyanse(deail.getChepaiyanse());
 					}
+
+					if(item.getGcheliangpaizhao() == null){
+						QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<Vehicle>();
+						vehicleQueryWrapper.lambda().eq(Vehicle::getId, item.getGvehid());
+						vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel, 0);
+						Vehicle deail = vehicleMapper.selectOne(vehicleQueryWrapper);
+						item.setGcheliangpaizhao(deail.getCheliangpaizhao());
+					}
 					if(item.getStatusshow() == null){
 						item.setStatusshow("未完成");
 					}
@@ -92,6 +100,15 @@ public class AnbiaoCarExamineInfoServiceImpl extends ServiceImpl<AnbiaoCarExamin
 						item.setCheliangpaizhao(deail.getCheliangpaizhao());
 						item.setChepaiyanse(deail.getChepaiyanse());
 					}
+
+					if(item.getGcheliangpaizhao() == null){
+						QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<Vehicle>();
+						vehicleQueryWrapper.lambda().eq(Vehicle::getId, item.getGvehid());
+						vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel, 0);
+						Vehicle deail = vehicleMapper.selectOne(vehicleQueryWrapper);
+						item.setGcheliangpaizhao(deail.getCheliangpaizhao());
+					}
+
 					if(item.getStatusshow() == null){
 						item.setStatusshow("未完成");
 					}

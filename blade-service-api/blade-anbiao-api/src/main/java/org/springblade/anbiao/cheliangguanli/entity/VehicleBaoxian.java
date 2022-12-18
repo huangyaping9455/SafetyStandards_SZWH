@@ -366,6 +366,9 @@ public class VehicleBaoxian implements Serializable {
     @ApiModelProperty(value = "更新人姓名")
     private String avbUpdateByName;
 
+	@ApiModelProperty(value = "投保人企业主键")
+	private String ajbInsureDeptid;
+
 	@ApiModelProperty(value = "车辆保险明细信息")
 	@TableField(exist = false)
 	private List<VehicleBaoxianMingxi> baoxianMingxis;

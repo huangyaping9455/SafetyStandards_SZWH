@@ -38,6 +38,10 @@ public class AnbiaoCarExamineInfo implements Serializable {
     @TableField("vehid")
     private String vehid;
 
+	@ApiModelProperty(value = "挂车ID",required = true)
+	@TableField("gvehid")
+	private String gvehid;
+
     @ApiModelProperty(value = "企业ID",required = true)
     @TableField("deptid")
     private Integer deptid;

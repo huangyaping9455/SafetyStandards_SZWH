@@ -25,6 +25,9 @@ public class AnbiaoCarExamineInfoVO extends AnbiaoCarExamineInfo {
 	@ApiModelProperty(value = "车辆牌照")
 	private String cheliangpaizhao;
 
+	@ApiModelProperty(value = "挂车牌照")
+	private String gcheliangpaizhao;
+
 	@ApiModelProperty(value = "车牌颜色")
 	private String chepaiyanse;
 

@@ -37,6 +37,9 @@
             <if test="carNum!=null and carNum!=''">
                 AND c.cheliangpaizhao = #{carNum}
             </if>
+            <if test="driverId!=null and driverId!=''">
+                AND a.driver_Id = #{driverId}
+            </if>
                limit ${total}
         </where>
         </if>
@@ -58,7 +61,7 @@
                 FROM
                 anbiao_cheliang_baoyangweixiu a
                 LEFT JOIN anbiao_vehicle c ON a.vehicle_Id = c.id
-                LEFT JOIN anbiao_jiashiyuan d ON  a.driver_Id = d.id
+                LEFT JOIN anbiao_jiashiyuan d ON a.driver_Id = d.id
                 inner join (
                 <include
                     refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
@@ -72,6 +75,9 @@
                     </if>
                     <if test="carNum!=null and carNum!=''">
                         AND c.cheliangpaizhao = #{carNum}
+                    </if>
+                    <if test="driverId!=null and driverId!=''">
+                        AND a.driver_Id = #{driverId}
                     </if>
                     limit ${offsetNo},${size}
                 </where>
@@ -96,6 +102,8 @@
             a.acb_bill_attachment AS acbBillAttachment,
             a.acb_before_maintenance AS acbBeforeMaintenance,
             a.acb_after_maintenance AS acbAfterMaintenance,
+            a.acb_center_maintenance AS acbCenterMaintenance,
+            a.acb_cost AS acbCost,
             b.dept_name AS deptName
         FROM
             anbiao_cheliang_baoyangweixiu a
@@ -132,11 +140,11 @@
     <insert id="insertOne" parameterType="org.springblade.anbiao.weixiu.entity.MaintenanceEntity" keyProperty="id" useGeneratedKeys="true">
         insert into anbiao_cheliang_baoyangweixiu(dept_Id,vehicle_Id,driver_Id,send_Date,acb_maintenance_content,
                                        maintenance_Dept_Name,maintain_Dict_Id,acb_repair_reason,acb_before_maintenance,
-                                                acb_after_maintenance,is_Deleted,acb_bill_attachment,acb_center_maintenance
+                                                acb_after_maintenance,is_Deleted,acb_bill_attachment,acb_center_maintenance,acb_cost
         )
         values (#{depID},#{vehicleId},#{driverId},#{sendDate},#{acbMaintenanceContent},
                 #{maintenanceDeptName},#{maintainDictId},#{acbRepairReason},#{acbBeforeMaintenance},
-                #{acbAfterMaintenance},0,#{acbBillAttachment},#{acbCenterMaintenance}
+                #{acbAfterMaintenance},0,#{acbBillAttachment},#{acbCenterMaintenance},#{acbCost}
                )
     </insert>
 
@@ -259,7 +267,10 @@
                 acb_after_maintenance = #{acbAfterMaintenance},
             </if>
             <if test="acbBillAttachment!=null">
-                acb_bill_attachment =#{acbBillAttachment}
+                acb_bill_attachment =#{acbBillAttachment},
+            </if>
+            <if test="acbCost!=null">
+                acb_cost =#{acbCost}
             </if>
         </set>
         where id = ${id}
@@ -303,9 +314,6 @@
         </set>
         where weihuid = ${weihuid}
     </update>
-
-
-
 
     <!--删除维修-->
     <delete id="deleteMain" parameterType="org.springblade.anbiao.weixiu.page.MaintenancePage">

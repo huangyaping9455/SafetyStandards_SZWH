@@ -68,6 +68,7 @@
         <result column="avb_update_by_name" property="avbUpdateByName"/>
         <result column="cheliangpaizhao" property="cheliangpaizhao"/>
         <result column="dept_name" property="avbDeptName"/>
+        <result column="ajb_insure_deptid" property="ajbInsureDeptid"/>
     </resultMap>
 
 

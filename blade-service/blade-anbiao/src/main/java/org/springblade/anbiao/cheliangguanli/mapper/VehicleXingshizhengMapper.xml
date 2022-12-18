@@ -35,6 +35,7 @@
         <result column="avx_update_time" property="avxUpdateTime"/>
         <result column="avx_update_by_ids" property="avxUpdateByIds"/>
         <result column="avx_update_by_name" property="avxUpdateByName"/>
+        <result column="avx_baofei_time" property="avxBaofeiTime"/>
     </resultMap>
 
 

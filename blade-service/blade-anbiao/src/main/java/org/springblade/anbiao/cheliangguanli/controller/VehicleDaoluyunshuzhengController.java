@@ -15,17 +15,18 @@
  */
 package org.springblade.anbiao.cheliangguanli.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import javax.validation.Valid;
 
-import org.springblade.anbiao.cheliangguanli.entity.DeptBaoxian;
-import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianInfo;
-import org.springblade.anbiao.cheliangguanli.entity.VehicleDengjizhengshu;
+import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
+import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
+import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
 import org.springblade.common.tool.FuncUtil;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
@@ -34,7 +35,6 @@ import org.springblade.core.tool.utils.Func;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.springblade.anbiao.cheliangguanli.entity.VehicleDaoluyunshuzheng;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleDaoluyunshuzhengVO;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleDaoluyunshuzhengService;
 import org.springblade.core.boot.ctrl.BladeController;
@@ -59,6 +59,8 @@ public class VehicleDaoluyunshuzhengController extends BladeController {
 
 	private IVehicleService vehicleService;
 
+	private IOrganizationsService organizationsService;
+
 	/**
 	 * 详情
 	 */
@@ -79,6 +81,20 @@ public class VehicleDaoluyunshuzhengController extends BladeController {
 		if(daoluyunshuzheng != null){
 			VehicleVO detail = vehicleService.selectByKey(vehicleId);
 			daoluyunshuzheng.setAvxPlateNo(detail.getCheliangpaizhao());
+		}
+
+		QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<Vehicle>();
+		vehicleQueryWrapper.lambda().eq(Vehicle::getId, vehicleId);
+		vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel, 0);
+		Vehicle vehicle = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper);
+		if(vehicle != null){
+			QueryWrapper<Organizations> organizationsQueryWrapper = new QueryWrapper<Organizations>();
+			organizationsQueryWrapper.lambda().eq(Organizations::getDeptId,vehicle.getDeptId());
+			organizationsQueryWrapper.lambda().eq(Organizations::getIsdelete,0);
+			Organizations organizations = organizationsService.getBaseMapper().selectOne(organizationsQueryWrapper);
+			if(organizations != null){
+				daoluyunshuzheng.setAvdRoadTransportCertificateNo(organizations.getDaoluxukezhenghao());
+			}
 		}
 		return R.data(daoluyunshuzheng);
 	}

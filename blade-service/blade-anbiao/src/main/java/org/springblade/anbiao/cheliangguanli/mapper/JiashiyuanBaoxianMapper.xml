@@ -67,6 +67,7 @@
         <result column="ajb_update_by_ids" property="ajbUpdateByIds"/>
         <result column="ajb_update_by_name" property="ajbUpdateByName"/>
         <result column="dept_name" property="ajbDeptName"/>
+        <result column="ajb_insure_deptid" property="ajbInsureDeptid"/>
     </resultMap>
 
 

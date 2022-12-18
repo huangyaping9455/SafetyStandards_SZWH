@@ -396,6 +396,7 @@ public class JiaShiYuanController {
 					ruzhi.setAjrAge(Integer.valueOf(jiaShiYuan.getNianling()));
 					ruzhi.setAjrIdNumber(jiaShiYuan.getShenfenzhenghao());
 					ruzhi.setAjrApproverStatus("0");
+					ruzhi.setAjrBirth(jiaShiYuan.getChushengshijian());
 					i = ruzhiService.save(ruzhi);
 				}
 

@@ -62,6 +62,10 @@ public class VehicleXingnengbaogao implements Serializable {
      */
     @ApiModelProperty(value = "检测日期")
     private LocalDate avxInspectionDate;
+
+	@ApiModelProperty(value = "检测有效期")
+	private LocalDate avxLastDate;
+
     /**
      * 检测报告附件
      */
