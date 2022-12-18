@@ -11,6 +11,10 @@ import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanQita;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanTijian;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanQitaService;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanTijianService;
+import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
+import org.springblade.anbiao.risk.entity.AnbiaoRiskDetailInfo;
+import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailInfoService;
+import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.common.tool.DateUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
@@ -40,6 +44,8 @@ import java.time.LocalDateTime;
 public class AnbiaoJiashiyuanTijianController {
 
 	private IAnbiaoJiashiyuanTijianService tijianService;
+	private IAnbiaoRiskDetailService riskDetailService;
+	private IAnbiaoRiskDetailInfoService detailInfoService;
 
 	/**
 	 * 新增
@@ -136,6 +142,37 @@ public class AnbiaoJiashiyuanTijianController {
 				tijian.setAjtUpdateByIds(tijian.getAjtUpdateByIds());
 			}
 			tijian.setAjtUpdateTime(DateUtil.now());
+
+			//体检有效期风险
+			AnbiaoRiskDetailInfo anbiaoRiskDetailInfo4 = new AnbiaoRiskDetailInfo();
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper4 = new QueryWrapper<>();
+			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,tijian.getAjtAjIds());
+			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdTitle,"体检有效截止日期");
+			AnbiaoRiskDetail riskDetail4 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper4);
+			if (riskDetail4!=null && StringUtils.isNotBlank(tijian.getAjtTermValidity()) && !tijian.getAjtTermValidity().equals("null")) {
+				riskDetail4.setArdIsRectification("1");
+				riskDetail4.setArdRectificationByIds(user.getUserId().toString());
+				riskDetail4.setArdRectificationByName(user.getUserName());
+				riskDetail4.setArdRectificationDate(DateUtil.now());
+				riskDetail4.setArdModularName("体检有效截止日期");
+				riskDetail4.setArdRectificationField("tijianyouxiaoqi");
+				riskDetail4.setArdRectificationValue(tijian.getAjtTermValidity());
+				riskDetail4.setArdRectificationFieldType("String");
+				boolean b = riskDetailService.updateById(riskDetail4);
+				if (b == true) {
+					//整改内容
+					anbiaoRiskDetailInfo4.setArdRiskIds(riskDetail4.getArdIds().toString());
+					anbiaoRiskDetailInfo4.setArdRectificationByIds(user.getUserId().toString());
+					anbiaoRiskDetailInfo4.setArdRectificationByName(user.getUserName());
+					anbiaoRiskDetailInfo4.setArdRectificationDate(DateUtil.now());
+					anbiaoRiskDetailInfo4.setArdRectificationField("tijianyouxiaoqi");
+					anbiaoRiskDetailInfo4.setArdRectificationValue(tijian.getAjtTermValidity());
+					anbiaoRiskDetailInfo4.setArdRectificationFieldType("String");
+					detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo4);
+				}
+			}
+
 			return R.status(tijianService.updateById(tijian));
 		}
 	}
