@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -149,30 +150,31 @@ public class AnbiaoJiashiyuanTijianController {
 			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,tijian.getAjtAjIds());
 			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
 			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdTitle,"体检有效截止日期");
-			AnbiaoRiskDetail riskDetail4 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper4);
-			if (riskDetail4!=null && StringUtils.isNotBlank(tijian.getAjtTermValidity()) && !tijian.getAjtTermValidity().equals("null")) {
-				riskDetail4.setArdIsRectification("1");
-				riskDetail4.setArdRectificationByIds(user.getUserId().toString());
-				riskDetail4.setArdRectificationByName(user.getUserName());
-				riskDetail4.setArdRectificationDate(DateUtil.now());
-				riskDetail4.setArdModularName("体检有效截止日期");
-				riskDetail4.setArdRectificationField("tijianyouxiaoqi");
-				riskDetail4.setArdRectificationValue(tijian.getAjtTermValidity());
-				riskDetail4.setArdRectificationFieldType("String");
-				boolean b = riskDetailService.updateById(riskDetail4);
-				if (b == true) {
-					//整改内容
-					anbiaoRiskDetailInfo4.setArdRiskIds(riskDetail4.getArdIds().toString());
-					anbiaoRiskDetailInfo4.setArdRectificationByIds(user.getUserId().toString());
-					anbiaoRiskDetailInfo4.setArdRectificationByName(user.getUserName());
-					anbiaoRiskDetailInfo4.setArdRectificationDate(DateUtil.now());
-					anbiaoRiskDetailInfo4.setArdRectificationField("tijianyouxiaoqi");
-					anbiaoRiskDetailInfo4.setArdRectificationValue(tijian.getAjtTermValidity());
-					anbiaoRiskDetailInfo4.setArdRectificationFieldType("String");
-					detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo4);
+			List<AnbiaoRiskDetail> anbiaoRiskDetails = riskDetailService.getBaseMapper().selectList(riskDetailQueryWrapper4);
+			for (AnbiaoRiskDetail riskDetail4 : anbiaoRiskDetails) {
+				if (riskDetail4 != null && StringUtils.isNotBlank(tijian.getAjtTermValidity()) && !tijian.getAjtTermValidity().equals("null")) {
+					riskDetail4.setArdIsRectification("1");
+					riskDetail4.setArdRectificationByIds(user.getUserId().toString());
+					riskDetail4.setArdRectificationByName(user.getUserName());
+					riskDetail4.setArdRectificationDate(DateUtil.now());
+					riskDetail4.setArdModularName("体检有效截止日期");
+					riskDetail4.setArdRectificationField("tijianyouxiaoqi");
+					riskDetail4.setArdRectificationValue(tijian.getAjtTermValidity());
+					riskDetail4.setArdRectificationFieldType("String");
+					boolean b = riskDetailService.updateById(riskDetail4);
+					if (b == true) {
+						//整改内容
+						anbiaoRiskDetailInfo4.setArdRiskIds(riskDetail4.getArdIds().toString());
+						anbiaoRiskDetailInfo4.setArdRectificationByIds(user.getUserId().toString());
+						anbiaoRiskDetailInfo4.setArdRectificationByName(user.getUserName());
+						anbiaoRiskDetailInfo4.setArdRectificationDate(DateUtil.now());
+						anbiaoRiskDetailInfo4.setArdRectificationField("tijianyouxiaoqi");
+						anbiaoRiskDetailInfo4.setArdRectificationValue(tijian.getAjtTermValidity());
+						anbiaoRiskDetailInfo4.setArdRectificationFieldType("String");
+						detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo4);
+					}
 				}
 			}
-
 			return R.status(tijianService.updateById(tijian));
 		}
 	}

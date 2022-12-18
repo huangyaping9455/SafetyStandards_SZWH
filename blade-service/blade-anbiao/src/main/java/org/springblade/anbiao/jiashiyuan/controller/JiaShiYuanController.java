@@ -561,127 +561,137 @@ public class JiaShiYuanController {
 			//身份证有效期风险
 			AnbiaoRiskDetailInfo anbiaoRiskDetailInfo = new AnbiaoRiskDetailInfo();
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
-			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,jiaShiYuan.getDeptId());
-			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,jiaShiYuan.getId());
-			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
-			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"身份证有效截止日期");
-			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
-			if (riskDetail!=null && StringUtils.isNotBlank(jiaShiYuan1.getShenfenzhengyouxiaoqi()) && !jiaShiYuan1.getShenfenzhengyouxiaoqi().equals("null")) {
-				riskDetail.setArdIsRectification("1");
-				riskDetail.setArdRectificationByIds(user.getUserId().toString());
-				riskDetail.setArdRectificationByName(user.getUserName());
-				riskDetail.setArdRectificationDate(DateUtil.now());
-				riskDetail.setArdModularName("身份证有效截止日期");
-				riskDetail.setArdRectificationField("shenfenzhengyouxiaoqi");
-				riskDetail.setArdRectificationValue(jiaShiYuan1.getShenfenzhengyouxiaoqi());
-				riskDetail.setArdRectificationFieldType("String");
-				riskDetail.setArdRectificationEnclosure(jiaShiYuan1.getShenfenzhengfujian());
-				boolean b = riskDetailService.updateById(riskDetail);
-				if (b == true) {
-					//整改内容
-					anbiaoRiskDetailInfo.setArdRiskIds(riskDetail.getArdIds().toString());
-					anbiaoRiskDetailInfo.setArdRectificationByIds(user.getUserId().toString());
-					anbiaoRiskDetailInfo.setArdRectificationByName(user.getUserName());
-					anbiaoRiskDetailInfo.setArdRectificationDate(DateUtil.now());
-					anbiaoRiskDetailInfo.setArdRectificationField("shenfenzhengyouxiaoqi");
-					anbiaoRiskDetailInfo.setArdRectificationValue(jiaShiYuan1.getShenfenzhengyouxiaoqi());
-					anbiaoRiskDetailInfo.setArdRectificationFieldType("String");
-					detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo);
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds, jiaShiYuan.getDeptId());
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue, jiaShiYuan.getId());
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification, "0");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle, "身份证有效截止日期");
+			List<AnbiaoRiskDetail> anbiaoRiskDetails = riskDetailService.getBaseMapper().selectList(riskDetailQueryWrapper);
+			for (AnbiaoRiskDetail riskDetail :
+				anbiaoRiskDetails) {
+				if (riskDetail != null && StringUtils.isNotBlank(jiaShiYuan1.getShenfenzhengyouxiaoqi()) && !jiaShiYuan1.getShenfenzhengyouxiaoqi().equals("null")) {
+					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationByIds(user.getUserId().toString());
+					riskDetail.setArdRectificationByName(user.getUserName());
+					riskDetail.setArdRectificationDate(DateUtil.now());
+					riskDetail.setArdModularName("身份证有效截止日期");
+					riskDetail.setArdRectificationField("shenfenzhengyouxiaoqi");
+					riskDetail.setArdRectificationValue(jiaShiYuan1.getShenfenzhengyouxiaoqi());
+					riskDetail.setArdRectificationFieldType("String");
+					riskDetail.setArdRectificationEnclosure(jiaShiYuan1.getShenfenzhengfujian());
+					boolean b = riskDetailService.updateById(riskDetail);
+					if (b == true) {
+						//整改内容
+						anbiaoRiskDetailInfo.setArdRiskIds(riskDetail.getArdIds().toString());
+						anbiaoRiskDetailInfo.setArdRectificationByIds(user.getUserId().toString());
+						anbiaoRiskDetailInfo.setArdRectificationByName(user.getUserName());
+						anbiaoRiskDetailInfo.setArdRectificationDate(DateUtil.now());
+						anbiaoRiskDetailInfo.setArdRectificationField("shenfenzhengyouxiaoqi");
+						anbiaoRiskDetailInfo.setArdRectificationValue(jiaShiYuan1.getShenfenzhengyouxiaoqi());
+						anbiaoRiskDetailInfo.setArdRectificationFieldType("String");
+						detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo);
+					}
 				}
 			}
 
 			//驾驶证有效期风险
 			AnbiaoRiskDetailInfo anbiaoRiskDetailInfo2 = new AnbiaoRiskDetailInfo();
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper2 = new QueryWrapper<>();
-			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,jiaShiYuan.getDeptId());
-			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,jiaShiYuan.getId());
-			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
-			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdTitle,"驾驶证有效截止日期");
-			AnbiaoRiskDetail riskDetail2 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper2);
-			if (riskDetail2!=null && StringUtils.isNotBlank(jiaShiYuan1.getJiashizhengyouxiaoqi()) && !jiaShiYuan1.getJiashizhengyouxiaoqi().equals("null")) {
-				riskDetail2.setArdIsRectification("1");
-				riskDetail2.setArdRectificationByIds(user.getUserId().toString());
-				riskDetail2.setArdRectificationByName(user.getUserName());
-				riskDetail2.setArdRectificationDate(DateUtil.now());
-				riskDetail2.setArdModularName("驾驶证有效截止日期");
-				riskDetail2.setArdRectificationField("jiashizhengyouxiaoqi");
-				riskDetail2.setArdRectificationValue(jiaShiYuan1.getJiashizhengyouxiaoqi());
-				riskDetail2.setArdRectificationFieldType("String");
-				riskDetail2.setArdRectificationEnclosure(jiaShiYuan1.getJiashizhengfujian());
-				boolean b = riskDetailService.updateById(riskDetail2);
-				if (b == true) {
-					//整改内容
-					anbiaoRiskDetailInfo2.setArdRiskIds(riskDetail2.getArdIds().toString());
-					anbiaoRiskDetailInfo2.setArdRectificationByIds(user.getUserId().toString());
-					anbiaoRiskDetailInfo2.setArdRectificationByName(user.getUserName());
-					anbiaoRiskDetailInfo2.setArdRectificationDate(DateUtil.now());
-					anbiaoRiskDetailInfo2.setArdRectificationField("jiashizhengyouxiaoqi");
-					anbiaoRiskDetailInfo2.setArdRectificationValue(jiaShiYuan1.getJiashizhengyouxiaoqi());
-					anbiaoRiskDetailInfo2.setArdRectificationFieldType("String");
-					detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo2);
+			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdDeptIds, jiaShiYuan.getDeptId());
+			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue, jiaShiYuan.getId());
+			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdIsRectification, "0");
+			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdTitle, "驾驶证有效截止日期");
+			List<AnbiaoRiskDetail> anbiaoRiskDetails2 = riskDetailService.getBaseMapper().selectList(riskDetailQueryWrapper2);
+			for (AnbiaoRiskDetail riskDetail2 : anbiaoRiskDetails2) {
+				if (riskDetail2 != null && StringUtils.isNotBlank(jiaShiYuan1.getJiashizhengyouxiaoqi()) && !jiaShiYuan1.getJiashizhengyouxiaoqi().equals("null")) {
+					riskDetail2.setArdIsRectification("1");
+					riskDetail2.setArdRectificationByIds(user.getUserId().toString());
+					riskDetail2.setArdRectificationByName(user.getUserName());
+					riskDetail2.setArdRectificationDate(DateUtil.now());
+					riskDetail2.setArdModularName("驾驶证有效截止日期");
+					riskDetail2.setArdRectificationField("jiashizhengyouxiaoqi");
+					riskDetail2.setArdRectificationValue(jiaShiYuan1.getJiashizhengyouxiaoqi());
+					riskDetail2.setArdRectificationFieldType("String");
+					riskDetail2.setArdRectificationEnclosure(jiaShiYuan1.getJiashizhengfujian());
+					boolean b = riskDetailService.updateById(riskDetail2);
+					if (b == true) {
+						//整改内容
+						anbiaoRiskDetailInfo2.setArdRiskIds(riskDetail2.getArdIds().toString());
+						anbiaoRiskDetailInfo2.setArdRectificationByIds(user.getUserId().toString());
+						anbiaoRiskDetailInfo2.setArdRectificationByName(user.getUserName());
+						anbiaoRiskDetailInfo2.setArdRectificationDate(DateUtil.now());
+						anbiaoRiskDetailInfo2.setArdRectificationField("jiashizhengyouxiaoqi");
+						anbiaoRiskDetailInfo2.setArdRectificationValue(jiaShiYuan1.getJiashizhengyouxiaoqi());
+						anbiaoRiskDetailInfo2.setArdRectificationFieldType("String");
+						detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo2);
+					}
 				}
 			}
 
 			//从业资格证有效期风险
 			AnbiaoRiskDetailInfo anbiaoRiskDetailInfo3 = new AnbiaoRiskDetailInfo();
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper3 = new QueryWrapper<>();
-			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,jiaShiYuan.getDeptId());
-			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,jiaShiYuan.getId());
-			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
-			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdTitle,"从业资格证有效截止日期");
-			AnbiaoRiskDetail riskDetail3 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper3);
-			if (riskDetail3!=null && StringUtils.isNotBlank(jiaShiYuan1.getCongyezhengyouxiaoqi()) && !jiaShiYuan1.getCongyezhengyouxiaoqi().equals("null")) {
-				riskDetail3.setArdIsRectification("1");
-				riskDetail3.setArdRectificationByIds(user.getUserId().toString());
-				riskDetail3.setArdRectificationByName(user.getUserName());
-				riskDetail3.setArdRectificationDate(DateUtil.now());
-				riskDetail3.setArdModularName("从业资格证有效截止日期");
-				riskDetail3.setArdRectificationField("congyezhengyouxiaoqi");
-				riskDetail3.setArdRectificationValue(jiaShiYuan1.getCongyezhengyouxiaoqi());
-				riskDetail3.setArdRectificationFieldType("String");
-				riskDetail3.setArdRectificationEnclosure(jiaShiYuan1.getCongyezhengfujian());
-				boolean b = riskDetailService.updateById(riskDetail3);
-				if (b == true) {
-					//整改内容
-					anbiaoRiskDetailInfo3.setArdRiskIds(riskDetail3.getArdIds().toString());
-					anbiaoRiskDetailInfo3.setArdRectificationByIds(user.getUserId().toString());
-					anbiaoRiskDetailInfo3.setArdRectificationByName(user.getUserName());
-					anbiaoRiskDetailInfo3.setArdRectificationDate(DateUtil.now());
-					anbiaoRiskDetailInfo3.setArdRectificationField("congyezhengyouxiaoqi");
-					anbiaoRiskDetailInfo3.setArdRectificationValue(jiaShiYuan1.getCongyezhengyouxiaoqi());
-					anbiaoRiskDetailInfo3.setArdRectificationFieldType("String");
-					detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo3);
+			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdDeptIds, jiaShiYuan.getDeptId());
+			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue, jiaShiYuan.getId());
+			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdIsRectification, "0");
+			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdTitle, "从业资格证有效截止日期");
+			List<AnbiaoRiskDetail> anbiaoRiskDetails3 = riskDetailService.getBaseMapper().selectList(riskDetailQueryWrapper3);
+			for (AnbiaoRiskDetail riskDetail3 :
+				anbiaoRiskDetails3) {
+				if (riskDetail3 != null && StringUtils.isNotBlank(jiaShiYuan1.getCongyezhengyouxiaoqi()) && !jiaShiYuan1.getCongyezhengyouxiaoqi().equals("null")) {
+					riskDetail3.setArdIsRectification("1");
+					riskDetail3.setArdRectificationByIds(user.getUserId().toString());
+					riskDetail3.setArdRectificationByName(user.getUserName());
+					riskDetail3.setArdRectificationDate(DateUtil.now());
+					riskDetail3.setArdModularName("从业资格证有效截止日期");
+					riskDetail3.setArdRectificationField("congyezhengyouxiaoqi");
+					riskDetail3.setArdRectificationValue(jiaShiYuan1.getCongyezhengyouxiaoqi());
+					riskDetail3.setArdRectificationFieldType("String");
+					riskDetail3.setArdRectificationEnclosure(jiaShiYuan1.getCongyezhengfujian());
+					boolean b = riskDetailService.updateById(riskDetail3);
+					if (b == true) {
+						//整改内容
+						anbiaoRiskDetailInfo3.setArdRiskIds(riskDetail3.getArdIds().toString());
+						anbiaoRiskDetailInfo3.setArdRectificationByIds(user.getUserId().toString());
+						anbiaoRiskDetailInfo3.setArdRectificationByName(user.getUserName());
+						anbiaoRiskDetailInfo3.setArdRectificationDate(DateUtil.now());
+						anbiaoRiskDetailInfo3.setArdRectificationField("congyezhengyouxiaoqi");
+						anbiaoRiskDetailInfo3.setArdRectificationValue(jiaShiYuan1.getCongyezhengyouxiaoqi());
+						anbiaoRiskDetailInfo3.setArdRectificationFieldType("String");
+						detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo3);
+					}
 				}
 			}
 
 			//体检有效期风险
 			AnbiaoRiskDetailInfo anbiaoRiskDetailInfo4 = new AnbiaoRiskDetailInfo();
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper4 = new QueryWrapper<>();
-			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,jiaShiYuan.getDeptId());
-			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,jiaShiYuan.getId());
-			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
-			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdTitle,"体检有效截止日期");
-			AnbiaoRiskDetail riskDetail4 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper4);
-			if (riskDetail4!=null && StringUtils.isNotBlank(jiaShiYuan1.getTijianyouxiaoqi()) && !jiaShiYuan1.getTijianyouxiaoqi().equals("null")) {
-				riskDetail4.setArdIsRectification("1");
-				riskDetail4.setArdRectificationByIds(user.getUserId().toString());
-				riskDetail4.setArdRectificationByName(user.getUserName());
-				riskDetail4.setArdRectificationDate(DateUtil.now());
-				riskDetail4.setArdModularName("体检有效截止日期");
-				riskDetail4.setArdRectificationField("tijianyouxiaoqi");
-				riskDetail4.setArdRectificationValue(jiaShiYuan1.getTijianyouxiaoqi());
-				riskDetail4.setArdRectificationFieldType("String");
-				boolean b = riskDetailService.updateById(riskDetail4);
-				if (b == true) {
-					//整改内容
-					anbiaoRiskDetailInfo4.setArdRiskIds(riskDetail4.getArdIds().toString());
-					anbiaoRiskDetailInfo4.setArdRectificationByIds(user.getUserId().toString());
-					anbiaoRiskDetailInfo4.setArdRectificationByName(user.getUserName());
-					anbiaoRiskDetailInfo4.setArdRectificationDate(DateUtil.now());
-					anbiaoRiskDetailInfo4.setArdRectificationField("tijianyouxiaoqi");
-					anbiaoRiskDetailInfo4.setArdRectificationValue(jiaShiYuan1.getTijianyouxiaoqi());
-					anbiaoRiskDetailInfo4.setArdRectificationFieldType("String");
-					detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo4);
+			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdDeptIds, jiaShiYuan.getDeptId());
+			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue, jiaShiYuan.getId());
+			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdIsRectification, "0");
+			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdTitle, "体检有效截止日期");
+			List<AnbiaoRiskDetail> anbiaoRiskDetails4 = riskDetailService.getBaseMapper().selectList(riskDetailQueryWrapper4);
+			for (AnbiaoRiskDetail riskDetail4 : anbiaoRiskDetails4) {
+				if (riskDetail4 != null && StringUtils.isNotBlank(jiaShiYuan1.getTijianyouxiaoqi()) && !jiaShiYuan1.getTijianyouxiaoqi().equals("null")) {
+					riskDetail4.setArdIsRectification("1");
+					riskDetail4.setArdRectificationByIds(user.getUserId().toString());
+					riskDetail4.setArdRectificationByName(user.getUserName());
+					riskDetail4.setArdRectificationDate(DateUtil.now());
+					riskDetail4.setArdModularName("体检有效截止日期");
+					riskDetail4.setArdRectificationField("tijianyouxiaoqi");
+					riskDetail4.setArdRectificationValue(jiaShiYuan1.getTijianyouxiaoqi());
+					riskDetail4.setArdRectificationFieldType("String");
+					boolean b = riskDetailService.updateById(riskDetail4);
+					if (b == true) {
+						//整改内容
+						anbiaoRiskDetailInfo4.setArdRiskIds(riskDetail4.getArdIds().toString());
+						anbiaoRiskDetailInfo4.setArdRectificationByIds(user.getUserId().toString());
+						anbiaoRiskDetailInfo4.setArdRectificationByName(user.getUserName());
+						anbiaoRiskDetailInfo4.setArdRectificationDate(DateUtil.now());
+						anbiaoRiskDetailInfo4.setArdRectificationField("tijianyouxiaoqi");
+						anbiaoRiskDetailInfo4.setArdRectificationValue(jiaShiYuan1.getTijianyouxiaoqi());
+						anbiaoRiskDetailInfo4.setArdRectificationFieldType("String");
+						detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo4);
+					}
 				}
 			}
 

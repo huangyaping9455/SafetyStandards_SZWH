@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 /**
  * <p>
@@ -171,34 +172,36 @@ public class AnbiaoJiashiyuanJiashizhengController {
 			//驾驶证有效期风险
 			AnbiaoRiskDetailInfo anbiaoRiskDetailInfo2 = new AnbiaoRiskDetailInfo();
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper2 = new QueryWrapper<>();
-			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,jiashizheng.getAjjAjIds());
-			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
-			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdTitle,"驾驶证有效截止日期");
-			AnbiaoRiskDetail riskDetail2 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper2);
-			if (riskDetail2!=null && StringUtils.isNotBlank(jiashizheng.getAjjValidPeriodEnd()) && !jiashizheng.getAjjValidPeriodEnd().equals("null")) {
-				riskDetail2.setArdIsRectification("1");
-				riskDetail2.setArdRectificationByIds(user.getUserId().toString());
-				riskDetail2.setArdRectificationByName(user.getUserName());
-				riskDetail2.setArdRectificationDate(DateUtil.now());
-				riskDetail2.setArdModularName("驾驶证有效截止日期");
-				riskDetail2.setArdRectificationField("jiashizhengyouxiaoqi");
-				riskDetail2.setArdRectificationValue(jiashizheng.getAjjValidPeriodEnd());
-				riskDetail2.setArdRectificationFieldType("String");
-				riskDetail2.setArdRectificationEnclosure(jiashizheng.getAjjFrontPhotoAddress());
-				boolean b = riskDetailService.updateById(riskDetail2);
-				if (b == true) {
-					//整改内容
-					anbiaoRiskDetailInfo2.setArdRiskIds(riskDetail2.getArdIds().toString());
-					anbiaoRiskDetailInfo2.setArdRectificationByIds(user.getUserId().toString());
-					anbiaoRiskDetailInfo2.setArdRectificationByName(user.getUserName());
-					anbiaoRiskDetailInfo2.setArdRectificationDate(DateUtil.now());
-					anbiaoRiskDetailInfo2.setArdRectificationField("jiashizhengyouxiaoqi");
-					anbiaoRiskDetailInfo2.setArdRectificationValue(jiashizheng.getAjjValidPeriodEnd());
-					anbiaoRiskDetailInfo2.setArdRectificationFieldType("String");
-					detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo2);
+			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue, jiashizheng.getAjjAjIds());
+			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdIsRectification, "0");
+			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdTitle, "驾驶证有效截止日期");
+			List<AnbiaoRiskDetail> anbiaoRiskDetails = riskDetailService.getBaseMapper().selectList(riskDetailQueryWrapper2);
+			for (AnbiaoRiskDetail riskDetail2 :
+				anbiaoRiskDetails) {
+				if (riskDetail2 != null && StringUtils.isNotBlank(jiashizheng.getAjjValidPeriodEnd()) && !jiashizheng.getAjjValidPeriodEnd().equals("null")) {
+					riskDetail2.setArdIsRectification("1");
+					riskDetail2.setArdRectificationByIds(user.getUserId().toString());
+					riskDetail2.setArdRectificationByName(user.getUserName());
+					riskDetail2.setArdRectificationDate(DateUtil.now());
+					riskDetail2.setArdModularName("驾驶证有效截止日期");
+					riskDetail2.setArdRectificationField("jiashizhengyouxiaoqi");
+					riskDetail2.setArdRectificationValue(jiashizheng.getAjjValidPeriodEnd());
+					riskDetail2.setArdRectificationFieldType("String");
+					riskDetail2.setArdRectificationEnclosure(jiashizheng.getAjjFrontPhotoAddress());
+					boolean b = riskDetailService.updateById(riskDetail2);
+					if (b == true) {
+						//整改内容
+						anbiaoRiskDetailInfo2.setArdRiskIds(riskDetail2.getArdIds().toString());
+						anbiaoRiskDetailInfo2.setArdRectificationByIds(user.getUserId().toString());
+						anbiaoRiskDetailInfo2.setArdRectificationByName(user.getUserName());
+						anbiaoRiskDetailInfo2.setArdRectificationDate(DateUtil.now());
+						anbiaoRiskDetailInfo2.setArdRectificationField("jiashizhengyouxiaoqi");
+						anbiaoRiskDetailInfo2.setArdRectificationValue(jiashizheng.getAjjValidPeriodEnd());
+						anbiaoRiskDetailInfo2.setArdRectificationFieldType("String");
+						detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo2);
+					}
 				}
 			}
-
 			return R.status(jiashizhengService.updateById(jiashizheng));
 		}
 	}
