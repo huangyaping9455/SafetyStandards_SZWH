@@ -210,7 +210,7 @@ public class AnbiaoJiashiyuanCongyezigezhengController {
 			JiaShiYuan jiaShiYuan = new JiaShiYuan();
 			jiaShiYuan.setId(congyezigezheng.getAjcAjIds());
 			jiaShiYuan.setCongyezhengfujian(congyezigezheng.getAjcLicence());
-			jiaShiYuan.setCongyezhengchulingri(congyezigezheng.getAjcIssueDate());
+			jiaShiYuan.setCongyezhengchulingri(congyezigezheng.getAjcInitialIssuing());
 			jiaShiYuan.setCongyezhengyouxiaoqi(congyezigezheng.getAjcValidUntil());
 			jiaShiYuanService.updateById(jiaShiYuan);
 
