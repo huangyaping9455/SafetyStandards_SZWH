@@ -8,7 +8,9 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanCongyezigezheng;
+import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanCongyezigezhengService;
+import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetailInfo;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailInfoService;
@@ -44,6 +46,7 @@ public class AnbiaoJiashiyuanCongyezigezhengController {
 	private IAnbiaoJiashiyuanCongyezigezhengService congyezigezhengService;
 	private IAnbiaoRiskDetailService riskDetailService;
 	private IAnbiaoRiskDetailInfoService detailInfoService;
+	private IJiaShiYuanService jiaShiYuanService;
 
 	/**
 	 * 新增
@@ -203,6 +206,14 @@ public class AnbiaoJiashiyuanCongyezigezhengController {
 					}
 				}
 			}
+
+			JiaShiYuan jiaShiYuan = new JiaShiYuan();
+			jiaShiYuan.setId(congyezigezheng.getAjcAjIds());
+			jiaShiYuan.setCongyezhengfujian(congyezigezheng.getAjcLicence());
+			jiaShiYuan.setCongyezhengchulingri(congyezigezheng.getAjcIssueDate());
+			jiaShiYuan.setCongyezhengyouxiaoqi(congyezigezheng.getAjcValidUntil());
+			jiaShiYuanService.updateById(jiaShiYuan);
+
 			return R.status(congyezigezhengService.updateById(congyezigezheng));
 		}
 	}

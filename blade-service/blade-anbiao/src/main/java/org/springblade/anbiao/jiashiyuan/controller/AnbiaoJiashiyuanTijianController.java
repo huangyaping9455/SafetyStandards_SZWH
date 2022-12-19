@@ -9,8 +9,10 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanQita;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanTijian;
+import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanQitaService;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanTijianService;
+import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetailInfo;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailInfoService;
@@ -47,6 +49,7 @@ public class AnbiaoJiashiyuanTijianController {
 	private IAnbiaoJiashiyuanTijianService tijianService;
 	private IAnbiaoRiskDetailService riskDetailService;
 	private IAnbiaoRiskDetailInfoService detailInfoService;
+	private IJiaShiYuanService jiaShiYuanService;
 
 	/**
 	 * 新增
@@ -175,6 +178,13 @@ public class AnbiaoJiashiyuanTijianController {
 					}
 				}
 			}
+
+			JiaShiYuan jiaShiYuan = new JiaShiYuan();
+			jiaShiYuan.setId(tijian.getAjtAjIds());
+			jiaShiYuan.setTijianriqi(tijian.getAjtPhysicalExaminationDate());
+			jiaShiYuan.setTijianyouxiaoqi(tijian.getAjtTermValidity());
+			jiaShiYuanService.updateById(jiaShiYuan);
+
 			return R.status(tijianService.updateById(tijian));
 		}
 	}

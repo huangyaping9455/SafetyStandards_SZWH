@@ -8,7 +8,9 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanJiashizheng;
+import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanJiashizhengService;
+import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetailInfo;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailInfoService;
@@ -44,6 +46,7 @@ public class AnbiaoJiashiyuanJiashizhengController {
 	private IAnbiaoJiashiyuanJiashizhengService jiashizhengService;
 	private IAnbiaoRiskDetailService riskDetailService;
 	private IAnbiaoRiskDetailInfoService detailInfoService;
+	private IJiaShiYuanService jiaShiYuanService;
 
 	/**
 	 * 新增
@@ -202,6 +205,14 @@ public class AnbiaoJiashiyuanJiashizhengController {
 					}
 				}
 			}
+
+			JiaShiYuan jiaShiYuan = new JiaShiYuan();
+			jiaShiYuan.setId(jiashizheng.getAjjAjIds());
+			jiaShiYuan.setJiashizhengfujian(jiashizheng.getAjjFrontPhotoAddress());
+			jiaShiYuan.setJiashizhengchulingriqi(jiashizheng.getAjjValidPeriodStart());
+			jiaShiYuan.setJiashizhengyouxiaoqi(jiashizheng.getAjjValidPeriodEnd());
+			jiaShiYuanService.updateById(jiaShiYuan);
+
 			return R.status(jiashizhengService.updateById(jiashizheng));
 		}
 	}
