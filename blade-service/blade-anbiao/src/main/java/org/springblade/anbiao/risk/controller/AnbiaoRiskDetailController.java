@@ -8,6 +8,7 @@ import io.protostuff.Request;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IBladeDeptService;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
@@ -100,7 +101,7 @@ public class AnbiaoRiskDetailController {
 				riskDetail.setArdAssociationTable("anbiao_jiashiyuan");
 				riskDetail.setArdAssociationField("id");
 				riskDetail.setArdAssociationValue(deail.getId());
-				if (deail.getShenfenzhengyouxiaoqi()==null){
+				if (StringUtils.isBlank(deail.getShenfenzhengyouxiaoqi()) || deail.getShenfenzhengyouxiaoqi().equals("null")){
 					riskDetail.setArdContent("身份证有效期缺项");
 					riskDetail.setArdType("缺项");
 					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
@@ -115,7 +116,7 @@ public class AnbiaoRiskDetailController {
 							aa++;
 						}
 					}
-				}else {
+				}else if (!deail.getShenfenzhengyouxiaoqi().equals("长期")){
 					Date shenfenzhengyouxiaoqi = formatter.parse(deail.getShenfenzhengyouxiaoqi());
 					Date now = formatter.parse(DateUtil.now());
 					Calendar calendar1 = Calendar.getInstance();
@@ -179,7 +180,7 @@ public class AnbiaoRiskDetailController {
 				riskDetail2.setArdAssociationTable("anbiao_jiashiyuan");
 				riskDetail2.setArdAssociationField("id");
 				riskDetail2.setArdAssociationValue(deail.getId());
-				if (deail.getJiashizhengyouxiaoqi()==null){
+				if (StringUtils.isBlank(deail.getJiashizhengyouxiaoqi()) || deail.getJiashizhengyouxiaoqi().equals("null")){
 					riskDetail2.setArdContent("驾驶证有效截止日期缺项");
 					riskDetail2.setArdType("缺项");
 					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
@@ -194,7 +195,7 @@ public class AnbiaoRiskDetailController {
 							aa++;
 						}
 					}
-				}else {
+				}else if (!deail.getJiashizhengyouxiaoqi().equals("长期")){
 					Date jiashizhengyouxiaoqi = formatter.parse(deail.getJiashizhengyouxiaoqi());
 					Date now2 = formatter.parse(DateUtil.now());
 					Calendar calendar3 = Calendar.getInstance();
@@ -258,7 +259,7 @@ public class AnbiaoRiskDetailController {
 				riskDetail3.setArdAssociationTable("anbiao_jiashiyuan");
 				riskDetail3.setArdAssociationField("id");
 				riskDetail3.setArdAssociationValue(deail.getId());
-				if (deail.getCongyezhengyouxiaoqi()==null){
+				if (StringUtils.isBlank(deail.getCongyezhengyouxiaoqi()) || deail.getCongyezhengyouxiaoqi().equals("null")){
 					riskDetail3.setArdContent("从业资格证有效期缺项");
 					riskDetail3.setArdType("缺项");
 					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
@@ -337,7 +338,7 @@ public class AnbiaoRiskDetailController {
 				riskDetail4.setArdAssociationTable("anbiao_jiashiyuan");
 				riskDetail4.setArdAssociationField("id");
 				riskDetail4.setArdAssociationValue(deail.getId());
-				if (deail.getTijianyouxiaoqi()==null){
+				if (StringUtils.isBlank(deail.getTijianyouxiaoqi()) || deail.getTijianyouxiaoqi().equals("null")){
 					riskDetail4.setArdContent("体检有效期缺项");
 					riskDetail4.setArdType("缺项");
 					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
