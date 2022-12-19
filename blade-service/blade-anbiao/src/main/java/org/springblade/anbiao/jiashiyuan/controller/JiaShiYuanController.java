@@ -2311,15 +2311,18 @@ public class JiaShiYuanController {
 			driver.setLaodonghetongjieshuriqi(String.valueOf(a.get("laodonghetongjieshuriqi")).trim());
 			driver.setAnquanzerenshuqishiriqi(String.valueOf(a.get("anquanzerenshuqishiriqi")).trim());
 			driver.setGangweigaozhishuqishiriqi(String.valueOf(a.get("gangweigaozhishuqishiriqi")).trim());
-			//通过身份证获取年龄
-			Integer age = IdCardUtil.getAgeByCard(tmp);
-			driver.setNianling(age.toString());
-
-			//通过身份证获取生日日期
-			Date chushengshijian = IdCardUtil.getBirthDate(tmp);
+			if (StringUtils.isNotBlank(tmp) && !tmp.equals("null")){
+				//通过身份证获取年龄
+				Integer age = IdCardUtil.getAgeByCard(tmp);
+				driver.setNianling(age.toString());
+				//通过身份证获取生日日期
+				Date chushengshijian = IdCardUtil.getBirthDate(tmp);
+				driver.setChushengshijian(dateFormat2.format(chushengshijian));
+			} else {
+				driver.setNianling("0");
+			}
 			String shoujihaoma = String.valueOf(a.get("shoujihaoma")).trim();
 			driver.setShoujihaoma(shoujihaoma);
-			driver.setChushengshijian(dateFormat2.format(chushengshijian));
 			driver.setCongyerenyuanleixing(String.valueOf(a.get("congyerenyuanleixing")).trim());
 			driver.setJiashizhenghao(String.valueOf(a.get("jiashizhenghao")).trim());
 			driver.setCongyezigezheng(String.valueOf(a.get("congyezigezheng")).trim());
@@ -2364,7 +2367,6 @@ public class JiaShiYuanController {
 			QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<JiaShiYuan>();
 			jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId, driver.getId());
 			jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShoujihaoma, driver.getShoujihaoma());
-			jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShenfenzhenghao, driver.getShenfenzhenghao());
 			jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId, driver.getDeptId());
 			JiaShiYuan jiaShiYuan = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
 
