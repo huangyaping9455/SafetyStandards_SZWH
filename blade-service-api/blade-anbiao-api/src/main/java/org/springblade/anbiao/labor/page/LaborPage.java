@@ -55,4 +55,7 @@ public class LaborPage extends BasePage{
 	private String Name;
 	@ApiModelProperty(value = "企业id")
 	private String ali_dept_ids;
+
+	@ApiModelProperty(value = "领取人ID")
+	private String alrPersonIds;
 }

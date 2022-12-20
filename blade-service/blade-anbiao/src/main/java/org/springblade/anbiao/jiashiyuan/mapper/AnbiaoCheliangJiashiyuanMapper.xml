@@ -12,12 +12,6 @@
     </resultMap>
 
     <select id="SelectByJiashiyuanID" resultType="org.springblade.anbiao.jiashiyuan.vo.CheliangJiashiyuanVO">
-<!--        SELECT v.cheliangpaizhao,cj.jiashiyuanid,cj.vehid FROM `anbiao_vehicle` v,anbiao_cheliang_jiashiyuan cj-->
-<!--        WHERE cj.jiashiyuanid= #{jiashiyuanid}-->
-<!--          and cj.vehid=v.id-->
-<!--        <if test="shiyongxingzhi != null and shiyongxingzhi != '' ">-->
-<!--          and v.shiyongxingzhi = #{shiyongxingzhi}-->
-<!--        </if>-->
 
         <if test="shiyongxingzhi == '车头' ">
             SELECT
@@ -58,4 +52,102 @@
         </if>
 
     </select>
+
+    <sql id="tableSql">
+        <if test="shiyongxingzhi == '车头' ">
+            select
+                a.vstatus as status,
+                b.cheliangpaizhao,
+                b.chepaiyanse,
+                c.jiashiyuanxingming,
+                c.shoujihaoma,
+                d.dept_name as deptname
+            from
+                anbiao_cheliang_jiashiyuan_daily a
+                left join anbiao_vehicle b on a.vehid = b.id
+                left join anbiao_jiashiyuan c on a.jiashiyuanid = c.id
+                left join blade_dept d on c.dept_id = d.id
+            where a.vstatus = 1
+                and d.is_deleted = 0
+                and b.is_deleted = 0
+                and c.isdelete = 0
+                and b.cheliangpaizhao not like '%挂%'
+            <if test="deptId !=null and deptId != ''">
+                and d.id = #{deptId}
+            </if>
+        </if>
+
+        <if test="shiyongxingzhi == '挂车' ">
+            select
+                a.gstatus as status,
+                b.cheliangpaizhao,
+                b.chepaiyanse,
+                c.jiashiyuanxingming,
+                c.shoujihaoma,
+                d.dept_name
+            from
+                anbiao_cheliang_jiashiyuan_daily a
+                left join anbiao_vehicle b on a.gvehid = b.id
+                left join anbiao_jiashiyuan c on a.jiashiyuanid = c.id
+                left join blade_dept d on c.dept_id = d.id
+            where a.gstatus = 1
+                and d.is_deleted = 0
+                and b.is_deleted = 0
+                and c.isdelete = 0
+                and b.cheliangpaizhao like '%挂%'
+            <if test="deptId !=null and deptId != ''">
+                and d.id = #{deptId}
+            </if>
+        </if>
+    </sql>
+
+    <sql id="querySql">
+        <if test="jiashiyuanxingming !=null and jiashiyuanxingming != ''">
+            AND jiashiyuanxingming  LIKE '%${jiashiyuanxingming}%'
+        </if>
+
+        <if test="shoujihaoma !=null and shoujihaoma != ''">
+            AND shoujihaoma = #{shoujihaoma}
+        </if>
+
+        <if test="cheliangpaizhao !=null and cheliangpaizhao != ''">
+            AND cheliangpaizhao  LIKE '%${cheliangpaizhao}%'
+        </if>
+
+    </sql>
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        order by cheliangpaizhao
+    </sql>
+
+    <select id="selectPageList" parameterType="org.springblade.anbiao.jiashiyuan.page.JiaShiYuanVehiclePage" resultType="org.springblade.anbiao.jiashiyuan.vo.CheliangJiashiyuanVO">
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectTotal" parameterType="org.springblade.anbiao.jiashiyuan.page.JiaShiYuanVehiclePage" resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql" />
+        )d
+        where 1 = 1
+        <include refid="querySql" />
+    </select>
+
+
 </mapper>

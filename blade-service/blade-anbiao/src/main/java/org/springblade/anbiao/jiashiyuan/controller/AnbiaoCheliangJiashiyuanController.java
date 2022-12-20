@@ -10,10 +10,13 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuan;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
+import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanVehiclePage;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoCheliangJiashiyuanService;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.anbiao.jiashiyuan.service.impl.AnbiaoCheliangJiashiyuanServiceImpl;
 import org.springblade.anbiao.jiashiyuan.vo.CheliangJiashiyuanVO;
+import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
 import org.springblade.common.tool.JSONUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
@@ -147,6 +150,17 @@ public class AnbiaoCheliangJiashiyuanController {
 			r.setSuccess(false);
 			return r;
 		}
+	}
+
+	/**
+	 * 分页
+	 */
+	@PostMapping("/list")
+	@ApiLog("分页-驾驶员车辆绑定关系")
+	@ApiOperation(value = "分页-驾驶员车辆绑定关系", notes = "传入JiaShiYuanVehiclePage", position = 5)
+	public R<JiaShiYuanVehiclePage<CheliangJiashiyuanVO>> list(@RequestBody JiaShiYuanVehiclePage jiaShiYuanVehiclePage) {
+		JiaShiYuanVehiclePage<CheliangJiashiyuanVO> pages = cheliangJiashiyuanService.selectPageList(jiaShiYuanVehiclePage);
+		return R.data(pages);
 	}
 
 }

@@ -18,5 +18,8 @@ public class LaborVO {
 	private String aliStatus;
 	private String aliApplicationScope;
 	private String detName;
-	private String 	aliIds;
+	private String aliIds;
+	private String alrPersonAutograph;
+	private String alrReceiptDate;
+
 }

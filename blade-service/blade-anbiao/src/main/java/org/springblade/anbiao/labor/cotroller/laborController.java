@@ -176,9 +176,17 @@ public class laborController {
 		laborQueryWrapper.lambda().eq(LaborlingquEntity::getAlrAliIds, laborlingqu.getAlrAliIds());
 		laborQueryWrapper.lambda().eq(LaborlingquEntity::getAlrPersonIds, laborlingqu.getAlrPersonIds());
 		LaborlingquEntity laborEntity1 = lingquService.getBaseMapper().selectOne(laborQueryWrapper);
-		laborlingqu.setAlrIds(laborEntity1.getAlrIds());
-		laborlingqu.setAlrUpdateByIds(laborlingqu.getAlrPersonIds());
-		laborlingqu.setAlrUpdateTime(DateUtil.now());
-		return R.status(service.updateL(laborlingqu));
+		if(laborEntity1 != null){
+			laborlingqu.setAlrIds(laborEntity1.getAlrIds());
+			laborlingqu.setAlrUpdateByIds(laborlingqu.getAlrPersonIds());
+			laborlingqu.setAlrUpdateTime(DateUtil.now());
+			return R.status(service.updateL(laborlingqu));
+		}else{
+			R rs = new R();
+			rs.setCode(200);
+			rs.setMsg("暂无数据");
+			rs.setSuccess(false);
+			return rs;
+		}
 	}
 }

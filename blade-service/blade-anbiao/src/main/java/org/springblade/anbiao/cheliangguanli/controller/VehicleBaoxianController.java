@@ -376,7 +376,12 @@ public class VehicleBaoxianController extends BladeController {
 		boolean isUpdate = vehicleBaoxianService.updateById(baoxian);
 		if(vehicleBaoxian.getBaoxianMingxis() != null && vehicleBaoxian.getBaoxianMingxis().size() > 0) {
 			for (VehicleBaoxianMingxi baoxianMingxi: vehicleBaoxian.getBaoxianMingxis()) {
-				vehicleBaoxianMingxiService.updateById(baoxianMingxi);
+				if(baoxianMingxi.getAvbmIds() == null){
+					baoxianMingxi.setAvbmAvbIds(baoxian.getAvbIds());
+					vehicleBaoxianMingxiService.save(baoxianMingxi);
+				}else{
+					vehicleBaoxianMingxiService.updateById(baoxianMingxi);
+				}
 			}
 		}
 		return R.status(isUpdate);

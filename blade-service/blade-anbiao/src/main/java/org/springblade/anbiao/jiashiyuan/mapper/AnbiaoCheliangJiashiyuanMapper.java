@@ -3,6 +3,7 @@ package org.springblade.anbiao.jiashiyuan.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuan;
+import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanVehiclePage;
 import org.springblade.anbiao.jiashiyuan.vo.CheliangJiashiyuanVO;
 
 import java.util.List;
@@ -18,4 +19,8 @@ import java.util.List;
 @Mapper
 public interface AnbiaoCheliangJiashiyuanMapper extends BaseMapper<AnbiaoCheliangJiashiyuan> {
 	public List<CheliangJiashiyuanVO> SelectByJiashiyuanID(String shiyongxingzhi,int deptId);
+
+	List<CheliangJiashiyuanVO> selectPageList(JiaShiYuanVehiclePage jiaShiYuanVehiclePage);
+	int selectTotal(JiaShiYuanVehiclePage jiaShiYuanVehiclePage);
+
 }

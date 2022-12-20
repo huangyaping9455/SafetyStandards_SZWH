@@ -378,7 +378,12 @@ public class JiashiyuanBaoxianController extends BladeController {
 		boolean isUpdate = jiashiyuanBaoxianService.updateById(baoxian);
 		if(jiashiyuanBaoxian.getBaoxianMingxis() != null && jiashiyuanBaoxian.getBaoxianMingxis().size() > 0) {
 			for (JiashiyuanBaoxianMingxi baoxianMingxi: jiashiyuanBaoxian.getBaoxianMingxis()) {
-				mingxiService.updateById(baoxianMingxi);
+				if(baoxianMingxi.getAjbmIds() == null){
+					baoxianMingxi.setAjbmAvbIds(baoxian.getAjbIds());
+					mingxiService.save(baoxianMingxi);
+				}else {
+					mingxiService.updateById(baoxianMingxi);
+				}
 			}
 		}
 		return R.status(isUpdate);

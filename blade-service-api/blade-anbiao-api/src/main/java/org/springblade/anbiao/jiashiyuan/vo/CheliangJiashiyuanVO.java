@@ -21,4 +21,16 @@ public class CheliangJiashiyuanVO {
 	@ApiModelProperty(value = "是否被绑定，1：已绑定")
 	private int status = 0;
 
+	@ApiModelProperty(value = "驾驶员姓名")
+	private String jiashiyuanxingming;
+
+	@ApiModelProperty(value = "手机号码")
+	private String shoujihaoma;
+
+	@ApiModelProperty(value = "企业名称")
+	private String deptname;
+
+
+
+
 }
