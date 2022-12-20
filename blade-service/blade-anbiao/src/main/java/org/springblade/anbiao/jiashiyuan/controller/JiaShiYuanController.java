@@ -2311,6 +2311,7 @@ public class JiaShiYuanController {
 			driver.setLaodonghetongjieshuriqi(String.valueOf(a.get("laodonghetongjieshuriqi")).trim());
 			driver.setAnquanzerenshuqishiriqi(String.valueOf(a.get("anquanzerenshuqishiriqi")).trim());
 			driver.setGangweigaozhishuqishiriqi(String.valueOf(a.get("gangweigaozhishuqishiriqi")).trim());
+			driver.setJiashiyuanleixing("驾驶员");
 			if (StringUtils.isNotBlank(tmp) && !tmp.equals("null")){
 				//通过身份证获取年龄
 				Integer age = IdCardUtil.getAgeByCard(tmp);
