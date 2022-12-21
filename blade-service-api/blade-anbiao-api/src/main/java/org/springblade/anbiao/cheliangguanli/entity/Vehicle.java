@@ -394,8 +394,11 @@ public class Vehicle implements Serializable {
 	@ApiModelProperty(value = "是否进口")
 	private String shifoujinkou;
 
-	@ApiModelProperty(value = "轮距")
+	@ApiModelProperty(value = "前轮距")
 	private String lunju;
+
+	@ApiModelProperty(value = "后轮距")
+	private String frontlunju;
 
 	@ApiModelProperty(value = "货箱内部尺寸")
 	private String huoxiangneibuchicun;

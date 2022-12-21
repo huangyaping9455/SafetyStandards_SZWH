@@ -21,5 +21,6 @@ public class LaborVO {
 	private String aliIds;
 	private String alrPersonAutograph;
 	private String alrReceiptDate;
+	private String alrReceiptsNumber;
 
 }

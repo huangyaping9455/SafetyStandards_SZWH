@@ -17,6 +17,7 @@ package org.springblade.anbiao.cheliangguanli.controller;
 
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -376,7 +377,12 @@ public class VehicleBaoxianController extends BladeController {
 		boolean isUpdate = vehicleBaoxianService.updateById(baoxian);
 		if(vehicleBaoxian.getBaoxianMingxis() != null && vehicleBaoxian.getBaoxianMingxis().size() > 0) {
 			for (VehicleBaoxianMingxi baoxianMingxi: vehicleBaoxian.getBaoxianMingxis()) {
-				if(baoxianMingxi.getAvbmIds() == null){
+				QueryWrapper<VehicleBaoxianMingxi> baoxianMingxiQueryWrapper = new QueryWrapper<VehicleBaoxianMingxi>();
+				baoxianMingxiQueryWrapper.lambda().eq(VehicleBaoxianMingxi::getAvbmAvbIds,baoxian.getAvbIds());
+				baoxianMingxiQueryWrapper.lambda().eq(VehicleBaoxianMingxi::getAvbmRisk,baoxianMingxi.getAvbmRisk());
+				baoxianMingxiQueryWrapper.lambda().eq(VehicleBaoxianMingxi::getAvbmName,baoxianMingxi.getAvbmName());
+				VehicleBaoxianMingxi deail = vehicleBaoxianMingxiService.getBaseMapper().selectOne(baoxianMingxiQueryWrapper);
+				if(deail == null || deail.getAvbmIds() == null){
 					baoxianMingxi.setAvbmAvbIds(baoxian.getAvbIds());
 					vehicleBaoxianMingxiService.save(baoxianMingxi);
 				}else{
