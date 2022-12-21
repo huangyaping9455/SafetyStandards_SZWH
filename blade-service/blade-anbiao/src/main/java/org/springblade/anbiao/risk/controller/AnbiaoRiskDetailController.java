@@ -338,8 +338,8 @@ public class AnbiaoRiskDetailController {
 				riskDetail4.setArdAssociationTable("anbiao_jiashiyuan");
 				riskDetail4.setArdAssociationField("id");
 				riskDetail4.setArdAssociationValue(deail.getId());
-				if (StringUtils.isBlank(deail.getTijianyouxiaoqi()) || deail.getTijianyouxiaoqi().equals("null")){
-					riskDetail4.setArdContent("体检有效期缺项");
+				if (StringUtils.isBlank(deail.getTijianriqi()) || deail.getTijianriqi().equals("null")){
+					riskDetail4.setArdContent("体检日期缺项");
 					riskDetail4.setArdType("缺项");
 					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
 					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,riskDetail4.getArdDeptIds());
@@ -629,7 +629,7 @@ public class AnbiaoRiskDetailController {
 				riskDetail.setArdRectificationByName(user.getUserName());
 				riskDetail.setArdRectificationDate(DateUtil.now());
 				riskDetail.setArdModularName("体检有效截止日期");
-				riskDetail.setArdRectificationField("tijianyouxiaoqi");
+				riskDetail.setArdRectificationField("tijianriqi");
 				riskDetail.setArdRectificationValue(date);
 				riskDetail.setArdRectificationFieldType("String");
 				riskDetail.setArdRectificationEnclosure(fujian);
@@ -640,7 +640,7 @@ public class AnbiaoRiskDetailController {
 					anbiaoRiskDetailInfo.setArdRectificationByIds(user.getUserId().toString());
 					anbiaoRiskDetailInfo.setArdRectificationByName(user.getUserName());
 					anbiaoRiskDetailInfo.setArdRectificationDate(DateUtil.now());
-					anbiaoRiskDetailInfo.setArdRectificationField("tijianyouxiaoqi");
+					anbiaoRiskDetailInfo.setArdRectificationField("tijianriqi");
 					anbiaoRiskDetailInfo.setArdRectificationValue(date);
 					anbiaoRiskDetailInfo.setArdRectificationFieldType("String");
 					int insert = detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo);
@@ -650,7 +650,11 @@ public class AnbiaoRiskDetailController {
 						jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId, riskDetail.getArdAssociationValue());
 						jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete, 0);
 						JiaShiYuan deal = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
-						deal.setTijianyouxiaoqi(date);
+						int tijianyouxiaoqi = Integer.parseInt(date.substring(0, 4))+ 1;
+						String tijianyouxiaoqis =String.valueOf(tijianyouxiaoqi);
+						String tijianyouxiaoqiss =tijianyouxiaoqis+date.substring(4, 10);
+						deal.setTijianriqi(date);
+						deal.setTijianyouxiaoqi(tijianyouxiaoqiss);
 						deal.setCaozuorenid(user.getUserId());
 						deal.setCaozuoshijian(DateUtil.now());
 						deal.setCaozuoren(user.getUserName());
@@ -661,6 +665,11 @@ public class AnbiaoRiskDetailController {
 							tijianQueryWrapper.lambda().eq(AnbiaoJiashiyuanTijian::getAjtAjIds, riskDetail.getArdAssociationValue());
 							tijianQueryWrapper.lambda().eq(AnbiaoJiashiyuanTijian::getAjtDelete, 0);
 							AnbiaoJiashiyuanTijian tijian = tijianService.getBaseMapper().selectOne(tijianQueryWrapper);
+							int tijianyouxiaoqi2 = Integer.parseInt(date.substring(0, 4))+ 1;
+							String tijianyouxiaoqi22 =String.valueOf(tijianyouxiaoqi2);
+							String tijianyouxiaoqi222 =tijianyouxiaoqi22+date.substring(4, 10);
+							tijian.setAjtPhysicalExaminationDate(date);
+							tijian.setAjtTermValidity(tijianyouxiaoqi222);
 							tijian.setAjtTermValidity(date);
 							tijian.setAjtEnclosure(fujian);
 							tijian.setAjtUpdateTime(DateUtil.now());

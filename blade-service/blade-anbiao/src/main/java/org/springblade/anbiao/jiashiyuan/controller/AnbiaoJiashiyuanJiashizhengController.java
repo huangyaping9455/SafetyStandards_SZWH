@@ -90,22 +90,29 @@ public class AnbiaoJiashiyuanJiashizhengController {
 		}
 
 		//有效期结束日期
-		if (jiashizheng.getAjjValidPeriodEnd().length()>=10){
-			String s2 = jiashizheng.getAjjValidPeriodEnd().substring(0,10);
-			if (StringUtils.isNotBlank(s2) && !s2.equals("null")){
-				if (DateUtils.isDateString(s2,null) == true){
-					jiashizheng.setAjjValidPeriodEnd(s2);
-				}else {
-					r.setMsg(jiashizheng.getAjjValidPeriodEnd()+",该有效期结束日期，不是时间格式；");
-					r.setCode(500);
-					r.setSuccess(false);
-					return r;
+		if (StringUtils.isNotBlank(jiashizheng.getAjjValidPeriodEnd()) && !jiashizheng.getAjjValidPeriodEnd().equals("null")) {
+			if (jiashizheng.getAjjValidPeriodEnd().length() >= 10 || jiashizheng.getAjjValidPeriodEnd().equals("长期")) {
+				if (!jiashizheng.getAjjValidPeriodEnd().equals("长期")) {
+					String s2 = jiashizheng.getAjjValidPeriodEnd().substring(0, 10);
+					if (StringUtils.isNotBlank(s2) && !s2.equals("null")) {
+						if (DateUtils.isDateString(s2, null) == true) {
+							jiashizheng.setAjjValidPeriodEnd(s2);
+						} else {
+							r.setMsg(jiashizheng.getAjjValidPeriodEnd() + ",该有效期结束日期，不是时间格式；");
+							r.setCode(500);
+							r.setSuccess(false);
+							return r;
+						}
+					}
+				}else if (jiashizheng.getAjjValidPeriodEnd().equals("长期")){
+					jiashizheng.setAjjValidPeriodEnd(jiashizheng.getAjjValidPeriodEnd());
 				}
 			}
 		}
 
+
 		//验证 有效期开始日期 不能大于 有效期结束日期
-		if(StringUtils.isNotBlank(jiashizheng.getAjjValidPeriodStart()) && !jiashizheng.getAjjValidPeriodStart().equals("null") && StringUtils.isNotBlank(jiashizheng.getAjjValidPeriodEnd()) && !jiashizheng.getAjjValidPeriodEnd().equals("null")){
+		if(StringUtils.isNotBlank(jiashizheng.getAjjValidPeriodStart()) && !jiashizheng.getAjjValidPeriodStart().equals("null") && StringUtils.isNotBlank(jiashizheng.getAjjValidPeriodEnd()) && !jiashizheng.getAjjValidPeriodEnd().equals("null")&& !jiashizheng.getAjjValidPeriodEnd().equals("长期")){
 			int a1 = jiashizheng.getAjjValidPeriodStart().length();
 			int b1 = jiashizheng.getAjjValidPeriodEnd().length();
 			if (a1 == b1){

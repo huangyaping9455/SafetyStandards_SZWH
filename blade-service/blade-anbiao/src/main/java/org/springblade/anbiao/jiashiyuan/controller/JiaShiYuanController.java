@@ -290,6 +290,27 @@ public class JiaShiYuanController {
 			}
 		}
 
+		//验证体检日期
+		if (StringUtils.isNotBlank(jiaShiYuan.getTijianriqi()) && !jiaShiYuan.getTijianriqi().equals("null")) {
+			if (jiaShiYuan.getTijianriqi().length() >= 10) {
+				String tijianriqi = jiaShiYuan.getTijianriqi().substring(0, 10);
+				if (StringUtils.isNotBlank(tijianriqi) && !tijianriqi.equals("null")) {
+					if (DateUtils.isDateString(tijianriqi, null) == true) {
+						int tijianyouxiaoqi = Integer.parseInt(tijianriqi.substring(0, 4))+ 1;
+						String tijianyouxiaoqis =String.valueOf(tijianyouxiaoqi);
+						String tijianyouxiaoqiss =tijianyouxiaoqis+tijianriqi.substring(4, 10);
+						jiaShiYuan.setTijianriqi(tijianriqi);
+						jiaShiYuan.setTijianyouxiaoqi(tijianyouxiaoqiss);
+					} else {
+						r.setMsg(jiaShiYuan.getTijianriqi() + ",该体检日期，不是时间格式；");
+						r.setCode(500);
+						r.setSuccess(false);
+						return r;
+					}
+				}
+			}
+		}
+
 		//验证手机号码
 		if (StringUtils.isBlank(jiaShiYuan.getShoujihaoma())) {
 			r.setMsg("手机号码不能为空;");
@@ -383,7 +404,7 @@ public class JiaShiYuanController {
 				ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrDelete, "0");
 				AnbiaoJiashiyuanRuzhi rzdeail = ruzhiService.getBaseMapper().selectOne(ruzhiQueryWrapper);
 				if (rzdeail == null) {
-					if(jiaShiYuan.getJialing() != null){
+					if (StringUtils.isNotBlank(jiaShiYuan.getJialing()) && !jiaShiYuan.getJialing().equals("null")) {
 						ruzhi.setAjrDrivingExperience(Integer.parseInt(jiaShiYuan.getJialing()));
 					}
 					ruzhi.setAjrCreateByName(jiaShiYuan.getCaozuoren());

@@ -161,8 +161,8 @@ public class AnbiaoJiashiyuanTijianController {
 					riskDetail4.setArdRectificationByName(user.getUserName());
 					riskDetail4.setArdRectificationDate(DateUtil.now());
 					riskDetail4.setArdModularName("体检有效截止日期");
-					riskDetail4.setArdRectificationField("tijianyouxiaoqi");
-					riskDetail4.setArdRectificationValue(tijian.getAjtTermValidity());
+					riskDetail4.setArdRectificationField("tijianriqi");
+					riskDetail4.setArdRectificationValue(tijian.getAjtPhysicalExaminationDate());
 					riskDetail4.setArdRectificationFieldType("String");
 					boolean b = riskDetailService.updateById(riskDetail4);
 					if (b == true) {
@@ -171,8 +171,8 @@ public class AnbiaoJiashiyuanTijianController {
 						anbiaoRiskDetailInfo4.setArdRectificationByIds(user.getUserId().toString());
 						anbiaoRiskDetailInfo4.setArdRectificationByName(user.getUserName());
 						anbiaoRiskDetailInfo4.setArdRectificationDate(DateUtil.now());
-						anbiaoRiskDetailInfo4.setArdRectificationField("tijianyouxiaoqi");
-						anbiaoRiskDetailInfo4.setArdRectificationValue(tijian.getAjtTermValidity());
+						anbiaoRiskDetailInfo4.setArdRectificationField("tijianriqi");
+						anbiaoRiskDetailInfo4.setArdRectificationValue(tijian.getAjtPhysicalExaminationDate());
 						anbiaoRiskDetailInfo4.setArdRectificationFieldType("String");
 						detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo4);
 					}
