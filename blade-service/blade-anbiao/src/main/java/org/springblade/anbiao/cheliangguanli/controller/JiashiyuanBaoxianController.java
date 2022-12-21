@@ -378,10 +378,15 @@ public class JiashiyuanBaoxianController extends BladeController {
 		boolean isUpdate = jiashiyuanBaoxianService.updateById(baoxian);
 		if(jiashiyuanBaoxian.getBaoxianMingxis() != null && jiashiyuanBaoxian.getBaoxianMingxis().size() > 0) {
 			for (JiashiyuanBaoxianMingxi baoxianMingxi: jiashiyuanBaoxian.getBaoxianMingxis()) {
-				if(baoxianMingxi.getAjbmIds() == null){
+				QueryWrapper<JiashiyuanBaoxianMingxi> baoxianMingxiQueryWrapper = new QueryWrapper<JiashiyuanBaoxianMingxi>();
+				baoxianMingxiQueryWrapper.lambda().eq(JiashiyuanBaoxianMingxi::getAjbmAvbIds,baoxian.getAjbIds());
+				baoxianMingxiQueryWrapper.lambda().eq(JiashiyuanBaoxianMingxi::getAjbmRisk,baoxianMingxi.getAjbmRisk());
+				baoxianMingxiQueryWrapper.lambda().eq(JiashiyuanBaoxianMingxi::getAjbmName,baoxianMingxi.getAjbmName());
+				JiashiyuanBaoxianMingxi deail = mingxiService.getBaseMapper().selectOne(baoxianMingxiQueryWrapper);
+				if(deail == null || deail.getAjbmIds() == null){
 					baoxianMingxi.setAjbmAvbIds(baoxian.getAjbIds());
 					mingxiService.save(baoxianMingxi);
-				}else {
+				}else{
 					mingxiService.updateById(baoxianMingxi);
 				}
 			}

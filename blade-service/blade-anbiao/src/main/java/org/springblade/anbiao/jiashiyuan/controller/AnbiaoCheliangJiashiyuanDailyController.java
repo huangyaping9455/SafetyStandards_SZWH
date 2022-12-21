@@ -6,8 +6,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
+import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuanDaily;
+import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanAnquanzerenshu;
+import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoCheliangJiashiyuanDailyService;
+import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.common.tool.StringUtil;
 import org.springblade.common.tool.StringUtils;
 import org.springblade.core.log.annotation.ApiLog;
@@ -34,6 +39,10 @@ public class AnbiaoCheliangJiashiyuanDailyController {
 
 	private IAnbiaoCheliangJiashiyuanDailyService cheliangJiashiyuanDailyService;
 
+	private IVehicleService vehicleService;
+
+	private IJiaShiYuanService jiaShiYuanService;
+
 
 	/**
 	 * 新增
@@ -58,6 +67,18 @@ public class AnbiaoCheliangJiashiyuanDailyController {
 					ss.setVstatus(0);
 					ss.setUpdatetime(DateUtil.now());
 					cheliangJiashiyuanDailyService.updateById(ss);
+
+//					QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<JiaShiYuan>();
+//					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId, cheliangJiashiyuanDaily.getJiashiyuanid());
+//					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete, 0);
+//					JiaShiYuan deail = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+//					if(deail != null){
+//						Vehicle vehicle = new Vehicle();
+//						vehicle.setId(cheliangJiashiyuanDaily.getVehid());
+//						vehicle.setChezhu(deail.getJiashiyuanxingming());
+//						vehicle.setChezhudianhua(deail.getShoujihaoma());
+//						vehicleService.updateById(vehicle);
+//					}
 				}
 				cheliangJiashiyuanDaily.setVstatus(1);
 			}
@@ -67,10 +88,23 @@ public class AnbiaoCheliangJiashiyuanDailyController {
 					ss.setGstatus(0);
 					ss.setUpdatetime(DateUtil.now());
 					cheliangJiashiyuanDailyService.updateById(ss);
+
+//					QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<JiaShiYuan>();
+//					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId, cheliangJiashiyuanDaily.getJiashiyuanid());
+//					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete, 0);
+//					JiaShiYuan deail = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+//					if(deail != null){
+//						Vehicle vehicle = new Vehicle();
+//						vehicle.setId(cheliangJiashiyuanDaily.getGvehid());
+//						vehicle.setChezhu(deail.getJiashiyuanxingming());
+//						vehicle.setChezhudianhua(deail.getShoujihaoma());
+//						vehicleService.updateById(vehicle);
+//					}
 				}
 				cheliangJiashiyuanDaily.setGstatus(1);
 			}
 			cheliangJiashiyuanDailyService.save(cheliangJiashiyuanDaily);
+
 			r.setMsg("保存成功");
 			r.setCode(200);
 			r.setSuccess(true);
@@ -86,6 +120,18 @@ public class AnbiaoCheliangJiashiyuanDailyController {
 							ss.setVstatus(0);
 							ss.setUpdatetime(DateUtil.now());
 							cheliangJiashiyuanDailyService.updateById(ss);
+
+//							QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<JiaShiYuan>();
+//							jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId, cheliangJiashiyuanDaily.getJiashiyuanid());
+//							jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete, 0);
+//							JiaShiYuan deail = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+//							if(deail != null){
+//								Vehicle vehicle = new Vehicle();
+//								vehicle.setId(cheliangJiashiyuanDaily.getVehid());
+//								vehicle.setChezhu(deail.getJiashiyuanxingming());
+//								vehicle.setChezhudianhua(deail.getShoujihaoma());
+//								vehicleService.updateById(vehicle);
+//							}
 						}
 						cheliangJiashiyuanDaily.setVstatus(1);
 					}
@@ -95,6 +141,18 @@ public class AnbiaoCheliangJiashiyuanDailyController {
 							ss.setGstatus(0);
 							ss.setUpdatetime(DateUtil.now());
 							cheliangJiashiyuanDailyService.updateById(ss);
+
+//							QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<JiaShiYuan>();
+//							jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId, cheliangJiashiyuanDaily.getJiashiyuanid());
+//							jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete, 0);
+//							JiaShiYuan deail = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+//							if(deail != null){
+//								Vehicle vehicle = new Vehicle();
+//								vehicle.setId(cheliangJiashiyuanDaily.getGvehid());
+//								vehicle.setChezhu(deail.getJiashiyuanxingming());
+//								vehicle.setChezhudianhua(deail.getShoujihaoma());
+//								vehicleService.updateById(vehicle);
+//							}
 						}
 						cheliangJiashiyuanDaily.setGstatus(1);
 					}

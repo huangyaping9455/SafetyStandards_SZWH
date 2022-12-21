@@ -11,7 +11,8 @@
             a.ali_issue_people_number AS aliIssuePeopleNumber,a.ali_status AS aliStatus,a.ali_ids AS aliIds,
             a.ali_application_scope AS aliApplicationScope,b.dept_name as detName,
             d.alr_person_autograph as alrPersonAutograph,
-            d.alr_receipt_date as alrReceiptDate
+            d.alr_receipt_date as alrReceiptDate,
+            d.alr_receipts_number as alrReceiptsNumber
         from
             anbiao_labor_insurance a
             left join anbiao_labor_receive d on d.alr_ali_ids = a.ali_ids
@@ -42,7 +43,8 @@
                 a.ali_issue_people_number AS aliIssuePeopleNumber,a.ali_status AS aliStatus,a.ali_ids AS aliIds,
                 a.ali_application_scope AS aliApplicationScope,b.dept_name as detName,
                 d.alr_person_autograph as alrPersonAutograph,
-                d.alr_receipt_date as alrReceiptDate
+                d.alr_receipt_date as alrReceiptDate,
+                d.alr_receipts_number as alrReceiptsNumber
             from
             anbiao_labor_insurance a
             left join anbiao_labor_receive d on d.alr_ali_ids = a.ali_ids
