@@ -126,6 +126,27 @@ public class AnbiaoJiashiyuanTijianController {
 //
 //		}
 
+		//验证体检日期
+		if (StringUtils.isNotBlank(tijian.getAjtPhysicalExaminationDate()) && !tijian.getAjtPhysicalExaminationDate().equals("null")) {
+			if (tijian.getAjtPhysicalExaminationDate().length() >= 10) {
+				String tijianriqi = tijian.getAjtPhysicalExaminationDate().substring(0, 10);
+				if (StringUtils.isNotBlank(tijianriqi) && !tijianriqi.equals("null")) {
+					if (DateUtils.isDateString(tijianriqi, null) == true) {
+						int tijianyouxiaoqi = Integer.parseInt(tijianriqi.substring(0, 4))+ 1;
+						String tijianyouxiaoqis =String.valueOf(tijianyouxiaoqi);
+						String tijianyouxiaoqiss =tijianyouxiaoqis+tijianriqi.substring(4, 10);
+						tijian.setAjtPhysicalExaminationDate(tijianriqi);
+						tijian.setAjtTermValidity(tijianyouxiaoqiss);
+					} else {
+						r.setMsg(tijian.getAjtPhysicalExaminationDate() + ",该体检日期，不是时间格式；");
+						r.setCode(500);
+						r.setSuccess(false);
+						return r;
+					}
+				}
+			}
+		}
+
 		if (deail == null) {
 			if (user != null) {
 				tijian.setAjtCreateByName(user.getUserName());

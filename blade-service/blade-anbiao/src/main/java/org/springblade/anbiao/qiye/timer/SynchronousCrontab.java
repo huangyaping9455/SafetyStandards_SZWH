@@ -309,7 +309,7 @@ public class SynchronousCrontab {
 				riskDetail4.setArdAssociationTable("anbiao_jiashiyuan");
 				riskDetail4.setArdAssociationField("id");
 				riskDetail4.setArdAssociationValue(deail.getId());
-				if (StringUtils.isBlank(deail.getTijianriqi()) || deail.getTijianriqi().equals("null")){
+				if (StringUtils.isBlank(deail.getTijianriqi()) || deail.getTijianriqi().equals("null") ){
 					riskDetail4.setArdContent("体检日期缺项");
 					riskDetail4.setArdType("缺项");
 					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
