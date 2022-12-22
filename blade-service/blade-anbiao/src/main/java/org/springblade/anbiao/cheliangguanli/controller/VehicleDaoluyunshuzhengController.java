@@ -87,15 +87,15 @@ public class VehicleDaoluyunshuzhengController extends BladeController {
 		vehicleQueryWrapper.lambda().eq(Vehicle::getId, vehicleId);
 		vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel, 0);
 		Vehicle vehicle = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper);
-		if(vehicle != null){
-			QueryWrapper<Organizations> organizationsQueryWrapper = new QueryWrapper<Organizations>();
-			organizationsQueryWrapper.lambda().eq(Organizations::getDeptId,vehicle.getDeptId());
-			organizationsQueryWrapper.lambda().eq(Organizations::getIsdelete,0);
-			Organizations organizations = organizationsService.getBaseMapper().selectOne(organizationsQueryWrapper);
-			if(organizations != null){
-				daoluyunshuzheng.setAvdRoadTransportCertificateNo(organizations.getDaoluxukezhenghao());
-			}
-		}
+//		if(vehicle != null){
+//			QueryWrapper<Organizations> organizationsQueryWrapper = new QueryWrapper<Organizations>();
+//			organizationsQueryWrapper.lambda().eq(Organizations::getDeptId,vehicle.getDeptId());
+//			organizationsQueryWrapper.lambda().eq(Organizations::getIsdelete,0);
+//			Organizations organizations = organizationsService.getBaseMapper().selectOne(organizationsQueryWrapper);
+//			if(organizations != null){
+//				daoluyunshuzheng.setAvdRoadTransportCertificateNo(organizations.getDaoluxukezhenghao());
+//			}
+//		}
 		return R.data(daoluyunshuzheng);
 	}
 

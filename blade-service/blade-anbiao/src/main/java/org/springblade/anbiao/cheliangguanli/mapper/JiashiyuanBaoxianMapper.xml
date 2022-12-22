@@ -75,10 +75,13 @@
         select ajb.*,bd.dept_name from anbiao_jiashiyuan_baoxian ajb
         LEFT JOIN blade_dept bd ON bd.id = ajb.ajb_dept_ids
         <where>
-                ajb_delete = 0
+                ajb.ajb_delete = 0
               <if test="ajbInsuredIds != null">
-                and ajb_insured_ids= #{ajbInsuredIds}
+                and ajb.ajb_insured_ids= #{ajbInsuredIds}
               </if>
+            <if test="jiashiyuanBaoxian.ajbInsuredName !=null and jiashiyuanBaoxian.ajbInsuredName != ''">
+                and ajb.ajb_insured_name like concat('%', #{jiashiyuanBaoxian.ajbInsuredName}, '%')
+            </if>
         </where>
     </select>
 

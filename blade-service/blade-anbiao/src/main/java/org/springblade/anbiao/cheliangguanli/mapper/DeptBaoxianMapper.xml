@@ -73,6 +73,9 @@
         select adb.*,bd.dept_name from anbiao_dept_baoxian adb
         LEFT JOIN blade_dept bd ON bd.id=adb.avb_dept_ids
         where avb_delete = 0
+        <if test="deptBaoxian.avbInsuredName != null and deptBaoxian.avbInsuredName != ''">
+            and adb.avb_insured_name like concat('%', #{deptBaoxian.avbInsuredName}, '%')
+        </if>
     </select>
 
     <select id="queryByMax" resultMap="deptBaoxianResultMap" parameterType="java.lang.String">

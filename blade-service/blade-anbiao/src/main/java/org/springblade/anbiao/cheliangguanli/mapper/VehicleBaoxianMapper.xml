@@ -81,6 +81,9 @@
             <if test="avbAvIds != null">
                 and avb.avb_av_ids= #{avbAvIds}
             </if>
+            <if test="vehicleBaoxian.avbInsuredName != null and vehicleBaoxian.avbInsuredName != ''">
+                and av.cheliangpaizhao like concat('%', #{vehicleBaoxian.avbInsuredName}, '%')
+            </if>
         </where>
     </select>
 
