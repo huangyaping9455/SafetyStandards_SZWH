@@ -15,14 +15,19 @@
  */
 package org.springblade.anbiao.guanlijigouherenyuan.service.impl;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
+import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
+import org.springblade.anbiao.guanlijigouherenyuan.entity.Personnel;
 import org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper;
 import org.springblade.anbiao.guanlijigouherenyuan.page.OrganizationsPage;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
 import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
+import org.springblade.system.entity.Dept;
+import org.springblade.system.user.entity.User;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,6 +52,30 @@ public class OrganizationsServiceImpl extends ServiceImpl<OrganizationsMapper, O
 	@Override
 	public OrganizationsPage<OrganizationsVO> selectPageList(OrganizationsPage Page) {
 		Integer total = mapper.selectTotal(Page);
+		if(Page.getSize()==0){
+			if(Page.getTotal()==0){
+				Page.setTotal(total);
+			}
+			if(Page.getTotal()==0){
+				return Page;
+			}else {
+				List<OrganizationsVO> organizationsVOList = mapper.selectPageList(Page);
+				organizationsVOList.forEach(s -> {
+					Dept dept = mapper.selectByGw("主要负责人",s.getDeptId());
+					if(dept != null){
+						User deail = mapper.selectByUser(dept.getId().toString());
+						if(deail != null){
+							s.setUserName(deail.getName());
+							s.setUserPhone(deail.getPhone());
+							s.setUserAccount(deail.getAccount());
+							s.setUserAddress(deail.getJiatingdizhi());
+						}
+					}
+				});
+				Page.setRecords(organizationsVOList);
+				return Page;
+			}
+		}
 		Integer pagetotal = 0;
 		if (total > 0) {
 			if(total%Page.getSize()==0){
@@ -54,10 +83,10 @@ public class OrganizationsServiceImpl extends ServiceImpl<OrganizationsMapper, O
 			}else {
 				pagetotal = total / Page.getSize() + 1;
 			}
+			List<OrganizationsVO> vehlist = mapper.selectPageList(Page);
+			Page.setRecords(vehlist);
 		}
-		if (pagetotal < Page.getCurrent()) {
-			return Page;
-		} else {
+		if (pagetotal >= Page.getCurrent()) {
 			Page.setPageTotal(pagetotal);
 			Integer offsetNo = 0;
 			if (Page.getCurrent() > 1) {
@@ -65,9 +94,22 @@ public class OrganizationsServiceImpl extends ServiceImpl<OrganizationsMapper, O
 			}
 			Page.setTotal(total);
 			Page.setOffsetNo(offsetNo);
-			List<OrganizationsVO> org = mapper.selectPageList(Page);
-			return (OrganizationsPage<OrganizationsVO>) Page.setRecords(org);
+			List<OrganizationsVO> organizationsVOList = mapper.selectPageList(Page);
+			organizationsVOList.forEach(s -> {
+				Dept dept = mapper.selectByGw("主要负责人",s.getDeptId());
+				if(dept != null){
+					User deail = mapper.selectByUser(dept.getId().toString());
+					if(deail != null){
+						s.setUserName(deail.getName());
+						s.setUserPhone(deail.getPhone());
+						s.setUserAccount(deail.getAccount());
+						s.setUserAddress(deail.getJiatingdizhi());
+					}
+				}
+			});
+			Page.setRecords(organizationsVOList);
 		}
+		return Page;
 	}
 
 	@Override
@@ -134,6 +176,11 @@ public class OrganizationsServiceImpl extends ServiceImpl<OrganizationsMapper, O
 	@Override
 	public int selectMaxId() {
 		return mapper.selectMaxId();
+	}
+
+	@Override
+	public int selectByName(String fullName, String deptId) {
+		return mapper.selectByName(fullName,deptId);
 	}
 
 }

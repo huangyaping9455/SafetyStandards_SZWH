@@ -57,4 +57,17 @@ public class OrganizationsVO extends Organizations {
 	public void setTree_code(String tree_code) {
 		this.tree_code = tree_code;
 	}
+
+	@ApiModelProperty(value = "userName")
+	private String userName;
+
+	@ApiModelProperty(value = "userPhone")
+	private String userPhone;
+
+	@ApiModelProperty(value = "userAccount")
+	private String userAccount;
+
+	@ApiModelProperty(value = "userAddress")
+	private String userAddress;
+
 }

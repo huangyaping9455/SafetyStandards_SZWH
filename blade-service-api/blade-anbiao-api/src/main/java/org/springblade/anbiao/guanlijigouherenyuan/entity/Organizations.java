@@ -322,6 +322,12 @@ public class Organizations implements Serializable {
 	@ApiModelProperty(value = "工商营业执照截止时间")
 	private String yyzzjzdate;
 
+	@ApiModelProperty(value = "合同期限开始时间")
+	private String htbegindate;
+
+	@ApiModelProperty(value = "合同期限结束时间")
+	private String htlastdate;
+
 	/**
 	 * 导入错误信息
 	 */
@@ -333,5 +339,16 @@ public class Organizations implements Serializable {
 	@TableField(exist = false)
 	private String importUrl;
 
+	@ApiModelProperty(value = "手机号码")
+	@TableField(exist = false)
+	private String shoujihaoma;
+
+	@ApiModelProperty(value = "姓名")
+	@TableField(exist = false)
+	private String xingming;
+
+	@ApiModelProperty(value = "岗位名称")
+	@TableField(exist = false)
+	private String gangweimingcheng;
 
 }

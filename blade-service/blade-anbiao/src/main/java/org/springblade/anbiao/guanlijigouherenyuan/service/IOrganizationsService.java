@@ -98,4 +98,12 @@ public interface IOrganizationsService extends IService<Organizations> {
 
 	int selectMaxId();
 
+	/**
+	 * 根据企业ID、岗位名称查询是否存在该岗位
+	 * @param fullName
+	 * @param deptId
+	 * @return
+	 */
+	int selectByName(@Param("fullName") String fullName,@Param("deptId") String deptId);
+
 }

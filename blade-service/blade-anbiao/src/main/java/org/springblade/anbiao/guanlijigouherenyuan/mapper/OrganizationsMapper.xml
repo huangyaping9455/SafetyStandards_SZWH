@@ -88,14 +88,13 @@
 
     <sql id="tableSql">
         SELECT
-        a.*, b.dept_name as deptName
+            a.*, b.dept_name as deptName
         FROM
-        anbiao_organization a
-        INNER JOIN
-        (
-        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
-        )
-        b ON a.dept_id = b.id and a.isdelete = 0 and  b.is_deleted = 0
+            anbiao_organization a
+            INNER JOIN(
+                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) b ON a.dept_id = b.id and a.isdelete = 0 and  b.is_deleted = 0
+        where a.jigouleixing in ('qiye','geti')
     </sql>
 
     <sql id="querySql">
@@ -659,10 +658,10 @@
             <if test="daoluyunshuzhengfujian != null">
                 daoluyunshuzhengfujian,
             </if>
-            <if test="daoluyunshuzhengkaishiriqi != null">
+            <if test="daoluyunshuzhengkaishiriqi != null and daoluyunshuzhengkaishiriqi != '' ">
                 daoluyunshuzhengkaishiriqi,
             </if>
-            <if test="daoluyunshuzhengjieshuriqi != null">
+            <if test="daoluyunshuzhengjieshuriqi != null and daoluyunshuzhengjieshuriqi != '' ">
                 daoluyunshuzhengjieshuriqi,
             </if>
             <if test="jingyingxukezhengfujian != null">
@@ -677,17 +676,23 @@
             <if test="jigoubianma != null">
                 jigoubianma,
             </if>
-            <if test="jingyingxukezhengchulingriqi != null">
+            <if test="jingyingxukezhengchulingriqi != null and jingyingxukezhengchulingriqi != '' ">
                 jingyingxukezhengchulingriqi,
             </if>
-            <if test="jingyingxukezhengyouxiaoqi != null">
+            <if test="jingyingxukezhengyouxiaoqi != null and jingyingxukezhengyouxiaoqi != '' ">
                 jingyingxukezhengyouxiaoqi,
             </if>
-            <if test="yyzzksdate != null">
+            <if test="yyzzksdate != null and yyzzksdate != '' ">
                 yyzzksdate,
             </if>
-            <if test="yyzzjzdate != null">
-                yyzzjzdate
+            <if test="yyzzjzdate != null and yyzzjzdate != '' ">
+                yyzzjzdate,
+            </if>
+            <if test="htbegindate != null and htbegindate != '' ">
+                htbegindate,
+            </if>
+            <if test="htlastdate != null and htlastdate != '' ">
+                htlastdate
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -833,10 +838,10 @@
             <if test="daoluyunshuzhengfujian != null">
                 #{daoluyunshuzhengfujian},
             </if>
-            <if test="daoluyunshuzhengkaishiriqi != null">
+            <if test="daoluyunshuzhengkaishiriqi != null and daoluyunshuzhengkaishiriqi != ''">
                 #{daoluyunshuzhengkaishiriqi},
             </if>
-            <if test="daoluyunshuzhengjieshuriqi != null">
+            <if test="daoluyunshuzhengjieshuriqi != null and daoluyunshuzhengjieshuriqi != ''">
                 #{daoluyunshuzhengjieshuriqi},
             </if>
             <if test="jingyingxukezhengfujian != null">
@@ -851,17 +856,23 @@
             <if test="jigoubianma != null">
                 #{jigoubianma},
             </if>
-            <if test="jingyingxukezhengchulingriqi != null">
+            <if test="jingyingxukezhengchulingriqi != null and jingyingxukezhengchulingriqi != ''">
                 #{jingyingxukezhengchulingriqi},
             </if>
-            <if test="jingyingxukezhengyouxiaoqi != null">
+            <if test="jingyingxukezhengyouxiaoqi != null and jingyingxukezhengyouxiaoqi != ''">
                 #{jingyingxukezhengyouxiaoqi},
             </if>
-            <if test="yyzzksdate != null">
+            <if test="yyzzksdate != null and yyzzksdate != ''">
                 #{yyzzksdate},
             </if>
-            <if test="yyzzjzdate != null">
-                #{yyzzjzdate}
+            <if test="yyzzjzdate != null and yyzzjzdate != ''">
+                #{yyzzjzdate},
+            </if>
+            <if test="htbegindate != null and htbegindate != ''">
+                #{htbegindate},
+            </if>
+            <if test="htlastdate != null and htlastdate != ''">
+                #{htlastdate}
             </if>
         </trim>
     </insert>
@@ -914,6 +925,23 @@
                 and daoluxukezhenghao = #{daoluxukezhenghao}
             </if>
         </where>
+    </select>
+
+    <select id="selectByName" resultType="java.lang.Integer">
+        select count(1) from blade_dept where is_deleted = 0 and extend_type = '岗位' and full_name=#{param1} and parent_id = #{deptId}
+    </select>
+
+    <select id="selectByGw" resultType="org.springblade.system.entity.Dept">
+        select * from blade_dept where is_deleted = 0 and extend_type = '岗位' and full_name=#{param1} and parent_id = #{deptId}
+    </select>
+
+    <select id="selectByUser" resultType="org.springblade.system.user.entity.User">
+        select a.*,b.jiatingdizhi from blade_user a,anbiao_personnel b
+        where a.is_deleted = 0
+          and a.id = b.userid
+          and b.is_deleted = 0
+          and b.post_id = #{deptId}
+        limit 1
     </select>
 
 </mapper>

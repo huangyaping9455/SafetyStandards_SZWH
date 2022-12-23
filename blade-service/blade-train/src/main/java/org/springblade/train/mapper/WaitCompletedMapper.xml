@@ -76,7 +76,7 @@
            from base_courseware bcw
            left join relation_course_courseware rcc on bcw.id = rcc.courseware_id
            where rcc.course_id = bc.id and bcw.course_type = 3 and bcw.status = 3) as directCount,
-           ifnull((select sum(bsr.duration)
+           ifnull((select max(bsr.duration)
            from biz_study_record bsr
            inner join relation_unit_course ruc on ruc.id = bsr.rel_unit_course_id
            where ruc.course_id = bc.id and ruc.id = rsc.rel_unit_course_id and bsr.student_id = bs.id and bsr.valid = 1)

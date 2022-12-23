@@ -225,6 +225,9 @@ public class User extends TenantEntity {
 	@TableField(exist = false)
 	private String address;
 
+	@TableField(exist = false)
+	private String jiatingdizhi;
+
 	/**
 	 * 导入错误信息
 	 */
