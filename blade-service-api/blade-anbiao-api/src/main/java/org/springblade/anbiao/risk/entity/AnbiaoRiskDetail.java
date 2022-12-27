@@ -116,4 +116,11 @@ public class AnbiaoRiskDetail implements Serializable {
 	@ApiModelProperty(value = "驾驶员姓名",required = true)
 	@TableField(exist = false)
 	private String jiashiyuanxingming;
+
+	/**
+	 * 企业名称
+	 */
+	@ApiModelProperty(value = "企业名称",required = true)
+	@TableField(exist = false)
+	private String qiyemingcheng;
 }

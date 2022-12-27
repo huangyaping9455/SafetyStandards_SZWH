@@ -333,5 +333,70 @@ public class Organizations implements Serializable {
 	@TableField(exist = false)
 	private String importUrl;
 
+	/**
+	 * 岗位id
+	 */
+	@ApiModelProperty(value = "岗位id")
+	@TableField(exist = false)
+	private String postId;
 
+	/**
+	 * 姓名
+	 */
+	@ApiModelProperty(value = "姓名", required = true)
+	@TableField(exist = false)
+	private String xingming;
+
+	/**
+	 * 手机号
+	 */
+	@ApiModelProperty(value = "手机号", required = true)
+	@TableField(exist = false)
+	private String shoujihao;
+
+	/**
+	 * 聘用日期
+	 */
+	@ApiModelProperty(value = "聘用日期")
+	@TableField(exist = false)
+	private String pingyongriqi;
+
+	/**
+	 * 劳动合同开始日期
+	 */
+	@ApiModelProperty(value = "劳动合同开始日期")
+	@TableField(exist = false)
+	private String laodonghetongkaishiriqi;
+
+	/**
+	 * 劳动合同结束日期
+	 */
+	@ApiModelProperty(value = "劳动合同结束日期")
+	@TableField(exist = false)
+	private String laodonghetongjieshuriqi;
+
+	/**
+	 * 身份证号
+	 */
+	@ApiModelProperty(value = "身份证号", required = true)
+	@TableField(exist = false)
+	private String shenfenzhenghao;
+
+	@ApiModelProperty(value = "身份证初领日期",required = true)
+	@TableField(exist = false)
+	private String shenfenzhengchulingriqi;
+
+	/**
+	 * 身份证有效期
+	 */
+	@ApiModelProperty(value = "身份证有效期",required = true)
+	@TableField(exist = false)
+	private String shenfenzhengyouxiaoqi;
+
+	/**
+	 * 从业资格证
+	 */
+	@ApiModelProperty(value = "从业资格证",required = true)
+	@TableField(exist = false)
+	private String congyezigezheng;
 }
