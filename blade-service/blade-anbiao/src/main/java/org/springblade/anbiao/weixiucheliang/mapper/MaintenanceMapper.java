@@ -1,7 +1,9 @@
 package org.springblade.anbiao.weixiucheliang.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import feign.Param;
 import org.mapstruct.Mapper;
+import org.springblade.anbiao.weixiu.VO.MaintenanceEntityV;
 import org.springblade.anbiao.weixiu.entity.FittingEntity;
 import org.springblade.anbiao.weixiu.VO.MaintenanceVO;
 import org.springblade.anbiao.weixiu.entity.FittingsEntity;
@@ -61,4 +63,8 @@ public interface MaintenanceMapper extends BaseMapper<MaintenanceEntity> {
 	 * @return
 	 */
 	Boolean deleteMain(MaintenancePage maintenancePage);
+
+	List<MaintenanceEntityV> selectByDateList(@Param("deptId") String deptId,@Param("date") String date,@Param("type") String type);
+
+
 }

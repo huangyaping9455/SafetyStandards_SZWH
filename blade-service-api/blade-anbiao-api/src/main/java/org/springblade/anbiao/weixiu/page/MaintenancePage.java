@@ -29,6 +29,7 @@ public class MaintenancePage extends BasePage {
 	private String deptName;
 
 	private String carNum;
+
 	private Integer	deptId;
 
 	private Integer	dept_Id;

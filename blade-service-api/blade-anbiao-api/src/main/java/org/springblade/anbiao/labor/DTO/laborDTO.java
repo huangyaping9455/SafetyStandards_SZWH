@@ -28,6 +28,9 @@ public class laborDTO {
 	private String aliStatus;
 	private String aliApplicationScope;
 	private Integer aliIssueQuantity;
+	private String aliCreateTime;
+	private String aliCreateByIds;
+	private String aliCreateByName;
 	private LaborEntity laborEntity;
 	private List<Labor> labor;
 }

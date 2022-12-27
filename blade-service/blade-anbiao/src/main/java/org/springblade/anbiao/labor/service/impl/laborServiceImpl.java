@@ -90,23 +90,9 @@ public class laborServiceImpl extends ServiceImpl<laborMapper,LaborEntity> imple
 	}
 
 	@Override
-	public graphicsVO selectGraphics(String ali_name) {
-		graphicsVO graphicsVO = laborMapper.selectGrapsihVO(ali_name);
-		Integer number = graphicsVO.getAli_issue_people_number();
-		Integer quantity = graphicsVO.getAli_issue_quantity();
-		/**计算百分比**/
-		int v = (int) ((new BigDecimal((float) number / quantity).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue())*100);
-		String str = v+"%";
-		if(graphicsVO.getAli_application_scope().equals("管理人员")){
-			graphicsVO.setGuanli(str);
-		}
-		if(graphicsVO.getAli_application_scope().equals("驾驶人员")){
-			graphicsVO.setJiashiyuan(str);
-		}
-		if(graphicsVO.getAli_application_scope().equals("其他人员")){
-			graphicsVO.setQita(str);
-		}
-		return graphicsVO;
+	public List<graphicsVO> selectGraphics(String ali_name,String aliIssueDate,String aliDeptIds) {
+		List<graphicsVO> graphicsVOList = laborMapper.selectGrapsihVO(ali_name,aliIssueDate,aliDeptIds);
+		return graphicsVOList;
 	}
 
 

@@ -321,6 +321,7 @@ public class JiaShiYuanController {
 			if (RegexUtils.checkMobile(jiaShiYuan.getShoujihaoma())) {
 				QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper1 = new QueryWrapper<JiaShiYuan>();
 				jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getShoujihaoma,jiaShiYuan.getShoujihaoma());
+				jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getDeptId, jiaShiYuan.getDeptId());
 				JiaShiYuan jiaShiYuan1 = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper1);
 				if (jiaShiYuan1!=null){
 				}else {

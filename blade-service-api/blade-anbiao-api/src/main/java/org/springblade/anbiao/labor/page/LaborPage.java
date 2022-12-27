@@ -58,4 +58,7 @@ public class LaborPage extends BasePage{
 
 	@ApiModelProperty(value = "领取人ID")
 	private String alrPersonIds;
+
+	@ApiModelProperty(value = "数据类型（1：发放；2：领取）")
+	private String type;
 }

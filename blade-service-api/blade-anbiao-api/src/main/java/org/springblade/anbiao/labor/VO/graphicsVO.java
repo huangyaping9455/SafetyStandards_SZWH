@@ -1,5 +1,7 @@
 package org.springblade.anbiao.labor.VO;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -12,15 +14,13 @@ import java.math.BigDecimal;
 @Data
 public class graphicsVO {
 
-	private Integer ali_issue_quantity;
+	@ApiModelProperty(value = "发放数量")
+	private Integer aliissuequantity;
 
-	private String ali_application_scope;
+	@ApiModelProperty(value = "用品名称")
+	private String aliname;
 
-	private Integer ali_issue_people_number;
+	@ApiModelProperty(value = "发放人数")
+	private Integer aliissuepeoplenumber;
 
-	private String jiashiyuan;
-
-	private String guanli;
-
-	private String qita;
 }

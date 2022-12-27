@@ -14,12 +14,10 @@ import org.springblade.anbiao.labor.page.LaborPage;
 import org.springblade.anbiao.labor.service.laborLingquService;
 import org.springblade.anbiao.labor.service.laborService;
 import org.springblade.core.log.annotation.ApiLog;
+import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -57,7 +55,7 @@ public class laborController {
 	@PostMapping("insert")
 	@ApiLog("添加-劳保用品信息")
 	@ApiOperation(value = "添加劳保用品信息", notes = "传入laborDTO", position = 2)
-	public R insert(@RequestBody laborDTO laborDTO) {
+	public R insert(@RequestBody laborDTO laborDTO, BladeUser user) {
 		if (laborDTO != null) {
 			String replace = UUID.randomUUID().toString().replace("-", "");
 			laborDTO.setAliIds(replace);
@@ -73,6 +71,9 @@ public class laborController {
 				labor1.setAadApType(list.getAadApType());
 				labor1.setAlrIds(replace1);
 				labor1.setAlrAliIds(replace);
+				labor1.setAlrCreateByIds(user.getUserId().toString());
+				labor1.setAlrCreateByName(user.getUserName());
+				labor1.setAlrCreateTime(DateUtil.now());
 				service.insertA(labor1);
 			}
 			str = aadApType;
@@ -87,16 +88,18 @@ public class laborController {
 			String s = list.toString();
 			laborDTO.setAliApplicationScope(s);
 		}
-
+		laborDTO.setAliCreateByIds(user.getUserId().toString());
+		laborDTO.setAliCreateByName(user.getUserName());
+		laborDTO.setAliCreateTime(DateUtil.now());
 		return R.status(service.insertOne(laborDTO));
 	}
 
 
-	@PostMapping("labor")
+	@GetMapping("labor")
 	@ApiLog("查询-劳保用品信息")
 	@ApiOperation(value = "查询劳保图形", notes = "传入laborDTO", position = 2)
-	public R selectlabor(@Param("ali_name") String ali_name) {
-		return R.data(service.selectGraphics(ali_name));
+	public R selectlabor(String ali_name,String aliIssueDate,String aliDeptIds) {
+		return R.data(service.selectGraphics(ali_name,aliIssueDate,aliDeptIds));
 	}
 
 	@PostMapping("all")

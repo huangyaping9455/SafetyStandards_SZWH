@@ -43,7 +43,7 @@ public interface laborService extends IService<LaborEntity> {
 	/**
 	 * 返回劳保图形统计
 	 */
-	graphicsVO selectGraphics(String ali_name);
+	List<graphicsVO> selectGraphics(String ali_name,String aliIssueDate,String aliDeptIds);
 
 	/**
 	 * 删除

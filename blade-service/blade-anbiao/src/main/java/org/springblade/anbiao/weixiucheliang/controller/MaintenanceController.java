@@ -1,11 +1,14 @@
 package org.springblade.anbiao.weixiucheliang.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.labor.entity.Labor;
 import org.springblade.anbiao.labor.entity.LaborEntity;
 import org.springblade.anbiao.labor.entity.LaborlingquEntity;
+import org.springblade.anbiao.weixiu.VO.MaintenanceEntityV;
 import org.springblade.anbiao.weixiu.entity.FittingEntity;
 import org.springblade.anbiao.weixiu.entity.FittingsEntity;
 import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
@@ -15,10 +18,7 @@ import org.springblade.anbiao.weixiucheliang.service.FittingService;
 import org.springblade.anbiao.weixiucheliang.service.MaintenanceService;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.tool.api.R;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -194,5 +194,30 @@ public class MaintenanceController {
 			return r;
 		}
 		return R.status(service.updateAccident(maintenanceEntity));
+	}
+
+	@GetMapping("getByDateList")
+	@ApiLog("维修折线图")
+	@ApiOperation(value = "维修折线图", notes = "deptId, date, type ", position = 12)
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "deptId", value = "企业ID", required = true),
+		@ApiImplicitParam(name = "date", value = "日期（传入年度）", required = true),
+		@ApiImplicitParam(name = "type", value = "维修类别（0=一级维护,1=二级维护,3=总成维修）", required = true)
+	})
+	public R getByDateList(String deptId, String date, String type){
+		R rs = new R();
+		List<MaintenanceEntityV> maintenanceEntities = service.selectByDateList(deptId, date, type);
+		if(maintenanceEntities.size() < 1){
+			rs.setCode(200);
+			rs.setSuccess(true);
+			rs.setData(null);
+			rs.setMsg("获取成功，暂无数据");
+		}else{
+			rs.setCode(200);
+			rs.setSuccess(true);
+			rs.setData(maintenanceEntities);
+			rs.setMsg("获取成功");
+		}
+		return rs;
 	}
 }
