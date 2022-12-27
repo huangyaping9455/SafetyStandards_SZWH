@@ -385,6 +385,13 @@ public class Organizations implements Serializable {
 	@ApiModelProperty(value = "身份证初领日期",required = true)
 	@TableField(exist = false)
 	private String shenfenzhengchulingriqi;
+	@ApiModelProperty(value = "手机号码")
+	@TableField(exist = false)
+	private String shoujihaoma;
+
+	@ApiModelProperty(value = "岗位名称")
+	@TableField(exist = false)
+	private String gangweimingcheng;
 
 	/**
 	 * 身份证有效期

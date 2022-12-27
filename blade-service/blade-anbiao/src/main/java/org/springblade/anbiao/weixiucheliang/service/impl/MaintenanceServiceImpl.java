@@ -3,6 +3,7 @@ package org.springblade.anbiao.weixiucheliang.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
+import org.springblade.anbiao.weixiu.VO.MaintenanceEntityV;
 import org.springblade.anbiao.weixiu.VO.MaintenanceVO;
 import org.springblade.anbiao.weixiu.entity.FittingsEntity;
 import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
@@ -86,4 +87,10 @@ public class MaintenanceServiceImpl extends ServiceImpl<MaintenanceMapper,Mainte
 	public Boolean updateAccident(MaintenanceEntity maintenanceEntity) {
 		return partsMapper.updateMain(maintenanceEntity);
 	}
+
+	@Override
+	public List<MaintenanceEntityV> selectByDateList(String deptId, String date, String type) {
+		return partsMapper.selectByDateList(deptId, date, type);
+	}
+
 }

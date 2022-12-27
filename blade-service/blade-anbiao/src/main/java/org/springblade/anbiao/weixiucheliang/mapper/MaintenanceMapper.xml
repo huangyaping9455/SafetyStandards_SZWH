@@ -368,5 +368,23 @@
         </if>
     </select>
 
+    <select id="selectByDateList" resultType="org.springblade.anbiao.weixiu.VO.MaintenanceEntityV">
+
+        select
+            left(send_Date,7) as date,
+            COUNT(1) as num
+        from
+            anbiao_cheliang_baoyangweixiu a
+            inner join (
+                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) b on a.dept_Id = b.id
+        where left(send_Date,4) = left(#{date},4)
+            and maintain_Dict_Id = #{type}
+        GROUP BY
+            maintain_Dict_Id,
+            left(send_Date,7)
+        ORDER BY left(send_Date,7)
+    </select>
+
 
 </mapper>

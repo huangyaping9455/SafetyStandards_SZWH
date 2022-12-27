@@ -16,11 +16,12 @@
 package org.springblade.anbiao.guanlijigouherenyuan.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.page.OrganizationsPage;
 import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
+import org.springblade.system.entity.Dept;
+import org.springblade.system.user.entity.User;
 
 import java.util.List;
 
@@ -78,5 +79,19 @@ public interface OrganizationsMapper extends BaseMapper<Organizations> {
 									   @Param("daoluxukezhenghao") String daoluxukezhenghao);
 
 	int selectMaxId();
+
+	/**
+	 * 根据企业ID、岗位名称查询是否存在该岗位
+	 * @param fullName
+	 * @param deptId
+	 * @return
+	 */
+	int selectByName(@Param("fullName") String fullName,@Param("deptId") String deptId);
+
+	Dept selectByGw(@Param("fullName") String fullName, @Param("deptId") String deptId);
+
+	User selectByUser(@Param("deptId") String deptId);
+
+
 }
 

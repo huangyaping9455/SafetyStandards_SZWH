@@ -14,4 +14,10 @@ public class Labor {
 	private String aadApIds;
 	private String alrIds;
 	private String alrAliIds;
+	private String alrCreateTime;
+	private String alrCreateByIds;
+	private String alrCreateByName;
+	private String alrPersonAutograph;
+	private String alrReceiptDate;
+	private String alrReceiptsNumber;
 }

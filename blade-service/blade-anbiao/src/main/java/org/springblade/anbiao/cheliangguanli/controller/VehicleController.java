@@ -187,6 +187,7 @@ public class VehicleController {
 		v.setShiyongxingzhi(detail.getShiyongxingzhi());
 		v.setCheliangchuchangriqi(detail.getChuchangriqi());
 		v.setCheliangpinpai(detail.getCheliangpinpai());
+		v.setFrontlunju(detail.getFrontlunju());
 
 		QueryWrapper<VehicleBiangengjilu> biangengjiluQueryWrapper = new QueryWrapper<VehicleBiangengjilu>();
 		biangengjiluQueryWrapper.lambda().eq(VehicleBiangengjilu::getAvbjVehicleId,detail.getId());

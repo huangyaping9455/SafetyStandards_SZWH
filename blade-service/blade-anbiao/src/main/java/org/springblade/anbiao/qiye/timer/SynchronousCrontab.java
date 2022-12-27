@@ -382,7 +382,7 @@ public class SynchronousCrontab {
 	}
 
 	//每5分钟执行一次
-	@Scheduled(cron = "0 */5 * * * ?")
+//	@Scheduled(cron = "0 */5 * * * ?")
 	//每天凌晨5点执行一次
 //	@Scheduled(cron = "0 0 5 * * ?")
 	public void configureTasks_static_data() {

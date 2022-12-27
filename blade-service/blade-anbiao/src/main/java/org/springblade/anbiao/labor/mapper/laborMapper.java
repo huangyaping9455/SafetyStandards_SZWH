@@ -45,7 +45,7 @@ public interface laborMapper extends BaseMapper<LaborEntity> {
 	 * 图形统计查询
 	 * @return
 	 */
-	graphicsVO selectGrapsihVO(String ali_name);
+	List<graphicsVO> selectGrapsihVO(String ali_name,String aliIssueDate,String aliDeptIds);
 
 	/**
 	 * 新增劳保详细信息

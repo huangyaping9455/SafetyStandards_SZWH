@@ -7,22 +7,25 @@
     <select id="selectList" parameterType="org.springblade.anbiao.labor.page.LaborPage" resultType="org.springblade.anbiao.labor.VO.LaborVO">
         <if test="size==0">
         select
+            distinct
             a.ali_name AS aliName,a.ali_issue_date AS aliIssueDate,a.ali_issue_quantity AS aliIssueQuantity,
             a.ali_issue_people_number AS aliIssuePeopleNumber,a.ali_status AS aliStatus,a.ali_ids AS aliIds,
-            a.ali_application_scope AS aliApplicationScope,b.dept_name as detName,
-            d.alr_person_autograph as alrPersonAutograph,
+            a.ali_application_scope AS aliApplicationScope,b.dept_name as detName
+        <if test="alrPersonIds!=null and alrPersonIds!=''">
+            ,d.alr_person_autograph as alrPersonAutograph,
             d.alr_receipt_date as alrReceiptDate,
             d.alr_receipts_number as alrReceiptsNumber
+        </if>
         from
             anbiao_labor_insurance a
-            left join anbiao_labor_receive d on d.alr_ali_ids = a.ali_ids
             inner join (
             <include
                 refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) b on a.ali_dept_ids = b.id
+            left join anbiao_labor_receive d on d.alr_ali_ids = a.ali_ids
         <where> a.ali_delete = 0
          <if test="asiYear!=null and asiYear!=''">
-             AND a.ali_issue_date = #{asiYear}
+             AND a.ali_issue_date >= #{asiYear}
          </if>
          <if test="deptName!=null and deptName!=''">
              AND b.dept_name= #{deptName}
@@ -39,22 +42,25 @@
         </if>
         <if test="current != 0">
             select
+                distinct
                 a.ali_name AS aliName,a.ali_issue_date AS aliIssueDate,a.ali_issue_quantity AS aliIssueQuantity,
                 a.ali_issue_people_number AS aliIssuePeopleNumber,a.ali_status AS aliStatus,a.ali_ids AS aliIds,
-                a.ali_application_scope AS aliApplicationScope,b.dept_name as detName,
-                d.alr_person_autograph as alrPersonAutograph,
+                a.ali_application_scope AS aliApplicationScope,b.dept_name as detName
+            <if test="alrPersonIds!=null and alrPersonIds!=''">
+                ,d.alr_person_autograph as alrPersonAutograph,
                 d.alr_receipt_date as alrReceiptDate,
                 d.alr_receipts_number as alrReceiptsNumber
+            </if>
             from
             anbiao_labor_insurance a
-            left join anbiao_labor_receive d on d.alr_ali_ids = a.ali_ids
             inner join (
             <include
                 refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) b on a.ali_dept_ids = b.id
+            left join anbiao_labor_receive d on d.alr_ali_ids = a.ali_ids
             <where> a.ali_delete = 0
                 <if test="asiYear!=null and asiYear!=''">
-                    AND a.ali_issue_date = #{asiYear}
+                    AND a.ali_issue_date >= #{asiYear}
                 </if>
                 <if test="deptName!=null  and deptName!=''">
                     AND b.dept_name= #{deptName}
@@ -91,34 +97,42 @@
 
     <select id="selectC" parameterType="org.springblade.anbiao.labor.page.LaborPage" resultType="org.springblade.anbiao.labor.entity.Labor">
         SELECT
-        alr_person_name AS aadApName,ali_application_scope AS aadApType ,alr_person_ids AS aadApIds
+            alr_person_name AS aadApName,
+            ali_application_scope AS aadApType,
+            alr_person_ids AS aadApIds,
+            alr_person_autograph as alrPersonAutograph,
+            alr_receipt_date as alrReceiptDate,
+            alr_receipts_number as alrReceiptsNumber
         FROM
             anbiao_labor_receive
         where alr_ali_ids  = #{aliIds}
     </select>
 
-
-
     <!--新增劳保-->
     <insert id="insertOne" parameterType="org.springblade.anbiao.labor.entity.LaborEntity">
         insert into anbiao_labor_insurance(ali_ids,ali_dept_ids,ali_name,ali_issue_date,ali_issue_quantity,ali_issue_people_number,
-                                       ali_status,ali_application_scope,ali_delete
+                                       ali_status,ali_application_scope,ali_delete,ali_create_time,ali_create_by_ids,ali_create_by_name
         )
         values (#{aliIds},${aliDeptIds},#{aliName},#{aliIssueDate},#{aliIssueQuantity},#{aliIssuePeopleNumber},
-                #{aliStatus},#{aliApplicationScope},0)
+                #{aliStatus},#{aliApplicationScope},0,#{aliCreateTime},#{aliCreateByIds},#{aliCreateByName})
     </insert>
 
     <insert id="insertA" parameterType="org.springblade.anbiao.labor.entity.Labor">
-        insert into anbiao_labor_receive(alr_person_name,alr_delete,alr_person_ids,alr_ids,ali_application_scope,alr_ali_ids)
-        values (#{aadApName},0,#{aadApIds},#{alrIds},#{aadApType},#{alrAliIds})
+        insert into anbiao_labor_receive(alr_person_name,alr_delete,alr_person_ids,alr_ids,ali_application_scope,alr_ali_ids,alr_create_time,alr_create_by_ids,alr_create_by_name)
+        values (#{aadApName},0,#{aadApIds},#{alrIds},#{aadApType},#{alrAliIds},#{alrCreateTime},#{alrCreateByIds},#{alrCreateByName})
     </insert>
 
-    <select id="selectGrapsihVO" resultType="org.springblade.anbiao.labor.VO.graphicsVO">
+    <select id="selectGrapsihVO" resultType="org.springblade.anbiao.labor.VO.graphicsVO" parameterType="map">
         select
-            ali_application_scope AS ali_application_scope ,ali_issue_quantity AS ali_issue_quantity
+            ali_name as aliname,
+            sum(ali_issue_quantity) AS aliissuequantity,
+            SUM(ali_issue_people_number) as aliissuepeoplenumber
         from
             anbiao_labor_insurance
-        where ali_name = #{ali_name}
+        where left(ali_issue_date,4) = left(#{aliIssueDate},4)
+          and ali_dept_ids = #{aliDeptIds}
+          and ali_delete = 0
+        group by ali_name
     </select>
 
     <update id="updateA" parameterType="org.springblade.anbiao.labor.entity.LaborlingquEntity">
