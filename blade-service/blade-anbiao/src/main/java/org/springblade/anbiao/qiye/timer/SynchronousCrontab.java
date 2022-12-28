@@ -5,6 +5,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleDaoluyunshuzheng;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleXingshizheng;
+import org.springblade.anbiao.cheliangguanli.service.IVehicleDaoluyunshuzhengService;
+import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
+import org.springblade.anbiao.cheliangguanli.service.IVehicleXingshizhengService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
@@ -18,9 +24,12 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author hyp
@@ -38,6 +47,7 @@ public class SynchronousCrontab {
 	private IAnbiaoRiskDetailService riskDetailService;
 	private IJiaShiYuanService jiaShiYuanService;
 	private IOrganizationsService organizationsService;
+
 
 	//获取驾驶员风险信息
 	private void addQYDriverList() throws IOException, ParseException {
@@ -794,6 +804,185 @@ public class SynchronousCrontab {
 		}
 	}
 
+	private IVehicleService vehicleService;
+	private IVehicleXingshizhengService xingshizhengService;
+	private IVehicleDaoluyunshuzhengService daoluyunshuzhengService;
+	//获取车辆风险信息
+	private void addQyVehicleList() throws IOException, ParseException {
+		QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<>();
+		vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel,0);
+		List<Vehicle> vehicleList = vehicleService.getBaseMapper().selectList(vehicleQueryWrapper);
+		for (Vehicle vehicle:vehicleList) {
+			//车辆行驶证
+			QueryWrapper<VehicleXingshizheng> xingshizhengQueryWrapper = new QueryWrapper<>();
+			xingshizhengQueryWrapper.lambda().eq(VehicleXingshizheng::getAvxAvIds,vehicle.getId());
+			xingshizhengQueryWrapper.lambda().eq(VehicleXingshizheng::getAvxDelete,0);
+			VehicleXingshizheng xingshizheng = xingshizhengService.getBaseMapper().selectOne(xingshizhengQueryWrapper);
+			if(xingshizheng != null) {
+				//行驶证号
+				AnbiaoRiskDetail riskDetail = new AnbiaoRiskDetail();
+				riskDetail.setArdDeptIds(vehicle.getDeptId().toString());
+				riskDetail.setArdMajorCategories("0");
+				riskDetail.setArdSubCategory("001");
+				riskDetail.setArdDiscoveryDate(DateUtil.now().substring(0, 10));
+				riskDetail.setArdIsRectification("0");
+				riskDetail.setArdAssociationTable("anbiao_vehicle_xingshizheng");
+				riskDetail.setArdAssociationField("avx_ids");
+				riskDetail.setArdAssociationValue(xingshizheng.getAvxIds());
+				if(StringUtils.isBlank(xingshizheng.getAvxFileNo())) {
+					riskDetail.setArdTitle("行驶证号");
+					riskDetail.setArdContent("行驶证号缺项");
+					riskDetail.setArdType("缺项");
+					riskDetail.setArdRectificationField("avx_file_no");		//整改字段
+					riskDetail.setArdRectificationFieldType("string");
+				}
+				queryRiskOrInsert(riskDetail);
+
+				//注册日期
+				if(xingshizheng.getAvxRegisterDate() != null) {
+
+				} else {
+					riskDetail.setArdTitle("注册日期");
+					riskDetail.setArdContent("注册日期缺项");
+					riskDetail.setArdType("缺项");
+					riskDetail.setArdRectificationField("avx_register_date");		//整改字段
+					riskDetail.setArdRectificationFieldType("date");
+				}
+				queryRiskOrInsert(riskDetail);
+
+				//有效期
+				if(xingshizheng.getAvxValidUntil() != null) {
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+					int timeDifference = differentDays(DateUtil.now(),formatter.format(xingshizheng.getAvxRegisterDate()));
+					riskDetail.setArdTitle("行驶证有效期");
+					riskDetail.setArdRectificationField("avx_valid_until");		//整改字段
+					riskDetail.setArdRectificationFieldType("date");
+					if (timeDifference <= 30 && timeDifference > 0) {
+						riskDetail.setArdContent("行驶证有效期预警");
+						riskDetail.setArdType("预警");
+					} else if (timeDifference < 0) {
+						riskDetail.setArdContent("行驶证有效期逾期");
+						riskDetail.setArdType("逾期");
+					}
+				} else {
+					riskDetail.setArdTitle("行驶证有效期");
+					riskDetail.setArdContent("行驶证有效期缺项");
+					riskDetail.setArdType("缺项");
+					riskDetail.setArdRectificationField("avx_valid_until");		//整改字段
+					riskDetail.setArdRectificationFieldType("date");
+				}
+				queryRiskOrInsert(riskDetail);
+			}
+
+			//道路运输证
+			QueryWrapper<VehicleDaoluyunshuzheng> daoluyunshuzhengQueryWrapper = new QueryWrapper<>();
+			daoluyunshuzhengQueryWrapper.lambda().eq(VehicleDaoluyunshuzheng::getAvdAvIds,vehicle.getId());
+			daoluyunshuzhengQueryWrapper.lambda().eq(VehicleDaoluyunshuzheng::getAvdDelete,0);
+			VehicleDaoluyunshuzheng daoluyunshuzheng = daoluyunshuzhengService.getBaseMapper().selectOne(daoluyunshuzhengQueryWrapper);
+			if(daoluyunshuzheng != null) {
+				AnbiaoRiskDetail riskDetail = new AnbiaoRiskDetail();
+				riskDetail.setArdDeptIds(vehicle.getDeptId().toString());
+				riskDetail.setArdMajorCategories("0");
+				riskDetail.setArdSubCategory("001");
+				riskDetail.setArdDiscoveryDate(DateUtil.now().substring(0, 10));
+				riskDetail.setArdIsRectification("0");
+				riskDetail.setArdAssociationTable("anbiao_vehicle_daoluyunshuzheng");
+				riskDetail.setArdAssociationField("avd_ids");
+				riskDetail.setArdAssociationValue(daoluyunshuzheng.getAvdIds());
+				if(StringUtils.isBlank(daoluyunshuzheng.getAvdRoadTransportCertificateNo())) {
+					riskDetail.setArdTitle("道路运输证号");
+					riskDetail.setArdContent("道路运输证号缺项");
+					riskDetail.setArdType("缺项");
+					riskDetail.setArdRectificationField("avd_road_transport_certificate_no");		//整改字段
+					riskDetail.setArdRectificationFieldType("string");
+				}
+				queryRiskOrInsert(riskDetail);
+
+				//注册日期
+				if(daoluyunshuzheng.getAvdIssueDate() != null) {
+
+				} else {
+					riskDetail.setArdTitle("发证日期");
+					riskDetail.setArdContent("发证日期缺项");
+					riskDetail.setArdType("缺项");
+					riskDetail.setArdRectificationField("avd_issue_date");		//整改字段
+					riskDetail.setArdRectificationFieldType("date");
+				}
+				queryRiskOrInsert(riskDetail);
+
+				//有效期
+				if(daoluyunshuzheng.getAvdValidUntil() != null) {
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+					int timeDifference = differentDays(DateUtil.now(),formatter.format(daoluyunshuzheng.getAvdValidUntil()));
+					riskDetail.setArdTitle("道路运输证有效期");
+					riskDetail.setArdRectificationField("avd_valid_until");		//整改字段
+					riskDetail.setArdRectificationFieldType("date");
+					if (timeDifference <= 30 && timeDifference > 0) {
+						riskDetail.setArdContent("道路运输证有效期预警");
+						riskDetail.setArdType("预警");
+					} else if (timeDifference < 0) {
+						riskDetail.setArdContent("道路运输证有效期逾期");
+						riskDetail.setArdType("逾期");
+					}
+				} else {
+					riskDetail.setArdTitle("道路运输证有效期");
+					riskDetail.setArdContent("道路运输证有效期缺项");
+					riskDetail.setArdType("缺项");
+					riskDetail.setArdRectificationField("avd_valid_until");		//整改字段
+					riskDetail.setArdRectificationFieldType("date");
+				}
+				queryRiskOrInsert(riskDetail);
+			}
+		}
+	}
+
+	//计算日期差
+	private int differentDays(String d1,String d2) {
+		int timeDifference = 0;
+		Date date2 = DateUtil.parse(d2);
+		Date date1 = DateUtil.parse(d1);
+
+		Calendar calendar1 = Calendar.getInstance();
+		calendar1.setTime(date1);
+		Calendar calendar2 = Calendar.getInstance();
+		calendar2.setTime(date2);
+		int day1 = calendar1.get(Calendar.DAY_OF_YEAR);
+		int day2 = calendar2.get(Calendar.DAY_OF_YEAR);
+		int year1 = calendar1.get(Calendar.YEAR);
+		int year2 = calendar2.get(Calendar.YEAR);
+		if (year1 != year2) {//不同年
+			int timeDistance = 0;
+			if (year2<year1){
+				timeDifference = -1;
+			}else {
+				for (int x = year1; x < year2; x++) { //闰年
+					if (x % 4 == 0 && x % 100 != 0 || x % 400 == 0) {
+						timeDistance += 366;
+					} else { // 不是闰年
+						timeDistance += 365;
+					}
+				}
+				timeDifference = timeDistance + (day2 - day1);
+			}
+		} else {
+			timeDifference = day2 - day1;
+		}
+		return timeDifference;
+	}
+
+	private void queryRiskOrInsert(AnbiaoRiskDetail detail) {
+		QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,detail.getArdDeptIds());
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationTable,detail.getArdAssociationTable());
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationField,detail.getArdAssociationField());
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,detail.getArdAssociationValue());
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,detail.getArdContent());
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,detail.getArdIsRectification());
+		AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+		if(riskDetail == null) {
+			riskDetailService.getBaseMapper().insert(detail);
+		}
+	}
 
 
 	//每5分钟执行一次
