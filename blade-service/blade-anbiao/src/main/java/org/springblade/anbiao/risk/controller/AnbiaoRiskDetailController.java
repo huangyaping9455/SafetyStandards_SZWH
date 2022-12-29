@@ -5,6 +5,8 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
@@ -22,14 +24,12 @@ import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetailInfo;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailInfoService;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
+import org.springblade.anbiao.risk.vo.AnbiaoRiskDetailVO;
 import org.springblade.common.tool.JSONUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -1467,6 +1467,123 @@ public class AnbiaoRiskDetailController {
 		return r;
 	}
 
+	@GetMapping("/getByCount")
+	@ApiLog("风险--首页数据统计")
+	@ApiOperation(value = "风险--首页数据统计", notes = "传入企业ID,日期", position = 4)
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "deptId", value = "企业ID", required = true),
+		@ApiImplicitParam(name = "date", value = "日期(yyyy-MM)", required = true)
+	})
+	public R<List<AnbiaoRiskDetailVO>> getByCount(String deptId, String date, BladeUser user) {
+		R rs = new R();
+		if(user == null){
+			rs.setCode(401);
+			rs.setMsg("未授权");
+			rs.setSuccess(false);
+			return rs;
+		}
+		List<AnbiaoRiskDetailVO> list= riskDetailService.selectByCount(deptId,date);
+		if(list.size() < 1){
+			rs.setCode(200);
+			rs.setSuccess(true);
+			rs.setMsg("获取成功，暂无数据");
+		}else{
+			rs.setData(list);
+			rs.setCode(200);
+			rs.setSuccess(true);
+			rs.setMsg("获取成功");
+		}
+		return rs;
+	}
+
+	@GetMapping("/getByDateCount")
+	@ApiLog("风险--一级穿透--折线图")
+	@ApiOperation(value = "风险--一级穿透--折线图", notes = "传入企业ID,日期", position = 5)
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "deptId", value = "企业ID", required = true),
+		@ApiImplicitParam(name = "date", value = "日期(yyyy-MM)", required = true)
+	})
+	public R<List<AnbiaoRiskDetailVO>> getByDateCount(String deptId, String date, BladeUser user) {
+		R rs = new R();
+		if(user == null){
+			rs.setCode(401);
+			rs.setMsg("未授权");
+			rs.setSuccess(false);
+			return rs;
+		}
+		List<AnbiaoRiskDetailVO> list= riskDetailService.selectByDateCount(deptId,date);
+		if(list.size() < 1){
+			rs.setCode(200);
+			rs.setSuccess(true);
+			rs.setMsg("获取成功，暂无数据");
+		}else{
+			rs.setData(list);
+			rs.setCode(200);
+			rs.setSuccess(true);
+			rs.setMsg("获取成功");
+		}
+		return rs;
+	}
+
+	@GetMapping("/getByCategoryCount")
+	@ApiLog("风险--一级穿透--隐患列表")
+	@ApiOperation(value = "风险--一级穿透--隐患列表", notes = "传入企业ID,日期,隐患类别", position = 6)
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "deptId", value = "企业ID", required = true),
+		@ApiImplicitParam(name = "date", value = "日期(yyyy-MM)", required = true),
+		@ApiImplicitParam(name = "category", value = "隐患类别", required = true)
+	})
+	public R<List<AnbiaoRiskDetailVO>> getByCategoryCount(String deptId, String date, String category, BladeUser user) {
+		R rs = new R();
+		if(user == null){
+			rs.setCode(401);
+			rs.setMsg("未授权");
+			rs.setSuccess(false);
+			return rs;
+		}
+		List<AnbiaoRiskDetailVO> list= riskDetailService.selectByCategoryCount(deptId,date,category);
+		if(list.size() < 1){
+			rs.setCode(200);
+			rs.setSuccess(true);
+			rs.setMsg("获取成功，暂无数据");
+		}else{
+			rs.setData(list);
+			rs.setCode(200);
+			rs.setSuccess(true);
+			rs.setMsg("获取成功");
+		}
+		return rs;
+	}
+
+	@GetMapping("/selectByCategoryMXList")
+	@ApiLog("风险--二级穿透--隐患明细列表")
+	@ApiOperation(value = "风险--二级穿透--隐患明细列表", notes = "传入企业ID,日期,隐患类别", position = 7)
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "deptId", value = "企业ID", required = true),
+		@ApiImplicitParam(name = "date", value = "日期(yyyy-MM)", required = true),
+		@ApiImplicitParam(name = "category", value = "隐患类别", required = true)
+	})
+	public R<List<AnbiaoRiskDetailVO>> selectByCategoryMXList(String deptId, String date, String category, BladeUser user) {
+		R rs = new R();
+		if(user == null){
+			rs.setCode(401);
+			rs.setMsg("未授权");
+			rs.setSuccess(false);
+			return rs;
+		}
+		List<AnbiaoRiskDetailVO> list= riskDetailService.selectByCategoryMXCount(deptId,date,category);
+		if(list.size() < 1){
+			rs.setCode(200);
+			rs.setSuccess(true);
+			rs.setMsg("获取成功，暂无数据");
+		}else{
+			rs.setData(list);
+			rs.setCode(200);
+			rs.setSuccess(true);
+			rs.setMsg("获取成功");
+		}
+		return rs;
+	}
 
 }
 

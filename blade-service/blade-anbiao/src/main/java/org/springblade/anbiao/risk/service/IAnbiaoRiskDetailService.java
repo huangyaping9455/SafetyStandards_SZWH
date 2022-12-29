@@ -2,6 +2,9 @@ package org.springblade.anbiao.risk.service;
 
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springblade.anbiao.risk.vo.AnbiaoRiskDetailVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2022-12-06
  */
 public interface IAnbiaoRiskDetailService extends IService<AnbiaoRiskDetail> {
+
+	List<AnbiaoRiskDetailVO> selectByCount(String deptId, String date);
+
+	List<AnbiaoRiskDetailVO> selectByDateCount(String deptId, String date);
+
+	List<AnbiaoRiskDetailVO> selectByCategoryCount(String deptId, String date,String category);
+
+	List<AnbiaoRiskDetailVO> selectByCategoryMXCount(String deptId, String date,String category);
 
 }

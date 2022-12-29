@@ -406,4 +406,12 @@ public class Organizations implements Serializable {
 	@ApiModelProperty(value = "从业资格证",required = true)
 	@TableField(exist = false)
 	private String congyezigezheng;
+
+	@ApiModelProperty(value = "合同期限开始时间")
+	private String htbegindate;
+
+	@ApiModelProperty(value = "合同期限结束时间")
+	private String htlastdate;
+
+
 }

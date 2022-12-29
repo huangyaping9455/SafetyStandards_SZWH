@@ -26,4 +26,127 @@
         <result column="ard_rectification_enclosure" property="ardRectificationEnclosure" />
     </resultMap>
 
+    <resultMap id="AnbiaoRiskDetailCountVOResultMap" type="org.springblade.anbiao.risk.vo.AnbiaoRiskDetailCountVO">
+        <result column="ard_major_categories" property="ardMajorCategories" />
+        <result column="ard_sub_category" property="ardSubCategory" />
+        <result column="ard_discovery_date" property="ardDiscoveryDate" />
+    </resultMap>
+
+    <resultMap id="AnbiaoRiskDetailVOResultMap" type="org.springblade.anbiao.risk.vo.AnbiaoRiskDetailVO">
+        <id column="ard_ids" property="ardIds" />
+        <result column="ard_dept_ids" property="ardDeptIds" />
+        <result column="ard_major_categories" property="ardMajorCategories" />
+        <result column="ard_sub_category" property="ardSubCategory" />
+        <result column="ard_title" property="ardTitle" />
+        <result column="ard_content" property="ardContent" />
+        <result column="ard_discovery_date" property="ardDiscoveryDate" />
+        <result column="ard_association_table" property="ardAssociationTable" />
+        <result column="ard_association_field" property="ardAssociationField" />
+        <result column="ard_association_value" property="ardAssociationValue" />
+    </resultMap>
+
+    <resultMap id="JiaShiYuanResultMap" type="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan">
+    </resultMap>
+
+    <resultMap id="OrganizationsResultMap" type="org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations">
+    </resultMap>
+
+    <resultMap id="VehicleResultMap" type="org.springblade.anbiao.cheliangguanli.entity.Vehicle">
+    </resultMap>
+
+    <select id="selectByCount" resultMap="AnbiaoRiskDetailCountVOResultMap">
+        select
+            ard_major_categories,
+            ard_sub_category,
+            count(1) as num
+        from
+            anbiao_risk_detail a
+            inner join (
+                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) b on a.ard_dept_ids = b.id
+        where ard_dept_ids = #{deptId}
+            and left(ard_discovery_date,7) = left(#{date},7)
+            and ard_is_rectification = 0
+        GROUP BY
+            ard_major_categories,
+            ard_sub_category
+    </select>
+
+    <select id="selectByDateCount" resultMap="AnbiaoRiskDetailCountVOResultMap">
+        select
+            ard_major_categories,
+            ard_sub_category,
+            ard_discovery_date,
+            count(1) as num
+        from
+            anbiao_risk_detail a
+            inner join (
+                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) b on a.ard_dept_ids = b.id
+        where ard_dept_ids = #{deptId}
+            and left(ard_discovery_date,7) = left(#{date},7)
+            and ard_is_rectification = 0
+        GROUP BY
+            ard_major_categories,
+            ard_sub_category,
+            ard_discovery_date
+    </select>
+
+    <select id="selectByCategoryCount" resultMap="AnbiaoRiskDetailVOResultMap">
+        select
+            ard_title,
+            ard_type,
+            ard_discovery_date,
+            ard_content,
+            count(1) as num
+        from
+            anbiao_risk_detail a
+            inner join (
+                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) b on a.ard_dept_ids = b.id
+        where ard_dept_ids = #{deptId}
+            and left(ard_discovery_date,7) = left(#{date},7)
+            and ard_sub_category = #{category}
+            and ard_is_rectification = 0
+        GROUP BY
+            ard_title,
+            ard_type,
+            ard_discovery_date,
+            ard_content
+    </select>
+
+    <select id="selectByCategoryMXCount" resultMap="AnbiaoRiskDetailVOResultMap">
+        select
+            ard_dept_ids,
+            ard_ids,
+            ard_title,
+            ard_type,
+            ard_discovery_date,
+            ard_content,
+            ard_association_value,
+            ard_association_table,
+            ard_association_field
+        from
+            anbiao_risk_detail a
+            inner join (
+                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) b on a.ard_dept_ids = b.id
+        where ard_dept_ids = #{deptId}
+            and left(ard_discovery_date,7) = left(#{date},7)
+            and ard_sub_category = #{category}
+            and ard_is_rectification = 0
+    </select>
+
+    <select id="selectMapList" resultMap="JiaShiYuanResultMap">
+        select * from ${ardAssociationTable} where ${ardAssociationField} = #{ardAssociationValue}
+    </select>
+
+    <select id="selectOrganizationsMapList" resultMap="OrganizationsResultMap">
+        select * from ${ardAssociationTable} where ${ardAssociationField} = #{ardAssociationValue}
+    </select>
+
+    <select id="selectVehicleMapList" resultMap="VehicleResultMap">
+        select * from ${ardAssociationTable} where ${ardAssociationField} = #{ardAssociationValue}
+    </select>
+
 </mapper>

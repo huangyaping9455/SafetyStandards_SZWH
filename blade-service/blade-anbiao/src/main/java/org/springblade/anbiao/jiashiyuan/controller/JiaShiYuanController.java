@@ -86,7 +86,9 @@ public class JiaShiYuanController {
 		SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
 		QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<JiaShiYuan>();
 		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShoujihaoma, jiaShiYuan.getShoujihaoma());
-		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShenfenzhenghao, jiaShiYuan.getShenfenzhenghao());
+		if(StringUtils.isNotEmpty(jiaShiYuan.getShenfenzhenghao()) && jiaShiYuan.getShenfenzhenghao() != "null"){
+			jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShenfenzhenghao, jiaShiYuan.getShenfenzhenghao());
+		}
 		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId, jiaShiYuan.getDeptId());
 		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete, 0);
 		JiaShiYuan deail = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
@@ -317,10 +319,13 @@ public class JiaShiYuanController {
 				QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper1 = new QueryWrapper<JiaShiYuan>();
 				jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getShoujihaoma,jiaShiYuan.getShoujihaoma());
 				jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getDeptId, jiaShiYuan.getDeptId());
+				jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getIsdelete, 0);
 				JiaShiYuan jiaShiYuan1 = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper1);
-				if (jiaShiYuan1!=null){
-				}else {
-					jiaShiYuan.setShoujihaoma(jiaShiYuan.getShoujihaoma());
+				if (jiaShiYuan1 !=null){
+					r.setMsg("该手机号码已存在;");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
 				}
 			} else {
 				r.setMsg("该手机号码不合法;");
@@ -392,7 +397,9 @@ public class JiaShiYuanController {
 			boolean i = iJiaShiYuanService.save(jiaShiYuan);
 			if (i) {
 				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShoujihaoma, jiaShiYuan.getShoujihaoma());
-				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShenfenzhenghao, jiaShiYuan.getShenfenzhenghao());
+				if(StringUtils.isNotEmpty(jiaShiYuan.getShenfenzhenghao()) && jiaShiYuan.getShenfenzhenghao() != "null"){
+					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShenfenzhenghao, jiaShiYuan.getShenfenzhenghao());
+				}
 				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId, jiaShiYuan.getDeptId());
 				jiaShiYuan = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
 

@@ -1,10 +1,7 @@
 package org.springblade.anbiao.labor.VO;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import java.math.BigDecimal;
 
 /**
  * @Description :劳保图形

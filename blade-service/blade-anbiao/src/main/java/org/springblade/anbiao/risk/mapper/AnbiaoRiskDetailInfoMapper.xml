@@ -14,4 +14,7 @@
         <result column="ard_rectification_field_type" property="ardRectificationFieldType" />
     </resultMap>
 
+
+
+
 </mapper>
