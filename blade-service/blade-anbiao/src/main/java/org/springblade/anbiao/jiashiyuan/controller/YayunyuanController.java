@@ -211,17 +211,17 @@ public class YayunyuanController {
 		return R.data(iJiaShiYuanService.selectByIds(id));
 	}
 
-	/**
-	 * 分页
-	 */
-	@PostMapping("/list")
-	@ApiLog("分页-押运员资料管理")
-	@ApiOperation(value = "分页-押运员资料管理", notes = "传入JiaShiYuanPage", position = 5)
-	public R<JiaShiYuanPage<JiaShiYuanVO>> list(@RequestBody JiaShiYuanPage jiaShiYuanPage) {
-//		jiaShiYuanPage.setJiashiyuanleixing("押运员");
-		JiaShiYuanPage<JiaShiYuanVO> pages = iJiaShiYuanService.selectPageList(jiaShiYuanPage);
-		return R.data(pages);
-	}
+//	/**
+//	 * 分页
+//	 */
+//	@PostMapping("/list")
+//	@ApiLog("分页-押运员资料管理")
+//	@ApiOperation(value = "分页-押运员资料管理", notes = "传入JiaShiYuanPage", position = 5)
+//	public R<JiaShiYuanPage<JiaShiYuanVO>> list(@RequestBody JiaShiYuanPage jiaShiYuanPage) {
+////		jiaShiYuanPage.setJiashiyuanleixing("押运员");
+//		JiaShiYuanPage<JiaShiYuanVO> pages = iJiaShiYuanService.selectPageList(jiaShiYuanPage);
+//		return R.data(pages);
+//	}
 
 	public static boolean isCarnumberNO(String carnumber) {
 		String carnumRegex = "([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}(([0-9]{5}[DF])|([DF]([A-HJ-NP-Z0-9])[0-9]{4})))|([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳]{1})";

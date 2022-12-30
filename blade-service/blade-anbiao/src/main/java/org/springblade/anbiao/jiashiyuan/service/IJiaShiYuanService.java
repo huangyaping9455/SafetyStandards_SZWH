@@ -7,6 +7,7 @@ import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTrain;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.vo.DriverInfoVO;
+import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanListVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public interface IJiaShiYuanService extends IService<JiaShiYuan> {
 	 * @param
 	 * @return
 	 */
-	JiaShiYuanPage<JiaShiYuanVO> selectPageList(JiaShiYuanPage jiaShiYuanPage);
+	JiaShiYuanPage<JiaShiYuanListVO> selectPageList(JiaShiYuanPage jiaShiYuanPage);
 
 	JiaShiYuanVO selectByIds(String id);
 

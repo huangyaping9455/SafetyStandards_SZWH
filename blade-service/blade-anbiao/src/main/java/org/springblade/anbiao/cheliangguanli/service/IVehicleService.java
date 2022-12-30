@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.page.VehiclePage;
+import org.springblade.anbiao.cheliangguanli.vo.VehicleListVO;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface IVehicleService extends IService<Vehicle> {
      * @param vehiclePage
      * @return
      */
-    VehiclePage<VehicleVO> selectVehiclePage(VehiclePage vehiclePage);
+    VehiclePage<VehicleListVO> selectVehiclePage(VehiclePage vehiclePage);
     /**
      * 根据id获取数据
      * *@param id

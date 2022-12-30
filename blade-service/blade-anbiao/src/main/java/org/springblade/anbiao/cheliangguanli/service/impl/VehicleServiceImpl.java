@@ -6,6 +6,7 @@ import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.mapper.VehicleMapper;
 import org.springblade.anbiao.cheliangguanli.page.VehiclePage;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
+import org.springblade.anbiao.cheliangguanli.vo.VehicleListVO;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ public class VehicleServiceImpl extends ServiceImpl<VehicleMapper, Vehicle> impl
     private VehicleMapper vehicleMapper;
 
     @Override
-    public VehiclePage<VehicleVO> selectVehiclePage(VehiclePage vehiclePage) {
+    public VehiclePage<VehicleListVO> selectVehiclePage(VehiclePage vehiclePage) {
         Integer total = vehicleMapper.selectVehicleTotal(vehiclePage);
 		if(vehiclePage.getSize()==0){
 			if(vehiclePage.getTotal()==0){
@@ -33,7 +34,7 @@ public class VehicleServiceImpl extends ServiceImpl<VehicleMapper, Vehicle> impl
 			if(vehiclePage.getTotal()==0){
 				return vehiclePage;
 			}else {
-				List<VehicleVO> vehlist = vehicleMapper.selectVehiclePage(vehiclePage);
+				List<VehicleListVO> vehlist = vehicleMapper.selectVehiclePage(vehiclePage);
 				vehiclePage.setRecords(vehlist);
 				return vehiclePage;
 			}
@@ -45,7 +46,7 @@ public class VehicleServiceImpl extends ServiceImpl<VehicleMapper, Vehicle> impl
 			}else {
 				pagetotal = total / vehiclePage.getSize() + 1;
 			}
-			List<VehicleVO> vehlist = vehicleMapper.selectVehiclePage(vehiclePage);
+			List<VehicleListVO> vehlist = vehicleMapper.selectVehiclePage(vehiclePage);
 			vehiclePage.setRecords(vehlist);
         }
         if (pagetotal >= vehiclePage.getCurrent()) {
@@ -56,7 +57,7 @@ public class VehicleServiceImpl extends ServiceImpl<VehicleMapper, Vehicle> impl
             }
             vehiclePage.setTotal(total);
             vehiclePage.setOffsetNo(offsetNo);
-            List<VehicleVO> vehlist = vehicleMapper.selectVehiclePage(vehiclePage);
+            List<VehicleListVO> vehlist = vehicleMapper.selectVehiclePage(vehiclePage);
             vehiclePage.setRecords(vehlist);
         }
         return vehiclePage;

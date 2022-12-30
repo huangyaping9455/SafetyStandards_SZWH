@@ -41,23 +41,69 @@ values
 
     <sql id="tableSql">
         SELECT
-            a.id,jiashiyuanxingming,
-            xingbie,
-            shenfenzhenghao,chushengshijian,nianling,shoujihaoma,congyerenyuanleixing,shenfenzhengyouxiaoqi,
-            wenhuachengdu,pingyongriqi,jidongjiashiyuan,jiashiyuanleixing,a.dept_id,shenfenzhengfujian,congyezhengfujian,jiashizhengfujian,
-            jiatingzhuzhi,danganbianhao,jiashizhenghao,zhunjiachexing,jialing,weifajifen,jiashizhengchulingriqi,jiashizhengyouxiaoqi,tijianyouxiaoqi,
-            congyezigezheng,congyeleibie,congyezhengyouxiaoqi,congyezhengchulingri,zhengjianhefajiguan,fazhengjiguan,chengxinkaoheshijian,
-            xiacichengxinkaoheshijian,jixujiaoyushijian,xiacijixujiaoyushijian,congyezigeleibie,zhengjianzhuangtai,huzhaohaoma,huzhaoleibie,guojiama,
-            huzhaoyouxiaoqi,zhunjiazhenghao,zhunjialeixing,zhunyunxian,zhunjiazhengyouxiaoqi,jiaonabiaozhun,jiaonajine,shifoujiaona,chaosuweifajilu,
-            jiaotongweifajilu,zhirensiwangzeren,weiguileixing,jiachejingli,beizhu,fuyinjian,bumen,lizhishijian,
-            denglumima,zhaopian,tijianriqi,ifnull(c.area,'') as area,
-            b.dept_name deptName
+        bb.dept_name deptName ,
+        jiashiyuanxingming ,
+        case when xingbie = 1 then '男' else '女' end as xingbie,
+        shoujihaoma ,
+        b.cheliangpaizhao ,
+        c.cheliangpaizhao as cheliangpaizhaoguache,
+        d.ajr_create_time as sijiruzhiriqi,
+        e.ajw_start_date as laodonghetongkaishiriqi,
+        e.ajw_end_date as laodonghetongjieshuriqi,
+        case when IFNULL(e.ajw_end_date,'') = '' then '0'
+        when year(e.ajw_end_date) > YEAR(NOW()) then '365'
+        else TIMESTAMPDIFF(DAY,NOW(),DATE_ADD(e.ajw_end_date, INTERVAL 1 YEAR)) end as laodonghetongshengyuyouxiaoqi,
+        shenfenzhenghao ,
+        shenfenzhengchulingriqi ,
+        shenfenzhengyouxiaoqi ,
+        case when IFNULL(shenfenzhengyouxiaoqi,'') = '' then '0'
+        else TIMESTAMPDIFF(day,NOW(),shenfenzhengyouxiaoqi) end as shenfenzhengshengyuyouxiaoqi,
+        jiashizhenghao ,
+        f.ajj_valid_period_start as jiashizhengkaishiriqi,
+        f.ajj_valid_period_end as jiashizhengjieshuriqi,
+        case when IFNULL(f.ajj_valid_period_end,'') = '' then '0'
+        else TIMESTAMPDIFF(day,NOW(),f.ajj_valid_period_end) end as jiashizhengshengyuyouxiaoqi,
+        g.ajc_certificate_no as congyezigezhenghao,
+        g.ajc_initial_issuing as congyezigezhengkaishiriqi,
+        g.ajc_valid_until as congyezigezhengjieshuriqi,
+        case when IFNULL(g.ajc_valid_until,'') = '' then '0'
+        else TIMESTAMPDIFF(day,NOW(),g.ajc_valid_until) end as congyezigezhengshengyuyouxiaoqi,
+        h.aja_start_date as anquanshengchanzerenshuqishiriqi ,
+        case when IFNULL(h.aja_start_date,'') = '' then '0'
+        when year(h.aja_start_date) > YEAR(NOW()) then '365'
+        else TIMESTAMPDIFF(DAY,NOW(),DATE_ADD(h.aja_start_date, INTERVAL 1 YEAR)) end as anquanshengchanzerenshushengyuyouxiaoqi,
+        j.ajw_start_date as gangweiweixiangaozhishuqishiriqi,
+        case when IFNULL(j.ajw_start_date,'') = '' then '0'
+        when year(j.ajw_start_date) > YEAR(NOW()) then '365'
+        else TIMESTAMPDIFF(DAY,NOW(),DATE_ADD(j.ajw_start_date, INTERVAL 1 YEAR)) end as gangweiweixiangaozhishushengyuyouxiaoqi,
+        k.ajt_physical_examination_date as tijianbaogaoqishiriqi ,
+        case when IFNULL(k.ajt_physical_examination_date,'') = '' then '0'
+        when year(k.ajt_physical_examination_date) > YEAR(NOW()) then '365'
+        else TIMESTAMPDIFF(DAY,NOW(),DATE_ADD(k.ajt_physical_examination_date, INTERVAL 1 YEAR)) end as tijianbaogaoshengyuyouxiaoqi,
+        l.ajw_start_date as wuzhongdazerenshiguqishiriqi
         FROM
             anbiao_jiashiyuan a
-        inner join anbiao_organization c on a.dept_id = c.dept_id and c.isdelete = 0
         inner join  (
             <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
-        ) b on a.dept_id = b.id
+        ) bb on a.dept_id = bb.id
+        left join (
+        select cheliangpaizhao,jiashiyuanid from anbiao_vehicle
+        where is_deleted = 0
+        and cheliangpaizhao not like '%挂%'
+        ) b on a.id = b.jiashiyuanid
+        left join (
+        select cheliangpaizhao,jiashiyuanid from anbiao_vehicle
+        where is_deleted = 0
+        and cheliangpaizhao like '%挂%'
+        ) c on a.id = c.jiashiyuanid
+        left join anbiao_jiashiyuan_ruzhi d on a.id = d.ajr_aj_ids
+        left join anbiao_jiashiyuan_laodonghetong e on a.id = e.ajw_aj_ids
+        left join anbiao_jiashiyuan_jiashizheng f on a.id = f.ajj_aj_ids
+        left join anbiao_jiashiyuan_congyezigezheng g on a.id = g.ajc_aj_ids
+        left join anbiao_jiashiyuan_anquanzerenshu h on a.id = h.aja_aj_ids
+        left join anbiao_jiashiyuan_weihaigaozhishu j on a.id = j.ajw_aj_ids
+        left join anbiao_jiashiyuan_tijian k on a.id = k.ajt_aj_ids
+        left join anbiao_jiashiyuan_wuzezhengming l on a.id = l.ajw_aj_ids
         WHERE 1=1
             and ifnull(a.isdelete,0) = 0
 <!--            and a.status = 0-->
@@ -86,7 +132,7 @@ values
         order by jiashiyuanxingming
     </sql>
 
-    <select id="selectPageList" parameterType="org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage" resultType="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO">
+    <select id="selectPageList" parameterType="org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage" resultType="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanListVO">
         <if test="size == 0" >
             select * from (
             <include refid="tableSql" />

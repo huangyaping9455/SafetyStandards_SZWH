@@ -209,68 +209,69 @@
 
     <sql id="tableSql">
 	 SELECT
-        a.id,
-        a.dept_id,
-        cheliangpaizhao,
-        chepaiyanse,
-        ifnull(shiyongxingzhi,'') as shiyongxingzhi,
-        ifnull(changpai,'') as changpai,
-        ifnull(xinghao,'') as xinghao,
-        ifnull(chejiahao,'') as chejiahao,
-        ifnull(yunyingshang,'') as yunyingshang,
-        ifnull(yunyingshangmingcheng,'') as yunyingshangmingcheng,
-        ifnull(zongduanid,'') as zongduanid,
-        c.dept_name as deptName,
-        ifnull(cheshenyanse,'') as cheshenyanse,
-        ifnull(cheliangzhaopian,'') as cheliangzhaopian,
-        ifnull(hedingzaike,'') as hedingzaike,
-        ifnull(dengjizhengshubianhao,'') as dengjizhengshubianhao,
-        ifnull(qiangzhibaofeishijian,'') as qiangzhibaofeishijian,
-        ifnull(jieboyunshuzhenghao,'') as jieboyunshuzhenghao,
-        ifnull(yuancheliangpaizhao,'') as yuancheliangpaizhao,
-        ifnull(cheliangzhuangtai,'') as cheliangzhuangtai,
-        ifnull(danganhao,'') as danganhao,
-        ifnull(suoshuchedui,'') as suoshuchedui,
-        ifnull(xingshifujian,'') as xingshifujian,
-        ifnull(zongzhiliang,'') as zongzhiliang,
-        ifnull(beizhu,'') as beizhu,
-        ifnull(gpsanzhuangshijian,'') as gpsanzhuangshijian,
-        ifnull(zongduanxinghao,'') as zongduanxinghao,
-        ifnull(yunshujiezhi,'') as yunshujiezhi,
-        ifnull(jiashiyuanxingming,'') as jiashiyuanxingming,
-        case when ifnull(a.caozuoshijian,'') != '' then a.caozuoshijian
-        else a.createtime
-        end as caozuoshijian,
-        ifnull(jiashiyuandianhua,'') as jiashiyuandianhua,
-        ifnull(yayunyuanxingming,'') as yayunyuanxingming,
-        ifnull(yayunyuandianhua,'') as yayunyuandianhua,
-        ifnull(chezhu,'') as chezhu,
-        ifnull(chezhudianhua,'') as chezhudianhua,
-        ifnull(c.area,'') as area,
-        zhongduanleixing,
-        ifnull(terminalprotocoltype,'') as terminalprotocoltype,
-        ifnull(videochannelnum,'') as videochannelnum,
-        ifnull(platformconnectiontype,'') as platformconnectiontype
-    <if test="ids !=null and ids != ''and ids == '1'.toString()">
-        ,yj.shuoming
-    </if>
+        cc.dept_name deptName,
+        cheliangpaizhao ,
+        chepaiyanse ,
+        b.jiashiyuanxingming ,
+        b.shoujihaoma ,
+        c.avx_register_date as xingshizhengzhuceriqi,
+        c.avx_issue_date as xingshizhengfazhengriqi,
+        c.avx_valid_until as xingshizhengjieshuriqi,
+        case when IFNULL(c.avx_valid_until,'') = '' then '0'
+        else TIMESTAMPDIFF(day,NOW(),c.avx_valid_until) end as xingshizhengshengyuyouxiaoqi,
+        c.avx_baofei_time as qiangzhibaofeiriqi,
+        case when IFNULL(c.avx_baofei_time,'') = '' then '0'
+        else TIMESTAMPDIFF(day,NOW(),c.avx_baofei_time) end as qiangzhibaofeishengyuyouxiaoqi,
+        xinghao ,
+        c.avx_vin as cheliangxinghao,
+        c.avx_owner as cheliangsuoyouren,
+        c.avx_address as address,
+        shiyongxingzhi ,
+        c.avx_file_no as danganbianhao,
+        c.avx_model as pinpaixinghao,
+        c.avx_vin as cheliangshibiedaima,
+        a.cheshenyanse ,
+        f.jingyingxukezhengbianma ,
+        a.jingjileixing ,
+        a.jingyingzuzhifangshi ,
+        a.cheliangyunyingleixing ,
+        a.teamno,
+        a.chelianghuoqufangshi ,
+        a.weihuzhouqi ,
+        a.chejiahao ,
+        a.shifoujinkou ,
+        a.ranliaoleibie ,
+        a.fadongjipailianggonglv ,
+        a.zhuanxiangfangshi ,
+        a.zhizhaochangshang ,
+        a.lunju ,
+        a.luntaishu ,
+        a.luntaiguige ,
+        a.gangbantanhuangpianshu ,
+        a.zhouju ,
+        a.chezhoushu ,
+        a.huoxiangneibuchicun ,
+        a.hedingzaike ,
+        a.jiashishizaike ,
+        a.zongzhiliang ,
+        a.hedingzaizhiliang ,
+        a.zhunqianyinzongzhiliang ,
+        a.cheliangwaikuochicun,
+        a.chuchangriqi ,
+        a.bencijipingriqi ,
+        a.xiacijipingriqi ,
+        d.avd_road_transport_certificate_no as daoluyunshuzhenghao,
+        d.avd_issue_date as daoluyunshuzhengkaishiriqi,
+        d.avd_valid_until as daoluyunshuzhengjieshuriqi,
+        case when IFNULL(d.avd_valid_until,'') = '' then '0'
+        else TIMESTAMPDIFF(day,NOW(),d.avd_valid_until) end as daoluyunshuzhengshengyuyouxiaoqi
     FROM
         anbiao_vehicle a
-        inner join anbiao_organization c on a.dept_id = c.dept_id and c.isdelete = 0
-        <if test="ids !=null and ids != ''and ids == '1'.toString()">
-        left join(
-            SELECT
-                biaoid,
-                (select shuoming from anbiao_yujingxiang where id = tixingxiangqingid) as shuoming
-            from
-                anbiao_jinritixing_jiesuan
-            where IFNULL(isdelete,0)=0
-                and dept_id = #{deptId}
-                and tongjiriqi = #{tongjiriqi}
-                and tixingleixing = #{tixingleixing}
-                and tixingxiangqingid = #{tixingxiangqingid}
-            )yj on yj.biaoid = a.id
-        </if>
+        inner join anbiao_organization cc on a.dept_id = cc.dept_id and cc.isdelete = 0
+        left join anbiao_jiashiyuan b on a.jiashiyuanid = b.id
+        left join anbiao_vehicle_xingshizheng c on a.id = c.avx_av_ids
+        left join anbiao_vehicle_daoluyunshuzheng d on a.id = d.avd_av_ids
+        left join anbiao_organization f on f.dept_id = a.dept_id
     WHERE 1=1
         and ifnull(a.is_deleted,0) = 0
         and ifnull(cheliangzhuangtai,0) != 2
@@ -347,7 +348,7 @@
     </sql>
 
     <select id="selectVehiclePage" resultMap="vehicleVOResultMap"
-            parameterType="org.springblade.anbiao.cheliangguanli.page.VehiclePage" resultType="org.springblade.anbiao.cheliangguanli.vo.VehicleVO">
+            parameterType="org.springblade.anbiao.cheliangguanli.page.VehiclePage" resultType="org.springblade.anbiao.cheliangguanli.vo.VehicleListVO">
         <if test="size == 0" >
             select * from (
             <include refid="tableSql" />

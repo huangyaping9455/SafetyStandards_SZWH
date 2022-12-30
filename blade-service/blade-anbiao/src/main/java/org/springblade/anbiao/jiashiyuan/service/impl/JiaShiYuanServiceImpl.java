@@ -9,6 +9,7 @@ import org.springblade.anbiao.jiashiyuan.mapper.JiaShiYuanMapper;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.anbiao.jiashiyuan.vo.DriverInfoVO;
+import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanListVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,7 @@ public class JiaShiYuanServiceImpl extends ServiceImpl<JiaShiYuanMapper, JiaShiY
 	}
 
 	@Override
-	public JiaShiYuanPage<JiaShiYuanVO> selectPageList(JiaShiYuanPage jiaShiYuanPage) {
+	public JiaShiYuanPage<JiaShiYuanListVO> selectPageList(JiaShiYuanPage jiaShiYuanPage) {
 		Integer total = jiaShiYuanMapper.selectTotal(jiaShiYuanPage);
 		Integer pagetotal = 0;
 		if(jiaShiYuanPage.getSize()==0){
@@ -44,7 +45,7 @@ public class JiaShiYuanServiceImpl extends ServiceImpl<JiaShiYuanMapper, JiaShiY
 			if(jiaShiYuanPage.getTotal()==0){
 				return jiaShiYuanPage;
 			}else {
-				List<JiaShiYuanVO> vehlist = jiaShiYuanMapper.selectPageList(jiaShiYuanPage);
+				List<JiaShiYuanListVO> vehlist = jiaShiYuanMapper.selectPageList(jiaShiYuanPage);
 				jiaShiYuanPage.setRecords(vehlist);
 				return jiaShiYuanPage;
 			}
@@ -66,8 +67,8 @@ public class JiaShiYuanServiceImpl extends ServiceImpl<JiaShiYuanMapper, JiaShiY
 			}
 			jiaShiYuanPage.setTotal(total);
 			jiaShiYuanPage.setOffsetNo(offsetNo);
-			List<JiaShiYuanVO> vehlist = jiaShiYuanMapper.selectPageList(jiaShiYuanPage);
-			return (JiaShiYuanPage<JiaShiYuanVO>) jiaShiYuanPage.setRecords(vehlist);
+			List<JiaShiYuanListVO> vehlist = jiaShiYuanMapper.selectPageList(jiaShiYuanPage);
+			return (JiaShiYuanPage<JiaShiYuanListVO>) jiaShiYuanPage.setRecords(vehlist);
 		}
 	}
 

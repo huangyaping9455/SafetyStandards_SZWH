@@ -18,6 +18,7 @@ import org.apache.http.util.TextUtils;
 import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.page.VehiclePage;
 import org.springblade.anbiao.cheliangguanli.service.*;
+import org.springblade.anbiao.cheliangguanli.vo.VehicleListVO;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
 import org.springblade.anbiao.configure.entity.Configure;
 import org.springblade.anbiao.configure.service.IConfigureService;
@@ -90,8 +91,8 @@ public class VehicleController {
     @PostMapping("/list")
 	@ApiLog("分页-车辆资料管理")
     @ApiOperation(value = "分页-车辆资料管理", notes = "传入VehiclePage", position = 1)
-    public R<VehiclePage<VehicleVO>> list(@RequestBody VehiclePage vehiclepage) {
-        VehiclePage<VehicleVO> pages = vehicleService.selectVehiclePage(vehiclepage);
+    public R<VehiclePage<VehicleListVO>> list(@RequestBody VehiclePage vehiclepage) {
+        VehiclePage<VehicleListVO> pages = vehicleService.selectVehiclePage(vehiclepage);
 //		List<VehicleVO>  list=pages.getRecords();
 //		for (int i = 0; i <list.size() ; i++) {
 //			//车辆照片

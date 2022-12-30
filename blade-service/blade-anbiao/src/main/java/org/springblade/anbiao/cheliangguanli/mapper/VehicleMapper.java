@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.page.VehiclePage;
+import org.springblade.anbiao.cheliangguanli.vo.VehicleListVO;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public interface VehicleMapper extends BaseMapper<Vehicle> {
      * @param vehiclePage
      * @return
      */
-    List<VehicleVO> selectVehiclePage(VehiclePage vehiclePage);
+    List<VehicleListVO> selectVehiclePage(VehiclePage vehiclePage);
 
 	/**
 	 * 车牌搜索

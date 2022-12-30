@@ -7,6 +7,7 @@ import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTrain;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.vo.DriverInfoVO;
+import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanListVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public interface JiaShiYuanMapper extends BaseMapper<JiaShiYuan> {
 	 * @param
 	 * @return
 	 */
-	List<JiaShiYuanVO> selectPageList(JiaShiYuanPage jiaShiYuanPage);
+	List<JiaShiYuanListVO> selectPageList(JiaShiYuanPage jiaShiYuanPage);
 
 	/**
 	 * 统计
