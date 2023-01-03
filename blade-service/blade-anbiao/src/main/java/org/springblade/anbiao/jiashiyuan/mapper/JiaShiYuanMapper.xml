@@ -50,36 +50,35 @@ values
         d.ajr_create_time as sijiruzhiriqi,
         e.ajw_start_date as laodonghetongkaishiriqi,
         e.ajw_end_date as laodonghetongjieshuriqi,
-        case when IFNULL(e.ajw_end_date,'') = '' then '0'
-        when year(e.ajw_end_date) > YEAR(NOW()) then '365'
-        else TIMESTAMPDIFF(DAY,NOW(),DATE_ADD(e.ajw_end_date, INTERVAL 1 YEAR)) end as laodonghetongshengyuyouxiaoqi,
+        case when IFNULL(e.ajw_end_date,'') = '' then '0天'
+        when year(e.ajw_end_date) > YEAR(NOW()) then '365天'
+        else TIMESTAMPDIFF(DAY,NOW(),e.ajw_end_date)+'天' end as laodonghetongshengyuyouxiaoqi,
         shenfenzhenghao ,
         shenfenzhengchulingriqi ,
         shenfenzhengyouxiaoqi ,
-        case when IFNULL(shenfenzhengyouxiaoqi,'') = '' then '0'
-        else TIMESTAMPDIFF(day,NOW(),shenfenzhengyouxiaoqi) end as shenfenzhengshengyuyouxiaoqi,
+        case when IFNULL(shenfenzhengyouxiaoqi,'') = '' then '0天'
+        else TIMESTAMPDIFF(day,NOW(),shenfenzhengyouxiaoqi)+'天' end as shenfenzhengshengyuyouxiaoqi,
         jiashizhenghao ,
         f.ajj_valid_period_start as jiashizhengkaishiriqi,
         f.ajj_valid_period_end as jiashizhengjieshuriqi,
-        case when IFNULL(f.ajj_valid_period_end,'') = '' then '0'
-        else TIMESTAMPDIFF(day,NOW(),f.ajj_valid_period_end) end as jiashizhengshengyuyouxiaoqi,
+        case when IFNULL(f.ajj_valid_period_end,'') = '' then '0天'
+        else TIMESTAMPDIFF(day,NOW(),f.ajj_valid_period_end)+'天' end as jiashizhengshengyuyouxiaoqi,
         g.ajc_certificate_no as congyezigezhenghao,
         g.ajc_initial_issuing as congyezigezhengkaishiriqi,
         g.ajc_valid_until as congyezigezhengjieshuriqi,
-        case when IFNULL(g.ajc_valid_until,'') = '' then '0'
-        else TIMESTAMPDIFF(day,NOW(),g.ajc_valid_until) end as congyezigezhengshengyuyouxiaoqi,
+        case when IFNULL(g.ajc_valid_until,'') = '' then '0天'
+        else TIMESTAMPDIFF(day,NOW(),g.ajc_valid_until)+'天' end as congyezigezhengshengyuyouxiaoqi,
         h.aja_start_date as anquanshengchanzerenshuqishiriqi ,
-        case when IFNULL(h.aja_start_date,'') = '' then '0'
-        when year(h.aja_start_date) > YEAR(NOW()) then '365'
-        else TIMESTAMPDIFF(DAY,NOW(),DATE_ADD(h.aja_start_date, INTERVAL 1 YEAR)) end as anquanshengchanzerenshushengyuyouxiaoqi,
+        case when IFNULL(h.aja_start_date,'') = '' then '0天'
+        when year(h.aja_start_date) > YEAR(NOW()) then '365天'
+        else TIMESTAMPDIFF(DAY,NOW(),DATE_ADD(h.aja_start_date, INTERVAL 1 YEAR))+'天' end as anquanshengchanzerenshushengyuyouxiaoqi,
         j.ajw_start_date as gangweiweixiangaozhishuqishiriqi,
-        case when IFNULL(j.ajw_start_date,'') = '' then '0'
-        when year(j.ajw_start_date) > YEAR(NOW()) then '365'
-        else TIMESTAMPDIFF(DAY,NOW(),DATE_ADD(j.ajw_start_date, INTERVAL 1 YEAR)) end as gangweiweixiangaozhishushengyuyouxiaoqi,
+        case when IFNULL(j.ajw_start_date,'') = '' then '0天'
+        else TIMESTAMPDIFF(DAY,NOW(),DATE_ADD(j.ajw_start_date, INTERVAL 3 YEAR))+'天' end as gangweiweixiangaozhishushengyuyouxiaoqi,
         k.ajt_physical_examination_date as tijianbaogaoqishiriqi ,
-        case when IFNULL(k.ajt_physical_examination_date,'') = '' then '0'
-        when year(k.ajt_physical_examination_date) > YEAR(NOW()) then '365'
-        else TIMESTAMPDIFF(DAY,NOW(),DATE_ADD(k.ajt_physical_examination_date, INTERVAL 1 YEAR)) end as tijianbaogaoshengyuyouxiaoqi,
+        case when IFNULL(k.ajt_physical_examination_date,'') = '' then '0天'
+        when year(k.ajt_physical_examination_date) > YEAR(NOW()) then '365天'
+        else TIMESTAMPDIFF(DAY,NOW(),DATE_ADD(k.ajt_physical_examination_date, INTERVAL 1 YEAR))+'天' end as tijianbaogaoshengyuyouxiaoqi,
         l.ajw_start_date as wuzhongdazerenshiguqishiriqi
         FROM
             anbiao_jiashiyuan a

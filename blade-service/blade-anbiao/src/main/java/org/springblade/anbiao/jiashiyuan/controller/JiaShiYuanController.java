@@ -1462,8 +1462,6 @@ public class JiaShiYuanController {
 			SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
 			JiaShiYuanVO driverVO = null;
 
-			//
-
 			//验证所属企业是否存在
 			String deptname = String.valueOf(a.get("所属企业")).trim();
 			if (StringUtils.isBlank(deptname)) {
@@ -1500,18 +1498,6 @@ public class JiaShiYuanController {
 				driver.setImportUrl("icon_gou.png");
 			}
 
-//			//验证从业人员类型不能为空
-//			String congyerenyuanleixing1 = String.valueOf(a.get("从业人员类型")).trim();
-//			if (StringUtils.isBlank(congyerenyuanleixing1) && !congyerenyuanleixing1.equals("null")) {
-//				driver.setMsg("从业人员类型不能为空;");
-//				driver.setImportUrl("icon_cha.png");
-//				errorStr += "从业人员类型不能为空;";
-//				bb++;
-//			} else {
-//				driver.setCongyerenyuanleixing(congyerenyuanleixing1);
-//				driver.setImportUrl("icon_gou.png");
-//			}
-
 			//验证驾驶员性别
 			String sex = String.valueOf(a.get("性别")).trim();
 			if (StringUtils.isNotBlank(sex) && !driverName.equals("null")) {
@@ -1530,18 +1516,6 @@ public class JiaShiYuanController {
 					bb++;
 				}
 			}
-
-//			//验证驾驶员类型不能为空
-//			String jiashiyuanleixing = String.valueOf(a.get("驾驶员类型")).trim();
-//			if (StringUtils.isBlank(jiashiyuanleixing) && !jiashiyuanleixing.equals("null")) {
-//				driver.setMsg("驾驶员类型不能为空;");
-//				driver.setImportUrl("icon_cha.png");
-//				errorStr += "驾驶员类型不能为空;";
-//				bb++;
-//			} else {
-//				driver.setJiashiyuanleixing(jiashiyuanleixing);
-//				driver.setImportUrl("icon_gou.png");
-//			}
 
 			//验证手机号码是否合法
 			String shoujihaoma = String.valueOf(a.get("手机号码")).trim();
@@ -1591,30 +1565,6 @@ public class JiaShiYuanController {
 				driver.setImportUrl("icon_gou.png");
 			}
 
-			//验证司机入职日期
-			String sijiruzhiriqi = String.valueOf(a.get("司机入职日期")).trim();
-			if (StringUtils.isNotBlank(sijiruzhiriqi) && !sijiruzhiriqi.equals("null")) {
-				if (sijiruzhiriqi.length() >= 10) {
-					sijiruzhiriqi = sijiruzhiriqi.substring(0, 10);
-					if (StringUtils.isNotBlank(sijiruzhiriqi) && !sijiruzhiriqi.equals("null")) {
-						if (DateUtils.isDateString(sijiruzhiriqi, null) == true) {
-							driver.setPingyongriqi(sijiruzhiriqi);
-							driver.setImportUrl("icon_gou.png");
-						} else {
-							driver.setMsg(sijiruzhiriqi + ",该司机入职日期,不是时间格式;");
-							errorStr += sijiruzhiriqi + ",该司机入职日期,不是时间格式;";
-							driver.setImportUrl("icon_cha.png");
-							bb++;
-						}
-					}
-				} else {
-					driver.setMsg(sijiruzhiriqi + ",该司机入职日期,不是时间格式;");
-					errorStr += sijiruzhiriqi + ",该司机入职日期,不是时间格式;";
-					driver.setImportUrl("icon_cha.png");
-					bb++;
-				}
-			}
-
 			//验证劳动合同开始日期
 			String laodonghetongkaishiriqi = String.valueOf(a.get("劳动合同开始日期")).trim();
 			if (StringUtils.isNotBlank(laodonghetongkaishiriqi) && !laodonghetongkaishiriqi.equals("null")) {
@@ -1637,6 +1587,33 @@ public class JiaShiYuanController {
 					driver.setImportUrl("icon_cha.png");
 					bb++;
 				}
+			}
+
+			//验证司机入职日期
+			String sijiruzhiriqi = String.valueOf(a.get("司机入职日期")).trim();
+			if (StringUtils.isNotBlank(sijiruzhiriqi) && !sijiruzhiriqi.equals("null")) {
+				if (sijiruzhiriqi.length() >= 10) {
+					sijiruzhiriqi = sijiruzhiriqi.substring(0, 10);
+					if (StringUtils.isNotBlank(sijiruzhiriqi) && !sijiruzhiriqi.equals("null")) {
+						if (DateUtils.isDateString(sijiruzhiriqi, null) == true) {
+							driver.setPingyongriqi(sijiruzhiriqi);
+							driver.setImportUrl("icon_gou.png");
+						} else {
+							driver.setMsg(sijiruzhiriqi + ",该司机入职日期,不是时间格式;");
+							errorStr += sijiruzhiriqi + ",该司机入职日期,不是时间格式;";
+							driver.setImportUrl("icon_cha.png");
+							bb++;
+						}
+					}
+				} else {
+					driver.setMsg(sijiruzhiriqi + ",该司机入职日期,不是时间格式;");
+					errorStr += sijiruzhiriqi + ",该司机入职日期,不是时间格式;";
+					driver.setImportUrl("icon_cha.png");
+					bb++;
+				}
+			}else if (StringUtils.isNotBlank(driver.getLaodonghetongkaishiriqi()) && !driver.getLaodonghetongkaishiriqi().equals("null")){
+				driver.setPingyongriqi(driver.getLaodonghetongkaishiriqi());
+				driver.setImportUrl("icon_gou.png");
 			}
 
 			//验证劳动合同结束日期
@@ -2106,63 +2083,6 @@ public class JiaShiYuanController {
 				}
 			}
 
-//			//验证体检有效期
-//			String tijianyouxiaoqi = String.valueOf(a.get("体检有效期")).trim();
-//			if (tijianyouxiaoqi.length() >= 10) {
-//				tijianyouxiaoqi=tijianyouxiaoqi.substring(0,10);
-//				if (StringUtils.isNotBlank(tijianyouxiaoqi) && !tijianyouxiaoqi.equals("null")) {
-//					if (DateUtils.isDateString(tijianyouxiaoqi, null) == true) {
-//						driver.setTijianyouxiaoqi(tijianyouxiaoqi);
-//						driver.setImportUrl("icon_gou.png");
-//					} else {
-//						driver.setMsg(tijianyouxiaoqi + ",该体检有效期,不是时间格式;");
-//						errorStr += tijianyouxiaoqi + ",该体检有效期,不是时间格式;";
-//						driver.setImportUrl("icon_cha.png");
-//						bb++;
-//					}
-//				}
-//			}else {
-//				driver.setMsg(tijianyouxiaoqi + ",该体检有效期,不是时间格式;");
-//				errorStr += tijianyouxiaoqi + ",该体检有效期,不是时间格式;";
-//				driver.setImportUrl("icon_cha.png");
-//				bb++;
-//			}
-
-//			//验证 体检日期 不能大于 体检有效期
-//			if (StringUtils.isNotBlank(tijianriqi) && !tijianriqi.equals("null") && StringUtils.isNotBlank(tijianyouxiaoqi) && !tijianyouxiaoqi.equals("null")) {
-//				int a1 = tijianriqi.length();
-//				int b1 = tijianyouxiaoqi.length();
-//				if (a1 == b1) {
-//					if (a1 <= 10) {
-//						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-//						if (DateUtils.belongCalendar(format.parse(tijianriqi), format.parse(tijianyouxiaoqi))) {
-//							driver.setImportUrl("icon_gou.png");
-//						} else {
-//							driver.setMsg("体检日期,不能大于体检有效期;");
-//							errorStr += "体检日期,不能大于体检有效期;";
-//							driver.setImportUrl("icon_cha.png");
-//							bb++;
-//						}
-//					}
-//					if (a1 > 10) {
-//						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//						if (DateUtils.belongCalendar(format.parse(shenfenzhengchulingriqi), format.parse(shenfenzhengyouxiaoqi))) {
-//							driver.setImportUrl("icon_gou.png");
-//						} else {
-//							driver.setMsg("体检日期,不能大于体检有效期;");
-//							errorStr += "体检日期,不能大于体检有效期;";
-//							driver.setImportUrl("icon_cha.png");
-//							bb++;
-//						}
-//					}
-//				} else {
-//					driver.setMsg("体检日期与体检有效期,时间格式不一致;");
-//					errorStr += "体检日期与体检有效期,时间格式不一致;";
-//					driver.setImportUrl("icon_cha.png");
-//					bb++;
-//				}
-//			}
-
 			//验证Excel导入时，是否存在重复数据
 			for (JiaShiYuan item : drivers) {
 				if (item.getJiashiyuanxingming().equals(driverName) && item.getShoujihaoma().equals(shoujihaoma) && item.getDeptName().equals(deptname)) {
@@ -2189,108 +2109,6 @@ public class JiaShiYuanController {
 			return rs;
 		}
 	}
-
-//	/**
-//	 * 企业端--驾驶员档案信息--确认导入
-//	 * @param
-//	 */
-//	@PostMapping("driverDeptImportOk")
-//	@ApiLog("企业端--驾驶员档案信息--确认导入(最新)")
-//	@ApiOperation(value = "企业端--驾驶员档案信息--确认导入(最新)", notes = "drivers", position = 10)
-//	public R driverDeptImportOk(@RequestParam(value = "drivers") String drivers,BladeUser user,@RequestParam Integer userId,@RequestParam String userName){
-//		JSONArray json = JSONUtil.parseArray(drivers);
-//		List<Map<String,Object>> lists = (List)json;
-//		R rs = new R();
-//		if (user == null) {
-//			rs.setCode(500);
-//			rs.setMsg("用户权限验证失败");
-//			rs.setData(null);
-//			rs.setSuccess(false);
-//			return rs;
-//		}
-//		//时间默认格式
-//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//		//验证数据成功条数
-//		int aa=0;
-//		//验证数据错误条数
-//		int bb=0;
-//		//全局变量，只要一条数据不对，就为false
-//		boolean isDataValidity=true;
-//		//错误信息
-//		String errorStr="";
-//
-//		if(lists.size()>2000){
-//			errorStr+="导入数据超过2000条，无法导入！";
-//			rs.setMsg(errorStr);
-//			rs.setCode(400);
-//			return rs;
-//		}
-//
-//		for(Map<String,Object> a:lists){
-//			aa++;
-//			JiaShiYuan driver=new JiaShiYuan();
-//			SimpleDateFormat dateFormat2=new SimpleDateFormat("yyyy-MM-dd");
-//			String deptId = String.valueOf(a.get("deptId"));
-//			driver.setDeptId(Integer.valueOf(deptId));
-//			driver.setJiashiyuanxingming(String.valueOf(a.get("jiashiyuanxingming")).trim());
-//			driver.setXingbie(String.valueOf(a.get("xingbie")));
-//			String tmp = String.valueOf(a.get("shenfenzhenghao")).trim();
-//			driver.setShenfenzhenghao(tmp);
-//			//通过身份证获取年龄
-//			Integer age = IdCardUtil.getAgeByCard(tmp);
-//			driver.setNianling(age.toString());
-//			//通过身份证获取生日日期
-//			Date chushengshijian = IdCardUtil.getBirthDate(tmp);
-//			String shoujihaoma = String.valueOf(a.get("shoujihaoma")).trim();
-//			driver.setShoujihaoma(shoujihaoma);
-//			driver.setChushengshijian(dateFormat2.format(chushengshijian));
-//			driver.setCongyeleibie(String.valueOf(a.get("congyeleibie")).trim());
-//			driver.setJiashiyuanleixing(String.valueOf(a.get("jiashiyuanleixing")).trim());
-//			driver.setCongyerenyuanleixing(String.valueOf(a.get("jiashiyuanleixing")).trim());
-//			driver.setJiashizhenghao(String.valueOf(a.get("jiashizhenghao")).trim());
-//			driver.setCongyezigezheng(String.valueOf(a.get("congyezigezheng")).trim());
-//			driver.setZhunjiachexing(String.valueOf(a.get("zhunjiachexing")).trim());
-//			driver.setCongyezhengchulingri(String.valueOf(a.get("congyezhengchulingri")).trim());
-//			driver.setCongyezhengyouxiaoqi(String.valueOf(a.get("congyezhengyouxiaoqi")).trim());
-//			driver.setChengxinkaoheshijian(String.valueOf(a.get("chengxinkaoheshijian")).trim());
-//			driver.setXiacichengxinkaoheshijian(String.valueOf(a.get("xiacichengxinkaoheshijian")).trim());
-//			driver.setJiashizhengchulingriqi(String.valueOf(a.get("jiashizhengchulingriqi")).trim());
-//			driver.setJiashizhengyouxiaoqi(String.valueOf(a.get("jiashizhengyouxiaoqi")).trim());
-//			driver.setShenfenzhengyouxiaoqi(String.valueOf(a.get("shenfenzhengyouxiaoqi")).trim());
-//			driver.setTijianyouxiaoqi(String.valueOf(a.get("tijianyouxiaoqi")).trim());
-//			driver.setFazhengjiguan(String.valueOf(a.get("fazhengjiguan")).trim());
-//			driver.setBeizhu(String.valueOf(a.get("beizhu")).trim());
-//			driver.setIsdelete(0);
-//			driver.setCreatetime(DateUtil.now());
-//			driver.setCaozuoshijian(DateUtil.now());
-//			if(user != null){
-//				driver.setCaozuoren(user.getUserName());
-//				driver.setCaozuorenid(user.getUserId());
-//			}
-//			//登录密码
-//			driver.setDenglumima(DigestUtil.encrypt("123456"));
-//			JiaShiYuan driverInfo = iJiaShiYuanService.getjiaShiYuanByOne(driver.getDeptId().toString(),driver.getJiashiyuanxingming(), driver.getShoujihaoma(),driver.getShenfenzhenghao(),driver.getJiashiyuanleixing());
-//			if(driverInfo != null){
-//				driver.setId(driverInfo.getId());
-//				isDataValidity = iJiaShiYuanService.updateSelective(driver);
-//			}else{
-//				String id= IdUtil.simpleUUID();
-//				driver.setId(id);
-//				isDataValidity = iJiaShiYuanService.insertSelective(driver);
-//			}
-//		}
-//		if(isDataValidity == true){
-//			rs.setCode(200);
-//			rs.setMsg("数据导入成功");
-//			rs.setData(drivers);
-//			return rs;
-//		}else{
-//			rs.setCode(500);
-//			rs.setMsg("数据导入失败");
-//			rs.setData(drivers);
-//			return rs;
-//		}
-//	}
 
 	@GetMapping(value = "/getJiaShiYuanByDept")
 	@ApiLog("企业-根据企业ID获取从业人员信息")

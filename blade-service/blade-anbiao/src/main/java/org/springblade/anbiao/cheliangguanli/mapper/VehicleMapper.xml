@@ -217,11 +217,11 @@
         c.avx_register_date as xingshizhengzhuceriqi,
         c.avx_issue_date as xingshizhengfazhengriqi,
         c.avx_valid_until as xingshizhengjieshuriqi,
-        case when IFNULL(c.avx_valid_until,'') = '' then '0'
-        else TIMESTAMPDIFF(day,NOW(),c.avx_valid_until) end as xingshizhengshengyuyouxiaoqi,
+        case when IFNULL(c.avx_valid_until,'') = '' then '0天'
+        else TIMESTAMPDIFF(day,NOW(),c.avx_valid_until)+'天' end as xingshizhengshengyuyouxiaoqi,
         c.avx_baofei_time as qiangzhibaofeiriqi,
-        case when IFNULL(c.avx_baofei_time,'') = '' then '0'
-        else TIMESTAMPDIFF(day,NOW(),c.avx_baofei_time) end as qiangzhibaofeishengyuyouxiaoqi,
+        case when IFNULL(c.avx_baofei_time,'') = '' then '0天'
+        else TIMESTAMPDIFF(day,NOW(),c.avx_baofei_time)+'天' end as qiangzhibaofeishengyuyouxiaoqi,
         xinghao ,
         c.avx_vin as cheliangxinghao,
         c.avx_owner as cheliangsuoyouren,
@@ -263,8 +263,8 @@
         d.avd_road_transport_certificate_no as daoluyunshuzhenghao,
         d.avd_issue_date as daoluyunshuzhengkaishiriqi,
         d.avd_valid_until as daoluyunshuzhengjieshuriqi,
-        case when IFNULL(d.avd_valid_until,'') = '' then '0'
-        else TIMESTAMPDIFF(day,NOW(),d.avd_valid_until) end as daoluyunshuzhengshengyuyouxiaoqi
+        case when IFNULL(d.avd_valid_until,'') = '' then '0天'
+        else TIMESTAMPDIFF(day,NOW(),d.avd_valid_until)+'天' end as daoluyunshuzhengshengyuyouxiaoqi
     FROM
         anbiao_vehicle a
         inner join anbiao_organization cc on a.dept_id = cc.dept_id and cc.isdelete = 0
