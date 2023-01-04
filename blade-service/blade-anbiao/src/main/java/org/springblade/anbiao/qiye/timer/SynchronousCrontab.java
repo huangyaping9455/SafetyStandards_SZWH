@@ -835,34 +835,35 @@ public class SynchronousCrontab {
 					riskDetail.setArdType("缺项");
 					riskDetail.setArdRectificationField("avx_file_no");		//整改字段
 					riskDetail.setArdRectificationFieldType("string");
+					queryRiskOrInsert(riskDetail);
 				}
-				queryRiskOrInsert(riskDetail);
 
 				//注册日期
 				if(xingshizheng.getAvxRegisterDate() != null) {
-
 				} else {
 					riskDetail.setArdTitle("注册日期");
 					riskDetail.setArdContent("注册日期缺项");
 					riskDetail.setArdType("缺项");
 					riskDetail.setArdRectificationField("avx_register_date");		//整改字段
 					riskDetail.setArdRectificationFieldType("date");
+					queryRiskOrInsert(riskDetail);
 				}
-				queryRiskOrInsert(riskDetail);
 
 				//有效期
 				if(xingshizheng.getAvxValidUntil() != null) {
-					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
-					int timeDifference = differentDays(DateUtil.now(),formatter.format(xingshizheng.getAvxRegisterDate()));
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.CHINA);
+					int timeDifference = differentDays(DateUtil.now(),formatter.format(xingshizheng.getAvxValidUntil()));
 					riskDetail.setArdTitle("行驶证有效期");
 					riskDetail.setArdRectificationField("avx_valid_until");		//整改字段
 					riskDetail.setArdRectificationFieldType("date");
 					if (timeDifference <= 30 && timeDifference > 0) {
 						riskDetail.setArdContent("行驶证有效期预警");
 						riskDetail.setArdType("预警");
+						queryRiskOrInsert(riskDetail);
 					} else if (timeDifference < 0) {
 						riskDetail.setArdContent("行驶证有效期逾期");
 						riskDetail.setArdType("逾期");
+						queryRiskOrInsert(riskDetail);
 					}
 				} else {
 					riskDetail.setArdTitle("行驶证有效期");
@@ -870,8 +871,8 @@ public class SynchronousCrontab {
 					riskDetail.setArdType("缺项");
 					riskDetail.setArdRectificationField("avx_valid_until");		//整改字段
 					riskDetail.setArdRectificationFieldType("date");
+					queryRiskOrInsert(riskDetail);
 				}
-				queryRiskOrInsert(riskDetail);
 			}
 
 			//道路运输证
@@ -895,24 +896,23 @@ public class SynchronousCrontab {
 					riskDetail.setArdType("缺项");
 					riskDetail.setArdRectificationField("avd_road_transport_certificate_no");		//整改字段
 					riskDetail.setArdRectificationFieldType("string");
+					queryRiskOrInsert(riskDetail);
 				}
-				queryRiskOrInsert(riskDetail);
 
 				//注册日期
 				if(daoluyunshuzheng.getAvdIssueDate() != null) {
-
 				} else {
 					riskDetail.setArdTitle("发证日期");
 					riskDetail.setArdContent("发证日期缺项");
 					riskDetail.setArdType("缺项");
 					riskDetail.setArdRectificationField("avd_issue_date");		//整改字段
 					riskDetail.setArdRectificationFieldType("date");
+					queryRiskOrInsert(riskDetail);
 				}
-				queryRiskOrInsert(riskDetail);
 
 				//有效期
 				if(daoluyunshuzheng.getAvdValidUntil() != null) {
-					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.CHINA);
 					int timeDifference = differentDays(DateUtil.now(),formatter.format(daoluyunshuzheng.getAvdValidUntil()));
 					riskDetail.setArdTitle("道路运输证有效期");
 					riskDetail.setArdRectificationField("avd_valid_until");		//整改字段
@@ -920,9 +920,11 @@ public class SynchronousCrontab {
 					if (timeDifference <= 30 && timeDifference > 0) {
 						riskDetail.setArdContent("道路运输证有效期预警");
 						riskDetail.setArdType("预警");
+						queryRiskOrInsert(riskDetail);
 					} else if (timeDifference < 0) {
 						riskDetail.setArdContent("道路运输证有效期逾期");
 						riskDetail.setArdType("逾期");
+						queryRiskOrInsert(riskDetail);
 					}
 				} else {
 					riskDetail.setArdTitle("道路运输证有效期");
@@ -930,8 +932,8 @@ public class SynchronousCrontab {
 					riskDetail.setArdType("缺项");
 					riskDetail.setArdRectificationField("avd_valid_until");		//整改字段
 					riskDetail.setArdRectificationFieldType("date");
+					queryRiskOrInsert(riskDetail);
 				}
-				queryRiskOrInsert(riskDetail);
 			}
 		}
 	}
@@ -1004,6 +1006,9 @@ public class SynchronousCrontab {
 
 			//获取驾驶员风险信息
 			addQYDriverList();
+
+			//获取车辆风险信息
+			addQyVehicleList();
 
 
 			System.out.println("执行完成");

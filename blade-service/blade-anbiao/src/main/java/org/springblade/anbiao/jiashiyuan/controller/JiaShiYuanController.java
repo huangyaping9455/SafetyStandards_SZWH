@@ -7,6 +7,9 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
@@ -25,6 +28,7 @@ import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetailInfo;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailInfoService;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
+import org.springblade.common.configurationBean.AlarmServer;
 import org.springblade.common.constant.CommonConstant;
 import org.springblade.common.tool.DateUtils;
 import org.springblade.common.tool.IdCardUtil;
@@ -37,17 +41,18 @@ import org.springblade.system.entity.Dept;
 import org.springblade.system.feign.IDictClient;
 import org.springblade.system.feign.ISysClient;
 import org.springblade.upload.upload.feign.IFileUploadClient;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 /**
  * Created by you on 2019/4/22.
@@ -78,6 +83,7 @@ public class JiaShiYuanController {
 	private IBladeDeptService deptService;
 	private IAnbiaoRiskDetailService riskDetailService;
 	private IAnbiaoRiskDetailInfoService detailInfoService;
+	private AlarmServer alarmServer;
 
 	@PostMapping("/insert")
 	@ApiLog("新增-驾驶员资料管理")
@@ -93,6 +99,9 @@ public class JiaShiYuanController {
 		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId, jiaShiYuan.getDeptId());
 		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete, 0);
 		JiaShiYuan deail = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+
+
+
 
 		//验证身份证初领日期
 		if (StringUtils.isNotBlank(jiaShiYuan.getShenfenzhengchulingriqi()) && !jiaShiYuan.getShenfenzhengchulingriqi().equals("null")) {
@@ -309,33 +318,6 @@ public class JiaShiYuanController {
 			}
 		}
 
-		//验证手机号码
-		if (StringUtils.isBlank(jiaShiYuan.getShoujihaoma())) {
-			r.setMsg("手机号码不能为空;");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
-		} else {
-			if (RegexUtils.checkMobile(jiaShiYuan.getShoujihaoma())) {
-				QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper1 = new QueryWrapper<JiaShiYuan>();
-				jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getShoujihaoma,jiaShiYuan.getShoujihaoma());
-				jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getDeptId, jiaShiYuan.getDeptId());
-				jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getIsdelete, 0);
-				JiaShiYuan jiaShiYuan1 = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper1);
-				if (jiaShiYuan1 !=null){
-					r.setMsg("该手机号码已存在;");
-					r.setCode(500);
-					r.setSuccess(false);
-					return r;
-				}
-			} else {
-				r.setMsg("该手机号码不合法;");
-				r.setCode(500);
-				r.setSuccess(false);
-				return r;
-			}
-		}
-
 		//验证驾驶证
 		if (StringUtils.isNotBlank(jiaShiYuan.getJiashizhenghao()) && jiaShiYuan.getJiashizhenghao() != null) {
 			if (IdCardUtil.isValidCard(jiaShiYuan.getJiashizhenghao()) == true) {
@@ -386,6 +368,33 @@ public class JiaShiYuanController {
 		JiaShiYuan jiaShiYuan1=jiaShiYuan;
 		//新增
 		if (deail == null) {
+			//验证手机号码
+			if (StringUtils.isBlank(jiaShiYuan.getShoujihaoma())) {
+				r.setMsg("手机号码不能为空;");
+				r.setCode(500);
+				r.setSuccess(false);
+				return r;
+			} else {
+				if (RegexUtils.checkMobile(jiaShiYuan.getShoujihaoma())) {
+					QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper1 = new QueryWrapper<JiaShiYuan>();
+					jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getShoujihaoma,jiaShiYuan.getShoujihaoma());
+					jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getDeptId, jiaShiYuan.getDeptId());
+					jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getIsdelete, 0);
+					JiaShiYuan jiaShiYuan2 = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper1);
+					if (jiaShiYuan2 !=null){
+						r.setMsg("该手机号码已存在;");
+						r.setCode(500);
+						r.setSuccess(false);
+						return r;
+					}
+				} else {
+					r.setMsg("该手机号码不合法;");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
+			}
+
 			if (StringUtils.isBlank(jiaShiYuan.getJiashiyuanleixing())) {
 				jiaShiYuan.setCongyerenyuanleixing("驾驶员");
 			}
@@ -2454,6 +2463,79 @@ public class JiaShiYuanController {
 			r.setMsg("离职失败");
 		}
 		return r;
+	}
+
+	@ApiLog("违规后续处理情况台账--导出")
+	@ApiOperation(value = "违规后续处理情况台账--导出", notes = "传入alarmPage", position = 7)
+	@GetMapping(value="/goExport_Get")
+	public R goExport_Get(JiaShiYuanPage jiaShiYuanPage ,HttpServletResponse response) throws IOException {
+		R rs = new R();
+		jiaShiYuanPage.setSize(0);
+		jiaShiYuanPage.setCurrent(0);
+		jiaShiYuanService.selectAlarmTJMXPage(jiaShiYuanPage);
+		List<JiaShiYuanTJMX> JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
+		String templateFile = alarmServer.getTemplateUrl()+"模板\\A.xlsx";
+		Map<String, Object> context = new HashMap<String, Object>();
+		//Excel中的结果集ListData
+		List<JiaShiYuanTJMX> ListData = new ArrayList<>();
+		if(JiaShiYuanTJMXList.size()==0){
+
+		}else if(JiaShiYuanTJMXList.size()>30000){
+			rs.setMsg("数据超过30000条无法下载");
+			rs.setCode(500);
+			return rs;
+		}else{
+			int index = 0;
+			DateTimeFormatter dtf3 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			for( int i = 0 ; i < JiaShiYuanTJMXList.size() ; i++) {
+				JiaShiYuanTJMX t = JiaShiYuanTJMXList.get(i);
+				JiaShiYuanTJMX JiaShiYuanTJMX = new JiaShiYuanTJMX();
+				JiaShiYuanTJMX.setXuhao(index);
+				JiaShiYuanTJMX.setDeptName(t.getDeptName());
+				JiaShiYuanTJMX.setA("√");
+				JiaShiYuanTJMX.setA1("×");
+				JiaShiYuanTJMX.setA2("√");
+				JiaShiYuanTJMX.setA3("×");
+				JiaShiYuanTJMX.setA4("√");
+				JiaShiYuanTJMX.setA5("×");
+				ListData.add(JiaShiYuanTJMX);
+				index ++;
+			}
+		}
+		String title = jiaShiYuanPage.getDeptName();
+		// 模板注意 用{} 来表示你要用的变量 如果本来就有"{","}" 特殊字符 用"\{","\}"代替
+		// {} 代表普通变量 {.} 代表是list的变量
+		// 这里模板 删除了list以后的数据，也就是统计的这一行
+		String templateFileName = templateFile;
+		String fileName = alarmServer.getTemplateUrl()+title + "-驾驶员信息统计表.xlsx";
+		ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
+		WriteSheet writeSheet = EasyExcel.writerSheet().build();
+		// 写入list之前的数据
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("title", title);
+		excelWriter.fill(map, writeSheet);
+
+		// 直接写入数据
+		excelWriter.fill(ListData, writeSheet);
+		excelWriter.finish();
+
+//		ExportExcel ee=new ExportExcel();
+//		ServletWebRequest servletContainer = null;
+//		String msg=ee.exportExcel(templateFile,fileName, context,servletContainer);
+
+		ClassPathResource classPathResource = new ClassPathResource("templates/A.xlsx");
+		InputStream inputStream = classPathResource.getInputStream();
+		response.setContentType("application/vnd.ms-excel");
+		response.setCharacterEncoding("utf-8");
+		// 这里URLEncoder.encode可以防止中文乱码 当然和easyExcel没有关系
+		response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+		// 如果不用模板的方式导出的话，是doWrite
+		EasyExcel.write(response.getOutputStream(),JiaShiYuanTJMX.class).withTemplate(inputStream).sheet("Sheet1").doFill(ListData);
+
+		rs.setData(fileName);
+		rs.setMsg("下载成功");
+		rs.setCode(200);
+		return rs;
 	}
 
 }

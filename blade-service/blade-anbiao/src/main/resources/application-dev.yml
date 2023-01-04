@@ -48,3 +48,6 @@ fileserver:
   learnRecordUrl: http://r.bn.cloudjoytech.com.cn/sec/getLearnRecord
   markRemindScore: 750
 
+alarmserver:
+  templateUrl: D:\BS\static\SafetyStandards\
+

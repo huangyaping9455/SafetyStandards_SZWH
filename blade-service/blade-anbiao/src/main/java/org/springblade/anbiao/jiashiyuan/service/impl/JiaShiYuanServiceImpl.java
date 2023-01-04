@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTJMX;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTrain;
 import org.springblade.anbiao.jiashiyuan.mapper.JiaShiYuanMapper;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
@@ -185,6 +186,41 @@ public class JiaShiYuanServiceImpl extends ServiceImpl<JiaShiYuanMapper, JiaShiY
 	@Override
 	public int selectMaxId() {
 		return jiaShiYuanMapper.selectMaxId();
+	}
+
+	@Override
+	public JiaShiYuanPage<JiaShiYuanTJMX> selectAlarmTJMXPage(JiaShiYuanPage jiaShiYuanPage) {
+		Integer total = jiaShiYuanMapper.selectAlarmTJMXTotal(jiaShiYuanPage);
+		if(jiaShiYuanPage.getSize()==0){
+			if(jiaShiYuanPage.getTotal()==0){
+				jiaShiYuanPage.setTotal(total);
+			}
+
+			List<JiaShiYuanTJMX> jiaShiYuanTJMXES = jiaShiYuanMapper.selectAlarmTJMXPage(jiaShiYuanPage);
+			jiaShiYuanPage.setRecords(jiaShiYuanTJMXES);
+			return jiaShiYuanPage;
+
+		}
+		Integer pagetotal = 0;
+		if (total > 0) {
+			if(total%jiaShiYuanPage.getSize()==0){
+				pagetotal = total / jiaShiYuanPage.getSize();
+			}else {
+				pagetotal = total / jiaShiYuanPage.getSize() + 1;
+			}
+		}
+		if (pagetotal >= jiaShiYuanPage.getCurrent()) {
+			jiaShiYuanPage.setPageTotal(pagetotal);
+			Integer offsetNo = 0;
+			if (jiaShiYuanPage.getCurrent() > 1) {
+				offsetNo = jiaShiYuanPage.getSize() * (jiaShiYuanPage.getCurrent() - 1);
+			}
+			jiaShiYuanPage.setTotal(total);
+			jiaShiYuanPage.setOffsetNo(offsetNo);
+			List<JiaShiYuanTJMX> jiaShiYuanTJMXES = jiaShiYuanMapper.selectAlarmTJMXPage(jiaShiYuanPage);
+			jiaShiYuanPage.setRecords(jiaShiYuanTJMXES);
+		}
+		return jiaShiYuanPage;
 	}
 
 

@@ -10,6 +10,9 @@
     <resultMap id="jiaShiYuanVOResultMap" type="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO">
     </resultMap>
 
+    <resultMap id="jiaShiYuanTJMXResultMap" type="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTJMX">
+    </resultMap>
+
 
 
     <insert id="insertJSY" parameterType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan">
@@ -837,6 +840,87 @@ values
         SELECT
             max(CONVERT(dept_id,SIGNED)) AS id
         FROM anbiao_jiashiyuan
+    </select>
+
+    <sql id="tableTJMXSql">
+        SELECT
+            bb.dept_name deptName ,
+            jiashiyuanxingming as a
+        FROM
+            anbiao_jiashiyuan a
+        inner join  (
+        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) bb on a.dept_id = bb.id
+        left join (
+        select cheliangpaizhao,jiashiyuanid from anbiao_vehicle
+        where is_deleted = 0
+        and cheliangpaizhao not like '%挂%'
+        ) b on a.id = b.jiashiyuanid
+        left join (
+        select cheliangpaizhao,jiashiyuanid from anbiao_vehicle
+        where is_deleted = 0
+        and cheliangpaizhao like '%挂%'
+        ) c on a.id = c.jiashiyuanid
+        left join anbiao_jiashiyuan_ruzhi d on a.id = d.ajr_aj_ids
+        left join anbiao_jiashiyuan_laodonghetong e on a.id = e.ajw_aj_ids
+        left join anbiao_jiashiyuan_jiashizheng f on a.id = f.ajj_aj_ids
+        left join anbiao_jiashiyuan_congyezigezheng g on a.id = g.ajc_aj_ids
+        left join anbiao_jiashiyuan_anquanzerenshu h on a.id = h.aja_aj_ids
+        left join anbiao_jiashiyuan_weihaigaozhishu j on a.id = j.ajw_aj_ids
+        left join anbiao_jiashiyuan_tijian k on a.id = k.ajt_aj_ids
+        left join anbiao_jiashiyuan_wuzezhengming l on a.id = l.ajw_aj_ids
+        WHERE 1=1
+        and ifnull(a.isdelete,0) = 0
+    </sql>
+    <sql id="queryTJMXSql">
+
+        <if test="deptName != null and deptName != '' ">
+            and deptName like concat('%', #{deptName} ,'%')
+        </if>
+
+    </sql>
+    <sql id="orderTJMXSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by a desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <select timeout="600" id="selectAlarmTJMXPage" resultMap="jiaShiYuanTJMXResultMap"
+            parameterType="org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage">
+        <if test="size == 0">
+            select * from (
+            <include refid="tableTJMXSql"/>
+            )b
+            where 1=1
+            <include refid="queryTJMXSql"/>
+            <include refid="orderTJMXSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="tableTJMXSql"/>
+            )b
+            where 1=1
+            <include refid="queryTJMXSql"/>
+            <include refid="orderTJMXSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectAlarmTJMXTotal"
+            parameterType="org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableTJMXSql"/>
+        )d where 1 = 1
+        <include refid="queryTJMXSql"/>
     </select>
 
 
