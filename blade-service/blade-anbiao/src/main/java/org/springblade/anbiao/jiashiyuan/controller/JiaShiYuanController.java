@@ -2492,12 +2492,112 @@ public class JiaShiYuanController {
 				JiaShiYuanTJMX JiaShiYuanTJMX = new JiaShiYuanTJMX();
 				JiaShiYuanTJMX.setXuhao(index);
 				JiaShiYuanTJMX.setDeptName(t.getDeptName());
-				JiaShiYuanTJMX.setA("√");
-				JiaShiYuanTJMX.setA1("×");
-				JiaShiYuanTJMX.setA2("√");
-				JiaShiYuanTJMX.setA3("×");
-				JiaShiYuanTJMX.setA4("√");
-				JiaShiYuanTJMX.setA5("×");
+				JiaShiYuanTJMX.setA(t.getA());
+				if (t.getA1().equals("0")){
+					JiaShiYuanTJMX.setA1("√");
+				}else {
+					JiaShiYuanTJMX.setA1("×");
+				}
+				if (t.getA2().equals("0")){
+					JiaShiYuanTJMX.setA2("√");
+				}else {
+					JiaShiYuanTJMX.setA2("×");
+				}
+				if (t.getA3().equals("0")){
+					JiaShiYuanTJMX.setA3("√");
+				}else {
+					JiaShiYuanTJMX.setA3("×");
+				}
+				if (t.getA4().equals("0")){
+					JiaShiYuanTJMX.setA4("√");
+				}else {
+					JiaShiYuanTJMX.setA4("×");
+				}
+				if (t.getA5().equals("0")){
+					JiaShiYuanTJMX.setA5("√");
+				}else {
+					JiaShiYuanTJMX.setA5("×");
+				}
+				if (t.getA6().equals("0")){
+					JiaShiYuanTJMX.setA6("√");
+				}else {
+					JiaShiYuanTJMX.setA6("×");
+				}
+				if (t.getA7().equals("0")){
+					JiaShiYuanTJMX.setA7("√");
+				}else {
+					JiaShiYuanTJMX.setA7("×");
+				}
+				if (t.getA8().equals("0")){
+					JiaShiYuanTJMX.setA8("√");
+				}else {
+					JiaShiYuanTJMX.setA8("×");
+				}
+				if (t.getA9().equals("0")){
+					JiaShiYuanTJMX.setA9("√");
+				}else {
+					JiaShiYuanTJMX.setA9("×");
+				}
+				if (t.getA10().equals("0")){
+					JiaShiYuanTJMX.setA10("√");
+				}else {
+					JiaShiYuanTJMX.setA10("×");
+				}
+				if (t.getB1().equals("0")){
+					JiaShiYuanTJMX.setB1("√");
+				}else {
+					JiaShiYuanTJMX.setB1("×");
+				}
+				if (t.getB2().equals("0")){
+					JiaShiYuanTJMX.setB2("√");
+				}else {
+					JiaShiYuanTJMX.setB2("×");
+				}
+				if (t.getB3().equals("0")){
+					JiaShiYuanTJMX.setB3("√");
+				}else {
+					JiaShiYuanTJMX.setB3("×");
+				}
+				if (t.getB4().equals("0")){
+					JiaShiYuanTJMX.setB4("√");
+				}else {
+					JiaShiYuanTJMX.setB4("×");
+				}
+				if (t.getB5().equals("0")){
+					JiaShiYuanTJMX.setB5("√");
+				}else {
+					JiaShiYuanTJMX.setB5("×");
+				}
+				if (t.getB6().equals("0")){
+					JiaShiYuanTJMX.setB6("√");
+				}else {
+					JiaShiYuanTJMX.setB6("×");
+				}
+				if (t.getB7().equals("0")){
+					JiaShiYuanTJMX.setB7("√");
+				}else {
+					JiaShiYuanTJMX.setB7("×");
+				}
+				if (t.getB8().equals("0")){
+					JiaShiYuanTJMX.setB8("√");
+				}else {
+					JiaShiYuanTJMX.setB8("×");
+				}
+				if (t.getC1().equals("0")){
+					JiaShiYuanTJMX.setC1("√");
+				}else {
+					JiaShiYuanTJMX.setC1("×");
+				}
+				if (t.getC2().equals("0")){
+					JiaShiYuanTJMX.setC2("√");
+				}else {
+					JiaShiYuanTJMX.setC2("×");
+				}
+				if (t.getC3().equals("0")){
+					JiaShiYuanTJMX.setC3("√");
+				}else {
+					JiaShiYuanTJMX.setC3("×");
+				}
 				ListData.add(JiaShiYuanTJMX);
 				index ++;
 			}
