@@ -25,4 +25,5 @@ public class MaintenanceVO {
 	private String acbAfterMaintenance;
 	private String sendDate;
 	private String maintenanceDeptName;
+	private String afterMaintenance;
 }

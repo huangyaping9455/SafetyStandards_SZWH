@@ -18,7 +18,9 @@
             d.jiashiyuanxingming AS driverName,
             a.maintain_Dict_Id AS maintainDictId,
             a.maintenance_Dept_Name AS maintenanceDeptName,
-            b.dept_name AS deptName
+            b.dept_name AS deptName,
+            case when IFNULL(a.acb_after_maintenance,'') = '' then 0 else 1 end as afterMaintenance
+
             FROM
             anbiao_cheliang_baoyangweixiu a
             LEFT JOIN anbiao_vehicle c ON a.vehicle_Id = c.id
@@ -57,7 +59,9 @@
                 d.jiashiyuanxingming AS driverName,
                 a.maintain_Dict_Id AS maintainDictId,
                 a.maintenance_Dept_Name AS maintenanceDeptName,
-                b.dept_name AS deptName
+                b.dept_name AS deptName,
+                case when IFNULL(a.acb_after_maintenance,'') = '' then 0 else 1 end as afterMaintenance
+
                 FROM
                 anbiao_cheliang_baoyangweixiu a
                 LEFT JOIN anbiao_vehicle c ON a.vehicle_Id = c.id
