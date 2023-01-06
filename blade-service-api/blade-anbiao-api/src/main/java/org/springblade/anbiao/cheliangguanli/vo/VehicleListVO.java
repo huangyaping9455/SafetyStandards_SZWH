@@ -12,6 +12,9 @@ public class VehicleListVO {
 	@ApiModelProperty(value = "车辆id")
 	private String id;
 
+	@ApiModelProperty(value = "企业名称")
+	private String deptName;
+
 	/**
 	 * 车辆牌照
 	 */
@@ -211,6 +214,12 @@ public class VehicleListVO {
 	private String lunju;
 
 	/**
+	 * 后轮距
+	 */
+	@ApiModelProperty(value = "后轮距")
+	private String frontlunju;
+
+	/**
 	 * 轮胎数
 	 */
 	@ApiModelProperty(value = "轮胎数")
@@ -293,6 +302,12 @@ public class VehicleListVO {
 	 */
 	@ApiModelProperty(value = "综合性能检测、技术等级评定信息:开始日期")
 	private String bencijipingriqi;
+
+	/**
+	 * 综合性能检测、技术等级评定信息剩余有效期
+	 */
+	@ApiModelProperty(value = "综合性能检测、技术等级评定信息剩余有效期")
+	private String jishupingdingshengyuyouxiaoqi;
 
 	/**
 	 * 道路运输证:证件号码

@@ -33,6 +33,9 @@ public class AnbiaoRiskDetailVO implements Serializable {
     @ApiModelProperty(value = "风险小类(000=企业资质,001=车辆资质,002=人员资质,003=驾驶员资质,004=保险资质;100=制度类,101=责任书,102=危险告知书,103=入职信息,104=劳动合同)")
     private String ardSubCategory;
 
+	@ApiModelProperty(value = "风险类型")
+	private String ardType;
+
     @ApiModelProperty(value = "风险标题")
     private String ardTitle;
 
@@ -43,15 +46,12 @@ public class AnbiaoRiskDetailVO implements Serializable {
     private String ardDiscoveryDate;
 
     @ApiModelProperty(value = "关联表")
-    @TableField("ard_association_table")
     private String ardAssociationTable;
 
     @ApiModelProperty(value = "关联字段")
-    @TableField("ard_association_field")
     private String ardAssociationField;
 
     @ApiModelProperty(value = "关联值")
-    @TableField("ard_association_value")
     private String ardAssociationValue;
 
 	@ApiModelProperty(value = "驾驶员姓名")

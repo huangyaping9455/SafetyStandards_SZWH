@@ -97,6 +97,42 @@ public class AnbiaoRiskDetailServiceImpl extends ServiceImpl<AnbiaoRiskDetailMap
 			}
 
 			List<AnbiaoRiskDetailVO> riskDetailVOList = mapper.selectByCategoryMXCountPage(riskPage);
+			if(riskDetailVOList.size() >= 1) {
+				riskDetailVOList.forEach(item-> {
+					//驾驶员资料
+					if("anbiao_jiashiyuan".contains(item.getArdAssociationTable())){
+						List<JiaShiYuan> jiaShiYuanList = mapper.selectMapList("anbiao_jiashiyuan","id",item.getArdAssociationValue());
+						if(jiaShiYuanList.size() >= 1){
+							jiaShiYuanList.forEach(jsyitem-> {
+								item.setJiashiyuanxingming(jsyitem.getJiashiyuanxingming());
+								item.setShoujihaoma(jsyitem.getShoujihaoma());
+								item.setShenfenzhenghao(jsyitem.getShenfenzhenghao());
+							});
+						}
+					}
+
+					//企业资料
+					if("anbiao_organization".contains(item.getArdAssociationTable())) {
+						List<Organizations> organizationsList = mapper.selectOrganizationsMapList("anbiao_organization", "id", item.getArdAssociationValue());
+						if (organizationsList.size() >= 1) {
+							organizationsList.forEach(orgitem -> {
+								item.setDeptName(orgitem.getDeptName());
+							});
+						}
+					}
+
+					//车辆资料
+					if("anbiao_vehicle".contains(item.getArdAssociationTable())) {
+						List<Vehicle> vehicleList = mapper.selectVehicleMapList("anbiao_vehicle", "id", item.getArdAssociationValue());
+						if (vehicleList.size() >= 1) {
+							vehicleList.forEach(vehitem -> {
+								item.setCheliangpaizhao(vehitem.getCheliangpaizhao());
+								item.setChepaiyanse(vehitem.getChepaiyanse());
+							});
+						}
+					}
+				});
+			}
 			riskPage.setRecords(riskDetailVOList);
 			return riskPage;
 
@@ -118,6 +154,42 @@ public class AnbiaoRiskDetailServiceImpl extends ServiceImpl<AnbiaoRiskDetailMap
 			riskPage.setTotal(total);
 			riskPage.setOffsetNo(offsetNo);
 			List<AnbiaoRiskDetailVO> riskDetailVOList = mapper.selectByCategoryMXCountPage(riskPage);
+			if(riskDetailVOList.size() >= 1) {
+				riskDetailVOList.forEach(item-> {
+					//驾驶员资料
+					if("anbiao_jiashiyuan".contains(item.getArdAssociationTable())){
+						List<JiaShiYuan> jiaShiYuanList = mapper.selectMapList("anbiao_jiashiyuan","id",item.getArdAssociationValue());
+						if(jiaShiYuanList.size() >= 1){
+							jiaShiYuanList.forEach(jsyitem-> {
+								item.setJiashiyuanxingming(jsyitem.getJiashiyuanxingming());
+								item.setShoujihaoma(jsyitem.getShoujihaoma());
+								item.setShenfenzhenghao(jsyitem.getShenfenzhenghao());
+							});
+						}
+					}
+
+					//企业资料
+					if("anbiao_organization".contains(item.getArdAssociationTable())) {
+						List<Organizations> organizationsList = mapper.selectOrganizationsMapList("anbiao_organization", "id", item.getArdAssociationValue());
+						if (organizationsList.size() >= 1) {
+							organizationsList.forEach(orgitem -> {
+								item.setDeptName(orgitem.getDeptName());
+							});
+						}
+					}
+
+					//车辆资料
+					if("anbiao_vehicle".contains(item.getArdAssociationTable())) {
+						List<Vehicle> vehicleList = mapper.selectVehicleMapList("anbiao_vehicle", "id", item.getArdAssociationValue());
+						if (vehicleList.size() >= 1) {
+							vehicleList.forEach(vehitem -> {
+								item.setCheliangpaizhao(vehitem.getCheliangpaizhao());
+								item.setChepaiyanse(vehitem.getChepaiyanse());
+							});
+						}
+					}
+				});
+			}
 			riskPage.setRecords(riskDetailVOList);
 		}
 		return riskPage;

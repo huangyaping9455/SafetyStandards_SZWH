@@ -246,6 +246,7 @@
         a.zhuanxiangfangshi ,
         a.zhizhaochangshang ,
         a.lunju ,
+        a.frontlunju ,
         a.luntaishu ,
         a.luntaiguige ,
         a.gangbantanhuangpianshu ,
@@ -261,6 +262,8 @@
         a.chuchangriqi ,
         a.bencijipingriqi ,
         a.xiacijipingriqi ,
+        case when IFNULL(a.bencijipingriqi,'') = '' then '0天'
+        else CONCAT(TIMESTAMPDIFF(day,NOW(),a.bencijipingriqi),'天') end as jishupingdingshengyuyouxiaoqi,
         ifnull(chezhu,'') as chezhu,
         d.avd_road_transport_certificate_no as daoluyunshuzhenghao,
         d.avd_issue_date as daoluyunshuzhengkaishiriqi,
@@ -349,7 +352,7 @@
         </if>
     </sql>
 
-    <select id="selectVehiclePage" resultMap="vehicleVOResultMap"
+    <select id="selectVehiclePage"
             parameterType="org.springblade.anbiao.cheliangguanli.page.VehiclePage" resultType="org.springblade.anbiao.cheliangguanli.vo.VehicleListVO">
         <if test="size == 0" >
             select * from (

@@ -98,7 +98,7 @@
         select
             ard_title,
             ard_type,
-            ard_discovery_date,
+            ard_sub_category,
             ard_content,
             count(1) as num
         from
@@ -114,7 +114,6 @@
         GROUP BY
             ard_title,
             ard_type,
-            ard_discovery_date,
             ard_content
     </select>
 
