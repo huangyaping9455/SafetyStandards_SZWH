@@ -223,4 +223,48 @@
         <include refid="queryTJMXSql"/>
     </select>
 
+    <select id="selectSystemRisk" resultType="org.springblade.anbiao.risk.vo.AnbiaoSystemRiskVO">
+        SELECT f.id as deptId,a.id as jiaShiYuanId,a.jiashiyuanxingming,
+                          ROUND((1-(
+                               (
+                                     (case when (ifnull(`aja_autograph_time`,'') = '') then 1 else 0 end)
+                                   + (case when (ifnull(`aja_autograph_status`,'') = '') or (`aja_autograph_status` = 0) then 1 else 0 end)
+                               )*1.0/2))*100,2) as anquanzerenshu,
+                          ROUND((1-(
+                               (
+                                     (case when (ifnull(`ajr_name`,'') = '') then 1 else 0 end)
+                                   + (case when (ifnull(`ajr_sex`,'') = '') then 1 else 0 end)
+                                   + (case when (ifnull(`ajr_nation`,'') = '') then 1 else 0 end)
+                                   + (case when (ifnull(`ajr_native_place`,'') = '') then 1 else 0 end)
+                                   + (case when (ifnull(`ajr_birth`,'') = '') then 1 else 0 end)
+                                   + (case when (ifnull(`ajr_age`,'') = '') then 1 else 0 end)
+                                   + (case when (ifnull(`ajr_political_outlook`,'') = '') then 1 else 0 end)
+                                   + (case when (ifnull(`ajr_education`,'') = '') then 1 else 0 end)
+                                   + (case when (ifnull(`ajr_graduation_school`,'') = '') then 1 else 0 end)
+                                   + (case when (ifnull(`ajr_graduation_date`,'') = '') then 1 else 0 end)
+                                   + (case when (ifnull(`ajr_id_number`,'') = '') then 1 else 0 end)
+                                   + (case when (ifnull(`ajr_address`,'') = '') then 1 else 0 end)
+                                   + (case when (ifnull(`ajr_receive_driving_license`,'') = '') then 1 else 0 end)
+                                   + (case when (ifnull(`ajr_class`,'') = '') then 1 else 0 end)
+                                   + (case when (ifnull(`ajr_driving_experience`,'') = '')then 1 else 0 end)
+                               )*1.0/ 15))*100,2) as ruzhi,
+                          ROUND((1-(
+                               (
+                                    (case when (ifnull(d.ajw_autograph_time,'') = '') then 1 else 0 end)
+                                   +(case when (ifnull(d.ajw_autograph_status,'') = '') or (d.ajw_autograph_status = 0) then 1 else 0 end)
+                               )*1.0/2))*100,2) as weihaigaozhishu,
+                          ROUND((1-(
+                               (
+                                     (case when (ifnull(e.ajw_autograph_time,'') = '') then 1 else 0 end)
+                                   + (case when (ifnull(e.ajw_autograph_status,'') = '') or (e.ajw_autograph_status = 0) then 1 else 0 end)
+                               )*1.0/2))*100,2) as laodonghetong
+        FROM
+                           anbiao_jiashiyuan a
+                 LEFT JOIN anbiao_jiashiyuan_anquanzerenshu b on a.id=b.aja_aj_ids
+                 LEFT JOIN anbiao_jiashiyuan_ruzhi c on a.id=c.ajr_aj_ids
+                 LEFT JOIN anbiao_jiashiyuan_weihaigaozhishu d on a.id=d.ajw_aj_ids
+                 LEFT JOIN anbiao_jiashiyuan_laodonghetong e on a.id=e.ajw_aj_ids
+                 LEFT JOIN blade_dept f on a.dept_id=f.id
+    </select>
+
 </mapper>

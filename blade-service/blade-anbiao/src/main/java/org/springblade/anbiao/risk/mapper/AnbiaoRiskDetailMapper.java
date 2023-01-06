@@ -9,6 +9,7 @@ import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springblade.anbiao.risk.page.RiskPage;
 import org.springblade.anbiao.risk.vo.AnbiaoRiskDetailVO;
+import org.springblade.anbiao.risk.vo.AnbiaoSystemRiskVO;
 
 import java.util.List;
 
@@ -44,5 +45,7 @@ public interface AnbiaoRiskDetailMapper extends BaseMapper<AnbiaoRiskDetail> {
 
 	List<AnbiaoRiskDetailVO> selectByCategoryMXCountPage(RiskPage riskPage);
 	int selectByCategoryMXCountTotal(RiskPage riskPage);
+
+	List<AnbiaoSystemRiskVO> selectSystemRisk();
 
 }

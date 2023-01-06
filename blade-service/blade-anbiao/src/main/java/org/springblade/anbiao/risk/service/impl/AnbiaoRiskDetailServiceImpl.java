@@ -11,6 +11,7 @@ import org.springblade.anbiao.risk.page.RiskPage;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springblade.anbiao.risk.vo.AnbiaoRiskDetailVO;
+import org.springblade.anbiao.risk.vo.AnbiaoSystemRiskVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -193,5 +194,10 @@ public class AnbiaoRiskDetailServiceImpl extends ServiceImpl<AnbiaoRiskDetailMap
 			riskPage.setRecords(riskDetailVOList);
 		}
 		return riskPage;
+	}
+
+	@Override
+	public List<AnbiaoSystemRiskVO> selectSystemRisk() {
+		return mapper.selectSystemRisk();
 	}
 }

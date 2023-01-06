@@ -28,12 +28,14 @@ import org.springblade.anbiao.risk.page.RiskPage;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailInfoService;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.anbiao.risk.vo.AnbiaoRiskDetailVO;
+import org.springblade.anbiao.risk.vo.AnbiaoSystemRiskVO;
 import org.springblade.common.tool.JSONUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -1595,6 +1597,168 @@ public class AnbiaoRiskDetailController {
 	public R<RiskPage<AnbiaoRiskDetailVO>> getByCategoryMXList(@RequestBody RiskPage riskPage) {
 		RiskPage<AnbiaoRiskDetailVO> pages = riskDetailService.selectByCategoryMXCountPage(riskPage);
 		return R.data(pages);
+	}
+
+
+	@PostMapping("/systemInsert")
+	@ApiLog("新增-制度风险统计信息")
+	@ApiOperation(value = "新增-制度风险统计信息", position = 1)
+	public R systemInsert(BladeUser user) throws ParseException{
+		R r = new R();
+		int aa=0;
+		List<AnbiaoSystemRiskVO> riskVOList = riskDetailService.selectSystemRisk();
+		if (riskVOList.size()>0){
+			for (AnbiaoSystemRiskVO riskVO: riskVOList) {
+
+				//安全责任书
+				if (Double.doubleToLongBits(Double.parseDouble(riskVO.getAnquanzerenshu())) < Double.doubleToLongBits(100.00) ){
+					AnbiaoRiskDetail riskDetail = new AnbiaoRiskDetail();
+					riskDetail.setArdDeptIds(riskVO.getDeptId());
+					riskDetail.setArdMajorCategories("1");
+					riskDetail.setArdSubCategory("101");
+					riskDetail.setArdTitle("安全责任书信息");
+					riskDetail.setArdDiscoveryDate(DateUtil.now().substring(0, 10));
+					riskDetail.setArdIsRectification("0");
+					riskDetail.setArdAssociationTable("anbiao_jiashiyuan");
+					riskDetail.setArdAssociationField("id");
+					riskDetail.setArdAssociationValue(riskVO.getJiaShiYuanId());
+					riskDetail.setArdContent("安全责任书信息未完善");
+					riskDetail.setArdType("未完善");
+					riskDetail.setArdPercentage(riskVO.getAnquanzerenshu()+"%");
+					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,riskDetail.getArdDeptIds());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,riskDetail.getArdAssociationValue());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,riskDetail.getArdContent());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+					AnbiaoRiskDetail riskDetail1 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+					if (riskDetail1==null) {
+						int insert = riskDetailService.getBaseMapper().insert(riskDetail);
+						if (insert>0){
+							aa++;
+						}
+					}else{
+						int update = riskDetailService.getBaseMapper().updateById(riskDetail);
+						if (update>0){
+							aa++;
+						}
+					}
+				}
+
+				//入职表
+				if (Double.doubleToLongBits(Double.parseDouble(riskVO.getRuzhi())) < Double.doubleToLongBits(100.00)){
+					AnbiaoRiskDetail riskDetail = new AnbiaoRiskDetail();
+					riskDetail.setArdDeptIds(riskVO.getDeptId());
+					riskDetail.setArdMajorCategories("1");
+					riskDetail.setArdSubCategory("103");
+					riskDetail.setArdTitle("入职信息");
+					riskDetail.setArdDiscoveryDate(DateUtil.now().substring(0, 10));
+					riskDetail.setArdIsRectification("0");
+					riskDetail.setArdAssociationTable("anbiao_jiashiyuan");
+					riskDetail.setArdAssociationField("id");
+					riskDetail.setArdPercentage(riskVO.getRuzhi()+"%");
+					riskDetail.setArdContent("入职信息未完善");
+					riskDetail.setArdType("未完善");
+					riskDetail.setArdAssociationValue(riskVO.getRuzhi()+"%");
+					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,riskDetail.getArdDeptIds());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,riskDetail.getArdAssociationValue());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,riskDetail.getArdContent());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+					AnbiaoRiskDetail riskDetail1 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+					if (riskDetail1==null) {
+						int insert = riskDetailService.getBaseMapper().insert(riskDetail);
+						if (insert>0){
+							aa++;
+						}
+					}else{
+						int update = riskDetailService.getBaseMapper().updateById(riskDetail);
+						if (update>0){
+							aa++;
+						}
+					}
+				}
+
+				//危害告知书
+				if (Double.doubleToLongBits(Double.parseDouble(riskVO.getWeihaigaozhishu())) < Double.doubleToLongBits(100.00)){
+					AnbiaoRiskDetail riskDetail = new AnbiaoRiskDetail();
+					riskDetail.setArdDeptIds(riskVO.getDeptId());
+					riskDetail.setArdMajorCategories("1");
+					riskDetail.setArdSubCategory("102");
+					riskDetail.setArdTitle("危害告知书信息");
+					riskDetail.setArdDiscoveryDate(DateUtil.now().substring(0, 10));
+					riskDetail.setArdIsRectification("0");
+					riskDetail.setArdAssociationTable("anbiao_jiashiyuan");
+					riskDetail.setArdAssociationField("id");
+					riskDetail.setArdAssociationValue(riskVO.getJiaShiYuanId());
+					riskDetail.setArdContent("危害告知书信息未完善");
+					riskDetail.setArdType("未完善");
+					riskDetail.setArdAssociationValue(riskVO.getWeihaigaozhishu()+"%");
+					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,riskDetail.getArdDeptIds());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,riskDetail.getArdAssociationValue());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,riskDetail.getArdContent());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+					AnbiaoRiskDetail riskDetail1 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+					if (riskDetail1==null) {
+						int insert = riskDetailService.getBaseMapper().insert(riskDetail);
+						if (insert>0){
+							aa++;
+						}
+					}else{
+						int update = riskDetailService.getBaseMapper().updateById(riskDetail);
+						if (update>0){
+							aa++;
+						}
+					}
+				}
+
+				//劳动合同
+
+				if ( Double.doubleToLongBits(Double.parseDouble(riskVO.getLaodonghetong())) < Double.doubleToLongBits(100.00)){
+					AnbiaoRiskDetail riskDetail = new AnbiaoRiskDetail();
+					riskDetail.setArdDeptIds(riskVO.getDeptId());
+					riskDetail.setArdMajorCategories("1");
+					riskDetail.setArdSubCategory("104");
+					riskDetail.setArdTitle("劳动合同信息");
+					riskDetail.setArdDiscoveryDate(DateUtil.now().substring(0, 10));
+					riskDetail.setArdIsRectification("0");
+					riskDetail.setArdAssociationTable("anbiao_jiashiyuan");
+					riskDetail.setArdAssociationField("id");
+					riskDetail.setArdAssociationValue(riskVO.getJiaShiYuanId());
+					riskDetail.setArdContent("劳动合同信息未完善");
+					riskDetail.setArdType("未完善");
+					riskDetail.setArdAssociationValue(riskVO.getLaodonghetong()+"%");
+					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,riskDetail.getArdDeptIds());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,riskDetail.getArdAssociationValue());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,riskDetail.getArdContent());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+					AnbiaoRiskDetail riskDetail1 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+					if (riskDetail1==null) {
+						int insert = riskDetailService.getBaseMapper().insert(riskDetail);
+						if (insert>0){
+							aa++;
+						}
+					}else{
+						int update = riskDetailService.getBaseMapper().updateById(riskDetail);
+						if (update>0){
+							aa++;
+						}
+					}
+				}
+
+			}
+		}
+		if (aa>0){
+			r.setSuccess(true);
+			r.setCode(200);
+			r.setMsg("新增成功");
+		}else {
+			r.setSuccess(true);
+			r.setCode(200);
+			r.setMsg("无风险新增");
+		}
+		return r;
 	}
 
 }
