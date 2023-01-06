@@ -826,9 +826,9 @@ public class SynchronousCrontab {
 				riskDetail.setArdSubCategory("001");
 				riskDetail.setArdDiscoveryDate(DateUtil.now().substring(0, 10));
 				riskDetail.setArdIsRectification("0");
-				riskDetail.setArdAssociationTable("anbiao_vehicle_xingshizheng");
-				riskDetail.setArdAssociationField("avx_ids");
-				riskDetail.setArdAssociationValue(xingshizheng.getAvxIds());
+				riskDetail.setArdAssociationTable("anbiao_vehicle");
+				riskDetail.setArdAssociationField("id");
+				riskDetail.setArdAssociationValue(xingshizheng.getAvxAvIds());
 				if(StringUtils.isBlank(xingshizheng.getAvxFileNo())) {
 					riskDetail.setArdTitle("行驶证号");
 					riskDetail.setArdContent("行驶证号缺项");
@@ -887,9 +887,9 @@ public class SynchronousCrontab {
 				riskDetail.setArdSubCategory("001");
 				riskDetail.setArdDiscoveryDate(DateUtil.now().substring(0, 10));
 				riskDetail.setArdIsRectification("0");
-				riskDetail.setArdAssociationTable("anbiao_vehicle_daoluyunshuzheng");
-				riskDetail.setArdAssociationField("avd_ids");
-				riskDetail.setArdAssociationValue(daoluyunshuzheng.getAvdIds());
+				riskDetail.setArdAssociationTable("anbiao_vehicle");
+				riskDetail.setArdAssociationField("id");
+				riskDetail.setArdAssociationValue(daoluyunshuzheng.getAvdAvIds());
 				if(StringUtils.isBlank(daoluyunshuzheng.getAvdRoadTransportCertificateNo())) {
 					riskDetail.setArdTitle("道路运输证号");
 					riskDetail.setArdContent("道路运输证号缺项");

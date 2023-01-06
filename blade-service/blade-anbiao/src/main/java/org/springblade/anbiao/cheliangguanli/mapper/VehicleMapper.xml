@@ -209,6 +209,7 @@
 
     <sql id="tableSql">
 	 SELECT
+        a.id,
         cc.dept_name deptName,
         cheliangpaizhao ,
         chepaiyanse ,
@@ -260,6 +261,7 @@
         a.chuchangriqi ,
         a.bencijipingriqi ,
         a.xiacijipingriqi ,
+        ifnull(chezhu,'') as chezhu,
         d.avd_road_transport_certificate_no as daoluyunshuzhenghao,
         d.avd_issue_date as daoluyunshuzhengkaishiriqi,
         d.avd_valid_until as daoluyunshuzhengjieshuriqi,

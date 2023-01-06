@@ -7,6 +7,7 @@ import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.springblade.anbiao.risk.page.RiskPage;
 import org.springblade.anbiao.risk.vo.AnbiaoRiskDetailVO;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public interface AnbiaoRiskDetailMapper extends BaseMapper<AnbiaoRiskDetail> {
 
 	List<AnbiaoRiskDetailVO> selectByCategoryCount(String deptId, String date,String category);
 
-	List<AnbiaoRiskDetailVO> selectByCategoryMXCount(String deptId, String date,String category);
+	List<AnbiaoRiskDetailVO> selectByCategoryMXCount(String deptId, String date,String category,String ardContent);
 
 	List<JiaShiYuan> selectMapList(@Param("ardAssociationTable") String ardAssociationTable
 		, @Param("ardAssociationField") String ardAssociationField
@@ -40,5 +41,8 @@ public interface AnbiaoRiskDetailMapper extends BaseMapper<AnbiaoRiskDetail> {
 	List<Vehicle> selectVehicleMapList(@Param("ardAssociationTable") String ardAssociationTable
 		, @Param("ardAssociationField") String ardAssociationField
 		, @Param("ardAssociationValue") String ardAssociationValue);
+
+	List<AnbiaoRiskDetailVO> selectByCategoryMXCountPage(RiskPage riskPage);
+	int selectByCategoryMXCountTotal(RiskPage riskPage);
 
 }

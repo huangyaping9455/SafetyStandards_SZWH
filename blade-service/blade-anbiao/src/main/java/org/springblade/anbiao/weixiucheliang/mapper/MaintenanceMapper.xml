@@ -240,40 +240,43 @@
     <update id="updateMain" parameterType="org.springblade.anbiao.weixiu.entity.MaintenanceEntity">
         update anbiao_cheliang_baoyangweixiu
         <set>
-            <if test="depID != null">
+            <if test="depID != null and depID != '' ">
                 dept_Id = #{depID},
             </if>
-            <if test="vehicleId != null">
+            <if test="vehicleId != null and vehicleId != '' ">
                 vehicle_Id = #{vehicleId},
             </if>
-            <if test="driverId != null">
+            <if test="driverId != null and driverId != '' ">
                 driver_Id = #{driverId},
             </if>
-            <if test="sendDate != null">
+            <if test="sendDate != null and sendDate != '' ">
                 send_Date = #{sendDate},
             </if>
-            <if test="acbMaintenanceContent != null">
+            <if test="acbMaintenanceContent != null and acbMaintenanceContent != '' ">
                 acb_maintenance_content = #{acbMaintenanceContent},
             </if>
-            <if test="maintenanceDeptName != null">
+            <if test="maintenanceDeptName != null and maintenanceDeptName != '' ">
                 maintenance_Dept_Name = #{maintenanceDeptName},
             </if>
-            <if test="maintainDictId !=null">
+            <if test="maintainDictId !=null and maintainDictId != '' ">
                 maintain_Dict_Id = #{maintainDictId},
             </if>
-            <if test="acbRepairReason !=null">
+            <if test="acbRepairReason !=null and acbRepairReason != '' ">
                 acb_repair_reason = #{acbRepairReason},
             </if>
-            <if test="acbBeforeMaintenance !=null">
+            <if test="acbBeforeMaintenance !=null and acbBeforeMaintenance != '' ">
                 acb_before_maintenance = #{acbBeforeMaintenance},
             </if>
-            <if test="acbAfterMaintenance!=null">
+            <if test="acbAfterMaintenance!=null and acbAfterMaintenance != '' ">
                 acb_after_maintenance = #{acbAfterMaintenance},
             </if>
-            <if test="acbBillAttachment!=null">
+            <if test="acbCenterMaintenance!=null and acbCenterMaintenance != '' ">
+                acb_center_maintenance = #{acbCenterMaintenance},
+            </if>
+            <if test="acbBillAttachment!=null and acbBillAttachment != '' ">
                 acb_bill_attachment =#{acbBillAttachment},
             </if>
-            <if test="acbCost!=null">
+            <if test="acbCost!=null and acbCost != '' " >
                 acb_cost =#{acbCost}
             </if>
         </set>

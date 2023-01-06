@@ -64,7 +64,8 @@
             inner join (
                 <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) b on a.ard_dept_ids = b.id
-        where ard_dept_ids = #{deptId}
+        where 1 = 1
+<!--            ard_dept_ids = #{deptId}-->
             and left(ard_discovery_date,7) = left(#{date},7)
             and ard_is_rectification = 0
         GROUP BY
@@ -83,7 +84,8 @@
             inner join (
                 <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) b on a.ard_dept_ids = b.id
-        where ard_dept_ids = #{deptId}
+        where 1 = 1
+        <!--ard_dept_ids = #{deptId}-->
             and left(ard_discovery_date,7) = left(#{date},7)
             and ard_is_rectification = 0
         GROUP BY
@@ -104,7 +106,8 @@
             inner join (
                 <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) b on a.ard_dept_ids = b.id
-        where ard_dept_ids = #{deptId}
+        where 1 = 1
+<!--        ard_dept_ids = #{deptId}-->
             and left(ard_discovery_date,7) = left(#{date},7)
             and ard_sub_category = #{category}
             and ard_is_rectification = 0
@@ -131,10 +134,12 @@
             inner join (
                 <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) b on a.ard_dept_ids = b.id
-        where ard_dept_ids = #{deptId}
+        where 1 = 1
+<!--            ard_dept_ids = #{deptId}-->
             and left(ard_discovery_date,7) = left(#{date},7)
             and ard_sub_category = #{category}
             and ard_is_rectification = 0
+            and ard_content = #{ardContent}
     </select>
 
     <select id="selectMapList" resultMap="JiaShiYuanResultMap">
@@ -147,6 +152,76 @@
 
     <select id="selectVehicleMapList" resultMap="VehicleResultMap">
         select * from ${ardAssociationTable} where ${ardAssociationField} = #{ardAssociationValue}
+    </select>
+
+    <sql id="tableTJMXSql">
+        select
+            ard_dept_ids,
+            ard_ids,
+            ard_title,
+            ard_type,
+            ard_discovery_date,
+            ard_content,
+            ard_association_value,
+            ard_association_table,
+            ard_association_field
+        from
+            anbiao_risk_detail a
+        inner join (
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b on a.ard_dept_ids = b.id
+        where 1 = 1
+        <!--            ard_dept_ids = #{deptId}-->
+            and left(ard_discovery_date,7) = left(#{date},7)
+            and ard_sub_category = #{category}
+            and ard_is_rectification = 0
+            and ard_content = #{ardContent}
+    </sql>
+    <sql id="queryTJMXSql">
+
+    </sql>
+    <sql id="orderTJMXSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by ard_ids desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <select timeout="600" id="selectByCategoryMXCountPage" resultMap="AnbiaoRiskDetailVOResultMap"
+            parameterType="org.springblade.anbiao.risk.page.RiskPage">
+        <if test="size == 0">
+            select * from (
+            <include refid="tableTJMXSql"/>
+            )b
+            where 1=1
+            <include refid="queryTJMXSql"/>
+            <include refid="orderTJMXSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="tableTJMXSql"/>
+            )b
+            where 1=1
+            <include refid="queryTJMXSql"/>
+            <include refid="orderTJMXSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectByCategoryMXCountTotal"
+            parameterType="org.springblade.anbiao.risk.page.RiskPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableTJMXSql"/>
+        )d where 1 = 1
+        <include refid="queryTJMXSql"/>
     </select>
 
 </mapper>

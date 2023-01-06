@@ -12,6 +12,10 @@ import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 public class JiaShiYuanListVO {
 	private static final long serialVersionUID = 1L;
 
+
+	@ApiModelProperty(value = "驾驶员id")
+	private String id;
+
 	/**
 	 * 企业名称
 	 */

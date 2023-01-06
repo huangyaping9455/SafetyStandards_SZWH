@@ -2465,8 +2465,8 @@ public class JiaShiYuanController {
 		return r;
 	}
 
-	@ApiLog("违规后续处理情况台账--导出")
-	@ApiOperation(value = "违规后续处理情况台账--导出", notes = "传入alarmPage", position = 7)
+	@ApiLog("驾驶员信息统计表--导出")
+	@ApiOperation(value = "驾驶员信息统计表--导出", notes = "传入jiaShiYuanPage", position = 7)
 	@GetMapping(value="/goExport_Get")
 	public R goExport_Get(JiaShiYuanPage jiaShiYuanPage ,HttpServletResponse response) throws IOException {
 		R rs = new R();

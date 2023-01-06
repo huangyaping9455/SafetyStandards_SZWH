@@ -9,6 +9,9 @@ import lombok.Data;
 public class VehicleListVO {
 	private static final long serialVersionUID = 1L;
 
+	@ApiModelProperty(value = "车辆id")
+	private String id;
+
 	/**
 	 * 车辆牌照
 	 */

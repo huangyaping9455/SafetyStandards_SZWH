@@ -16,12 +16,15 @@ import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanCongyezigezheng;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanJiashizheng;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanTijian;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanCongyezigezhengService;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanJiashizhengService;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanTijianService;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
+import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanListVO;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetailInfo;
+import org.springblade.anbiao.risk.page.RiskPage;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailInfoService;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.anbiao.risk.vo.AnbiaoRiskDetailVO;
@@ -1561,9 +1564,10 @@ public class AnbiaoRiskDetailController {
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "deptId", value = "企业ID", required = true),
 		@ApiImplicitParam(name = "date", value = "日期(yyyy-MM)", required = true),
-		@ApiImplicitParam(name = "category", value = "隐患类别", required = true)
+		@ApiImplicitParam(name = "category", value = "隐患类别", required = true),
+		@ApiImplicitParam(name = "ardContent", value = "风险内容", required = true)
 	})
-	public R<List<AnbiaoRiskDetailVO>> selectByCategoryMXList(String deptId, String date, String category, BladeUser user) {
+	public R<List<AnbiaoRiskDetailVO>> selectByCategoryMXList(String deptId, String date, String category,String ardContent, BladeUser user) {
 		R rs = new R();
 		if(user == null){
 			rs.setCode(401);
@@ -1571,7 +1575,7 @@ public class AnbiaoRiskDetailController {
 			rs.setSuccess(false);
 			return rs;
 		}
-		List<AnbiaoRiskDetailVO> list= riskDetailService.selectByCategoryMXCount(deptId,date,category);
+		List<AnbiaoRiskDetailVO> list= riskDetailService.selectByCategoryMXCount(deptId,date,category,ardContent);
 		if(list.size() < 1){
 			rs.setCode(200);
 			rs.setSuccess(true);
@@ -1583,6 +1587,14 @@ public class AnbiaoRiskDetailController {
 			rs.setMsg("获取成功");
 		}
 		return rs;
+	}
+
+	@PostMapping("/getByCategoryMXList")
+	@ApiLog("风险--二级穿透--隐患明细列表")
+	@ApiOperation(value = "风险--二级穿透--隐患明细列表", notes = "传入RiskPage", position = 8)
+	public R<RiskPage<AnbiaoRiskDetailVO>> getByCategoryMXList(@RequestBody RiskPage riskPage) {
+		RiskPage<AnbiaoRiskDetailVO> pages = riskDetailService.selectByCategoryMXCountPage(riskPage);
+		return R.data(pages);
 	}
 
 }
