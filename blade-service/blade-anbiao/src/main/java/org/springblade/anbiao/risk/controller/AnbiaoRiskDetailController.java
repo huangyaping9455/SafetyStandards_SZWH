@@ -2,6 +2,7 @@ package org.springblade.anbiao.risk.controller;
 
 
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.druid.sql.visitor.functions.Substring;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.Api;
@@ -10,6 +11,8 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
+import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
+import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanCongyezigezheng;
@@ -63,6 +66,7 @@ public class AnbiaoRiskDetailController {
 	private IAnbiaoJiashiyuanJiashizhengService jiashizhengService;
 	private IAnbiaoJiashiyuanCongyezigezhengService congyezigezhengService;
 	private IAnbiaoJiashiyuanTijianService tijianService;
+	private IAnbiaoAnquanhuiyiService anquanhuiyiService;
 
 	@PostMapping("/insert")
 	@ApiLog("新增-风险统计信息")
@@ -1655,10 +1659,10 @@ public class AnbiaoRiskDetailController {
 					riskDetail.setArdIsRectification("0");
 					riskDetail.setArdAssociationTable("anbiao_jiashiyuan");
 					riskDetail.setArdAssociationField("id");
-					riskDetail.setArdPercentage(riskVO.getRuzhi()+"%");
+					riskDetail.setArdAssociationValue(riskVO.getJiaShiYuanId());
 					riskDetail.setArdContent("入职信息未完善");
 					riskDetail.setArdType("未完善");
-					riskDetail.setArdAssociationValue(riskVO.getRuzhi()+"%");
+					riskDetail.setArdPercentage(riskVO.getRuzhi()+"%");
 					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
 					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,riskDetail.getArdDeptIds());
 					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,riskDetail.getArdAssociationValue());
@@ -1692,7 +1696,7 @@ public class AnbiaoRiskDetailController {
 					riskDetail.setArdAssociationValue(riskVO.getJiaShiYuanId());
 					riskDetail.setArdContent("危害告知书信息未完善");
 					riskDetail.setArdType("未完善");
-					riskDetail.setArdAssociationValue(riskVO.getWeihaigaozhishu()+"%");
+					riskDetail.setArdPercentage(riskVO.getWeihaigaozhishu()+"%");
 					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
 					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,riskDetail.getArdDeptIds());
 					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,riskDetail.getArdAssociationValue());
@@ -1713,7 +1717,6 @@ public class AnbiaoRiskDetailController {
 				}
 
 				//劳动合同
-
 				if ( Double.doubleToLongBits(Double.parseDouble(riskVO.getLaodonghetong())) < Double.doubleToLongBits(100.00)){
 					AnbiaoRiskDetail riskDetail = new AnbiaoRiskDetail();
 					riskDetail.setArdDeptIds(riskVO.getDeptId());
@@ -1727,7 +1730,7 @@ public class AnbiaoRiskDetailController {
 					riskDetail.setArdAssociationValue(riskVO.getJiaShiYuanId());
 					riskDetail.setArdContent("劳动合同信息未完善");
 					riskDetail.setArdType("未完善");
-					riskDetail.setArdAssociationValue(riskVO.getLaodonghetong()+"%");
+					riskDetail.setArdPercentage(riskVO.getLaodonghetong()+"%");
 					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
 					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds,riskDetail.getArdDeptIds());
 					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,riskDetail.getArdAssociationValue());
@@ -1760,6 +1763,7 @@ public class AnbiaoRiskDetailController {
 		}
 		return r;
 	}
+
 
 }
 
