@@ -32,7 +32,7 @@ public class JiaShiYuanTJMX implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "序号")
-    private Integer xuhao;
+    private Integer xuhao = 0;
     @ApiModelProperty(value = "企业名称")
     private String deptName;
 	@ApiModelProperty(value = "姓名")

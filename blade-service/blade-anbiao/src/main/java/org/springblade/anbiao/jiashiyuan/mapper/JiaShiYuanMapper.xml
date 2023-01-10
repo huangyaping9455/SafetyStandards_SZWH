@@ -845,45 +845,43 @@ values
 
     <sql id="tableTJMXSql">
         SELECT
-        bb.dept_name deptName ,
-        a.jiashiyuanxingming as a,
-        ruzhi_compeleted as a1,
-        sfz_compeleted as a2,
-        jsz_compeleted as a3,
-        cyzgz_compeleted as a4,
-        tj_compeleted as a5,
-        gqpx_compeleted as a6,
-        wzzm_compeleted as a7,
-        aqzrs_compeleted as a8,
-        whgzs_compeleted as a9,
-        ldht_compeleted as a10,
-        case when IFNULL(ct_xsz_compeleted,'') = '' then 0 else ct_xsz_compeleted end as b1,
-        case when IFNULL(ct_ysz_compeleted,'') = '' then 0 else ct_ysz_compeleted end as b2,
-        case when IFNULL(h.xnbg_compeleted,'') = '' then 0 else h.xnbg_compeleted end as b3,
-        case when IFNULL(h.djzs_compeleted,'') = '' then 0 else h.djzs_compeleted end as b4,
-        case when IFNULL(gc_xsz_compeleted,'') = '' then 0 else gc_xsz_compeleted end as b5,
-        case when IFNULL(gc_ysz_compeleted,'') = '' then 0 else gc_ysz_compeleted end as b6,
-        case when IFNULL(j.xnbg_compeleted,'') = '' then 0 else j.xnbg_compeleted end as b7,
-        case when IFNULL(j.djzs_compeleted,'') = '' then 0 else j.djzs_compeleted end as b8,
-        case when IFNULL(jsybx.ajb_insured_ids,'') = '' then 1 else 0 end as c1,
-        case when IFNULL(h.avb_av_ids,'') = '' then 1 else 0 end as c2,
-        case when IFNULL(j.avb_av_ids,'') = '' then 1 else 0 end as c3
-
+            bb.dept_name deptName ,
+            a.jiashiyuanxingming as a,
+            ruzhi_compeleted as a1,
+            sfz_compeleted as a2,
+            jsz_compeleted as a3,
+            cyzgz_compeleted as a4,
+            tj_compeleted as a5,
+            gqpx_compeleted as a6,
+            wzzm_compeleted as a7,
+            aqzrs_compeleted as a8,
+            whgzs_compeleted as a9,
+            ldht_compeleted as a10,
+            case when IFNULL(ct_xsz_compeleted,'') = '' then 0 else ct_xsz_compeleted end as b1,
+            case when IFNULL(ct_ysz_compeleted,'') = '' then 0 else ct_ysz_compeleted end as b2,
+            case when IFNULL(h.xnbg_compeleted,'') = '' then 0 else h.xnbg_compeleted end as b3,
+            case when IFNULL(h.djzs_compeleted,'') = '' then 0 else h.djzs_compeleted end as b4,
+            case when IFNULL(gc_xsz_compeleted,'') = '' then 0 else gc_xsz_compeleted end as b5,
+            case when IFNULL(gc_ysz_compeleted,'') = '' then 0 else gc_ysz_compeleted end as b6,
+            case when IFNULL(j.xnbg_compeleted,'') = '' then 0 else j.xnbg_compeleted end as b7,
+            case when IFNULL(j.djzs_compeleted,'') = '' then 0 else j.djzs_compeleted end as b8,
+            case when IFNULL(jsybx.ajb_insured_ids,'') = '' then 1 else 0 end as c1,
+            case when IFNULL(h.avb_av_ids,'') = '' then 1 else 0 end as c2,
+            case when IFNULL(j.avb_av_ids,'') = '' then 1 else 0 end as c3
         FROM
             anbiao_jiashiyuan a
         inner join  (
         <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) bb on a.dept_id = bb.id
-        LEFT JOIN anbiao_jiashiyuan_ruzhi o on a.id = o.ajr_aj_ids
-        LEFT JOIN anbiao_jiashiyuan_jiashizheng b on a.id = b.ajj_aj_ids
-        LEFT JOIN anbiao_jiashiyuan_congyezigezheng c on a.id = c.ajc_aj_ids
-        LEFT JOIN anbiao_jiashiyuan_tijian d on a.id = d.ajt_aj_ids
-        LEFT JOIN anbiao_jiashiyuan_gangqianpeixun e on a.id = e.ajg_aj_ids
-        LEFT JOIN anbiao_jiashiyuan_wuzezhengming f on a.id = f.ajw_aj_ids
-        LEFT JOIN anbiao_jiashiyuan_anquanzerenshu g on a.id = g.aja_aj_ids
-        LEFT JOIN anbiao_jiashiyuan_weihaigaozhishu h on a.id = h.ajw_aj_ids
-        LEFT JOIN anbiao_jiashiyuan_laodonghetong i on a.id = i.ajw_aj_ids
-
+        LEFT JOIN anbiao_jiashiyuan_ruzhi o ON a.id = o.ajr_aj_ids AND o.ajr_delete = 0
+        LEFT JOIN anbiao_jiashiyuan_jiashizheng b ON a.id = b.ajj_aj_ids AND b.ajj_delete = 0
+        LEFT JOIN anbiao_jiashiyuan_congyezigezheng c ON a.id = c.ajc_aj_ids AND c.ajc_delete = 0
+        LEFT JOIN anbiao_jiashiyuan_tijian d ON a.id = d.ajt_aj_ids AND d.ajt_delete = 0
+        LEFT JOIN anbiao_jiashiyuan_gangqianpeixun e ON a.id = e.ajg_aj_ids AND e.ajg_delete = 0
+        LEFT JOIN anbiao_jiashiyuan_wuzezhengming f ON a.id = f.ajw_aj_ids AND f.ajw_delete = 0
+        LEFT JOIN anbiao_jiashiyuan_anquanzerenshu g ON a.id = g.aja_aj_ids AND g.aja_delete = 0
+        LEFT JOIN anbiao_jiashiyuan_weihaigaozhishu h ON a.id = h.ajw_aj_ids AND h.ajw_delete = 0
+        LEFT JOIN anbiao_jiashiyuan_laodonghetong i ON a.id = i.ajw_aj_ids AND i.ajw_delete = 0
         LEFT JOIN (
         SELECT gc_xsz_compeleted,gc_ysz_compeleted,xnbg_compeleted,jiashiyuanid,djzs_compeleted,avb_av_ids FROM anbiao_vehicle j
         LEFT JOIN anbiao_vehicle_xingshizheng k on j.id = k.avx_av_ids
@@ -898,7 +896,6 @@ values
         and n.avd_delete = 0
         and o.avb_delete = 0
         ) j on a.id = j.jiashiyuanid
-
         LEFT JOIN (
         SELECT ct_xsz_compeleted,ct_ysz_compeleted,xnbg_compeleted,jiashiyuanid,djzs_compeleted,avb_av_ids FROM anbiao_vehicle j
         LEFT JOIN anbiao_vehicle_xingshizheng k on j.id = k.avx_av_ids
@@ -913,24 +910,8 @@ values
         and n.avd_delete = 0
         and o.avb_delete = 0
         ) h on a.id = h.jiashiyuanid
-
-        left JOIN(
-        SELECT ajb_insured_ids,ajb_delete
-        FROM anbiao_jiashiyuan_baoxian
-        )jsybx on jsybx.ajb_insured_ids = a.id
-
-        WHERE 1=1
-        and ifnull(a.isdelete,0) = 0
-        and b.ajj_delete = 0
-        and c.ajc_delete = 0
-        and d.ajt_delete = 0
-        and e.ajg_delete = 0
-        and f.ajw_delete = 0
-        and g.aja_delete = 0
-        and h.ajw_delete = 0
-        and i.ajw_delete = 0
-        and o.ajr_delete = 0
-
+        LEFT JOIN ( SELECT ajb_insured_ids, ajb_delete,ajb_insure_deptid FROM anbiao_jiashiyuan_baoxian where ajb_delete = 0 ) jsybx ON jsybx.ajb_insured_ids = a.id
+        WHERE ifnull( a.isdelete, 0 ) = 0
         GROUP BY a.jiashiyuanxingming
     </sql>
     <sql id="queryTJMXSql">

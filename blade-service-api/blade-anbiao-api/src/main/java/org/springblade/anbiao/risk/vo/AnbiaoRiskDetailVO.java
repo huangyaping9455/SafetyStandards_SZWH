@@ -72,6 +72,9 @@ public class AnbiaoRiskDetailVO implements Serializable {
 	@ApiModelProperty(value = "车牌颜色")
 	private String chepaiyanse;
 
+	@ApiModelProperty(value = "驾驶员照片")
+	private String ajrHeadPortrait;
+
 	@ApiModelProperty(value = "预警数")
 	private int num = 0;
 

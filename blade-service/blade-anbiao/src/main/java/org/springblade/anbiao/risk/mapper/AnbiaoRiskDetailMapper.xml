@@ -174,7 +174,9 @@
             and left(ard_discovery_date,7) = left(#{date},7)
             and ard_sub_category = #{category}
             and ard_is_rectification = 0
+        <if test="ardContent !=null and ardContent != ''">
             and ard_content = #{ardContent}
+        </if>
     </sql>
     <sql id="queryTJMXSql">
 

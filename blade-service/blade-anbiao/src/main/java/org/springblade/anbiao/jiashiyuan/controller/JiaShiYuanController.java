@@ -2638,4 +2638,125 @@ public class JiaShiYuanController {
 		return rs;
 	}
 
+	@ApiLog("驾驶员信息统计表--分页")
+	@ApiOperation(value = "驾驶员信息统计表--分页", notes = "传入jiaShiYuanPage", position = 8)
+	@PostMapping(value="/getDriverTJ")
+	public R getDriverTJ(@RequestBody JiaShiYuanPage jiaShiYuanPage) throws IOException {
+		R rs = new R();
+		jiaShiYuanService.selectAlarmTJMXPage(jiaShiYuanPage);
+		List<JiaShiYuanTJMX> JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
+		JiaShiYuanTJMXList.forEach(item-> {
+			if (item.getA1().equals("0")){
+				item.setA1("√");
+			}else {
+				item.setA1("×");
+			}
+			if (item.getA2().equals("0")){
+				item.setA2("√");
+			}else {
+				item.setA2("×");
+			}
+			if (item.getA3().equals("0")){
+				item.setA3("√");
+			}else {
+				item.setA3("×");
+			}
+			if (item.getA4().equals("0")){
+				item.setA4("√");
+			}else {
+				item.setA4("×");
+			}
+			if (item.getA5().equals("0")){
+				item.setA5("√");
+			}else {
+				item.setA5("×");
+			}
+			if (item.getA6().equals("0")){
+				item.setA6("√");
+			}else {
+				item.setA6("×");
+			}
+			if (item.getA7().equals("0")){
+				item.setA7("√");
+			}else {
+				item.setA7("×");
+			}
+			if (item.getA8().equals("0")){
+				item.setA8("√");
+			}else {
+				item.setA8("×");
+			}
+			if (item.getA9().equals("0")){
+				item.setA9("√");
+			}else {
+				item.setA9("×");
+			}
+			if (item.getA10().equals("0")){
+				item.setA10("√");
+			}else {
+				item.setA10("×");
+			}
+			if (item.getB1().equals("0")){
+				item.setB1("√");
+			}else {
+				item.setB1("×");
+			}
+			if (item.getB2().equals("0")){
+				item.setB2("√");
+			}else {
+				item.setB2("×");
+			}
+			if (item.getB3().equals("0")){
+				item.setB3("√");
+			}else {
+				item.setB3("×");
+			}
+			if (item.getB4().equals("0")){
+				item.setB4("√");
+			}else {
+				item.setB4("×");
+			}
+			if (item.getB5().equals("0")){
+				item.setB5("√");
+			}else {
+				item.setB5("×");
+			}
+			if (item.getB6().equals("0")){
+				item.setB6("√");
+			}else {
+				item.setB6("×");
+			}
+			if (item.getB7().equals("0")){
+				item.setB7("√");
+			}else {
+				item.setB7("×");
+			}
+			if (item.getB8().equals("0")){
+				item.setB8("√");
+			}else {
+				item.setB8("×");
+			}
+			if (item.getC1().equals("0")){
+				item.setC1("√");
+			}else {
+				item.setC1("×");
+			}
+			if (item.getC2().equals("0")){
+				item.setC2("√");
+			}else {
+				item.setC2("×");
+			}
+			if (item.getC3().equals("0")){
+				item.setC3("√");
+			}else {
+				item.setC3("×");
+			}
+		});
+		jiaShiYuanPage.setRecords(JiaShiYuanTJMXList);
+		rs.setData(jiaShiYuanPage);
+		rs.setMsg("获取成功");
+		rs.setCode(200);
+		return rs;
+	}
+
 }
