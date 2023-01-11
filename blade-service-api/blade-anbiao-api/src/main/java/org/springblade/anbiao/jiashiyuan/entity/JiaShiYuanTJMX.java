@@ -38,45 +38,45 @@ public class JiaShiYuanTJMX implements Serializable {
 	@ApiModelProperty(value = "姓名")
 	private String a;
 	@ApiModelProperty(value = "入职表")
-	private String a1;
+	private String a1 = "0";
 	@ApiModelProperty(value = "身份证")
-	private String a2;
+	private String a2 = "0";
 	@ApiModelProperty(value = "驾驶证")
-	private String a3;
+	private String a3 = "0";
 	@ApiModelProperty(value = "从业资格证")
-	private String a4;
+	private String a4 = "0";
 	@ApiModelProperty(value = "体检表")
-	private String a5;
+	private String a5 = "0";
 	@ApiModelProperty(value = "岗前培训表")
-	private String a6;
+	private String a6 = "0";
 	@ApiModelProperty(value = "三年无重大责任事故证明")
-	private String a7;
+	private String a7 = "0";
 	@ApiModelProperty(value = "安全责任书")
-	private String a8;
+	private String a8 = "0";
 	@ApiModelProperty(value = "危害告知书")
-	private String a9;
+	private String a9 = "0";
 	@ApiModelProperty(value = "劳动合同")
-	private String a10;
+	private String a10 = "0";
 	@ApiModelProperty(value = "行驶证（车头）")
-	private String b1;
+	private String b1 = "0";
 	@ApiModelProperty(value = "运输证（车头）")
-	private String b2;
+	private String b2 = "0";
 	@ApiModelProperty(value = "性能报告（车头）")
-	private String b3;
+	private String b3 = "0";
 	@ApiModelProperty(value = "登记证书（车头）")
-	private String b4;
+	private String b4 = "0";
 	@ApiModelProperty(value = "行驶证（挂车）")
-	private String b5;
+	private String b5 = "0";
 	@ApiModelProperty(value = "运输证（挂车）")
-	private String b6;
+	private String b6 = "0";
 	@ApiModelProperty(value = "性能报告（挂车）")
-	private String b7;
+	private String b7 = "0";
 	@ApiModelProperty(value = "登记证书（挂车）")
-	private String b8;
+	private String b8 = "0";
 	@ApiModelProperty(value = "驾驶员保险")
-	private String c1;
+	private String c1 = "0";
 	@ApiModelProperty(value = "车辆保险（车头）")
-	private String c2;
+	private String c2 = "0";
 	@ApiModelProperty(value = "车辆保险（挂车）")
-	private String c3;
+	private String c3 = "0";
 }
