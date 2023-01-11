@@ -118,7 +118,7 @@ public class JiashiyuanBaoxianMingxi implements Serializable {
      * 保司金额
      */
     @ApiModelProperty(value = "保司金额")
-    private Long ajbmCompanyAmount;
+    private BigDecimal ajbmCompanyAmount;
     /**
      * 序号
      */

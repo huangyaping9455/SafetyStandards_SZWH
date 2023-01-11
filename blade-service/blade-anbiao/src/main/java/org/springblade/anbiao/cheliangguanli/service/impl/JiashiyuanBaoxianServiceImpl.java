@@ -26,6 +26,8 @@ import org.springblade.anbiao.cheliangguanli.mapper.JiashiyuanBaoxianMapper;
 import org.springblade.anbiao.cheliangguanli.service.IJiashiyuanBaoxianService;
 import org.springblade.core.mp.base.BaseServiceImpl;
 import org.springblade.core.mp.support.Condition;
+import org.springblade.system.entity.Dept;
+import org.springblade.system.user.entity.User;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
@@ -63,6 +65,16 @@ public class JiashiyuanBaoxianServiceImpl extends ServiceImpl<JiashiyuanBaoxianM
 
 	public JiashiyuanBaoxian queryByMax(String driverId){
 		return baoxianMapper.queryByMax(driverId);
+	}
+
+	@Override
+	public List<User> getDeptUser(String deptId) {
+		return baoxianMapper.getDeptUser(deptId);
+	}
+
+	@Override
+	public List<Dept> QiYeList(Integer deptId) {
+		return baoxianMapper.QiYeList(deptId);
 	}
 
 	@Override

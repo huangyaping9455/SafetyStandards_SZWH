@@ -354,5 +354,20 @@ public class DeptBaoxian implements Serializable {
     @ApiModelProperty(value = "更新人姓名")
     private String avbUpdateByName;
 
+	/**
+	 * 保险金额
+	 */
+	@ApiModelProperty(value = "保险金额")
+	@TableField(exist = false)
+	private BigDecimal ajbmInsuranceAmount;
+	/**
+	 * 基本保费
+	 */
+	@ApiModelProperty(value = "基本保费")
+	@TableField(exist = false)
+	private BigDecimal ajbmBasicPremium;
 
+	@ApiModelProperty(value = "企业ID")
+	@TableField(exist = false)
+	private Integer deptId;
 }

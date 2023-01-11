@@ -70,8 +70,34 @@
 
 
     <select id="selectDeptBaoxianPage" resultMap="deptBaoxianResultMap">
-        select adb.*,bd.dept_name from anbiao_dept_baoxian adb
-        LEFT JOIN blade_dept bd ON bd.id=adb.avb_dept_ids
+        select
+            adb.*,bd.dept_name,IFNULL(cc.ajbm_company_amount,0) as ajbmInsuranceAmount,IFNULL(ajbm_basic_premium,0) as ajbmBasicPremium
+        from
+            anbiao_dept_baoxian adb
+        inner join  (
+            SELECT
+                DISTINCT
+                xiaji.id,
+                xiaji.parent_id,
+                xiaji.dept_name,
+                xiaji.is_deleted
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+            <if test="deptBaoxian.deptId != null and deptBaoxian.deptId != ''">
+                AND shangji.id= #{deptBaoxian.deptId}
+            </if>
+        ) bd on bd.id=adb.avb_dept_ids
+        left join (
+            select
+                avbm_avb_ids,IFNULL(SUM(avbm_insurance_amount),0) as ajbm_company_amount,IFNULL(SUM(avbm_basic_premium),0) as ajbm_basic_premium
+            from
+                anbiao_dept_baoxian_mingxi
+            GROUP BY
+                avbm_avb_ids
+        ) cc on cc.avbm_avb_ids = adb.avb_ids
         where avb_delete = 0
         <if test="deptBaoxian.avbInsuredName != null and deptBaoxian.avbInsuredName != ''">
             and adb.avb_insured_name like concat('%', #{deptBaoxian.avbInsuredName}, '%')

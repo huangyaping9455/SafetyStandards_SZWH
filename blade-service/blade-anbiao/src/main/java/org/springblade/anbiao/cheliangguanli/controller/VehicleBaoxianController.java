@@ -24,14 +24,19 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springblade.anbiao.cheliangguanli.entity.*;
+import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxian;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianInfo;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianMingxi;
+import org.springblade.anbiao.cheliangguanli.service.IJiashiyuanBaoxianService;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleBaoxianMingxiService;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleBaoxianService;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleBaoxianVO;
+import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanRuzhi;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanRuzhiService;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
-import org.springblade.common.tool.FuncUtil;
 import org.springblade.core.boot.ctrl.BladeController;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.mp.support.Condition;
@@ -41,6 +46,7 @@ import org.springblade.core.tool.api.R;
 import org.springblade.core.tool.utils.StringUtil;
 import org.springblade.system.entity.Dept;
 import org.springblade.system.feign.ISysClient;
+import org.springblade.system.user.entity.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -75,6 +81,8 @@ public class VehicleBaoxianController extends BladeController {
 	private IVehicleService vehicleService;
 	private IJiaShiYuanService jiaShiYuanService;
 	private ISysClient iSysClient;
+	private IJiashiyuanBaoxianService jiashiyuanBaoxianService;
+	private IAnbiaoJiashiyuanRuzhiService ruzhiService;
 
 	/**
 	 * 详情
@@ -176,24 +184,41 @@ public class VehicleBaoxianController extends BladeController {
 			SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
 
 			String avbInsureName = String.valueOf(mmap.get("投保单位")).trim();		//投保单位
-			String avbInsuredName = String.valueOf(mmap.get("被保险单位")).trim();
+			String avbInsuredName = String.valueOf(mmap.get("保险单位")).trim();
 			String avbInsuredContacts = String.valueOf(mmap.get("被保险人")).trim();
-			String avbPolicyNo = String.valueOf(mmap.get("保单号")).trim();
-			String avbInsureContacts = String.valueOf(mmap.get("投保联系人")).trim();
-			String avbInsureContactNumber = String.valueOf(mmap.get("投保人联系电话")).trim();
-			String avbmRisk = String.valueOf(mmap.get("保险类别")).trim();
+			String avbPolicyNo = String.valueOf(mmap.get("保险单号")).trim();
+			String avbInsureContacts = String.valueOf(mmap.get("投保车辆")).trim();
+			String avbInsureContactNumber = String.valueOf(mmap.get("投保联系人电话")).trim();
+			String avbmRisk = String.valueOf(mmap.get("保险种类")).trim();
 			String avbmName = String.valueOf(mmap.get("保险名称")).trim();
 			String avbInsurancePeriodStart = String.valueOf(mmap.get("投保开始时间")).trim();
 			String avbInsurancePeriodEnd = String.valueOf(mmap.get("投保结束时间")).trim();
-			String daysRemaining = String.valueOf(mmap.get("剩余天数")).trim();
-			String avbmInsuranceAmount = String.valueOf(mmap.get("保额")).trim();
-			String avbmBasicPremium = String.valueOf(mmap.get("保费")).trim();
+			String daysRemaining = String.valueOf(mmap.get("投保剩余有效期")).trim();
+			String avbmInsuranceAmount = String.valueOf(mmap.get("保险金额")).trim();
+			String avbmBasicPremium = String.valueOf(mmap.get("保险费用")).trim();
 
-			if(baoxian == null) {
+//			if(baoxian == null) {
 				if(StringUtil.isNotBlank(avbInsureName)) {
 					avbInsureDept = iSysClient.getDeptByName(avbInsureName);
-					baoxian.setAvbInsureIds(avbInsureDept.getId()+"");
-					baoxian.setAvbInsureName(avbInsureName);
+					if (avbInsureDept != null){
+						baoxian.setAvbInsureIds(avbInsureDept.getId()+"");
+						baoxian.setAvbInsureName(avbInsureName);
+						baoxian.setAjbInsureDeptid(avbInsureDept.getId()+"");
+						//投保人
+						List<User> users = jiashiyuanBaoxianService.getDeptUser(avbInsureDept.getId().toString());
+						if(users.size() > 0){
+							users.forEach(item-> {
+								if("主要负责人".equals(item.getPostName())){
+									baoxian.setAvbInsureContacts(item.getName());
+									baoxian.setAvbInsureContactNumber(item.getPhone());
+									baoxian.setAvbInsureContactAddress(item.getAddress());
+								}
+							});
+						}
+					}else{
+						isFail=true;
+						errorStr += "投保企业不存在！";
+					}
 				} else {
 					isFail=true;
 					errorStr += "投保企业不能为空！";
@@ -212,9 +237,9 @@ public class VehicleBaoxianController extends BladeController {
 					errorStr += "被保车辆不能为空！";
 				}
 
-				if(StringUtil.isNotBlank(avbInsuredContacts)) {
+				if(StringUtil.isNotBlank(avbInsureContacts) && avbInsureContacts != "null" ) {
 					Vehicle v = new Vehicle();
-					v.setCheliangpaizhao(avbInsuredContacts);
+					v.setCheliangpaizhao(avbInsureContacts);
 					v.setIsdel(0);
 					avbInsuredVehicle = vehicleService.getOne(Condition.getQueryWrapper(v));
 					if(avbInsuredVehicle != null) {
@@ -225,7 +250,13 @@ public class VehicleBaoxianController extends BladeController {
 							baoxian.setAvbInsuredName(driver.getJiashiyuanxingming());
 							baoxian.setAvbInsuredContacts(driver.getJiashiyuanxingming());
 							baoxian.setAvbInsuredContactNumber(driver.getShoujihaoma());
-							baoxian.setAvbInsuredContactAddress(driver.getJiatingzhuzhi());
+							QueryWrapper<AnbiaoJiashiyuanRuzhi> ruzhiQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanRuzhi>();
+							ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrAjIds, driver.getId());
+							ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrDelete, "0");
+							AnbiaoJiashiyuanRuzhi ruzhiInfo = ruzhiService.getBaseMapper().selectOne(ruzhiQueryWrapper);
+							if (ruzhiInfo != null) {
+								baoxian.setAvbInsuredContactAddress(ruzhiInfo.getAjrAddress());
+							}
 						} else {
 							errorStr += "没有查询到"+avbInsuredVehicle.getCheliangpaizhao()+"的车主信息！";
 						}
@@ -233,8 +264,8 @@ public class VehicleBaoxianController extends BladeController {
 						errorStr += "没有查询到被保车辆，请查证后重新导入！";
 					}
 				}
-				baoxian.setAvbInsureContacts(avbInsureContacts);
-				baoxian.setAvbInsureContactNumber(avbInsureContactNumber);
+				baoxian.setAvbPolicyNo(avbPolicyNo);
+				baoxian.setAvbInsuranceDays(Integer.parseInt(daysRemaining));
 				baoxian.setAvbDelete(0);
 				if(StringUtil.isNotBlank(avbInsurancePeriodStart)) {
 					baoxian.setAvbInsurancePeriodStart(dateFormat2.parse(avbInsurancePeriodStart).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
@@ -255,12 +286,12 @@ public class VehicleBaoxianController extends BladeController {
 				baoxian.setAvbCreateTime(LocalDateTime.now());
 				baoxianInfo.setBaoxian(baoxian);
 
-			}
+//			}
 			VehicleBaoxianMingxi mingxi = new VehicleBaoxianMingxi();
 			mingxi.setAvbmRisk(avbmRisk);
 			mingxi.setAvbmName(avbmName);
 			mingxi.setAvbmBasicPremium(new BigDecimal(avbmBasicPremium));
-			mingxi.setAvbmBasicPremium(new BigDecimal(avbmInsuranceAmount));
+			mingxi.setAvbmCompanyAmount(new BigDecimal(avbmInsuranceAmount));
 			insurance.add(mingxi);
 			if(isFail) {
 				failNum++;
@@ -279,6 +310,9 @@ public class VehicleBaoxianController extends BladeController {
 			boolean isSave = vehicleBaoxianService.save(baoxian);
 			for (VehicleBaoxianMingxi baoxianMingxi: insurance) {
 				baoxianMingxi.setAvbmAvbIds(baoxian.getAvbIds());
+				if(StringUtil.isEmpty(baoxianMingxi.getAvbmName())){
+					baoxianMingxi.setAvbmName("车辆");
+				}
 				vehicleBaoxianMingxiService.save(baoxianMingxi);
 			}
 			return R.status(isSave);

@@ -118,7 +118,7 @@ public class DeptBaoxianMingxi implements Serializable {
      * 保司金额
      */
     @ApiModelProperty(value = "保司金额")
-    private Long avbmCompanyAmount;
+    private BigDecimal avbmCompanyAmount;
     /**
      * 序号
      */

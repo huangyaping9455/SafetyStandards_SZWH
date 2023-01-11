@@ -73,9 +73,35 @@
 
 
     <select id="selectVehicleBaoxianPage" resultMap="vehicleBaoxianResultMap">
-        select avb.*,av.cheliangpaizhao,bd.dept_name from anbiao_vehicle_baoxian avb
+        select
+            avb.*,av.cheliangpaizhao,bd.dept_name,IFNULL(cc.ajbm_company_amount,0) as ajbmInsuranceAmount,IFNULL(ajbm_basic_premium,0) as ajbmBasicPremium
+        from
+            anbiao_vehicle_baoxian avb
         left join anbiao_vehicle av on av.id=avb.avb_av_ids
-        LEFT JOIN blade_dept bd ON bd.id=avb.avb_dept_ids
+        inner join  (
+            SELECT
+                DISTINCT
+                xiaji.id,
+                xiaji.parent_id,
+                xiaji.dept_name,
+                xiaji.is_deleted
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+            <if test="vehicleBaoxian.deptId != null and vehicleBaoxian.deptId != ''">
+                AND shangji.id= #{vehicleBaoxian.deptId}
+            </if>
+        ) bd on avb.avb_dept_ids = bd.id
+        left join (
+            select
+                avbm_avb_ids,IFNULL(SUM(avbm_insurance_amount),0) as ajbm_company_amount,IFNULL(SUM(avbm_basic_premium),0) as ajbm_basic_premium
+            from
+                anbiao_vehicle_baoxian_mingxi
+            GROUP BY
+                avbm_avb_ids
+        ) cc on cc.avbm_avb_ids = avb.avb_ids
         <where>
                 avb.avb_delete = 0
             <if test="avbAvIds != null">

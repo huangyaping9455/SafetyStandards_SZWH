@@ -15,12 +15,17 @@
  */
 package org.springblade.anbiao.cheliangguanli.service;
 
+import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxian;
 import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxianInfo;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianInfo;
 import org.springblade.anbiao.cheliangguanli.vo.JiashiyuanBaoxianVO;
 import org.springblade.core.mp.base.BaseService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.springblade.system.entity.Dept;
+import org.springblade.system.user.entity.User;
+
+import java.util.List;
 
 /**
  * 驾驶员保险信息主表 服务类
@@ -47,4 +52,13 @@ public interface IJiashiyuanBaoxianService extends BaseService<JiashiyuanBaoxian
 	JiashiyuanBaoxianInfo queryDetail(String ajbId);
 
 	JiashiyuanBaoxian queryByMax(String driverId);
+
+	List<User> getDeptUser(String deptId);
+
+	/**
+	 * 根据企业ID获取下级所有企业（企业、个体）
+	 * @param deptId
+	 * @return
+	 */
+	List<Dept> QiYeList(@Param("deptId") Integer deptId);
 }

@@ -373,5 +373,23 @@ public class VehicleBaoxian implements Serializable {
 	@TableField(exist = false)
 	private List<VehicleBaoxianMingxi> baoxianMingxis;
 
+	/**
+	 * 保险金额
+	 */
+	@ApiModelProperty(value = "保险金额")
+	@TableField(exist = false)
+	private BigDecimal ajbmInsuranceAmount;
+	/**
+	 * 基本保费
+	 */
+	@ApiModelProperty(value = "基本保费")
+	@TableField(exist = false)
+	private BigDecimal ajbmBasicPremium;
+
+	@ApiModelProperty(value = "企业ID")
+	@TableField(exist = false)
+	private Integer deptId;
+
+
 
 }

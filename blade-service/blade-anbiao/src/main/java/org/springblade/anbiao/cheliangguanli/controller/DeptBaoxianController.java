@@ -25,6 +25,7 @@ import javax.validation.Valid;
 
 import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.service.IDeptBaoxianMingxiService;
+import org.springblade.anbiao.cheliangguanli.service.IJiashiyuanBaoxianService;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.feign.IOrganizationsClient;
@@ -40,6 +41,7 @@ import org.springblade.core.tool.utils.Func;
 import org.springblade.core.tool.utils.StringUtil;
 import org.springblade.system.entity.Dept;
 import org.springblade.system.feign.ISysClient;
+import org.springblade.system.user.entity.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -78,6 +80,7 @@ public class DeptBaoxianController extends BladeController {
 	private IJiaShiYuanService jiaShiYuanService;
 	private IVehicleService vehicleService;
 	private ISysClient iSysClient;
+	private IJiashiyuanBaoxianService jiashiyuanBaoxianService;
 
 	/**
 	 * 详情
@@ -161,24 +164,42 @@ public class DeptBaoxianController extends BladeController {
 			Dept avbInsuredDept = new Dept();
 
 			String avbInsureName = String.valueOf(mmap.get("投保单位")).trim();		//投保单位
-			String avbInsuredName = String.valueOf(mmap.get("被保险单位")).trim();
+			String avbInsuredName = String.valueOf(mmap.get("保险单位")).trim();
 			String avbInsuredContacts = String.valueOf(mmap.get("被保险人")).trim();
-			String avbPolicyNo = String.valueOf(mmap.get("保单号")).trim();
+			String avbPolicyNo = String.valueOf(mmap.get("保险单号")).trim();
 			String avbInsureContacts = String.valueOf(mmap.get("投保联系人")).trim();
 			String avbInsureContactNumber = String.valueOf(mmap.get("投保人联系电话")).trim();
-			String avbmRisk = String.valueOf(mmap.get("保险类别")).trim();
+			String avbmRisk = String.valueOf(mmap.get("保险种类")).trim();
 			String avbmName = String.valueOf(mmap.get("保险名称")).trim();
 			String avbInsurancePeriodStart = String.valueOf(mmap.get("投保开始时间")).trim();
 			String avbInsurancePeriodEnd = String.valueOf(mmap.get("投保结束时间")).trim();
-			String daysRemaining = String.valueOf(mmap.get("剩余天数")).trim();
-			String avbmInsuranceAmount = String.valueOf(mmap.get("保额")).trim();
-			String avbmBasicPremium = String.valueOf(mmap.get("保费")).trim();
+			String daysRemaining = String.valueOf(mmap.get("投保剩余有效期")).trim();
+			String avbmInsuranceAmount = String.valueOf(mmap.get("保险金额")).trim();
+			String avbmBasicPremium = String.valueOf(mmap.get("保险费用")).trim();
 
-			if(baoxian == null) {
+//			if(baoxian == null) {
 				if(StringUtil.isNotBlank(avbInsureName)) {
 					avbInsureDept = iSysClient.getDeptByName(avbInsureName);
 					baoxian.setAvbInsureIds(avbInsureDept.getId()+"");
 					baoxian.setAvbInsureName(avbInsureName);
+					if (avbInsureDept != null){
+						baoxian.setAvbInsureIds(avbInsureDept.getId()+"");
+						baoxian.setAvbInsureName(avbInsureName);
+						//投保人
+						List<User> users = jiashiyuanBaoxianService.getDeptUser(avbInsureDept.getId().toString());
+						if(users.size() > 0){
+							users.forEach(item-> {
+								if("主要负责人".equals(item.getPostName())){
+									baoxian.setAvbInsureContacts(item.getName());
+									baoxian.setAvbInsureContactNumber(item.getPhone());
+									baoxian.setAvbInsureContactAddress(item.getAddress());
+								}
+							});
+						}
+					}else{
+						isFail=true;
+						errorStr += "投保企业不存在！";
+					}
 				} else {
 					isFail=true;
 					errorStr += "投保企业不能为空！";
@@ -189,6 +210,8 @@ public class DeptBaoxianController extends BladeController {
 					avbInsuredDept = iSysClient.getDeptByName(avbInsuredName);
 					if(avbInsuredDept != null) {
 						baoxian.setAvbDeptIds(avbInsuredDept.getId()+"");		//被保险人所属企业
+						List<Dept> QiYeList = jiashiyuanBaoxianService.QiYeList(avbInsuredDept.getId());
+						baoxian.setAvbCertificateNumber(QiYeList.get(0).getJigoubianma());
 					} else {
 						errorStr += "没有查询到被保险单位！";
 					}
@@ -197,23 +220,25 @@ public class DeptBaoxianController extends BladeController {
 					errorStr += "被保车辆不能为空！";
 				}
 				//被保险人
-				if(StringUtil.isNotBlank(avbInsuredContacts)) {
-					Dept d = iSysClient.getDeptByName(avbInsuredContacts);
-					if(d != null) {
-						baoxian.setAvbInsuredIds(d.getId()+"");
-						baoxian.setAvbInsuredName(d.getDeptName());
-//						baoxian.setAvbInsuredContacts(driver.getJiashiyuanxingming());
-//						baoxian.setAvbInsuredContactNumber(driver.getShoujihaoma());
-//						baoxian.setAvbInsuredContactAddress(driver.getJiatingzhuzhi());
-					} else {
-						errorStr += "没有查询到被保险人驾驶员！";
-					}
-				} else {
-					isFail=true;
-					errorStr += "被保驾驶员不能为空！";
-				}
-				baoxian.setAvbInsureContacts(avbInsureContacts);
-				baoxian.setAvbInsureContactNumber(avbInsureContactNumber);
+//				if(StringUtil.isNotBlank(avbInsuredName)) {
+//					Dept d = iSysClient.getDeptByName(avbInsuredName);
+//					if(d != null) {
+//						baoxian.setAvbInsuredIds(d.getId()+"");
+//						baoxian.setAvbInsuredName(d.getDeptName());
+//						List<Dept> QiYeList = jiashiyuanBaoxianService.QiYeList(d.getId());
+//						baoxian.setAvbCertificateNumber(QiYeList.get(0).getJigoubianma());
+////						baoxian.setAvbInsuredContacts(driver.getJiashiyuanxingming());
+////						baoxian.setAvbInsuredContactNumber(driver.getShoujihaoma());
+////						baoxian.setAvbInsuredContactAddress(driver.getJiatingzhuzhi());
+//					} else {
+//						errorStr += "没有查询到被保险人驾驶员！";
+//					}
+//				} else {
+//					isFail=true;
+//					errorStr += "被保驾驶员不能为空！";
+//				}
+				baoxian.setAvbPolicyNo(avbPolicyNo);
+				baoxian.setAvbInsuranceDays(Integer.parseInt(daysRemaining));
 				baoxian.setAvbDelete("0");
 				if(StringUtil.isNotBlank(avbInsurancePeriodStart)) {
 					baoxian.setAvbInsurancePeriodStart(dateFormat2.parse(avbInsurancePeriodStart).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
@@ -234,12 +259,12 @@ public class DeptBaoxianController extends BladeController {
 				baoxian.setAvbCreateTime(LocalDateTime.now());
 				baoxianInfo.setBaoxian(baoxian);
 
-			}
+//			}
 			DeptBaoxianMingxi mingxi = new DeptBaoxianMingxi();
 			mingxi.setAvbmRisk(avbmRisk);
 			mingxi.setAvbmName(avbmName);
 			mingxi.setAvbmBasicPremium(new BigDecimal(avbmBasicPremium));
-			mingxi.setAvbmBasicPremium(new BigDecimal(avbmInsuranceAmount));
+			mingxi.setAvbmInsuranceAmount(new BigDecimal(avbmInsuranceAmount));
 			insurance.add(mingxi);
 			if(isFail) {
 				failNum++;
