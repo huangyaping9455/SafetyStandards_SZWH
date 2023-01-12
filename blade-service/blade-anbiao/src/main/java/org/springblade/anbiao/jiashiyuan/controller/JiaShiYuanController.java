@@ -48,6 +48,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -2468,8 +2469,13 @@ public class JiaShiYuanController {
 	@ApiLog("驾驶员信息统计表--导出")
 	@ApiOperation(value = "驾驶员信息统计表--导出", notes = "传入jiaShiYuanPage", position = 7)
 	@GetMapping(value="/goExport_Get")
-	public R goExport_Get(JiaShiYuanPage jiaShiYuanPage ,HttpServletResponse response) throws IOException {
+	public R goExport_Get(JiaShiYuanPage jiaShiYuanPage ,HttpServletResponse response, BladeUser user) throws IOException {
 		R rs = new R();
+		if(user == null) {
+			rs.setCode(401);
+			rs.setMsg("未授权，请重新登录！");
+			return rs;
+		}
 		jiaShiYuanPage.setSize(0);
 		jiaShiYuanPage.setCurrent(0);
 		jiaShiYuanService.selectAlarmTJMXPage(jiaShiYuanPage);
@@ -2485,7 +2491,7 @@ public class JiaShiYuanController {
 			rs.setCode(500);
 			return rs;
 		}else{
-			int index = 0;
+			int index = 1;
 			DateTimeFormatter dtf3 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 			for( int i = 0 ; i < JiaShiYuanTJMXList.size() ; i++) {
 				JiaShiYuanTJMX t = JiaShiYuanTJMXList.get(i);
@@ -2602,12 +2608,13 @@ public class JiaShiYuanController {
 				index ++;
 			}
 		}
-		String title = jiaShiYuanPage.getDeptName();
+		String title = new String(jiaShiYuanPage.getDeptName().getBytes(StandardCharsets.UTF_8))+ "-驾驶员信息统计表";
 		// 模板注意 用{} 来表示你要用的变量 如果本来就有"{","}" 特殊字符 用"\{","\}"代替
 		// {} 代表普通变量 {.} 代表是list的变量
 		// 这里模板 删除了list以后的数据，也就是统计的这一行
 		String templateFileName = templateFile;
-		String fileName = alarmServer.getTemplateUrl()+title + "-驾驶员信息统计表.xlsx";
+//		alarmServer.getTemplateUrl()+
+		String fileName = alarmServer.getTemplateUrl()+title+".xlsx";
 		ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
 		WriteSheet writeSheet = EasyExcel.writerSheet().build();
 		// 写入list之前的数据
@@ -2623,18 +2630,19 @@ public class JiaShiYuanController {
 //		ServletWebRequest servletContainer = null;
 //		String msg=ee.exportExcel(templateFile,fileName, context,servletContainer);
 
-		ClassPathResource classPathResource = new ClassPathResource("templates/A.xlsx");
-		InputStream inputStream = classPathResource.getInputStream();
-		response.setContentType("application/vnd.ms-excel");
-		response.setCharacterEncoding("utf-8");
-		// 这里URLEncoder.encode可以防止中文乱码 当然和easyExcel没有关系
-		response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-		// 如果不用模板的方式导出的话，是doWrite
-		EasyExcel.write(response.getOutputStream(),JiaShiYuanTJMX.class).withTemplate(inputStream).sheet("Sheet1").doFill(ListData);
+//		ClassPathResource classPathResource = new ClassPathResource("templates/A.xlsx");
+//		InputStream inputStream = classPathResource.getInputStream();
+//		response.setContentType("application/vnd.ms-excel");
+//		response.setCharacterEncoding("utf-8");
+//		// 这里URLEncoder.encode可以防止中文乱码 当然和easyExcel没有关系
+//		response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + new String(title.getBytes(StandardCharsets.UTF_8)) + ".xlsx");
+//		// 如果不用模板的方式导出的话，是doWrite
+//		EasyExcel.write(response.getOutputStream(),JiaShiYuanTJMX.class).withTemplate(inputStream).sheet("Sheet1").doFill(ListData);
 
 		rs.setData(fileName);
 		rs.setMsg("下载成功");
 		rs.setCode(200);
+		rs.setSuccess(true);
 		return rs;
 	}
 

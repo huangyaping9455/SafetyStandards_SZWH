@@ -373,7 +373,7 @@ public class JiashiyuanBaoxian implements Serializable {
 	/**
 	 * 基本保费
 	 */
-	@ApiModelProperty(value = "基本保费")
+	@ApiModelProperty(value = "保费")
 	@TableField(exist = false)
 	private BigDecimal ajbmBasicPremium;
 
