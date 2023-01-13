@@ -13,6 +13,10 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiService;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleDaoluyunshuzheng;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleXingshizheng;
+import org.springblade.anbiao.cheliangguanli.service.IVehicleDaoluyunshuzhengService;
+import org.springblade.anbiao.cheliangguanli.service.IVehicleXingshizhengService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanCongyezigezheng;
@@ -67,6 +71,8 @@ public class AnbiaoRiskDetailController {
 	private IAnbiaoJiashiyuanCongyezigezhengService congyezigezhengService;
 	private IAnbiaoJiashiyuanTijianService tijianService;
 	private IAnbiaoAnquanhuiyiService anquanhuiyiService;
+	private IVehicleDaoluyunshuzhengService daoluyunshuzhengService;
+	private IVehicleXingshizhengService xingshizhengService;
 
 	@PostMapping("/insert")
 	@ApiLog("新增-风险统计信息")
@@ -453,6 +459,104 @@ public class AnbiaoRiskDetailController {
 			r.setSuccess(true);
 		}
 
+		return r;
+	}
+
+	@PostMapping("/vehicleUpdate")
+	@ApiLog("处理-风险统计信息")
+	@ApiOperation(value = "处理-风险统计信息", notes = "传入ardIds" )
+	public R vehicleUpdate(@RequestBody String json,BladeUser user) {
+		R r= new R();
+		int aa=0;
+		//获取参数
+		JsonNode node = JSONUtils.string2JsonNode(json);
+		String ardIds = node.get("ardIds").asText();
+		String date = node.get("date").asText();
+		String fujian = node.get("fujian").asText();
+		QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIds,ardIds);
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+		AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+		if(riskDetail != null) {
+			String rectificationField = riskDetail.getArdRectificationField().split("_")[0];
+
+			if(rectificationField.equals("avx")) {
+				// 行驶证
+
+				riskDetail.setArdIsRectification("1");
+				riskDetail.setArdRectificationByIds(user.getUserId().toString());
+				riskDetail.setArdRectificationByName(user.getUserName());
+				riskDetail.setArdRectificationDate(DateUtil.now());
+				riskDetail.setArdModularName(riskDetail.getArdTitle());
+				riskDetail.setArdRectificationField("anbiao_vehicle_xingshizheng");
+				riskDetail.setArdRectificationValue(date);
+				riskDetail.setArdRectificationEnclosure(fujian);
+				boolean b = riskDetailService.updateById(riskDetail);
+				if(b) {
+					AnbiaoRiskDetailInfo anbiaoRiskDetailInfo = new AnbiaoRiskDetailInfo();
+					anbiaoRiskDetailInfo.setArdRiskIds(ardIds);
+					anbiaoRiskDetailInfo.setArdRectificationByIds(user.getUserId().toString());
+					anbiaoRiskDetailInfo.setArdRectificationByName(user.getUserName());
+					anbiaoRiskDetailInfo.setArdRectificationDate(DateUtil.now());
+					anbiaoRiskDetailInfo.setArdRectificationField("anbiao_vehicle_xingshizheng");
+					anbiaoRiskDetailInfo.setArdRectificationValue(date);
+					anbiaoRiskDetailInfo.setArdRectificationFieldType(riskDetail.getArdRectificationFieldType());
+					int insert = detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo);
+					if(insert > 0) {
+
+						QueryWrapper<VehicleXingshizheng> xingshizhengQueryWrapper = new QueryWrapper<>();
+						xingshizhengQueryWrapper.lambda().eq(VehicleXingshizheng::getAvxAvIds, riskDetail.getArdAssociationValue());
+						xingshizhengQueryWrapper.lambda().eq(VehicleXingshizheng::getAvxDelete, 0);
+						VehicleXingshizheng deal = xingshizhengService.getBaseMapper().selectOne(xingshizhengQueryWrapper);
+
+						if(xingshizhengService.saveOrUpdate(deal)) {
+							aa++;
+						}
+					}
+				}
+			} else if(rectificationField.equals("avd")){
+				//道路运输证
+				riskDetail.setArdIsRectification("1");
+				riskDetail.setArdRectificationByIds(user.getUserId().toString());
+				riskDetail.setArdRectificationByName(user.getUserName());
+				riskDetail.setArdRectificationDate(DateUtil.now());
+				riskDetail.setArdModularName(riskDetail.getArdTitle());
+				riskDetail.setArdRectificationField("anbiao_vehicle_daoluyunshuzheng");
+				riskDetail.setArdRectificationValue(date);
+				riskDetail.setArdRectificationEnclosure(fujian);
+				boolean b = riskDetailService.updateById(riskDetail);
+				if(b) {
+					AnbiaoRiskDetailInfo anbiaoRiskDetailInfo = new AnbiaoRiskDetailInfo();
+					anbiaoRiskDetailInfo.setArdRiskIds(ardIds);
+					anbiaoRiskDetailInfo.setArdRectificationByIds(user.getUserId().toString());
+					anbiaoRiskDetailInfo.setArdRectificationByName(user.getUserName());
+					anbiaoRiskDetailInfo.setArdRectificationDate(DateUtil.now());
+					anbiaoRiskDetailInfo.setArdRectificationField("anbiao_vehicle_xingshizheng");
+					anbiaoRiskDetailInfo.setArdRectificationValue(date);
+					anbiaoRiskDetailInfo.setArdRectificationFieldType(riskDetail.getArdRectificationFieldType());
+					int insert = detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo);
+					if(insert > 0) {
+						QueryWrapper<VehicleDaoluyunshuzheng> daoluyunshuzhengQueryWrapper = new QueryWrapper<>();
+						daoluyunshuzhengQueryWrapper.lambda().eq(VehicleDaoluyunshuzheng::getAvdAvIds, riskDetail.getArdAssociationValue());
+						daoluyunshuzhengQueryWrapper.lambda().eq(VehicleDaoluyunshuzheng::getAvdDelete, 0);
+						VehicleDaoluyunshuzheng deal = daoluyunshuzhengService.getBaseMapper().selectOne(daoluyunshuzhengQueryWrapper);
+
+						if(daoluyunshuzhengService.saveOrUpdate(deal)) {
+							aa++;
+						}
+					}
+				}
+			}
+		}
+		if (aa>0) {
+			r.setMsg("风险处理成功");
+			r.setCode(200);
+			r.setSuccess(true);
+		}else {
+			r.setMsg("风险处理失败");
+			r.setCode(500);
+			r.setSuccess(false);
+		}
 		return r;
 	}
 

@@ -54,6 +54,9 @@ public class AnbiaoRiskDetailVO implements Serializable {
     @ApiModelProperty(value = "关联值")
     private String ardAssociationValue;
 
+	@ApiModelProperty(value = "整改字段类型")
+	private String ardRectificationFieldType;
+
 	@ApiModelProperty(value = "驾驶员姓名")
 	private String jiashiyuanxingming;
 
