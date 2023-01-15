@@ -273,14 +273,14 @@ public class VehicleBaoxianController extends BladeController {
 				if(StringUtil.isNotBlank(avbInsurancePeriodEnd)) {
 					baoxian.setAvbInsurancePeriodEnd(dateFormat2.parse(avbInsurancePeriodEnd).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 				}
-				if(StringUtil.isNotBlank(avbInsurancePeriodStart) && StringUtil.isNotBlank(avbInsurancePeriodEnd)) {
-					Date startTime = dateFormat2.parse(avbInsurancePeriodStart);
-					Date endTime = dateFormat2.parse(avbInsurancePeriodEnd);
-					long s = endTime.getTime() - startTime.getTime();
-					TimeUnit time = TimeUnit.DAYS;
-					long days = time.convert(s,TimeUnit.MICROSECONDS);
-					baoxian.setAvbInsuranceDays((int)days);
-				}
+//				if(StringUtil.isNotBlank(avbInsurancePeriodStart) && StringUtil.isNotBlank(avbInsurancePeriodEnd)) {
+//					Date startTime = dateFormat2.parse(avbInsurancePeriodStart);
+//					Date endTime = dateFormat2.parse(avbInsurancePeriodEnd);
+//					long s = endTime.getTime() - startTime.getTime();
+//					TimeUnit time = TimeUnit.DAYS;
+//					long days = time.convert(s,TimeUnit.MICROSECONDS);
+//					baoxian.setAvbInsuranceDays((int)days);
+//				}
 				baoxian.setAvbCreateByIds(user.getUserId()+"");
 				baoxian.setAvbCreateByName(user.getUserName());
 				baoxian.setAvbCreateTime(LocalDateTime.now());

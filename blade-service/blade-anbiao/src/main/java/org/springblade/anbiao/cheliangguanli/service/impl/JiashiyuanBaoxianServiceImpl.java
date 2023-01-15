@@ -54,7 +54,7 @@ public class JiashiyuanBaoxianServiceImpl extends ServiceImpl<JiashiyuanBaoxianM
 	@Override
 	public JiashiyuanBaoxianInfo queryDetail(String ajbId) {
 		JiashiyuanBaoxianInfo baoxianInfo = new JiashiyuanBaoxianInfo();
-		baoxianInfo.setBaoxian(baoxianMapper.selectById(ajbId));
+		baoxianInfo.setBaoxian(baoxianMapper.selectId(ajbId));
 
 		JiashiyuanBaoxianMingxi mingxi = new JiashiyuanBaoxianMingxi();
 		mingxi.setAjbmAvbIds(ajbId);
@@ -63,6 +63,7 @@ public class JiashiyuanBaoxianServiceImpl extends ServiceImpl<JiashiyuanBaoxianM
 		return baoxianInfo;
 	}
 
+	@Override
 	public JiashiyuanBaoxian queryByMax(String driverId){
 		return baoxianMapper.queryByMax(driverId);
 	}

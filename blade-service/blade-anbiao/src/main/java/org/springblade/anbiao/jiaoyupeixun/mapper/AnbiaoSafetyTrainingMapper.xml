@@ -70,7 +70,7 @@
         ORDER BY ast_training_end_time desc
     </sql>
 
-    <select id="selectPage" resultMap="AnbiaoSafetyTrainingVOBaseResultMap"
+    <select id="selectListPage" resultMap="AnbiaoSafetyTrainingVOBaseResultMap"
             parameterType="org.springblade.anbiao.jiaoyupeixun.page.AnbiaoSafetyTrainingPage" >
         <if test="size == 0" >
             select * from (

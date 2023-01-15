@@ -38,7 +38,7 @@ public class AnbiaoSafetyTrainingServiceImpl extends ServiceImpl<AnbiaoSafetyTra
 			if(anbiaoSafetyTrainingPage.getTotal()==0){
 				return anbiaoSafetyTrainingPage;
 			}else {
-				List<AnbiaoSafetyTrainingVO> safetyTrainingList = mapper.selectPage(anbiaoSafetyTrainingPage);
+				List<AnbiaoSafetyTrainingVO> safetyTrainingList = mapper.selectListPage(anbiaoSafetyTrainingPage);
 				anbiaoSafetyTrainingPage.setRecords(safetyTrainingList);
 				return anbiaoSafetyTrainingPage;
 			}
@@ -60,7 +60,7 @@ public class AnbiaoSafetyTrainingServiceImpl extends ServiceImpl<AnbiaoSafetyTra
 			}
 			anbiaoSafetyTrainingPage.setTotal(total);
 			anbiaoSafetyTrainingPage.setOffsetNo(offsetNo);
-			List<AnbiaoSafetyTrainingVO> safetyTrainingList = mapper.selectPage(anbiaoSafetyTrainingPage);
+			List<AnbiaoSafetyTrainingVO> safetyTrainingList = mapper.selectListPage(anbiaoSafetyTrainingPage);
 			anbiaoSafetyTrainingPage.setRecords(safetyTrainingList);
 			return anbiaoSafetyTrainingPage;
 		}

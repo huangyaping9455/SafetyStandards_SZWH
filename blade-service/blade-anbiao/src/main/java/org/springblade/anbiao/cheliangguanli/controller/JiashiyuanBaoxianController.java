@@ -249,14 +249,14 @@ public class JiashiyuanBaoxianController extends BladeController {
 				if(StringUtil.isNotBlank(avbInsurancePeriodEnd)) {
 					baoxian.setAjbInsurancePeriodEnd(dateFormat2.parse(avbInsurancePeriodEnd).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 				}
-				if(StringUtil.isNotBlank(avbInsurancePeriodStart) && StringUtil.isNotBlank(avbInsurancePeriodEnd)) {
-					Date startTime = dateFormat2.parse(avbInsurancePeriodStart);
-					Date endTime = dateFormat2.parse(avbInsurancePeriodEnd);
-					long s = endTime.getTime() - startTime.getTime();
-					TimeUnit time = TimeUnit.DAYS;
-					long days = time.convert(s,TimeUnit.MICROSECONDS);
-					baoxian.setAjbInsuranceDays((int)days);
-				}
+//				if(StringUtil.isNotBlank(avbInsurancePeriodStart) && StringUtil.isNotBlank(avbInsurancePeriodEnd)) {
+//					Date startTime = dateFormat2.parse(avbInsurancePeriodStart);
+//					Date endTime = dateFormat2.parse(avbInsurancePeriodEnd);
+//					long s = endTime.getTime() - startTime.getTime();
+//					TimeUnit time = TimeUnit.DAYS;
+//					long days = time.convert(s,TimeUnit.MICROSECONDS);
+//					baoxian.setAjbInsuranceDays((int)days);
+//				}
 				baoxianInfo.setBaoxian(baoxian);
 
 //			}

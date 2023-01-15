@@ -17,7 +17,7 @@ import java.util.List;
  */
 public interface AnbiaoSafetyTrainingMapper extends BaseMapper<AnbiaoSafetyTraining> {
 
-	List<AnbiaoSafetyTrainingVO> selectPage(AnbiaoSafetyTrainingPage anbiaoSafetyTrainingPage);
+	List<AnbiaoSafetyTrainingVO> selectListPage(AnbiaoSafetyTrainingPage anbiaoSafetyTrainingPage);
 	int selectTotal(AnbiaoSafetyTrainingPage anbiaoSafetyTrainingPage);
 
 
