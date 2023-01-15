@@ -163,7 +163,8 @@
             ard_content,
             ard_association_value,
             ard_association_table,
-            ard_association_field
+            ard_association_field,
+            ard_rectification_field_type
         from
             anbiao_risk_detail a
         inner join (

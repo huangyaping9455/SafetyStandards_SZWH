@@ -45,6 +45,8 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -487,8 +489,7 @@ public class AnbiaoRiskDetailController {
 				riskDetail.setArdRectificationByIds(user.getUserId().toString());
 				riskDetail.setArdRectificationByName(user.getUserName());
 				riskDetail.setArdRectificationDate(DateUtil.now());
-				riskDetail.setArdModularName(riskDetail.getArdTitle());
-				riskDetail.setArdRectificationField("anbiao_vehicle_xingshizheng");
+				riskDetail.setArdModularName("anbiao_vehicle_xingshizheng");
 				riskDetail.setArdRectificationValue(date);
 				riskDetail.setArdRectificationEnclosure(fujian);
 				boolean b = riskDetailService.updateById(riskDetail);
@@ -498,7 +499,7 @@ public class AnbiaoRiskDetailController {
 					anbiaoRiskDetailInfo.setArdRectificationByIds(user.getUserId().toString());
 					anbiaoRiskDetailInfo.setArdRectificationByName(user.getUserName());
 					anbiaoRiskDetailInfo.setArdRectificationDate(DateUtil.now());
-					anbiaoRiskDetailInfo.setArdRectificationField("anbiao_vehicle_xingshizheng");
+					anbiaoRiskDetailInfo.setArdRectificationField(riskDetail.getArdAssociationField());
 					anbiaoRiskDetailInfo.setArdRectificationValue(date);
 					anbiaoRiskDetailInfo.setArdRectificationFieldType(riskDetail.getArdRectificationFieldType());
 					int insert = detailInfoService.getBaseMapper().insert(anbiaoRiskDetailInfo);
@@ -508,7 +509,15 @@ public class AnbiaoRiskDetailController {
 						xingshizhengQueryWrapper.lambda().eq(VehicleXingshizheng::getAvxAvIds, riskDetail.getArdAssociationValue());
 						xingshizhengQueryWrapper.lambda().eq(VehicleXingshizheng::getAvxDelete, 0);
 						VehicleXingshizheng deal = xingshizhengService.getBaseMapper().selectOne(xingshizhengQueryWrapper);
-
+						if(riskDetail.getArdRectificationField().equals("avx_file_no")) {
+							deal.setAvxFileNo(date);
+						} else if(riskDetail.getArdRectificationField().equals("avx_register_date")){
+							deal.setAvxRegisterDate(LocalDate.parse(date,
+								DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+						} else if(riskDetail.getArdRectificationField().equals("avx_valid_until")){
+							deal.setAvxValidUntil(LocalDate.parse(date,
+								DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+						}
 						if(xingshizhengService.saveOrUpdate(deal)) {
 							aa++;
 						}
@@ -520,8 +529,7 @@ public class AnbiaoRiskDetailController {
 				riskDetail.setArdRectificationByIds(user.getUserId().toString());
 				riskDetail.setArdRectificationByName(user.getUserName());
 				riskDetail.setArdRectificationDate(DateUtil.now());
-				riskDetail.setArdModularName(riskDetail.getArdTitle());
-				riskDetail.setArdRectificationField("anbiao_vehicle_daoluyunshuzheng");
+				riskDetail.setArdModularName("anbiao_vehicle_daoluyunshuzheng");
 				riskDetail.setArdRectificationValue(date);
 				riskDetail.setArdRectificationEnclosure(fujian);
 				boolean b = riskDetailService.updateById(riskDetail);
@@ -540,7 +548,15 @@ public class AnbiaoRiskDetailController {
 						daoluyunshuzhengQueryWrapper.lambda().eq(VehicleDaoluyunshuzheng::getAvdAvIds, riskDetail.getArdAssociationValue());
 						daoluyunshuzhengQueryWrapper.lambda().eq(VehicleDaoluyunshuzheng::getAvdDelete, 0);
 						VehicleDaoluyunshuzheng deal = daoluyunshuzhengService.getBaseMapper().selectOne(daoluyunshuzhengQueryWrapper);
-
+						if(riskDetail.getArdRectificationField().equals("avd_road_transport_certificate_no")) {
+							deal.setAvdRoadTransportCertificateNo(date);
+						} else if(riskDetail.getArdRectificationField().equals("avd_issue_date")){
+							deal.setAvdIssueDate(LocalDate.parse(date,
+								DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+						} else if(riskDetail.getArdRectificationField().equals("avd_valid_until")){
+							deal.setAvdValidUntil(LocalDate.parse(date,
+								DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+						}
 						if(daoluyunshuzhengService.saveOrUpdate(deal)) {
 							aa++;
 						}
