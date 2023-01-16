@@ -19,14 +19,11 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import org.springblade.core.mp.base.BaseEntity;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * 车辆道路运输证实体类
@@ -101,7 +98,7 @@ public class VehicleDaoluyunshuzheng implements Serializable {
      * 发证日期
      */
     @ApiModelProperty(value = "发证日期")
-    private LocalDate avdIssueDate;
+    private String avdIssueDate;
     /**
      * 车牌颜色
      */
@@ -132,7 +129,7 @@ public class VehicleDaoluyunshuzheng implements Serializable {
      * 有效期至
      */
     @ApiModelProperty(value = "有效期至")
-    private LocalDate avdValidUntil;
+    private String avdValidUntil;
     /**
      * 备注
      */
@@ -152,7 +149,7 @@ public class VehicleDaoluyunshuzheng implements Serializable {
      * 创建时间
      */
     @ApiModelProperty(value = "创建时间")
-    private LocalDateTime avdCreateTime;
+    private String avdCreateTime;
     /**
      * 创建人主键
      */
@@ -167,7 +164,7 @@ public class VehicleDaoluyunshuzheng implements Serializable {
      * 更新时间
      */
     @ApiModelProperty(value = "更新时间")
-    private LocalDateTime avdUpdateTime;
+    private String avdUpdateTime;
     /**
      * 更新人主键
      */

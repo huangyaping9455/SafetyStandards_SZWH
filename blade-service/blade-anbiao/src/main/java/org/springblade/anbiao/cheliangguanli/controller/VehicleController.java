@@ -25,6 +25,7 @@ import org.springblade.anbiao.configure.service.IConfigureService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.feign.IOrganizationsClient;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuan;
+import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanRuzhi;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoCheliangJiashiyuanService;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
@@ -42,16 +43,19 @@ import org.springblade.system.entity.Dept;
 import org.springblade.system.entity.Dict;
 import org.springblade.system.feign.IDictClient;
 import org.springblade.system.feign.ISysClient;
+import org.springblade.system.user.entity.User;
 import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,6 +91,7 @@ public class VehicleController {
 	private IVehicleJishupingdingService jishupingdingService;
 	private IVehicleHegezhengService hegezhengService;
 	private IAnbiaoCheliangJiashiyuanService cheliangJiashiyuanService;
+	private IVehicleXingshizhengService vehicleXingshizhengService;
 
     @PostMapping("/list")
 	@ApiLog("分页-车辆资料管理")
@@ -142,10 +147,10 @@ public class VehicleController {
 		v.setJingyingxukezhenghao(detail.getDaoluyunshuzheng());
 		DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		if(detail.getDaoluyunshuzhengchulingriqi() != null){
-			v.setJyxkzyouxiaoqiStart(LocalDate.parse(detail.getDaoluyunshuzhengchulingriqi(), fmt));
+			v.setJyxkzyouxiaoqiStart(detail.getDaoluyunshuzhengchulingriqi());
 		}
 		if(detail.getDaoluyunshuzhengyouxiaoqi() != null){
-			v.setJyxkzyouxiaoqiEnd(LocalDate.parse(detail.getDaoluyunshuzhengyouxiaoqi(), fmt));
+			v.setJyxkzyouxiaoqiEnd(detail.getDaoluyunshuzhengyouxiaoqi());
 		}
 		v.setJingjileixing(detail.getJingjileixing());
 		v.setJingyingzuzhifangshi(detail.getJingyingzuzhifangshi());
@@ -397,7 +402,7 @@ public class VehicleController {
 					jingyingxukezheng.setAvjDelete("0");
 					jingyingxukezheng.setAvjCreateByName(user.getUserName());
 					jingyingxukezheng.setAvjCreateByIds(user.getUserId().toString());
-					jingyingxukezheng.setAvjCreateTime(LocalDateTime.now());
+					jingyingxukezheng.setAvjCreateTime(DateUtil.now());
 					jingyingxukezhengService.save(jingyingxukezheng);
 
 					VehicleXingnengbaogao xingnengbaogao = new VehicleXingnengbaogao();		//性能报告
@@ -465,7 +470,7 @@ public class VehicleController {
 					daoluyunshuzheng.setAvdDelete("0");
 					daoluyunshuzheng.setAvdCreateByName(user.getUserName());
 					daoluyunshuzheng.setAvdCreateByIds(user.getUserId().toString());
-					daoluyunshuzheng.setAvdCreateTime(LocalDateTime.now());
+					daoluyunshuzheng.setAvdCreateTime(DateUtil.now());
 					daoluyunshuzhengService.save(daoluyunshuzheng);
 
 					//新增-车辆-驾驶员绑定信息
@@ -789,11 +794,11 @@ public class VehicleController {
 				dlysz.setAvdIds(daoluyunshuzheng.getAvdIds());
 				dlysz.setAvdUpdateByName(user.getUserName());
 				dlysz.setAvdUpdateByIds(user.getUserId().toString());
-				dlysz.setAvdUpdateTime(LocalDateTime.now());
+				dlysz.setAvdUpdateTime(DateUtil.now());
 			} else {
 				dlysz.setAvdCreateByName(user.getUserName());
 				dlysz.setAvdCreateByIds(user.getUserId().toString());
-				dlysz.setAvdCreateTime(LocalDateTime.now());
+				dlysz.setAvdCreateTime(DateUtil.now());
 			}
 
 			if(daoluyunshuzhengService.saveOrUpdate(dlysz)) {
@@ -1663,7 +1668,7 @@ public class VehicleController {
 						jingyingxukezheng.setAvjDelete("0");
 						jingyingxukezheng.setAvjCreateByName(user.getUserName());
 						jingyingxukezheng.setAvjCreateByIds(user.getUserId().toString());
-						jingyingxukezheng.setAvjCreateTime(LocalDateTime.now());
+						jingyingxukezheng.setAvjCreateTime(DateUtil.now());
 						jingyingxukezhengService.save(jingyingxukezheng);
 
 						VehicleXingnengbaogao xingnengbaogao = new VehicleXingnengbaogao();		//性能报告
@@ -1699,7 +1704,7 @@ public class VehicleController {
 						daoluyunshuzheng.setAvdDelete("0");
 						daoluyunshuzheng.setAvdCreateByName(user.getUserName());
 						daoluyunshuzheng.setAvdCreateByIds(user.getUserId().toString());
-						daoluyunshuzheng.setAvdCreateTime(LocalDateTime.now());
+						daoluyunshuzheng.setAvdCreateTime(DateUtil.now());
 						daoluyunshuzhengService.save(daoluyunshuzheng);
 
 						//新增-车辆-驾驶员绑定信息
@@ -1734,7 +1739,334 @@ public class VehicleController {
 		}
 	}
 
+	@PostMapping("/insuranceImport")
+	@ApiLog("企业端-车辆资料更新导入")
+	@ApiOperation(value = "企业端-车辆资料更新导入", notes = "file")
+	public R insuranceImport(@RequestParam(value = "file") MultipartFile file, BladeUser user) throws ParseException {
+		R r = new R();
+		if (user == null) {
+			r.setCode(401);
+			r.setMsg("用户权限验证失败");
+			r.setData(null);
+			r.setSuccess(false);
+			return r;
+		}
+		ExcelReader reader = null;
+		try {
+			reader = ExcelUtil.getReader(file.getInputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
+		//时间默认格式
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		//验证数据成功条数
+		int successNum = 0;
+		//验证数据错误条数
+		int failNum = 0;
+		//全局变量，只要一条数据不对，就为false
+		boolean isDataValidity = true;
+		//错误信息
+		String errorStr = "";
+		boolean isSave = false;
+
+		List<Map<String, Object>> readAll = reader.readAll();
+		if(readAll.size() > 2000) {
+			errorStr +="导入数据超过2000条，无法导入";
+			r.setMsg(errorStr);
+			r.setCode(400);
+			return  r;
+		}
+
+		for(Map<String ,Object> mmap: readAll) {
+			boolean isFail = false;
+			Vehicle vv = new Vehicle();
+			VehicleXingshizheng vvxs = new VehicleXingshizheng();
+			VehicleJingyingxukezheng vvjy = new VehicleJingyingxukezheng();
+
+			String deptName = String.valueOf(mmap.get("所属企业")).trim();
+			if(!StringUtil.isEmpty(deptName) && deptName != "null"){
+				Dept dept = iSysClient.getDeptByName(deptName.trim());
+				if (dept != null) {
+					vv.setDeptName(deptName);
+					vv.setDeptId(Integer.valueOf(dept.getId()));
+					isFail = true;
+				}else{
+					errorStr += deptName+"所属企业不存在";
+				}
+			}else{
+				errorStr += "所属企业不能为空";
+			}
+			String cp = String.valueOf(mmap.get("车牌号码")).trim();
+			if(!StringUtil.isEmpty(cp) && cp != "null"){
+				vv.setCheliangpaizhao(cp);
+				VehicleVO vehicleVO = vehicleService.selectDeptCPYS(cp,null,vv.getDeptId().toString());
+				if(vehicleVO ==null){
+					errorStr+=cp+"该车不存在;";
+				}else{
+					vv.setId(vehicleVO.getId());
+					vvxs.setAvxAvIds(vv.getId());
+					VehicleXingshizheng qXsz = new VehicleXingshizheng();
+					qXsz.setAvxAvIds(vv.getId());
+					qXsz.setAvxDelete("0");
+					VehicleXingshizheng xingshizheng = vehicleXingshizhengService.getOne(Condition.getQueryWrapper(qXsz));
+					if(xingshizheng != null){
+						vvxs.setAvxIds(xingshizheng.getAvxIds());
+					}
+					isFail = true;
+				}
+			}else{
+				errorStr += "车牌号码不能为空";
+			}
+			String cpys = String.valueOf(mmap.get("车牌颜色")).trim();
+			if(!StringUtil.isEmpty(cp) && cp != "null"){
+				vv.setChepaiyanse(cpys);
+			}
+			String syxz = String.valueOf(mmap.get("使用性质")).trim();
+			if(!StringUtil.isEmpty(syxz) && syxz != "null"){
+				vv.setShiyongxingzhi(syxz);
+			}
+			String jsy = String.valueOf(mmap.get("驾驶员")).trim();
+			if(!StringUtil.isEmpty(jsy) && jsy != "null"){
+				vv.setJiashiyuanxingming(jsy);
+			}
+			String jsydh = String.valueOf(mmap.get("联系电话")).trim();
+			if(!StringUtil.isEmpty(jsydh) && jsydh != "null"){
+				if(CheckPhoneUtil.isChinaPhoneLegal(jsydh) == false){
+					errorStr+=jsydh+"车主电话格式不正确;";
+				}else{
+					vv.setJiashiyuandianhua(jsydh);
+					vv.setChezhudianhua(jsydh);
+				}
+			}
+			if(!StringUtil.isEmpty(jsy) && jsy != "null" && !StringUtil.isEmpty(jsydh) && jsydh != "null"){
+				//根据企业ID、驾驶员姓名、驾驶员电话查询驾驶员信息是否存在
+				JiaShiYuan jiaShiYuan = iJiaShiYuanService.getjiaShiYuanByOne(vv.getDeptId().toString(), jsy, jsydh,null,"驾驶员");
+				if (jiaShiYuan != null) {
+					vv.setJiashiyuanid(jiaShiYuan.getId());
+					vv.setChezhu(jsy);
+					vv.setJiashiyuanxingming(jsy);
+				}else{
+					errorStr += jsy+",该车的驾驶员不存在,请校验”;";
+				}
+			}
+
+			String clxh = String.valueOf(mmap.get("车辆型号")).trim();
+			if(!StringUtil.isEmpty(clxh) && clxh != "null"){
+				vv.setXinghao(clxh);
+			}
+			String xszzcrq = String.valueOf(mmap.get("行驶证注册日期")).trim();
+			if(!StringUtil.isEmpty(xszzcrq) && xszzcrq != "null"){
+//				LocalDate ldt = LocalDate.parse(xszzcrq , DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+				vvxs.setAvxRegisterDate(xszzcrq);
+			}
+			String xszfzrq = String.valueOf(mmap.get("行驶证发证日期")).trim();
+			if(!StringUtil.isEmpty(xszfzrq) && xszfzrq != "null"){
+//				LocalDate ldt = LocalDate.parse(xszfzrq , DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+				vvxs.setAvxIssueDate(xszfzrq);
+			}
+			String xszjsrq = String.valueOf(mmap.get("行驶证：结束日期")).trim();
+			if(!StringUtil.isEmpty(xszjsrq) && xszjsrq != "null"){
+//				LocalDate ldt = LocalDate.parse(xszjsrq , DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+				vvxs.setAvxValidUntil(xszjsrq);
+			}
+			String qzbfrq = String.valueOf(mmap.get("强制报废日期")).trim();
+			if(!StringUtil.isEmpty(qzbfrq) && qzbfrq != "null"){
+				vvxs.setAvxBaofeiTime(qzbfrq);
+			}
+			String cllx = String.valueOf(mmap.get("车辆类型")).trim();
+			if(!StringUtil.isEmpty(cllx) && cllx != "null"){
+				vvxs.setAvxVehicleType(cllx);
+			}
+			String clsyr = String.valueOf(mmap.get("车辆所有人")).trim();
+			if(!StringUtil.isEmpty(clsyr) && clsyr != "null"){
+				vvxs.setAvxOwner(clsyr);
+			}
+			String dz = String.valueOf(mmap.get("地址")).trim();
+			if(!StringUtil.isEmpty(dz) && dz != "null"){
+				vvxs.setAvxAddress(dz);
+			}
+			String dabh = String.valueOf(mmap.get("档案编号")).trim();
+			if(!StringUtil.isEmpty(dabh) && dabh != "null"){
+				vvxs.setAvxFileNo(dabh);
+			}
+			String ppxh = String.valueOf(mmap.get("品牌型号")).trim();
+			if(!StringUtil.isEmpty(ppxh) && ppxh != "null"){
+				vvxs.setAvxModel(ppxh);
+			}
+			String clsbdh = String.valueOf(mmap.get("车辆识别代号")).trim();
+			if(!StringUtil.isEmpty(clsbdh) && clsbdh != "null"){
+				vvxs.setAvxVin(clsbdh);
+			}
+			String csys = String.valueOf(mmap.get("车身颜色")).trim();
+			if(!StringUtil.isEmpty(csys) && csys != "null"){
+				vv.setCheshenyanse(csys);
+			}
+//			String jyxkzh = String.valueOf(mmap.get("经营许可证号")).trim();
+//			if(StringUtil.isEmpty(jyxkzh) && jyxkzh != "null"){
+//				vvjy.setAvjBusinessLicense(jyxkzh);
+//			}
+			String jjlx = String.valueOf(mmap.get("经济类型")).trim();
+			if(!StringUtil.isEmpty(jjlx) && jjlx != "null"){
+				vv.setJingjileixing(jjlx);
+			}
+			String jyzzfs = String.valueOf(mmap.get("经营组织方式")).trim();
+			if(!StringUtil.isEmpty(jyzzfs) && jyzzfs != "null"){
+				vv.setJingyingzuzhifangshi(jyzzfs);
+			}
+			String jyfw = String.valueOf(mmap.get("经营范围")).trim();
+			if(!StringUtil.isEmpty(jyfw) && jyfw != "null"){
+				vv.setCheliangyunyingleixing(jyfw);
+			}
+			String yslx = String.valueOf(mmap.get("运输路线")).trim();
+			if(!StringUtil.isEmpty(yslx) && yslx != "null"){
+				vv.setTeamno(yslx);
+			}
+			String clhdfs = String.valueOf(mmap.get("车辆获得方式")).trim();
+			if(!StringUtil.isEmpty(clhdfs) && clhdfs != "null"){
+				vv.setChelianghuoqufangshi(clhdfs);
+			}
+			String cjh = String.valueOf(mmap.get("车架号")).trim();
+			if(!StringUtil.isEmpty(cjh) && cjh != "null"){
+				vv.setChejiahao(cjh);
+			}
+			String gcjk = String.valueOf(mmap.get("国产/进口")).trim();
+			if(!StringUtil.isEmpty(gcjk) && gcjk != "null"){
+				vv.setShifoujinkou(gcjk);
+			}
+			String rlzl = String.valueOf(mmap.get("燃料种类")).trim();
+			if(!StringUtil.isEmpty(rlzl) && rlzl != "null"){
+				vv.setRanliaoleibie(rlzl);
+			}
+			String plgl = String.valueOf(mmap.get("排量/功率")).trim();
+			if(!StringUtil.isEmpty(plgl) && plgl != "null"){
+				vv.setPaifangbiaozhun(plgl);
+			}
+			String zxxs = String.valueOf(mmap.get("转向形式")).trim();
+			if(!StringUtil.isEmpty(zxxs) && zxxs != "null"){
+				vv.setZhuanxiangfangshi(zxxs);
+			}
+			String zzcmc = String.valueOf(mmap.get("制造产名称")).trim();
+			if(!StringUtil.isEmpty(zzcmc) && zzcmc != "null"){
+				vv.setZhizhaochangshang(zzcmc);
+			}
+			String ljq = String.valueOf(mmap.get("轮距（前）")).trim();
+			if(!StringUtil.isEmpty(ljq) && ljq != "null"){
+				vv.setLunju(ljq);
+			}
+			String ljh = String.valueOf(mmap.get("轮距（后）")).trim();
+			if(!StringUtil.isEmpty(ljh) && ljh != "null"){
+				vv.setFrontlunju(ljh);
+			}
+			String lts = String.valueOf(mmap.get("轮胎数")).trim();
+			if(!StringUtil.isEmpty(lts) && lts != "null"){
+				vv.setLuntaishu(lts);
+			}
+			String ltgg = String.valueOf(mmap.get("轮胎规格")).trim();
+			if(!StringUtil.isEmpty(ltgg) && ltgg != "null"){
+				vv.setLuntaiguige(ltgg);
+			}
+			String gbthps = String.valueOf(mmap.get("钢板弹簧片数")).trim();
+			if(!StringUtil.isEmpty(gbthps) && gbthps != "null"){
+				vv.setGangbantanhuangpianshu(gbthps);
+			}
+			String zj = String.valueOf(mmap.get("轴距")).trim();
+			if(!StringUtil.isEmpty(zj) && zj != "null"){
+				vv.setZhouju(zj);
+			}
+			String zs = String.valueOf(mmap.get("轴数")).trim();
+			if(!StringUtil.isEmpty(zs) && zs != "null"){
+				vv.setChezhoushu(zs);
+			}
+			String hxnbcc = String.valueOf(mmap.get("货箱内部尺寸")).trim();
+			if(!StringUtil.isEmpty(hxnbcc) && hxnbcc != "null"){
+				vv.setHuoxiangneibuchicun(hxnbcc);
+			}
+			String hdzrs = String.valueOf(mmap.get("核定载人数")).trim();
+			if(!StringUtil.isEmpty(hdzrs) && hdzrs != "null"){
+				vv.setHedingzaike(hdzrs);
+			}
+			String jsszk = String.valueOf(mmap.get("驾驶室载客")).trim();
+			if(!StringUtil.isEmpty(jsszk) && jsszk != "null"){
+				vv.setJiashishizaike(jsszk);
+			}
+			String zzl = String.valueOf(mmap.get("总质量")).trim();
+			if(!StringUtil.isEmpty(zzl) && zzl != "null"){
+				vv.setZongzhiliang(zzl);
+			}
+			String hdzzl = String.valueOf(mmap.get("核定载质量")).trim();
+			if(!StringUtil.isEmpty(hdzzl) && hdzzl != "null"){
+				vv.setHedingzaizhiliang(hdzzl);
+			}
+			String zqyzzl = String.valueOf(mmap.get("准牵引总质量")).trim();
+			if(!StringUtil.isEmpty(zqyzzl) && zqyzzl != "null"){
+				vv.setZhunqianyinzongzhiliang(zqyzzl);
+			}
+			String wkcc = String.valueOf(mmap.get("外廓尺寸")).trim();
+			if(!StringUtil.isEmpty(wkcc) && wkcc != "null"){
+				if(wkcc.contains("M")){
+					//截取_之前字符串
+					wkcc = wkcc.substring(0, wkcc.indexOf("M"));
+					vv.setCheliangwaikuochicun(wkcc);
+					vvxs.setAvxOverallDimensions(wkcc);
+				}
+				if(wkcc.contains("m")){
+					//截取_之前字符串
+					wkcc = wkcc.substring(0, wkcc.indexOf("m"));
+					vv.setCheliangwaikuochicun(wkcc);
+					vvxs.setAvxOverallDimensions(wkcc);
+				}
+			}
+			String ccrq = String.valueOf(mmap.get("车辆出厂日期")).trim();
+			if(!StringUtil.isEmpty(ccrq) && ccrq != "null"){
+				vv.setChuchangriqi(ccrq);
+			}
+			String jsdjksrq = String.valueOf(mmap.get("综合性能检测、技术等级评定信息:开始日期")).trim();
+			if(!StringUtil.isEmpty(jsdjksrq) && jsdjksrq != "null"){
+				vv.setBencijipingriqi(jsdjksrq);
+			}
+			String dlysz = String.valueOf(mmap.get("道路运输证:证件号码")).trim();
+			if(!StringUtil.isEmpty(dlysz) && dlysz != "null"){
+				vv.setDaoluyunshuzheng(dlysz);
+			}
+			String dlyszksrq = String.valueOf(mmap.get("道路运输证:开始日期")).trim();
+			if(!StringUtil.isEmpty(dlyszksrq) && dlyszksrq != "null"){
+				vv.setDaoluyunshuzhengchulingriqi(dlyszksrq);
+			}
+			String dlyszjsrq = String.valueOf(mmap.get("道路运输证:结束日期")).trim();
+			if(!StringUtil.isEmpty(dlyszjsrq) && dlyszjsrq != "null"){
+				vv.setDaoluyunshuzhengyouxiaoqi(dlyszjsrq);
+			}
+
+			vv.setCaozuoshijian(LocalDateTime.now());
+			vv.setCaozuoren(user.getUserName());
+			vv.setCaozuorenid(user.getUserId());
+			vv.setIsdel(0);
+
+			vvxs.setAvxUpdateTime(LocalDateTime.now());
+			vvxs.setAvxUpdateByIds(user.getUserId().toString());
+			vvxs.setAvxUpdateByName(user.getUserName());
+			vvxs.setAvxDelete("0");
+			isSave = vehicleService.updateById(vv);
+			isSave = xingshizhengService.updateById(vvxs);
+			if(isSave == false) {
+				failNum ++;
+			}
+		}
+		if(failNum > 0) {
+			r.setCode(500);
+			r.setMsg(errorStr);
+			r.setSuccess(false);
+			r.setData(null);
+			return r;
+		} else {
+			r.setCode(200);
+			r.setMsg("数据更新成功");
+			r.setSuccess(true);
+			r.setData(null);
+			return r;
+		}
+	}
 
 
 }

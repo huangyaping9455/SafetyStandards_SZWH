@@ -13,11 +13,6 @@ spring:
     username: ${blade.datasource.dev.username}
     password: ${blade.datasource.dev.password}
 
-    #测试
-#    url: jdbc:mysql://120.78.198.161:3306/blade?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
-#    username: root
-#    password: Ts2022
-
     driver-class-name: com.mysql.jdbc.Driver    #指定数据库驱动
     type: com.alibaba.druid.pool.DruidDataSource  #指定类型连接池
     #数据源其他配置

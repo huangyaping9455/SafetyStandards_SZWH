@@ -852,7 +852,7 @@ public class SynchronousCrontab {
 				//有效期
 				if(xingshizheng.getAvxValidUntil() != null) {
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.CHINA);
-					int timeDifference = differentDays(DateUtil.now(),formatter.format(xingshizheng.getAvxValidUntil()));
+					int timeDifference = differentDays(DateUtil.now(),xingshizheng.getAvxValidUntil());
 					riskDetail.setArdTitle("行驶证有效期");
 					riskDetail.setArdRectificationField("avx_valid_until");		//整改字段
 					riskDetail.setArdRectificationFieldType("date");
@@ -913,7 +913,7 @@ public class SynchronousCrontab {
 				//有效期
 				if(daoluyunshuzheng.getAvdValidUntil() != null) {
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.CHINA);
-					int timeDifference = differentDays(DateUtil.now(),formatter.format(daoluyunshuzheng.getAvdValidUntil()));
+					int timeDifference = differentDays(DateUtil.now(),daoluyunshuzheng.getAvdValidUntil());
 					riskDetail.setArdTitle("道路运输证有效期");
 					riskDetail.setArdRectificationField("avd_valid_until");		//整改字段
 					riskDetail.setArdRectificationFieldType("date");
@@ -988,7 +988,7 @@ public class SynchronousCrontab {
 
 
 	//每5分钟执行一次
-	@Scheduled(cron = "0 */5 * * * ?")
+//	@Scheduled(cron = "0 */5 * * * ?")
 	//每天凌晨5点执行一次
 //	@Scheduled(cron = "0 0 5 * * ?")
 	public void configureTasks_static_data() {
