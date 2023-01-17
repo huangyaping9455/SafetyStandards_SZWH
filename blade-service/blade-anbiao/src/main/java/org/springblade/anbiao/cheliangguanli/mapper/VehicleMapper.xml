@@ -215,6 +215,7 @@
         cc.dept_name deptName,
         cheliangpaizhao ,
         chepaiyanse ,
+        cheliangzhaopian,
         b.jiashiyuanxingming ,
         b.shoujihaoma ,
         c.avx_register_date as xingshizhengzhuceriqi,

@@ -42,4 +42,7 @@ public class AccidentReportsVO {
 	private String shiguzhaopian3;
 	private String shiguzhijieyuanyin;
 	private Integer shoushang;
+	private String zerenfenxi;
+	private String caozuorenid;
+	private String cheliangid;
 }

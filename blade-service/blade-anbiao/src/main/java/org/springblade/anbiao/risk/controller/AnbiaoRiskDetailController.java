@@ -512,11 +512,13 @@ public class AnbiaoRiskDetailController {
 						if(riskDetail.getArdRectificationField().equals("avx_file_no")) {
 							deal.setAvxFileNo(date);
 						} else if(riskDetail.getArdRectificationField().equals("avx_register_date")){
-							deal.setAvxRegisterDate(LocalDate.parse(date,
-								DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+							deal.setAvxRegisterDate(date);
+//							deal.setAvxRegisterDate(LocalDate.parse(date,
+//								DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 						} else if(riskDetail.getArdRectificationField().equals("avx_valid_until")){
-							deal.setAvxValidUntil(LocalDate.parse(date,
-								DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+							deal.setAvxValidUntil(date);
+//							deal.setAvxValidUntil(LocalDate.parse(date,
+//								DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 						}
 						if(xingshizhengService.saveOrUpdate(deal)) {
 							aa++;
@@ -551,11 +553,13 @@ public class AnbiaoRiskDetailController {
 						if(riskDetail.getArdRectificationField().equals("avd_road_transport_certificate_no")) {
 							deal.setAvdRoadTransportCertificateNo(date);
 						} else if(riskDetail.getArdRectificationField().equals("avd_issue_date")){
-							deal.setAvdIssueDate(LocalDate.parse(date,
-								DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+							deal.setAvdIssueDate(date);
+//							deal.setAvdIssueDate(LocalDate.parse(date,
+//								DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 						} else if(riskDetail.getArdRectificationField().equals("avd_valid_until")){
-							deal.setAvdValidUntil(LocalDate.parse(date,
-								DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+							deal.setAvdValidUntil(date);
+//							deal.setAvdValidUntil(LocalDate.parse(date,
+//								DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 						}
 						if(daoluyunshuzhengService.saveOrUpdate(deal)) {
 							aa++;
