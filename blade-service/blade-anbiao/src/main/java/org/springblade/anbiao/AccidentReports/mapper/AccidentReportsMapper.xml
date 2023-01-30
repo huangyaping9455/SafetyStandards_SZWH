@@ -20,7 +20,7 @@
         ) b on a.dept_id = b.id
         <where> a.is_deleted = 0
          <if test="asiYear!=null and asiYear!=''">
-             AND a.shigufashengshijian >= #{asiYear}
+             AND left(a.shigufashengshijian,10) >= left(#{asiYear},10)
          </if>
 
         <if test="deptName !=null">
@@ -49,7 +49,7 @@
             ) b on a.dept_id = b.id
             <where> a.is_deleted = 0
             <if test="asiYear!=null and asiYear!=''">
-                AND  a.shigufashengshijian = #{asiYear}
+                AND left(a.shigufashengshijian,10) >= left(#{asiYear},10)
             </if>
 
             <if test="deptName !=null">
@@ -360,7 +360,7 @@
         <include refid="tableSql"/>
         )d where 1 = 1
         <if test="asiYear!=null and asiYear!=''">
-            AND d.shigufashengshijian= #{asiYear}
+            AND left(d.shigufashengshijian,10) >= left(#{asiYear},10)
         </if>
         <if test="deptName!=null and deptName!=''">
             AND d.deptName= #{deptName}

@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
@@ -988,7 +987,7 @@ public class SynchronousCrontab {
 
 
 	//每5分钟执行一次
-	@Scheduled(cron = "0 */10 * * * ?")
+	@Scheduled(cron = "0 */5 * * * ?")
 	//每天凌晨5点执行一次
 //	@Scheduled(cron = "0 0 5 * * ?")
 	public void configureTasks_static_data() {

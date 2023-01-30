@@ -25,7 +25,7 @@
             left join anbiao_labor_receive d on d.alr_ali_ids = a.ali_ids
         <where> a.ali_delete = 0
          <if test="asiYear!=null and asiYear!=''">
-             AND a.ali_issue_date >= #{asiYear}
+             AND left(a.ali_issue_date,10) >= left(#{asiYear},10)
          </if>
          <if test="deptName!=null and deptName!=''">
              AND b.dept_name= #{deptName}
@@ -234,10 +234,17 @@
 
     <sql id="tableSql">
         select
-        a.*,
-        b.dept_name as deptName
+            a.*,
+            b.dept_name as deptName
+        <if test="alrPersonIds!=null and alrPersonIds!=''">
+            ,d.alr_person_autograph as alrPersonAutograph,
+            d.alr_receipt_date as alrReceiptDate,
+            d.alr_receipts_number as alrReceiptsNumber,
+            d.alr_person_ids
+        </if>
         from
         anbiao_labor_insurance a
+        left join anbiao_labor_receive d on d.alr_ali_ids = a.ali_ids
         inner join  (
         <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) b on a.ali_dept_ids = b.id
@@ -251,13 +258,16 @@
         <include refid="tableSql"/>
         )d where 1 = 1
         <if test="asiYear!=null and asiYear!=''">
-           AND d.ali_issue_date = #{asiYear}
+            AND left(d.ali_issue_date,10) >= left(#{asiYear},10)
         </if>
         <if test="deptName!=null and deptName!=''">
-            AND  d.deptName= #{deptName}
+            AND d.deptName= #{deptName}
         </if>
         <if test="aliName!=null and aliName!=''">
             AND d.ali_name= #{aliName}
+        </if>
+        <if test="alrPersonIds!=null and alrPersonIds!=''">
+            AND d.alr_person_ids = #{alrPersonIds}
         </if>
     </select>
 

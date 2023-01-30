@@ -61,6 +61,7 @@ public class AnbiaoSafetyTrainingController {
 		trainQueryWrapper.lambda().eq(AnbiaoSafetyTraining::getAstDeptIds, train.getAstDeptIds());
 		trainQueryWrapper.lambda().eq(AnbiaoSafetyTraining::getAstTrainingCategory, train.getAstTrainingCategory());
 		trainQueryWrapper.lambda().eq(AnbiaoSafetyTraining::getAstTrainingEndTime, train.getAstTrainingEndTime());
+		trainQueryWrapper.lambda().eq(AnbiaoSafetyTraining::getAstTrainingTopic, train.getAstTrainingTopic());
 		trainQueryWrapper.lambda().eq(AnbiaoSafetyTraining::getAstDelete, "0");
 		trainQueryWrapper.lambda().eq(AnbiaoSafetyTraining::getAstTrainingForm, "1");
 		AnbiaoSafetyTraining deail = service.getBaseMapper().selectOne(trainQueryWrapper);

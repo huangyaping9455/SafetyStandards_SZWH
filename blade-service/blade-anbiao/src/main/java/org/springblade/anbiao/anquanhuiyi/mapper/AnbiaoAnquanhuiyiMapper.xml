@@ -43,7 +43,7 @@
         left join anbiao_anquanhuiyi_detail c on c.aad_aa_ids = a.id
     </if>
 		where a.is_deleted = 0
-			and left(a.huiyikaishishijian,7) >= left(#{huiyikaishishijian},7)
+			and left(a.huiyikaishishijian,10) >= left(#{huiyikaishishijian},10)
         <if test="aadApIds != null and aadApIds != '' ">
             and aad_ap_ids = #{aadApIds}
         </if>

@@ -140,6 +140,7 @@ public class VehicleDaoluyunshuzhengController extends BladeController {
 	@PostMapping("/submit")
 	@ApiOperation(value = "新增或修改", notes = "传入vehicleDaoluyunshuzheng")
 	public R submit(@Valid @RequestBody VehicleDaoluyunshuzheng vehicleDaoluyunshuzheng) {
+		vehicleDaoluyunshuzheng.setAvdUpdateTime(DateUtil.now());
 		return R.status(vehicleDaoluyunshuzhengService.saveOrUpdate(vehicleDaoluyunshuzheng));
 	}
 

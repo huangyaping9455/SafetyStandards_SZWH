@@ -51,6 +51,7 @@ public class AnbiaoHiddenDangerController {
 		dangerQueryWrapper.lambda().eq(AnbiaoHiddenDanger::getAhdType, danger.getAhdType());
 		dangerQueryWrapper.lambda().eq(AnbiaoHiddenDanger::getAhdDelete, "0");
 		dangerQueryWrapper.lambda().eq(AnbiaoHiddenDanger::getAhdDiscoveryTime, danger.getAhdDiscoveryTime());
+		dangerQueryWrapper.lambda().eq(AnbiaoHiddenDanger::getAhdDescribe, danger.getAhdDescribe());
 		AnbiaoHiddenDanger deail = service.getBaseMapper().selectOne(dangerQueryWrapper);
 		if(deail == null){
 			danger.setAhdDelete("0");

@@ -12,6 +12,7 @@
         <if test="jsyId != null and jsyId != '' ">
             select * from (
                 select
+                    distinct
                     a.day as date,
                     case when IFNULL(b.vehid,'') = '' then (
                     select vehid from anbiao_cheliang_jiashiyuan_daily  where jiashiyuanid = #{jsyId} and vstatus = 1 )
@@ -35,7 +36,7 @@
                     b.address,
                     b.statusshow
                 from
-                    help_topic_time a
+                    anbiao_help_topic_time a
                 LEFT JOIN(
                     select
                         a.id as vehid,
@@ -60,7 +61,7 @@
                         anbiao_vehicle a
                     left join (
                         select * from anbiao_car_examine_info
-                        where left(date,7) = left(#{date},7)
+                        where left(date,10) &lt;= left(#{date},10)
                     ) b on b.vehid = a.id
                 left join anbiao_jiashiyuan c on b.jsyid = c.id and c.isdelete = 0
                 inner join  (
@@ -69,7 +70,7 @@
                 where 1=1
                     and b.jsyid = #{jsyId}
                 )b on a.day = b.date
-                where a.day &lt;= left(NOW(),10)
+                where a.day &lt;= left(#{date},10)
             )a
             where a.date >= (
                 select left(avx_register_date,10) as createTime from anbiao_vehicle_xingshizheng where avx_av_ids = vehid

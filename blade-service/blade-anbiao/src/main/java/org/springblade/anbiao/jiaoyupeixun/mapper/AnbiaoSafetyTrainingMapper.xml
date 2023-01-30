@@ -49,7 +49,7 @@
           and a.ast_training_form = 1
           and a.ast_training_end_time >= #{date}
         <if test="aadApIds != null and aadApIds != '' ">
-            and aad_ap_ids = #{aadApIds}
+            and c.aad_ap_ids = #{aadApIds}
         </if>
     </sql>
 
