@@ -110,5 +110,10 @@ public class VehicleDengjizhengshu implements Serializable {
 	@TableField(exist = false)
 	private String avxFileNo;
 
+	/**
+	 * 车辆型号
+	 */
+	@ApiModelProperty(value = "车辆型号")
+	private String avdVehicleModel;
 
 }

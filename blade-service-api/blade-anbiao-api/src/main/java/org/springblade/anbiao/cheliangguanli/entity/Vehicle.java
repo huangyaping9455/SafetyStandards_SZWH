@@ -7,6 +7,7 @@ import lombok.Data;
 import org.springblade.core.tool.utils.Func;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -307,7 +308,7 @@ public class Vehicle implements Serializable {
 	@TableField(exist = false)
 	private String accessoryphone;
 
-	@ApiModelProperty(value = "道路运输证")
+	@ApiModelProperty(value = "经营道路运输证")
 	private String daoluyunshuzheng;
 
 	@ApiModelProperty(value = "道路运输证初领日期")
@@ -376,6 +377,20 @@ public class Vehicle implements Serializable {
 	@ApiModelProperty(value = "行驶证到期时间")
 	private String xingshizhengdaoqishijian;
 
+	/**
+	 * 行驶证注册日期
+	 */
+	@ApiModelProperty(value = "行驶证注册日期")
+	@TableField(exist = false)
+	private LocalDate avxRegisterDate;
+
+	/**
+	 * 行驶证发证日期
+	 */
+	@ApiModelProperty(value = "行驶证发证日期")
+	@TableField(exist = false)
+	private LocalDate avxIssueDate;
+
 	@ApiModelProperty(value = "车主居住地址")
 	private String carowneraddress;
 
@@ -406,7 +421,7 @@ public class Vehicle implements Serializable {
 	@ApiModelProperty(value = "核定载质量")
 	private String hedingzaizhiliang;
 
-	@ApiModelProperty(value = "准牵引质量")
+	@ApiModelProperty(value = "准牵引总质量")
 	private String zhunqianyinzongzhiliang;
 
 	@ApiModelProperty(value = "驾驶室载客")
@@ -421,5 +436,36 @@ public class Vehicle implements Serializable {
 	@ApiModelProperty(value = "经营组织方式")
 	private String jingyingzuzhifangshi;
 
+	/**
+	 * 所有人
+	 */
+	@ApiModelProperty(value = "所有人")
+	@TableField(exist = false)
+	private String owner;
+
+	/**
+	 * 档案编号
+	 */
+	@ApiModelProperty(value = "档案编号")
+	@TableField(exist = false)
+	private String fileNo;
+
+	/**
+	 * 品牌型号
+	 */
+	@ApiModelProperty(value = "品牌型号")
+	@TableField(exist = false)
+	private String brandModel;
+
+	/**
+	 * 车辆识别代码
+	 */
+	@ApiModelProperty(value = "车辆识别代码")
+	@TableField(exist = false)
+	private String cheliangshibiedaima;
+
+	@ApiModelProperty(value = "道路运输证号")
+	@TableField(exist = false)
+	private String daoluyunshuzhenghao;
 
 }
