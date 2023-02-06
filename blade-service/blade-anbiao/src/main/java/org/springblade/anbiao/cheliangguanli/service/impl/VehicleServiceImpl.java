@@ -8,6 +8,8 @@ import org.springblade.anbiao.cheliangguanli.page.VehiclePage;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleListVO;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
+import org.springblade.common.tool.StringUtils;
+import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +25,8 @@ import java.util.Map;
 public class VehicleServiceImpl extends ServiceImpl<VehicleMapper, Vehicle> implements IVehicleService {
 
     private VehicleMapper vehicleMapper;
+
+	private IFileUploadClient fileUploadClient;
 
     @Override
     public VehiclePage<VehicleListVO> selectVehiclePage(VehiclePage vehiclePage) {
@@ -286,6 +290,50 @@ public class VehicleServiceImpl extends ServiceImpl<VehicleMapper, Vehicle> impl
 	@Override
 	public List<VehicleDriver> getDriverByDeptIdList(String deptId,String type) {
 		return vehicleMapper.getDriverByDeptIdList(deptId,type);
+	}
+
+	@Override
+	public VehicleImg getByVehImg(String vehId) {
+		VehicleImg vehImg = vehicleMapper.getByVehImg(vehId);
+		if (vehImg != null){
+			int count = 0 ;
+			if(StringUtils.isNotEmpty(vehImg.getXszzmimg()) && vehImg.getXszzmimg() != null){
+				if(!vehImg.getXszzmimg().contains("http")){
+					vehImg.setXszzmimg(fileUploadClient.getUrl(vehImg.getXszzmimg()));
+				}
+				count += 1;
+			}
+			if(StringUtils.isNotEmpty(vehImg.getXszfmimg()) && vehImg.getXszfmimg() != null){
+				if(!vehImg.getXszfmimg().contains("http")){
+					vehImg.setXszfmimg(fileUploadClient.getUrl(vehImg.getXszfmimg()));
+				}
+				count += 1;
+			}
+			vehImg.setXszcount(count);
+			if(StringUtils.isNotEmpty(vehImg.getYszimg()) && vehImg.getYszimg() != null){
+				if(!vehImg.getYszimg().contains("http")){
+					vehImg.setYszimg(fileUploadClient.getUrl(vehImg.getYszimg()));
+				}
+				count += 1;
+				vehImg.setYszimgcount(1);
+			}
+			if(StringUtils.isNotEmpty(vehImg.getXnbgimg()) && vehImg.getXnbgimg() != null){
+				if(!vehImg.getXnbgimg().contains("http")){
+					vehImg.setXnbgimg(fileUploadClient.getUrl(vehImg.getXnbgimg()));
+				}
+				count += 1;
+				vehImg.setXnbgimgcount(1);
+			}
+			if(StringUtils.isNotEmpty(vehImg.getDjzimg()) && vehImg.getDjzimg() != null){
+				if(!vehImg.getDjzimg().contains("http")){
+					vehImg.setDjzimg(fileUploadClient.getUrl(vehImg.getDjzimg()));
+				}
+				count += 1;
+				vehImg.setDjzimgcount(1);
+			}
+			vehImg.setCount(count);
+		}
+		return vehicleMapper.getByVehImg(vehId);
 	}
 
 

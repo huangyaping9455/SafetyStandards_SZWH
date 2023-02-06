@@ -240,4 +240,12 @@ public interface IVehicleService extends IService<Vehicle> {
 	 */
 	List<VehicleDriver> getDriverByDeptIdList(@Param("deptId") String deptId,@Param("type") String type);
 
+	/**
+	 * 获取车辆附件
+	 * @param vehId
+	 * @return
+	 */
+	VehicleImg getByVehImg(@Param("vehId") String vehId);
+
+
 }
