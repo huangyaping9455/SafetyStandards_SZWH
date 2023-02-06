@@ -2430,27 +2430,27 @@ public class JiaShiYuanController {
 
 			//驾驶车辆
 			QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<>();
-			vehicleQueryWrapper.lambda().eq(Vehicle::getDeptId,jiaShiYuan.getDeptId());
-			vehicleQueryWrapper.lambda().eq(Vehicle::getCheliangpaizhao,jiaShiYuan.getCheliangpaizhao());
+			vehicleQueryWrapper.lambda().eq(Vehicle::getDeptId,driver.getDeptId());
+			vehicleQueryWrapper.lambda().eq(Vehicle::getCheliangpaizhao,driver.getCheliangpaizhao());
 			vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel,0);
 			Vehicle vehicle = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper);
 			if (vehicle != null){
-				vehicle.setJiashiyuanid(jiaShiYuan.getId());
-				vehicle.setJiashiyuanxingming(jiaShiYuan.getJiashiyuanxingming());
-				vehicle.setJiashiyuandianhua(jiaShiYuan.getShoujihaoma());
+				vehicle.setJiashiyuanid(driver.getId());
+				vehicle.setJiashiyuanxingming(driver.getJiashiyuanxingming());
+				vehicle.setJiashiyuandianhua(driver.getShoujihaoma());
 				vehicleService.getBaseMapper().updateById(vehicle);
 			}
 
 			//挂车号码
 			QueryWrapper<Vehicle> vehicleQueryWrapper2 = new QueryWrapper<>();
-			vehicleQueryWrapper2.lambda().eq(Vehicle::getDeptId,jiaShiYuan.getDeptId());
-			vehicleQueryWrapper2.lambda().eq(Vehicle::getCheliangpaizhao,jiaShiYuan.getTrailerNumber());
+			vehicleQueryWrapper2.lambda().eq(Vehicle::getDeptId,driver.getDeptId());
+			vehicleQueryWrapper2.lambda().eq(Vehicle::getCheliangpaizhao,driver.getTrailerNumber());
 			vehicleQueryWrapper2.lambda().eq(Vehicle::getIsdel,0);
-			Vehicle vehicle2 = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper);
+			Vehicle vehicle2 = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper2);
 			if (vehicle2 != null){
-				vehicle2.setJiashiyuanid(jiaShiYuan.getId());
-				vehicle2.setJiashiyuanxingming(jiaShiYuan.getJiashiyuanxingming());
-				vehicle2.setJiashiyuandianhua(jiaShiYuan.getShoujihaoma());
+				vehicle2.setJiashiyuanid(driver.getId());
+				vehicle2.setJiashiyuanxingming(driver.getJiashiyuanxingming());
+				vehicle2.setJiashiyuandianhua(driver.getShoujihaoma());
 				vehicleService.getBaseMapper().updateById(vehicle2);
 			}
 
