@@ -958,4 +958,35 @@
           AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
     </select>
 
+    <select id="selectByDeptImg" resultType="org.springblade.anbiao.guanlijigouherenyuan.entity.OrganizationsFuJian">
+        select
+            id,dept_id as deptId,dept_name as deptName,daoluyunshuzhengfujian,jingyingxukezhengfujian,yingyezhizhaofujian
+        from
+            anbiao_organization
+        where isdelete = 0
+          and dept_id = #{deptId}
+            limit 1
+    </select>
+
+    <select id="selectByPersonnelImg" resultType="org.springblade.anbiao.guanlijigouherenyuan.entity.OrganizationsFuJian">
+        select
+        DISTINCT
+        a.id as personId,a.post_id as postId,xingming personName,a.dept_id as deptId,
+        qitazhengmianfujian,shenfenzhengfanmianfujian,shenfenzhengfujian,qitafanmianfujian
+        from
+        anbiao_personnel a
+        INNER JOIN blade_post b ON a.userid=b.user_id
+        <!--&#45;&#45; 	INNER JOIN blade_user renyuan ON a.userid=renyuan.id AND renyuan.is_deleted=0-->
+        where a.is_deleted = 0
+        and a.dept_id = #{deptId}
+        and b.post_id = #{postId}
+    </select>
+
+    <select id="selectByDeptPost" resultType="org.springblade.anbiao.guanlijigouherenyuan.entity.OrganizationsFuJian">
+        select id as postId,dept_name as postName from blade_dept
+        where parent_id = #{deptId}
+          and is_deleted = 0
+          and extend_type = '岗位'
+    </select>
+
 </mapper>

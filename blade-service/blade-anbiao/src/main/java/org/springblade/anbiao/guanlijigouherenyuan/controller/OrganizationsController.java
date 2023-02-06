@@ -15,13 +15,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
+import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
+import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiDetail;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleGDSTJ;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.configure.entity.Configure;
 import org.springblade.anbiao.configure.service.IConfigureService;
-import org.springblade.anbiao.guanlijigouherenyuan.entity.Departmentpost;
-import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
-import org.springblade.anbiao.guanlijigouherenyuan.entity.Personnel;
+import org.springblade.anbiao.guanlijigouherenyuan.entity.*;
 import org.springblade.anbiao.guanlijigouherenyuan.page.OrganizationsPage;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IDepartmentpostService;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
@@ -1173,4 +1173,77 @@ public class OrganizationsController extends BladeController {
 		}
 		return rs;
 	}
+
+	@GetMapping("/getDeptImg")
+	@ApiLog("企业-影像资料数据统计")
+	@ApiOperation(value = "企业-影像资料数据统计", notes = "传入deptId", position = 31)
+	public R<OrganizationsFuJian> getDeptImg(String deptId) {
+		R rs = new R();
+		OrganizationsFuJian or = organizationService.selectByDeptImg(deptId);
+		if(or != null){
+			rs.setCode(200);
+			rs.setData(or);
+			rs.setMsg("获取成功");
+		}else{
+			rs.setCode(200);
+			rs.setData(null);
+			rs.setMsg("获取成功,暂无数据");
+		}
+		return rs;
+	}
+
+	@PostMapping("/uploadInsert")
+	@ApiLog("企业-影像资料数据-导入")
+	@ApiOperation(value = "企业-影像资料数据-导入", notes = "传入OrganizationsFuJian")
+	public R uploadInsert(@RequestBody OrganizationsFuJian organizationsFuJian, BladeUser user) throws ParseException {
+		R r = new R();
+		if(user == null) {
+			r.setMsg("未授权");
+			r.setCode(401);
+			return r;
+		}
+
+		Organizations organization = new Organizations();
+		organization.setCaozuoshijian(DateUtil.now());
+		organization.setId(organizationsFuJian.getId());
+		organization.setDaoluyunshuzhengfujian(organizationsFuJian.getDaoluyunshuzhengfujian());
+		organization.setJingyingxukezhengfujian(organizationsFuJian.getJingyingxukezhengfujian());
+		organization.setYingyezhizhaofujian(organizationsFuJian.getYingyezhizhaofujian());
+		boolean ii = organizationService.updateById(organization);
+		if (ii){
+			List<OrganizationsFuJian> organizationsFuJianList = organizationsFuJian.getPersonnelFuJianList();
+			for (int j = 0; j <= organizationsFuJianList.size()-1; j++) {
+				Personnel personnel = new Personnel();
+				personnel.setCaozuoshijian(DateUtil.now());
+				personnel.setId(organizationsFuJianList.get(j).getPersonId());
+				if (user == null) {
+					personnel.setCaozuoren("admin");
+					personnel.setCaozuorenid(1);
+				} else {
+					personnel.setCaozuoren(user.getUserName());
+					personnel.setCaozuorenid(user.getUserId());
+				}
+				personnel.setQitafanmianfujian(organizationsFuJianList.get(j).getQitafanmianfujian());
+				personnel.setQitazhengmianfujian(organizationsFuJianList.get(j).getQitazhengmianfujian());
+				personnel.setShenfenzhengfanmianfujian(organizationsFuJianList.get(j).getShenfenzhengfanmianfujian());
+				personnel.setShenfenzhengfujian(organizationsFuJianList.get(j).getShenfenzhengfujian());
+				ii = personnelService.updateSelective(personnel);
+				if (ii) {
+					r.setMsg("导入成功");
+					r.setCode(200);
+					r.setSuccess(false);
+				} else {
+					r.setMsg("导入失败");
+					r.setCode(500);
+					r.setSuccess(false);
+				}
+			}
+		}else {
+				r.setMsg("导入失败");
+				r.setCode(500);
+				r.setSuccess(false);
+		}
+		return r;
+	}
+
 }

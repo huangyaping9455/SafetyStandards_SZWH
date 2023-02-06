@@ -15,7 +15,6 @@
  */
 package org.springblade.train.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -28,12 +27,10 @@ import org.springblade.core.boot.ctrl.BladeController;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.tool.api.R;
 import org.springblade.train.config.RedisUtil;
-import org.springblade.train.config.model.AccountVo;
 import org.springblade.train.entity.Train;
 import org.springblade.train.entity.Unit;
 import org.springblade.train.service.ITrainService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

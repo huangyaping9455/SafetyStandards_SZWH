@@ -188,4 +188,77 @@ public class OrganizationsServiceImpl extends ServiceImpl<OrganizationsMapper, O
 		return mapper.selectDept();
 	}
 
+	@Override
+	public OrganizationsFuJian selectByDeptImg(String deptId) {
+		OrganizationsFuJian or = new OrganizationsFuJian();
+		OrganizationsFuJian organizationFuJian = mapper.selectByDeptImg(deptId);
+		if(organizationFuJian != null){
+			int count = 0;
+			if(StringUtils.isNotEmpty(organizationFuJian.getDaoluyunshuzhengfujian()) && organizationFuJian.getDaoluyunshuzhengfujian() != null){
+				if(!organizationFuJian.getDaoluyunshuzhengfujian().contains("http")){
+					organizationFuJian.setDaoluyunshuzhengfujian(fileUploadClient.getUrl(organizationFuJian.getDaoluyunshuzhengfujian()));
+				}
+				count += 1;
+			}
+			if(StringUtils.isNotEmpty(organizationFuJian.getYingyezhizhaofujian()) && organizationFuJian.getYingyezhizhaofujian() != null){
+				if(!organizationFuJian.getYingyezhizhaofujian().contains("http")){
+					organizationFuJian.setYingyezhizhaofujian(fileUploadClient.getUrl(organizationFuJian.getYingyezhizhaofujian()));
+				}
+				count += 1;
+			}
+			List<OrganizationsFuJian> deptPost = mapper.selectByDeptPost(deptId);
+			if(deptPost.size() > 0){
+				int postCount = 0;
+				for (int p = 0; p < deptPost.size(); p++) {
+					postCount = 0;
+					deptPost.get(p).setPostId(deptPost.get(p).getPostId());
+					deptPost.get(p).setPostName(deptPost.get(p).getPostName());
+					List<OrganizationsFuJian> personnelImg = mapper.selectByPersonnelImg(deptId,deptPost.get(p).getPostId());
+					if(personnelImg.size() > 0) {
+						for (int i = 0; i < personnelImg.size(); i++) {
+							int pcount = 0;
+							personnelImg.get(i).setPersonId(personnelImg.get(i).getPersonId());
+							personnelImg.get(i).setPersonName(personnelImg.get(i).getPersonName());
+							if (StringUtils.isNotEmpty(personnelImg.get(i).getShenfenzhengfanmianfujian()) && personnelImg.get(i).getShenfenzhengfanmianfujian() != null) {
+								if(!personnelImg.get(i).getShenfenzhengfanmianfujian().contains("http")){
+									personnelImg.get(i).setShenfenzhengfanmianfujian(fileUploadClient.getUrl(personnelImg.get(i).getShenfenzhengfanmianfujian()));
+								}
+								pcount += 1;
+							}
+							if (StringUtils.isNotEmpty(personnelImg.get(i).getShenfenzhengfujian()) && personnelImg.get(i).getShenfenzhengfujian() != null) {
+								if(!personnelImg.get(i).getShenfenzhengfujian().contains("http")){
+									personnelImg.get(i).setShenfenzhengfujian(fileUploadClient.getUrl(personnelImg.get(i).getShenfenzhengfujian()));
+								}
+								pcount += 1;
+							}
+							if (StringUtils.isNotEmpty(personnelImg.get(i).getQitafanmianfujian()) && personnelImg.get(i).getQitafanmianfujian() != null) {
+								if(!personnelImg.get(i).getQitafanmianfujian().contains("http")){
+									personnelImg.get(i).setQitafanmianfujian(fileUploadClient.getUrl(personnelImg.get(i).getQitafanmianfujian()));
+								}
+								pcount += 1;
+							}
+							if (StringUtils.isNotEmpty(personnelImg.get(i).getQitazhengmianfujian()) && personnelImg.get(i).getQitazhengmianfujian() != null) {
+								if(!personnelImg.get(i).getQitazhengmianfujian().contains("http")){
+									personnelImg.get(i).setQitazhengmianfujian(fileUploadClient.getUrl(personnelImg.get(i).getQitazhengmianfujian()));
+								}
+								pcount += 1;
+							}
+							personnelImg.get(i).setCount(pcount);
+							postCount += pcount;
+						}
+						deptPost.get(p).setPersonnelFuJianList(personnelImg);
+					}
+					deptPost.get(p).setCount(postCount);
+					or.setPostFuJianList(deptPost);
+					count += postCount;
+				}
+			}
+			or.setCount(count);
+			or.setId(organizationFuJian.getId());
+			or.setDeptId(organizationFuJian.getDeptId());
+			or.setDeptName(organizationFuJian.getDeptName());
+		}
+		return or;
+	}
+
 }

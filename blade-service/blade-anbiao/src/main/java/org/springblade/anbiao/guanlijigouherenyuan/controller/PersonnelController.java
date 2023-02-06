@@ -205,9 +205,24 @@ public class PersonnelController extends BladeController {
 	@ApiLog("分页-人员管理")
 	@ApiOperation(value = "分页-人员管理", notes = "传入PersonnelPage", position = 2)
 	public R<PersonnelPage<PersonnelVO>> list(@RequestBody PersonnelPage Page) {
-		Dept dept = iSysClient.selectByJGBM("机构",Page.getPostId().toString());
+		Dept dept = iSysClient.selectByJGBM("机构", Page.getPostId().toString());
 		Page.setDeptId(dept.getId());
 		PersonnelPage<PersonnelVO> pages = personnelService.selectPageList(Page);
+		List<PersonnelVO> list = pages.getRecords();
+		for (int i = 0; i <list.size() ; i++) {
+			//其他附件反面
+			if(StrUtil.isNotEmpty(list.get(i).getQitafanmianfujian()) && list.get(i).getQitafanmianfujian().contains("http") == false){
+				list.get(i).setQitafanmianfujian(fileUploadClient.getUrl(list.get(i).getQitafanmianfujian()));
+			}
+			//身份证附件反面
+			if(StrUtil.isNotEmpty(list.get(i).getShenfenzhengfanmianfujian()) && list.get(i).getShenfenzhengfanmianfujian().contains("http") == false){
+				list.get(i).setShenfenzhengfanmianfujian(fileUploadClient.getUrl(list.get(i).getShenfenzhengfanmianfujian()));
+			}
+			//身份证附件正面
+			if(StrUtil.isNotEmpty(list.get(i).getShenfenzhengfujian()) && list.get(i).getShenfenzhengfujian().contains("http") == false){
+				list.get(i).setShenfenzhengfujian(fileUploadClient.getUrl(list.get(i).getShenfenzhengfujian()));
+			}
+		}
 		return R.data(pages);
 	}
 
@@ -364,7 +379,6 @@ public class PersonnelController extends BladeController {
 			personnel.setCaozuorenid(bladeUser.getUserId());
 		}
 		personnel.setCaozuoshijian(DateUtil.now());
-		personnel.setCreatetime(DateUtil.now());
 		if(StringUtil.isNotBlank(personnel.getFujian())){
 			fileUploadClient.updateCorrelation(personnel.getFujian(),"1");
 		}

@@ -92,6 +92,13 @@ public interface OrganizationsMapper extends BaseMapper<Organizations> {
 
 	User selectByUser(@Param("deptId") String deptId);
 
+	OrganizationsFuJian selectByDeptImg(@Param("deptId") String deptId);
+
+	List<OrganizationsFuJian> selectByPersonnelImg(@Param("deptId") String deptId,@Param("postId") String postId);
+
+	List<OrganizationsFuJian> selectByDeptPost(@Param("deptId") String deptId);
+
+
 	List<Dept> selectDept();
 }
 
