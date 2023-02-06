@@ -18,6 +18,6 @@ public interface IAnbiaoAnquanhuiyiService extends IService<AnbiaoAnquanhuiyi> {
 
 	AnQuanHuiYiPage<AnbiaoAnquanhuiyi> selectGetAll(AnQuanHuiYiPage anQuanHuiYiPage);
 
-
+	List<AnbiaoAnquanhuiyi> selectAnquanHuiYiMonth(int year,String deptId);
 
 }

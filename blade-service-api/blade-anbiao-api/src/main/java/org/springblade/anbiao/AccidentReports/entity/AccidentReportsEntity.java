@@ -17,7 +17,7 @@ public class AccidentReportsEntity {
 	private String id;
 	private Integer deptId;
 	private String  caozuoren;
-	private String caozuorenid;
+	private Integer caozuorenid;
 	private Date caozuoshijian;
 	private String  cheliangid;
 	private String chepaihao;

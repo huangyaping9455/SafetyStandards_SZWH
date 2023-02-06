@@ -162,6 +162,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 
 			String avbInsureName = String.valueOf(mmap.get("投保单位")).trim();		//投保单位
 			String avbInsuredName = String.valueOf(mmap.get("保险单位")).trim();
+			String avbInsuranceCompany = String.valueOf(mmap.get("保险公司")).trim();
 			String avbInsuredContacts = String.valueOf(mmap.get("被保险人")).trim();
 			String avbPolicyNo = String.valueOf(mmap.get("保险单号")).trim();
 			String avbInsureContacts = String.valueOf(mmap.get("投保人")).trim();
@@ -239,9 +240,11 @@ public class JiashiyuanBaoxianController extends BladeController {
 					isFail=true;
 					errorStr += "被保驾驶员不能为空！";
 				}
+				if(StringUtil.isNotBlank(avbInsuranceCompany)) {
+					baoxian.setAjbInsuranceCompany(avbInsuranceCompany);
+				}
 				baoxian.setAjbPolicyNo(avbPolicyNo);
 				baoxian.setAjbInsuranceDays(Integer.parseInt(daysRemaining));
-
 				baoxian.setAjbDelete("0");
 				if(StringUtil.isNotBlank(avbInsurancePeriodStart)) {
 					baoxian.setAjbInsurancePeriodStart(dateFormat2.parse(avbInsurancePeriodStart).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
@@ -249,14 +252,14 @@ public class JiashiyuanBaoxianController extends BladeController {
 				if(StringUtil.isNotBlank(avbInsurancePeriodEnd)) {
 					baoxian.setAjbInsurancePeriodEnd(dateFormat2.parse(avbInsurancePeriodEnd).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 				}
-//				if(StringUtil.isNotBlank(avbInsurancePeriodStart) && StringUtil.isNotBlank(avbInsurancePeriodEnd)) {
-//					Date startTime = dateFormat2.parse(avbInsurancePeriodStart);
-//					Date endTime = dateFormat2.parse(avbInsurancePeriodEnd);
-//					long s = endTime.getTime() - startTime.getTime();
-//					TimeUnit time = TimeUnit.DAYS;
-//					long days = time.convert(s,TimeUnit.MICROSECONDS);
-//					baoxian.setAjbInsuranceDays((int)days);
-//				}
+				if(StringUtil.isNotBlank(avbInsurancePeriodStart) && StringUtil.isNotBlank(avbInsurancePeriodEnd)) {
+					Date startTime = dateFormat2.parse(avbInsurancePeriodStart);
+					Date endTime = dateFormat2.parse(avbInsurancePeriodEnd);
+					long s = endTime.getTime() - startTime.getTime();
+					TimeUnit time = TimeUnit.DAYS;
+					long days = time.convert(s,TimeUnit.MICROSECONDS);
+					baoxian.setAjbInsuranceDays((int)days);
+				}
 				baoxianInfo.setBaoxian(baoxian);
 
 //			}

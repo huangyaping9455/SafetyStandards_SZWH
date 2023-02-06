@@ -59,4 +59,6 @@ public interface laborService extends IService<LaborEntity> {
 	Boolean updateAccident(LaborEntity laborEntity);
 	Boolean updateA(Labor labor);
 	Boolean updateL(LaborlingquEntity laborlingqu);
+
+	List<LaborEntity> selectInsurance(int aliDeptIds);
 }

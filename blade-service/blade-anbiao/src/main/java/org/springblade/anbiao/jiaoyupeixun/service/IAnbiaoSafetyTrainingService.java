@@ -19,4 +19,6 @@ public interface IAnbiaoSafetyTrainingService extends IService<AnbiaoSafetyTrain
 
 	AnbiaoSafetyTrainingPage<AnbiaoSafetyTrainingVO> selectPage(AnbiaoSafetyTrainingPage anbiaoSafetyTrainingPage);
 
+	List<AnbiaoSafetyTraining> selectSafetyTrainingMonth(int year,String astDeptIds);
+
 }

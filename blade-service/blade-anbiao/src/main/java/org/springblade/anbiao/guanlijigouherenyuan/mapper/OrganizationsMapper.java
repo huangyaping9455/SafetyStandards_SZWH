@@ -92,6 +92,6 @@ public interface OrganizationsMapper extends BaseMapper<Organizations> {
 
 	User selectByUser(@Param("deptId") String deptId);
 
-
+	List<Dept> selectDept();
 }
 

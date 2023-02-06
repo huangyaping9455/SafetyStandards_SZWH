@@ -48,7 +48,7 @@ public interface JiashiyuanBaoxianMapper extends BaseMapper<JiashiyuanBaoxian> {
 	 * @param ajbIds
 	 * @return
 	 */
-	JiashiyuanBaoxian selectId(String ajbIds);
+	JiashiyuanBaoxian selectById(String ajbIds);
 
 	JiashiyuanBaoxian queryByMax(String driverId);
 

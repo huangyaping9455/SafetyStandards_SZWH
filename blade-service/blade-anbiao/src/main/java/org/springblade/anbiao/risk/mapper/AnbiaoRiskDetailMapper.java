@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springblade.anbiao.risk.page.RiskPage;
 import org.springblade.anbiao.risk.vo.AnbiaoRiskDetailVO;
 import org.springblade.anbiao.risk.vo.AnbiaoSystemRiskVO;
+import org.springblade.anbiao.risk.vo.LedgerDetailVO;
 
 import java.util.List;
 
@@ -48,4 +49,5 @@ public interface AnbiaoRiskDetailMapper extends BaseMapper<AnbiaoRiskDetail> {
 
 	List<AnbiaoSystemRiskVO> selectSystemRisk();
 
+	List<LedgerDetailVO> ledgerDetail(@Param("deptId") String deptId);
 }

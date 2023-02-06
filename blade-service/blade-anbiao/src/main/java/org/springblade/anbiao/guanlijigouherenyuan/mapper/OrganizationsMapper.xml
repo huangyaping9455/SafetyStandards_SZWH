@@ -944,4 +944,18 @@
         limit 1
     </select>
 
+    <select id="selectDept" resultType="org.springblade.system.entity.Dept">
+        SELECT
+            DISTINCT
+            xiaji.id,
+            xiaji.parent_id,
+            xiaji.dept_name,
+            xiaji.is_deleted
+        FROM
+            blade_dept shangji,
+            blade_dept xiaji
+        WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+          AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+    </select>
+
 </mapper>

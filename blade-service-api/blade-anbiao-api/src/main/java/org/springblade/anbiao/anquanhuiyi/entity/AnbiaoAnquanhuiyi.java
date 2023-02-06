@@ -138,4 +138,8 @@ public class AnbiaoAnquanhuiyi implements Serializable {
 	@ApiModelProperty(value = "状态，0：未签到，1：已签到")
 	@TableField(exist = false)
 	private Integer status;
+
+	@ApiModelProperty(value = "月份")
+	@TableField(exist = false)
+	private String months;
 }

@@ -165,6 +165,7 @@ public class DeptBaoxianController extends BladeController {
 
 			String avbInsureName = String.valueOf(mmap.get("投保单位")).trim();		//投保单位
 			String avbInsuredName = String.valueOf(mmap.get("保险单位")).trim();
+			String avbInsuranceCompany = String.valueOf(mmap.get("保险公司")).trim();
 			String avbInsuredContacts = String.valueOf(mmap.get("被保险人")).trim();
 			String avbPolicyNo = String.valueOf(mmap.get("保险单号")).trim();
 			String avbInsureContacts = String.valueOf(mmap.get("投保联系人")).trim();
@@ -237,6 +238,9 @@ public class DeptBaoxianController extends BladeController {
 //					isFail=true;
 //					errorStr += "被保驾驶员不能为空！";
 //				}
+				if(StringUtil.isNotBlank(avbInsuranceCompany)) {
+					baoxian.setAvbInsuranceCompany(avbInsuranceCompany);
+				}
 				baoxian.setAvbPolicyNo(avbPolicyNo);
 				baoxian.setAvbInsuranceDays(Integer.parseInt(daysRemaining));
 				baoxian.setAvbDelete("0");
@@ -246,14 +250,14 @@ public class DeptBaoxianController extends BladeController {
 				if(StringUtil.isNotBlank(avbInsurancePeriodEnd)) {
 					baoxian.setAvbInsurancePeriodEnd(dateFormat2.parse(avbInsurancePeriodEnd).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 				}
-//				if(StringUtil.isNotBlank(avbInsurancePeriodStart) && StringUtil.isNotBlank(avbInsurancePeriodEnd)) {
-//					Date startTime = dateFormat2.parse(avbInsurancePeriodStart);
-//					Date endTime = dateFormat2.parse(avbInsurancePeriodEnd);
-//					long s = endTime.getTime() - startTime.getTime();
-//					TimeUnit time = TimeUnit.DAYS;
-//					long days = time.convert(s,TimeUnit.MICROSECONDS);
-//					baoxian.setAvbInsuranceDays((int)days);
-//				}
+				if(StringUtil.isNotBlank(avbInsurancePeriodStart) && StringUtil.isNotBlank(avbInsurancePeriodEnd)) {
+					Date startTime = dateFormat2.parse(avbInsurancePeriodStart);
+					Date endTime = dateFormat2.parse(avbInsurancePeriodEnd);
+					long s = endTime.getTime() - startTime.getTime();
+					TimeUnit time = TimeUnit.DAYS;
+					long days = time.convert(s,TimeUnit.MICROSECONDS);
+					baoxian.setAvbInsuranceDays((int)days);
+				}
 				baoxian.setAvbCreateByIds(user.getUserId()+"");
 				baoxian.setAvbCreateByName(user.getUserName());
 				baoxian.setAvbCreateTime(LocalDateTime.now());

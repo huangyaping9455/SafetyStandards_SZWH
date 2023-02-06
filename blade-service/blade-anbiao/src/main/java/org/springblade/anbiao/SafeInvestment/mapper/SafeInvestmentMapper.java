@@ -64,4 +64,7 @@ public interface SafeInvestmentMapper {
 	 * @return
 	 */
 	Boolean deleteSafe(SafeInvestmentDTO safeInvestmentDTO);
+
+	List<SafeInvestmentDTO> selectYears(int year,String asiDeptIds);
+
 }

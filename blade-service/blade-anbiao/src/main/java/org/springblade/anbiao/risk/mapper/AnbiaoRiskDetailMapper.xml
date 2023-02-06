@@ -163,8 +163,7 @@
             ard_content,
             ard_association_value,
             ard_association_table,
-            ard_association_field,
-            ard_rectification_field_type
+            ard_association_field
         from
             anbiao_risk_detail a
         inner join (
@@ -268,6 +267,17 @@
                  LEFT JOIN anbiao_jiashiyuan_weihaigaozhishu d on a.id=d.ajw_aj_ids
                  LEFT JOIN anbiao_jiashiyuan_laodonghetong e on a.id=e.ajw_aj_ids
                  LEFT JOIN blade_dept f on a.dept_id=f.id
+    </select>
+
+    <select id="ledgerDetail" resultType="org.springblade.anbiao.risk.vo.LedgerDetailVO">
+        SELECT *
+        FROM  (SELECT ard_dept_ids,ard_content,COUNT(ard_ids) as number
+                FROM  anbiao_risk_detail
+                where ard_major_categories=2
+                GROUP BY ard_dept_ids,ard_content) a
+              inner join  (
+                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+              ) bb on a.ard_dept_ids = bb.id
     </select>
 
 </mapper>

@@ -114,6 +114,11 @@ public class SafeInvestmentServiceImpl implements SafeInvestmentService {
 		}
 	}
 
+	@Override
+	public List<SafeInvestmentDTO> selectYears(int year,String asiDeptIds) {
+		return safeInvestmentMapper.selectYears(year,asiDeptIds);
+	}
+
 }
 
 

@@ -80,4 +80,9 @@ public class AccidentReportsServiceImpl implements AccidentReportsService {
 	public Boolean updateAccident(AccidentReportsDTO accidentReportsDTO) {
 		return mapper.updateAcc(accidentReportsDTO);
 	}
+
+	@Override
+	public List<AccidentReportsDTO> selectshigubaogao(String deptId) {
+		return mapper.selectshigubaogao(deptId);
+	}
 }

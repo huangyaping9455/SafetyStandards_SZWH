@@ -168,11 +168,9 @@
     </select>
 
     <select id="selectDeptCPYS" resultMap="vehicleVOResultMap" parameterType="java.lang.String">
-        select id,cheliangpaizhao,zhongduanleixing from anbiao_vehicle
+        select cheliangpaizhao,zhongduanleixing from anbiao_vehicle
         where cheliangpaizhao=#{cheliangpaizhao}
-        <if test=" chepaiyanse !=null and chepaiyanse != '' ">
-            and chepaiyanse=#{chepaiyanse}
-        </if>
+          and chepaiyanse=#{chepaiyanse}
           and dept_id = #{deptId}
           and ifnull(is_deleted,0) = 0
           and ifnull(cheliangzhuangtai,0) != 2
@@ -215,7 +213,6 @@
         cc.dept_name deptName,
         cheliangpaizhao ,
         chepaiyanse ,
-        cheliangzhaopian,
         b.jiashiyuanxingming ,
         b.shoujihaoma ,
         c.avx_register_date as xingshizhengzhuceriqi,

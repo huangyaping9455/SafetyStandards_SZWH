@@ -111,7 +111,7 @@
         </where>
     </select>
 
-    <select id="selectId" resultMap="jiashiyuanBaoxianResultMap" parameterType="java.lang.String">
+    <select id="selectById" resultMap="jiashiyuanBaoxianResultMap" parameterType="java.lang.String">
         select ajb.*,bd.dept_name from anbiao_jiashiyuan_baoxian ajb
         LEFT JOIN blade_dept bd ON bd.id = ajb.ajb_dept_ids
         where ajb_delete = 0 and  ajb.ajb_ids= #{ajbIds}

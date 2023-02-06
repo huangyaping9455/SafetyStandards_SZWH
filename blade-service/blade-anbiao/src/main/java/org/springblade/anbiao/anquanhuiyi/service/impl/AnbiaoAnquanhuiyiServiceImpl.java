@@ -62,4 +62,9 @@ public class AnbiaoAnquanhuiyiServiceImpl extends ServiceImpl<AnbiaoAnquanhuiyiM
 			return anQuanHuiYiPage;
 		}
 	}
+
+	@Override
+	public List<AnbiaoAnquanhuiyi> selectAnquanHuiYiMonth(int year,String deptId) {
+		return mapper.selectAnquanHuiYiMonth(year,deptId);
+	}
 }

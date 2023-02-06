@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -38,16 +40,16 @@ public class VehicleInfo implements Serializable {
 	private List<VehicleBiangengjilu> cheliangbiangengjilu;
 
 	@ApiModelProperty(value = "注册日期")
-	private String zhuceriqi;
+	private LocalDate zhuceriqi;
 
 	@ApiModelProperty(value = "经营许可证号")
 	private String jingyingxukezhenghao;
 
 	@ApiModelProperty(value = "经营许可证有效期（起）")
-	private String jyxkzyouxiaoqiStart;
+	private LocalDate jyxkzyouxiaoqiStart;
 
 	@ApiModelProperty(value = "经营许可证有效期（止）")
-	private String jyxkzyouxiaoqiEnd;
+	private LocalDate jyxkzyouxiaoqiEnd;
 
 	@ApiModelProperty(value = "经营许可证照片")
 	private String jyxkzzhaopian;
@@ -56,10 +58,10 @@ public class VehicleInfo implements Serializable {
 	private String daoluyunshuzhenghao;
 
 	@ApiModelProperty(value = "道路运输证有效期（起）")
-	private String dlyszyouxiaoqiStart;
+	private LocalDate dlyszyouxiaoqiStart;
 
 	@ApiModelProperty(value = "道路运输证有效期（止）")
-	private String dlyszyouxiaoqiEnd;
+	private LocalDate dlyszyouxiaoqiEnd;
 
 	@ApiModelProperty(value = "道路运输证照片")
 	private String dlyszzhaopian;

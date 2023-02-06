@@ -271,5 +271,11 @@
         </if>
     </select>
 
+    <select id="selectInsurance" resultType="org.springblade.anbiao.labor.entity.LaborEntity">
+        SELECT * FROM
+            anbiao_labor_insurance
+        WHERE ali_dept_ids = #{aliDeptIds}
+          and ali_delete = 0
+    </select>
 
 </mapper>

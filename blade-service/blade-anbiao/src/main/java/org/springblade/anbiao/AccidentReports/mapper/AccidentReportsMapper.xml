@@ -87,8 +87,7 @@
         a.caichansunshi,
         a.dept_id AS deptId,
         a.fujian,
-        a.shigugaikuang,
-        a.zerenfenxi
+        a.shigugaikuang
         FROM
         anbiao_shigubaogao a
         INNER JOIN ( <include refid = "org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId" /> ) c ON a.dept_id = c.id
@@ -110,31 +109,31 @@
             <if test="jianjiejingjisunshi !=null and jianjiejingjisunshi !=''">
                 jianjiejingjisunshi,
             </if>
-            <if test="shigufashengshijian !=null ">
+            <if test="shigufashengshijian !=null">
                 shigufashengshijian,
             </if>
-            <if test="shiguxingzhi !=null and shiguxingzhi != '' ">
+            <if test="shiguxingzhi !=null">
                 shiguxingzhi,
             </if>
-            <if test="shigufenlei !=null and shigufenlei != '' ">
+            <if test="shigufenlei !=null">
                 shigufenlei,
             </if>
-            <if test="shiguzeren !=null and shiguzeren != '' ">
+            <if test="shiguzeren !=null">
                 shiguzeren,
             </if>
-            <if test="chepaihao !=null and chepaihao != '' ">
+            <if test="chepaihao !=null">
                 chepaihao,
             </if>
-            <if test="jiashiyuan !=null and jiashiyuan != '' ">
+            <if test="jiashiyuan !=null">
                 jiashiyuan,
             </if>
-            <if test="siwang !=null and siwang != '' ">
+            <if test="siwang !=null">
                 siwang,
             </if>
-            <if test="shoushang !=null and shoushang != '' ">
+            <if test="shoushang !=null">
                 shoushang,
             </if>
-            <if test="caichansunshi !=null and caichansunshi != '' ">
+            <if test="caichansunshi !=null">
                 caichansunshi,
             </if>
             <if test="shiguzhaopian1 !=null and shiguzhaopian1 !=''">
@@ -152,22 +151,13 @@
             <if test="shigugaikuang !=null and shigugaikuang !=''">
                 shigugaikuang,
             </if>
-            <if test="zerenfenxi !=null and zerenfenxi !=''">
-                zerenfenxi,
-            </if>
-            <if test="caozuorenid !=null and caozuorenid !=''">
-                caozuorenid,
-            </if>
-            <if test="cheliangid !=null and cheliangid !=''">
-                cheliangid,
-            </if>
             is_deleted
 
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                 #{id},
 
-            <if test="deptId !=null and deptId !=''">
+            <if test="deptId !=null and shiguzhaopian1 !=''">
                 #{deptId},
             </if>
             <if test="shigufashengdidian !=null and shigufashengdidian !=''">
@@ -179,28 +169,28 @@
             <if test="shigufashengshijian !=null">
                 #{shigufashengshijian},
             </if>
-            <if test="shiguxingzhi !=null and shiguxingzhi != '' ">
+            <if test="shiguxingzhi !=null">
                 #{shiguxingzhi},
             </if>
-            <if test="shigufenlei !=null and shigufenlei != '' ">
+            <if test="shigufenlei !=null">
                 #{shigufenlei},
             </if>
-            <if test="shiguzeren !=null and shiguzeren != '' ">
+            <if test="shiguzeren !=null">
                 #{shiguzeren},
             </if>
-            <if test="chepaihao !=null and chepaihao != '' ">
+            <if test="chepaihao !=null">
                 #{chepaihao},
             </if>
-            <if test="jiashiyuan !=null and jiashiyuan != '' ">
+            <if test="jiashiyuan !=null">
                 #{jiashiyuan},
             </if>
-            <if test="siwang !=null and siwang != '' ">
+            <if test="siwang !=null">
                 #{siwang},
             </if>
-            <if test="shoushang !=null and shoushang != '' ">
+            <if test="shoushang !=null">
                 #{shoushang},
             </if>
-            <if test="caichansunshi !=null and caichansunshi != '' ">
+            <if test="caichansunshi !=null">
                 #{caichansunshi},
             </if>
             <if test="shiguzhaopian1 !=null and shiguzhaopian1 !=''">
@@ -217,15 +207,6 @@
             </if>
             <if test="shigugaikuang !=null and shigugaikuang !=''">
                 #{shigugaikuang},
-            </if>
-            <if test="zerenfenxi !=null and zerenfenxi !=''">
-                #{zerenfenxi},
-            </if>
-            <if test="caozuorenid !=null and caozuorenid !=''">
-                #{caozuorenid},
-            </if>
-            <if test="cheliangid !=null and cheliangid !=''">
-                #{cheliangid},
             </if>
              0
         </trim>
@@ -306,15 +287,6 @@
             <if test="shigugaikuang !=null and shigugaikuang !=''">
                 shigugaikuang = #{shigugaikuang},
             </if>
-            <if test="zerenfenxi !=null and zerenfenxi !=''">
-                zerenfenxi = #{zerenfenxi},
-            </if>
-            <if test="caozuorenid !=null and caozuorenid !=''">
-                caozuorenid = #{caozuorenid},
-            </if>
-            <if test="cheliangid !=null and cheliangid !=''">
-                cheliangid = #{cheliangid},
-            </if>
         </set>
         where id = #{id}
     </update>
@@ -365,6 +337,12 @@
         <if test="deptName!=null and deptName!=''">
             AND d.deptName= #{deptName}
         </if>
+    </select>
+
+    <select id="selectshigubaogao" resultType="org.springblade.anbiao.AccidentReports.DTO.AccidentReportsDTO" >
+        SELECT * FROM `anbiao_shigubaogao`
+        WHERE dept_id=#{deptId}
+          and is_deleted=0
     </select>
 
 </mapper>

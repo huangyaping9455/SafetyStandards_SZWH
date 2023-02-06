@@ -9,4 +9,7 @@ import org.springblade.anbiao.labor.entity.LaborlingquEntity;
  * @Date :2022/11/12 11:22
  */
 public interface laborLingquService extends IService<LaborlingquEntity> {
+
+	LaborlingquEntity selectSumReceive(String alrAliIds);
+
 }

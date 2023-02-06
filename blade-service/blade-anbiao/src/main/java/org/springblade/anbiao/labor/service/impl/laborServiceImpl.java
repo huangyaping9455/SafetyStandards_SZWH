@@ -115,4 +115,9 @@ public class laborServiceImpl extends ServiceImpl<laborMapper,LaborEntity> imple
 	public Boolean updateL(LaborlingquEntity laborlingqu) {
 		return laborMapper.updateL(laborlingqu);
 	}
+
+	@Override
+	public List<LaborEntity> selectInsurance(int aliDeptIds) {
+		return laborMapper.selectInsurance(aliDeptIds);
+	}
 }

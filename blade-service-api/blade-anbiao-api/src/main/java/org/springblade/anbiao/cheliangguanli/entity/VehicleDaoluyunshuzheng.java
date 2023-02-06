@@ -19,11 +19,14 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import org.springblade.core.mp.base.BaseEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-
-import java.io.Serializable;
 
 /**
  * 车辆道路运输证实体类
@@ -98,7 +101,7 @@ public class VehicleDaoluyunshuzheng implements Serializable {
      * 发证日期
      */
     @ApiModelProperty(value = "发证日期")
-    private String avdIssueDate;
+    private LocalDate avdIssueDate;
     /**
      * 车牌颜色
      */
@@ -129,7 +132,7 @@ public class VehicleDaoluyunshuzheng implements Serializable {
      * 有效期至
      */
     @ApiModelProperty(value = "有效期至")
-    private String avdValidUntil;
+    private LocalDate avdValidUntil;
     /**
      * 备注
      */

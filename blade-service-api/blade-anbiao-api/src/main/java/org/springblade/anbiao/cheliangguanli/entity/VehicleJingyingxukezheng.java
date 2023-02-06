@@ -18,11 +18,14 @@ package org.springblade.anbiao.cheliangguanli.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import org.springblade.core.mp.base.BaseEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-
-import java.io.Serializable;
 
 /**
  * 车辆经营许可证实体类
@@ -65,7 +68,7 @@ public class VehicleJingyingxukezheng implements Serializable {
      * 经营截至日期
      */
     @ApiModelProperty(value = "经营截至日期")
-    private String avjOperationDeadline;
+    private LocalDate avjOperationDeadline;
 
     @ApiModelProperty(value = "经营许可线路名称")
 	private String avjOperatingLineName;
@@ -138,7 +141,7 @@ public class VehicleJingyingxukezheng implements Serializable {
      * 客车类型等级有效期
      */
     @ApiModelProperty(value = "客车类型等级有效期")
-    private String avjValidPeriodPassengerCarType;
+    private LocalDate avjValidPeriodPassengerCarType;
     /**
      * 车辆技术等级
      */
@@ -153,12 +156,12 @@ public class VehicleJingyingxukezheng implements Serializable {
      * 车辆审验起（日期）
      */
     @ApiModelProperty(value = "车辆审验起（日期）")
-    private String avjAnnualReviewVehicles;
+    private LocalDate avjAnnualReviewVehicles;
     /**
      * 车辆审验止（日期）
      */
     @ApiModelProperty(value = "车辆审验止（日期）")
-    private String avjEndReviewVehicles;
+    private LocalDate avjEndReviewVehicles;
     /**
      * 说明
      */
@@ -188,7 +191,7 @@ public class VehicleJingyingxukezheng implements Serializable {
      * 创建时间
      */
     @ApiModelProperty(value = "创建时间")
-    private String avjCreateTime;
+    private LocalDateTime avjCreateTime;
     /**
      * 创建人主键
      */
@@ -203,7 +206,7 @@ public class VehicleJingyingxukezheng implements Serializable {
      * 更新时间
      */
     @ApiModelProperty(value = "更新时间")
-    private String avjUpdateTime;
+    private LocalDateTime avjUpdateTime;
     /**
      * 更新人主键
      */

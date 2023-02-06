@@ -103,5 +103,7 @@ public class AnbiaoSafetyTraining implements Serializable {
 	@TableField(exist = false)
 	private String deptName;
 
-
+	@ApiModelProperty(value = "月份")
+	@TableField(exist = false)
+	private String months;
 }

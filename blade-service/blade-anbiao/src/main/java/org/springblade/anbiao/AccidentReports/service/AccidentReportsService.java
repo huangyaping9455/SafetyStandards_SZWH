@@ -50,4 +50,6 @@ public interface AccidentReportsService {
 	 * @return
 	 */
 	Boolean updateAccident(AccidentReportsDTO accidentReportsDTO);
+
+	List<AccidentReportsDTO> selectshigubaogao(String deptId);
 }

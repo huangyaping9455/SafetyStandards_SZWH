@@ -12,6 +12,7 @@ import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springblade.anbiao.risk.vo.AnbiaoRiskDetailVO;
 import org.springblade.anbiao.risk.vo.AnbiaoSystemRiskVO;
+import org.springblade.anbiao.risk.vo.LedgerDetailVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -199,5 +200,10 @@ public class AnbiaoRiskDetailServiceImpl extends ServiceImpl<AnbiaoRiskDetailMap
 	@Override
 	public List<AnbiaoSystemRiskVO> selectSystemRisk() {
 		return mapper.selectSystemRisk();
+	}
+
+	@Override
+	public List<LedgerDetailVO> ledgerDetail(String deptId) {
+		return mapper.ledgerDetail(deptId);
 	}
 }

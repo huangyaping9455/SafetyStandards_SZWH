@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.springblade.anbiao.risk.page.RiskPage;
 import org.springblade.anbiao.risk.vo.AnbiaoRiskDetailVO;
 import org.springblade.anbiao.risk.vo.AnbiaoSystemRiskVO;
+import org.springblade.anbiao.risk.vo.LedgerDetailVO;
 
 import java.util.List;
 
@@ -30,4 +31,5 @@ public interface IAnbiaoRiskDetailService extends IService<AnbiaoRiskDetail> {
 
 	List<AnbiaoSystemRiskVO> selectSystemRisk();
 
+	List<LedgerDetailVO> ledgerDetail(String deptId);
 }

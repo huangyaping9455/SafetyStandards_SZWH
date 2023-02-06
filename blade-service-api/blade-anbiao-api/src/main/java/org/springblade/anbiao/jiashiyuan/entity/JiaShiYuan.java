@@ -523,4 +523,11 @@ public class JiaShiYuan implements Serializable {
 	@ApiModelProperty(value = "无重大责任事故：起始日期")
 	@TableField(exist = false)
 	private String wuzhongdazerenshiguqishiriqi;
+
+	/**
+	 * 挂车号码
+	 */
+	@ApiModelProperty(value = "挂车号码")
+	@TableField(exist = false)
+	private String trailerNumber;
 }

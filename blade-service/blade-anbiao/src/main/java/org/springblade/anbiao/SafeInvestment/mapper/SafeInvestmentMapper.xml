@@ -235,4 +235,14 @@
         AND  b.deptName= #{deptName}
         </if>
     </select>
+
+    <select id="selectYears" resultType="org.springblade.anbiao.SafeInvestment.DTO.SafeInvestmentDTO">
+       select asi_dept_ids,asi_ids,asi_year
+         from anbiao_safety_input
+        where asi_year &gt;= #{year}-1 and asi_year &lt;= #{year}-1
+          and asi_dept_ids=#{asiDeptIds}
+          and asi_delete = 0
+        group by asi_year
+    </select>
+
 </mapper>

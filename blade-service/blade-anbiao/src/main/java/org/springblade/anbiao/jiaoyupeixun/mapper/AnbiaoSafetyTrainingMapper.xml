@@ -70,7 +70,7 @@
         ORDER BY ast_training_end_time desc
     </sql>
 
-    <select id="selectListPage" resultMap="AnbiaoSafetyTrainingVOBaseResultMap"
+    <select id="selectPage" resultMap="AnbiaoSafetyTrainingVOBaseResultMap"
             parameterType="org.springblade.anbiao.jiaoyupeixun.page.AnbiaoSafetyTrainingPage" >
         <if test="size == 0" >
             select * from (
@@ -100,6 +100,16 @@
         )d
         where 1 = 1
         <include refid="querySql" />
+    </select>
+
+    <select id="selectSafetyTrainingMonth" resultType="org.springblade.anbiao.jiaoyupeixun.entity.AnbiaoSafetyTraining">
+        select  ast_dept_ids,ast_ids,
+               date_format(ast_training_start_time, '%Y-%m') months
+        from anbiao_safety_training
+        where ast_training_start_time &gt;= concat(#{year},'-01-01 00:00:00') and ast_training_start_time &lt;= concat(#{year},'-12-31 23:59:59')
+        and ast_delete = 0
+        and ast_dept_ids=#{astDeptIds}
+        group by months
     </select>
 
 </mapper>

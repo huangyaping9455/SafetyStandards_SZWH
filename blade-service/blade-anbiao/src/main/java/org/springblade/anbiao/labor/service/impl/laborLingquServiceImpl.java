@@ -15,4 +15,11 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class laborLingquServiceImpl extends ServiceImpl<LaborlingquMapper, LaborlingquEntity> implements laborLingquService {
+
+	private LaborlingquMapper laborlingquMapper;
+
+	@Override
+	public LaborlingquEntity selectSumReceive(String alrAliIds) {
+		return laborlingquMapper.selectSumReceive(alrAliIds);
+	}
 }

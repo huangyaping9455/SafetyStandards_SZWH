@@ -95,7 +95,7 @@ values
         where a.is_deleted = 0
         and a.id = b.vehid
         and b.vstatus = 1
-        and b.jiashiyuanid = a.jiashiyuanid
+--         and b.jiashiyuanid = a.jiashiyuanid
         and cheliangpaizhao not like '%挂%'
         ) b on a.id = b.jiashiyuanid
         left join (
@@ -103,7 +103,7 @@ values
         where a.is_deleted = 0
         and a.id = b.gvehid
         and b.gstatus = 1
-        and b.jiashiyuanid = a.jiashiyuanid
+--         and b.jiashiyuanid = a.jiashiyuanid
         and cheliangpaizhao like '%挂%'
         ) c on a.id = c.jiashiyuanid
         left join anbiao_jiashiyuan_ruzhi d on a.id = d.ajr_aj_ids

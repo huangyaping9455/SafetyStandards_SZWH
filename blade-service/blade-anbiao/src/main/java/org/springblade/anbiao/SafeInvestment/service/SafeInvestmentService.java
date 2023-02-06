@@ -63,4 +63,7 @@ public interface SafeInvestmentService {
 	Boolean updateSafede(SafetyInvestmentDetailsVO safetyInvestmentDetailsVO);
 
 	SafelInfoPage selectPage(SafelInfoPage safelInfoPage);
+
+	List<SafeInvestmentDTO> selectYears(int year,String asiDeptIds);
+
 }

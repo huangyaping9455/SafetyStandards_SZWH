@@ -20,6 +20,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.page.OrganizationsPage;
 import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
+import org.springblade.system.entity.Dept;
 
 import java.util.List;
 
@@ -106,4 +107,5 @@ public interface IOrganizationsService extends IService<Organizations> {
 	 */
 	int selectByName(@Param("fullName") String fullName,@Param("deptId") String deptId);
 
+	List<Dept> selectDept();
 }

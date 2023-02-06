@@ -18,11 +18,11 @@ public class AccidentReportsDTO {
 	private String detName;
 	private Integer deptId;
 	private String 	shigufashengdidian;
-	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
 	private Date shigufashengshijian;
-	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
 	private Date caozuoshijian;
 	private String shiguxingzhi;
 	private String shigufenlei;
@@ -41,7 +41,5 @@ public class AccidentReportsDTO {
 	private String shangwangcaichansunshi;
 	private String shigubaogaoid;
 	private String ali_delete;
-	private String zerenfenxi;
-	private String caozuorenid;
-	private String cheliangid;
+	private String is_deleted;
 }

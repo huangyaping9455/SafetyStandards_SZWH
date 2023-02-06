@@ -2,4 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.springblade.anbiao.labor.mapper.LaborlingquMapper">
 
+    <select id="selectSumReceive" resultType="org.springblade.anbiao.labor.entity.LaborlingquEntity" >
+
+        SELECT CASE WHEN IFNULL(SUM(alr_receipts_number),'')='' THEN 0 ELSE SUM(alr_receipts_number) end as sumReceive
+        FROM   anbiao_labor_receive
+        WHERE  alr_ali_ids=#{alrAliIds}
+          and  alr_delete=0
+
+    </select>
+
 </mapper>

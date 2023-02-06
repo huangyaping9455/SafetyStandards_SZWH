@@ -70,4 +70,6 @@ public interface laborMapper extends BaseMapper<LaborEntity> {
 	 * @return
 	 */
 	Boolean deleteLao(laborDTO laborDTO);
+
+	List<LaborEntity> selectInsurance(int aliDeptIds);
 }

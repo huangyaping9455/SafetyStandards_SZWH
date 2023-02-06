@@ -183,4 +183,9 @@ public class OrganizationsServiceImpl extends ServiceImpl<OrganizationsMapper, O
 		return mapper.selectByName(fullName,deptId);
 	}
 
+	@Override
+	public List<Dept> selectDept() {
+		return mapper.selectDept();
+	}
+
 }

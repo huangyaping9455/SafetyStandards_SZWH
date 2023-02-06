@@ -53,4 +53,6 @@ public interface AccidentReportsMapper {
 	 * @return
 	 */
 	Boolean deleteAcc(AccidentPage accidentPage);
+
+	List<AccidentReportsDTO> selectshigubaogao(String deptId);
 }

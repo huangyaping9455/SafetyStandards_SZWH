@@ -18,4 +18,6 @@ public interface AnbiaoAnquanhuiyiMapper extends BaseMapper<AnbiaoAnquanhuiyi> {
 
 	List<AnbiaoAnquanhuiyi> selectGetAll(AnQuanHuiYiPage anQuanHuiYiPage);
 	int selectGetAllTotal(AnQuanHuiYiPage anQuanHuiYiPage);
+
+	List<AnbiaoAnquanhuiyi> selectAnquanHuiYiMonth(int year,String deptId);
 }

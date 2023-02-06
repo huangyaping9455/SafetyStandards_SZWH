@@ -134,7 +134,7 @@ public class JiashiyuanBaoxian implements Serializable {
      * 保险天数
      */
     @ApiModelProperty(value = "保险天数")
-    private Integer ajbInsuranceDays = 0;
+    private Integer ajbInsuranceDays;
     /**
      * 计算方式(0=正常,1=1/300,2=1/365,3=短期;4=月平均,5=公务车)
      */
