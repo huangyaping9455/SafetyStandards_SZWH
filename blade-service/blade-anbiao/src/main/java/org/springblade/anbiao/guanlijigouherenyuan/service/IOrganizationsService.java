@@ -18,8 +18,10 @@ package org.springblade.anbiao.guanlijigouherenyuan.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
+import org.springblade.anbiao.guanlijigouherenyuan.entity.OrganizationsFuJian;
 import org.springblade.anbiao.guanlijigouherenyuan.page.OrganizationsPage;
 import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
+import org.springblade.system.entity.Dept;
 
 import java.util.List;
 

@@ -15,19 +15,18 @@
  */
 package org.springblade.anbiao.guanlijigouherenyuan.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
-import org.springblade.anbiao.guanlijigouherenyuan.entity.Personnel;
+import org.springblade.anbiao.guanlijigouherenyuan.entity.OrganizationsFuJian;
 import org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper;
 import org.springblade.anbiao.guanlijigouherenyuan.page.OrganizationsPage;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
 import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
+import org.springblade.common.tool.StringUtils;
 import org.springblade.system.entity.Dept;
 import org.springblade.system.user.entity.User;
-import org.springframework.cloud.client.ServiceInstance;
+import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,6 +42,8 @@ import java.util.List;
 public class OrganizationsServiceImpl extends ServiceImpl<OrganizationsMapper, Organizations> implements IOrganizationsService {
 
 	OrganizationsMapper mapper;
+
+	private IFileUploadClient fileUploadClient;
 
 	@Override
 	public boolean updateDel(String id) {

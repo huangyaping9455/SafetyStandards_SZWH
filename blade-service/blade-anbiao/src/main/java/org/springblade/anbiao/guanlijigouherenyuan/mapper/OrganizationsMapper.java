@@ -18,6 +18,7 @@ package org.springblade.anbiao.guanlijigouherenyuan.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
+import org.springblade.anbiao.guanlijigouherenyuan.entity.OrganizationsFuJian;
 import org.springblade.anbiao.guanlijigouherenyuan.page.OrganizationsPage;
 import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
 import org.springblade.system.entity.Dept;
@@ -94,7 +95,7 @@ public interface OrganizationsMapper extends BaseMapper<Organizations> {
 
 	OrganizationsFuJian selectByDeptImg(@Param("deptId") String deptId);
 
-	List<OrganizationsFuJian> selectByPersonnelImg(@Param("deptId") String deptId,@Param("postId") String postId);
+	List<OrganizationsFuJian> selectByPersonnelImg(@Param("deptId") String deptId, @Param("postId") String postId);
 
 	List<OrganizationsFuJian> selectByDeptPost(@Param("deptId") String deptId);
 
