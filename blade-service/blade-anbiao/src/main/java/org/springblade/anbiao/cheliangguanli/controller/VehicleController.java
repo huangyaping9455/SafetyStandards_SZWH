@@ -23,6 +23,8 @@ import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
 import org.springblade.anbiao.configure.entity.Configure;
 import org.springblade.anbiao.configure.service.IConfigureService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
+import org.springblade.anbiao.guanlijigouherenyuan.entity.OrganizationsFuJian;
+import org.springblade.anbiao.guanlijigouherenyuan.entity.Personnel;
 import org.springblade.anbiao.guanlijigouherenyuan.feign.IOrganizationsClient;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuan;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
@@ -2232,7 +2234,88 @@ public class VehicleController {
 		}
 	}
 
+	@GetMapping("/getVehImg")
+	@ApiLog("车辆-影像资料数据统计")
+	@ApiOperation(value = "车辆-影像资料数据统计", notes = "传入vehId", position = 31)
+	public R<VehicleImg> getVehImg(String vehId) {
+		R rs = new R();
+		VehicleImg or = vehicleService.getByVehImg(vehId);
+		if(or != null){
+			rs.setCode(200);
+			rs.setData(or);
+			rs.setMsg("获取成功");
+		}else{
+			rs.setCode(200);
+			rs.setData(null);
+			rs.setMsg("获取成功,暂无数据");
+		}
+		return rs;
+	}
 
+	@PostMapping("/uploadInsert")
+	@ApiLog("车辆-影像资料数据-导入")
+	@ApiOperation(value = "车辆-影像资料数据-导入", notes = "传入VehicleImg")
+	public R uploadInsert(@RequestBody VehicleImg vehicleImg, BladeUser user) throws ParseException {
+		R r = new R();
+		if(user == null) {
+			r.setMsg("未授权");
+			r.setCode(401);
+			return r;
+		}
+		VehicleXingshizheng vxs = new VehicleXingshizheng();
+		vxs.setAvxUpdateTime(LocalDateTime.now());
+		vxs.setAvxUpdateByName(user.getUserName());
+		vxs.setAvxUpdateByIds(user.getUserId().toString());
+		vxs.setAvxIds(vehicleImg.getXszid());
+		if (StringUtils.isNotEmpty(vehicleImg.getXszzmimg()) && vehicleImg.getXszzmimg() != "null"){
+			vxs.setAvxOriginalEnclosure(vehicleImg.getXszzmimg());
+		}
+		if (StringUtils.isNotEmpty(vehicleImg.getXszfmimg()) && vehicleImg.getXszfmimg() != "null"){
+			vxs.setAvxCopyEnclosure(vehicleImg.getXszfmimg());
+		}
+		VehicleDaoluyunshuzheng vdlyxs = new VehicleDaoluyunshuzheng();
+		vdlyxs.setAvdUpdateTime(DateUtil.now());
+		vdlyxs.setAvdUpdateByName(user.getUserName());
+		vdlyxs.setAvdUpdateByIds(user.getUserId().toString());
+		vdlyxs.setAvdIds(vehicleImg.getYszid());
+		if (StringUtils.isNotEmpty(vehicleImg.getYszimg()) && vehicleImg.getYszimg() != "null"){
+			vdlyxs.setAvdEnclosure(vehicleImg.getYszimg());
+		}
+		VehicleXingnengbaogao vxnbg = new VehicleXingnengbaogao();
+		vxnbg.setAvxUpdateTime(LocalDateTime.now());
+		vxnbg.setAvxUpdateByName(user.getUserName());
+		vxnbg.setAvxUpdateByIds(user.getUserId().toString());
+		vxnbg.setAvxIds(vehicleImg.getXnbgid());
+		if (StringUtils.isNotEmpty(vehicleImg.getXnbgimg()) && vehicleImg.getXnbgimg() != "null"){
+			vxnbg.setAvxEnclosure(vehicleImg.getXnbgimg());
+		}
+		VehicleDengjizhengshu vdjz = new VehicleDengjizhengshu();
+		vdjz.setAvdUpdateTime(LocalDateTime.now());
+		vdjz.setAvdUpdateByName(user.getUserName());
+		vdjz.setAvdUpdateByIds(user.getUserId().toString());
+		vdjz.setAvdIds(vehicleImg.getDjzid());
+		if (StringUtils.isNotEmpty(vehicleImg.getDjzimg()) && vehicleImg.getDjzimg() != "null"){
+			vdjz.setAvdEnclosure(vehicleImg.getDjzimg());
+		}
+		//行驶证
+		boolean ii = xingshizhengService.updateById(vxs);
+		//道路运输证
+		ii = daoluyunshuzhengService.updateById(vdlyxs);
+		//性能检测报告
+		ii = xingnengbaogaoService.updateById(vxnbg);
+		//登记证书
+		ii = dengjizhengshuService.updateById(vdjz);
+		if (ii){
+			r.setMsg("导入成功");
+			r.setCode(200);
+			r.setSuccess(false);
+		}else {
+			r.setMsg("导入失败");
+			r.setCode(500);
+			r.setSuccess(false);
+		}
+		return r;
+	}
 
 
 }
