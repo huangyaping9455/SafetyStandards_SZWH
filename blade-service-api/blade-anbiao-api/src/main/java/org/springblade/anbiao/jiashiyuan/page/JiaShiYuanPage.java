@@ -16,7 +16,7 @@ public class JiaShiYuanPage<T> extends BasePage<T> {
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "单位ID",required = true)
-	private Integer deptId;
+	private String deptId;
 
 	@ApiModelProperty(value = "单位名称")
 	private String deptName;

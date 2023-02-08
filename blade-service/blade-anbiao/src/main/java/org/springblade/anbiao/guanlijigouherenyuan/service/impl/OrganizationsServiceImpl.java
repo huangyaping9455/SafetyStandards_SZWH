@@ -197,15 +197,30 @@ public class OrganizationsServiceImpl extends ServiceImpl<OrganizationsMapper, O
 			int count = 0;
 			if(StringUtils.isNotEmpty(organizationFuJian.getDaoluyunshuzhengfujian()) && organizationFuJian.getDaoluyunshuzhengfujian() != null){
 				if(!organizationFuJian.getDaoluyunshuzhengfujian().contains("http")){
-					organizationFuJian.setDaoluyunshuzhengfujian(fileUploadClient.getUrl(organizationFuJian.getDaoluyunshuzhengfujian()));
+					or.setDaoluyunshuzhengfujian(fileUploadClient.getUrl(organizationFuJian.getDaoluyunshuzhengfujian()));
+				}else{
+					or.setDaoluyunshuzhengfujian(organizationFuJian.getDaoluyunshuzhengfujian());
 				}
 				count += 1;
+				or.setDaoluyunshuzhengcount(1);
 			}
 			if(StringUtils.isNotEmpty(organizationFuJian.getYingyezhizhaofujian()) && organizationFuJian.getYingyezhizhaofujian() != null){
 				if(!organizationFuJian.getYingyezhizhaofujian().contains("http")){
-					organizationFuJian.setYingyezhizhaofujian(fileUploadClient.getUrl(organizationFuJian.getYingyezhizhaofujian()));
+					or.setYingyezhizhaofujian(fileUploadClient.getUrl(organizationFuJian.getYingyezhizhaofujian()));
+				}else{
+					or.setYingyezhizhaofujian(organizationFuJian.getYingyezhizhaofujian());
 				}
 				count += 1;
+				or.setYingyezhizhaocount(1);
+			}
+			if(StringUtils.isNotEmpty(organizationFuJian.getJingyingxukezhengfujian()) && organizationFuJian.getJingyingxukezhengfujian() != null){
+				if(!organizationFuJian.getJingyingxukezhengfujian().contains("http")){
+					or.setJingyingxukezhengfujian(fileUploadClient.getUrl(organizationFuJian.getJingyingxukezhengfujian()));
+				}else{
+					or.setJingyingxukezhengfujian(organizationFuJian.getJingyingxukezhengfujian());
+				}
+				count += 1;
+				or.setJingyingxukezhengcount(1);
 			}
 			List<OrganizationsFuJian> deptPost = mapper.selectByDeptPost(deptId);
 			if(deptPost.size() > 0){
@@ -218,32 +233,46 @@ public class OrganizationsServiceImpl extends ServiceImpl<OrganizationsMapper, O
 					if(personnelImg.size() > 0) {
 						for (int i = 0; i < personnelImg.size(); i++) {
 							int pcount = 0;
+							int sfzcount = 0;
+							int qtcount = 0;
 							personnelImg.get(i).setPersonId(personnelImg.get(i).getPersonId());
 							personnelImg.get(i).setPersonName(personnelImg.get(i).getPersonName());
 							if (StringUtils.isNotEmpty(personnelImg.get(i).getShenfenzhengfanmianfujian()) && personnelImg.get(i).getShenfenzhengfanmianfujian() != null) {
 								if(!personnelImg.get(i).getShenfenzhengfanmianfujian().contains("http")){
 									personnelImg.get(i).setShenfenzhengfanmianfujian(fileUploadClient.getUrl(personnelImg.get(i).getShenfenzhengfanmianfujian()));
+								}else{
+									personnelImg.get(i).setShenfenzhengfanmianfujian(personnelImg.get(i).getShenfenzhengfanmianfujian());
 								}
 								pcount += 1;
+								sfzcount += 1;
 							}
 							if (StringUtils.isNotEmpty(personnelImg.get(i).getShenfenzhengfujian()) && personnelImg.get(i).getShenfenzhengfujian() != null) {
 								if(!personnelImg.get(i).getShenfenzhengfujian().contains("http")){
 									personnelImg.get(i).setShenfenzhengfujian(fileUploadClient.getUrl(personnelImg.get(i).getShenfenzhengfujian()));
+								}else{
+									personnelImg.get(i).setShenfenzhengfujian(personnelImg.get(i).getShenfenzhengfujian());
 								}
 								pcount += 1;
+								sfzcount += 1;
 							}
+							personnelImg.get(i).setShenfenzhengcount(sfzcount);
 							if (StringUtils.isNotEmpty(personnelImg.get(i).getQitafanmianfujian()) && personnelImg.get(i).getQitafanmianfujian() != null) {
 								if(!personnelImg.get(i).getQitafanmianfujian().contains("http")){
 									personnelImg.get(i).setQitafanmianfujian(fileUploadClient.getUrl(personnelImg.get(i).getQitafanmianfujian()));
+								}else{
+									personnelImg.get(i).setQitafanmianfujian(personnelImg.get(i).getQitafanmianfujian());
 								}
 								pcount += 1;
+								qtcount +=1;
 							}
 							if (StringUtils.isNotEmpty(personnelImg.get(i).getQitazhengmianfujian()) && personnelImg.get(i).getQitazhengmianfujian() != null) {
 								if(!personnelImg.get(i).getQitazhengmianfujian().contains("http")){
 									personnelImg.get(i).setQitazhengmianfujian(fileUploadClient.getUrl(personnelImg.get(i).getQitazhengmianfujian()));
 								}
 								pcount += 1;
+								qtcount +=1;
 							}
+							personnelImg.get(i).setQitacount(qtcount);
 							personnelImg.get(i).setCount(pcount);
 							postCount += pcount;
 						}

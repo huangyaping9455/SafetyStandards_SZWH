@@ -15,6 +15,7 @@ import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.util.TextUtils;
+import org.apache.tools.zip.ZipOutputStream;
 import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.configure.service.IConfigureService;
@@ -30,6 +31,7 @@ import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailInfoService;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.common.configurationBean.AlarmServer;
 import org.springblade.common.constant.CommonConstant;
+import org.springblade.common.tool.ApacheZipUtils;
 import org.springblade.common.tool.DateUtils;
 import org.springblade.common.tool.IdCardUtil;
 import org.springblade.common.tool.RegexUtils;
@@ -46,6 +48,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -2801,5 +2804,197 @@ public class JiaShiYuanController {
 		rs.setCode(200);
 		return rs;
 	}
+
+	@ApiLog("驾驶员信息统计表--导出")
+	@ApiOperation(value = "驾驶员信息统计表--导出", notes = "传入jiaShiYuanPage", position = 7)
+	@GetMapping(value="/goExport_GetTest")
+	public R goExport_GetTest(JiaShiYuanPage jiaShiYuanPage ,HttpServletResponse response, BladeUser user) throws IOException {
+		R rs = new R();
+		List<String> urlList = new ArrayList<>();
+
+		String[] idsss = jiaShiYuanPage.getDeptId().split(",");
+		//去除素组中重复的数组
+		List<String> listid = new ArrayList<String>();
+		for (int i=0; i<idsss.length; i++) {
+			if(!listid.contains(idsss[i])) {
+				listid.add(idsss[i]);
+			}
+		}
+		//返回一个包含所有对象的指定类型的数组
+		String[] idss= listid.toArray(new String[1]);
+		for(int j = 0;j< idss.length;j++){
+			jiaShiYuanPage.setDeptName("");
+			jiaShiYuanPage.setSize(0);
+			jiaShiYuanPage.setCurrent(0);
+			jiaShiYuanPage.setDeptId(idss[j]);
+			jiaShiYuanService.selectAlarmTJMXPage(jiaShiYuanPage);
+			List<JiaShiYuanTJMX> JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
+			String templateFile = alarmServer.getTemplateUrl()+"模板\\A.xlsx";
+			Map<String, Object> context = new HashMap<String, Object>();
+			//Excel中的结果集ListData
+			List<JiaShiYuanTJMX> ListData = new ArrayList<>();
+			if(JiaShiYuanTJMXList.size()==0){
+
+			}else if(JiaShiYuanTJMXList.size()>30000){
+				rs.setMsg("数据超过30000条无法下载");
+				rs.setCode(500);
+				return rs;
+			}else{
+				int index = 1;
+				DateTimeFormatter dtf3 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				for( int i = 0 ; i < JiaShiYuanTJMXList.size() ; i++) {
+					JiaShiYuanTJMX t = JiaShiYuanTJMXList.get(i);
+					JiaShiYuanTJMX JiaShiYuanTJMX = new JiaShiYuanTJMX();
+					JiaShiYuanTJMX.setXuhao(index);
+					JiaShiYuanTJMX.setDeptName(t.getDeptName());
+					JiaShiYuanTJMX.setA(t.getA());
+					if (t.getA1().equals("0")){
+						JiaShiYuanTJMX.setA1("√");
+					}else {
+						JiaShiYuanTJMX.setA1("×");
+					}
+					if (t.getA2().equals("0")){
+						JiaShiYuanTJMX.setA2("√");
+					}else {
+						JiaShiYuanTJMX.setA2("×");
+					}
+					if (t.getA3().equals("0")){
+						JiaShiYuanTJMX.setA3("√");
+					}else {
+						JiaShiYuanTJMX.setA3("×");
+					}
+					if (t.getA4().equals("0")){
+						JiaShiYuanTJMX.setA4("√");
+					}else {
+						JiaShiYuanTJMX.setA4("×");
+					}
+					if (t.getA5().equals("0")){
+						JiaShiYuanTJMX.setA5("√");
+					}else {
+						JiaShiYuanTJMX.setA5("×");
+					}
+					if (t.getA6().equals("0")){
+						JiaShiYuanTJMX.setA6("√");
+					}else {
+						JiaShiYuanTJMX.setA6("×");
+					}
+					if (t.getA7().equals("0")){
+						JiaShiYuanTJMX.setA7("√");
+					}else {
+						JiaShiYuanTJMX.setA7("×");
+					}
+					if (t.getA8().equals("0")){
+						JiaShiYuanTJMX.setA8("√");
+					}else {
+						JiaShiYuanTJMX.setA8("×");
+					}
+					if (t.getA9().equals("0")){
+						JiaShiYuanTJMX.setA9("√");
+					}else {
+						JiaShiYuanTJMX.setA9("×");
+					}
+					if (t.getA10().equals("0")){
+						JiaShiYuanTJMX.setA10("√");
+					}else {
+						JiaShiYuanTJMX.setA10("×");
+					}
+					if (t.getB1().equals("0")){
+						JiaShiYuanTJMX.setB1("√");
+					}else {
+						JiaShiYuanTJMX.setB1("×");
+					}
+					if (t.getB2().equals("0")){
+						JiaShiYuanTJMX.setB2("√");
+					}else {
+						JiaShiYuanTJMX.setB2("×");
+					}
+					if (t.getB3().equals("0")){
+						JiaShiYuanTJMX.setB3("√");
+					}else {
+						JiaShiYuanTJMX.setB3("×");
+					}
+					if (t.getB4().equals("0")){
+						JiaShiYuanTJMX.setB4("√");
+					}else {
+						JiaShiYuanTJMX.setB4("×");
+					}
+					if (t.getB5().equals("0")){
+						JiaShiYuanTJMX.setB5("√");
+					}else {
+						JiaShiYuanTJMX.setB5("×");
+					}
+					if (t.getB6().equals("0")){
+						JiaShiYuanTJMX.setB6("√");
+					}else {
+						JiaShiYuanTJMX.setB6("×");
+					}
+					if (t.getB7().equals("0")){
+						JiaShiYuanTJMX.setB7("√");
+					}else {
+						JiaShiYuanTJMX.setB7("×");
+					}
+					if (t.getB8().equals("0")){
+						JiaShiYuanTJMX.setB8("√");
+					}else {
+						JiaShiYuanTJMX.setB8("×");
+					}
+					if (t.getC1().equals("0")){
+						JiaShiYuanTJMX.setC1("√");
+					}else {
+						JiaShiYuanTJMX.setC1("×");
+					}
+					if (t.getC2().equals("0")){
+						JiaShiYuanTJMX.setC2("√");
+					}else {
+						JiaShiYuanTJMX.setC2("×");
+					}
+					if (t.getC3().equals("0")){
+						JiaShiYuanTJMX.setC3("√");
+					}else {
+						JiaShiYuanTJMX.setC3("×");
+					}
+					ListData.add(JiaShiYuanTJMX);
+					index ++;
+					jiaShiYuanPage.setDeptName(t.getDeptName());
+				}
+			}
+			String title = new String(jiaShiYuanPage.getDeptName().getBytes(StandardCharsets.UTF_8))+ "-驾驶员信息统计表";
+			// 模板注意 用{} 来表示你要用的变量 如果本来就有"{","}" 特殊字符 用"\{","\}"代替
+			// {} 代表普通变量 {.} 代表是list的变量
+			// 这里模板 删除了list以后的数据，也就是统计的这一行
+			String templateFileName = templateFile;
+//		alarmServer.getTemplateUrl()+
+			String fileName = "D:\\ExcelTest\\"+title+idss[j]+".xlsx";
+			ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
+			WriteSheet writeSheet = EasyExcel.writerSheet().build();
+			// 写入list之前的数据
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("title", title);
+			excelWriter.fill(map, writeSheet);
+
+			// 直接写入数据
+			excelWriter.fill(ListData, writeSheet);
+			excelWriter.finish();
+			urlList.add(fileName);
+		}
+
+		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream("D:\\ExcelTest\\文件夹33.zip"));
+		ApacheZipUtils.doCompress1(urlList, bizOut);
+		//不要忘记调用
+		bizOut.close();
+
+		rs.setMsg("下载成功");
+		rs.setCode(200);
+		rs.setSuccess(true);
+		return rs;
+	}
+
+//	public static void main(String[] args) {
+////		System.out.println(DigestUtil.encrypt("431238"));
+//	}
+
+
+
+
 
 }

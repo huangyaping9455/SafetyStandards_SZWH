@@ -72,9 +72,12 @@
                 )b on a.day = b.date
                 where a.day &lt;= left(#{date},10)
             )a
-            where a.date >= (
+            where
+            <!--a.date >= (
                 select left(avx_register_date,10) as createTime from anbiao_vehicle_xingshizheng where avx_av_ids = vehid
             )
+            and -->
+            a.date >= date_add(#{date}, interval -30 day)
         </if>
         <if test="jsyId == null or jsyId == '' ">
         select

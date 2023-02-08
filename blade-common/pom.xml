@@ -181,6 +181,14 @@
             <scope>compile</scope>
         </dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.apache.ant/ant -->
+		<!--       zip -->
+		<dependency>
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant</artifactId>
+			<version>1.10.11</version>
+		</dependency>
+
 
     </dependencies>
 

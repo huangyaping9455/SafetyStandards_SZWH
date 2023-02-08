@@ -17,6 +17,7 @@
         <result column="avd_update_time" property="avdUpdateTime"/>
         <result column="avd_update_by_ids" property="avdUpdateByIds"/>
         <result column="avd_update_by_name" property="avdUpdateByName"/>
+        <result column="avd_vehicle_model" property="avdVehicleModel"/>
     </resultMap>
 
 

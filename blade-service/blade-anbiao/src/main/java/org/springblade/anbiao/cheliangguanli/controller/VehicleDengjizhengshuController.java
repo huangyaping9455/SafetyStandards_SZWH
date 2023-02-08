@@ -29,6 +29,7 @@ import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
 import org.springblade.core.tool.api.R;
 import org.springblade.core.tool.utils.Func;
+import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -57,6 +58,8 @@ public class VehicleDengjizhengshuController extends BladeController {
 
 	private IVehicleService vehicleService;
 
+	private IFileUploadClient fileUploadClient;
+
 	/**
 	 * 详情
 	 */
@@ -75,6 +78,9 @@ public class VehicleDengjizhengshuController extends BladeController {
 		qDjzs.setAvdDelete("0");
 		VehicleDengjizhengshu dengjizhengshu= vehicleDengjizhengshuService.getOne(Condition.getQueryWrapper(qDjzs));
 		if(dengjizhengshu != null){
+			if(!dengjizhengshu.getAvdEnclosure().contains("http")){
+				dengjizhengshu.setAvdEnclosure(fileUploadClient.getUrl(dengjizhengshu.getAvdEnclosure()));
+			}
 			VehicleVO detail = vehicleService.selectByKey(vehicleId);
 			dengjizhengshu.setAvxFileNo(detail.getCheliangpaizhao());
 		}

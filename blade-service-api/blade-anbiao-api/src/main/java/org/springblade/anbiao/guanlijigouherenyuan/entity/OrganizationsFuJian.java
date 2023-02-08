@@ -43,11 +43,20 @@ public class OrganizationsFuJian implements Serializable {
 	@ApiModelProperty(value = "道路运输证附件")
 	private String daoluyunshuzhengfujian;
 
+	@ApiModelProperty(value = "道路运输证影像附件数")
+	private Integer daoluyunshuzhengcount = 0;
+
 	@ApiModelProperty(value = "经营许可证附件")
 	private String jingyingxukezhengfujian;
 
+	@ApiModelProperty(value = "经营许可证影像附件数")
+	private Integer jingyingxukezhengcount = 0;
+
 	@ApiModelProperty(value = "工商营业执照附件")
 	private String yingyezhizhaofujian;
+
+	@ApiModelProperty(value = "工商营业执照影像附件数")
+	private Integer yingyezhizhaocount = 0;
 
 	@ApiModelProperty(value = "岗位id")
 	private String postId;
@@ -67,11 +76,17 @@ public class OrganizationsFuJian implements Serializable {
 	@ApiModelProperty(value = "身份证附件反面")
 	private String shenfenzhengfanmianfujian;
 
+	@ApiModelProperty(value = "身份证影像附件数")
+	private Integer shenfenzhengcount = 0;
+
 	@ApiModelProperty(value = "其他附件证明")
 	private String qitazhengmianfujian;
 
 	@ApiModelProperty(value = "其他附件反面")
 	private String qitafanmianfujian;
+
+	@ApiModelProperty(value = "其他影像附件数")
+	private Integer qitacount = 0;
 
 	@ApiModelProperty(value = "影像附件数")
 	private Integer count = 0;

@@ -17,30 +17,25 @@ package org.springblade.anbiao.cheliangguanli.controller;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
-import javax.validation.Valid;
-
-import org.springblade.anbiao.cheliangguanli.entity.*;
+import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleDaoluyunshuzheng;
+import org.springblade.anbiao.cheliangguanli.service.IVehicleDaoluyunshuzhengService;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
+import org.springblade.anbiao.cheliangguanli.vo.VehicleDaoluyunshuzhengVO;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
-import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
-import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
-import org.springblade.common.tool.FuncUtil;
+import org.springblade.core.boot.ctrl.BladeController;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
 import org.springblade.core.tool.api.R;
-import org.springblade.core.tool.utils.Func;
+import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestParam;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.springblade.anbiao.cheliangguanli.vo.VehicleDaoluyunshuzhengVO;
-import org.springblade.anbiao.cheliangguanli.service.IVehicleDaoluyunshuzhengService;
-import org.springblade.core.boot.ctrl.BladeController;
 
-import java.time.LocalDateTime;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +55,7 @@ public class VehicleDaoluyunshuzhengController extends BladeController {
 
 	private IVehicleService vehicleService;
 
-	private IOrganizationsService organizationsService;
+	private IFileUploadClient fileUploadClient;
 
 	/**
 	 * 详情
@@ -80,6 +75,9 @@ public class VehicleDaoluyunshuzhengController extends BladeController {
 		qDlysz.setAvdDelete("0");
 		VehicleDaoluyunshuzheng daoluyunshuzheng= vehicleDaoluyunshuzhengService.getOne(Condition.getQueryWrapper(qDlysz));
 		if(daoluyunshuzheng != null){
+			if(!daoluyunshuzheng.getAvdEnclosure().contains("http")){
+				daoluyunshuzheng.setAvdEnclosure(fileUploadClient.getUrl(daoluyunshuzheng.getAvdEnclosure()));
+			}
 			VehicleVO detail = vehicleService.selectByKey(vehicleId);
 			daoluyunshuzheng.setAvxPlateNo(detail.getCheliangpaizhao());
 		}

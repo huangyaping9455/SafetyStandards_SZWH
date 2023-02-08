@@ -527,7 +527,7 @@
                 qitazhengmianfujian = #{qitazhengmianfujian},
             </if>
 
-            <if test="postId != null">
+            <if test="qitafanmianfujian != null">
                 qitafanmianfujian = #{qitafanmianfujian}
             </if>
 

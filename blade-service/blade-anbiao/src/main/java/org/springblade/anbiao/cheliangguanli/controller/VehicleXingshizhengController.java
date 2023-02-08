@@ -32,6 +32,7 @@ import org.springblade.core.mp.support.Query;
 import org.springblade.core.tool.api.R;
 import org.springblade.core.tool.utils.Func;
 import org.springblade.system.vo.DeptVO;
+import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -62,6 +63,8 @@ public class VehicleXingshizhengController extends BladeController {
 
 	private IVehicleService vehicleService;
 
+	private IFileUploadClient fileUploadClient;
+
 	/**
 	 * 详情
 	 */
@@ -80,6 +83,12 @@ public class VehicleXingshizhengController extends BladeController {
 		qXsz.setAvxDelete("0");
 		VehicleXingshizheng xingshizheng = vehicleXingshizhengService.getOne(Condition.getQueryWrapper(qXsz));
 		if(xingshizheng != null){
+			if(!xingshizheng.getAvxCopyEnclosure().contains("http")){
+				xingshizheng.setAvxCopyEnclosure(fileUploadClient.getUrl(xingshizheng.getAvxCopyEnclosure()));
+			}
+			if(!xingshizheng.getAvxOriginalEnclosure().contains("http")){
+				xingshizheng.setAvxOriginalEnclosure(fileUploadClient.getUrl(xingshizheng.getAvxOriginalEnclosure()));
+			}
 			VehicleVO detail = vehicleService.selectByKey(vehicleId);
 			OrganizationsVO dept = organizationsService.selectByDeptId(detail.getDeptId().toString());
 			xingshizheng.setDeptName(dept.getDeptName());
