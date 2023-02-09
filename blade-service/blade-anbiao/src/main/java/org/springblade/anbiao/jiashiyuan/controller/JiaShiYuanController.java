@@ -1704,7 +1704,7 @@ public class JiaShiYuanController {
 					//根据企业ID、身份证号查询该身份证是否存在
 					QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
 					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId, driver.getDeptId());
-					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,0);
+					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete, 0);
 					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShenfenzhenghao, tmp);
 					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete, 0);
 					JiaShiYuan jiaShiYuan2 = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
@@ -2195,44 +2195,92 @@ public class JiaShiYuanController {
 			driver.setDeptId(Integer.valueOf(deptId));
 			driver.setDeptName(String.valueOf(a.get("deptName")).trim());
 			driver.setJiashiyuanxingming(String.valueOf(a.get("jiashiyuanxingming")).trim());
-			String tmp = String.valueOf(a.get("shenfenzhenghao")).trim();
-			driver.setShenfenzhenghao(tmp);
-			driver.setXingbie(String.valueOf(a.get("xingbie")).trim());
-			driver.setCheliangpaizhao(String.valueOf(a.get("cheliangpaizhao")).trim());
-			driver.setTrailerNumber(String.valueOf(a.get("trailerNumber")).trim());
-			driver.setPingyongriqi(String.valueOf(a.get("pingyongriqi")).trim());
-			driver.setLaodonghetongkaishiriqi(String.valueOf(a.get("laodonghetongkaishiriqi")).trim());
-			driver.setLaodonghetongjieshuriqi(String.valueOf(a.get("laodonghetongjieshuriqi")).trim());
-			driver.setAnquanzerenshuqishiriqi(String.valueOf(a.get("anquanzerenshuqishiriqi")).trim());
-			driver.setGangweigaozhishuqishiriqi(String.valueOf(a.get("gangweigaozhishuqishiriqi")).trim());
-			driver.setJiashiyuanleixing("驾驶员");
-			if (StringUtils.isNotBlank(tmp) && !tmp.equals("null")){
-				//通过身份证获取年龄
-				Integer age = IdCardUtil.getAgeByCard(tmp);
-				driver.setNianling(age.toString());
-				//通过身份证获取生日日期
-				Date chushengshijian = IdCardUtil.getBirthDate(tmp);
-				driver.setChushengshijian(dateFormat2.format(chushengshijian));
-			} else {
-				driver.setNianling("0");
+			if (StringUtils.isNotBlank(String.valueOf(a.get("shenfenzhenghao")).trim())  && !String.valueOf(a.get("shenfenzhenghao")).equals("null")){
+				String tmp = String.valueOf(a.get("shenfenzhenghao")).trim();
+				driver.setShenfenzhenghao(tmp);
+				if (StringUtils.isNotBlank(tmp) && !tmp.equals("null")){
+					//通过身份证获取年龄
+					Integer age = IdCardUtil.getAgeByCard(tmp);
+					driver.setNianling(age.toString());
+					//通过身份证获取生日日期
+					Date chushengshijian = IdCardUtil.getBirthDate(tmp);
+					driver.setChushengshijian(dateFormat2.format(chushengshijian));
+				} else {
+					driver.setNianling("0");
+				}
 			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("xingbie")).trim())  && !String.valueOf(a.get("xingbie")).equals("null")){
+				driver.setXingbie(String.valueOf(a.get("xingbie")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("cheliangpaizhao")).trim())  && !String.valueOf(a.get("cheliangpaizhao")).equals("null")){
+				driver.setCheliangpaizhao(String.valueOf(a.get("cheliangpaizhao")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("trailerNumber")).trim())  && !String.valueOf(a.get("trailerNumber")).equals("null")){
+				driver.setTrailerNumber(String.valueOf(a.get("trailerNumber")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("pingyongriqi")).trim())  && !String.valueOf(a.get("pingyongriqi")).equals("null")){
+				driver.setPingyongriqi(String.valueOf(a.get("pingyongriqi")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("laodonghetongkaishiriqi")).trim())  && !String.valueOf(a.get("laodonghetongkaishiriqi")).equals("null")){
+				driver.setLaodonghetongkaishiriqi(String.valueOf(a.get("laodonghetongkaishiriqi")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("laodonghetongjieshuriqi")).trim())  && !String.valueOf(a.get("laodonghetongjieshuriqi")).equals("null")){
+				driver.setLaodonghetongjieshuriqi(String.valueOf(a.get("laodonghetongjieshuriqi")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("anquanzerenshuqishiriqi")).trim())  && !String.valueOf(a.get("anquanzerenshuqishiriqi")).equals("null")){
+				driver.setAnquanzerenshuqishiriqi(String.valueOf(a.get("anquanzerenshuqishiriqi")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("gangweigaozhishuqishiriqi")).trim())  && !String.valueOf(a.get("gangweigaozhishuqishiriqi")).equals("null")){
+				driver.setGangweigaozhishuqishiriqi(String.valueOf(a.get("gangweigaozhishuqishiriqi")).trim());
+			}
+			driver.setJiashiyuanleixing("驾驶员");
 			String shoujihaoma = String.valueOf(a.get("shoujihaoma")).trim();
 			driver.setShoujihaoma(shoujihaoma);
-			driver.setCongyerenyuanleixing(String.valueOf(a.get("congyerenyuanleixing")).trim());
-			driver.setJiashizhenghao(String.valueOf(a.get("jiashizhenghao")).trim());
-			driver.setCongyezigezheng(String.valueOf(a.get("congyezigezheng")).trim());
-			driver.setCongyezhengchulingri(String.valueOf(a.get("congyezhengchulingri")).trim());
-			driver.setCongyezhengyouxiaoqi(String.valueOf(a.get("congyezhengyouxiaoqi")).trim());
-			driver.setJiashizhengchulingriqi(String.valueOf(a.get("jiashizhengchulingriqi")).trim());
-			driver.setJiashizhengyouxiaoqi(String.valueOf(a.get("jiashizhengyouxiaoqi")).trim());
-			driver.setShenfenzhengchulingriqi(String.valueOf(a.get("shenfenzhengchulingriqi")).trim());
-			driver.setShenfenzhengyouxiaoqi(String.valueOf(a.get("shenfenzhengyouxiaoqi")).trim());
-			driver.setLaodonghetongkaishiriqi(String.valueOf(a.get("laodonghetongkaishiriqi")).trim());
-			driver.setLaodonghetongjieshuriqi(String.valueOf(a.get("laodonghetongjieshuriqi")).trim());
-			driver.setAnquanzerenshuqishiriqi(String.valueOf(a.get("anquanzerenshuqishiriqi")).trim());
-			driver.setGangweigaozhishuqishiriqi(String.valueOf(a.get("gangweigaozhishuqishiriqi")).trim());
-			driver.setWuzhongdazerenshiguqishiriqi(String.valueOf(a.get("wuzhongdazerenshiguqishiriqi")).trim());
-			driver.setTijianriqi(String.valueOf(a.get("tijianriqi")).trim());
+			if (StringUtils.isNotBlank(String.valueOf(a.get("congyerenyuanleixing")).trim())  && !String.valueOf(a.get("congyerenyuanleixing")).equals("null")){
+				driver.setCongyerenyuanleixing(String.valueOf(a.get("congyerenyuanleixing")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("jiashizhenghao")).trim())  && !String.valueOf(a.get("jiashizhenghao")).equals("null")){
+				driver.setJiashizhenghao(String.valueOf(a.get("jiashizhenghao")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("congyezigezheng")).trim())  && !String.valueOf(a.get("congyezigezheng")).equals("null")){
+				driver.setCongyezigezheng(String.valueOf(a.get("congyezigezheng")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("congyezhengchulingri")).trim())  && !String.valueOf(a.get("congyezhengchulingri")).equals("null")){
+				driver.setCongyezhengchulingri(String.valueOf(a.get("congyezhengchulingri")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("congyezhengyouxiaoqi")).trim())  && !String.valueOf(a.get("congyezhengyouxiaoqi")).equals("null")){
+				driver.setCongyezhengyouxiaoqi(String.valueOf(a.get("congyezhengyouxiaoqi")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("jiashizhengchulingriqi")).trim())  && !String.valueOf(a.get("jiashizhengchulingriqi")).equals("null")){
+				driver.setJiashizhengchulingriqi(String.valueOf(a.get("jiashizhengchulingriqi")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("jiashizhengyouxiaoqi")).trim())  && !String.valueOf(a.get("jiashizhengyouxiaoqi")).equals("null")){
+				driver.setJiashizhengyouxiaoqi(String.valueOf(a.get("jiashizhengyouxiaoqi")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("shenfenzhengchulingriqi")).trim())  && !String.valueOf(a.get("shenfenzhengchulingriqi")).equals("null")){
+				driver.setShenfenzhengchulingriqi(String.valueOf(a.get("shenfenzhengchulingriqi")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("shenfenzhengyouxiaoqi")).trim())  && !String.valueOf(a.get("shenfenzhengyouxiaoqi")).equals("null")){
+				driver.setShenfenzhengyouxiaoqi(String.valueOf(a.get("shenfenzhengyouxiaoqi")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("laodonghetongkaishiriqi")).trim())  && !String.valueOf(a.get("laodonghetongkaishiriqi")).equals("null")){
+				driver.setLaodonghetongkaishiriqi(String.valueOf(a.get("laodonghetongkaishiriqi")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("laodonghetongjieshuriqi")).trim())  && !String.valueOf(a.get("laodonghetongjieshuriqi")).equals("null")){
+				driver.setLaodonghetongjieshuriqi(String.valueOf(a.get("laodonghetongjieshuriqi")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("anquanzerenshuqishiriqi")).trim())  && !String.valueOf(a.get("anquanzerenshuqishiriqi")).equals("null")){
+				driver.setAnquanzerenshuqishiriqi(String.valueOf(a.get("anquanzerenshuqishiriqi")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("gangweigaozhishuqishiriqi")).trim())  && !String.valueOf(a.get("gangweigaozhishuqishiriqi")).equals("null")){
+				driver.setGangweigaozhishuqishiriqi(String.valueOf(a.get("gangweigaozhishuqishiriqi")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("wuzhongdazerenshiguqishiriqi")).trim())  && !String.valueOf(a.get("wuzhongdazerenshiguqishiriqi")).equals("null")){
+				driver.setWuzhongdazerenshiguqishiriqi(String.valueOf(a.get("wuzhongdazerenshiguqishiriqi")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("tijianriqi")).trim())  && !String.valueOf(a.get("tijianriqi")).equals("null")){
+				driver.setTijianriqi(String.valueOf(a.get("tijianriqi")).trim());
+			}
 			driver.setCongyerenyuanleixing("驾驶员");
 			driver.setIsdelete(0);
 			driver.setCreatetime(DateUtil.now());
@@ -2249,6 +2297,7 @@ public class JiaShiYuanController {
 			jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getJiashiyuanxingming,driver.getJiashiyuanxingming());
 			jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getShoujihaoma,driver.getShoujihaoma());
 			jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getShenfenzhenghao,driver.getShenfenzhenghao());
+			jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getIsdelete,0);
 			JiaShiYuan jiaShiYuan1 = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper1);
 			if (jiaShiYuan1 != null) {
 				driver.setId(jiaShiYuan1.getId());
@@ -2262,6 +2311,7 @@ public class JiaShiYuanController {
 			QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<JiaShiYuan>();
 			jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId, driver.getId());
 			jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShoujihaoma, driver.getShoujihaoma());
+			jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete, 0);
 			jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId, driver.getDeptId());
 			JiaShiYuan jiaShiYuan = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
 
@@ -2278,9 +2328,15 @@ public class JiaShiYuanController {
 				ruzhi.setAjrDelete("0");
 				ruzhi.setAjrAjIds(jiaShiYuan.getId());
 				ruzhi.setAjrName(jiaShiYuan.getJiashiyuanxingming());
-				ruzhi.setAjrSex(jiaShiYuan.getXingbie());
-				ruzhi.setAjrAge(Integer.valueOf(jiaShiYuan.getNianling()));
-				ruzhi.setAjrIdNumber(jiaShiYuan.getShenfenzhenghao());
+				if (StringUtils.isNotBlank(jiaShiYuan.getXingbie())  && !jiaShiYuan.getXingbie().equals("null")){
+					ruzhi.setAjrSex(jiaShiYuan.getXingbie());
+				}
+				if (StringUtils.isNotBlank(jiaShiYuan.getNianling())  && !jiaShiYuan.getNianling().equals("null")){
+					ruzhi.setAjrAge(Integer.valueOf(jiaShiYuan.getNianling()));
+				}
+				if (StringUtils.isNotBlank(jiaShiYuan.getShenfenzhenghao())  && !jiaShiYuan.getShenfenzhenghao().equals("null")){
+					ruzhi.setAjrIdNumber(jiaShiYuan.getShenfenzhenghao());
+				}
 				ruzhi.setAjrApproverStatus("0");
 				isDataValidity = ruzhiService.save(ruzhi);
 			}
@@ -2293,9 +2349,15 @@ public class JiaShiYuanController {
 			AnbiaoJiashiyuanJiashizheng jszdeail = jiashizhengService.getBaseMapper().selectOne(jiashizhengQueryWrapper);
 			if (jszdeail == null) {
 				jiashizheng.setAjjAjIds(jiaShiYuan.getId());
-				jiashizheng.setAjjFileNo(jiaShiYuan.getJiashizhenghao());
-				jiashizheng.setAjjValidPeriodStart(jiaShiYuan.getJiashizhengchulingriqi());
-				jiashizheng.setAjjValidPeriodEnd(jiaShiYuan.getJiashizhengyouxiaoqi());
+				if (StringUtils.isNotBlank(jiaShiYuan.getJiashizhenghao())  && !jiaShiYuan.getJiashizhenghao().equals("null")){
+					jiashizheng.setAjjFileNo(jiaShiYuan.getJiashizhenghao());
+				}
+				if (StringUtils.isNotBlank(jiaShiYuan.getJiashizhengchulingriqi())  && !jiaShiYuan.getJiashizhengchulingriqi().equals("null")){
+					jiashizheng.setAjjValidPeriodStart(jiaShiYuan.getJiashizhengchulingriqi());
+				}
+				if (StringUtils.isNotBlank(jiaShiYuan.getJiashizhengyouxiaoqi())  && !jiaShiYuan.getJiashizhengyouxiaoqi().equals("null")){
+					jiashizheng.setAjjValidPeriodEnd(jiaShiYuan.getJiashizhengyouxiaoqi());
+				}
 				jiashizheng.setAjjStatus("0");
 				jiashizheng.setAjjDelete("0");
 				jiashizheng.setAjjCreateByIds(jiaShiYuan.getCaozuorenid().toString());
@@ -2312,9 +2374,15 @@ public class JiaShiYuanController {
 			AnbiaoJiashiyuanCongyezigezheng cyzdeail = congyezigezhengService.getBaseMapper().selectOne(congyezigezhengQueryWrapper);
 			if (cyzdeail == null) {
 				congyezigezheng.setAjcAjIds(jiaShiYuan.getId());
-				congyezigezheng.setAjcCertificateNo(jiaShiYuan.getCongyezigezheng());
-				congyezigezheng.setAjcIssueDate(jiaShiYuan.getCongyezhengchulingri());
-				congyezigezheng.setAjcValidUntil(jiaShiYuan.getCongyezhengyouxiaoqi());
+				if (StringUtils.isNotBlank(jiaShiYuan.getCongyezigezheng())  && !jiaShiYuan.getCongyezigezheng().equals("null")){
+					congyezigezheng.setAjcCertificateNo(jiaShiYuan.getCongyezigezheng());
+				}
+				if (StringUtils.isNotBlank(jiaShiYuan.getCongyezhengchulingri())  && !jiaShiYuan.getCongyezhengchulingri().equals("null")){
+					congyezigezheng.setAjcIssueDate(jiaShiYuan.getCongyezhengchulingri());
+				}
+				if (StringUtils.isNotBlank(jiaShiYuan.getCongyezhengyouxiaoqi())  && !jiaShiYuan.getCongyezhengyouxiaoqi().equals("null")){
+					congyezigezheng.setAjcValidUntil(jiaShiYuan.getCongyezhengyouxiaoqi());
+				}
 				congyezigezheng.setAjcStatus("0");
 				congyezigezheng.setAjcCreateTime(DateUtil.now());
 				congyezigezheng.setAjcDelete("0");
@@ -2333,7 +2401,9 @@ public class JiaShiYuanController {
 				tijian.setAjtCreateTime(jiaShiYuan.getCaozuoshijian());
 				tijian.setAjtDelete("0");
 				tijian.setAjtAjIds(jiaShiYuan.getId());
-				tijian.setAjtPhysicalExaminationDate(jiaShiYuan.getTijianriqi());
+				if (StringUtils.isNotBlank(jiaShiYuan.getTijianriqi())  && !jiaShiYuan.getTijianriqi().equals("null")){
+					tijian.setAjtPhysicalExaminationDate(jiaShiYuan.getTijianriqi());
+				}
 				isDataValidity = tijianService.save(tijian);
 			}
 
@@ -2364,7 +2434,9 @@ public class JiaShiYuanController {
 				wuzezhengming.setAjwCreateTime(DateUtil.now());
 				wuzezhengming.setAjwDelete("0");
 				wuzezhengming.setAjwAjIds(jiaShiYuan.getId());
-				wuzezhengming.setAjwStartDate(driver.getWuzhongdazerenshiguqishiriqi());
+				if (StringUtils.isNotBlank(driver.getWuzhongdazerenshiguqishiriqi())  && !driver.getWuzhongdazerenshiguqishiriqi().equals("null")){
+					wuzezhengming.setAjwStartDate(driver.getWuzhongdazerenshiguqishiriqi());
+				}
 				isDataValidity = wuzezhengmingService.save(wuzezhengming);
 			}
 
@@ -2380,7 +2452,9 @@ public class JiaShiYuanController {
 				anquanzerenshu.setAjaCreateTime(DateUtil.now());
 				anquanzerenshu.setAjaDelete("0");
 				anquanzerenshu.setAjaAjIds(jiaShiYuan.getId());
-				anquanzerenshu.setAjaStartDate(driver.getAnquanzerenshuqishiriqi());
+				if (StringUtils.isNotBlank(driver.getAnquanzerenshuqishiriqi())  && !driver.getAnquanzerenshuqishiriqi().equals("null")){
+					anquanzerenshu.setAjaStartDate(driver.getAnquanzerenshuqishiriqi());
+				}
 				isDataValidity = anquanzerenshuService.save(anquanzerenshu);
 			}
 
@@ -2396,7 +2470,9 @@ public class JiaShiYuanController {
 				weihaigaozhishu.setAjwCreateTime(DateUtil.now());
 				weihaigaozhishu.setAjwDelete("0");
 				weihaigaozhishu.setAjwAjIds(jiaShiYuan.getId());
-				weihaigaozhishu.setAjwStartDate(driver.getGangweigaozhishuqishiriqi());
+				if (StringUtils.isNotBlank(driver.getGangweigaozhishuqishiriqi())  && !driver.getGangweigaozhishuqishiriqi().equals("null")){
+					weihaigaozhishu.setAjwStartDate(driver.getGangweigaozhishuqishiriqi());
+				}
 				isDataValidity = weihaigaozhishuService.save(weihaigaozhishu);
 			}
 
@@ -2412,8 +2488,12 @@ public class JiaShiYuanController {
 				laodonghetong.setAjwCreateTime(DateUtil.now());
 				laodonghetong.setAjwDelete("0");
 				laodonghetong.setAjwAjIds(jiaShiYuan.getId());
-				laodonghetong.setAjwStartDate(driver.getLaodonghetongkaishiriqi());
-				laodonghetong.setAjwEndDate(driver.getLaodonghetongjieshuriqi());
+				if (StringUtils.isNotBlank(driver.getLaodonghetongkaishiriqi())  && !driver.getLaodonghetongkaishiriqi().equals("null")){
+					laodonghetong.setAjwStartDate(driver.getLaodonghetongkaishiriqi());
+				}
+				if (StringUtils.isNotBlank(driver.getLaodonghetongjieshuriqi())  && !driver.getLaodonghetongjieshuriqi().equals("null")){
+					laodonghetong.setAjwEndDate(driver.getLaodonghetongjieshuriqi());
+				}
 				isDataValidity = laodonghetongService.save(laodonghetong);
 			}
 
