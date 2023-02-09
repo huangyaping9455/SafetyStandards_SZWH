@@ -16,6 +16,7 @@
 package org.springblade.anbiao.cheliangguanli.controller;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
@@ -75,7 +76,7 @@ public class VehicleDaoluyunshuzhengController extends BladeController {
 		qDlysz.setAvdDelete("0");
 		VehicleDaoluyunshuzheng daoluyunshuzheng= vehicleDaoluyunshuzhengService.getOne(Condition.getQueryWrapper(qDlysz));
 		if(daoluyunshuzheng != null){
-			if(!daoluyunshuzheng.getAvdEnclosure().contains("http")){
+			if(StrUtil.isNotEmpty(daoluyunshuzheng.getAvdEnclosure()) && !daoluyunshuzheng.getAvdEnclosure().contains("http")){
 				daoluyunshuzheng.setAvdEnclosure(fileUploadClient.getUrl(daoluyunshuzheng.getAvdEnclosure()));
 			}
 			VehicleVO detail = vehicleService.selectByKey(vehicleId);
