@@ -1706,6 +1706,7 @@ public class JiaShiYuanController {
 					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId, driver.getDeptId());
 					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,0);
 					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShenfenzhenghao, tmp);
+					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete, 0);
 					JiaShiYuan jiaShiYuan2 = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
 					if (jiaShiYuan2 != null) {
 						driver.setMsg(tmp + "该企业驾驶员身份证号已存在;");

@@ -15,6 +15,7 @@
  */
 package org.springblade.anbiao.cheliangguanli.controller;
 
+import cn.hutool.core.util.StrUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -79,7 +80,7 @@ public class VehicleXingnengbaogaoController extends BladeController {
 		qXlbg.setAvxDelete("0");
 		VehicleXingnengbaogao xingnengbaogao= vehicleXingnengbaogaoService.getOne(Condition.getQueryWrapper(qXlbg));
 		if(xingnengbaogao != null){
-			if(!xingnengbaogao.getAvxEnclosure().contains("http")){
+			if(StrUtil.isNotEmpty(xingnengbaogao.getAvxEnclosure()) && !xingnengbaogao.getAvxEnclosure().contains("http")){
 				xingnengbaogao.setAvxEnclosure(fileUploadClient.getUrl(xingnengbaogao.getAvxEnclosure()));
 			}
 			VehicleVO detail = vehicleService.selectByKey(vehicleId);

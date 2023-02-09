@@ -13,6 +13,7 @@ import org.springblade.anbiao.chuchejiancha.mapper.AnbiaoCarExamineInfoRemarkMap
 import org.springblade.anbiao.chuchejiancha.page.AnBiaoCheckCarPage;
 import org.springblade.anbiao.chuchejiancha.page.AnbiaoCarExamineInfoPage;
 import org.springblade.anbiao.chuchejiancha.service.IAnbiaoCarExamineInfoService;
+import org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineInfoTZVO;
 import org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineInfoVO;
 import org.springframework.stereotype.Service;
 
@@ -134,6 +135,39 @@ public class AnbiaoCarExamineInfoServiceImpl extends ServiceImpl<AnbiaoCarExamin
 			});
 		}
 		return infoList;
+	}
+
+	@Override
+	public AnbiaoCarExamineInfoPage<AnbiaoCarExamineInfoTZVO> selectCarExamineInfoTZPage(AnbiaoCarExamineInfoPage anbiaoCarExamineInfoPage) {
+		Integer total = mapper.selectCarExamineInfoTZTotal(anbiaoCarExamineInfoPage);
+		if(anbiaoCarExamineInfoPage.getSize()==0){
+			if(anbiaoCarExamineInfoPage.getTotal()==0){
+				anbiaoCarExamineInfoPage.setTotal(total);
+			}
+			List<AnbiaoCarExamineInfoTZVO> infoList = mapper.selectCarExamineInfoTZPage(anbiaoCarExamineInfoPage);
+			anbiaoCarExamineInfoPage.setRecords(infoList);
+			return anbiaoCarExamineInfoPage;
+		}
+		Integer pagetotal = 0;
+		if (total > 0) {
+			if(total%anbiaoCarExamineInfoPage.getSize()==0){
+				pagetotal = total / anbiaoCarExamineInfoPage.getSize();
+			}else {
+				pagetotal = total / anbiaoCarExamineInfoPage.getSize() + 1;
+			}
+		}
+		if (pagetotal >= anbiaoCarExamineInfoPage.getCurrent()) {
+			anbiaoCarExamineInfoPage.setPageTotal(pagetotal);
+			Integer offsetNo = 0;
+			if (anbiaoCarExamineInfoPage.getCurrent() > 1) {
+				offsetNo = anbiaoCarExamineInfoPage.getSize() * (anbiaoCarExamineInfoPage.getCurrent() - 1);
+			}
+			anbiaoCarExamineInfoPage.setTotal(total);
+			anbiaoCarExamineInfoPage.setOffsetNo(offsetNo);
+			List<AnbiaoCarExamineInfoTZVO> infoList = mapper.selectCarExamineInfoTZPage(anbiaoCarExamineInfoPage);
+			anbiaoCarExamineInfoPage.setRecords(infoList);
+		}
+		return anbiaoCarExamineInfoPage;
 	}
 
 
