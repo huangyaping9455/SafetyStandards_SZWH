@@ -1704,6 +1704,7 @@ public class JiaShiYuanController {
 					//根据企业ID、身份证号查询该身份证是否存在
 					QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
 					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId, driver.getDeptId());
+					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,0);
 					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShenfenzhenghao, tmp);
 					JiaShiYuan jiaShiYuan2 = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
 					if (jiaShiYuan2 != null) {
