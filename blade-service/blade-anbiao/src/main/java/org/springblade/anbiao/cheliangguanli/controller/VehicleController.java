@@ -1449,6 +1449,7 @@ public class VehicleController {
 				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,0);
 				JiaShiYuan jiaShiYuan = iJiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
 				if (jiaShiYuan != null){
+					vehicle.setJiashiyuanid(jiaShiYuan.getId());
 					vehicle.setJiashiyuanxingming(jiashiyuan);
 				}else {
 					errorStr+=jiashiyuan+"该驾驶员不存在;";
@@ -2231,10 +2232,10 @@ public class VehicleController {
 						xingshizheng.setAvxCreateByName(user.getUserName());
 						xingshizheng.setAvxCreateByIds(user.getUserId().toString());
 						xingshizheng.setAvxCreateTime(LocalDateTime.now());
-						if (StringUtils.isNotBlank(vehicle.getAvxRegisterDate().toString())  && !vehicle.getAvxRegisterDate().equals("null")){
+						if (vehicle.getAvxRegisterDate() != null){
 							xingshizheng.setAvxRegisterDate(vehicle.getAvxRegisterDate());
 						}
-						if (StringUtils.isNotBlank(vehicle.getAvxIssueDate().toString())  && !vehicle.getAvxIssueDate().equals("null")){
+						if ( vehicle.getAvxIssueDate() != null){
 							xingshizheng.setAvxIssueDate(vehicle.getAvxIssueDate());
 						}
 						if (StringUtils.isNotBlank(vehicle.getXingshizhengdaoqishijian())  && !vehicle.getXingshizhengdaoqishijian().equals("null")){

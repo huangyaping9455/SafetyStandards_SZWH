@@ -499,7 +499,7 @@ public class JiaShiYuan implements Serializable {
 	/**
 	 * 劳动合同结束日期
 	 */
-	@ApiModelProperty(value = "车牌颜色")
+	@ApiModelProperty(value = "劳动合同结束日期")
 	@TableField(exist = false)
 	private String laodonghetongjieshuriqi;
 
