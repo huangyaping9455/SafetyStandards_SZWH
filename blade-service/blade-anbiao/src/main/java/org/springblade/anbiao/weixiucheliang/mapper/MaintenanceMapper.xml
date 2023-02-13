@@ -393,5 +393,72 @@
         ORDER BY left(send_Date,7)
     </select>
 
+    <sql id="tableTZTJSql">
+        select
+            b.dept_name as deptName,
+            a.id,
+            a.dept_Id as deptId,
+            a.send_Date as sendDate,
+            a.maintain_Dict_Id as maintainDictId,
+            a.acb_cost as acbCost,
+            v.cheliangpaizhao,
+            j.jiashiyuanxingming as driverName,
+            a.acb_maintenance_content as maintenanceContent,
+            a.acb_repair_reason as repairReason,
+            a.maintenance_Dept_Name as maintenanceDeptName,
+            a.acb_bill_attachment as billAttachment,
+            a.acb_before_maintenance as beforeMaintenance,
+            a.acb_after_maintenance as afterMaintenance,
+            a.acb_center_maintenance as centerMaintenance,
+            a.caozuoshijian
+        from
+            anbiao_cheliang_baoyangweixiu a
+            inner join  (
+                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) b on a.dept_Id = b.id
+            LEFT JOIN anbiao_vehicle v on v.id = a.vehicle_Id
+            LEFT JOIN anbiao_jiashiyuan j on j.id = a.driver_Id
+        where a.is_Deleted = 0
+    </sql>
 
+    <sql id="queryTZTJSql">
+
+        <if test="date !=null and date != ''">
+            and sendDate >= #{date}
+        </if>
+
+    </sql>
+    <sql id="orderTZTJSql">
+        <!-- 默认排序规则 -->
+        order by driverName
+    </sql>
+
+    <select id="selectTZTJList" parameterType="org.springblade.anbiao.weixiu.page.MaintenanceTZPage" resultType="org.springblade.anbiao.weixiu.VO.MaintenanceTZVO">
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableTZTJSql" />
+            )b
+            where 1=1
+            <include refid="queryTZTJSql" />
+            <include refid="orderTZTJSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableTZTJSql" />
+            )b
+            where 1=1
+            <include refid="queryTZTJSql" />
+            <include refid="orderTZTJSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectTZTJTotal" parameterType="org.springblade.anbiao.weixiu.page.MaintenanceTZPage" resultType="int">
+        select COUNT(1) from (
+        <include refid="tableTZTJSql" />
+        )d
+        where 1 = 1
+        <include refid="queryTZTJSql" />
+    </select>
 </mapper>

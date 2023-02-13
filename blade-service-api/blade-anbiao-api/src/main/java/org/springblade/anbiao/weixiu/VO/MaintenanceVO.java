@@ -17,8 +17,8 @@ public class MaintenanceVO {
 	private String cheliangpaizhao;
 	private String driverName;
 	private String acbMaintenanceContent;
-	private String	acbRepairReason;
-	private String	acbBeforeMaintenance;
+	private String acbRepairReason;
+	private String acbBeforeMaintenance;
 	private String driverId;
 	private String acbBillAttachment;
 	private Integer maintainDictId;

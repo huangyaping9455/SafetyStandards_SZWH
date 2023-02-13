@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import feign.Param;
 import org.mapstruct.Mapper;
 import org.springblade.anbiao.weixiu.VO.MaintenanceEntityV;
+import org.springblade.anbiao.weixiu.VO.MaintenanceTZVO;
 import org.springblade.anbiao.weixiu.entity.FittingEntity;
 import org.springblade.anbiao.weixiu.VO.MaintenanceVO;
 import org.springblade.anbiao.weixiu.entity.FittingsEntity;
 import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
 import org.springblade.anbiao.weixiu.page.MaintenancePage;
+import org.springblade.anbiao.weixiu.page.MaintenanceTZPage;
 
 import java.util.List;
 
@@ -66,5 +68,12 @@ public interface MaintenanceMapper extends BaseMapper<MaintenanceEntity> {
 
 	List<MaintenanceEntityV> selectByDateList(@Param("deptId") String deptId,@Param("date") String date,@Param("type") String type);
 
+	/**
+	 * 维修隐患整改台账
+	 * @param maintenanceTZPage
+	 * @return
+	 */
+	List<MaintenanceTZVO> selectTZTJList(MaintenanceTZPage maintenanceTZPage);
+	int selectTZTJTotal(MaintenanceTZPage maintenanceTZPage);
 
 }

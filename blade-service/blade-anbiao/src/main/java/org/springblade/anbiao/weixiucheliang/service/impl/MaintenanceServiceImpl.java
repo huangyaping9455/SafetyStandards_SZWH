@@ -4,10 +4,12 @@ package org.springblade.anbiao.weixiucheliang.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.weixiu.VO.MaintenanceEntityV;
+import org.springblade.anbiao.weixiu.VO.MaintenanceTZVO;
 import org.springblade.anbiao.weixiu.VO.MaintenanceVO;
 import org.springblade.anbiao.weixiu.entity.FittingsEntity;
 import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
 import org.springblade.anbiao.weixiu.page.MaintenancePage;
+import org.springblade.anbiao.weixiu.page.MaintenanceTZPage;
 import org.springblade.anbiao.weixiucheliang.mapper.MaintenanceMapper;
 import org.springblade.anbiao.weixiucheliang.service.MaintenanceService;
 import org.springframework.stereotype.Service;
@@ -91,6 +93,45 @@ public class MaintenanceServiceImpl extends ServiceImpl<MaintenanceMapper,Mainte
 	@Override
 	public List<MaintenanceEntityV> selectByDateList(String deptId, String date, String type) {
 		return partsMapper.selectByDateList(deptId, date, type);
+	}
+
+	@Override
+	public MaintenanceTZPage<MaintenanceTZVO> selectTZTJList(MaintenanceTZPage maintenanceTZPage) {
+		int total = partsMapper.selectTZTJTotal(maintenanceTZPage);
+		Integer safelPagetotal = 0;
+		if (maintenanceTZPage.getSize() == 0) {
+			if (maintenanceTZPage.getTotal() == 0) {
+				maintenanceTZPage.setTotal(total);
+			}
+			if (maintenanceTZPage.getTotal() == 0) {
+				return maintenanceTZPage;
+			} else {
+				List<MaintenanceTZVO> maintenanceVOS = partsMapper.selectTZTJList(maintenanceTZPage);
+				maintenanceTZPage.setRecords(maintenanceVOS);
+				return maintenanceTZPage;
+			}
+		}
+		if (total > 0) {
+			if (total % maintenanceTZPage.getSize() == 0) {
+				safelPagetotal = total / maintenanceTZPage.getSize();
+			} else {
+				safelPagetotal = total / maintenanceTZPage.getSize() + 1;
+			}
+		}
+		if (safelPagetotal < maintenanceTZPage.getCurrent()) {
+			return maintenanceTZPage;
+		} else {
+			maintenanceTZPage.setPageTotal(safelPagetotal);
+			Integer offsetNo = 0;
+			if (maintenanceTZPage.getCurrent() > 1) {
+				offsetNo = maintenanceTZPage.getSize() * (maintenanceTZPage.getCurrent() - 1);
+			}
+			maintenanceTZPage.setTotal(total);
+			maintenanceTZPage.setOffsetNo(offsetNo);
+			List<MaintenanceTZVO> maintenanceVOS = partsMapper.selectTZTJList(maintenanceTZPage);
+			maintenanceTZPage.setRecords(maintenanceVOS);
+			return maintenanceTZPage;
+		}
 	}
 
 }

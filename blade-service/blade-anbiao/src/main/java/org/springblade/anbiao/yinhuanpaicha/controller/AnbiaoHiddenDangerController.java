@@ -250,7 +250,7 @@ public class AnbiaoHiddenDangerController {
 		Calendar now = Calendar.getInstance();
 		//word模板地址
 		String templatePath =fileServer.getPathPrefix()+"muban\\"+"HiddenDanger.xlsx";
-
+		String [] nyr= DateUtil.today().split("-");
 		String[] idsss = anbiaoHiddenDangerPage.getDeptId().split(",");
 		//去除素组中重复的数组
 		List<String> listid = new ArrayList<String>();
@@ -333,7 +333,7 @@ public class AnbiaoHiddenDangerController {
 					// 这里模板 删除了list以后的数据，也就是统计的这一行
 					String templateFileName = templateFile;
 					//alarmServer.getTemplateUrl()+
-					String fileName = "D:\\ExcelTest\\"+t.getDeptname()+"-隐患登记台账.xlsx";
+					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptname()+"-隐患登记台账.xlsx";
 					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
 					WriteSheet writeSheet = EasyExcel.writerSheet().build();
 					// 写入list之前的数据
@@ -345,7 +345,6 @@ public class AnbiaoHiddenDangerController {
 				}
 			}
 		}
-		String [] nyr=DateUtil.today().split("-");
 		String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"隐患登记台账.zip";
 		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(fileName));
 		ApacheZipUtils.doCompress1(urlList, bizOut);
@@ -404,7 +403,7 @@ public class AnbiaoHiddenDangerController {
 					Map<String, Object> map = new HashMap<>();
 					String temDir = "";
 					String fileName = "";
-
+					String url = "";
 					// 渲染文本
 					AnbiaoHiddenDangerVO t = hiddenDangerVOList.get(i);
 					AnbiaoHiddenDangerVO hiddenDangerVO = new AnbiaoHiddenDangerVO();
@@ -440,33 +439,16 @@ public class AnbiaoHiddenDangerController {
 					image.setWidth(440);
 					if (StrUtil.isNotEmpty(t.getAhdHiddendangerEnclosure()) && t.getAhdHiddendangerEnclosure().contains("http") == false) {
 						t.setAhdHiddendangerEnclosure(fileUploadClient.getUrl(t.getAhdHiddendangerEnclosure()));
-
-						String jsonObject = t.getAhdHiddendangerEnclosure();
-						if(org.apache.commons.lang.StringUtils.isNotBlank(jsonObject)){
-							JSONArray jsonList= JSONUtil.parseArray(jsonObject);
-							System.out.println(jsonList);
-							String url = "";
-							for (int p = 0; p < jsonList.size(); p++) {
-								JSONObject jsonObject1 = jsonList.getJSONObject(p);
-								url = jsonObject1.get("url").toString();
-							}
-							//获得第一个点的位置
-							int index = url.indexOf("/");
-							System.out.println(index);
-							//根据第一个点的位置 获得第二个点的位置
-							index = url.indexOf("/", index+2);
-							//根据第三个点的位置，截取 字符串。得到结果 result
-							String result = url.substring(index);
-							url = fileServer.getPathPrefix()+result;
-							System.out.println(url);
-							image.setUrl(url);
-							image.setType(WordImageEntity.URL);
-							map.put("ahdHiddendangerEnclosure", image);
-						}else{
-							map.put("ahdHiddendangerEnclosure", "无");
-						}
+						url = t.getAhdHiddendangerEnclosure();
+						url = fileServer.getPathPrefix() + org.springblade.common.tool.StringUtils.splits(url);
+						System.out.println(url);
+						image.setUrl(url);
+						image.setType(WordImageEntity.URL);
+						map.put("a1", image);
 					}else if(StrUtil.isNotEmpty(t.getAhdHiddendangerEnclosure())){
-						image.setUrl(t.getAhdHiddendangerEnclosure());
+						url = t.getAhdHiddendangerEnclosure();
+						url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
+						image.setUrl(url);
 						image.setType(WordImageEntity.URL);
 						map.put("ahdHiddendangerEnclosure", image);
 					}else{

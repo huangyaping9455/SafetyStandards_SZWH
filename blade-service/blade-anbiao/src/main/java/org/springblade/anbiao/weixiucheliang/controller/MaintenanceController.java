@@ -1,27 +1,49 @@
 package org.springblade.anbiao.weixiucheliang.controller;
 
+import cn.afterturn.easypoi.word.entity.WordImageEntity;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
-import org.springblade.anbiao.labor.entity.Labor;
-import org.springblade.anbiao.labor.entity.LaborEntity;
-import org.springblade.anbiao.labor.entity.LaborlingquEntity;
+import org.apache.tools.zip.ZipOutputStream;
 import org.springblade.anbiao.weixiu.VO.MaintenanceEntityV;
+import org.springblade.anbiao.weixiu.VO.MaintenanceTZVO;
 import org.springblade.anbiao.weixiu.entity.FittingEntity;
 import org.springblade.anbiao.weixiu.entity.FittingsEntity;
 import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
 import org.springblade.anbiao.weixiu.page.MaintenancePage;
+import org.springblade.anbiao.weixiu.page.MaintenanceTZPage;
 import org.springblade.anbiao.weixiucheliang.mapper.MaintenanceMapper;
 import org.springblade.anbiao.weixiucheliang.service.FittingService;
 import org.springblade.anbiao.weixiucheliang.service.MaintenanceService;
+import org.springblade.anbiao.yinhuanpaicha.page.AnbiaoHiddenDangerPage;
+import org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoHiddenDangerVO;
+import org.springblade.common.configurationBean.FileServer;
+import org.springblade.common.constant.FilePathConstant;
+import org.springblade.common.tool.ApacheZipUtils;
+import org.springblade.common.tool.StringUtils;
+import org.springblade.common.tool.WordUtil2;
 import org.springblade.core.log.annotation.ApiLog;
+import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
+import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.DecimalFormat;
+import java.util.*;
 
 import static cn.hutool.core.date.DateUtil.now;
 
@@ -33,6 +55,7 @@ import static cn.hutool.core.date.DateUtil.now;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/anbiao/Repair/")
+@Api(value = "维修登记", tags = "维修登记")
 public class MaintenanceController {
 
 	private MaintenanceService service;
@@ -40,6 +63,10 @@ public class MaintenanceController {
 	private MaintenanceMapper mapper;
 
 	private FittingService fittingService;
+
+	private FileServer fileServer;
+
+	private IFileUploadClient fileUploadClient;
 
 	@PostMapping("list")
 	@ApiLog("查询-维修列表")
@@ -220,4 +247,206 @@ public class MaintenanceController {
 		}
 		return rs;
 	}
+
+	@PostMapping(value = "/getTZTJPage")
+	@ApiLog("维修登记-维修隐患整改台账")
+	@ApiOperation(value = "维修登记-维修隐患整改台账", notes = "传入MaintenanceTZPage", position = 13)
+	public R<MaintenanceTZPage<MaintenanceTZVO>> getTZTJPage(@RequestBody MaintenanceTZPage maintenanceTZPage) {
+		R r = new R();
+		MaintenanceTZPage<MaintenanceTZVO> pages = service.selectTZTJList(maintenanceTZPage);
+		if(pages != null){
+			r.setMsg("获取成功");
+			r.setData(pages);
+			r.setCode(200);
+		}else{
+			r.setMsg("获取成功,暂无数据");
+			r.setCode(200);
+		}
+		return r;
+	}
+
+	@GetMapping("/goExport_HiddenDanger_Excel")
+	@ApiLog("维修登记-维修隐患整改台账-导出")
+	@ApiOperation(value = "维修登记-维修隐患整改台账-导出", notes = "传入deptId、date", position = 22)
+	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String deptId , String date, BladeUser user) throws IOException {
+		R rs = new R();
+		List<String> urlList = new ArrayList<>();
+		MaintenanceTZPage maintenanceTZPage = new MaintenanceTZPage();
+		maintenanceTZPage.setDeptId(deptId);
+		maintenanceTZPage.setDate(date);
+		// TODO 渲染其他类型的数据请参考官方文档
+		DecimalFormat df = new DecimalFormat("######0.00");
+		Calendar now = Calendar.getInstance();
+		//word模板地址
+		String templatePath =fileServer.getPathPrefix()+"muban\\"+"HiddenDangerRepair.xlsx";
+		String [] nyr= DateUtil.today().split("-");
+		String[] idsss = maintenanceTZPage.getDeptId().split(",");
+		//去除素组中重复的数组
+		List<String> listid = new ArrayList<String>();
+		for (int i=0; i<idsss.length; i++) {
+			if(!listid.contains(idsss[i])) {
+				listid.add(idsss[i]);
+			}
+		}
+		//返回一个包含所有对象的指定类型的数组
+		String[] idss= listid.toArray(new String[1]);
+		for(int j = 0;j< idss.length;j++){
+			maintenanceTZPage.setSize(0);
+			maintenanceTZPage.setCurrent(0);
+			maintenanceTZPage.setDeptId(idss[j]);
+			service.selectTZTJList(maintenanceTZPage);
+			List<MaintenanceTZVO> hiddenDangerVOList = maintenanceTZPage.getRecords();
+			//Excel中的结果集ListData
+			List<AnbiaoHiddenDangerVO> ListData = new ArrayList<>();
+			if(hiddenDangerVOList.size()==0){
+
+			}else if(hiddenDangerVOList.size()>3000){
+				rs.setMsg("数据超过30000条无法下载");
+				rs.setCode(500);
+				return rs;
+			}else{
+				for( int i = 0 ; i < hiddenDangerVOList.size() ; i++) {
+					Map<String, Object> map = new HashMap<>();
+					String url = "";
+					String templateFile = templatePath;
+					// 渲染文本
+					MaintenanceTZVO t = hiddenDangerVOList.get(i);
+					MaintenanceTZVO hiddenDangerVO = new MaintenanceTZVO();
+					map.put("deptName", t.getDeptName());
+					hiddenDangerVO.setCheliangpaizhao(t.getCheliangpaizhao());
+					map.put("cheliangpaizhao", t.getCheliangpaizhao());
+					map.put("driverName", t.getDriverName());
+					map.put("sendDate", t.getSendDate());
+					if(StringUtils.isEmpty(t.getAfterMaintenance()) && t.getAfterMaintenance() != "null"){
+						map.put("zgdriverName", t.getDriverName());
+						map.put("zgsendDate", t.getCaozuoshijian());
+					}
+					if(t.getMaintainDictId().equals("0")){
+						hiddenDangerVO.setMaintainDictId("一级维护");
+					}
+					if(t.getMaintainDictId().equals("1")){
+						hiddenDangerVO.setMaintainDictId("二级维护");
+					}
+					if(t.getMaintainDictId().equals("2")){
+						hiddenDangerVO.setMaintainDictId("总成维修");
+					}
+					map.put("maintainDictId", hiddenDangerVO.getMaintainDictId());
+					map.put("repairReason", t.getRepairReason());
+					map.put("maintenanceDeptName", t.getMaintenanceDeptName());
+					map.put("acbCost", t.getAcbCost());
+					//附件
+					// 渲染图片
+					if (StrUtil.isNotEmpty(t.getBillAttachment()) && t.getBillAttachment().contains("http") == false) {
+						t.setBillAttachment(fileUploadClient.getUrl(t.getBillAttachment()));
+						//添加图片到工作表的指定位置
+						try {
+							t.setImgUrl(new URL(t.getBillAttachment()));
+						} catch (MalformedURLException e) {
+							e.printStackTrace();
+						}
+						map.put("billAttachment", t.getImgUrl());
+					}else if(StrUtil.isNotEmpty(t.getBillAttachment())){
+						//添加图片到工作表的指定位置
+						try {
+							t.setImgUrl(new URL(t.getBillAttachment()));
+						} catch (MalformedURLException e) {
+							e.printStackTrace();
+						}
+						map.put("billAttachment", t.getImgUrl());
+					}else{
+						map.put("billAttachment", "无");
+					}
+					//维修前照片
+					if (StrUtil.isNotEmpty(t.getBeforeMaintenance()) && t.getBeforeMaintenance().contains("http") == false) {
+						t.setBillAttachment(fileUploadClient.getUrl(t.getBeforeMaintenance()));
+						//添加图片到工作表的指定位置
+						try {
+							t.setImgUrl(new URL(t.getBeforeMaintenance()));
+						} catch (MalformedURLException e) {
+							e.printStackTrace();
+						}
+						map.put("beforeMaintenance", t.getImgUrl());
+					}else if(StrUtil.isNotEmpty(t.getBeforeMaintenance())){
+						//添加图片到工作表的指定位置
+						try {
+							t.setImgUrl(new URL(t.getBeforeMaintenance()));
+						} catch (MalformedURLException e) {
+							e.printStackTrace();
+						}
+						map.put("beforeMaintenance", t.getImgUrl());
+					}else{
+						map.put("beforeMaintenance", "无");
+					}
+					//维修中照片
+					if (StrUtil.isNotEmpty(t.getCenterMaintenance()) && t.getCenterMaintenance().contains("http") == false) {
+						t.setBillAttachment(fileUploadClient.getUrl(t.getCenterMaintenance()));
+						//添加图片到工作表的指定位置
+						try {
+							t.setImgUrl(new URL(t.getCenterMaintenance()));
+						} catch (MalformedURLException e) {
+							e.printStackTrace();
+						}
+						map.put("centerMaintenance", t.getImgUrl());
+					}else if(StrUtil.isNotEmpty(t.getCenterMaintenance())){
+						//添加图片到工作表的指定位置
+						try {
+							t.setImgUrl(new URL(t.getCenterMaintenance()));
+						} catch (MalformedURLException e) {
+							e.printStackTrace();
+						}
+						map.put("centerMaintenance", t.getImgUrl());
+					}else{
+						map.put("centerMaintenance", "无");
+					}
+					//维修前照片
+					if (StrUtil.isNotEmpty(t.getAfterMaintenance()) && t.getAfterMaintenance().contains("http") == false) {
+						t.setBillAttachment(fileUploadClient.getUrl(t.getAfterMaintenance()));
+						//添加图片到工作表的指定位置
+						try {
+							t.setImgUrl(new URL(t.getAfterMaintenance()));
+						} catch (MalformedURLException e) {
+							e.printStackTrace();
+						}
+						map.put("afterMaintenance", t.getImgUrl());
+					}else if(StrUtil.isNotEmpty(t.getAfterMaintenance())){
+						//添加图片到工作表的指定位置
+						try {
+							t.setImgUrl(new URL(t.getAfterMaintenance()));
+						} catch (MalformedURLException e) {
+							e.printStackTrace();
+						}
+						map.put("afterMaintenance", t.getImgUrl());
+					}else{
+						map.put("afterMaintenance", "无");
+					}
+					// 模板注意 用{} 来表示你要用的变量 如果本来就有"{","}" 特殊字符 用"\{","\}"代替
+					// {} 代表普通变量 {.} 代表是list的变量
+					// 这里模板 删除了list以后的数据，也就是统计的这一行
+					String templateFileName = templateFile;
+					//alarmServer.getTemplateUrl()+
+					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+"-维修隐患整改台账.xlsx";
+					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
+					WriteSheet writeSheet = EasyExcel.writerSheet().build();
+					// 写入list之前的数据
+					excelWriter.fill(map, writeSheet);
+					// 直接写入数据
+					excelWriter.fill(ListData, writeSheet);
+					excelWriter.finish();
+					urlList.add(fileName);
+				}
+			}
+		}
+		String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"维修隐患整改台账.zip";
+		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(fileName));
+		ApacheZipUtils.doCompress1(urlList, bizOut);
+		//不要忘记调用
+		bizOut.close();
+
+		rs.setMsg("下载成功");
+		rs.setCode(200);
+		rs.setData(fileName);
+		rs.setSuccess(true);
+		return rs;
+	}
+
 }

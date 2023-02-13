@@ -3,9 +3,11 @@ package org.springblade.anbiao.weixiucheliang.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import feign.Param;
 import org.springblade.anbiao.weixiu.VO.MaintenanceEntityV;
+import org.springblade.anbiao.weixiu.VO.MaintenanceTZVO;
 import org.springblade.anbiao.weixiu.entity.FittingsEntity;
 import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
 import org.springblade.anbiao.weixiu.page.MaintenancePage;
+import org.springblade.anbiao.weixiu.page.MaintenanceTZPage;
 
 import java.util.List;
 
@@ -62,5 +64,12 @@ public interface MaintenanceService  extends IService<MaintenanceEntity> {
 	Boolean updateAccident(MaintenanceEntity maintenanceEntity);
 
 	List<MaintenanceEntityV> selectByDateList(@Param("deptId") String deptId,@Param("date") String date,@Param("type") String type);
+
+	/**
+	 * 维修隐患整改台账
+	 * @param maintenanceTZPage
+	 * @return
+	 */
+	MaintenanceTZPage<MaintenanceTZVO> selectTZTJList(MaintenanceTZPage maintenanceTZPage);
 
 }

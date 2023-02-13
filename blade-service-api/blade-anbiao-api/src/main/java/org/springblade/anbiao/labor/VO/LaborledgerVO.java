@@ -2,19 +2,17 @@ package org.springblade.anbiao.labor.VO;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
-import com.baomidou.mybatisplus.annotation.TableField;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.net.URL;
 
-
+/**
+ * @author hyp
+ * @create 2023-02-13 22:01
+ */
 @Data
-@ApiModel(value = "laborledgerVO", description = "laborledgerVO对象")
 public class LaborledgerVO {
-	private static final long serialVersionUID = 1L;
-
 	@ApiModelProperty(value = "主键id")
 	private String aliIds;
 
