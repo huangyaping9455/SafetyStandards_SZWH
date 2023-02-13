@@ -4,12 +4,14 @@ package org.springblade.anbiao.anquanhuiyi.controller;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
+import org.springblade.anbiao.anquanhuiyi.VO.AnquanhuiyiledgerVO;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiDetail;
 import org.springblade.anbiao.anquanhuiyi.page.AnQuanHuiYiPage;
@@ -17,10 +19,10 @@ import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiDetailServic
 import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
-import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
-import org.springblade.anbiao.jiaoyupeixun.entity.AnbiaoSafetyTrainingDetail;
 import org.springblade.common.tool.DateUtils;
 import org.springblade.core.log.annotation.ApiLog;
+import org.springblade.core.mp.support.Condition;
+import org.springblade.core.mp.support.Query;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
 import org.springblade.upload.upload.feign.IFileUploadClient;
@@ -401,4 +403,11 @@ public class AnbiaoAnquanhuiyiController {
 		}
 	}
 
+	@GetMapping("ledgerlist")
+	@ApiLog("分页 列表-安全会议台账")
+	@ApiOperation(value = "安全会议台账分页", notes = "传入AnquanhuiyiledgerVO", position = 1)
+	public R<IPage<AnquanhuiyiledgerVO>> ledgerList(AnquanhuiyiledgerVO anquanhuiyiledgerVO, Query query) {
+		IPage<AnquanhuiyiledgerVO> pages = anquanhuiyiService.selectLedgerList(Condition.getPage(query), anquanhuiyiledgerVO);
+		return R.data(pages);
+	}
 }

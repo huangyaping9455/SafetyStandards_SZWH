@@ -278,4 +278,118 @@
           and ali_delete = 0
     </select>
 
+    <select id="selectLedgerList" resultType="org.springblade.anbiao.labor.VO.LaborledgerVO" >
+
+        SELECT
+            c.dept_name as deptName,
+            a.* ,
+            b.*
+        FROM
+            (
+                SELECT
+                    ali_ids,ali_dept_ids,ali_name AS aliName,ali_issue_date as aliIssueDate,ali_issue_people_number AS aliIssuePeopleNumber,ali_issue_quantity AS aliIssueQuantity,ali_delete
+                FROM
+                    anbiao_labor_insurance
+                where
+                    ali_delete=0
+            ) a
+                inner JOIN ( SELECT id, dept_name FROM blade_dept ) c ON c.id = a.ali_dept_ids
+                LEFT JOIN(
+                SELECT
+                    alr_ids,alr_ali_ids,alr_person_name AS alrPersonName,alr_receipts_number as alrReceiptsNumber,alr_receipt_date AS alrReceiptDate,alr_person_autograph AS alrPersonAutograph,alr_delete
+                FROM
+                    anbiao_labor_receive
+                where
+                    alr_delete=0) b on b.alr_ali_ids=a.ali_ids
+
+    </select>
+
+    <select id="selectLedgerPage"
+            parameterType="org.springblade.anbiao.labor.page.laborledgerPage"
+            resultType="org.springblade.anbiao.labor.VO.LaborledgerVO">
+        <if test="size == 0" >
+            SELECT
+            c.dept_name as deptName,
+            c.id as deptId,
+            a.*
+            FROM
+            (
+            SELECT
+            ali_ids,ali_dept_ids,ali_name AS aliName,ali_issue_date as aliIssueDate,ali_issue_people_number AS aliIssuePeopleNumber,ali_issue_quantity AS aliIssueQuantity,ali_delete
+            FROM
+            anbiao_labor_insurance
+            where
+            ali_delete=0
+            ) a
+            inner join (
+            <include
+                refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) c ON c.id = a.ali_dept_ids
+            where 1=1
+            <if test="deptId != null and deptId != ''">
+                AND c.id=#{deptId}
+            </if>
+            <if test="deptName != null and deptName != ''">
+                AND  c.dept_name=#{deptName}
+            </if>
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            SELECT
+            c.dept_name as deptName,
+            c.id as deptId,
+            a.*
+            FROM
+            (
+            SELECT
+            ali_ids,ali_dept_ids,ali_name AS aliName,ali_issue_date as aliIssueDate,ali_issue_people_number AS aliIssuePeopleNumber,ali_issue_quantity AS aliIssueQuantity,ali_delete
+            FROM
+            anbiao_labor_insurance
+            where
+            ali_delete=0
+            ) a
+            inner join (
+            <include
+                refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) c ON c.id = a.ali_dept_ids
+            where 1=1
+            <if test="deptId != null and deptId != ''">
+                AND c.id=#{deptId}
+            </if>
+            <if test="deptName != null and deptName != ''">
+                AND  c.dept_name=#{deptName}
+            </if>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectLedgerTotal"
+            parameterType="org.springblade.anbiao.labor.page.laborledgerPage"
+            resultType="int">
+        select COUNT(1) from(
+                             SELECT
+                                  c.dept_name as deptName,
+                                  c.id as deptId,
+                                  a.*
+                              FROM
+                                  (
+                                      SELECT
+                                          ali_ids,ali_dept_ids,ali_name AS aliName,ali_issue_date as aliIssueDate,ali_issue_people_number AS aliIssuePeopleNumber,ali_issue_quantity AS aliIssueQuantity,ali_delete
+                                      FROM
+                                          anbiao_labor_insurance
+                                      where
+                                          ali_delete=0
+                                  ) a
+                                  inner join (
+                                     <include
+                                         refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+                                     ) c ON c.id = a.ali_dept_ids
+                            ) d where 1=1
+                                 <if test="deptId != null and deptId != ''">
+                                     AND d.deptId=#{deptId}
+                                 </if>
+                                 <if test="deptName != null and deptName != ''">
+                                     AND  d.deptName=#{deptName}
+                                 </if>
+    </select>
 </mapper>

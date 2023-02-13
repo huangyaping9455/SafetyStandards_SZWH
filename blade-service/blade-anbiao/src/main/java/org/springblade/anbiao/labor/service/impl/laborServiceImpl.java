@@ -1,21 +1,22 @@
 package org.springblade.anbiao.labor.service.impl;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.labor.DTO.laborDTO;
 import org.springblade.anbiao.labor.VO.LaborVO;
 import org.springblade.anbiao.labor.VO.graphicsVO;
+import org.springblade.anbiao.labor.VO.LaborledgerVO;
 import org.springblade.anbiao.labor.entity.Labor;
 import org.springblade.anbiao.labor.entity.LaborEntity;
 import org.springblade.anbiao.labor.entity.LaborlingquEntity;
-import org.springblade.anbiao.labor.mapper.LaborlingquMapper;
 import org.springblade.anbiao.labor.mapper.laborMapper;
 import org.springblade.anbiao.labor.page.LaborPage;
+import org.springblade.anbiao.labor.page.laborledgerPage;
 import org.springblade.anbiao.labor.service.laborService;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -119,5 +120,49 @@ public class laborServiceImpl extends ServiceImpl<laborMapper,LaborEntity> imple
 	@Override
 	public List<LaborEntity> selectInsurance(int aliDeptIds) {
 		return laborMapper.selectInsurance(aliDeptIds);
+	}
+
+	@Override
+	public IPage<LaborledgerVO> selectLedgerList(IPage<LaborledgerVO> page, LaborledgerVO laborledgerVO) {
+		return page.setRecords(laborMapper.selectLedgerList(page,laborledgerVO));
+	}
+
+	@Override
+	public laborledgerPage selectLedgerList(laborledgerPage laborledgerPage) {
+		int total = laborMapper.selectLedgerTotal(laborledgerPage);
+		Integer AccPagetotal = 0;
+		if (laborledgerPage.getSize() == 0) {
+			if (laborledgerPage.getTotal() == 0) {
+				laborledgerPage.setTotal(total);
+			}
+			if (laborledgerPage.getTotal() == 0) {
+				return laborledgerPage;
+			} else {
+				List<LaborledgerVO> LaborledgerVOS = laborMapper.selectLedgerPage(laborledgerPage);
+				laborledgerPage.setRecords(LaborledgerVOS);
+				return laborledgerPage;
+			}
+		}
+		if (total > 0) {
+			if (total % laborledgerPage.getSize() == 0) {
+				AccPagetotal = total / laborledgerPage.getSize();
+			} else {
+				AccPagetotal = total / laborledgerPage.getSize() + 1;
+			}
+		}
+		if (AccPagetotal < laborledgerPage.getCurrent()) {
+			return laborledgerPage;
+		} else {
+			laborledgerPage.setPageTotal(AccPagetotal);
+			Integer offsetNo = 0;
+			if (laborledgerPage.getCurrent() > 1) {
+				offsetNo = laborledgerPage.getSize() * (laborledgerPage.getCurrent() - 1);
+			}
+			laborledgerPage.setTotal(total);
+			laborledgerPage.setOffsetNo(offsetNo);
+			List<LaborledgerVO> LaborledgerVOS = laborMapper.selectLedgerPage(laborledgerPage);
+			laborledgerPage.setRecords(LaborledgerVOS);
+			return laborledgerPage;
+		}
 	}
 }

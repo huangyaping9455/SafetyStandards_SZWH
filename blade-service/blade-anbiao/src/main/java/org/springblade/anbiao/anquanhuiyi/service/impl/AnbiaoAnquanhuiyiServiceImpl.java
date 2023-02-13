@@ -1,7 +1,9 @@
 package org.springblade.anbiao.anquanhuiyi.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
+import org.springblade.anbiao.anquanhuiyi.VO.AnquanhuiyiledgerVO;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.anquanhuiyi.mapper.AnbiaoAnquanhuiyiMapper;
 import org.springblade.anbiao.anquanhuiyi.page.AnQuanHuiYiPage;
@@ -66,5 +68,10 @@ public class AnbiaoAnquanhuiyiServiceImpl extends ServiceImpl<AnbiaoAnquanhuiyiM
 	@Override
 	public List<AnbiaoAnquanhuiyi> selectAnquanHuiYiMonth(int year,String deptId) {
 		return mapper.selectAnquanHuiYiMonth(year,deptId);
+	}
+
+	@Override
+	public IPage<AnquanhuiyiledgerVO> selectLedgerList(IPage<AnquanhuiyiledgerVO> page, AnquanhuiyiledgerVO anquanhuiyiledgerVO) {
+		return page.setRecords(mapper.selectLedgerList(page,anquanhuiyiledgerVO));
 	}
 }

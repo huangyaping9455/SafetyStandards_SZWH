@@ -1,5 +1,7 @@
 package org.springblade.anbiao.labor.entity;
 
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -7,6 +9,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.models.auth.In;
 import lombok.Data;
 
+import java.net.URL;
 import java.util.Date;
 
 /**
@@ -37,4 +40,8 @@ public class LaborlingquEntity {
 	private String aliApplicationScope;
 	@TableField(exist = false)
 	private int sumReceive;
+	@ColumnWidth(15)
+	@TableField(exist = false)
+	@ExcelProperty("图片")
+	private URL imgUrl;
 }

@@ -1,6 +1,9 @@
 package org.springblade.anbiao.SafeInvestment.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.AllArgsConstructor;
+import org.springblade.anbiao.AccidentReports.VO.AccidentLedgerReportsVO;
+import org.springblade.anbiao.AccidentReports.page.AccidentLedgerReportsPage;
 import org.springblade.anbiao.SafeInvestment.DTO.SafeInvestmentDTO;
 import org.springblade.anbiao.SafeInvestment.VO.SafeAllVO;
 import org.springblade.anbiao.SafeInvestment.VO.SafeInvestmentVO;
@@ -9,9 +12,10 @@ import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInput;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInputDetailed;
 import org.springblade.anbiao.SafeInvestment.mapper.SafeInvestmentMapper;
 import org.springblade.anbiao.SafeInvestment.page.SafelInfoPage;
+import org.springblade.anbiao.SafeInvestment.VO.SafelInfoledgerVO;
+import org.springblade.anbiao.SafeInvestment.page.SafelInfoledgerPage;
 import org.springblade.anbiao.SafeInvestment.service.SafeInvestmentService;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -119,7 +123,48 @@ public class SafeInvestmentServiceImpl implements SafeInvestmentService {
 		return safeInvestmentMapper.selectYears(year,asiDeptIds);
 	}
 
+	@Override
+	public IPage<SafelInfoledgerVO> selectLedgerList(IPage<SafelInfoledgerVO> page, SafelInfoledgerVO safelInfoledgerVO) {
+			return page.setRecords(safeInvestmentMapper.selectLedgerList(page,safelInfoledgerVO));
+	}
+
+	@Override
+	public SafelInfoledgerPage selectLedgerList(SafelInfoledgerPage safelInfoledgerPage) {
+		int total = safeInvestmentMapper.selectLedgerTotal(safelInfoledgerPage);
+		Integer AccPagetotal = 0;
+		if (safelInfoledgerPage.getSize() == 0) {
+			if (safelInfoledgerPage.getTotal() == 0) {
+				safelInfoledgerPage.setTotal(total);
+			}
+			if (safelInfoledgerPage.getTotal() == 0) {
+				return safelInfoledgerPage;
+			} else {
+				List<SafelInfoledgerVO> safelInfoledgerVOS = safeInvestmentMapper.selectLedgerPage(safelInfoledgerPage);
+				safelInfoledgerPage.setRecords(safelInfoledgerVOS);
+				return safelInfoledgerPage;
+			}
+		}
+		if (total > 0) {
+			if (total % safelInfoledgerPage.getSize() == 0) {
+				AccPagetotal = total / safelInfoledgerPage.getSize();
+			} else {
+				AccPagetotal = total / safelInfoledgerPage.getSize() + 1;
+			}
+		}
+		if (AccPagetotal < safelInfoledgerPage.getCurrent()) {
+			return safelInfoledgerPage;
+		} else {
+			safelInfoledgerPage.setPageTotal(AccPagetotal);
+			Integer offsetNo = 0;
+			if (safelInfoledgerPage.getCurrent() > 1) {
+				offsetNo = safelInfoledgerPage.getSize() * (safelInfoledgerPage.getCurrent() - 1);
+			}
+			safelInfoledgerPage.setTotal(total);
+			safelInfoledgerPage.setOffsetNo(offsetNo);
+			List<SafelInfoledgerVO> safelInfoledgerVOS = safeInvestmentMapper.selectLedgerPage(safelInfoledgerPage);
+			safelInfoledgerPage.setRecords(safelInfoledgerVOS);
+			return safelInfoledgerPage;
+		}
+	}
+
 }
-
-
-

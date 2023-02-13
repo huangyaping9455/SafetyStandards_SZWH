@@ -118,5 +118,34 @@
         group by months
     </select>
 
-
+    <select id="selectLedgerList" resultType="org.springblade.anbiao.anquanhuiyi.VO.AnquanhuiyiledgerVO">
+        SELECT
+            c.dept_name as deptName,
+            a.huiyimingcheng ,
+            (case when a.huiyixingshi = 0 then '线上'
+                  else '线下' end) as huiyixingshi,
+            a.huiyikaishishijian ,
+            a.zhuchiren ,
+            a.canhuirenshu ,
+            a.huiyineirong ,
+            b.*
+        FROM
+            (
+                SELECT
+                    id,dept_id,huiyimingcheng,huiyixingshi,huiyikaishishijian,zhuchiren,canhuirenshu,huiyineirong,is_deleted
+                FROM
+                    anbiao_anquanhuiyi
+                where
+                    is_deleted=0
+            ) a
+                inner JOIN ( SELECT id, dept_name FROM blade_dept ) c ON c.id = a.dept_id
+                LEFT JOIN(
+                SELECT
+                    aad_aa_ids,aad_ap_name as aadApName,add_time AS addTime,add_ap_head_portrait AS addApHeadPortrait,add_ap_autograph AS addApAutograph
+                FROM
+                    anbiao_anquanhuiyi_detail
+-- 	where
+-- 		add_ap_being_joined = 1
+            ) b on b.aad_aa_ids=a.id
+    </select>
 </mapper>

@@ -1,16 +1,15 @@
-package org.springblade.anbiao.AccidentReports.VO;
+package org.springblade.anbiao.AccidentReports.page;
 
-import com.alibaba.excel.annotation.ExcelProperty;
-import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import java.net.URL;
+import lombok.EqualsAndHashCode;
+import org.springblade.common.BasePage;
 
 @Data
-@ApiModel(value = "SafelInfoledgerVO", description = "SafelInfoledgerVO对象")
-public class AccidentLedgerReportsVO {
+@EqualsAndHashCode(callSuper = true)
+@ApiModel(value = "AccidentLedgerReportsPage对象", description = "AccidentLedgerReportsPage对象")
+public class AccidentLedgerReportsPage<T> extends BasePage<T> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -58,8 +57,4 @@ public class AccidentLedgerReportsVO {
 
 	@ApiModelProperty(value = "事故照片3")
 	private String shiguzhaopian3;
-
-	@ColumnWidth(15)
-	@ExcelProperty("图片")
-	private URL imgUrl;
 }

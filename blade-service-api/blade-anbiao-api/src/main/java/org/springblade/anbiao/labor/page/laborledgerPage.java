@@ -1,25 +1,23 @@
-package org.springblade.anbiao.labor.VO;
+package org.springblade.anbiao.labor.page;
 
-import com.alibaba.excel.annotation.ExcelProperty;
-import com.alibaba.excel.annotation.write.style.ColumnWidth;
-import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import java.net.URL;
-
+import lombok.EqualsAndHashCode;
+import org.springblade.common.BasePage;
 
 @Data
-@ApiModel(value = "laborledgerVO", description = "laborledgerVO对象")
-public class LaborledgerVO {
-	private static final long serialVersionUID = 1L;
+@EqualsAndHashCode(callSuper = true)
+@ApiModel(value = "SafelInfoledgerPage对象", description = "SafelInfoledgerPage对象")
+public class laborledgerPage <T> extends BasePage<T> {
 
-	@ApiModelProperty(value = "主键id")
-	private String aliIds;
+	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "企业名称")
 	private String deptName;
+
+	@ApiModelProperty(value = "企业id")
+	private String deptId;
 
 	@ApiModelProperty(value = "发放日期")
 	private String aliIssueDate;
@@ -37,15 +35,11 @@ public class LaborledgerVO {
 	private String alrPersonName;
 
 	@ApiModelProperty(value = "领取数量")
-	private Integer alrReceiptsNumber;
+	private String alrReceiptsNumber;
 
 	@ApiModelProperty(value = "领取日期")
 	private String alrReceiptDate;
 
 	@ApiModelProperty(value = "签名")
 	private String alrPersonAutograph;
-
-	@ColumnWidth(15)
-	@ExcelProperty("图片")
-	private URL imgUrl;
 }

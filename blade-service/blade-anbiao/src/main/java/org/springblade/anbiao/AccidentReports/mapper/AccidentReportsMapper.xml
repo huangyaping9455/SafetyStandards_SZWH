@@ -345,4 +345,78 @@
           and is_deleted=0
     </select>
 
+    <select id="selectLedgerList" resultType="org.springblade.anbiao.AccidentReports.VO.AccidentLedgerReportsVO" >
+        SELECT
+            c.dept_name as deptName,
+            a.*
+        FROM
+            (
+                SELECT
+                    dept_id,shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
+                FROM
+                    anbiao_shigubaogao
+                where
+                    is_deleted=0
+            ) a
+                LEFT JOIN ( SELECT id, dept_name FROM blade_dept ) c ON c.id = a.dept_id
+    </select>
+
+    <select id="selectLedgerPage"
+            parameterType="org.springblade.anbiao.AccidentReports.page.AccidentLedgerReportsPage"
+            resultType="org.springblade.anbiao.AccidentReports.VO.AccidentLedgerReportsVO">
+        <if test="size == 0" >
+            SELECT
+            c.dept_name as deptName,
+            c.id as deptId,
+            a.*
+            FROM
+            (
+            SELECT
+            dept_id,shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
+            FROM
+            anbiao_shigubaogao
+            where
+            is_deleted=0
+            ) a
+            LEFT JOIN ( SELECT id, dept_name FROM blade_dept ) c ON c.id = a.dept_id
+            where 1=1
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            SELECT
+            c.dept_name as deptName,
+            c.id as deptId,
+            a.*
+            FROM
+            (
+            SELECT
+            dept_id,shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
+            FROM
+            anbiao_shigubaogao
+            where
+            is_deleted=0
+            ) a
+            LEFT JOIN ( SELECT id, dept_name FROM blade_dept ) c ON c.id = a.dept_id
+            where 1=1
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectLedgerTotal"
+            parameterType="org.springblade.anbiao.AccidentReports.page.AccidentLedgerReportsPage"
+            resultType="int">
+        select COUNT(1) from(SELECT
+            c.dept_name as deptName,
+            a.*
+        FROM
+            (
+                SELECT
+                    dept_id,shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
+                FROM
+                    anbiao_shigubaogao
+                where
+                    is_deleted=0
+            ) a
+                LEFT JOIN ( SELECT id, dept_name FROM blade_dept ) c ON c.id = a.dept_id) d
+    </select>
 </mapper>

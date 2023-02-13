@@ -15,7 +15,6 @@
  */
 package org.springblade.system.feign;
 
-import org.apache.ibatis.annotations.Param;
 import org.springblade.core.launch.constant.AppConstant;
 import org.springblade.system.entity.Dept;
 import org.springblade.system.entity.Post;

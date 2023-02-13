@@ -13,4 +13,7 @@ import org.springblade.anbiao.labor.entity.LaborlingquEntity;
 @Mapper
 public interface LaborlingquMapper extends BaseMapper<LaborlingquEntity> {
 	LaborlingquEntity selectSumReceive(String alrAliIds);
+
 }
+
+

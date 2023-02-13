@@ -1,6 +1,8 @@
 package org.springblade.anbiao.anquanhuiyi.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.springblade.anbiao.anquanhuiyi.VO.AnquanhuiyiledgerVO;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.anquanhuiyi.page.AnQuanHuiYiPage;
 
@@ -20,4 +22,7 @@ public interface AnbiaoAnquanhuiyiMapper extends BaseMapper<AnbiaoAnquanhuiyi> {
 	int selectGetAllTotal(AnQuanHuiYiPage anQuanHuiYiPage);
 
 	List<AnbiaoAnquanhuiyi> selectAnquanHuiYiMonth(int year,String deptId);
+
+	List<AnquanhuiyiledgerVO> selectLedgerList(IPage page, AnquanhuiyiledgerVO anquanhuiyiledgerVO);
+
 }

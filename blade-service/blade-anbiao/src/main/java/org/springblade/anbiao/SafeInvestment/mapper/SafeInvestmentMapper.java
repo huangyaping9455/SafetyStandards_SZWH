@@ -1,5 +1,8 @@
 package org.springblade.anbiao.SafeInvestment.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.springblade.anbiao.AccidentReports.VO.AccidentLedgerReportsVO;
+import org.springblade.anbiao.AccidentReports.page.AccidentLedgerReportsPage;
 import org.springblade.anbiao.SafeInvestment.DTO.SafeInvestmentDTO;
 import org.springblade.anbiao.SafeInvestment.VO.SafeAllVO;
 import org.springblade.anbiao.SafeInvestment.VO.SafeInvestmentVO;
@@ -7,6 +10,8 @@ import org.springblade.anbiao.SafeInvestment.VO.SafetyInvestmentDetailsVO;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInput;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInputDetailed;
 import org.springblade.anbiao.SafeInvestment.page.SafelInfoPage;
+import org.springblade.anbiao.SafeInvestment.VO.SafelInfoledgerVO;
+import org.springblade.anbiao.SafeInvestment.page.SafelInfoledgerPage;
 
 import java.util.List;
 
@@ -67,4 +72,8 @@ public interface SafeInvestmentMapper {
 
 	List<SafeInvestmentDTO> selectYears(int year,String asiDeptIds);
 
+	List<SafelInfoledgerVO> selectLedgerList(IPage page, SafelInfoledgerVO safelInfoledgerVO);
+
+	List<SafelInfoledgerVO> selectLedgerPage(SafelInfoledgerPage safelInfoledgerPage);
+	int selectLedgerTotal(SafelInfoledgerPage safelInfoledgerPage);
 }

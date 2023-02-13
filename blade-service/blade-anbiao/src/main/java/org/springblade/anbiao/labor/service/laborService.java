@@ -1,12 +1,15 @@
 package org.springblade.anbiao.labor.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springblade.anbiao.labor.DTO.laborDTO;
 import org.springblade.anbiao.labor.VO.graphicsVO;
+import org.springblade.anbiao.labor.VO.LaborledgerVO;
 import org.springblade.anbiao.labor.entity.Labor;
 import org.springblade.anbiao.labor.entity.LaborEntity;
 import org.springblade.anbiao.labor.entity.LaborlingquEntity;
 import org.springblade.anbiao.labor.page.LaborPage;
+import org.springblade.anbiao.labor.page.laborledgerPage;
 
 import java.util.List;
 
@@ -61,4 +64,8 @@ public interface laborService extends IService<LaborEntity> {
 	Boolean updateL(LaborlingquEntity laborlingqu);
 
 	List<LaborEntity> selectInsurance(int aliDeptIds);
+
+	IPage<LaborledgerVO> selectLedgerList(IPage<LaborledgerVO> page, LaborledgerVO laborledgerVO);
+
+	laborledgerPage selectLedgerList(laborledgerPage laborledgerPage);
 }

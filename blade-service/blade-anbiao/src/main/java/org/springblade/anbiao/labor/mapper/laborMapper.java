@@ -1,14 +1,17 @@
 package org.springblade.anbiao.labor.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.mapstruct.Mapper;
 import org.springblade.anbiao.labor.DTO.laborDTO;
 import org.springblade.anbiao.labor.VO.LaborVO;
 import org.springblade.anbiao.labor.VO.graphicsVO;
+import org.springblade.anbiao.labor.VO.LaborledgerVO;
 import org.springblade.anbiao.labor.entity.Labor;
 import org.springblade.anbiao.labor.entity.LaborEntity;
 import org.springblade.anbiao.labor.entity.LaborlingquEntity;
 import org.springblade.anbiao.labor.page.LaborPage;
+import org.springblade.anbiao.labor.page.laborledgerPage;
 
 import java.util.List;
 
@@ -72,4 +75,9 @@ public interface laborMapper extends BaseMapper<LaborEntity> {
 	Boolean deleteLao(laborDTO laborDTO);
 
 	List<LaborEntity> selectInsurance(int aliDeptIds);
+
+	List<LaborledgerVO> selectLedgerList(IPage page, LaborledgerVO laborledgerVO);
+
+	List<LaborledgerVO> selectLedgerPage(laborledgerPage laborledgerPage);
+	int selectLedgerTotal(laborledgerPage laborledgerPage);
 }

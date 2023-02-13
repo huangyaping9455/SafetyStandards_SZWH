@@ -1,24 +1,53 @@
 package org.springblade.anbiao.SafeInvestment.controller;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.math.NumberUtils;
-import org.apache.ibatis.annotations.Param;
+import org.apache.tools.zip.ZipOutputStream;
+import org.springblade.anbiao.AccidentReports.VO.AccidentLedgerReportsVO;
+import org.springblade.anbiao.AccidentReports.page.AccidentLedgerReportsPage;
 import org.springblade.anbiao.SafeInvestment.DTO.SafeInvestmentDTO;
 import org.springblade.anbiao.SafeInvestment.VO.SafeAllVO;
 import org.springblade.anbiao.SafeInvestment.VO.SafetyInvestmentDetailsVO;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInput;
 import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInputDetailed;
 import org.springblade.anbiao.SafeInvestment.page.SafelInfoPage;
+import org.springblade.anbiao.SafeInvestment.VO.SafelInfoledgerVO;
+import org.springblade.anbiao.SafeInvestment.page.SafelInfoledgerPage;
 import org.springblade.anbiao.SafeInvestment.service.impl.SafeInvestmentServiceImpl;
+import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTJMX;
+import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
+import org.springblade.anbiao.risk.vo.LedgerDetailVO;
+import org.springblade.common.configurationBean.AlarmServer;
+import org.springblade.common.configurationBean.FileServer;
+import org.springblade.common.constant.FilePathConstant;
+import org.springblade.common.tool.ApacheZipUtils;
 import org.springblade.core.boot.ctrl.BladeController;
 import org.springblade.core.log.annotation.ApiLog;
+import org.springblade.core.mp.support.Condition;
+import org.springblade.core.mp.support.Query;
+import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
+import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 /**
  * @author long
@@ -32,6 +61,10 @@ public class SafeInvestmentController extends BladeController {
 
 	private SafeInvestmentServiceImpl safeInvestmentService;
 
+	private AlarmServer alarmServer;
+	private FileServer fileServer;
+	private IFileUploadClient fileUploadClient;
+
 	@PostMapping("list")
 	@ApiLog("分页 列表-安全投入")
 	@ApiOperation(value = "安全投入分页", notes = "传入SafeInvestmentDTO", position = 1)
@@ -39,7 +72,6 @@ public class SafeInvestmentController extends BladeController {
 		SafelInfoPage safelInfoPage1 = safeInvestmentService.selectPage(safelInfoPage);
 		return R.data(safelInfoPage1);
 	}
-
 
 	@PostMapping("all")
 	@ApiLog("列表-安全投入详情")
@@ -118,7 +150,7 @@ public class SafeInvestmentController extends BladeController {
 		Boolean insert = true;
 		if (detailsVOList != null) {
 			List<AnbiaoSafetyInputDetailed> selectd = safeInvestmentService.selectd(safeInvestmentDTO);
-			if (selectd != null&&selectd.size()!=0) {
+			if (selectd != null && selectd.size() != 0) {
 				for (SafetyInvestmentDetailsVO list : detailsVOList) {
 					SafetyInvestmentDetailsVO safetyInvestmentDetailsVO = new SafetyInvestmentDetailsVO();
 					safetyInvestmentDetailsVO.setAsidEntryName(list.getAsidEntryName());
@@ -156,6 +188,117 @@ public class SafeInvestmentController extends BladeController {
 				rs.setMsg("修改失败");
 			}
 		}
+		return rs;
+	}
+
+	@GetMapping("ledgerlist")
+	@ApiLog("分页 列表-安全投入台账")
+	@ApiOperation(value = "安全投入台账分页", notes = "传入SafelInfoledgerVO", position = 1)
+	public R<IPage<SafelInfoledgerVO>> ledgerList(SafelInfoledgerVO safelInfoledgerVO, Query query) {
+		IPage<SafelInfoledgerVO> pages = safeInvestmentService.selectLedgerList(Condition.getPage(query), safelInfoledgerVO);
+		return R.data(pages);
+	}
+
+	@PostMapping("/getledgerPage")
+	@ApiLog("分页 列表-安全投入台账")
+	@ApiOperation(value = "分页 列表-安全投入台账", notes = "传入SafelInfoledgerPage", position = 2)
+	public R getLedgerPage(@RequestBody SafelInfoledgerPage safelInfoledgerPage, BladeUser us) {
+		R rs = new R();
+		SafelInfoledgerPage list = safeInvestmentService.selectLedgerList(safelInfoledgerPage);
+		return R.data(list);
+	}
+
+	@GetMapping("/goExport_Excel")
+	@ApiLog("事故信息-导出")
+	@ApiOperation(value = "事故信息-导出", notes = "传入SafelInfoledgerPage", position = 22)
+	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String deptId , String date, BladeUser user) throws IOException {
+		int a=1;
+		R rs = new R();
+		List<String> urlList = new ArrayList<>();
+		SafelInfoledgerPage safelInfoledgerPage = new SafelInfoledgerPage();
+		safelInfoledgerPage.setDeptId(deptId);
+//		anbiaoHiddenDangerPage.setDate(date);
+		// TODO 渲染其他类型的数据请参考官方文档
+		DecimalFormat df = new DecimalFormat("######0.00");
+		Calendar now = Calendar.getInstance();
+		//word模板地址
+		String templatePath =fileServer.getPathPrefix()+"muban\\"+"SafeInvestment.xlsx";
+
+		String[] idsss = safelInfoledgerPage.getDeptId().split(",");
+		//去除素组中重复的数组
+		List<String> listid = new ArrayList<String>();
+		for (int i=0; i<idsss.length; i++) {
+			if(!listid.contains(idsss[i])) {
+				listid.add(idsss[i]);
+			}
+		}
+		//返回一个包含所有对象的指定类型的数组
+		String[] idss= listid.toArray(new String[1]);
+		for(int j = 0;j< idss.length;j++){
+			safelInfoledgerPage.setDeptName("");
+			safelInfoledgerPage.setSize(0);
+			safelInfoledgerPage.setCurrent(0);
+			safelInfoledgerPage.setDeptId(idss[j]);
+			safeInvestmentService.selectLedgerList(safelInfoledgerPage);
+			List<SafelInfoledgerVO> safelInfoledgerVOS = safelInfoledgerPage.getRecords();
+			//Excel中的结果集ListData
+			List<SafelInfoledgerVO> ListData = new ArrayList<>();
+			if(safelInfoledgerVOS.size()==0){
+
+			}else if(safelInfoledgerVOS.size()>3000){
+				rs.setMsg("数据超过30000条无法下载");
+				rs.setCode(500);
+				return rs;
+			}else{
+				for( int i = 0 ; i < safelInfoledgerVOS.size() ; i++) {
+					Map<String, Object> map = new HashMap<>();
+					String templateFile = templatePath;
+					// 渲染文本
+					SafelInfoledgerVO t = safelInfoledgerVOS.get(i);
+					SafelInfoledgerVO safelInfoledgerVO = new SafelInfoledgerVO();
+					map.put("deptName", t.getDeptName());
+					map.put("asiYear", t.getAsiYear());
+					map.put("asiLastYearsTurnover", t.getAsiLastYearsTurnover());
+					map.put("asiExtractionProportion", t.getAsiExtractionProportion());
+					map.put("asiWithdrawalAmount", t.getAsiWithdrawalAmount());
+					map.put("asiAccruedAmount", t.getAsiAccruedAmount());
+					map.put("asiAmountUsed", t.getAsiAmountUsed());
+					map.put("asiRemainingAmount", t.getAsiRemainingAmount());
+					map.put("asidEntryName", t.getAsidEntryName());
+					map.put("asidHandledByName", t.getAsidHandledByName());
+					map.put("asidInvestmentScope", t.getAsidInvestmentScope());
+					map.put("asidInvestmentDare", t.getAsidInvestmentDare());
+					map.put("asidAmountUsed", t.getAsidAmountUsed());
+
+					// 模板注意 用{} 来表示你要用的变量 如果本来就有"{","}" 特殊字符 用"\{","\}"代替
+					// {} 代表普通变量 {.} 代表是list的变量
+					// 这里模板 删除了list以后的数据，也就是统计的这一行
+					String templateFileName = templateFile;
+					//alarmServer.getTemplateUrl()+
+					String fileName = "D:\\ExcelTest\\"+t.getAsidEntryName()+t.getDeptName()+"-安全投入台账"+a+".xlsx";
+					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
+					WriteSheet writeSheet = EasyExcel.writerSheet().build();
+					// 写入list之前的数据
+					excelWriter.fill(map, writeSheet);
+					// 直接写入数据
+					excelWriter.fill(ListData, writeSheet);
+					excelWriter.finish();
+					urlList.add(fileName);
+					a++;
+				}
+			}
+		}
+		String [] nyr= DateUtil.today().split("-");
+		String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"安全投入台账.zip";
+		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(fileName));
+		ApacheZipUtils.doCompress1(urlList, bizOut);
+		//不要忘记调用
+		bizOut.close();
+
+		rs.setMsg("下载成功");
+		rs.setCode(200);
+		rs.setData(fileName);
+		rs.setSuccess(true);
 		return rs;
 	}
 }
