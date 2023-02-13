@@ -1,6 +1,7 @@
 package org.springblade.common.tool;
 
 import cn.afterturn.easypoi.word.WordExportUtil;
+import cn.afterturn.easypoi.word.entity.WordImageEntity;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.util.Assert;
 
@@ -10,6 +11,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -105,17 +107,44 @@ public class WordUtil2 {
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
+		String tmpPath = "";
 		try {
 			byte[] utf8Bytes = fileName.getBytes("utf-8");
 			fileName = new String(utf8Bytes, "utf-8");
 			XWPFDocument doc = WordExportUtil.exportWord07(templatePath, params);
-			String tmpPath = temDir + fileName;
+			tmpPath = temDir + fileName;
 			FileOutputStream fos = new FileOutputStream(tmpPath);
 			doc.write(fos);
+			fos.close();
+			doc.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return temDir;
+		return tmpPath;
+	}
+
+	/**
+	 * 简单导出包含图片
+	 */
+	public static String imageWordExport() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		WordImageEntity image = new WordImageEntity();
+		image.setHeight(200);
+		image.setWidth(500);
+		image.setUrl("http://www.baidu.com/img/bdlogo.png");
+		image.setType(WordImageEntity.URL);
+		map.put("a1", "55555");
+		map.put("a2", image);
+		try {
+			XWPFDocument doc = WordExportUtil.exportWord07(
+				"D:/BS/static/muban/muban2.docx", map);
+			FileOutputStream fos = new FileOutputStream("D:/excel/image.docx");
+			doc.write(fos);
+			fos.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 
 

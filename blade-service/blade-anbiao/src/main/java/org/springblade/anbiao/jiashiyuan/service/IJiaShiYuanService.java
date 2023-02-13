@@ -3,6 +3,8 @@ package org.springblade.anbiao.jiashiyuan.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleImg;
+import org.springblade.anbiao.jiashiyuan.entity.DriverImg;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTJMX;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTrain;
@@ -142,4 +144,12 @@ public interface IJiaShiYuanService extends IService<JiaShiYuan> {
 	int selectMaxId();
 
 	JiaShiYuanPage<JiaShiYuanTJMX> selectAlarmTJMXPage(JiaShiYuanPage jiaShiYuanPage);
+
+	/**
+	 * 获取车辆附件
+	 * @param jsyId
+	 * @return
+	 */
+	DriverImg getByDriverImg(@Param("jsyId") String jsyId);
+
 }

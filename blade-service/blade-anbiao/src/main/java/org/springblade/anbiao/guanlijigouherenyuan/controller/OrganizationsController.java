@@ -1,6 +1,7 @@
 
 package org.springblade.anbiao.guanlijigouherenyuan.controller;
 
+import cn.afterturn.easypoi.word.entity.WordImageEntity;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
@@ -10,14 +11,13 @@ import cn.hutool.json.JSONUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
+import org.apache.tools.zip.ZipOutputStream;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiDetail;
-import org.springblade.anbiao.cheliangguanli.entity.VehicleGDSTJ;
+import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.configure.entity.Configure;
 import org.springblade.anbiao.configure.service.IConfigureService;
@@ -27,9 +27,14 @@ import org.springblade.anbiao.guanlijigouherenyuan.service.IDepartmentpostServic
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IPersonnelService;
 import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
+import org.springblade.common.configurationBean.FileServer;
+import org.springblade.common.constant.FilePathConstant;
+import org.springblade.common.tool.ApacheZipUtils;
 import org.springblade.common.tool.DateUtils;
+import org.springblade.common.tool.WordUtil2;
 import org.springblade.core.boot.ctrl.BladeController;
 import org.springblade.core.log.annotation.ApiLog;
+import org.springblade.core.mp.support.Condition;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
 import org.springblade.core.tool.utils.DigestUtil;
@@ -45,15 +50,17 @@ import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *  控制器
@@ -73,6 +80,7 @@ public class OrganizationsController extends BladeController {
 	private IUserFiegn userClient;
 	private IDepartmentpostService departmentpostService;
 	private IPersonnelService personnelService;
+	private FileServer fileServer;
 
 	/**
 	 * 详情
@@ -1243,6 +1251,153 @@ public class OrganizationsController extends BladeController {
 				r.setCode(500);
 				r.setSuccess(false);
 		}
+		return r;
+	}
+
+	@GetMapping("/exportDataWord")
+	@ApiLog("企业-影像资料数据-导出")
+	@ApiOperation(value = "企业-影像资料数据-导出", notes = "传入企业ID", position = 29)
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "deptId", value = "企业ID（多个以英文逗号隔开）", required = true),
+	})
+	public R exportDataWord(HttpServletRequest request, HttpServletResponse response, String deptId, BladeUser user) throws IOException{
+		R r = new R();
+		if(user == null) {
+			r.setMsg("未授权");
+			r.setCode(401);
+			return r;
+		}
+		Map<String, Object> params = new HashMap<>();
+		String temDir = "";
+		String fileName = "";
+		String folder = "";
+		String [] nyr=DateUtil.today().split("-");
+		List<String> urlList = new ArrayList<>();
+		try {
+			// TODO 渲染其他类型的数据请参考官方文档
+			DecimalFormat df = new DecimalFormat("######0.00");
+			Calendar now = Calendar.getInstance();
+			String[] idsss = deptId.split(",");
+			//去除素组中重复的数组
+			List<String> listid = new ArrayList<String>();
+			for (int i=0; i<idsss.length; i++) {
+				if(!listid.contains(idsss[i])) {
+					listid.add(idsss[i]);
+				}
+			}
+			//返回一个包含所有对象的指定类型的数组
+			String[] idss= listid.toArray(new String[1]);
+			for(int j = 0;j< idss.length;j++){
+				String url = "";
+				//获取数据
+				OrganizationsVO detail = organizationService.selectByDeptId(idss[j]);
+				if(detail == null){
+					r.setMsg("导出失败，请校验资料数据");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
+				//word模板地址
+				String templatePath =fileServer.getPathPrefix()+"muban\\"+"deptFile.docx";
+				// 渲染文本
+				params.put("deptName", detail.getDeptName());
+				// 渲染图片
+				//经营许可证
+				WordImageEntity image = new WordImageEntity();
+				image.setHeight(240);
+				image.setWidth(440);
+				if(StrUtil.isNotEmpty(detail.getJingyingxukezhengfujian()) && !detail.getJingyingxukezhengfujian().contains("http")){
+					detail.setJingyingxukezhengfujian(fileUploadClient.getUrl(detail.getJingyingxukezhengfujian()));
+					url = detail.getJingyingxukezhengfujian();
+					url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
+					System.out.println(url);
+					image.setUrl(url);
+					image.setType(WordImageEntity.URL);
+					params.put("a1", image);
+				}else if(StringUtils.isNotEmpty(detail.getJingyingxukezhengfujian())){
+					url = detail.getJingyingxukezhengfujian();
+					url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
+					System.out.println(url);
+					image.setUrl(url);
+					image.setType(WordImageEntity.URL);
+					params.put("a1", image);
+				}else{
+					params.put("a1", "未上传");
+				}
+				//企业营业执照
+				image = new WordImageEntity();
+				image.setHeight(240);
+				image.setWidth(440);
+				if(StrUtil.isNotEmpty(detail.getYingyezhizhaofujian()) && !detail.getYingyezhizhaofujian().contains("http")){
+					detail.setYingyezhizhaofujian(fileUploadClient.getUrl(detail.getYingyezhizhaofujian()));
+					url = detail.getYingyezhizhaofujian();
+					url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
+					System.out.println(url);
+					image.setUrl(url);
+					image.setType(WordImageEntity.URL);
+					params.put("a2", image);
+				}else if(StringUtils.isNotEmpty(detail.getYingyezhizhaofujian())){
+					url = detail.getYingyezhizhaofujian();
+					url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
+					System.out.println(url);
+					image.setUrl(url);
+					image.setType(WordImageEntity.URL);
+					params.put("a2", image);
+				}else{
+					params.put("a2", "未上传");
+				}
+				//企业道路运输许可证
+				image = new WordImageEntity();
+				image.setHeight(240);
+				image.setWidth(440);
+				if(StrUtil.isNotEmpty(detail.getDaoluyunshuzhengfujian()) && !detail.getDaoluyunshuzhengfujian().contains("http")){
+					detail.setDaoluyunshuzhengfujian(fileUploadClient.getUrl(detail.getDaoluyunshuzhengfujian()));
+					url = detail.getDaoluyunshuzhengfujian();
+					url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
+					System.out.println(url);
+					image.setUrl(url);
+					image.setType(WordImageEntity.URL);
+					params.put("a3", image);
+				}else if(StringUtils.isNotEmpty(detail.getDaoluyunshuzhengfujian())){
+					url = detail.getDaoluyunshuzhengfujian();
+					url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
+					System.out.println(url);
+					image.setUrl(url);
+					image.setType(WordImageEntity.URL);
+					params.put("a3", image);
+				}else{
+					params.put("a3", "未上传");
+				}
+				// TODO 渲染其他类型的数据请参考官方文档
+				//=================生成文件保存在本地D盘某目录下=================
+//			temDir = "D:/mimi/file/word/"; ;//生成临时文件存放地址
+				nyr=DateUtil.today().split("-");
+				//附件存放地址(服务器生成地址)
+				temDir = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/";
+				//生成文件名
+				Long time = new Date().getTime();
+				// 生成的word格式
+				String formatSuffix = ".docx";
+				String wjName = detail.getDeptName()+"_"+"影像附件";
+				// 拼接后的文件名
+				fileName = wjName + formatSuffix;//文件名  带后缀
+				//导出word
+				String tmpPath = WordUtil2.exportDataWord3(templatePath, temDir, fileName, params, request, response);
+				urlList.add(tmpPath);
+			}
+			folder = fileServer.getPathPrefix()+FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+"企业影像.zip";
+			ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(folder));
+			ApacheZipUtils.doCompress1(urlList, bizOut);
+			//不要忘记调用
+			bizOut.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		r.setMsg("导出成功");
+		r.setCode(200);
+		r.setData(folder);
+		r.setSuccess(true);
 		return r;
 	}
 

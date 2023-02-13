@@ -3,6 +3,8 @@ package org.springblade.anbiao.jiashiyuan.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleImg;
+import org.springblade.anbiao.jiashiyuan.entity.DriverImg;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTJMX;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTrain;
@@ -12,6 +14,8 @@ import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.anbiao.jiashiyuan.vo.DriverInfoVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanListVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
+import org.springblade.common.tool.StringUtils;
+import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +28,8 @@ import java.util.List;
 public class JiaShiYuanServiceImpl extends ServiceImpl<JiaShiYuanMapper, JiaShiYuan> implements IJiaShiYuanService {
 
 	private JiaShiYuanMapper jiaShiYuanMapper;
+
+	private IFileUploadClient fileUploadClient;
 
 	@Override
 	public boolean insertJSY(JiaShiYuan jiaShiYuan) {
@@ -221,6 +227,107 @@ public class JiaShiYuanServiceImpl extends ServiceImpl<JiaShiYuanMapper, JiaShiY
 			jiaShiYuanPage.setRecords(jiaShiYuanTJMXES);
 		}
 		return jiaShiYuanPage;
+	}
+
+	@Override
+	public DriverImg getByDriverImg(String jsyId) {
+		DriverImg driverImg = jiaShiYuanMapper.getByDriverImg(jsyId);
+		if (driverImg != null){
+			int count = 0 ;
+			if(StringUtils.isNotEmpty(driverImg.getSfzzmimg()) && driverImg.getSfzzmimg() != null){
+				if(!driverImg.getSfzzmimg().contains("http")){
+					driverImg.setSfzzmimg(fileUploadClient.getUrl(driverImg.getSfzzmimg()));
+				}else{
+					driverImg.setSfzzmimg(driverImg.getSfzzmimg());
+				}
+				count += 1;
+			}
+			if(StringUtils.isNotEmpty(driverImg.getSfzfmimg()) && driverImg.getSfzfmimg() != null){
+				if(!driverImg.getSfzfmimg().contains("http")){
+					driverImg.setSfzfmimg(fileUploadClient.getUrl(driverImg.getSfzfmimg()));
+				}else{
+					driverImg.setSfzfmimg(driverImg.getSfzfmimg());
+				}
+				count += 1;
+			}
+			driverImg.setSfzimgzcount(count);
+			if(StringUtils.isNotEmpty(driverImg.getRuzhiimg()) && driverImg.getRuzhiimg() != null){
+				if(!driverImg.getRuzhiimg().contains("http")){
+					driverImg.setRuzhiimg(fileUploadClient.getUrl(driverImg.getRuzhiimg()));
+				}else{
+					driverImg.setRuzhiimg(driverImg.getRuzhiimg());
+				}
+				count += 1;
+				driverImg.setRuzhiimgzcount(1);
+			}
+			int jszcount = 0;
+			if(StringUtils.isNotEmpty(driverImg.getJszzmimg()) && driverImg.getJszzmimg() != null){
+				if(!driverImg.getJszzmimg().contains("http")){
+					driverImg.setJszzmimg(fileUploadClient.getUrl(driverImg.getJszzmimg()));
+				}else{
+					driverImg.setJszzmimg(driverImg.getJszzmimg());
+				}
+				count += 1;
+				jszcount += 1;
+			}
+			if(StringUtils.isNotEmpty(driverImg.getJszfmimg()) && driverImg.getJszfmimg() != null){
+				if(!driverImg.getJszfmimg().contains("http")){
+					driverImg.setJszfmimg(fileUploadClient.getUrl(driverImg.getJszfmimg()));
+				}else{
+					driverImg.setJszfmimg(driverImg.getJszfmimg());
+				}
+				count += 1;
+				jszcount += 1;
+			}
+			driverImg.setJszimgcount(jszcount);
+			if(StringUtils.isNotEmpty(driverImg.getCyzimg()) && driverImg.getCyzimg() != null){
+				if(!driverImg.getCyzimg().contains("http")){
+					driverImg.setCyzimg(fileUploadClient.getUrl(driverImg.getCyzimg()));
+				}else{
+					driverImg.setCyzimg(driverImg.getCyzimg());
+				}
+				count += 1;
+				driverImg.setCyzcount(1);
+			}
+			if(StringUtils.isNotEmpty(driverImg.getTjimg()) && driverImg.getTjimg() != null){
+				if(!driverImg.getTjimg().contains("http")){
+					driverImg.setTjimg(fileUploadClient.getUrl(driverImg.getTjimg()));
+				}else{
+					driverImg.setTjimg(driverImg.getTjimg());
+				}
+				count += 1;
+				driverImg.setTjcount(1);
+			}
+			if(StringUtils.isNotEmpty(driverImg.getGqimg()) && driverImg.getGqimg() != null){
+				if(!driverImg.getGqimg().contains("http")){
+					driverImg.setGqimg(fileUploadClient.getUrl(driverImg.getGqimg()));
+				}else{
+					driverImg.setGqimg(driverImg.getGqimg());
+				}
+				count += 1;
+				driverImg.setGqimgcount(1);
+			}
+			if(StringUtils.isNotEmpty(driverImg.getWzzmimg()) && driverImg.getWzzmimg() != null){
+				if(!driverImg.getWzzmimg().contains("http")){
+					driverImg.setWzzmimg(fileUploadClient.getUrl(driverImg.getWzzmimg()));
+				}else{
+					driverImg.setWzzmimg(driverImg.getWzzmimg());
+				}
+				count += 1;
+				driverImg.setWzzmimgcount(1);
+			}
+			if(StringUtils.isNotEmpty(driverImg.getQtimg()) && driverImg.getQtimg() != null){
+				if(!driverImg.getQtimg().contains("http")){
+					driverImg.setQtimg(fileUploadClient.getUrl(driverImg.getQtimg()));
+				}else{
+					driverImg.setQtimg(driverImg.getQtimg());
+				}
+				count += 1;
+				driverImg.setQtimgcount(1);
+			}
+			driverImg.setCount(count);
+		}
+		return driverImg;
 	}
 
 

@@ -1,5 +1,6 @@
 package org.springblade.anbiao.cheliangguanli.controller;
 
+import cn.afterturn.easypoi.word.entity.WordImageEntity;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
@@ -14,7 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.util.TextUtils;
+import org.apache.tools.zip.ZipOutputStream;
 import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.page.VehiclePage;
 import org.springblade.anbiao.cheliangguanli.service.*;
@@ -23,32 +24,35 @@ import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
 import org.springblade.anbiao.configure.entity.Configure;
 import org.springblade.anbiao.configure.service.IConfigureService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
-import org.springblade.anbiao.guanlijigouherenyuan.entity.OrganizationsFuJian;
-import org.springblade.anbiao.guanlijigouherenyuan.entity.Personnel;
 import org.springblade.anbiao.guanlijigouherenyuan.feign.IOrganizationsClient;
+import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuan;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoCheliangJiashiyuanService;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
-import org.springblade.common.tool.CheckPhoneUtil;
-import org.springblade.common.tool.DateUtils;
-import org.springblade.common.tool.JSONUtils;
-import org.springblade.common.tool.RegexUtils;
+import org.springblade.common.configurationBean.FileServer;
+import org.springblade.common.constant.FilePathConstant;
+import org.springblade.common.tool.*;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
-import org.springblade.core.tool.utils.DigestUtil;
 import org.springblade.core.tool.utils.StringUtil;
 import org.springblade.system.entity.Dept;
 import org.springblade.system.entity.Dict;
-import org.springblade.system.feign.IDictClient;
 import org.springblade.system.feign.ISysClient;
 import org.springblade.upload.upload.feign.IFileUploadClient;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -73,8 +77,6 @@ public class VehicleController {
 	private IFileUploadClient fileUploadClient;
 	private IJiaShiYuanService iJiaShiYuanService;
 	private ISysClient iSysClient;
-	private IDictClient iDictClient;
-	private IVehiclePhoneService vehiclePhoneService;
 	private IVehicleBiangengjiluService vehicleBiangengjiluService;
 	private IOrganizationsClient orrganizationsClient;
 	private IVehicleDaoluyunshuzhengService daoluyunshuzhengService;
@@ -83,8 +85,12 @@ public class VehicleController {
 	private IVehicleJingyingxukezhengService jingyingxukezhengService;
 	private IVehicleDengjizhengshuService dengjizhengshuService;
 	private IVehicleJishupingdingService jishupingdingService;
-	private IVehicleHegezhengService hegezhengService;
 	private IAnbiaoCheliangJiashiyuanService cheliangJiashiyuanService;
+	private FileServer fileServer;
+	private IVehicleXingshizhengService vehicleXingshizhengService;
+	private IVehicleDaoluyunshuzhengService vehicleDaoluyunshuzhengService;
+	private IVehicleXingnengbaogaoService vehicleXingnengbaogaoService;
+	private IVehicleDengjizhengshuService vehicleDengjizhengshuService;
 
     @PostMapping("/list")
 	@ApiLog("分页-车辆资料管理")
@@ -2410,5 +2416,245 @@ public class VehicleController {
 		return r;
 	}
 
+	@GetMapping("/exportDataWord")
+	@ApiLog("车辆-影像资料数据-导出")
+	@ApiOperation(value = "车辆-影像资料数据-导出", notes = "传入车辆ID", position = 29)
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "vehId", value = "车辆ID（多个以英文逗号隔开）", required = true),
+	})
+	public R exportDataWord(HttpServletRequest request, HttpServletResponse response, String vehId, BladeUser user) throws IOException{
+		R r = new R();
+		if(user == null) {
+			r.setMsg("未授权");
+			r.setCode(401);
+			return r;
+		}
+		Map<String, Object> params = new HashMap<>();
+		String temDir = "";
+		String fileName = "";
+		String folder = "";
+		String [] nyr=DateUtil.today().split("-");
+		List<String> urlList = new ArrayList<>();
+		try {
+			// TODO 渲染其他类型的数据请参考官方文档
+			DecimalFormat df = new DecimalFormat("######0.00");
+			Calendar now = Calendar.getInstance();
+			String[] idsss = vehId.split(",");
+			//去除素组中重复的数组
+			List<String> listid = new ArrayList<String>();
+			for (int i=0; i<idsss.length; i++) {
+				if(!listid.contains(idsss[i])) {
+					listid.add(idsss[i]);
+				}
+			}
+			//返回一个包含所有对象的指定类型的数组
+			String[] idss= listid.toArray(new String[1]);
+			for(int j = 0;j< idss.length;j++){
+				String url = "";
+				//获取数据
+				Vehicle detail = vehicleService.getBaseMapper().selectById(idss[j]);
+				if(detail == null){
+					r.setMsg("导出失败，请校验资料数据");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
+				//word模板地址
+				String templatePath =fileServer.getPathPrefix()+"muban\\"+"vehicleFile.docx";
+				// 渲染文本
+				params.put("vehNo", detail.getCheliangpaizhao());
+				// 渲染图片
+				//车辆照片
+				WordImageEntity image = new WordImageEntity();
+				image.setHeight(240);
+				image.setWidth(440);
+				if(StrUtil.isNotEmpty(detail.getCheliangzhaopian()) && !detail.getCheliangzhaopian().contains("http")){
+					detail.setCheliangzhaopian(fileUploadClient.getUrl(detail.getCheliangzhaopian()));
+					url = detail.getCheliangzhaopian();
+					url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
+					System.out.println(url);
+					image.setUrl(url);
+					image.setType(WordImageEntity.URL);
+					params.put("a1", image);
+				}else if(StringUtils.isNotEmpty(detail.getCheliangzhaopian())){
+					url = detail.getCheliangzhaopian();
+					url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
+					System.out.println(url);
+					image.setUrl(url);
+					image.setType(WordImageEntity.URL);
+					params.put("a1", image);
+				}else{
+					params.put("a1", "未上传");
+				}
+				//行驶证
+				image = new WordImageEntity();
+				image.setHeight(240);
+				image.setWidth(440);
+				VehicleXingshizheng qXsz = new VehicleXingshizheng();
+				qXsz.setAvxAvIds(detail.getId());
+				qXsz.setAvxDelete("0");
+				VehicleXingshizheng xingshizheng = vehicleXingshizhengService.getOne(Condition.getQueryWrapper(qXsz));
+				if(xingshizheng != null){
+					if(StrUtil.isNotEmpty(xingshizheng.getAvxCopyEnclosure()) && !xingshizheng.getAvxCopyEnclosure().contains("http")){
+						xingshizheng.setAvxCopyEnclosure(fileUploadClient.getUrl(xingshizheng.getAvxCopyEnclosure()));
+						url = xingshizheng.getAvxCopyEnclosure();
+						url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
+						System.out.println(url);
+						image.setUrl(url);
+						image.setType(WordImageEntity.URL);
+						params.put("a2", image);
+					}else if(StrUtil.isNotEmpty(xingshizheng.getAvxCopyEnclosure())){
+						url = xingshizheng.getAvxOriginalEnclosure();
+						url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
+						System.out.println(url);
+						image.setUrl(url);
+						image.setType(WordImageEntity.URL);
+						params.put("a2", image);
+					}else{
+						params.put("a2", "未上传");
+					}
+					image = new WordImageEntity();
+					image.setHeight(240);
+					image.setWidth(440);
+					if(StrUtil.isNotEmpty(xingshizheng.getAvxOriginalEnclosure()) && !xingshizheng.getAvxOriginalEnclosure().contains("http")){
+						xingshizheng.setAvxOriginalEnclosure(fileUploadClient.getUrl(xingshizheng.getAvxOriginalEnclosure()));
+						url = xingshizheng.getAvxOriginalEnclosure();
+						url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
+						System.out.println(url);
+						image.setUrl(url);
+						image.setType(WordImageEntity.URL);
+						params.put("a3", image);
+					}else if(StrUtil.isNotEmpty(xingshizheng.getAvxOriginalEnclosure())){
+						url = xingshizheng.getAvxOriginalEnclosure();
+						url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
+						System.out.println(url);
+						image.setUrl(url);
+						image.setType(WordImageEntity.URL);
+						params.put("a3", image);
+					}else{
+						params.put("a3", "未上传");
+					}
+				}
+				//道路运输证
+				image = new WordImageEntity();
+				image.setHeight(240);
+				image.setWidth(440);
+				VehicleDaoluyunshuzheng qDlysz = new VehicleDaoluyunshuzheng();
+				qDlysz.setAvdAvIds(detail.getId());
+				qDlysz.setAvdDelete("0");
+				VehicleDaoluyunshuzheng daoluyunshuzheng= vehicleDaoluyunshuzhengService.getOne(Condition.getQueryWrapper(qDlysz));
+				if(daoluyunshuzheng != null){
+					if(StrUtil.isNotEmpty(daoluyunshuzheng.getAvdEnclosure()) && !daoluyunshuzheng.getAvdEnclosure().contains("http")){
+						daoluyunshuzheng.setAvdEnclosure(fileUploadClient.getUrl(daoluyunshuzheng.getAvdEnclosure()));
+						url = daoluyunshuzheng.getAvdEnclosure();
+						url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
+						System.out.println(url);
+						image.setUrl(url);
+						image.setType(WordImageEntity.URL);
+						params.put("a4", image);
+					}else if(StrUtil.isNotEmpty(daoluyunshuzheng.getAvdEnclosure())){
+						url = daoluyunshuzheng.getAvdEnclosure();
+						url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
+						System.out.println(url);
+						image.setUrl(url);
+						image.setType(WordImageEntity.URL);
+						params.put("a4", image);
+					}else{
+						params.put("a4", "未上传");
+					}
+				}
+				//性能检测报告
+				image = new WordImageEntity();
+				image.setHeight(240);
+				image.setWidth(440);
+				VehicleXingnengbaogao qXlbg = new VehicleXingnengbaogao();
+				qXlbg.setAvxAvIds(detail.getId());
+				qXlbg.setAvxDelete("0");
+				VehicleXingnengbaogao xingnengbaogao= vehicleXingnengbaogaoService.getOne(Condition.getQueryWrapper(qXlbg));
+				if(xingnengbaogao != null) {
+					if (StrUtil.isNotEmpty(xingnengbaogao.getAvxEnclosure()) && !xingnengbaogao.getAvxEnclosure().contains("http")) {
+						xingnengbaogao.setAvxEnclosure(fileUploadClient.getUrl(xingnengbaogao.getAvxEnclosure()));
+						url = xingnengbaogao.getAvxEnclosure();
+						url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
+						System.out.println(url);
+						image.setUrl(url);
+						image.setType(WordImageEntity.URL);
+						params.put("a5", image);
+					} else if (StrUtil.isNotEmpty(xingnengbaogao.getAvxEnclosure())) {
+						url = xingnengbaogao.getAvxEnclosure();
+						url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
+						System.out.println(url);
+						image.setUrl(url);
+						image.setType(WordImageEntity.URL);
+						params.put("a5", image);
+					} else {
+						params.put("a5", "未上传");
+					}
+				}
+
+				//登记证
+				image = new WordImageEntity();
+				image.setHeight(240);
+				image.setWidth(440);
+				VehicleDengjizhengshu qDjzs = new VehicleDengjizhengshu();
+					qDjzs.setAvdVehicleIds(detail.getId());
+					qDjzs.setAvdDelete("0");
+					VehicleDengjizhengshu dengjizhengshu= vehicleDengjizhengshuService.getOne(Condition.getQueryWrapper(qDjzs));
+					if(dengjizhengshu != null) {
+						if (StrUtil.isNotEmpty(dengjizhengshu.getAvdEnclosure()) && !dengjizhengshu.getAvdEnclosure().contains("http")) {
+							dengjizhengshu.setAvdEnclosure(fileUploadClient.getUrl(dengjizhengshu.getAvdEnclosure()));
+							url = dengjizhengshu.getAvdEnclosure();
+							url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
+							System.out.println(url);
+							image.setUrl(url);
+							image.setType(WordImageEntity.URL);
+							params.put("a6", image);
+						} else if (StrUtil.isNotEmpty(dengjizhengshu.getAvdEnclosure())) {
+							url = dengjizhengshu.getAvdEnclosure();
+							url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
+							System.out.println(url);
+							image.setUrl(url);
+							image.setType(WordImageEntity.URL);
+							params.put("a6", image);
+						} else {
+							params.put("a6", "未上传");
+						}
+					}
+
+//				image.setUrl("D:\\BS\\static\\SafetyStandards\\安全生产档案\\图片文件\\清远市清城区丰烨物流有限公司\\车辆档案\\C1车辆资料\\车辆信息\\车辆信息-1.png");
+//				image.setType(WordImageEntity.URL);
+//				params.put("a1", image);
+				// TODO 渲染其他类型的数据请参考官方文档
+				//=================生成文件保存在本地D盘某目录下=================
+//			temDir = "D:/mimi/file/word/"; ;//生成临时文件存放地址
+				nyr=DateUtil.today().split("-");
+				//附件存放地址(服务器生成地址)
+				temDir = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/";
+				//生成文件名
+				Long time = new Date().getTime();
+				// 生成的word格式
+				String formatSuffix = ".docx";
+				String wjName = detail.getCheliangpaizhao()+"_"+"影像附件";
+				// 拼接后的文件名
+				fileName = wjName + formatSuffix;//文件名  带后缀
+				//导出word
+				String tmpPath = WordUtil2.exportDataWord3(templatePath, temDir, fileName, params, request, response);
+				urlList.add(tmpPath);
+			}
+			folder = fileServer.getPathPrefix()+FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+"车辆影像.zip";
+			ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(folder));
+			ApacheZipUtils.doCompress1(urlList, bizOut);
+			//不要忘记调用
+			bizOut.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		r.setMsg("导出成功");
+		r.setCode(200);
+		r.setData(folder);
+		r.setSuccess(true);
+		return r;
+	}
 
 }

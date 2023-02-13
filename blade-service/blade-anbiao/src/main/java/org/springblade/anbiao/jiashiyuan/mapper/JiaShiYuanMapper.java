@@ -3,6 +3,8 @@ package org.springblade.anbiao.jiashiyuan.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleImg;
+import org.springblade.anbiao.jiashiyuan.entity.DriverImg;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTJMX;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTrain;
@@ -152,4 +154,12 @@ public interface JiaShiYuanMapper extends BaseMapper<JiaShiYuan> {
 
 	List<JiaShiYuanTJMX> selectAlarmTJMXPage(JiaShiYuanPage jiaShiYuanPage);
 	int selectAlarmTJMXTotal(JiaShiYuanPage jiaShiYuanPage);
+
+	/**
+	 * 获取车辆附件
+	 * @param jsyId
+	 * @return
+	 */
+	DriverImg getByDriverImg(@Param("jsyId") String jsyId);
+
 }

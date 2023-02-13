@@ -1,5 +1,6 @@
 package org.springblade.common.tool;
 
+import cn.afterturn.easypoi.word.entity.WordImageEntity;
 import cn.hutool.core.text.StrFormatter;
 import org.springblade.common.constant.Constants;
 import org.springframework.util.AntPathMatcher;
@@ -486,4 +487,18 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     public static <T> T cast(Object obj) {
         return (T) obj;
     }
+
+	public static String splits(String url){
+		System.out.println(url);
+		int index = url.indexOf("/");
+		index = url.indexOf("/", index + 2);//获取第二个_索引
+		String str1 = url.substring(0, index);
+		url = url.substring(str1.length() + 1, url.length());
+		return url;
+	}
+
+	public static void main(String[] args) {
+		System.out.println(splits("https://swhaq.com:8204/AttachFiles/2023/02/anbiao_vehicle/1676177580362.jpg"));
+	}
+
 }

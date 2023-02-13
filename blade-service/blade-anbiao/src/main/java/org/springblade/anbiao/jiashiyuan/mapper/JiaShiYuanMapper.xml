@@ -978,5 +978,39 @@ values
         <include refid="queryTJMXSql"/>
     </select>
 
+    <!--根据企业ID获取驾驶员信息-->
+    <select id="getByDriverImg" resultType="org.springblade.anbiao.jiashiyuan.entity.DriverImg" parameterType="java.lang.String">
+        select
+            a.id,
+            a.shenfenzhengfujian as sfzzmimg,
+            a.shenfenzhengfanmianfujian as sfzfmimg,
+            b.ajr_ids as ruzhiid,
+            b.ajr_head_portrait as ruzhiimg,
+            c.ajj_ids as jszid,
+            c.ajj_front_photo_address as jszzmimg,
+            c.ajj_attached_photos as jszfmimg,
+            d.ajc_ids as cyzid,
+            d.ajc_licence as cyzimg,
+            e.ajt_ids as tjid,
+            e.ajt_enclosure as tjimg,
+            f.ajg_ids as gqid,
+            f.ajg_training_enclosure as gqimg,
+            g.ajw_ids as wzzmid,
+            g.ajw_enclosure as wzzmimg,
+            h.ajt_ids as qtid,
+            h.ajt_enclosure as qtimg
+        from
+            anbiao_jiashiyuan a
+                left join anbiao_jiashiyuan_ruzhi b on a.id = b.ajr_aj_ids and b.ajr_delete = 0
+                left join anbiao_jiashiyuan_jiashizheng c on a.id = c.ajj_aj_ids and c.ajj_delete = 0
+                left join anbiao_jiashiyuan_congyezigezheng d on a.id = d.ajc_aj_ids and d.ajc_delete = 0
+                left join anbiao_jiashiyuan_tijian e on a.id = e.ajt_aj_ids and e.ajt_delete = 0
+                left join anbiao_jiashiyuan_gangqianpeixun f on a.id = f.ajg_aj_ids and f.ajg_delete = 0
+                left join anbiao_jiashiyuan_wuzezhengming g on a.id = g.ajw_aj_ids and g.ajw_delete = 0
+                left join anbiao_jiashiyuan_qita h on a.id = h.ajt_aj_ids and h.ajt_delete = 0
+        where a.isdelete = 0
+          and a.id = #{jsyId}
+    </select>
+
 
 </mapper>
