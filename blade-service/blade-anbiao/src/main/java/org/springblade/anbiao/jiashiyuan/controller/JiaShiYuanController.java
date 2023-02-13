@@ -3204,7 +3204,7 @@ public class JiaShiYuanController {
 
 	@GetMapping("/exportDataWord")
 	@ApiLog("驾驶员-影像资料数据-导出")
-	@ApiOperation(value = "车辆-影像资料数据-导出", notes = "传入驾驶员ID", position = 29)
+	@ApiOperation(value = "驾驶员-影像资料数据-导出", notes = "传入驾驶员ID", position = 29)
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "jsyId", value = "驾驶员ID（多个以英文逗号隔开）", required = true),
 	})

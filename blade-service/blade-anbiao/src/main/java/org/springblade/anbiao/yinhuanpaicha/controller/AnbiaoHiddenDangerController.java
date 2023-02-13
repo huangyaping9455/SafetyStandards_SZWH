@@ -373,7 +373,8 @@ public class AnbiaoHiddenDangerController {
 		Calendar now = Calendar.getInstance();
 		//word模板地址
 		String templatePath =fileServer.getPathPrefix()+"muban\\"+"HiddenDanger.docx";
-
+		String folder = "";
+		String [] nyr=DateUtil.today().split("-");
 		String[] idsss = anbiaoHiddenDangerPage.getDeptId().split(",");
 		//去除素组中重复的数组
 		List<String> listid = new ArrayList<String>();
@@ -475,7 +476,7 @@ public class AnbiaoHiddenDangerController {
 					// TODO 渲染其他类型的数据请参考官方文档
 					//=================生成文件保存在本地D盘某目录下=================
 					//			temDir = "D:/mimi/file/word/"; ;//生成临时文件存放地址
-					String [] nyr=DateUtil.today().split("-");
+					nyr=DateUtil.today().split("-");
 					//附件存放地址(服务器生成地址)
 					temDir = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+t.getDeptname()+"\\";
 					//生成文件名
@@ -489,14 +490,15 @@ public class AnbiaoHiddenDangerController {
 				}
 			}
 		}
-		String fileName = alarmServer.getTemplateUrl()+date+"隐患登记台账.xlsx";
-		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream("D:\\ExcelTest\\文件夹34.zip"));
+		folder = fileServer.getPathPrefix()+FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+"隐患登记台账.zip";
+		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(folder));
 		ApacheZipUtils.doCompress1(urlList, bizOut);
 		//不要忘记调用
 		bizOut.close();
 
 		rs.setMsg("下载成功");
 		rs.setCode(200);
+		rs.setData(folder);
 		rs.setSuccess(true);
 		return rs;
 	}
