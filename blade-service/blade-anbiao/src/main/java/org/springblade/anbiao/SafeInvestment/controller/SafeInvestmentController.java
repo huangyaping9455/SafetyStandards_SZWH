@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,6 +22,7 @@ import org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInputDetailed;
 import org.springblade.anbiao.SafeInvestment.page.SafelInfoPage;
 import org.springblade.anbiao.SafeInvestment.VO.SafelInfoledgerVO;
 import org.springblade.anbiao.SafeInvestment.page.SafelInfoledgerPage;
+import org.springblade.anbiao.SafeInvestment.service.IAnbiaoSafetyInputDetailedService;
 import org.springblade.anbiao.SafeInvestment.service.impl.SafeInvestmentServiceImpl;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTJMX;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
@@ -60,6 +62,7 @@ import java.util.*;
 public class SafeInvestmentController extends BladeController {
 
 	private SafeInvestmentServiceImpl safeInvestmentService;
+	private IAnbiaoSafetyInputDetailedService safetyInputDetailedService;
 
 	private AlarmServer alarmServer;
 	private FileServer fileServer;
@@ -242,7 +245,7 @@ public class SafeInvestmentController extends BladeController {
 			safeInvestmentService.selectLedgerList(safelInfoledgerPage);
 			List<SafelInfoledgerVO> safelInfoledgerVOS = safelInfoledgerPage.getRecords();
 			//Excel中的结果集ListData
-			List<SafelInfoledgerVO> ListData = new ArrayList<>();
+//			List<SafelInfoledgerVO> ListData = new ArrayList<>();
 			if(safelInfoledgerVOS.size()==0){
 
 			}else if(safelInfoledgerVOS.size()>3000){
@@ -251,11 +254,12 @@ public class SafeInvestmentController extends BladeController {
 				return rs;
 			}else{
 				for( int i = 0 ; i < safelInfoledgerVOS.size() ; i++) {
+					List<SafelInfoledgerVO> ListData = new ArrayList<>();
 					Map<String, Object> map = new HashMap<>();
+					int b=1;
 					String templateFile = templatePath;
 					// 渲染文本
 					SafelInfoledgerVO t = safelInfoledgerVOS.get(i);
-					SafelInfoledgerVO safelInfoledgerVO = new SafelInfoledgerVO();
 					map.put("deptName", t.getDeptName());
 					map.put("asiYear", t.getAsiYear());
 					map.put("asiLastYearsTurnover", t.getAsiLastYearsTurnover());
@@ -264,11 +268,23 @@ public class SafeInvestmentController extends BladeController {
 					map.put("asiAccruedAmount", t.getAsiAccruedAmount());
 					map.put("asiAmountUsed", t.getAsiAmountUsed());
 					map.put("asiRemainingAmount", t.getAsiRemainingAmount());
-					map.put("asidEntryName", t.getAsidEntryName());
-					map.put("asidHandledByName", t.getAsidHandledByName());
-					map.put("asidInvestmentScope", t.getAsidInvestmentScope());
-					map.put("asidInvestmentDare", t.getAsidInvestmentDare());
-					map.put("asidAmountUsed", t.getAsidAmountUsed());
+					QueryWrapper<AnbiaoSafetyInputDetailed> safetyInvestmentDetailsVOQueryWrapper = new QueryWrapper<>();
+					safetyInvestmentDetailsVOQueryWrapper.lambda().eq(AnbiaoSafetyInputDetailed::getAsidAsiIds,t.getAsiIds());
+					safetyInvestmentDetailsVOQueryWrapper.lambda().eq(AnbiaoSafetyInputDetailed::getAsidDelete,"0");
+					List<AnbiaoSafetyInputDetailed> safetyInputDetaileds = safetyInputDetailedService.getBaseMapper().selectList(safetyInvestmentDetailsVOQueryWrapper);
+					for (AnbiaoSafetyInputDetailed anbiaoSafetyInputDetailed: safetyInputDetaileds) {
+						SafelInfoledgerVO safelInfoledgerVO = new SafelInfoledgerVO();
+						safelInfoledgerVO.setAsidEntryName(anbiaoSafetyInputDetailed.getAsidEntryName());
+						safelInfoledgerVO.setAsidHandledByName(anbiaoSafetyInputDetailed.getAsidHandledByName());
+						safelInfoledgerVO.setAsidInvestmentScope(anbiaoSafetyInputDetailed.getAsidInvestmentScope());
+						safelInfoledgerVO.setAsidInvestmentDare(anbiaoSafetyInputDetailed.getAsidInvestmentDare());
+						safelInfoledgerVO.setAsidAmountUsed(anbiaoSafetyInputDetailed.getAsidAmountUsed());
+
+						safelInfoledgerVO.setSerialNumber(b);
+						b++;
+
+						ListData.add(safelInfoledgerVO);
+					}
 
 					// 模板注意 用{} 来表示你要用的变量 如果本来就有"{","}" 特殊字符 用"\{","\}"代替
 					// {} 代表普通变量 {.} 代表是list的变量

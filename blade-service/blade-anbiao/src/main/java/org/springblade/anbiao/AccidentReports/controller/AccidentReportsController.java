@@ -125,7 +125,7 @@ public class AccidentReportsController {
 		List<String> urlList = new ArrayList<>();
 		AccidentLedgerReportsPage accidentLedgerReportsPage = new AccidentLedgerReportsPage();
 		accidentLedgerReportsPage.setDeptId(deptId);
-//		anbiaoHiddenDangerPage.setDate(date);
+		accidentLedgerReportsPage.setDate(date);
 		// TODO 渲染其他类型的数据请参考官方文档
 		DecimalFormat df = new DecimalFormat("######0.00");
 		Calendar now = Calendar.getInstance();

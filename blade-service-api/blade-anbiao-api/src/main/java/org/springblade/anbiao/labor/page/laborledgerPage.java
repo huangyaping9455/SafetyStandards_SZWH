@@ -42,4 +42,6 @@ public class laborledgerPage <T> extends BasePage<T> {
 
 	@ApiModelProperty(value = "签名")
 	private String alrPersonAutograph;
+
+	private String date;
 }

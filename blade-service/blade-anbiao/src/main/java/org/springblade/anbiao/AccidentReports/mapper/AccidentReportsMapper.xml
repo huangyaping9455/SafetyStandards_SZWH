@@ -378,8 +378,16 @@
             where
             is_deleted=0
             ) a
-            LEFT JOIN ( SELECT id, dept_name FROM blade_dept ) c ON c.id = a.dept_id
+            inner join  (
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) c ON c.id = a.dept_id
             where 1=1
+            <if test="deptId != null and deptId != ''">
+                AND c.id=#{deptId}
+            </if>
+            <if test="deptName != null and deptName != ''">
+                AND  c.dept_name=#{deptName}
+            </if>
             limit ${total}
         </if>
         <if test="current != 0" >
@@ -396,8 +404,16 @@
             where
             is_deleted=0
             ) a
-            LEFT JOIN ( SELECT id, dept_name FROM blade_dept ) c ON c.id = a.dept_id
+            inner join  (
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) c ON c.id = a.dept_id
             where 1=1
+            <if test="deptId != null and deptId != ''">
+                AND c.id=#{deptId}
+            </if>
+            <if test="deptName != null and deptName != ''">
+                AND  c.dept_name=#{deptName}
+            </if>
             limit ${offsetNo},${size}
         </if>
     </select>
@@ -407,6 +423,7 @@
             resultType="int">
         select COUNT(1) from(SELECT
             c.dept_name as deptName,
+            c.id as deptId,
             a.*
         FROM
             (
@@ -417,6 +434,12 @@
                 where
                     is_deleted=0
             ) a
-                LEFT JOIN ( SELECT id, dept_name FROM blade_dept ) c ON c.id = a.dept_id) d
+        inner join  (
+        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) c ON c.id = a.dept_id
+            ) d where 1=1
+        <if test="deptId!=null and deptId!=''">
+           and d.deptId = #{deptId}
+        </if>
     </select>
 </mapper>

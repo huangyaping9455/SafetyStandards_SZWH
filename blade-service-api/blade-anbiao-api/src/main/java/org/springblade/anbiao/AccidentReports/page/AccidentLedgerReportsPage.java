@@ -57,4 +57,6 @@ public class AccidentLedgerReportsPage<T> extends BasePage<T> {
 
 	@ApiModelProperty(value = "事故照片3")
 	private String shiguzhaopian3;
+
+	private String date;
 }

@@ -1,9 +1,11 @@
 package org.springblade.anbiao.SafeInvestment.VO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
+import org.springframework.format.annotation.DateTimeFormat;
+import java.util.Date;
 
 import java.math.BigDecimal;
 
@@ -12,6 +14,9 @@ import java.math.BigDecimal;
 public class SafelInfoledgerVO {
 
 	private static final long serialVersionUID = 1L;
+
+	@ApiModelProperty(value = "主键id")
+	private String asiIds;
 
 	@ApiModelProperty(value = "企业名称")
 	private String deptName;
@@ -50,7 +55,9 @@ public class SafelInfoledgerVO {
 	private String asidInvestmentScope;
 
 	@ApiModelProperty(value = "使用时间")
-	private String asidInvestmentDare;
+	@DateTimeFormat(pattern="yyyy")
+	@JsonFormat(pattern = "yyyy",timezone = "GMT+8")
+	private Date asidInvestmentDare;
 
 	@ApiModelProperty(value = "使用金额")
 	private String asidAmountUsed;
@@ -60,4 +67,7 @@ public class SafelInfoledgerVO {
 
 	@ApiModelProperty(value = "每页显示数", required = true)
 	private Integer size;
+
+	@ApiModelProperty(value = "序号")
+	private Integer serialNumber;
 }

@@ -242,7 +242,7 @@ public class laborController {
 		List<String> urlList = new ArrayList<>();
 		laborledgerPage laborledgerPage = new laborledgerPage();
 		laborledgerPage.setDeptId(deptId);
-//		anbiaoHiddenDangerPage.setDate(date);
+		laborledgerPage.setDate(date);
 		// TODO 渲染其他类型的数据请参考官方文档
 		DecimalFormat df = new DecimalFormat("######0.00");
 		Calendar now = Calendar.getInstance();
@@ -267,7 +267,7 @@ public class laborController {
 			service.selectLedgerList(laborledgerPage);
 			List<LaborledgerVO> LaborledgerVOS = laborledgerPage.getRecords();
 			//Excel中的结果集ListData
-			List<LaborledgerVO> ListData = new ArrayList<>();
+//			List<LaborledgerVO> ListData = new ArrayList<>();
 			if(LaborledgerVOS.size()==0){
 
 			}else if(LaborledgerVOS.size()>3000){
@@ -276,6 +276,7 @@ public class laborController {
 				return rs;
 			}else{
 				for(int i = 0; i < LaborledgerVOS.size() ; i++) {
+					List<LaborledgerVO> ListData = new ArrayList<>();
 					Map<String, Object> map = new HashMap<>();
 					String templateFile = templatePath;
 					// 渲染文本

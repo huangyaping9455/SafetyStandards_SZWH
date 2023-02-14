@@ -281,14 +281,13 @@
             SELECT
             c.dept_name AS deptName,
             c.id as deptId,
-            a.*,
-            b.*
+            a.*
             FROM
             ( SELECT asi_ids as asiIds, asi_year as asiYear, asi_last_years_turnover as asiLastYearsTurnover, asi_extraction_proportion AS asiExtractionProportion, asi_withdrawal_amount AS asiWithdrawalAmount, asi_accrued_amount AS asiAccruedAmount, asi_amount_used AS asiAmountUsed, asi_remaining_amount AS asiRemainingAmount, asi_delete AS asiDelete, asi_dept_ids AS asiDeptIds FROM `anbiao_safety_input`  WHERE asi_delete = 0) a
             inner join (
-            SELECT id, dept_name FROM blade_dept
+            <include
+                refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) c ON c.id = a.asiDeptIds
-            LEFT JOIN ( SELECT asid_ids as asidIds,asid_asi_ids AS asidAsiIds, asid_entry_name AS asidEntryName, asid_handled_by_name AS asidHandledByName, asid_investment_scope as asidInvestmentScope, asid_investment_dare AS asidInvestmentDare, asid_amount_used AS asidAmountUsed,asid_delete as asidDelete FROM anbiao_safety_input_detailed  where asid_delete =0 ) b ON a.asiIds = b.asidAsiIds
             where 1=1
             <if test="deptId != null and deptId != ''">
                 AND c.id=#{deptId}
@@ -302,14 +301,13 @@
             SELECT
             c.dept_name AS deptName,
             c.id as deptId,
-            a.*,
-            b.*
+            a.*
             FROM
             ( SELECT asi_ids as asiIds, asi_year as asiYear, asi_last_years_turnover as asiLastYearsTurnover, asi_extraction_proportion AS asiExtractionProportion, asi_withdrawal_amount AS asiWithdrawalAmount, asi_accrued_amount AS asiAccruedAmount, asi_amount_used AS asiAmountUsed, asi_remaining_amount AS asiRemainingAmount, asi_delete AS asiDelete, asi_dept_ids AS asiDeptIds FROM `anbiao_safety_input`  WHERE asi_delete = 0) a
             inner join (
-            SELECT id, dept_name FROM blade_dept
+            <include
+                refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) c ON c.id = a.asiDeptIds
-            LEFT JOIN ( SELECT asid_ids as asidIds,asid_asi_ids AS asidAsiIds, asid_entry_name AS asidEntryName, asid_handled_by_name AS asidHandledByName, asid_investment_scope as asidInvestmentScope, asid_investment_dare AS asidInvestmentDare, asid_amount_used AS asidAmountUsed,asid_delete as asidDelete FROM anbiao_safety_input_detailed  where asid_delete =0 ) b ON a.asiIds = b.asidAsiIds
             where 1=1
         <if test="deptId != null and deptId != ''">
             AND c.id=#{deptId}
@@ -327,14 +325,13 @@
         select COUNT(1) from(SELECT
                                  c.dept_name AS deptName,
                                  c.id as deptId,
-                                 a.*,
-                                 b.*
+                                 a.*
                              FROM
                                  ( SELECT asi_ids as asiIds, asi_year as asiYear, asi_last_years_turnover as asiLastYearsTurnover, asi_extraction_proportion AS asiExtractionProportion, asi_withdrawal_amount AS asiWithdrawalAmount, asi_accrued_amount AS asiAccruedAmount, asi_amount_used AS asiAmountUsed, asi_remaining_amount AS asiRemainingAmount, asi_delete AS asiDelete, asi_dept_ids AS asiDeptIds FROM `anbiao_safety_input`  WHERE asi_delete = 0) a
                                      inner join (
-                                     SELECT id, dept_name FROM blade_dept
-                                 ) c ON c.id = a.asiDeptIds
-                                     LEFT JOIN ( SELECT asid_ids as asidIds,asid_asi_ids AS asidAsiIds, asid_entry_name AS asidEntryName, asid_handled_by_name AS asidHandledByName, asid_investment_scope as asidInvestmentScope, asid_investment_dare AS asidInvestmentDare, asid_amount_used AS asidAmountUsed,asid_delete as asidDelete FROM anbiao_safety_input_detailed  where asid_delete =0 ) b ON a.asiIds = b.asidAsiIds
+                                     <include
+                                         refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+                                     ) c ON c.id = a.asiDeptIds
                             ) d where 1=1
                              <if test="deptId != null and deptId != ''">
                                  AND d.deptId=#{deptId}

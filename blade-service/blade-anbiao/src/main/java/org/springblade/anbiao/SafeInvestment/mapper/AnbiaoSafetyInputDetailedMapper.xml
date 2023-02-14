@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.SafeInvestment.mapper.AnbiaoSafetyInputDetailedMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInputDetailed">
+        <id column="asid_ids" property="asidIds" />
+        <result column="asid_asi_ids" property="asidAsiIds" />
+        <result column="asid_entry_name" property="asidEntryName" />
+        <result column="asid_handled_by_ids" property="asidHandledByIds" />
+        <result column="asid_handled_by_name" property="asidHandledByName" />
+        <result column="asid_investment_scope" property="asidInvestmentScope" />
+        <result column="asid_investment_dare" property="asidInvestmentDare" />
+        <result column="asid_amount_used" property="asidAmountUsed" />
+        <result column="asid_delete" property="asidDelete" />
+    </resultMap>
+
+</mapper>
