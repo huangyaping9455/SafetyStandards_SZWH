@@ -183,4 +183,394 @@
         ORDER BY a.dept_name asc
     </select>
 
+    <select id="selectLedgerPage"
+            parameterType="org.springblade.anbiao.jiashiyuan.page.JiaShiYuanLedgerPage"
+            resultType="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanLedgerVO">
+        <if test="size == 0" >
+            SELECT
+            a.id as deptId,
+            a.dept_name as deptName,
+            b.jiashiyuanrenshu,
+            c.cheliangshuliang,
+            d.yiwaixianzongbaoxianjine,
+            d.yiwaixianzongbaofeijine ,
+            e.chexianzongbaoxianjine,
+            e.chexianzongbaofeijine,
+            f.jiaoqiangxianzongjine,
+            f.jiaoqiangxianzongbaofeijine,
+            g.huoguizongbaoxianjine,
+            g.huoguizongbaofeijine,
+            h.anzezongbaoxianjine,
+            h.anzezongbaofeijine,
+            i.qitazongbaoxianjine,
+            i.qitazongbaofeijine,
+            j.qitazongbaoxianjine as qitazongbaoxianjineqiye,
+            j.qitazongbaofeijine as qitazongbaofeijineqiye,
+            IFNULL(d.yiwaixianzongbaoxianjine,0)+IFNULL(d.yiwaixianzongbaofeijine,0)+IFNULL(e.chexianzongbaoxianjine,0)+IFNULL( e.chexianzongbaofeijine,0)+IFNULL(f.jiaoqiangxianzongjine,0)+IFNULL(f.jiaoqiangxianzongbaofeijine,0)+IFNULL(g.huoguizongbaoxianjine,0)+IFNULL(g.huoguizongbaofeijine,0)+IFNULL(h.anzezongbaoxianjine,0)+IFNULL(h.anzezongbaofeijine,0)+IFNULL( i.qitazongbaoxianjine,0)+IFNULL(i.qitazongbaofeijine,0)+IFNULL(j.qitazongbaoxianjine,0)+IFNULL(j.qitazongbaofeijine ,0) as totalTmount
+            FROM
+            (
+            <include
+                refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) a
+            LEFT JOIN ( SELECT dept_id, COUNT( id ) AS jiashiyuanrenshu FROM anbiao_jiashiyuan WHERE  isdelete = 0 GROUP BY dept_id) b ON b.dept_id = a.id
+            LEFT JOIN ( SELECT dept_id, COUNT( id ) AS cheliangshuliang FROM anbiao_vehicle WHERE  is_deleted = 0 GROUP BY dept_id) c ON c.dept_id = a.id
+            -- 意外险
+            LEFT JOIN (
+            SELECT
+            ajb_dept_ids,
+            sum(d.yiwaixianzongbaoxianjine) as yiwaixianzongbaoxianjine ,
+            sum(d.yiwaixianzongbaofeijine) as  yiwaixianzongbaofeijine
+            FROM
+            anbiao_jiashiyuan_baoxian
+            LEFT JOIN ( SELECT ajbm_avb_ids,SUM( ajbm_company_amount ) AS yiwaixianzongbaoxianjine, SUM( ajbm_basic_premium ) AS yiwaixianzongbaofeijine FROM anbiao_jiashiyuan_baoxian_mingxi WHERE ajbm_risk = "意外险" GROUP BY ajbm_avb_ids) d ON ajb_ids = d.ajbm_avb_ids
+            WHERE
+            ajb_delete=0
+            GROUP BY ajb_dept_ids
+            ) d ON d.ajb_dept_ids = a.id
+
+            -- 车险
+            LEFT JOIN (
+            SELECT
+            avb_dept_ids,
+            sum(d.chexianzongbaoxianjine) as chexianzongbaoxianjine,
+            sum(d.chexianzongbaofeijine ) as chexianzongbaofeijine
+            FROM
+            anbiao_vehicle_baoxian
+            LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS chexianzongbaoxianjine, sum(avbm_basic_premium) AS chexianzongbaofeijine FROM anbiao_vehicle_baoxian_mingxi WHERE avbm_risk != "交强险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
+            WHERE
+            avb_delete=0
+            GROUP BY avb_dept_ids
+            )e on e.avb_dept_ids	=a.id
+
+            -- 交强险
+            LEFT JOIN (
+            SELECT
+            avb_dept_ids,
+            sum(d.jiaoqiangxianzongjine) as jiaoqiangxianzongjine,
+            sum(d.jiaoqiangxianzongbaofeijine ) as jiaoqiangxianzongbaofeijine
+            FROM
+            anbiao_vehicle_baoxian
+            LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS jiaoqiangxianzongjine, sum(avbm_basic_premium) AS jiaoqiangxianzongbaofeijine FROM anbiao_vehicle_baoxian_mingxi WHERE avbm_risk = "交强险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
+            WHERE
+            avb_delete=0
+            GROUP BY avb_dept_ids
+            )f on f.avb_dept_ids	=a.id
+
+            -- 货柜险
+            LEFT JOIN (
+            SELECT
+            avb_dept_ids,
+            sum(d.huoguizongbaoxianjine) as huoguizongbaoxianjine,
+            sum(d.huoguizongbaofeijine ) as huoguizongbaofeijine
+            FROM
+            anbiao_dept_baoxian
+            LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS huoguizongbaoxianjine, sum(avbm_basic_premium) AS huoguizongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk = "货柜险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
+            WHERE
+            avb_delete=0
+            GROUP BY avb_dept_ids
+            )g on g.avb_dept_ids	=a.id
+
+            -- 安责险
+            LEFT JOIN (
+            SELECT
+            avb_dept_ids,
+            sum(d.anzezongbaoxianjine) as anzezongbaoxianjine,
+            sum(d.anzezongbaofeijine ) as anzezongbaofeijine
+            FROM
+            anbiao_dept_baoxian
+            LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS anzezongbaoxianjine, sum(avbm_basic_premium) AS anzezongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk = "安责险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
+            WHERE
+            avb_delete=0
+            GROUP BY avb_dept_ids
+            )h on h.avb_dept_ids	=a.id
+
+            -- 其他（人员）
+            LEFT JOIN (
+            SELECT
+            ajb_dept_ids,
+            sum(d.qitazongbaoxianjine) as qitazongbaoxianjine ,
+            sum(d.qitazongbaofeijine) as  qitazongbaofeijine
+            FROM
+            anbiao_jiashiyuan_baoxian
+            LEFT JOIN ( SELECT ajbm_avb_ids,SUM( ajbm_company_amount ) AS qitazongbaoxianjine, SUM( ajbm_basic_premium ) AS qitazongbaofeijine FROM anbiao_jiashiyuan_baoxian_mingxi WHERE ajbm_risk != "意外险" GROUP BY ajbm_avb_ids) d ON ajb_ids = d.ajbm_avb_ids
+            WHERE
+            ajb_delete=0
+            GROUP BY ajb_dept_ids
+            ) i ON i.ajb_dept_ids = a.id
+
+            -- 其他（企业）
+            LEFT JOIN (
+            SELECT
+            avb_dept_ids,
+            sum(d.qitazongbaoxianjine) as qitazongbaoxianjine,
+            sum(d.qitazongbaofeijine ) as qitazongbaofeijine
+            FROM
+            anbiao_dept_baoxian
+            LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS qitazongbaoxianjine, sum(avbm_basic_premium) AS qitazongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk != "安责险" and avbm_risk != "货柜险" GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
+            WHERE
+            avb_delete=0
+            GROUP BY avb_dept_ids
+            )j on j.avb_dept_ids	=a.id
+
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            SELECT
+            a.id as deptId,
+            a.dept_name as deptName,
+            b.jiashiyuanrenshu,
+            c.cheliangshuliang,
+            d.yiwaixianzongbaoxianjine,
+            d.yiwaixianzongbaofeijine ,
+            e.chexianzongbaoxianjine,
+            e.chexianzongbaofeijine,
+            f.jiaoqiangxianzongjine,
+            f.jiaoqiangxianzongbaofeijine,
+            g.huoguizongbaoxianjine,
+            g.huoguizongbaofeijine,
+            h.anzezongbaoxianjine,
+            h.anzezongbaofeijine,
+            i.qitazongbaoxianjine,
+            i.qitazongbaofeijine,
+            j.qitazongbaoxianjine as qitazongbaoxianjineqiye,
+            j.qitazongbaofeijine as qitazongbaofeijineqiye,
+            IFNULL(d.yiwaixianzongbaoxianjine,0)+IFNULL(d.yiwaixianzongbaofeijine,0)+IFNULL(e.chexianzongbaoxianjine,0)+IFNULL( e.chexianzongbaofeijine,0)+IFNULL(f.jiaoqiangxianzongjine,0)+IFNULL(f.jiaoqiangxianzongbaofeijine,0)+IFNULL(g.huoguizongbaoxianjine,0)+IFNULL(g.huoguizongbaofeijine,0)+IFNULL(h.anzezongbaoxianjine,0)+IFNULL(h.anzezongbaofeijine,0)+IFNULL( i.qitazongbaoxianjine,0)+IFNULL(i.qitazongbaofeijine,0)+IFNULL(j.qitazongbaoxianjine,0)+IFNULL(j.qitazongbaofeijine ,0) as totalTmount
+            FROM
+            (
+            <include
+                refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) a
+            LEFT JOIN ( SELECT dept_id, COUNT( id ) AS jiashiyuanrenshu FROM anbiao_jiashiyuan WHERE  isdelete = 0 GROUP BY dept_id) b ON b.dept_id = a.id
+            LEFT JOIN ( SELECT dept_id, COUNT( id ) AS cheliangshuliang FROM anbiao_vehicle WHERE  is_deleted = 0 GROUP BY dept_id) c ON c.dept_id = a.id
+            -- 意外险
+            LEFT JOIN (
+            SELECT
+            ajb_dept_ids,
+            sum(d.yiwaixianzongbaoxianjine) as yiwaixianzongbaoxianjine ,
+            sum(d.yiwaixianzongbaofeijine) as  yiwaixianzongbaofeijine
+            FROM
+            anbiao_jiashiyuan_baoxian
+            LEFT JOIN ( SELECT ajbm_avb_ids,SUM( ajbm_company_amount ) AS yiwaixianzongbaoxianjine, SUM( ajbm_basic_premium ) AS yiwaixianzongbaofeijine FROM anbiao_jiashiyuan_baoxian_mingxi WHERE ajbm_risk = "意外险" GROUP BY ajbm_avb_ids) d ON ajb_ids = d.ajbm_avb_ids
+            WHERE
+            ajb_delete=0
+            GROUP BY ajb_dept_ids
+            ) d ON d.ajb_dept_ids = a.id
+
+            -- 车险
+            LEFT JOIN (
+            SELECT
+            avb_dept_ids,
+            sum(d.chexianzongbaoxianjine) as chexianzongbaoxianjine,
+            sum(d.chexianzongbaofeijine ) as chexianzongbaofeijine
+            FROM
+            anbiao_vehicle_baoxian
+            LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS chexianzongbaoxianjine, sum(avbm_basic_premium) AS chexianzongbaofeijine FROM anbiao_vehicle_baoxian_mingxi WHERE avbm_risk != "交强险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
+            WHERE
+            avb_delete=0
+            GROUP BY avb_dept_ids
+            )e on e.avb_dept_ids	=a.id
+
+            -- 交强险
+            LEFT JOIN (
+            SELECT
+            avb_dept_ids,
+            sum(d.jiaoqiangxianzongjine) as jiaoqiangxianzongjine,
+            sum(d.jiaoqiangxianzongbaofeijine ) as jiaoqiangxianzongbaofeijine
+            FROM
+            anbiao_vehicle_baoxian
+            LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS jiaoqiangxianzongjine, sum(avbm_basic_premium) AS jiaoqiangxianzongbaofeijine FROM anbiao_vehicle_baoxian_mingxi WHERE avbm_risk = "交强险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
+            WHERE
+            avb_delete=0
+            GROUP BY avb_dept_ids
+            )f on f.avb_dept_ids	=a.id
+
+            -- 货柜险
+            LEFT JOIN (
+            SELECT
+            avb_dept_ids,
+            sum(d.huoguizongbaoxianjine) as huoguizongbaoxianjine,
+            sum(d.huoguizongbaofeijine ) as huoguizongbaofeijine
+            FROM
+            anbiao_dept_baoxian
+            LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS huoguizongbaoxianjine, sum(avbm_basic_premium) AS huoguizongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk = "货柜险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
+            WHERE
+            avb_delete=0
+            GROUP BY avb_dept_ids
+            )g on g.avb_dept_ids	=a.id
+
+            -- 安责险
+            LEFT JOIN (
+            SELECT
+            avb_dept_ids,
+            sum(d.anzezongbaoxianjine) as anzezongbaoxianjine,
+            sum(d.anzezongbaofeijine ) as anzezongbaofeijine
+            FROM
+            anbiao_dept_baoxian
+            LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS anzezongbaoxianjine, sum(avbm_basic_premium) AS anzezongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk = "安责险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
+            WHERE
+            avb_delete=0
+            GROUP BY avb_dept_ids
+            )h on h.avb_dept_ids	=a.id
+
+            -- 其他（人员）
+            LEFT JOIN (
+            SELECT
+            ajb_dept_ids,
+            sum(d.qitazongbaoxianjine) as qitazongbaoxianjine ,
+            sum(d.qitazongbaofeijine) as  qitazongbaofeijine
+            FROM
+            anbiao_jiashiyuan_baoxian
+            LEFT JOIN ( SELECT ajbm_avb_ids,SUM( ajbm_company_amount ) AS qitazongbaoxianjine, SUM( ajbm_basic_premium ) AS qitazongbaofeijine FROM anbiao_jiashiyuan_baoxian_mingxi WHERE ajbm_risk != "意外险" GROUP BY ajbm_avb_ids) d ON ajb_ids = d.ajbm_avb_ids
+            WHERE
+            ajb_delete=0
+            GROUP BY ajb_dept_ids
+            ) i ON i.ajb_dept_ids = a.id
+
+            -- 其他（企业）
+            LEFT JOIN (
+            SELECT
+            avb_dept_ids,
+            sum(d.qitazongbaoxianjine) as qitazongbaoxianjine,
+            sum(d.qitazongbaofeijine ) as qitazongbaofeijine
+            FROM
+            anbiao_dept_baoxian
+            LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS qitazongbaoxianjine, sum(avbm_basic_premium) AS qitazongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk != "安责险" and avbm_risk != "货柜险" GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
+            WHERE
+            avb_delete=0
+            GROUP BY avb_dept_ids
+            )j on j.avb_dept_ids	=a.id
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectLedgerTotal"
+            parameterType="org.springblade.anbiao.jiashiyuan.page.JiaShiYuanLedgerPage"
+            resultType="int">
+        select COUNT(1) from(
+        SELECT
+        a.id as deptId,
+        a.dept_name as deptName,
+        b.jiashiyuanrenshu,
+        c.cheliangshuliang,
+        d.yiwaixianzongbaoxianjine,
+        d.yiwaixianzongbaofeijine ,
+        e.chexianzongbaoxianjine,
+        e.chexianzongbaofeijine,
+        f.jiaoqiangxianzongjine,
+        f.jiaoqiangxianzongbaofeijine,
+        g.huoguizongbaoxianjine,
+        g.huoguizongbaofeijine,
+        h.anzezongbaoxianjine,
+        h.anzezongbaofeijine,
+        i.qitazongbaoxianjine,
+        i.qitazongbaofeijine,
+        j.qitazongbaoxianjine as qitazongbaoxianjineqiye,
+        j.qitazongbaofeijine as qitazongbaofeijineqiye,
+        IFNULL(d.yiwaixianzongbaoxianjine,0)+IFNULL(d.yiwaixianzongbaofeijine,0)+IFNULL(e.chexianzongbaoxianjine,0)+IFNULL( e.chexianzongbaofeijine,0)+IFNULL(f.jiaoqiangxianzongjine,0)+IFNULL(f.jiaoqiangxianzongbaofeijine,0)+IFNULL(g.huoguizongbaoxianjine,0)+IFNULL(g.huoguizongbaofeijine,0)+IFNULL(h.anzezongbaoxianjine,0)+IFNULL(h.anzezongbaofeijine,0)+IFNULL( i.qitazongbaoxianjine,0)+IFNULL(i.qitazongbaofeijine,0)+IFNULL(j.qitazongbaoxianjine,0)+IFNULL(j.qitazongbaofeijine ,0) as totalTmount
+        FROM
+        (
+        <include
+            refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) a
+        LEFT JOIN ( SELECT dept_id, COUNT( id ) AS jiashiyuanrenshu FROM anbiao_jiashiyuan WHERE  isdelete = 0 GROUP BY dept_id) b ON b.dept_id = a.id
+        LEFT JOIN ( SELECT dept_id, COUNT( id ) AS cheliangshuliang FROM anbiao_vehicle WHERE  is_deleted = 0 GROUP BY dept_id) c ON c.dept_id = a.id
+        -- 意外险
+        LEFT JOIN (
+        SELECT
+        ajb_dept_ids,
+        sum(d.yiwaixianzongbaoxianjine) as yiwaixianzongbaoxianjine ,
+        sum(d.yiwaixianzongbaofeijine) as  yiwaixianzongbaofeijine
+        FROM
+        anbiao_jiashiyuan_baoxian
+        LEFT JOIN ( SELECT ajbm_avb_ids,SUM( ajbm_company_amount ) AS yiwaixianzongbaoxianjine, SUM( ajbm_basic_premium ) AS yiwaixianzongbaofeijine FROM anbiao_jiashiyuan_baoxian_mingxi WHERE ajbm_risk = "意外险" GROUP BY ajbm_avb_ids) d ON ajb_ids = d.ajbm_avb_ids
+        WHERE
+        ajb_delete=0
+        GROUP BY ajb_dept_ids
+        ) d ON d.ajb_dept_ids = a.id
+
+        -- 车险
+        LEFT JOIN (
+        SELECT
+        avb_dept_ids,
+        sum(d.chexianzongbaoxianjine) as chexianzongbaoxianjine,
+        sum(d.chexianzongbaofeijine ) as chexianzongbaofeijine
+        FROM
+        anbiao_vehicle_baoxian
+        LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS chexianzongbaoxianjine, sum(avbm_basic_premium) AS chexianzongbaofeijine FROM anbiao_vehicle_baoxian_mingxi WHERE avbm_risk != "交强险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
+        WHERE
+        avb_delete=0
+        GROUP BY avb_dept_ids
+        )e on e.avb_dept_ids	=a.id
+
+        -- 交强险
+        LEFT JOIN (
+        SELECT
+        avb_dept_ids,
+        sum(d.jiaoqiangxianzongjine) as jiaoqiangxianzongjine,
+        sum(d.jiaoqiangxianzongbaofeijine ) as jiaoqiangxianzongbaofeijine
+        FROM
+        anbiao_vehicle_baoxian
+        LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS jiaoqiangxianzongjine, sum(avbm_basic_premium) AS jiaoqiangxianzongbaofeijine FROM anbiao_vehicle_baoxian_mingxi WHERE avbm_risk = "交强险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
+        WHERE
+        avb_delete=0
+        GROUP BY avb_dept_ids
+        )f on f.avb_dept_ids	=a.id
+
+        -- 货柜险
+        LEFT JOIN (
+        SELECT
+        avb_dept_ids,
+        sum(d.huoguizongbaoxianjine) as huoguizongbaoxianjine,
+        sum(d.huoguizongbaofeijine ) as huoguizongbaofeijine
+        FROM
+        anbiao_dept_baoxian
+        LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS huoguizongbaoxianjine, sum(avbm_basic_premium) AS huoguizongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk = "货柜险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
+        WHERE
+        avb_delete=0
+        GROUP BY avb_dept_ids
+        )g on g.avb_dept_ids	=a.id
+
+        -- 安责险
+        LEFT JOIN (
+        SELECT
+        avb_dept_ids,
+        sum(d.anzezongbaoxianjine) as anzezongbaoxianjine,
+        sum(d.anzezongbaofeijine ) as anzezongbaofeijine
+        FROM
+        anbiao_dept_baoxian
+        LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS anzezongbaoxianjine, sum(avbm_basic_premium) AS anzezongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk = "安责险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
+        WHERE
+        avb_delete=0
+        GROUP BY avb_dept_ids
+        )h on h.avb_dept_ids	=a.id
+
+        -- 其他（人员）
+        LEFT JOIN (
+        SELECT
+        ajb_dept_ids,
+        sum(d.qitazongbaoxianjine) as qitazongbaoxianjine ,
+        sum(d.qitazongbaofeijine) as  qitazongbaofeijine
+        FROM
+        anbiao_jiashiyuan_baoxian
+        LEFT JOIN ( SELECT ajbm_avb_ids,SUM( ajbm_company_amount ) AS qitazongbaoxianjine, SUM( ajbm_basic_premium ) AS qitazongbaofeijine FROM anbiao_jiashiyuan_baoxian_mingxi WHERE ajbm_risk != "意外险" GROUP BY ajbm_avb_ids) d ON ajb_ids = d.ajbm_avb_ids
+        WHERE
+        ajb_delete=0
+        GROUP BY ajb_dept_ids
+        ) i ON i.ajb_dept_ids = a.id
+
+        -- 其他（企业）
+        LEFT JOIN (
+        SELECT
+        avb_dept_ids,
+        sum(d.qitazongbaoxianjine) as qitazongbaoxianjine,
+        sum(d.qitazongbaofeijine ) as qitazongbaofeijine
+        FROM
+        anbiao_dept_baoxian
+        LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS qitazongbaoxianjine, sum(avbm_basic_premium) AS qitazongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk != "安责险" and avbm_risk != "货柜险" GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
+        WHERE
+        avb_delete=0
+        GROUP BY avb_dept_ids
+        )j on j.avb_dept_ids	=a.id
+        ) d
+    </select>
 </mapper>

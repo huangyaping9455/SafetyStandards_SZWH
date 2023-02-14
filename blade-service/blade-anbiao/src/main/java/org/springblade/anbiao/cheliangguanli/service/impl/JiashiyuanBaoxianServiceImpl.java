@@ -24,6 +24,9 @@ import org.springblade.anbiao.cheliangguanli.mapper.JiashiyuanBaoxianMingxiMappe
 import org.springblade.anbiao.cheliangguanli.vo.JiashiyuanBaoxianVO;
 import org.springblade.anbiao.cheliangguanli.mapper.JiashiyuanBaoxianMapper;
 import org.springblade.anbiao.cheliangguanli.service.IJiashiyuanBaoxianService;
+import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanLedgerPage;
+import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanLedgerVO;
+import org.springblade.anbiao.labor.VO.LaborledgerVO;
 import org.springblade.core.mp.base.BaseServiceImpl;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.system.entity.Dept;
@@ -75,6 +78,45 @@ public class JiashiyuanBaoxianServiceImpl extends ServiceImpl<JiashiyuanBaoxianM
 	@Override
 	public List<Dept> QiYeList(Integer deptId) {
 		return baoxianMapper.QiYeList(deptId);
+	}
+
+	@Override
+	public JiaShiYuanLedgerPage selectLedgerList(JiaShiYuanLedgerPage jiaShiYuanLedgerPage) {
+		int total = baoxianMapper.selectLedgerTotal(jiaShiYuanLedgerPage);
+		Integer AccPagetotal = 0;
+		if (jiaShiYuanLedgerPage.getSize() == 0) {
+			if (jiaShiYuanLedgerPage.getTotal() == 0) {
+				jiaShiYuanLedgerPage.setTotal(total);
+			}
+			if (jiaShiYuanLedgerPage.getTotal() == 0) {
+				return jiaShiYuanLedgerPage;
+			} else {
+				List<JiaShiYuanLedgerVO> jiaShiYuanLedgerVOS = baoxianMapper.selectLedgerPage(jiaShiYuanLedgerPage);
+				jiaShiYuanLedgerPage.setRecords(jiaShiYuanLedgerVOS);
+				return jiaShiYuanLedgerPage;
+			}
+		}
+		if (total > 0) {
+			if (total % jiaShiYuanLedgerPage.getSize() == 0) {
+				AccPagetotal = total / jiaShiYuanLedgerPage.getSize();
+			} else {
+				AccPagetotal = total / jiaShiYuanLedgerPage.getSize() + 1;
+			}
+		}
+		if (AccPagetotal < jiaShiYuanLedgerPage.getCurrent()) {
+			return jiaShiYuanLedgerPage;
+		} else {
+			jiaShiYuanLedgerPage.setPageTotal(AccPagetotal);
+			Integer offsetNo = 0;
+			if (jiaShiYuanLedgerPage.getCurrent() > 1) {
+				offsetNo = jiaShiYuanLedgerPage.getSize() * (jiaShiYuanLedgerPage.getCurrent() - 1);
+			}
+			jiaShiYuanLedgerPage.setTotal(total);
+			jiaShiYuanLedgerPage.setOffsetNo(offsetNo);
+			List<JiaShiYuanLedgerVO> jiaShiYuanLedgerVOS = baoxianMapper.selectLedgerPage(jiaShiYuanLedgerPage);
+			jiaShiYuanLedgerPage.setRecords(jiaShiYuanLedgerVOS);
+			return jiaShiYuanLedgerPage;
+		}
 	}
 
 	@Override

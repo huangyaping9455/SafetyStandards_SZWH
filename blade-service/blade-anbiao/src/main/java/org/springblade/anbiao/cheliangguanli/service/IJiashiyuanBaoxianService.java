@@ -20,6 +20,8 @@ import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxian;
 import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxianInfo;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianInfo;
 import org.springblade.anbiao.cheliangguanli.vo.JiashiyuanBaoxianVO;
+import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanLedgerPage;
+import org.springblade.anbiao.labor.page.laborledgerPage;
 import org.springblade.core.mp.base.BaseService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springblade.system.entity.Dept;
@@ -61,4 +63,6 @@ public interface IJiashiyuanBaoxianService extends BaseService<JiashiyuanBaoxian
 	 * @return
 	 */
 	List<Dept> QiYeList(@Param("deptId") Integer deptId);
+
+	JiaShiYuanLedgerPage selectLedgerList(JiaShiYuanLedgerPage jiaShiYuanLedgerPage);
 }

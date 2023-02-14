@@ -20,6 +20,10 @@ import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxian;
 import org.springblade.anbiao.cheliangguanli.vo.JiashiyuanBaoxianVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanLedgerPage;
+import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanLedgerVO;
+import org.springblade.anbiao.labor.VO.LaborledgerVO;
+import org.springblade.anbiao.labor.page.laborledgerPage;
 import org.springblade.system.entity.Dept;
 import org.springblade.system.user.entity.User;
 import org.springblade.system.user.page.UserPage;
@@ -61,4 +65,6 @@ public interface JiashiyuanBaoxianMapper extends BaseMapper<JiashiyuanBaoxian> {
 	 */
 	List<Dept> QiYeList(@Param("deptId") Integer deptId);
 
+	List<JiaShiYuanLedgerVO> selectLedgerPage(JiaShiYuanLedgerPage jiaShiYuanLedgerPage);
+	int selectLedgerTotal(JiaShiYuanLedgerPage jiaShiYuanLedgerPage);
 }

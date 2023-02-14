@@ -15,14 +15,20 @@
  */
 package org.springblade.anbiao.cheliangguanli.controller;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
+import org.apache.tools.zip.ZipOutputStream;
 import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxian;
 import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxianInfo;
 import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxianMingxi;
@@ -32,8 +38,16 @@ import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.cheliangguanli.vo.JiashiyuanBaoxianVO;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanRuzhi;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanLedgerPage;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanRuzhiService;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
+import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanLedgerVO;
+import org.springblade.anbiao.labor.VO.LaborledgerVO;
+import org.springblade.anbiao.labor.entity.LaborlingquEntity;
+import org.springblade.anbiao.labor.page.laborledgerPage;
+import org.springblade.common.configurationBean.FileServer;
+import org.springblade.common.constant.FilePathConstant;
+import org.springblade.common.tool.ApacheZipUtils;
 import org.springblade.core.boot.ctrl.BladeController;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.mp.support.Condition;
@@ -44,20 +58,24 @@ import org.springblade.core.tool.utils.StringUtil;
 import org.springblade.system.entity.Dept;
 import org.springblade.system.feign.ISysClient;
 import org.springblade.system.user.entity.User;
+import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -78,6 +96,8 @@ public class JiashiyuanBaoxianController extends BladeController {
 	private IVehicleService vehicleService;
 	private ISysClient iSysClient;
 	private IAnbiaoJiashiyuanRuzhiService ruzhiService;
+	private FileServer fileServer;
+	private IFileUploadClient fileUploadClient;
 
 	/**
 	 * 详情
@@ -524,6 +544,180 @@ public class JiashiyuanBaoxianController extends BladeController {
 		}
 	}
 
+	@PostMapping("/getledgerPage")
+	@ApiLog("分页 列表-保险台账")
+	@ApiOperation(value = "分页 列表-保险台账", notes = "传入JiaShiYuanLedgerPage", position = 2)
+	public R getLedgerPage(@RequestBody JiaShiYuanLedgerPage jiaShiYuanLedgerPage, BladeUser us) {
+		R rs = new R();
+		JiaShiYuanLedgerPage list = jiashiyuanBaoxianService.selectLedgerList(jiaShiYuanLedgerPage);
+		return R.data(list);
+	}
 
+	@GetMapping("/goExport_Excel")
+	@ApiLog("保险信息-导出")
+	@ApiOperation(value = "保险信息-导出", notes = "传入JiaShiYuanLedgerPage", position = 22)
+	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String deptId , String date, BladeUser user) throws IOException {
+		int a=1;
+		R rs = new R();
+		List<String> urlList = new ArrayList<>();
+		JiaShiYuanLedgerPage jiaShiYuanLedgerPage = new JiaShiYuanLedgerPage();
+		jiaShiYuanLedgerPage.setDeptId(deptId);
+		jiaShiYuanLedgerPage.setDate(date);
+		// TODO 渲染其他类型的数据请参考官方文档
+		DecimalFormat df = new DecimalFormat("######0.00");
+		Calendar now = Calendar.getInstance();
+		//word模板地址
+		String templatePath =fileServer.getPathPrefix()+"muban\\"+"Baoxian.xlsx";
+
+		String[] idsss = jiaShiYuanLedgerPage.getDeptId().split(",");
+		//去除素组中重复的数组
+		List<String> listid = new ArrayList<String>();
+		for (int i=0; i<idsss.length; i++) {
+			if(!listid.contains(idsss[i])) {
+				listid.add(idsss[i]);
+			}
+		}
+		//返回一个包含所有对象的指定类型的数组
+		String[] idss= listid.toArray(new String[1]);
+		for(int j = 0;j< idss.length;j++){
+			jiaShiYuanLedgerPage.setDeptName("");
+			jiaShiYuanLedgerPage.setSize(0);
+			jiaShiYuanLedgerPage.setCurrent(0);
+			jiaShiYuanLedgerPage.setDeptId(idss[j]);
+			jiashiyuanBaoxianService.selectLedgerList(jiaShiYuanLedgerPage);
+			List<JiaShiYuanLedgerVO> jiaShiYuanLedgerVOS = jiaShiYuanLedgerPage.getRecords();
+			//Excel中的结果集ListData
+//			List<LaborledgerVO> ListData = new ArrayList<>();
+			if(jiaShiYuanLedgerVOS.size()==0){
+
+			}else if(jiaShiYuanLedgerVOS.size()>3000){
+				rs.setMsg("数据超过30000条无法下载");
+				rs.setCode(500);
+				return rs;
+			}else{
+				for(int i = 0; i < jiaShiYuanLedgerVOS.size() ; i++) {
+					List<LaborledgerVO> ListData = new ArrayList<>();
+					Map<String, Object> map = new HashMap<>();
+					String templateFile = templatePath;
+					// 渲染文本
+					JiaShiYuanLedgerVO t = jiaShiYuanLedgerVOS.get(i);
+					map.put("deptName", t.getDeptName());
+					if(StrUtil.isNotEmpty(t.getJiashiyuanrenshu())){
+						map.put("jiashiyuanrenshu", t.getJiashiyuanrenshu());
+					}else {
+						map.put("jiashiyuanrenshu", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getCheliangshuliang())){
+						map.put("cheliangshuliang", t.getCheliangshuliang());
+					}else {
+						map.put("cheliangshuliang", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getYiwaixianzongbaoxianjine())){
+						map.put("yiwaixianzongbaoxianjine", t.getYiwaixianzongbaoxianjine());
+					}else {
+						map.put("yiwaixianzongbaoxianjine", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getYiwaixianzongbaofeijine())){
+						map.put("yiwaixianzongbaofeijine", t.getYiwaixianzongbaofeijine());
+					}else {
+						map.put("yiwaixianzongbaofeijine", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getQitazongbaoxianjine())){
+						map.put("qitazongbaoxianjine", t.getQitazongbaoxianjine());
+					}else {
+						map.put("qitazongbaoxianjine", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getQitazongbaofeijine())){
+						map.put("qitazongbaofeijine", t.getQitazongbaofeijine());
+					}else {
+						map.put("qitazongbaofeijine", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getChexianzongbaoxianjine())){
+						map.put("chexianzongbaoxianjine", t.getChexianzongbaoxianjine());
+					}else {
+						map.put("chexianzongbaoxianjine", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getChexianzongbaofeijine())){
+						map.put("chexianzongbaofeijine", t.getChexianzongbaofeijine());
+					}else {
+						map.put("chexianzongbaofeijine", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getJiaoqiangxianzongjine())){
+						map.put("jiaoqiangxianzongjine", t.getJiaoqiangxianzongjine());
+					}else {
+						map.put("jiaoqiangxianzongjine", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getJiaoqiangxianzongbaofeijine())){
+						map.put("jiaoqiangxianzongbaofeijine", t.getJiaoqiangxianzongbaofeijine());
+					}else {
+						map.put("jiaoqiangxianzongbaofeijine", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getHuoguizongbaoxianjine())){
+						map.put("huoguizongbaoxianjine", t.getHuoguizongbaoxianjine());
+					}else {
+						map.put("huoguizongbaoxianjine", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getHuoguizongbaofeijine())){
+						map.put("huoguizongbaofeijine", t.getHuoguizongbaofeijine());
+					}else {
+						map.put("huoguizongbaofeijine", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getAnzezongbaoxianjine())){
+						map.put("anzezongbaoxianjine", t.getAnzezongbaoxianjine());
+					}else {
+						map.put("anzezongbaoxianjine", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getAnzezongbaofeijine())){
+						map.put("anzezongbaofeijine", t.getAnzezongbaofeijine());
+					}else {
+						map.put("anzezongbaofeijine", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getQitazongbaoxianjineqiye())){
+						map.put("qitazongbaoxianjineqiye", t.getQitazongbaoxianjineqiye());
+					}else {
+						map.put("qitazongbaoxianjineqiye", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getQitazongbaofeijineqiye())){
+						map.put("qitazongbaofeijineqiye", t.getQitazongbaofeijineqiye());
+					}else {
+						map.put("qitazongbaofeijineqiye", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getTotalTmount())){
+						map.put("totalTmount", t.getTotalTmount());
+					}else {
+						map.put("totalTmount", "0");
+					}
+
+					// 模板注意 用{} 来表示你要用的变量 如果本来就有"{","}" 特殊字符 用"\{","\}"代替
+					// {} 代表普通变量 {.} 代表是list的变量
+					// 这里模板 删除了list以后的数据，也就是统计的这一行
+					String templateFileName = templateFile;
+					//alarmServer.getTemplateUrl()+
+					String fileName = "D:\\ExcelTest\\"+t.getDeptName()+"-保险台账"+a+".xlsx";
+					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
+					WriteSheet writeSheet = EasyExcel.writerSheet().build();
+					// 写入list之前的数据
+					excelWriter.fill(map, writeSheet);
+					// 直接写入数据
+					excelWriter.fill(ListData, writeSheet);
+					excelWriter.finish();
+					urlList.add(fileName);
+					a++;
+				}
+			}
+		}
+		String [] nyr= DateUtil.today().split("-");
+		String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"保险台账.zip";
+		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(fileName));
+		ApacheZipUtils.doCompress1(urlList, bizOut);
+		//不要忘记调用
+		bizOut.close();
+
+		rs.setMsg("下载成功");
+		rs.setCode(200);
+		rs.setData(fileName);
+		rs.setSuccess(true);
+		return rs;
+	}
 
 }
