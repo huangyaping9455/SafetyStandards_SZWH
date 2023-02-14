@@ -24,10 +24,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
-import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxian;
-import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianInfo;
-import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianMingxi;
+import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.service.IJiashiyuanBaoxianService;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleBaoxianMingxiService;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleBaoxianService;
@@ -173,10 +170,10 @@ public class VehicleBaoxianController extends BladeController {
 			return  r;
 		}
 
-		List<VehicleBaoxianMingxi> insurance = new ArrayList<>();
-		VehicleBaoxianInfo baoxianInfo = new VehicleBaoxianInfo();
-		VehicleBaoxian baoxian = new VehicleBaoxian();
 		for(Map<String ,Object> mmap: readAll) {
+			List<VehicleBaoxianMingxi> insurance = new ArrayList<>();
+			VehicleBaoxianInfo baoxianInfo = new VehicleBaoxianInfo();
+			VehicleBaoxian baoxian = new VehicleBaoxian();
 			boolean isFail = false;
 			Dept avbInsureDept = new Dept();
 			Dept avbInsuredDept = new Dept();
@@ -304,25 +301,58 @@ public class VehicleBaoxianController extends BladeController {
 			} else {
 				successNum++;
 			}
-		}
-		baoxianInfo.setBaoxianMingxis(insurance);
-		if(failNum > 0) {
-			r.setCode(500);
-			r.setMsg(errorStr);
-			r.setSuccess(false);
-			r.setData(null);
-			return r;
-		} else {
-			boolean isSave = vehicleBaoxianService.save(baoxian);
-			for (VehicleBaoxianMingxi baoxianMingxi: insurance) {
-				baoxianMingxi.setAvbmAvbIds(baoxian.getAvbIds());
-				if(StringUtil.isEmpty(baoxianMingxi.getAvbmName())){
-					baoxianMingxi.setAvbmName("车辆");
+
+			baoxianInfo.setBaoxianMingxis(insurance);
+			if(failNum > 0) {
+				r.setCode(500);
+				r.setMsg(errorStr);
+				r.setSuccess(false);
+				r.setData(null);
+				return r;
+			} else {
+				QueryWrapper<VehicleBaoxian> vehicleBaoxianQueryWrapper = new QueryWrapper<>();
+				vehicleBaoxianQueryWrapper.lambda().eq(VehicleBaoxian::getAvbPolicyNo,baoxian.getAvbPolicyNo());
+				vehicleBaoxianQueryWrapper.lambda().eq(VehicleBaoxian::getAvbDelete,"0");
+				VehicleBaoxian vehicleBaoxian = vehicleBaoxianService.getBaseMapper().selectOne(vehicleBaoxianQueryWrapper);
+				if (vehicleBaoxian != null){
+					baoxian.setAvbIds(vehicleBaoxian.getAvbIds());
+					vehicleBaoxianService.updateById(baoxian);
+					for (VehicleBaoxianMingxi baoxianMingxi: insurance) {
+						QueryWrapper<VehicleBaoxianMingxi> deptBaoxianMingxiQueryWrapper = new QueryWrapper<>();
+						deptBaoxianMingxiQueryWrapper.lambda().eq(VehicleBaoxianMingxi::getAvbmName,baoxianMingxi.getAvbmName());
+						deptBaoxianMingxiQueryWrapper.lambda().eq(VehicleBaoxianMingxi::getAvbmRisk,baoxianMingxi.getAvbmRisk());
+						deptBaoxianMingxiQueryWrapper.lambda().eq(VehicleBaoxianMingxi::getAvbmAvbIds,baoxian.getAvbIds());
+						VehicleBaoxianMingxi vehicleBaoxianMingxi = vehicleBaoxianMingxiService.getBaseMapper().selectOne(deptBaoxianMingxiQueryWrapper);
+						if (vehicleBaoxianMingxi != null){
+							baoxianMingxi.setAvbmIds(vehicleBaoxianMingxi.getAvbmIds());
+							baoxianMingxi.setAvbmAvbIds(baoxian.getAvbIds());
+							if(StringUtil.isEmpty(baoxianMingxi.getAvbmName())){
+								baoxianMingxi.setAvbmName("车辆");
+							}
+							vehicleBaoxianMingxiService.getBaseMapper().updateById(baoxianMingxi);
+						}else {
+							baoxianMingxi.setAvbmAvbIds(baoxian.getAvbIds());
+							if(StringUtil.isEmpty(baoxianMingxi.getAvbmName())){
+								baoxianMingxi.setAvbmName("车辆");
+							}
+							vehicleBaoxianMingxiService.save(baoxianMingxi);
+						}
+					}
+				}else {
+					boolean isSave = vehicleBaoxianService.save(baoxian);
+					for (VehicleBaoxianMingxi baoxianMingxi: insurance) {
+						baoxianMingxi.setAvbmAvbIds(baoxian.getAvbIds());
+						if(StringUtil.isEmpty(baoxianMingxi.getAvbmName())){
+							baoxianMingxi.setAvbmName("车辆");
+						}
+						vehicleBaoxianMingxiService.save(baoxianMingxi);
+					}
 				}
-				vehicleBaoxianMingxiService.save(baoxianMingxi);
 			}
-			return R.status(isSave);
 		}
+		r.setCode(200);
+		r.setSuccess(true);
+		return r;
 	}
 
 	/**
