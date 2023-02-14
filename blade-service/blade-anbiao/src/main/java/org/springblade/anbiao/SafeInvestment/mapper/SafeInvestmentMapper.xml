@@ -288,13 +288,13 @@
             <include
                 refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) c ON c.id = a.asiDeptIds
-            where 1=1
-            <if test="deptId != null and deptId != ''">
-                AND c.id=#{deptId}
-            </if>
-            <if test="deptName != null and deptName != ''">
-                AND  c.dept_name=#{deptName}
-            </if>
+<!--            where 1=1-->
+<!--            <if test="deptId != null and deptId != ''">-->
+<!--                AND c.id=#{deptId}-->
+<!--            </if>-->
+<!--            <if test="deptName != null and deptName != ''">-->
+<!--                AND  c.dept_name=#{deptName}-->
+<!--            </if>-->
             limit ${total}
         </if>
         <if test="current != 0" >
@@ -308,13 +308,13 @@
             <include
                 refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) c ON c.id = a.asiDeptIds
-            where 1=1
-        <if test="deptId != null and deptId != ''">
-            AND c.id=#{deptId}
-        </if>
-        <if test="deptName != null and deptName != ''">
-            AND  c.dept_name=#{deptName}
-        </if>
+<!--            where 1=1-->
+<!--        <if test="deptId != null and deptId != ''">-->
+<!--            AND c.id=#{deptId}-->
+<!--        </if>-->
+<!--        <if test="deptName != null and deptName != ''">-->
+<!--            AND  c.dept_name=#{deptName}-->
+<!--        </if>-->
             limit ${offsetNo},${size}
         </if>
     </select>
@@ -332,12 +332,6 @@
                                      <include
                                          refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
                                      ) c ON c.id = a.asiDeptIds
-                            ) d where 1=1
-                             <if test="deptId != null and deptId != ''">
-                                 AND d.deptId=#{deptId}
-                             </if>
-                             <if test="deptName != null and deptName != ''">
-                                 AND  d.deptName=#{deptName}
-                             </if>
+                            ) d
     </select>
 </mapper>
