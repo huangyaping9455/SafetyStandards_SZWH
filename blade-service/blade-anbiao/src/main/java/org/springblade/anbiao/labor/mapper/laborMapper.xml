@@ -330,7 +330,10 @@
                 AND a.aliIssueDate >= #{date}
             </if>
             <if test="deptName != null and deptName != ''">
-                AND c.dept_name = #{deptName}
+                AND c.dept_name like '%${deptname}%'
+            </if>
+            <if test="aliName != null and aliName != ''">
+                AND a.aliName like '%${aliName}%'
             </if>
             limit ${total}
         </if>
@@ -357,7 +360,10 @@
                 AND a.aliIssueDate >= #{date}
             </if>
             <if test="deptName != null and deptName != ''">
-                AND c.dept_name = #{deptName}
+                AND c.dept_name like '%${deptname}%'
+            </if>
+            <if test="aliName != null and aliName != ''">
+                AND a.aliName like '%${aliName}%'
             </if>
             limit ${offsetNo},${size}
         </if>
@@ -389,7 +395,10 @@
                                     AND a.aliIssueDate >= #{date}
                                 </if>
                                 <if test="deptName != null and deptName != ''">
-                                    AND c.dept_name = #{deptName}
+                                    AND c.dept_name like '%${deptname}%'
+                                </if>
+                                <if test="aliName != null and aliName != ''">
+                                    AND a.aliName like '%${aliName}%'
                                 </if>
                             ) d
     </select>

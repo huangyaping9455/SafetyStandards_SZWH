@@ -65,6 +65,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -694,7 +695,18 @@ public class JiashiyuanBaoxianController extends BladeController {
 					String templateFileName = templateFile;
 					//alarmServer.getTemplateUrl()+
 //					String fileName = "D:\\ExcelTest\\"+t.getDeptName()+"-保险台账"+a+".xlsx";
-					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+"-保险台账"+".xlsx";
+//					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+"-保险台账"+".xlsx";
+
+					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2];
+					File newFile = new File(fileName);
+					//判断目标文件所在目录是否存在
+					if(!newFile.exists()){
+						//如果目标文件所在的目录不存在，则创建父目录
+						newFile.mkdirs();
+					}
+					fileName = fileName+"/"+t.getDeptName()+"-保险台账.xlsx";
+
+
 					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
 					WriteSheet writeSheet = EasyExcel.writerSheet().build();
 					// 写入list之前的数据

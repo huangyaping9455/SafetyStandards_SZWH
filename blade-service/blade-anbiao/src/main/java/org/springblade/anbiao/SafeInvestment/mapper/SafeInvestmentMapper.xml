@@ -293,7 +293,7 @@
                 AND a.asiYear >= #{asiYear}
             </if>
             <if test="deptName != null and deptName != ''">
-                AND c.dept_name=#{deptName}
+                AND c.dept_name like '%${deptName}%'
             </if>
             limit ${total}
         </if>
@@ -313,7 +313,7 @@
                 AND a.asiYear >= #{asiYear}
             </if>
             <if test="deptName != null and deptName != ''">
-                AND c.dept_name=#{deptName}
+                AND c.dept_name like '%${deptName}%'
             </if>
             limit ${offsetNo},${size}
         </if>
@@ -337,7 +337,7 @@
                                     AND a.asiYear >= #{asiYear}
                                 </if>
                                 <if test="deptName != null and deptName != ''">
-                                    AND c.dept_name=#{deptName}
+                                    AND c.dept_name like '%${deptName}%'
                                 </if>
                             ) d
     </select>

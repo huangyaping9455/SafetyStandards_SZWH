@@ -385,8 +385,8 @@
             <if test="date != null and date != ''">
                 AND a.shigufashengshijian >= #{date}
             </if>
-            <if test="deptName != null and deptName != ''">
-                AND c.dept_name=#{deptName}
+            <if test="deptName != null and deptName != '' ">
+                and c.dept_name like '%${deptName}%'
             </if>
             limit ${total}
         </if>
@@ -410,8 +410,8 @@
             <if test="date != null and date != ''">
                 AND a.shigufashengshijian >= #{date}
             </if>
-            <if test="deptName != null and deptName != ''">
-                AND c.dept_name=#{deptName}
+            <if test="deptName != null and deptName != '' ">
+                and c.dept_name like '%${deptName}%'
             </if>
             limit ${offsetNo},${size}
         </if>
@@ -439,8 +439,8 @@
             <if test="date != null and date != ''">
                 AND a.shigufashengshijian >= #{date}
             </if>
-            <if test="deptName != null and deptName != ''">
-                AND c.dept_name=#{deptName}
+            <if test="deptName != null and deptName != '' ">
+                and c.dept_name like '%${deptName}%'
             </if>
             ) d
     </select>

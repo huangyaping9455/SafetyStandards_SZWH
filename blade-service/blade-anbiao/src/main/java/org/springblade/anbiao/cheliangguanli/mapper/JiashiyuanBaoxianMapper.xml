@@ -314,7 +314,7 @@
 
             where 1=1
             <if test="deptName != null and deptName != ''">
-                AND a.dept_name=#{deptName}
+                AND a.dept_name like '%${deptname}%'
             </if>
             limit ${total}
         </if>
@@ -446,7 +446,7 @@
 
             where 1=1
             <if test="deptName != null and deptName != ''">
-                AND a.dept_name=#{deptName}
+                AND a.dept_name like '%${deptname}%'
             </if>
             limit ${offsetNo},${size}
         </if>
@@ -583,7 +583,7 @@
 
         where 1=1
         <if test="deptName != null and deptName != ''">
-            AND a.dept_name=#{deptName}
+            AND a.dept_name like '%${deptname}%'
         </if>
         ) d
 
