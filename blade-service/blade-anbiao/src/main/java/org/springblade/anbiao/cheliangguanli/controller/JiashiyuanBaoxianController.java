@@ -694,7 +694,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 					String templateFileName = templateFile;
 					//alarmServer.getTemplateUrl()+
 //					String fileName = "D:\\ExcelTest\\"+t.getDeptName()+"-保险台账"+a+".xlsx";
-					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+"-保险台账"+a+".xlsx";
+					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+"-保险台账"+".xlsx";
 					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
 					WriteSheet writeSheet = EasyExcel.writerSheet().build();
 					// 写入list之前的数据
