@@ -333,7 +333,7 @@ public class laborController {
 						//如果目标文件所在的目录不存在，则创建父目录
 						newFile.mkdirs();
 					}
-					fileName = fileName+"/"+t.getDeptName()+"-劳保台账.xlsx";
+					fileName = fileName+"/"+t.getDeptName()+"-"+a+"-劳保台账.xlsx";
 
 //					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+"-劳保台账.xlsx";
 					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();

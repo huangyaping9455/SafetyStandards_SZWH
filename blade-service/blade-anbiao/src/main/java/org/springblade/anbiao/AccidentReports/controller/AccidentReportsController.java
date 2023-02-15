@@ -252,7 +252,7 @@ public class AccidentReportsController {
 						//如果目标文件所在的目录不存在，则创建父目录
 						newFile.mkdirs();
 					}
-					fileName = fileName+"/"+t.getDeptName()+"-事故报告台账.xlsx";
+					fileName = fileName+"/"+t.getDeptName()+"-"+a+"-事故报告台账.xlsx";
 
 
 					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();

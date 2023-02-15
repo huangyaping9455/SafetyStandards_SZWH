@@ -704,7 +704,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 						//如果目标文件所在的目录不存在，则创建父目录
 						newFile.mkdirs();
 					}
-					fileName = fileName+"/"+t.getDeptName()+"-保险台账.xlsx";
+					fileName = fileName+"/"+t.getDeptName()+"-"+a+"-保险台账.xlsx";
 
 
 					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
