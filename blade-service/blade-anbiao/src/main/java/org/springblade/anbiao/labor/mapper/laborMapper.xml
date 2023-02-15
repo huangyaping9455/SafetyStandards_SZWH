@@ -330,7 +330,7 @@
                 AND a.aliIssueDate >= #{date}
             </if>
             <if test="deptName != null and deptName != ''">
-                AND c.dept_name like '%${deptname}%'
+                AND c.dept_name like '%${deptName}%'
             </if>
             <if test="aliName != null and aliName != ''">
                 AND a.aliName like '%${aliName}%'
@@ -360,7 +360,7 @@
                 AND a.aliIssueDate >= #{date}
             </if>
             <if test="deptName != null and deptName != ''">
-                AND c.dept_name like '%${deptname}%'
+                AND c.dept_name like '%${deptName}%'
             </if>
             <if test="aliName != null and aliName != ''">
                 AND a.aliName like '%${aliName}%'
@@ -395,7 +395,7 @@
                                     AND a.aliIssueDate >= #{date}
                                 </if>
                                 <if test="deptName != null and deptName != ''">
-                                    AND c.dept_name like '%${deptname}%'
+                                    AND c.dept_name like '%${deptName}%'
                                 </if>
                                 <if test="aliName != null and aliName != ''">
                                     AND a.aliName like '%${aliName}%'

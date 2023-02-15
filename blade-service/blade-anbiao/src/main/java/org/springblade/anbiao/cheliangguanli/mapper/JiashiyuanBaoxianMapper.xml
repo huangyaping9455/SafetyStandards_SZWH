@@ -212,6 +212,7 @@
             <include
                 refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) a
+            INNER JOIN anbiao_organization k on a.id = k.dept_id and k.jigouleixing in('qiye','geti')
             LEFT JOIN ( SELECT dept_id, COUNT( id ) AS jiashiyuanrenshu FROM anbiao_jiashiyuan WHERE  isdelete = 0 GROUP BY dept_id) b ON b.dept_id = a.id
             LEFT JOIN ( SELECT dept_id, COUNT( id ) AS cheliangshuliang FROM anbiao_vehicle WHERE  is_deleted = 0 GROUP BY dept_id) c ON c.dept_id = a.id
             -- 意外险
@@ -314,7 +315,7 @@
 
             where 1=1
             <if test="deptName != null and deptName != ''">
-                AND a.dept_name like '%${deptname}%'
+                AND a.dept_name like '%${deptName}%'
             </if>
             limit ${total}
         </if>
@@ -344,6 +345,7 @@
             <include
                 refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) a
+            INNER JOIN anbiao_organization k on a.id = k.dept_id and k.jigouleixing in('qiye','geti')
             LEFT JOIN ( SELECT dept_id, COUNT( id ) AS jiashiyuanrenshu FROM anbiao_jiashiyuan WHERE  isdelete = 0 GROUP BY dept_id) b ON b.dept_id = a.id
             LEFT JOIN ( SELECT dept_id, COUNT( id ) AS cheliangshuliang FROM anbiao_vehicle WHERE  is_deleted = 0 GROUP BY dept_id) c ON c.dept_id = a.id
             -- 意外险
@@ -446,7 +448,7 @@
 
             where 1=1
             <if test="deptName != null and deptName != ''">
-                AND a.dept_name like '%${deptname}%'
+                AND a.dept_name like '%${deptName}%'
             </if>
             limit ${offsetNo},${size}
         </if>
@@ -481,6 +483,7 @@
         <include
             refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) a
+        INNER JOIN anbiao_organization k on a.id = k.dept_id and k.jigouleixing in('qiye','geti')
         LEFT JOIN ( SELECT dept_id, COUNT( id ) AS jiashiyuanrenshu FROM anbiao_jiashiyuan WHERE  isdelete = 0 GROUP BY dept_id) b ON b.dept_id = a.id
         LEFT JOIN ( SELECT dept_id, COUNT( id ) AS cheliangshuliang FROM anbiao_vehicle WHERE  is_deleted = 0 GROUP BY dept_id) c ON c.dept_id = a.id
         -- 意外险
@@ -583,7 +586,7 @@
 
         where 1=1
         <if test="deptName != null and deptName != ''">
-            AND a.dept_name like '%${deptname}%'
+            AND a.dept_name like '%${deptName}%'
         </if>
         ) d
 
