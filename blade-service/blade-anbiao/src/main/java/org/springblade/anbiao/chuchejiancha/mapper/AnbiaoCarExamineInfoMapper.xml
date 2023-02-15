@@ -247,6 +247,10 @@
 			and cheliangpaizhao like '%${cheliangpaizhao}%'
 		</if>
 
+        <if test="deptname != null and deptname != ''">
+            and deptName like '%${deptname}%'
+        </if>
+
 	</sql>
 
 	<sql id="orderDeptYHTZSql">

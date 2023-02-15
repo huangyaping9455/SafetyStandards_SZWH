@@ -427,6 +427,10 @@
             and sendDate >= #{date}
         </if>
 
+        <if test="deptName != null and deptName != ''">
+            and deptName like '%${deptName}%'
+        </if>
+
     </sql>
     <sql id="orderTZTJSql">
         <!-- 默认排序规则 -->

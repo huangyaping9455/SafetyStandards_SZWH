@@ -558,8 +558,33 @@ public class DateUtils {
 		}
 	}
 
+	public static List<String> getDays(String startTime, String endTime) {
+		// 返回的日期集合
+		List<String> days = new ArrayList<String>();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			Date start = dateFormat.parse(startTime);
+			Date end = dateFormat.parse(endTime);
+			Calendar tempStart = Calendar.getInstance();
+			tempStart.setTime(start);
+			Calendar tempEnd = Calendar.getInstance();
+			tempEnd.setTime(end);
+			tempEnd.add(Calendar.DATE, +1);// 日期加1(包含结束)
+			while (tempStart.before(tempEnd)) {
+				days.add(dateFormat.format(tempStart.getTime()));
+				tempStart.add(Calendar.DAY_OF_YEAR, 1);
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return days;
+	}
+
 
 	public static void main(String[] args) throws Exception {
+
+		System.out.println(getDays("2022-02-01","2022-02-14"));
+
 //		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //		Date parse = null;
 //		try {
@@ -658,7 +683,7 @@ public class DateUtils {
 //		System.out.println(jidu[1]);
 
 //		System.out.println(getYearFullMonth("2021"));
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 //		System.out.println(format.format(new Date()));
 //		Date nowDate_Date = format.parse(format.format(new Date()));
 //		Date endDate_Date = format.parse("2021-11-17");
@@ -680,16 +705,16 @@ public class DateUtils {
 //		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 //		System.out.println(Integer.parseInt(format.format(new Date()).substring(format.format(new Date()).lastIndexOf("-")+1)));
 
-		String path="/home/henry/Desktop/1.txt";
-		//获得"Desktop/1.txt",并且不需要前面的"/"
-		String oo = path.substring(path.lastIndexOf("/",path.lastIndexOf("/")-1)+1);
-		//"+1"代表在定位时往后取一位,即去掉"/"
-		//"-1"代表以"/"字符定位的位置向前取一位
-		//从path.lastIndexOf("/")-1位置开始向前寻找倒数第二个"/"的位置
-		oo = oo.substring(0, oo.indexOf("/"));
-		System.out.println(oo);
-
-		System.out.println(format.format(str2Date("Mon Nov 22 2021 00:00:00 GMT+0800 (中国标准时间) 00:00:00")));
+//		String path="/home/henry/Desktop/1.txt";
+//		//获得"Desktop/1.txt",并且不需要前面的"/"
+//		String oo = path.substring(path.lastIndexOf("/",path.lastIndexOf("/")-1)+1);
+//		//"+1"代表在定位时往后取一位,即去掉"/"
+//		//"-1"代表以"/"字符定位的位置向前取一位
+//		//从path.lastIndexOf("/")-1位置开始向前寻找倒数第二个"/"的位置
+//		oo = oo.substring(0, oo.indexOf("/"));
+//		System.out.println(oo);
+//
+//		System.out.println(format.format(str2Date("Mon Nov 22 2021 00:00:00 GMT+0800 (中国标准时间) 00:00:00")));
 	}
 
 

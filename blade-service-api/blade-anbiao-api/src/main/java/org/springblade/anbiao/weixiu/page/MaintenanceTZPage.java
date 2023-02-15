@@ -1,6 +1,7 @@
 package org.springblade.anbiao.weixiu.page;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springblade.common.BasePage;
@@ -18,4 +19,7 @@ public class MaintenanceTZPage<T> extends BasePage<T> {
 	private String	deptId;
 
 	private String date;
+
+	@ApiModelProperty(value = "企业名称")
+	private String deptName;
 }

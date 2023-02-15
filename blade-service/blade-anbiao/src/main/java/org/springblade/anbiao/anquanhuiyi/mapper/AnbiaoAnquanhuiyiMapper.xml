@@ -30,6 +30,7 @@
 	<sql id="tableSql">
 		select
 			a.*,
+            concat(left(a.huiyikaishishijian,10),'至',left(a.huiyijieshushijian,10)) as dateShow,
 			b.dept_name as deptname
         <if test="aadApIds != null and aadApIds != '' ">
             ,case when IFNULL(c.add_time,'') != '' then 1 else 0 end as status
