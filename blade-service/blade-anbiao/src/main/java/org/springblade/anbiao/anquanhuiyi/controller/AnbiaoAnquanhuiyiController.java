@@ -3,6 +3,9 @@ package org.springblade.anbiao.anquanhuiyi.controller;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
@@ -11,6 +14,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
+import org.apache.tools.zip.ZipOutputStream;
 import org.springblade.anbiao.anquanhuiyi.VO.AnquanhuiyiledgerVO;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiDetail;
@@ -19,6 +23,12 @@ import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiDetailServic
 import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
+import org.springblade.anbiao.labor.VO.LaborledgerVO;
+import org.springblade.anbiao.labor.entity.LaborlingquEntity;
+import org.springblade.anbiao.labor.page.laborledgerPage;
+import org.springblade.common.configurationBean.FileServer;
+import org.springblade.common.constant.FilePathConstant;
+import org.springblade.common.tool.ApacheZipUtils;
 import org.springblade.common.tool.DateUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.mp.support.Condition;
@@ -28,9 +38,16 @@ import org.springblade.core.tool.api.R;
 import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -54,6 +71,8 @@ public class AnbiaoAnquanhuiyiController {
 	private IAnbiaoAnquanhuiyiDetailService anquanhuiyiDetailService;
 
 	private IOrganizationsService organizationService;
+
+	private FileServer fileServer;
 
 
 	/**
@@ -410,4 +429,149 @@ public class AnbiaoAnquanhuiyiController {
 		IPage<AnquanhuiyiledgerVO> pages = anquanhuiyiService.selectLedgerList(Condition.getPage(query), anquanhuiyiledgerVO);
 		return R.data(pages);
 	}
+
+	@GetMapping("/goExport_Excel")
+	@ApiLog("安全会议台账-导出")
+	@ApiOperation(value = "安全会议台账-导出", notes = "传入deptId、date", position = 22)
+	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String deptId , String date, BladeUser user) throws IOException {
+		int a=1;
+		R rs = new R();
+		List<String> urlList = new ArrayList<>();
+		AnQuanHuiYiPage anQuanHuiYiPage = new AnQuanHuiYiPage();
+		anQuanHuiYiPage.setDeptId(deptId);
+		anQuanHuiYiPage.setHuiyikaishishijian(date);
+		// TODO 渲染其他类型的数据请参考官方文档
+		DecimalFormat df = new DecimalFormat("######0.00");
+		Calendar now = Calendar.getInstance();
+		//word模板地址
+		String templatePath =fileServer.getPathPrefix()+"muban\\"+"Anquanhuiyi.xlsx";
+		String [] nyr= DateUtil.today().split("-");
+		String[] idsss = anQuanHuiYiPage.getDeptId().split(",");
+		//去除素组中重复的数组
+		List<String> listid = new ArrayList<String>();
+		for (int i=0; i<idsss.length; i++) {
+			if(!listid.contains(idsss[i])) {
+				listid.add(idsss[i]);
+			}
+		}
+		//返回一个包含所有对象的指定类型的数组
+		String[] idss= listid.toArray(new String[1]);
+		for(int j = 0;j< idss.length;j++){
+			anQuanHuiYiPage.setSize(0);
+			anQuanHuiYiPage.setCurrent(0);
+			anQuanHuiYiPage.setDeptId(idss[j]);
+			anquanhuiyiService.selectGetAll(anQuanHuiYiPage);
+			List<AnbiaoAnquanhuiyi> anbiaoAnquanhuiyiList = anQuanHuiYiPage.getRecords();
+			//Excel中的结果集ListData
+			if(anbiaoAnquanhuiyiList.size()==0){
+
+			}else if(anbiaoAnquanhuiyiList.size()>3000){
+				rs.setMsg("数据超过30000条无法下载");
+				rs.setCode(500);
+				return rs;
+			}else{
+				for(int i = 0; i < anbiaoAnquanhuiyiList.size() ; i++) {
+					Map<String, Object> map = new HashMap<>();
+					String templateFile = templatePath;
+					// 渲染文本
+					AnbiaoAnquanhuiyi t = anbiaoAnquanhuiyiList.get(i);
+					map.put("deptName", t.getDeptname());
+					map.put("huiyimingcheng", t.getHuiyimingcheng());
+					if(t.getHuiyixingshi().equals("0")){
+						t.setHuiyixingshi("线上");
+					}else{
+						t.setHuiyixingshi("线下");
+					}
+					map.put("huiyixingshi", t.getHuiyixingshi());
+					map.put("huiyikaishishijian", t.getHuiyikaishishijian()+"至"+t.getHuiyijieshushijian());
+					map.put("zhuchiren", t.getZhuchiren());
+					map.put("canhuirenshu", t.getCanhuirenshu());
+					map.put("huiyineirong", t.getHuiyineirong());
+
+					List<AnbiaoAnquanhuiyiDetail> ListData = new ArrayList<>();
+					QueryWrapper<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailQueryWrapper = new QueryWrapper<>();
+					anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,t.getId());
+					List<AnbiaoAnquanhuiyiDetail> details = anquanhuiyiDetailService.getBaseMapper().selectList(anquanhuiyiDetailQueryWrapper);
+					if(details.size() > 0 ){
+						for (int q = 0; q <= details.size() - 1; q++) {
+							AnbiaoAnquanhuiyiDetail aa = new AnbiaoAnquanhuiyiDetail();
+							AnbiaoAnquanhuiyiDetail anbiaoAnquanhuiyiDetail = details.get(q);
+							aa.setAddTime(anbiaoAnquanhuiyiDetail.getAddTime());
+							aa.setAadApName(anbiaoAnquanhuiyiDetail.getAadApName());
+							aa.setAddApHeadPortrait(anbiaoAnquanhuiyiDetail.getAddApHeadPortrait());
+							aa.setAddApAutograph(anbiaoAnquanhuiyiDetail.getAddApAutograph());
+							if (StrUtil.isNotEmpty(aa.getAddApHeadPortrait()) && aa.getAddApHeadPortrait().contains("http") == false) {
+								aa.setAddApHeadPortrait(fileUploadClient.getUrl(aa.getAddApHeadPortrait()));
+								//添加图片到工作表的指定位置
+								try {
+									aa.setImgUrl(new URL(aa.getAddApHeadPortrait()));
+								} catch (MalformedURLException e) {
+									e.printStackTrace();
+								}
+								aa.setImgUrl(aa.getImgUrl());
+							}else if(StrUtil.isNotEmpty(aa.getAddApHeadPortrait())){
+								//添加图片到工作表的指定位置
+								try {
+									aa.setImgUrl(new URL(aa.getAddApHeadPortrait()));
+								} catch (MalformedURLException e) {
+									e.printStackTrace();
+								}
+								aa.setImgUrl(aa.getImgUrl());
+							}else{
+								aa.setImgUrl(null);
+							}
+							if (StrUtil.isNotEmpty(aa.getAddApAutograph()) && aa.getAddApAutograph().contains("http") == false) {
+								aa.setAddApHeadPortrait(fileUploadClient.getUrl(aa.getAddApAutograph()));
+								//添加图片到工作表的指定位置
+								try {
+									aa.setImgUrl(new URL(aa.getAddApAutograph()));
+								} catch (MalformedURLException e) {
+									e.printStackTrace();
+								}
+								aa.setImgUrl(aa.getImgUrl());
+							}else if(StrUtil.isNotEmpty(aa.getAddApAutograph())){
+								//添加图片到工作表的指定位置
+								try {
+									aa.setImgUrl(new URL(aa.getAddApAutograph()));
+								} catch (MalformedURLException e) {
+									e.printStackTrace();
+								}
+								aa.setImgUrl(aa.getImgUrl());
+							}else{
+								aa.setImgUrl(null);
+							}
+							ListData.add(aa);
+						}
+					}
+					// 模板注意 用{} 来表示你要用的变量 如果本来就有"{","}" 特殊字符 用"\{","\}"代替
+					// {} 代表普通变量 {.} 代表是list的变量
+					// 这里模板 删除了list以后的数据，也就是统计的这一行
+					String templateFileName = templateFile;
+					//alarmServer.getTemplateUrl()+
+					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptname()+"-"+t.getHuiyimingcheng()+"-安全会议台账.xlsx";
+					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
+					WriteSheet writeSheet = EasyExcel.writerSheet().build();
+					// 写入list之前的数据
+					excelWriter.fill(map, writeSheet);
+					// 直接写入数据
+					excelWriter.fill(ListData, writeSheet);
+					excelWriter.finish();
+					urlList.add(fileName);
+					a++;
+				}
+			}
+		}
+		String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"安全会议台账.zip";
+		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(fileName));
+		ApacheZipUtils.doCompress1(urlList, bizOut);
+		//不要忘记调用
+		bizOut.close();
+		rs.setMsg("下载成功");
+		rs.setCode(200);
+		rs.setData(fileName);
+		rs.setSuccess(true);
+		return rs;
+	}
+
+
 }

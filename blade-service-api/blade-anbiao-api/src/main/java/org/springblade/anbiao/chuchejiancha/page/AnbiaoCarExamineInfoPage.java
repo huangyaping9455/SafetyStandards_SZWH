@@ -41,6 +41,12 @@ public class AnbiaoCarExamineInfoPage<T> extends BasePage<T> {
 	@ApiModelProperty(value = "排序字段")
 	private String orderColumns;
 
+	@ApiModelProperty(value = "开始日期")
+	private String beginTime;
+
+	@ApiModelProperty(value = "结束日期")
+	private String endTime;
+
 
 }
 

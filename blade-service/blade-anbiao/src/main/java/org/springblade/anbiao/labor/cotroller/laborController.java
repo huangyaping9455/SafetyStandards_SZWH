@@ -58,6 +58,7 @@ public class laborController {
 	private laborLingquService lingquService;
 
 	private FileServer fileServer;
+
 	private IFileUploadClient fileUploadClient;
 
 	@PostMapping("list")
@@ -248,7 +249,7 @@ public class laborController {
 		Calendar now = Calendar.getInstance();
 		//word模板地址
 		String templatePath =fileServer.getPathPrefix()+"muban\\"+"Labor.xlsx";
-
+		String [] nyr= DateUtil.today().split("-");
 		String[] idsss = laborledgerPage.getDeptId().split(",");
 		//去除素组中重复的数组
 		List<String> listid = new ArrayList<String>();
@@ -323,7 +324,7 @@ public class laborController {
 					// 这里模板 删除了list以后的数据，也就是统计的这一行
 					String templateFileName = templateFile;
 					//alarmServer.getTemplateUrl()+
-					String fileName = "D:\\ExcelTest\\"+t.getDeptName()+"-劳保台账"+a+".xlsx";
+					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+"-劳保台账.xlsx";
 					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
 					WriteSheet writeSheet = EasyExcel.writerSheet().build();
 					// 写入list之前的数据
@@ -336,7 +337,7 @@ public class laborController {
 				}
 			}
 		}
-		String [] nyr= DateUtil.today().split("-");
+
 		String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"劳保台账.zip";
 		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(fileName));
 		ApacheZipUtils.doCompress1(urlList, bizOut);

@@ -153,4 +153,12 @@ public class AnbiaoCarExamineInfo implements Serializable {
 	@TableField(exist = false)
 	List<AnbiaoCarExamineInfoRemark> anbiaoCarExamineInfoRemarkList;
 
+//	@ApiModelProperty(value = "车辆牌照")
+//	@TableField(exist = false)
+//	private String cheliangpaizhao;
+//
+//	@ApiModelProperty(value = "驾驶员")
+//	@TableField(exist = false)
+//	private String jiashiyuanxingming;
+
 }

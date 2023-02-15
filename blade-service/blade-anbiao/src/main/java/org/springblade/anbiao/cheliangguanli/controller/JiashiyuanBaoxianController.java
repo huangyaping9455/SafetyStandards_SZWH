@@ -568,7 +568,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 		Calendar now = Calendar.getInstance();
 		//word模板地址
 		String templatePath =fileServer.getPathPrefix()+"muban\\"+"Baoxian.xlsx";
-
+		String [] nyr= DateUtil.today().split("-");
 		String[] idsss = jiaShiYuanLedgerPage.getDeptId().split(",");
 		//去除素组中重复的数组
 		List<String> listid = new ArrayList<String>();
@@ -693,7 +693,8 @@ public class JiashiyuanBaoxianController extends BladeController {
 					// 这里模板 删除了list以后的数据，也就是统计的这一行
 					String templateFileName = templateFile;
 					//alarmServer.getTemplateUrl()+
-					String fileName = "D:\\ExcelTest\\"+t.getDeptName()+"-保险台账"+a+".xlsx";
+//					String fileName = "D:\\ExcelTest\\"+t.getDeptName()+"-保险台账"+a+".xlsx";
+					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+"-保险台账"+a+".xlsx";
 					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
 					WriteSheet writeSheet = EasyExcel.writerSheet().build();
 					// 写入list之前的数据
@@ -706,7 +707,6 @@ public class JiashiyuanBaoxianController extends BladeController {
 				}
 			}
 		}
-		String [] nyr= DateUtil.today().split("-");
 		String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"保险台账.zip";
 		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(fileName));
 		ApacheZipUtils.doCompress1(urlList, bizOut);

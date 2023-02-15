@@ -124,8 +124,8 @@ public class AnbiaoCarExamineInfoServiceImpl extends ServiceImpl<AnbiaoCarExamin
 	}
 
 	@Override
-	public List<AnbiaoCarExamineInfo> selectAnBiaoCheckCarALLPage(AnBiaoCheckCarPage anbiaoCarExamineInfoPage) {
-		List<AnbiaoCarExamineInfo> infoList = mapper.selectAnBiaoCheckCarALLPage(anbiaoCarExamineInfoPage);
+	public List<AnbiaoCarExamineInfoVO> selectAnBiaoCheckCarALLPage(AnBiaoCheckCarPage anbiaoCarExamineInfoPage) {
+		List<AnbiaoCarExamineInfoVO> infoList = mapper.selectAnBiaoCheckCarALLPage(anbiaoCarExamineInfoPage);
 		if(infoList.size()>0){
 			infoList.forEach(item-> {
 				QueryWrapper<AnbiaoCarExamineInfoRemark> remarkQueryWrapper = new QueryWrapper<AnbiaoCarExamineInfoRemark>();

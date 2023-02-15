@@ -131,7 +131,7 @@ public class AccidentReportsController {
 		Calendar now = Calendar.getInstance();
 		//word模板地址
 		String templatePath =fileServer.getPathPrefix()+"muban\\"+"AccidentReports.xlsx";
-
+		String [] nyr= DateUtil.today().split("-");
 		String[] idsss = accidentLedgerReportsPage.getDeptId().split(",");
 		//去除素组中重复的数组
 		List<String> listid = new ArrayList<String>();
@@ -242,7 +242,7 @@ public class AccidentReportsController {
 					// 这里模板 删除了list以后的数据，也就是统计的这一行
 					String templateFileName = templateFile;
 					//alarmServer.getTemplateUrl()+
-					String fileName = "D:\\ExcelTest\\"+t.getChepaihao()+t.getDeptName()+"-事故报告台账"+a+".xlsx";
+					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+"-事故报告台账.xlsx";
 					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
 					WriteSheet writeSheet = EasyExcel.writerSheet().build();
 					// 写入list之前的数据
@@ -255,7 +255,6 @@ public class AccidentReportsController {
 				}
 			}
 		}
-		String [] nyr= DateUtil.today().split("-");
 		String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"事故报告台账.zip";
 		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(fileName));
 		ApacheZipUtils.doCompress1(urlList, bizOut);

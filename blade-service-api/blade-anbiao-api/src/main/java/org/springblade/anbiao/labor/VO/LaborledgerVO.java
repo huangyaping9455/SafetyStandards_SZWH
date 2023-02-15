@@ -16,6 +16,9 @@ public class LaborledgerVO {
 	@ApiModelProperty(value = "主键id")
 	private String aliIds;
 
+	@ApiModelProperty(value = "企业id")
+	private Integer deptId;
+
 	@ApiModelProperty(value = "企业名称")
 	private String deptName;
 

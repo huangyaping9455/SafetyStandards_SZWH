@@ -27,4 +27,10 @@ public class AnBiaoCheckCarPage<T> extends BasePage<T> {
 	@ApiModelProperty(value = "创建人ID")
 	private String createId;
 
+	@ApiModelProperty(value = "开始日期")
+	private String beginTime;
+
+	@ApiModelProperty(value = "结束日期")
+	private String endTime;
+
 }

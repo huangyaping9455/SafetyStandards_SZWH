@@ -23,7 +23,7 @@ public interface AnbiaoCarExamineInfoMapper extends BaseMapper<AnbiaoCarExamineI
 	int selectCarExamineInfoTotal(AnbiaoCarExamineInfoPage anbiaoCarExamineInfoPage);
 
 
-	List<AnbiaoCarExamineInfo> selectAnBiaoCheckCarALLPage(AnBiaoCheckCarPage anbiaoCarExamineInfoPage);
+	List<AnbiaoCarExamineInfoVO> selectAnBiaoCheckCarALLPage(AnBiaoCheckCarPage anbiaoCarExamineInfoPage);
 
 	/**
 	 * 日常检查台账

@@ -171,12 +171,16 @@
     <!-- 查询出车检查列表 -->
     <sql id="tableAnBiaoCheckCarSql">
         select
-            b.dept_name as deptName,a.*,right(a.date,2) as dateShow
+            b.dept_name as deptName,a.*,right(a.date,2) as dateShow,
+            v.cheliangpaizhao,
+            j.jiashiyuanxingming
         from
             anbiao_car_examine_info a
             inner join  (
                 <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) b on a.deptid = b.id
+            LEFT JOIN anbiao_vehicle v on v.id = a.Vehid
+            LEFT JOIN anbiao_jiashiyuan j on j.id = a.jsyid
         where a.isdelete = 0
         <if test="deptName != null and deptName != ''">
             and b.dept_name like '%${deptName}%'
@@ -188,50 +192,66 @@
 
         <if test="date != null and date != ''">
             and year(a.date) = left(#{date},4)
-            and month(a.date) = month(#{date})
+            <if test="date != null and date != '' and date.length() == 10 ">
+                and month(a.date) = month(#{date})
+            </if>
+            <if test="date != null and date != '' and date.length() == 7 ">
+                and month(a.date) = right(#{date},2)
+            </if>
         </if>
+
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != '' ">
+            and a.date >= #{beginTime}
+            and a.date &lt;= #{endTime}
+        </if>
+
         <if test="createId != null and createId != ''">
             and a.createid = #{createId}
         </if>
         order by left(a.date,10) asc
     </sql>
 
-    <select timeout="600" id="selectAnBiaoCheckCarALLPage" resultMap="AnbiaoCarExamineInfoResultMap"
+    <select timeout="600" id="selectAnBiaoCheckCarALLPage" resultMap="AnbiaoCarExamineInfoVOResultMap"
             parameterType="org.springblade.anbiao.chuchejiancha.page.AnBiaoCheckCarPage">
             <include refid="tableAnBiaoCheckCarSql"/>
     </select>
 
 	<sql id="tableDeptYHTZSql">
-		select
-			b.dept_name as deptName,
-			v.cheliangpaizhao,
-			a.date,
-			case when IFNULL(a.id,'') != '' then '1' else '0' end as statusshow
-		from
-			anbiao_car_examine_info a
-		inner join  (
-			<include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
-		) b on a.deptid = b.id
-		LEFT JOIN anbiao_vehicle v on v.id = a.Vehid
-		where a.isdelete = 0
-			and year(a.date) = left(#{date},4)
-			and month(a.date) = right(#{date},2)
+        select
+            b.id as deptId,
+            b.dept_name as deptName,
+            v.cheliangpaizhao,
+            v.id as vehId,
+            j.jiashiyuanxingming,
+            a.date,
+            a.`status`,
+            case when IFNULL(a.id,'') != '' then '1' else '0' end as statusshow,
+            case when IFNULL(a.jcrsignatrue,'') != '' then '1' else '0' end as jcrsignatrueshow
+        from
+            anbiao_car_examine_info a
+        inner join  (
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b on a.deptid = b.id
+        LEFT JOIN anbiao_vehicle v on v.id = a.Vehid
+        LEFT JOIN anbiao_jiashiyuan j on j.id = a.jsyid
+        where a.isdelete = 0
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != '' ">
+            and a.date >= #{beginTime}
+            and a.date &lt;= #{endTime}
+        </if>
 	</sql>
 
 	<sql id="queryDeptYHTZSql">
+
 		<if test="cheliangpaizhao != null and cheliangpaizhao != '' ">
 			and cheliangpaizhao like '%${cheliangpaizhao}%'
-		</if>
-
-		<if test="deptname != null and deptname != '' ">
-			and deptname like '%${deptname}%'
 		</if>
 
 	</sql>
 
 	<sql id="orderDeptYHTZSql">
 		<!-- 默认排序规则 -->
-		ORDER BY cheliangpaizhao desc
+		ORDER BY date desc
 	</sql>
 
 	<select id="selectCarExamineInfoTZPage" resultMap="AnbiaoCarExamineInfoTZVOResultMap"

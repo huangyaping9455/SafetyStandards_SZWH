@@ -3153,7 +3153,7 @@ public class JiaShiYuanController {
 		gangqianpeixun.setAjgUpdateTime(DateUtil.now());
 		gangqianpeixun.setAjgUpdateByName(user.getUserName());
 		gangqianpeixun.setAjgUpdateByIds(user.getUserId().toString());
-		gangqianpeixun.setAjgIds(driverImg.getTjid());
+		gangqianpeixun.setAjgIds(driverImg.getGqid());
 		if (StringUtils.isNotEmpty(driverImg.getQtimg()) && driverImg.getQtimg() != "null"){
 			gangqianpeixun.setAjgTrainingEnclosure(driverImg.getQtimg());
 		}
@@ -3169,7 +3169,7 @@ public class JiaShiYuanController {
 		qita.setAjtUpdateTime(DateUtil.now());
 		qita.setAjtUpdateByName(user.getUserName());
 		qita.setAjtUpdateByIds(user.getUserId().toString());
-		qita.setAjtIds(driverImg.getWzzmid());
+		qita.setAjtIds(driverImg.getQtid());
 		if (StringUtils.isNotEmpty(driverImg.getQtimg()) && driverImg.getQtimg() != "null"){
 			qita.setAjtEnclosure(driverImg.getQtimg());
 		}
@@ -3202,13 +3202,13 @@ public class JiaShiYuanController {
 		return r;
 	}
 
-	@GetMapping("/exportDataWord")
+	@PostMapping("/exportDataWord")
 	@ApiLog("驾驶员-影像资料数据-导出")
 	@ApiOperation(value = "驾驶员-影像资料数据-导出", notes = "传入驾驶员ID", position = 29)
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "jsyId", value = "驾驶员ID（多个以英文逗号隔开）", required = true),
 	})
-	public R exportDataWord(HttpServletRequest request, HttpServletResponse response, String jsyId, BladeUser user) throws IOException{
+	public R exportDataWord(HttpServletRequest request, HttpServletResponse response, @RequestParam String jsyId, @RequestParam String deptId,BladeUser user) throws IOException{
 		R r = new R();
 		if(user == null) {
 			r.setMsg("未授权");

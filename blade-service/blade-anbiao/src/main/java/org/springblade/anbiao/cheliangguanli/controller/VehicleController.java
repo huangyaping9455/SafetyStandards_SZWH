@@ -2416,13 +2416,13 @@ public class VehicleController {
 		return r;
 	}
 
-	@GetMapping("/exportDataWord")
+	@PostMapping("/exportDataWord")
 	@ApiLog("车辆-影像资料数据-导出")
 	@ApiOperation(value = "车辆-影像资料数据-导出", notes = "传入车辆ID", position = 29)
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "vehId", value = "车辆ID（多个以英文逗号隔开）", required = true),
 	})
-	public R exportDataWord(HttpServletRequest request, HttpServletResponse response, String vehId, BladeUser user) throws IOException{
+	public R exportDataWord(HttpServletRequest request, HttpServletResponse response, @RequestParam String vehId, @RequestParam String deptId,BladeUser user) throws IOException{
 		R r = new R();
 		if(user == null) {
 			r.setMsg("未授权");

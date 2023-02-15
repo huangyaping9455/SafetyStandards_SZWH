@@ -372,7 +372,7 @@
             FROM
             (
             SELECT
-            dept_id,shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
+                dept_id,left(shigufashengshijian,10) as shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
             FROM
             anbiao_shigubaogao
             where
@@ -381,13 +381,13 @@
             inner join  (
             <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) c ON c.id = a.dept_id
-<!--            where 1=1-->
-<!--            <if test="deptId != null and deptId != ''">-->
-<!--                AND c.id=#{deptId}-->
-<!--            </if>-->
-<!--            <if test="deptName != null and deptName != ''">-->
-<!--                AND  c.dept_name=#{deptName}-->
-<!--            </if>-->
+            where 1=1
+            <if test="date != null and date != ''">
+                AND a.shigufashengshijian >= #{date}
+            </if>
+            <if test="deptName != null and deptName != ''">
+                AND c.dept_name=#{deptName}
+            </if>
             limit ${total}
         </if>
         <if test="current != 0" >
@@ -398,7 +398,7 @@
             FROM
             (
             SELECT
-            dept_id,shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
+                dept_id,left(shigufashengshijian,10) as shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
             FROM
             anbiao_shigubaogao
             where
@@ -407,13 +407,12 @@
             inner join  (
             <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) c ON c.id = a.dept_id
-<!--            where 1=1-->
-<!--            <if test="deptId != null and deptId != ''">-->
-<!--                AND c.id=#{deptId}-->
-<!--            </if>-->
-<!--            <if test="deptName != null and deptName != ''">-->
-<!--                AND  c.dept_name=#{deptName}-->
-<!--            </if>-->
+            <if test="date != null and date != ''">
+                AND a.shigufashengshijian >= #{date}
+            </if>
+            <if test="deptName != null and deptName != ''">
+                AND c.dept_name=#{deptName}
+            </if>
             limit ${offsetNo},${size}
         </if>
     </select>
@@ -428,15 +427,21 @@
         FROM
             (
                 SELECT
-                    dept_id,shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
+                    dept_id,left(shigufashengshijian,10) as shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
                 FROM
                     anbiao_shigubaogao
                 where
                     is_deleted=0
             ) a
-        inner join  (
-        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
-        ) c ON c.id = a.dept_id
+            inner join  (
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) c ON c.id = a.dept_id
+            <if test="date != null and date != ''">
+                AND a.shigufashengshijian >= #{date}
+            </if>
+            <if test="deptName != null and deptName != ''">
+                AND c.dept_name=#{deptName}
+            </if>
             ) d
     </select>
 </mapper>

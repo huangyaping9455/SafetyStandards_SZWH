@@ -1,8 +1,12 @@
 package org.springblade.anbiao.anquanhuiyi.entity;
 
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
+
+import java.net.URL;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
@@ -64,6 +68,11 @@ public class AnbiaoAnquanhuiyiDetail implements Serializable {
     @ApiModelProperty(value = "参会时间",required = true)
     @TableField("add_time")
     private String addTime;
+
+	@ColumnWidth(15)
+	@ExcelProperty("图片")
+	@TableField(exist = false)
+	private URL imgUrl;
 
 
 }

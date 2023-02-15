@@ -325,13 +325,13 @@
             <include
                 refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) c ON c.id = a.ali_dept_ids
-<!--            where 1=1-->
-<!--            <if test="deptId != null and deptId != ''">-->
-<!--                AND c.id=#{deptId}-->
-<!--            </if>-->
-<!--            <if test="deptName != null and deptName != ''">-->
-<!--                AND  c.dept_name=#{deptName}-->
-<!--            </if>-->
+            where 1=1
+            <if test="date != null and date != ''">
+                AND a.aliIssueDate >= #{date}
+            </if>
+            <if test="deptName != null and deptName != ''">
+                AND c.dept_name = #{deptName}
+            </if>
             limit ${total}
         </if>
         <if test="current != 0" >
@@ -352,13 +352,13 @@
             <include
                 refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) c ON c.id = a.ali_dept_ids
-<!--            where 1=1-->
-<!--            <if test="deptId != null and deptId != ''">-->
-<!--                AND c.id=#{deptId}-->
-<!--            </if>-->
-<!--            <if test="deptName != null and deptName != ''">-->
-<!--                AND  c.dept_name=#{deptName}-->
-<!--            </if>-->
+            where 1=1
+            <if test="date != null and date != ''">
+                AND a.aliIssueDate >= #{date}
+            </if>
+            <if test="deptName != null and deptName != ''">
+                AND c.dept_name = #{deptName}
+            </if>
             limit ${offsetNo},${size}
         </if>
     </select>
@@ -384,6 +384,13 @@
                                      <include
                                          refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
                                      ) c ON c.id = a.ali_dept_ids
+                                where 1=1
+                                <if test="date != null and date != ''">
+                                    AND a.aliIssueDate >= #{date}
+                                </if>
+                                <if test="deptName != null and deptName != ''">
+                                    AND c.dept_name = #{deptName}
+                                </if>
                             ) d
     </select>
 </mapper>

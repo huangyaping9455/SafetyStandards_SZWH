@@ -220,13 +220,13 @@ public class SafeInvestmentController extends BladeController {
 		List<String> urlList = new ArrayList<>();
 		SafelInfoledgerPage safelInfoledgerPage = new SafelInfoledgerPage();
 		safelInfoledgerPage.setDeptId(deptId);
-//		anbiaoHiddenDangerPage.setDate(date);
+		safelInfoledgerPage.setAsiYear(date);
 		// TODO 渲染其他类型的数据请参考官方文档
 		DecimalFormat df = new DecimalFormat("######0.00");
 		Calendar now = Calendar.getInstance();
 		//word模板地址
 		String templatePath =fileServer.getPathPrefix()+"muban\\"+"SafeInvestment.xlsx";
-
+		String [] nyr= DateUtil.today().split("-");
 		String[] idsss = safelInfoledgerPage.getDeptId().split(",");
 		//去除素组中重复的数组
 		List<String> listid = new ArrayList<String>();
@@ -291,7 +291,7 @@ public class SafeInvestmentController extends BladeController {
 					// 这里模板 删除了list以后的数据，也就是统计的这一行
 					String templateFileName = templateFile;
 					//alarmServer.getTemplateUrl()+
-					String fileName = "D:\\ExcelTest\\"+t.getAsidEntryName()+t.getDeptName()+"-安全投入台账"+a+".xlsx";
+					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+t.getAsiYear()+"-安全投入台账.xlsx";
 					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
 					WriteSheet writeSheet = EasyExcel.writerSheet().build();
 					// 写入list之前的数据
@@ -304,7 +304,6 @@ public class SafeInvestmentController extends BladeController {
 				}
 			}
 		}
-		String [] nyr= DateUtil.today().split("-");
 		String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"安全投入台账.zip";
 		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(fileName));
 		ApacheZipUtils.doCompress1(urlList, bizOut);
