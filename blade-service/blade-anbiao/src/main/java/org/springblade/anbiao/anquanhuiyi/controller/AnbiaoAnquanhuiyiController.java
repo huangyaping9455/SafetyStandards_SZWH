@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tools.zip.ZipOutputStream;
+import org.springblade.anbiao.anquanhuiyi.VO.AnbiaoAnquanhuiyiVO;
 import org.springblade.anbiao.anquanhuiyi.VO.AnquanhuiyiledgerVO;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiDetail;
@@ -30,6 +31,7 @@ import org.springblade.common.configurationBean.FileServer;
 import org.springblade.common.constant.FilePathConstant;
 import org.springblade.common.tool.ApacheZipUtils;
 import org.springblade.common.tool.DateUtils;
+import org.springblade.common.tool.ExcelUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
@@ -40,6 +42,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -483,7 +486,7 @@ public class AnbiaoAnquanhuiyiController {
 						t.setHuiyixingshi("线下");
 					}
 					map.put("huiyixingshi", t.getHuiyixingshi());
-					map.put("huiyikaishishijian", t.getHuiyikaishishijian()+"至"+t.getHuiyijieshushijian());
+					map.put("huiyikaishishijian", t.getDateShow());
 					map.put("zhuchiren", t.getZhuchiren());
 					map.put("canhuirenshu", t.getCanhuirenshu());
 					map.put("huiyineirong", t.getHuiyineirong());
@@ -548,7 +551,14 @@ public class AnbiaoAnquanhuiyiController {
 					// 这里模板 删除了list以后的数据，也就是统计的这一行
 					String templateFileName = templateFile;
 					//alarmServer.getTemplateUrl()+
-					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptname()+"-"+t.getHuiyimingcheng()+"-安全会议台账.xlsx";
+					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2];
+					File newFile = new File(fileName);
+					//判断目标文件所在目录是否存在
+					if(!newFile.exists()){
+						//如果目标文件所在的目录不存在，则创建父目录
+						newFile.mkdirs();
+					}
+					fileName = fileName+"/"+t.getDeptname()+"-"+t.getHuiyimingcheng()+"-"+t.getDateShow()+"-安全会议台账.xlsx";
 					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
 					WriteSheet writeSheet = EasyExcel.writerSheet().build();
 					// 写入list之前的数据
@@ -562,6 +572,7 @@ public class AnbiaoAnquanhuiyiController {
 			}
 		}
 		String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"安全会议台账.zip";
+		ExcelUtils.deleteFile(fileName);
 		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(fileName));
 		ApacheZipUtils.doCompress1(urlList, bizOut);
 		//不要忘记调用
@@ -573,5 +584,42 @@ public class AnbiaoAnquanhuiyiController {
 		return rs;
 	}
 
+	/**
+	 * 查询详情
+	 */
+	@GetMapping("/standingBookDetail")
+	@ApiLog("安全会议台账-详情")
+	@ApiOperation(value = "安全会议台账-详情",notes = "传入数据Id")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "Id", value = "数据Id", required = true)})
+	public R standingBookDetail(String Id,String deptName){
+		R r = new R();
+		AnbiaoAnquanhuiyi anquanhuiyiInfo = anquanhuiyiService.getById(Id);
+		if (anquanhuiyiInfo != null){
+			QueryWrapper<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailQueryWrapper = new QueryWrapper<>();
+			anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,Id);
+			anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAddApBeingJoined,"0");
+			List<AnbiaoAnquanhuiyiDetail> details = anquanhuiyiDetailService.getBaseMapper().selectList(anquanhuiyiDetailQueryWrapper);
+			AnbiaoAnquanhuiyiVO anquanhuiyiVO = new AnbiaoAnquanhuiyiVO();
+			anquanhuiyiVO.setDeptName(deptName);
+			anquanhuiyiVO.setHuiyimingcheng(anquanhuiyiInfo.getHuiyimingcheng());
+			String dates = anquanhuiyiInfo.getHuiyijieshushijian().substring(0,10)+"至"+anquanhuiyiInfo.getHuiyijieshushijian().substring(0,10);
+			anquanhuiyiVO.setDateShow(dates);
+			String message = "";
+			if (details != null && details.size() > 0){
+				for (AnbiaoAnquanhuiyiDetail detail:details) {
+					message += detail.getAadApName()+",";
+				}
+			}
+			anquanhuiyiVO.setMessage(message);
+			r.setData(anquanhuiyiVO);
+			r.setCode(200);
+			r.setMsg("获取成功");
+			return r;
+		}else {
+			r.setCode(200);
+			r.setMsg("暂无数据");
+			return r;
+		}
+	}
 
 }

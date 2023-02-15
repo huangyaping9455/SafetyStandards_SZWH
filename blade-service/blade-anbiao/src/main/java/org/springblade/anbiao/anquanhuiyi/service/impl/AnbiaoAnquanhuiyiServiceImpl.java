@@ -1,16 +1,20 @@
 package org.springblade.anbiao.anquanhuiyi.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.anquanhuiyi.VO.AnquanhuiyiledgerVO;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
+import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiDetail;
+import org.springblade.anbiao.anquanhuiyi.mapper.AnbiaoAnquanhuiyiDetailMapper;
 import org.springblade.anbiao.anquanhuiyi.mapper.AnbiaoAnquanhuiyiMapper;
 import org.springblade.anbiao.anquanhuiyi.page.AnQuanHuiYiPage;
 import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * <p>
@@ -26,6 +30,8 @@ public class AnbiaoAnquanhuiyiServiceImpl extends ServiceImpl<AnbiaoAnquanhuiyiM
 
 	AnbiaoAnquanhuiyiMapper mapper;
 
+	AnbiaoAnquanhuiyiDetailMapper detailMapper;
+
 	@Override
 	public AnQuanHuiYiPage<AnbiaoAnquanhuiyi> selectGetAll(AnQuanHuiYiPage anQuanHuiYiPage) {
 		Integer total = mapper.selectGetAllTotal(anQuanHuiYiPage);
@@ -38,6 +44,17 @@ public class AnbiaoAnquanhuiyiServiceImpl extends ServiceImpl<AnbiaoAnquanhuiyiM
 				return anQuanHuiYiPage;
 			} else {
 				List<AnbiaoAnquanhuiyi> bsPolicyInfoList = mapper.selectGetAll(anQuanHuiYiPage);
+				if(bsPolicyInfoList.size() >= 1) {
+					bsPolicyInfoList.forEach(item-> {
+						QueryWrapper<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailQueryWrapper = new QueryWrapper<>();
+						anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,item.getId());
+						anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAddApBeingJoined,"1");
+						List<AnbiaoAnquanhuiyiDetail> detail = detailMapper.selectList(anquanhuiyiDetailQueryWrapper);
+						if (detail != null && detail.size() > 0){
+							item.setShijicanhuirenshu(detail.size()+1);
+						}
+					});
+				}
 				anQuanHuiYiPage.setRecords(bsPolicyInfoList);
 				return anQuanHuiYiPage;
 			}
@@ -60,6 +77,17 @@ public class AnbiaoAnquanhuiyiServiceImpl extends ServiceImpl<AnbiaoAnquanhuiyiM
 			anQuanHuiYiPage.setTotal(total);
 			anQuanHuiYiPage.setOffsetNo(offsetNo);
 			List<AnbiaoAnquanhuiyi> bsPolicyInfoList = mapper.selectGetAll(anQuanHuiYiPage);
+			if(bsPolicyInfoList.size() >= 1) {
+				bsPolicyInfoList.forEach(item-> {
+					QueryWrapper<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailQueryWrapper = new QueryWrapper<>();
+					anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,item.getId());
+					anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAddApBeingJoined,"1");
+					List<AnbiaoAnquanhuiyiDetail> detail = detailMapper.selectList(anquanhuiyiDetailQueryWrapper);
+					if (detail != null && detail.size() > 0){
+						item.setShijicanhuirenshu(detail.size()+1);
+					}
+				});
+			}
 			anQuanHuiYiPage.setRecords(bsPolicyInfoList);
 			return anQuanHuiYiPage;
 		}

@@ -142,4 +142,12 @@ public class AnbiaoAnquanhuiyi implements Serializable {
 	@ApiModelProperty(value = "月份")
 	@TableField(exist = false)
 	private String months;
+
+	@ApiModelProperty(value = "会议日期区间")
+	@TableField(exist = false)
+	private String dateShow;
+
+	@ApiModelProperty(value = "实际参会人数")
+	@TableField(exist = false)
+	private Integer shijicanhuirenshu = 0;
 }

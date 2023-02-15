@@ -6,13 +6,13 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.apache.tools.zip.ZipOutputStream;
 import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamine;
 import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamineInfo;
 import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamineInfoRemark;
@@ -24,6 +24,7 @@ import org.springblade.anbiao.chuchejiancha.service.IAnbiaoCarExamineInfoService
 import org.springblade.anbiao.chuchejiancha.service.IAnbiaoCarExamineService;
 import org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineInfoTZVO;
 import org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineInfoVO;
+import org.springblade.anbiao.chuchejiancha.vo.CarExamineMessageVO;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
 import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
 import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
@@ -33,17 +34,18 @@ import org.springblade.anbiao.yinhuanpaicha.service.IAnbiaoHiddenDangerService;
 import org.springblade.common.configurationBean.FileServer;
 import org.springblade.common.constant.FilePathConstant;
 import org.springblade.common.tool.ApacheZipUtils;
+import org.springblade.common.tool.DateUtils;
+import org.springblade.common.tool.ExcelUtils;
 import org.springblade.common.tool.StringUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
 import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.web.bind.annotation.*;
-import org.apache.tools.zip.ZipOutputStream;
-import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -675,6 +677,7 @@ public class AnbiaoCarExamineInfoController {
 			}
 		}
 		String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"车辆日常检查表.zip";
+		ExcelUtils.deleteFile(fileName);
 		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(fileName));
 		ApacheZipUtils.doCompress1(urlList, bizOut);
 		//不要忘记调用
@@ -725,7 +728,7 @@ public class AnbiaoCarExamineInfoController {
 				rs.setCode(500);
 				return rs;
 			}else{
-				for( int i = 1 ; i < examineInfoList.size() ; i++) {
+				for( int i = 0 ; i < examineInfoList.size() ; i++) {
 					//Excel中的结果集ListData
 					List<CarExamineTJMX> ListData1 = new ArrayList<>();
 					Map<String, Object> map = new HashMap<>();
@@ -736,7 +739,7 @@ public class AnbiaoCarExamineInfoController {
 					CarExamineTJMX ca = (CarExamineTJMX) c1.newInstance();
 					String str = "";
 					String dates = "";
-					ca.setXuhao(i);
+					ca.setXuhao(i+1);
 					ca.setVehNo(t.getCheliangpaizhao());
 					for( int p = 1 ; p < 32 ; p++) {
 						String pp = String.valueOf(p);
@@ -772,7 +775,14 @@ public class AnbiaoCarExamineInfoController {
 					// 这里模板 删除了list以后的数据，也就是统计的这一行
 					String templateFileName = templateFile;
 					//alarmServer.getTemplateUrl()+
-					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+"-车辆安全检查台账.xlsx";
+					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2];
+					File newFile = new File(fileName);
+					//判断目标文件所在目录是否存在
+					if(!newFile.exists()){
+						//如果目标文件所在的目录不存在，则创建父目录
+						newFile.mkdirs();
+					}
+					fileName = fileName+"/"+t.getDeptName()+"-车辆安全检查台账.xlsx";
 					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
 					WriteSheet writeSheet = EasyExcel.writerSheet().build();
 					// 写入list之前的数据
@@ -832,6 +842,48 @@ public class AnbiaoCarExamineInfoController {
 //		}
 //		System.out.println(JSON.toJSONString(ca));
 //	}
+
+	@PostMapping("/standingBookDetail")
+	@ApiLog("安全检查数据-详情")
+	@ApiOperation(value = "安全检查数据-详情", notes = "传入AnBiaoCheckCarPage", position = 18)
+	public R standingBookDetail(@RequestBody AnBiaoCheckCarPage carExamineInfoPage, BladeUser user) {
+		R r = new R();
+		if(user == null){
+			r.setMsg("未授权");
+			r.setCode(401);
+			return r;
+		}
+		List<AnbiaoCarExamineInfoVO> list= iAnbiaoCarExamineInfoService.selectAnBiaoCheckCarALLPage(carExamineInfoPage);
+		if(list != null && list.size() >0){
+			CarExamineMessageVO messageVO = new CarExamineMessageVO();
+			messageVO.setDateShow(carExamineInfoPage.getBeginTime()+"至"+carExamineInfoPage.getEndTime());
+			String message = "";
+			for (AnbiaoCarExamineInfoVO detail:list) {
+				messageVO.setVehNo(detail.getCheliangpaizhao());
+				messageVO.setDriverName(detail.getJiashiyuanxingming());
+				List<String> stringList = DateUtils.getDays(carExamineInfoPage.getBeginTime(),carExamineInfoPage.getEndTime());
+				String days = "";
+				int count = 0;
+				for (int i = 0; i < stringList.size(); i++) {
+					if (!detail.getDate().equals(stringList.get(i))) {
+						count += 1;
+						days += stringList.get(i).substring(stringList.get(i).length()-2)+"/";
+					}
+				}
+				messageVO.setCount(count);
+				message += count+"次"+"未做日常检查（"+days+"）";
+			}
+			messageVO.setMessage(message);
+			r.setData(messageVO);
+			r.setCode(200);
+			r.setMsg("获取成功");
+			return r;
+		}else {
+			r.setCode(200);
+			r.setMsg("暂无数据");
+			return r;
+		}
+	}
 
 
 }
