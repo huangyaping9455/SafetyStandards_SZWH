@@ -226,6 +226,9 @@
             LEFT JOIN ( SELECT ajbm_avb_ids,SUM( ajbm_company_amount ) AS yiwaixianzongbaoxianjine, SUM( ajbm_basic_premium ) AS yiwaixianzongbaofeijine FROM anbiao_jiashiyuan_baoxian_mingxi WHERE ajbm_risk = "意外险" GROUP BY ajbm_avb_ids) d ON ajb_ids = d.ajbm_avb_ids
             WHERE
             ajb_delete=0
+            <if test="date != null and date != ''">
+                and ajb_insurance_period_start >= #{date}
+            </if>
             GROUP BY ajb_dept_ids
             ) d ON d.ajb_dept_ids = a.id
 
@@ -240,6 +243,9 @@
             LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS chexianzongbaoxianjine, sum(avbm_basic_premium) AS chexianzongbaofeijine FROM anbiao_vehicle_baoxian_mingxi WHERE avbm_risk != "交强险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
             WHERE
             avb_delete=0
+            <if test="date != null and date != ''">
+                and avb_insurance_period_start >= #{date}
+            </if>
             GROUP BY avb_dept_ids
             )e on e.avb_dept_ids	=a.id
 
@@ -254,6 +260,9 @@
             LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS jiaoqiangxianzongjine, sum(avbm_basic_premium) AS jiaoqiangxianzongbaofeijine FROM anbiao_vehicle_baoxian_mingxi WHERE avbm_risk = "交强险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
             WHERE
             avb_delete=0
+            <if test="date != null and date != ''">
+                and avb_insurance_period_start >= #{date}
+            </if>
             GROUP BY avb_dept_ids
             )f on f.avb_dept_ids	=a.id
 
@@ -268,6 +277,9 @@
             LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS huoguizongbaoxianjine, sum(avbm_basic_premium) AS huoguizongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk = "货柜险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
             WHERE
             avb_delete=0
+            <if test="date != null and date != ''">
+                and avb_insurance_period_start >= #{date}
+            </if>
             GROUP BY avb_dept_ids
             )g on g.avb_dept_ids	=a.id
 
@@ -282,6 +294,9 @@
             LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS anzezongbaoxianjine, sum(avbm_basic_premium) AS anzezongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk = "安责险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
             WHERE
             avb_delete=0
+            <if test="date != null and date != ''">
+                and avb_insurance_period_start >= #{date}
+            </if>
             GROUP BY avb_dept_ids
             )h on h.avb_dept_ids	=a.id
 
@@ -296,6 +311,9 @@
             LEFT JOIN ( SELECT ajbm_avb_ids,SUM( ajbm_company_amount ) AS qitazongbaoxianjine, SUM( ajbm_basic_premium ) AS qitazongbaofeijine FROM anbiao_jiashiyuan_baoxian_mingxi WHERE ajbm_risk != "意外险" GROUP BY ajbm_avb_ids) d ON ajb_ids = d.ajbm_avb_ids
             WHERE
             ajb_delete=0
+            <if test="date != null and date != ''">
+                and ajb_insurance_period_start >= #{date}
+            </if>
             GROUP BY ajb_dept_ids
             ) i ON i.ajb_dept_ids = a.id
 
@@ -310,6 +328,9 @@
             LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS qitazongbaoxianjine, sum(avbm_basic_premium) AS qitazongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk != "安责险" and avbm_risk != "货柜险" GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
             WHERE
             avb_delete=0
+            <if test="date != null and date != ''">
+                and avb_insurance_period_start >= #{date}
+            </if>
             GROUP BY avb_dept_ids
             )j on j.avb_dept_ids	=a.id
 
@@ -359,6 +380,9 @@
             LEFT JOIN ( SELECT ajbm_avb_ids,SUM( ajbm_company_amount ) AS yiwaixianzongbaoxianjine, SUM( ajbm_basic_premium ) AS yiwaixianzongbaofeijine FROM anbiao_jiashiyuan_baoxian_mingxi WHERE ajbm_risk = "意外险" GROUP BY ajbm_avb_ids) d ON ajb_ids = d.ajbm_avb_ids
             WHERE
             ajb_delete=0
+            <if test="date != null and date != ''">
+                and ajb_insurance_period_start >= #{date}
+            </if>
             GROUP BY ajb_dept_ids
             ) d ON d.ajb_dept_ids = a.id
 
@@ -373,6 +397,9 @@
             LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS chexianzongbaoxianjine, sum(avbm_basic_premium) AS chexianzongbaofeijine FROM anbiao_vehicle_baoxian_mingxi WHERE avbm_risk != "交强险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
             WHERE
             avb_delete=0
+            <if test="date != null and date != ''">
+                and avb_insurance_period_start >= #{date}
+            </if>
             GROUP BY avb_dept_ids
             )e on e.avb_dept_ids	=a.id
 
@@ -387,6 +414,9 @@
             LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS jiaoqiangxianzongjine, sum(avbm_basic_premium) AS jiaoqiangxianzongbaofeijine FROM anbiao_vehicle_baoxian_mingxi WHERE avbm_risk = "交强险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
             WHERE
             avb_delete=0
+            <if test="date != null and date != ''">
+                and avb_insurance_period_start >= #{date}
+            </if>
             GROUP BY avb_dept_ids
             )f on f.avb_dept_ids	=a.id
 
@@ -401,6 +431,9 @@
             LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS huoguizongbaoxianjine, sum(avbm_basic_premium) AS huoguizongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk = "货柜险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
             WHERE
             avb_delete=0
+            <if test="date != null and date != ''">
+                and avb_insurance_period_start >= #{date}
+            </if>
             GROUP BY avb_dept_ids
             )g on g.avb_dept_ids	=a.id
 
@@ -415,6 +448,9 @@
             LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS anzezongbaoxianjine, sum(avbm_basic_premium) AS anzezongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk = "安责险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
             WHERE
             avb_delete=0
+            <if test="date != null and date != ''">
+                and avb_insurance_period_start >= #{date}
+            </if>
             GROUP BY avb_dept_ids
             )h on h.avb_dept_ids	=a.id
 
@@ -429,6 +465,9 @@
             LEFT JOIN ( SELECT ajbm_avb_ids,SUM( ajbm_company_amount ) AS qitazongbaoxianjine, SUM( ajbm_basic_premium ) AS qitazongbaofeijine FROM anbiao_jiashiyuan_baoxian_mingxi WHERE ajbm_risk != "意外险" GROUP BY ajbm_avb_ids) d ON ajb_ids = d.ajbm_avb_ids
             WHERE
             ajb_delete=0
+            <if test="date != null and date != ''">
+                and ajb_insurance_period_start >= #{date}
+            </if>
             GROUP BY ajb_dept_ids
             ) i ON i.ajb_dept_ids = a.id
 
@@ -443,6 +482,9 @@
             LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS qitazongbaoxianjine, sum(avbm_basic_premium) AS qitazongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk != "安责险" and avbm_risk != "货柜险" GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
             WHERE
             avb_delete=0
+            <if test="date != null and date != ''">
+                and avb_insurance_period_start >= #{date}
+            </if>
             GROUP BY avb_dept_ids
             )j on j.avb_dept_ids	=a.id
 
@@ -497,6 +539,9 @@
         LEFT JOIN ( SELECT ajbm_avb_ids,SUM( ajbm_company_amount ) AS yiwaixianzongbaoxianjine, SUM( ajbm_basic_premium ) AS yiwaixianzongbaofeijine FROM anbiao_jiashiyuan_baoxian_mingxi WHERE ajbm_risk = "意外险" GROUP BY ajbm_avb_ids) d ON ajb_ids = d.ajbm_avb_ids
         WHERE
         ajb_delete=0
+        <if test="date != null and date != ''">
+            and ajb_insurance_period_start >= #{date}
+        </if>
         GROUP BY ajb_dept_ids
         ) d ON d.ajb_dept_ids = a.id
 
@@ -511,6 +556,9 @@
         LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS chexianzongbaoxianjine, sum(avbm_basic_premium) AS chexianzongbaofeijine FROM anbiao_vehicle_baoxian_mingxi WHERE avbm_risk != "交强险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
         WHERE
         avb_delete=0
+        <if test="date != null and date != ''">
+            and avb_insurance_period_start >= #{date}
+        </if>
         GROUP BY avb_dept_ids
         )e on e.avb_dept_ids	=a.id
 
@@ -525,6 +573,9 @@
         LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS jiaoqiangxianzongjine, sum(avbm_basic_premium) AS jiaoqiangxianzongbaofeijine FROM anbiao_vehicle_baoxian_mingxi WHERE avbm_risk = "交强险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
         WHERE
         avb_delete=0
+        <if test="date != null and date != ''">
+            and avb_insurance_period_start >= #{date}
+        </if>
         GROUP BY avb_dept_ids
         )f on f.avb_dept_ids	=a.id
 
@@ -539,6 +590,9 @@
         LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS huoguizongbaoxianjine, sum(avbm_basic_premium) AS huoguizongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk = "货柜险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
         WHERE
         avb_delete=0
+        <if test="date != null and date != ''">
+            and avb_insurance_period_start >= #{date}
+        </if>
         GROUP BY avb_dept_ids
         )g on g.avb_dept_ids	=a.id
 
@@ -553,6 +607,9 @@
         LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS anzezongbaoxianjine, sum(avbm_basic_premium) AS anzezongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk = "安责险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
         WHERE
         avb_delete=0
+        <if test="date != null and date != ''">
+            and avb_insurance_period_start >= #{date}
+        </if>
         GROUP BY avb_dept_ids
         )h on h.avb_dept_ids	=a.id
 
@@ -567,6 +624,9 @@
         LEFT JOIN ( SELECT ajbm_avb_ids,SUM( ajbm_company_amount ) AS qitazongbaoxianjine, SUM( ajbm_basic_premium ) AS qitazongbaofeijine FROM anbiao_jiashiyuan_baoxian_mingxi WHERE ajbm_risk != "意外险" GROUP BY ajbm_avb_ids) d ON ajb_ids = d.ajbm_avb_ids
         WHERE
         ajb_delete=0
+        <if test="date != null and date != ''">
+            and ajb_insurance_period_start >= #{date}
+        </if>
         GROUP BY ajb_dept_ids
         ) i ON i.ajb_dept_ids = a.id
 
@@ -581,6 +641,9 @@
         LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS qitazongbaoxianjine, sum(avbm_basic_premium) AS qitazongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk != "安责险" and avbm_risk != "货柜险" GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
         WHERE
         avb_delete=0
+        <if test="date != null and date != ''">
+            and avb_insurance_period_start >= #{date}
+        </if>
         GROUP BY avb_dept_ids
         )j on j.avb_dept_ids	=a.id
 
