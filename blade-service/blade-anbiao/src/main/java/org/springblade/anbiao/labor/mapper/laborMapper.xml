@@ -335,6 +335,9 @@
             <if test="aliName != null and aliName != ''">
                 AND a.aliName like '%${aliName}%'
             </if>
+            <if test="aliIds != null and aliIds != ''">
+                AND a.ali_ids=#{aliIds}
+            </if>
             limit ${total}
         </if>
         <if test="current != 0" >
@@ -364,6 +367,9 @@
             </if>
             <if test="aliName != null and aliName != ''">
                 AND a.aliName like '%${aliName}%'
+            </if>
+            <if test="aliIds != null and aliIds != ''">
+                AND a.ali_ids=#{aliIds}
             </if>
             limit ${offsetNo},${size}
         </if>
@@ -399,6 +405,9 @@
                                 </if>
                                 <if test="aliName != null and aliName != ''">
                                     AND a.aliName like '%${aliName}%'
+                                </if>
+                                <if test="aliIds != null and aliIds != ''">
+                                    AND a.ali_ids=#{aliIds}
                                 </if>
                             ) d
     </select>

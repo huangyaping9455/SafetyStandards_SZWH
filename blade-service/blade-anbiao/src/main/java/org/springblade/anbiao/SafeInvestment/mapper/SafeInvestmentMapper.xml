@@ -295,6 +295,9 @@
             <if test="deptName != null and deptName != ''">
                 AND c.dept_name like '%${deptName}%'
             </if>
+            <if test="asiIds != null and asiIds != ''">
+                AND a.asiIds = #{asiIds}
+            </if>
             limit ${total}
         </if>
         <if test="current != 0" >
@@ -314,6 +317,9 @@
             </if>
             <if test="deptName != null and deptName != ''">
                 AND c.dept_name like '%${deptName}%'
+            </if>
+            <if test="asiIds != null and asiIds != ''">
+                AND a.asiIds = #{asiIds}
             </if>
             limit ${offsetNo},${size}
         </if>
@@ -339,6 +345,9 @@
                                 <if test="deptName != null and deptName != ''">
                                     AND c.dept_name like '%${deptName}%'
                                 </if>
-                            ) d
+                                <if test="asiIds != null and asiIds != ''">
+                                    AND a.asiIds = #{asiIds}
+                                </if>
+                                     ) d
     </select>
 </mapper>

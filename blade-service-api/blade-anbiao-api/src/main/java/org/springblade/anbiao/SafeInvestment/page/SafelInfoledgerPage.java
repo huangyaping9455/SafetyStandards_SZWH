@@ -14,6 +14,9 @@ import java.math.BigDecimal;
 public class SafelInfoledgerPage<T> extends BasePage<T> {
 	private static final long serialVersionUID = 1L;
 
+	@ApiModelProperty(value = "主键id")
+	private String asiIds;
+
 	@ApiModelProperty(value = "企业名称")
 	private String deptName;
 

@@ -239,20 +239,20 @@ public class laborController {
 	@GetMapping("/goExport_Excel")
 	@ApiLog("劳保信息-导出")
 	@ApiOperation(value = "劳保信息-导出", notes = "传入laborledgerPage", position = 22)
-	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String deptId , String date, BladeUser user) throws IOException {
+	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String id, BladeUser user) throws IOException {
 		int a=1;
 		R rs = new R();
 		List<String> urlList = new ArrayList<>();
 		laborledgerPage laborledgerPage = new laborledgerPage();
-		laborledgerPage.setDeptId(deptId);
-		laborledgerPage.setDate(date);
+		laborledgerPage.setAliIds(id);
+//		laborledgerPage.setDate(date);
 		// TODO 渲染其他类型的数据请参考官方文档
 		DecimalFormat df = new DecimalFormat("######0.00");
 		Calendar now = Calendar.getInstance();
 		//word模板地址
 		String templatePath =fileServer.getPathPrefix()+"muban\\"+"Labor.xlsx";
 		String [] nyr= DateUtil.today().split("-");
-		String[] idsss = laborledgerPage.getDeptId().split(",");
+		String[] idsss = laborledgerPage.getAliIds().split(",");
 		//去除素组中重复的数组
 		List<String> listid = new ArrayList<String>();
 		for (int i=0; i<idsss.length; i++) {
@@ -266,7 +266,7 @@ public class laborController {
 			laborledgerPage.setDeptName("");
 			laborledgerPage.setSize(0);
 			laborledgerPage.setCurrent(0);
-			laborledgerPage.setDeptId(idss[j]);
+			laborledgerPage.setAliIds(idss[j]);
 			service.selectLedgerList(laborledgerPage);
 			List<LaborledgerVO> LaborledgerVOS = laborledgerPage.getRecords();
 			//Excel中的结果集ListData

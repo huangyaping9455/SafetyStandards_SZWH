@@ -13,6 +13,9 @@ public class AccidentLedgerReportsPage<T> extends BasePage<T> {
 
 	private static final long serialVersionUID = 1L;
 
+	@ApiModelProperty(value = "主键id")
+	private String id;
+
 	@ApiModelProperty(value = "企业名称")
 	private String deptName;
 

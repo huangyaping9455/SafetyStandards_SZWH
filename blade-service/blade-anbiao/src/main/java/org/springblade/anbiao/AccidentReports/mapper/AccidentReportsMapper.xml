@@ -372,7 +372,7 @@
             FROM
             (
             SELECT
-                dept_id,left(shigufashengshijian,10) as shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
+                id,dept_id,left(shigufashengshijian,10) as shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
             FROM
             anbiao_shigubaogao
             where
@@ -388,6 +388,9 @@
             <if test="deptName != null and deptName != '' ">
                 and c.dept_name like '%${deptName}%'
             </if>
+            <if test="id != null and id != '' ">
+                and a.id =#{id}
+            </if>
             limit ${total}
         </if>
         <if test="current != 0" >
@@ -398,7 +401,7 @@
             FROM
             (
             SELECT
-                dept_id,left(shigufashengshijian,10) as shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
+                id,dept_id,left(shigufashengshijian,10) as shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
             FROM
             anbiao_shigubaogao
             where
@@ -412,6 +415,9 @@
             </if>
             <if test="deptName != null and deptName != '' ">
                 and c.dept_name like '%${deptName}%'
+            </if>
+            <if test="id != null and id != '' ">
+                and a.id =#{id}
             </if>
             limit ${offsetNo},${size}
         </if>
@@ -427,7 +433,7 @@
         FROM
             (
                 SELECT
-                    dept_id,left(shigufashengshijian,10) as shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
+                    id,dept_id,left(shigufashengshijian,10) as shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
                 FROM
                     anbiao_shigubaogao
                 where
@@ -441,6 +447,9 @@
             </if>
             <if test="deptName != null and deptName != '' ">
                 and c.dept_name like '%${deptName}%'
+            </if>
+            <if test="id != null and id != '' ">
+                and a.id =#{id}
             </if>
             ) d
     </select>

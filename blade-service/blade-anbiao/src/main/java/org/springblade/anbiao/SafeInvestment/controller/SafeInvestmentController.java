@@ -216,20 +216,20 @@ public class SafeInvestmentController extends BladeController {
 	@GetMapping("/goExport_Excel")
 	@ApiLog("安全投入信息-导出")
 	@ApiOperation(value = "安全投入信息-导出", notes = "传入SafelInfoledgerPage", position = 22)
-	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String deptId , String date, BladeUser user) throws IOException {
+	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String asiIds, BladeUser user) throws IOException {
 		int a=1;
 		R rs = new R();
 		List<String> urlList = new ArrayList<>();
 		SafelInfoledgerPage safelInfoledgerPage = new SafelInfoledgerPage();
-		safelInfoledgerPage.setDeptId(deptId);
-		safelInfoledgerPage.setAsiYear(date);
+		safelInfoledgerPage.setAsiIds(asiIds);
+//		safelInfoledgerPage.setAsiYear(date);
 		// TODO 渲染其他类型的数据请参考官方文档
 		DecimalFormat df = new DecimalFormat("######0.00");
 		Calendar now = Calendar.getInstance();
 		//word模板地址
 		String templatePath =fileServer.getPathPrefix()+"muban\\"+"SafeInvestment.xlsx";
 		String [] nyr= DateUtil.today().split("-");
-		String[] idsss = safelInfoledgerPage.getDeptId().split(",");
+		String[] idsss = safelInfoledgerPage.getAsiIds().split(",");
 		//去除素组中重复的数组
 		List<String> listid = new ArrayList<String>();
 		for (int i=0; i<idsss.length; i++) {
@@ -243,7 +243,7 @@ public class SafeInvestmentController extends BladeController {
 			safelInfoledgerPage.setDeptName("");
 			safelInfoledgerPage.setSize(0);
 			safelInfoledgerPage.setCurrent(0);
-			safelInfoledgerPage.setDeptId(idss[j]);
+			safelInfoledgerPage.setAsiIds(idss[j]);
 			safeInvestmentService.selectLedgerList(safelInfoledgerPage);
 			List<SafelInfoledgerVO> safelInfoledgerVOS = safelInfoledgerPage.getRecords();
 			//Excel中的结果集ListData

@@ -13,6 +13,9 @@ public class laborledgerPage <T> extends BasePage<T> {
 
 	private static final long serialVersionUID = 1L;
 
+	@ApiModelProperty(value = "主键id")
+	private String aliIds;
+
 	@ApiModelProperty(value = "企业名称")
 	private String deptName;
 
@@ -44,4 +47,5 @@ public class laborledgerPage <T> extends BasePage<T> {
 	private String alrPersonAutograph;
 
 	private String date;
+
 }
