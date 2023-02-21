@@ -1,7 +1,10 @@
 package org.springblade.anbiao.jiashiyuan.mapper;
 
-import org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuanDaily;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuanDaily;
+import org.springblade.anbiao.jiashiyuan.page.AnbiaoCheliangJiashiyuanDailyPage;
+
+import java.util.List;
 
 /**
  * <p>
@@ -15,5 +18,9 @@ public interface AnbiaoCheliangJiashiyuanDailyMapper extends BaseMapper<AnbiaoCh
 
 
 	AnbiaoCheliangJiashiyuanDaily SelectByID(String shiyongxingzhi,String jiashiyuanid);
+
+	List<AnbiaoCheliangJiashiyuanDaily> selectPageList(AnbiaoCheliangJiashiyuanDailyPage page);
+	int selectTotal(AnbiaoCheliangJiashiyuanDailyPage page);
+
 
 }

@@ -19,17 +19,21 @@
             refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) b on a.dept_id = b.id
         <where> a.is_deleted = 0
-         <if test="asiYear!=null and asiYear!=''">
-             AND left(a.shigufashengshijian,10) >= left(#{asiYear},10)
-         </if>
+             <if test="asiYear!=null and asiYear!=''">
+                 AND year(a.shigufashengshijian) >= year(#{asiYear})
+             </if>
 
-        <if test="deptName !=null">
-            AND b.dept_name = #{deptName}
-        </if>
+            <if test="deptName !=null">
+                AND b.dept_name = #{deptName}
+            </if>
 
-        <if test="jiashiyuan !=null">
-            AND a.jiashiyuan = #{jiashiyuan}
-        </if>
+            <if test="jiashiyuan !=null">
+                AND a.jiashiyuan = #{jiashiyuan}
+            </if>
+
+            <if test="chepaihao !=null and chepaihao != ''">
+                AND a.chepaihao like CONCAT('%',#{chepaihao},'%')
+            </if>
 
            limit ${total}
         </where>
@@ -49,15 +53,19 @@
             ) b on a.dept_id = b.id
             <where> a.is_deleted = 0
             <if test="asiYear!=null and asiYear!=''">
-                AND left(a.shigufashengshijian,10) >= left(#{asiYear},10)
+                AND year(a.shigufashengshijian) >= year(#{asiYear})
             </if>
 
             <if test="deptName !=null">
-                AND  b.dept_name = #{deptName}
+                AND b.dept_name = #{deptName}
             </if>
 
             <if test="jiashiyuan !=null">
                 AND a.jiashiyuan = #{jiashiyuan}
+            </if>
+
+            <if test="chepaihao !=null and chepaihao != ''">
+                AND a.chepaihao like CONCAT('%',#{chepaihao},'%')
             </if>
 
            limit ${offsetNo},${size}
@@ -157,7 +165,7 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                 #{id},
 
-            <if test="deptId !=null and shiguzhaopian1 !=''">
+            <if test="deptId !=null and deptId !=''">
                 #{deptId},
             </if>
             <if test="shigufashengdidian !=null and shigufashengdidian !=''">
@@ -332,10 +340,13 @@
         <include refid="tableSql"/>
         )d where 1 = 1
         <if test="asiYear!=null and asiYear!=''">
-            AND left(d.shigufashengshijian,10) >= left(#{asiYear},10)
+            AND year(d.shigufashengshijian) >= year(#{asiYear})
         </if>
         <if test="deptName!=null and deptName!=''">
             AND d.deptName= #{deptName}
+        </if>
+        <if test="chepaihao !=null and chepaihao != ''">
+            AND d.chepaihao like CONCAT('%',#{chepaihao},'%')
         </if>
     </select>
 

@@ -111,7 +111,7 @@ public class AccidentReportsController {
 
 	@PostMapping("/getledgerPage")
 	@ApiLog("分页 列表-事故台账")
-	@ApiOperation(value = "分页 列表-安全投入台账", notes = "传入AccidentLedgerReportsPage", position = 2)
+	@ApiOperation(value = "分页 列表-事故台账", notes = "传入AccidentLedgerReportsPage", position = 2)
 	public R getLedgerPage(@RequestBody AccidentLedgerReportsPage accidentLedgerReportsPage, BladeUser us) {
 		R rs = new R();
 		AccidentLedgerReportsPage list = service.selectLedgerList(accidentLedgerReportsPage);

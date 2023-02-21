@@ -1,7 +1,8 @@
 package org.springblade.anbiao.jiashiyuan.service;
 
-import org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuanDaily;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuanDaily;
+import org.springblade.anbiao.jiashiyuan.page.AnbiaoCheliangJiashiyuanDailyPage;
 
 /**
  * <p>
@@ -14,5 +15,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IAnbiaoCheliangJiashiyuanDailyService extends IService<AnbiaoCheliangJiashiyuanDaily> {
 
 	AnbiaoCheliangJiashiyuanDaily SelectByID(String shiyongxingzhi,String jiashiyuanid);
+
+	AnbiaoCheliangJiashiyuanDailyPage<AnbiaoCheliangJiashiyuanDaily> selectPageList(AnbiaoCheliangJiashiyuanDailyPage page);
 
 }

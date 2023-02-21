@@ -1,14 +1,16 @@
 package org.springblade.anbiao.jiashiyuan.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 /**
  * <p>
@@ -50,6 +52,28 @@ public class AnbiaoCheliangJiashiyuanDaily implements Serializable {
 
 	@ApiModelProperty(value = "更新时间")
 	private String updatetime;
+
+	@ApiModelProperty(value = "车辆牌照")
+	@TableField(exist = false)
+	private String cheliangpaizhao;
+
+	@ApiModelProperty(value = "挂车牌照")
+	@TableField(exist = false)
+	private String gcheliangpaizhao;
+
+	@ApiModelProperty(value = "驾驶员姓名")
+	@TableField(exist = false)
+	private String jiashiyuanxingming;
+
+	@ApiModelProperty(value = "手机号码")
+	@TableField(exist = false)
+	private String shoujihaoma;
+
+	@ApiModelProperty(value = "企业名称")
+	@TableField(exist = false)
+	private String deptName;
+
+
 
 }
 

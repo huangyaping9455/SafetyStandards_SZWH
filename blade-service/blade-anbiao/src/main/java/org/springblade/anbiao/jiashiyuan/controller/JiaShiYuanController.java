@@ -3551,5 +3551,9 @@ public class JiaShiYuanController {
 		return r;
 	}
 
+//	public static void main(String[] args) {
+//		System.out.println(DigestUtil.encrypt("139788"));
+//	}
+
 
 }

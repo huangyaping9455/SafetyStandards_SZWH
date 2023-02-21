@@ -580,10 +580,61 @@ public class DateUtils {
 		return days;
 	}
 
+	/**
+	 *
+	 * @param nowTime   当前时间
+	 * @param startTime    开始时间
+	 * @param endTime   结束时间
+	 * @return
+	 * @author sunran   判断当前时间在时间区间内
+	 */
+	public static boolean isEffectiveDate(Date nowTime, Date startTime, Date endTime) {
+		if (nowTime.getTime() == startTime.getTime()
+			|| nowTime.getTime() == endTime.getTime()) {
+			return true;
+		}
+
+		Calendar date = Calendar.getInstance();
+		date.setTime(nowTime);
+
+		Calendar begin = Calendar.getInstance();
+		begin.setTime(startTime);
+
+		Calendar end = Calendar.getInstance();
+		end.setTime(endTime);
+
+		if (date.after(begin) && date.before(end)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 
 	public static void main(String[] args) throws Exception {
 
-		System.out.println(getDays("2022-02-01","2022-02-14"));
+		String time="2023-02-18";
+
+		Date date=null;
+		SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd");
+		date=formatter.parse(time);
+
+		SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
+		Date startTime = ft.parse("2022-04-18");
+		Date endTime = ft.parse("2022-04-18");
+
+		Date nowTime = date;
+
+		boolean effectiveDate = isEffectiveDate(nowTime, startTime, endTime);
+		if (effectiveDate) {
+			System.out.println("当前时间在范围内");
+		}else {
+			System.out.println("当前时间在不在范围内");
+		}
+
+
+
+//		System.out.println(getDays("2022-02-01","2022-02-14"));
 
 //		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //		Date parse = null;

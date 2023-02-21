@@ -27,4 +27,68 @@
         </if>
 
     </select>
+
+    <sql id="tableSql">
+        select
+            a.* ,
+            b.cheliangpaizhao,
+            g.cheliangpaizhao as gcheliangpaizhao,
+            j.jiashiyuanxingming,
+            j.shoujihaoma,
+            d.dept_name as deptName
+        from
+            anbiao_cheliang_jiashiyuan_daily a
+            LEFT JOIN anbiao_vehicle b on a.vehid = b.id and b.is_deleted = 0
+            LEFT JOIN anbiao_vehicle g on a.gvehid = g.id and g.is_deleted = 0
+            LEFT JOIN anbiao_jiashiyuan j on a.jiashiyuanid = j.id and j.isdelete = 0
+            LEFT JOIN (
+                <include
+                    refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+                ) d on b.dept_id = d.id
+            where (vstatus = 1 or gstatus = 1)
+            HAVING IFNULL(j.jiashiyuanxingming,'') != ''
+    </sql>
+
+    <sql id="querySql">
+        <if test="jiashiyuanxingming !=null and jiashiyuanxingming != ''">
+            AND jiashiyuanxingming LIKE '%${jiashiyuanxingming}%'
+        </if>
+
+        <if test="cheliangpaizhao !=null and cheliangpaizhao != ''">
+            AND (cheliangpaizhao LIKE '%${cheliangpaizhao}%' or gcheliangpaizhao LIKE '%${cheliangpaizhao}%')
+        </if>
+    </sql>
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        order by cheliangpaizhao desc
+    </sql>
+
+    <select id="selectPageList" parameterType="org.springblade.anbiao.jiashiyuan.page.AnbiaoCheliangJiashiyuanDailyPage" resultMap="BaseResultMap">
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectTotal" parameterType="org.springblade.anbiao.jiashiyuan.page.AnbiaoCheliangJiashiyuanDailyPage" resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql" />
+        )d
+        where 1 = 1
+        <include refid="querySql" />
+    </select>
 </mapper>

@@ -45,5 +45,8 @@ public class AnbiaoCarExamineInfoTZVO {
 	@ApiModelProperty(value = "是否签名")
 	private String jcrsignatrueshow;
 
+	@ApiModelProperty(value = "检查天数")
+	private Integer count = 0;
+
 
 }

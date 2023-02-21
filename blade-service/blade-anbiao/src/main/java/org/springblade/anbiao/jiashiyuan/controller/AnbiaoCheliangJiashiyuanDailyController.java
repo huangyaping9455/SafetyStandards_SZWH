@@ -6,13 +6,17 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiDetail;
 import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuanDaily;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanAnquanzerenshu;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.jiashiyuan.page.AnbiaoCheliangJiashiyuanDailyPage;
+import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanVehiclePage;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoCheliangJiashiyuanDailyService;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
+import org.springblade.anbiao.jiashiyuan.vo.CheliangJiashiyuanVO;
 import org.springblade.common.tool.StringUtil;
 import org.springblade.common.tool.StringUtils;
 import org.springblade.core.log.annotation.ApiLog;
@@ -20,6 +24,7 @@ import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -227,4 +232,73 @@ public class AnbiaoCheliangJiashiyuanDailyController {
 		}
 		return r;
 	}
+
+	/**
+	 * 解绑车辆
+	 */
+	@PostMapping("/unbundle")
+	@ApiLog("解绑车辆")
+	@ApiOperation(value = "解绑车辆", notes = "传入车辆vehId（多个以英文逗号隔开）", position = 5)
+	public R del(@RequestParam String vehId) {
+		R r = new R();
+		String[] idsss = vehId.split(",");
+		//去除素组中重复的数组
+		List<String> listid = new ArrayList<String>();
+		for (int i=0; i<idsss.length; i++) {
+			if(!listid.contains(idsss[i])) {
+				listid.add(idsss[i]);
+			}
+		}
+		//返回一个包含所有对象的指定类型的数组
+		String[]  idss= listid.toArray(new String[1]);
+		for(int i = 0;i< idss.length;i++){
+			AnbiaoCheliangJiashiyuanDaily daily = new AnbiaoCheliangJiashiyuanDaily();
+			int ss = 0;
+			QueryWrapper<AnbiaoCheliangJiashiyuanDaily> cheliangJiashiyuanDailyQueryWrapper = new QueryWrapper<>();
+			cheliangJiashiyuanDailyQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuanDaily::getVehid,idss[i]);
+			cheliangJiashiyuanDailyQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuanDaily::getVstatus,1);
+			cheliangJiashiyuanDailyQueryWrapper.last(" limit 1");
+			AnbiaoCheliangJiashiyuanDaily chetou = cheliangJiashiyuanDailyService.getBaseMapper().selectOne(cheliangJiashiyuanDailyQueryWrapper);
+			if (chetou != null){
+				daily.setId(chetou.getId());
+				daily.setVehid(chetou.getVehid());
+				daily.setVstatus(0);
+				daily.setUpdatetime(DateUtil.now());
+				ss = cheliangJiashiyuanDailyService.getBaseMapper().updateById(daily);
+			}
+			QueryWrapper<AnbiaoCheliangJiashiyuanDaily> guacheliangJiashiyuanDailyQueryWrapper = new QueryWrapper<>();
+			guacheliangJiashiyuanDailyQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuanDaily::getGvehid,idss[i]);
+			guacheliangJiashiyuanDailyQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuanDaily::getGstatus,1);
+			guacheliangJiashiyuanDailyQueryWrapper.last(" limit 1");
+			AnbiaoCheliangJiashiyuanDaily guache = cheliangJiashiyuanDailyService.getBaseMapper().selectOne(guacheliangJiashiyuanDailyQueryWrapper);
+			if (guache != null){
+				daily.setId(guache.getId());
+				daily.setGvehid(guache.getGvehid());
+				daily.setGstatus(0);
+				daily.setUpdatetime(DateUtil.now());
+				ss = cheliangJiashiyuanDailyService.getBaseMapper().updateById(daily);
+			}
+			if (ss > 0){
+				r.setMsg("解绑成功");
+				r.setCode(200);
+			}else{
+				r.setMsg("解绑失败");
+				r.setCode(500);
+			}
+		}
+		return r;
+	}
+
+	/**
+	 * 分页
+	 */
+	@PostMapping("/list")
+	@ApiLog("分页-驾驶员车辆绑定关系")
+	@ApiOperation(value = "分页-驾驶员车辆绑定关系", notes = "传入AnbiaoCheliangJiashiyuanDailyPage", position = 5)
+	public R<AnbiaoCheliangJiashiyuanDailyPage<AnbiaoCheliangJiashiyuanDaily>> list(@RequestBody AnbiaoCheliangJiashiyuanDailyPage cheliangJiashiyuanDailyPage) {
+		AnbiaoCheliangJiashiyuanDailyPage<AnbiaoCheliangJiashiyuanDaily> pages = cheliangJiashiyuanDailyService.selectPageList(cheliangJiashiyuanDailyPage);
+		return R.data(pages);
+	}
+
+
 }

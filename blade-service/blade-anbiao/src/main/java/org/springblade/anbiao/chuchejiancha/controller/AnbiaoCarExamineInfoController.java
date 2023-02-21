@@ -33,10 +33,7 @@ import org.springblade.anbiao.yinhuanpaicha.entity.AnbiaoHiddenDanger;
 import org.springblade.anbiao.yinhuanpaicha.service.IAnbiaoHiddenDangerService;
 import org.springblade.common.configurationBean.FileServer;
 import org.springblade.common.constant.FilePathConstant;
-import org.springblade.common.tool.ApacheZipUtils;
-import org.springblade.common.tool.DateUtils;
-import org.springblade.common.tool.ExcelUtils;
-import org.springblade.common.tool.StringUtils;
+import org.springblade.common.tool.*;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
@@ -50,6 +47,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -693,7 +692,7 @@ public class AnbiaoCarExamineInfoController {
 	@GetMapping("/goExport_ExamineInfo_Excel")
 	@ApiLog("安全检查数据-车辆安全检查台账统计表-导出")
 	@ApiOperation(value = "安全检查数据-车辆安全检查台账统计表-导出", notes = "传入deptId、vehId、beginTime、endTime", position = 22)
-	public R goExport_ExamineInfo_Excel(HttpServletRequest request, HttpServletResponse response, String deptId, String vehId , String beginTime , String endTime , BladeUser user) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+	public R goExport_ExamineInfo_Excel(HttpServletRequest request, HttpServletResponse response, String deptId, String vehId ,String deptname, String beginTime , String endTime , BladeUser user) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchFieldException {
 		R rs = new R();
 		List<String> urlList = new ArrayList<>();
 		AnBiaoCheckCarPage anBiaoCheckCarPage = new AnBiaoCheckCarPage();
@@ -846,7 +845,7 @@ public class AnbiaoCarExamineInfoController {
 	@PostMapping("/standingBookDetail")
 	@ApiLog("安全检查数据-详情")
 	@ApiOperation(value = "安全检查数据-详情", notes = "传入AnBiaoCheckCarPage", position = 18)
-	public R standingBookDetail(@RequestBody AnBiaoCheckCarPage carExamineInfoPage, BladeUser user) {
+	public R standingBookDetail(@RequestBody AnBiaoCheckCarPage carExamineInfoPage, BladeUser user) throws ParseException {
 		R r = new R();
 		if(user == null){
 			r.setMsg("未授权");
@@ -858,21 +857,52 @@ public class AnbiaoCarExamineInfoController {
 			CarExamineMessageVO messageVO = new CarExamineMessageVO();
 			messageVO.setDateShow(carExamineInfoPage.getBeginTime()+"至"+carExamineInfoPage.getEndTime());
 			String message = "";
-			for (AnbiaoCarExamineInfoVO detail:list) {
-				messageVO.setVehNo(detail.getCheliangpaizhao());
-				messageVO.setDriverName(detail.getJiashiyuanxingming());
-				List<String> stringList = DateUtils.getDays(carExamineInfoPage.getBeginTime(),carExamineInfoPage.getEndTime());
-				String days = "";
-				int count = 0;
-				for (int i = 0; i < stringList.size(); i++) {
-					if (!detail.getDate().equals(stringList.get(i))) {
-						count += 1;
-						days += stringList.get(i).substring(stringList.get(i).length()-2)+"/";
-					}
-				}
-				messageVO.setCount(count);
-				message += count+"次"+"未做日常检查（"+days+"）";
+			String days = "";
+			int count = 0;
+			List<String> stringList = DateUtils.getDays(carExamineInfoPage.getBeginTime(),carExamineInfoPage.getEndTime());
+			String[] array2 = stringList.toArray(new String[stringList.size()]);
+			int size = list.size();
+			String[] array1 = new String[size];
+			for (int i = 0; i < list.size(); i++) {
+				messageVO.setVehNo(list.get(i).getCheliangpaizhao());
+				messageVO.setDriverName(list.get(i).getJiashiyuanxingming());
+				array1[i] = list.get(i).getDate();
 			}
+//			for (AnbiaoCarExamineInfoVO detail:list) {
+//				messageVO.setVehNo(detail.getCheliangpaizhao());
+//				messageVO.setDriverName(detail.getJiashiyuanxingming());
+
+//				List<String> stringList = DateUtils.getDays(carExamineInfoPage.getBeginTime(),carExamineInfoPage.getEndTime());
+//				for (int i = 0; i < stringList.size(); i++) {
+//					System.out.println(stringList.get(i)+"------------------"+detail.getDate());
+//					if (!stringList.get(i).equals(detail.getDate())) {
+//						count += 1;
+//						days += stringList.get(i).substring(stringList.get(i).length()-2)+"/";
+//					}
+//				}
+//				SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
+//				Date startTime = ft.parse(carExamineInfoPage.getBeginTime());
+//				Date endTime = ft.parse(carExamineInfoPage.getEndTime());
+//				Date nowTime = ft.parse(detail.getDate());
+//				boolean effectiveDate = DateUtils.isEffectiveDate(nowTime, startTime, endTime);
+//				if (effectiveDate) {
+//					System.out.println("当前时间在范围内");
+//				}else {
+//					count += 1;
+//					days += detail.getDate().substring(detail.getDate().length()-2)+"/";
+//				}
+
+//			}
+			System.out.println(array1);
+			System.out.println("++++++++++++++++++++++++++++++++++");
+			System.out.println(array2);
+			List<String> stringlist = StringUtil.compare(array1,array2);
+			for (String integer : stringlist) {
+				count += 1;
+				days += integer.substring(integer.length()-2)+"/";
+			}
+			messageVO.setCount(count);
+			message += count+"次"+"未做日常检查（"+days+"）";
 			messageVO.setMessage(message);
 			r.setData(messageVO);
 			r.setCode(200);

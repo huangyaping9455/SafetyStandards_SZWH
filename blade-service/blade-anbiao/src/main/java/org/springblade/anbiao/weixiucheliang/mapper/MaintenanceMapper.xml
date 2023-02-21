@@ -31,13 +31,13 @@
         ) b on a.dept_Id = b.id
         <where> a.is_Deleted = 0
             <if test="asiYear!=null and asiYear!=''">
-                AND  a.send_Date between #{asiYear} and #{asiYear}
+                AND year(a.send_Date) >= year(#{asiYear})
             </if>
             <if test="deptName!=null and deptName!=''">
                 AND b.dept_name= #{deptName}
             </if>
             <if test="carNum!=null and carNum!=''">
-                AND c.cheliangpaizhao = #{carNum}
+                AND c.cheliangpaizhao like '%${carNum}%'
             </if>
             <if test="driverId!=null and driverId!=''">
                 AND a.driver_Id = #{driverId}
@@ -72,13 +72,13 @@
                 ) b on a.dept_Id = b.id
                 <where> a.is_Deleted = 0
                     <if test="asiYear!=null and asiYear!=''">
-                        AND  a.send_Date between #{asiYear} and #{asiYear}
+                        AND year(a.send_Date) >= year(#{asiYear})
                     </if>
                     <if test="deptName!=null and deptName!=''">
                         AND b.dept_name= #{deptName}
                     </if>
                     <if test="carNum!=null and carNum!=''">
-                        AND c.cheliangpaizhao = #{carNum}
+                        AND c.cheliangpaizhao like '%${carNum}%'
                     </if>
                     <if test="driverId!=null and driverId!=''">
                         AND a.driver_Id = #{driverId}
@@ -365,13 +365,13 @@
         <include refid="tableSql"/>
         )d where 1 = 1
         <if test="asiYear!=null and asiYear!=''">
-            AND d.send_Date = #{asiYear}
+            AND year(d.send_Date) >= year(#{asiYear})
         </if>
         <if test="deptName!=null and deptName!=''">
             AND d.deptName= #{deptName}
         </if>
         <if test="carNum!=null and carNum!=''">
-           AND d.cheliangpaizhao = #{carNum}
+            AND d.cheliangpaizhao like '%${carNum}%'
         </if>
     </select>
 
