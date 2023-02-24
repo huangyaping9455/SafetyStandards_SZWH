@@ -924,6 +924,7 @@
             <if test="daoluxukezhenghao != null and daoluxukezhenghao != ''">
                 and daoluxukezhenghao = #{daoluxukezhenghao}
             </if>
+            and isdelete = 0
         </where>
     </select>
 

@@ -31,8 +31,8 @@
     <sql id="tableSql">
         select
             a.* ,
-            b.cheliangpaizhao,
-            g.cheliangpaizhao as gcheliangpaizhao,
+            case when vstatus = 0 then '' else b.cheliangpaizhao end as cheliangpaizhao,
+            case when gstatus = 0 then '' else g.cheliangpaizhao end as gcheliangpaizhao,
             j.jiashiyuanxingming,
             j.shoujihaoma,
             d.dept_name as deptName
@@ -41,7 +41,7 @@
             LEFT JOIN anbiao_vehicle b on a.vehid = b.id and b.is_deleted = 0
             LEFT JOIN anbiao_vehicle g on a.gvehid = g.id and g.is_deleted = 0
             LEFT JOIN anbiao_jiashiyuan j on a.jiashiyuanid = j.id and j.isdelete = 0
-            LEFT JOIN (
+            INNER JOIN (
                 <include
                     refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
                 ) d on b.dept_id = d.id
@@ -91,4 +91,23 @@
         where 1 = 1
         <include refid="querySql" />
     </select>
+
+    <update id="unbundleVeh" parameterType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuanDaily" >
+    update anbiao_cheliang_jiashiyuan_daily
+    <set>
+
+        <if test="vstatus != null">
+            vstatus = #{vstatus},
+        </if>
+
+        <if test="gstatus != null">
+            gstatus = #{gstatus},
+        </if>
+
+        updatetime = #{updatetime}
+
+    </set>
+    where id = #{id}
+</update>
+
 </mapper>

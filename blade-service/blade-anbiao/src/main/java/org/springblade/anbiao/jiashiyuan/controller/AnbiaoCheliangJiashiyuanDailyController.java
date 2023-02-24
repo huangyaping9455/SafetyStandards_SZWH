@@ -253,7 +253,7 @@ public class AnbiaoCheliangJiashiyuanDailyController {
 		String[]  idss= listid.toArray(new String[1]);
 		for(int i = 0;i< idss.length;i++){
 			AnbiaoCheliangJiashiyuanDaily daily = new AnbiaoCheliangJiashiyuanDaily();
-			int ss = 0;
+			boolean ss = false;
 			QueryWrapper<AnbiaoCheliangJiashiyuanDaily> cheliangJiashiyuanDailyQueryWrapper = new QueryWrapper<>();
 			cheliangJiashiyuanDailyQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuanDaily::getVehid,idss[i]);
 			cheliangJiashiyuanDailyQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuanDaily::getVstatus,1);
@@ -263,8 +263,9 @@ public class AnbiaoCheliangJiashiyuanDailyController {
 				daily.setId(chetou.getId());
 				daily.setVehid(chetou.getVehid());
 				daily.setVstatus(0);
+				daily.setGstatus(null);
 				daily.setUpdatetime(DateUtil.now());
-				ss = cheliangJiashiyuanDailyService.getBaseMapper().updateById(daily);
+				ss = cheliangJiashiyuanDailyService.unbundleVeh(daily);
 			}
 			QueryWrapper<AnbiaoCheliangJiashiyuanDaily> guacheliangJiashiyuanDailyQueryWrapper = new QueryWrapper<>();
 			guacheliangJiashiyuanDailyQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuanDaily::getGvehid,idss[i]);
@@ -275,10 +276,11 @@ public class AnbiaoCheliangJiashiyuanDailyController {
 				daily.setId(guache.getId());
 				daily.setGvehid(guache.getGvehid());
 				daily.setGstatus(0);
+				daily.setVstatus(null);
 				daily.setUpdatetime(DateUtil.now());
-				ss = cheliangJiashiyuanDailyService.getBaseMapper().updateById(daily);
+				ss = cheliangJiashiyuanDailyService.unbundleVeh(daily);
 			}
-			if (ss > 0){
+			if (ss){
 				r.setMsg("解绑成功");
 				r.setCode(200);
 			}else{

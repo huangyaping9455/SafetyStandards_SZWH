@@ -22,5 +22,6 @@ public interface AnbiaoCheliangJiashiyuanDailyMapper extends BaseMapper<AnbiaoCh
 	List<AnbiaoCheliangJiashiyuanDaily> selectPageList(AnbiaoCheliangJiashiyuanDailyPage page);
 	int selectTotal(AnbiaoCheliangJiashiyuanDailyPage page);
 
+	boolean unbundleVeh(AnbiaoCheliangJiashiyuanDaily anbiaoCheliangJiashiyuanDaily);
 
 }

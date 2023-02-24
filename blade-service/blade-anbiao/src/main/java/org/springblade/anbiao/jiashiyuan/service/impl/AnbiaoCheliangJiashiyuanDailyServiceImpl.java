@@ -69,4 +69,9 @@ public class AnbiaoCheliangJiashiyuanDailyServiceImpl extends ServiceImpl<Anbiao
 			return page;
 		}
 	}
+
+	@Override
+	public boolean unbundleVeh(AnbiaoCheliangJiashiyuanDaily anbiaoCheliangJiashiyuanDaily) {
+		return mapper.unbundleVeh(anbiaoCheliangJiashiyuanDaily);
+	}
 }

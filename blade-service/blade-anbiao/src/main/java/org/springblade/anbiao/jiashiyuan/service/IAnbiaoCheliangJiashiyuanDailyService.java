@@ -18,4 +18,6 @@ public interface IAnbiaoCheliangJiashiyuanDailyService extends IService<AnbiaoCh
 
 	AnbiaoCheliangJiashiyuanDailyPage<AnbiaoCheliangJiashiyuanDaily> selectPageList(AnbiaoCheliangJiashiyuanDailyPage page);
 
+	boolean unbundleVeh(AnbiaoCheliangJiashiyuanDaily anbiaoCheliangJiashiyuanDaily);
+
 }

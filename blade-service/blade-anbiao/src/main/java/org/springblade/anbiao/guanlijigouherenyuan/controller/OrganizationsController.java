@@ -577,7 +577,7 @@ public class OrganizationsController extends BladeController {
 			} else {
 				organization.setDeptName(deptName);
 				int i = iSysClient.selectByName(organization.getDeptName());
-				if(i > 1){
+				if(i > 0){
 					organization.setMsg(deptName+"所属企业已存在;");
 					organization.setImportUrl("icon_cha.png");
 					errorStr += deptName+"所属企业已存在;";
@@ -944,7 +944,7 @@ public class OrganizationsController extends BladeController {
 
 			//验证Excel导入时，是否存在重复数据
 			for (Organizations item : organizations) {
-				if (item.getDeptName().equals(deptName) && item.getJigoubianma().equals(jiGouBianMa) && item.getDaoluxukezhenghao().equals(daoluxukezhenghao)) {
+				if (item.getDeptName().equals(deptName) && item.getJigoubianma().equals(jiGouBianMa) && item.getDaoluxukezhenghao().equals(daoluxukezhenghao) && item.getGangweimingcheng().equals(gangwei)) {
 					organization.setImportUrl("icon_cha.png");
 					errorStr += organizations + "机构信息重复；";
 					organization.setMsg(organizations + "机构信息重复；");
@@ -1010,20 +1010,30 @@ public class OrganizationsController extends BladeController {
 			aa++;
 			Organizations organization = new Organizations();
 			Dept dept = new Dept();
-			organization.setDeptId(String.valueOf(a.get("deptId")).trim());
-			organization.setDeptName(String.valueOf(a.get("deptName")).trim());
 			if (String.valueOf(a.get("parentId")).trim() == null || String.valueOf(a.get("parentId")).trim().equals("") || String.valueOf(a.get("parentId")).trim().equals("null")) {
 				organization.setParentId("1");
 			}
 			String treeCode = iSysClient.selectByTreeCode(organization.getParentId()).getTreeCode();
-			dept.setTreeCode(treeCode);
-			dept.setId(iSysClient.selectMaxId() + 1);
-			dept.setExtendType("机构");
-			dept.setParentId(Integer.parseInt(organization.getParentId()));
-			dept.setDeptName(organization.getDeptName());
-			dept.setFullName(organization.getDeptName());
-			isDataValidity = iSysClient.insertDept(dept);
-			organization.setDeptId(dept.getId().toString());
+			organization.setDeptId(String.valueOf(a.get("deptId")).trim());
+			organization.setDeptName(String.valueOf(a.get("deptName")).trim());
+			int q = iSysClient.selectByName(organization.getDeptName());
+			if(q > 0){
+				dept.setTreeCode(treeCode);
+				dept.setId(Integer.parseInt(organization.getDeptId()));
+				dept.setExtendType("机构");
+				dept.setParentId(Integer.parseInt(organization.getParentId()));
+				dept.setDeptName(organization.getDeptName());
+				dept.setFullName(organization.getDeptName());
+			}else{
+				dept.setTreeCode(treeCode);
+				dept.setId(iSysClient.selectMaxId() + 1);
+				dept.setExtendType("机构");
+				dept.setParentId(Integer.parseInt(organization.getParentId()));
+				dept.setDeptName(organization.getDeptName());
+				dept.setFullName(organization.getDeptName());
+				isDataValidity = iSysClient.insertDept(dept);
+				organization.setDeptId(dept.getId().toString());
+			}
 			organization.setJigoubianma(String.valueOf(a.get("jigoubianma")).trim());
 			organization.setYyzzksdate(String.valueOf(a.get("yyzzksdate")).trim());
 			organization.setYyzzjzdate(String.valueOf(a.get("yyzzjzdate")).trim());
@@ -1166,20 +1176,19 @@ public class OrganizationsController extends BladeController {
 					iSysClient.insertPost(post);
 				}
 			}
-			if (isDataValidity == true) {
-				rs.setCode(200);
-				rs.setMsg("数据导入成功");
-				rs.setSuccess(true);
-				rs.setData(organizations);
-				return rs;
-			} else {
-				rs.setCode(500);
-				rs.setMsg("数据导入失败");
-				rs.setData(organizations);
-				return rs;
-			}
 		}
-		return rs;
+		if (isDataValidity == true) {
+			rs.setCode(200);
+			rs.setMsg("数据导入成功");
+			rs.setSuccess(true);
+			rs.setData(organizations);
+			return rs;
+		} else {
+			rs.setCode(500);
+			rs.setMsg("数据导入失败");
+			rs.setData(organizations);
+			return rs;
+		}
 	}
 
 	@GetMapping("/getDeptImg")

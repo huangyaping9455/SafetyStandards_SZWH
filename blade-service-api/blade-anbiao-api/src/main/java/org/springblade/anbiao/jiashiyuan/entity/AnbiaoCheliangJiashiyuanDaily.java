@@ -45,10 +45,10 @@ public class AnbiaoCheliangJiashiyuanDaily implements Serializable {
 	private String gvehid;
 
 	@ApiModelProperty(value = "车辆使用状态")
-	private int vstatus = 0;
+	private Integer vstatus = 0;
 
 	@ApiModelProperty(value = "挂车使用状态")
-	private int gstatus = 0;
+	private Integer gstatus = 0;
 
 	@ApiModelProperty(value = "更新时间")
 	private String updatetime;

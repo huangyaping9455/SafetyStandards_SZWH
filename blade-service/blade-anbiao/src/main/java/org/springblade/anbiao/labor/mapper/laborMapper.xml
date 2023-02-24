@@ -60,7 +60,7 @@
             left join anbiao_labor_receive d on d.alr_ali_ids = a.ali_ids
             <where> a.ali_delete = 0
                 <if test="asiYear!=null and asiYear!=''">
-                    AND year(a.ali_issue_date) >= year(#{asiYear}
+                    AND year(a.ali_issue_date) >= year(#{asiYear})
                 </if>
                 <if test="deptName!=null  and deptName!=''">
                     AND b.dept_name= #{deptName}
@@ -258,7 +258,7 @@
         <include refid="tableSql"/>
         )d where 1 = 1
         <if test="asiYear!=null and asiYear!=''">
-            AND year(d.ali_issue_date) >= year(#{asiYear}
+            AND year(d.ali_issue_date) >= year(#{asiYear})
         </if>
         <if test="deptName!=null and deptName!=''">
             AND d.deptName= #{deptName}

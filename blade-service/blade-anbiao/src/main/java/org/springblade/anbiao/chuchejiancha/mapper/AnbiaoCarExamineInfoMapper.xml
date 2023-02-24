@@ -224,7 +224,7 @@
             cheliangpaizhao,
             vehId,
             jiashiyuanxingming,
-            status,
+<!--            status,-->
             COUNT(date) as count,
             CONCAT(#{beginTime},'至',#{endTime}) as date
         FROM(
@@ -258,8 +258,9 @@
             deptName,
             cheliangpaizhao,
             vehId,
-            jiashiyuanxingming,
-            status
+            jiashiyuanxingming
+<!--        ,-->
+<!--            status-->
 	</sql>
 
 	<sql id="queryDeptYHTZSql">
