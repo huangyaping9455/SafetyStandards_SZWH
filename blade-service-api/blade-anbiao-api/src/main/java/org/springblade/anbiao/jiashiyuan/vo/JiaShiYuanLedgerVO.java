@@ -61,4 +61,73 @@ public class JiaShiYuanLedgerVO {
 
 	@ApiModelProperty(value = "总金额")
 	private String totalTmount;
+
+	@ApiModelProperty(value = "车辆牌照")
+	private String cheliangpaizhao;
+
+	private String avbIds;
+
+	private String avbAvIds;
+
+	private String avbInsureName;
+
+	private String avbmRisk;
+
+	private String ajbInsuredName;
+
+	private String ajbInsureName;
+
+	private String ajbmRisk;
+
+	private String avbInsuranceDays;
+
+	private String ajbInsuranceDays;
+
+	private String avbmInsuranceAmount;
+
+	private String avbmBasicPremium;
+
+	private String avbmName;
+
+	private Double jiaoqiangxianzongbaoxianjine;
+
+	private Double jiaoqiangxianzongfeiyong;
+
+	private String jidongchesunshixianjine;
+
+	private String jidongchesunshixianbaofeijine;
+
+	private String sanzhezerenxianjine;
+
+	private String sanzhezerenxianbaofeijine;
+
+	private String sijijine;
+
+	private String sijibaofeijine;
+
+	private String chengkejine;
+
+	private String chengkebaofeijine;
+
+	private String qitajine;
+
+	private String qitabaofeijine;
+
+	private String huoguiInsuranceDays;
+
+	private String anzeInsuranceDays;
+
+	private String qitaInsuranceDays;
+
+	private String chexianzongbaofei;
+
+	private String yiwaixianbaoxianjine;
+
+	private String yiwaixianbaofeijine;
+
+	private String renyuanqitabaoxianjine;
+
+	private String renyuanqitabaofeijine;
+
+	private String date;
 }

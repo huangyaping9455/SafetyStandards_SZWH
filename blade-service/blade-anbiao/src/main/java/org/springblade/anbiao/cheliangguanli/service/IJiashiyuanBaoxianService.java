@@ -18,10 +18,9 @@ package org.springblade.anbiao.cheliangguanli.service;
 import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxian;
 import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxianInfo;
-import org.springblade.anbiao.cheliangguanli.entity.VehicleBaoxianInfo;
 import org.springblade.anbiao.cheliangguanli.vo.JiashiyuanBaoxianVO;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanLedgerPage;
-import org.springblade.anbiao.labor.page.laborledgerPage;
+import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanLedgerVO;
 import org.springblade.core.mp.base.BaseService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springblade.system.entity.Dept;
@@ -65,4 +64,20 @@ public interface IJiashiyuanBaoxianService extends BaseService<JiashiyuanBaoxian
 	List<Dept> QiYeList(@Param("deptId") Integer deptId);
 
 	JiaShiYuanLedgerPage selectLedgerList(JiaShiYuanLedgerPage jiaShiYuanLedgerPage);
+
+	List<JiaShiYuanLedgerVO> selectVehicleInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	JiaShiYuanLedgerVO selectHeavyTrafficInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	JiaShiYuanLedgerVO selectNotHeavyTrafficInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	List<JiaShiYuanLedgerVO> selectDeptInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	JiaShiYuanLedgerVO selectAccidentInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	List<JiaShiYuanLedgerVO> selectPersonInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	JiaShiYuanLedgerVO selectNotAccidentInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	JiaShiYuanLedgerVO selectDeptTotalTmountInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
 }

@@ -315,7 +315,7 @@ public class laborController {
 							} catch (MalformedURLException e) {
 								e.printStackTrace();
 							}
-							laborledgerVO.setImgUrl(laborlingquEntity.getImgUrl());
+//							laborledgerVO.setImgUrl(laborlingquEntity.getImgUrl());
 						}else{
 							laborledgerVO.setImgUrl(null);
 						}

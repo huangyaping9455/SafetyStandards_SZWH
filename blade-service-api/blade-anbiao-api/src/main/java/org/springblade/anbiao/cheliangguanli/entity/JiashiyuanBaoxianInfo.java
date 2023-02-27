@@ -17,4 +17,8 @@ public class JiashiyuanBaoxianInfo implements Serializable {
 
 	@ApiModelProperty(value = "驾驶员保险明细信息")
 	private List<JiashiyuanBaoxianMingxi> baoxianMingxis;
+
+	@ApiModelProperty(value = "驾驶员保险明细信息")
+	private List<JiashiyuanBaoxianMingxi> mingxiList;
+
 }

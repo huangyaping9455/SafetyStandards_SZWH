@@ -67,4 +67,20 @@ public interface JiashiyuanBaoxianMapper extends BaseMapper<JiashiyuanBaoxian> {
 
 	List<JiaShiYuanLedgerVO> selectLedgerPage(JiaShiYuanLedgerPage jiaShiYuanLedgerPage);
 	int selectLedgerTotal(JiaShiYuanLedgerPage jiaShiYuanLedgerPage);
+
+	List<JiaShiYuanLedgerVO> selectVehicleInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	JiaShiYuanLedgerVO selectHeavyTrafficInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	JiaShiYuanLedgerVO selectNotHeavyTrafficInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	List<JiaShiYuanLedgerVO> selectDeptInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	List<JiaShiYuanLedgerVO> selectPersonInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	JiaShiYuanLedgerVO selectAccidentInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	JiaShiYuanLedgerVO selectNotAccidentInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	JiaShiYuanLedgerVO selectDeptTotalTmountInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
 }

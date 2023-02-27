@@ -119,8 +119,51 @@ public class JiashiyuanBaoxianServiceImpl extends ServiceImpl<JiashiyuanBaoxianM
 		}
 	}
 
+
 	@Override
 	public boolean deleteLogic(@NotEmpty List<Integer> ids) {
 		return false;
 	}
+
+	@Override
+	public List<JiaShiYuanLedgerVO> selectVehicleInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
+		return baoxianMapper.selectVehicleInsurance( jiaShiYuanLedgerVO);
+	}
+
+	@Override
+	public JiaShiYuanLedgerVO selectHeavyTrafficInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
+		return baoxianMapper.selectHeavyTrafficInsurance(jiaShiYuanLedgerVO);
+	}
+
+	@Override
+	public JiaShiYuanLedgerVO selectNotHeavyTrafficInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
+		return baoxianMapper.selectNotHeavyTrafficInsurance(jiaShiYuanLedgerVO);
+	}
+
+	@Override
+	public List<JiaShiYuanLedgerVO> selectDeptInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
+		return baoxianMapper.selectDeptInsurance( jiaShiYuanLedgerVO);
+	}
+
+	@Override
+	public JiaShiYuanLedgerVO selectAccidentInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
+		return baoxianMapper.selectAccidentInsurance(jiaShiYuanLedgerVO);
+	}
+
+	@Override
+	public List<JiaShiYuanLedgerVO> selectPersonInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
+		return baoxianMapper.selectPersonInsurance(jiaShiYuanLedgerVO);
+	}
+
+	@Override
+	public JiaShiYuanLedgerVO selectNotAccidentInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
+		return baoxianMapper.selectNotAccidentInsurance(jiaShiYuanLedgerVO);
+	}
+
+	@Override
+	public JiaShiYuanLedgerVO selectDeptTotalTmountInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
+		return baoxianMapper.selectDeptTotalTmountInsurance(jiaShiYuanLedgerVO);
+	}
+
+
 }

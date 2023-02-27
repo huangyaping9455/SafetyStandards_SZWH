@@ -22,12 +22,16 @@ import cn.hutool.poi.excel.ExcelUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
+import com.alibaba.excel.write.metadata.fill.FillConfig;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang.StringUtils;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxian;
 import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxianInfo;
@@ -49,6 +53,7 @@ import org.springblade.common.configurationBean.FileServer;
 import org.springblade.common.constant.FilePathConstant;
 import org.springblade.common.tool.ApacheZipUtils;
 import org.springblade.common.tool.ExcelUtils;
+import org.springblade.common.tool.PackageToZIp;
 import org.springblade.core.boot.ctrl.BladeController;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.mp.support.Condition;
@@ -66,9 +71,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -381,8 +384,8 @@ public class JiashiyuanBaoxianController extends BladeController {
 		baoxian.setAjbCreateByName(user.getUserName());
 		baoxian.setAjbCreateTime(LocalDateTime.now());
 		boolean isSave = jiashiyuanBaoxianService.save(baoxian);
-		if(jiashiyuanBaoxian.getBaoxianMingxis() != null && jiashiyuanBaoxian.getBaoxianMingxis().size() > 0) {
-			for (JiashiyuanBaoxianMingxi baoxianMingxi: jiashiyuanBaoxian.getBaoxianMingxis()) {
+		if(jiashiyuanBaoxian.getMingxiList() != null && jiashiyuanBaoxian.getMingxiList().size() > 0) {
+			for (JiashiyuanBaoxianMingxi baoxianMingxi: jiashiyuanBaoxian.getMingxiList()) {
 				baoxianMingxi.setAjbmAvbIds(jiashiyuanBaoxian.getBaoxian().getAjbIds());
 				mingxiService.save(baoxianMingxi);
 			}
@@ -558,7 +561,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 	@GetMapping("/goExport_Excel")
 	@ApiLog("保险信息-导出")
 	@ApiOperation(value = "保险信息-导出", notes = "传入JiaShiYuanLedgerPage", position = 22)
-	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String deptId , String date, BladeUser user) throws IOException {
+	public R goExport_Excel(HttpServletRequest request, HttpServletResponse response, String deptId , String date, BladeUser user) throws IOException {
 		int a=1;
 		R rs = new R();
 		List<String> urlList = new ArrayList<>();
@@ -598,7 +601,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 				return rs;
 			}else{
 				for(int i = 0; i < jiaShiYuanLedgerVOS.size() ; i++) {
-					List<LaborledgerVO> ListData = new ArrayList<>();
+					List<JiaShiYuanLedgerVO> ListData = new ArrayList<>();
 					Map<String, Object> map = new HashMap<>();
 					String templateFile = templatePath;
 					// 渲染文本
@@ -733,5 +736,344 @@ public class JiashiyuanBaoxianController extends BladeController {
 		rs.setSuccess(true);
 		return rs;
 	}
+
+
+
+	@GetMapping("/goExport_MingXi_Excel")
+	@ApiLog("保险信息-导出")
+	@ApiOperation(value = "保险信息-导出", notes = "传入JiaShiYuanLedgerPage", position = 22)
+	public R goExport_MingXi_Excel(HttpServletRequest request, HttpServletResponse response, String deptId , String date, BladeUser user) throws IOException {
+		int a=1;
+		int b=0;
+		R rs = new R();
+		List<String> urlList = new ArrayList<>();
+		JiaShiYuanLedgerVO jiaShiYuanLedgerVO = new JiaShiYuanLedgerVO();
+//		JiaShiYuanLedgerPage jiaShiYuanLedgerPage = new JiaShiYuanLedgerPage();
+		jiaShiYuanLedgerVO.setDeptId(deptId);
+//		jiaShiYuanLedgerVO.setDate(date);
+		// TODO 渲染其他类型的数据请参考官方文档
+		DecimalFormat df = new DecimalFormat("######0.00");
+		Calendar now = Calendar.getInstance();
+
+		//word模板地址
+		String templatePath =fileServer.getPathPrefix()+"muban\\"+"chexian.xlsx";
+		String templatePath2 =fileServer.getPathPrefix()+"muban\\"+"renxian.xlsx";
+		String [] nyr= DateUtil.today().split("-");
+		String[] idsss = jiaShiYuanLedgerVO.getDeptId().split(",");
+		//去除素组中重复的数组
+		List<String> listid = new ArrayList<String>();
+		for (int i=0; i<idsss.length; i++) {
+			if(!listid.contains(idsss[i])) {
+				listid.add(idsss[i]);
+			}
+		}
+		//返回一个包含所有对象的指定类型的数组
+		String[] idss= listid.toArray(new String[1]);
+		for(int j = 0;j< idss.length;j++){
+			jiaShiYuanLedgerVO.setDeptName("");
+			jiaShiYuanLedgerVO.setDeptId(idss[j]);
+			List<JiaShiYuanLedgerVO> jiaShiYuanLedgerVOS = jiashiyuanBaoxianService.selectDeptInsurance(jiaShiYuanLedgerVO);
+			//Excel中的结果集ListData
+//			List<LaborledgerVO> ListData = new ArrayList<>();
+			if(jiaShiYuanLedgerVOS.size()==0){
+
+			}else if(jiaShiYuanLedgerVOS.size()>3000){
+				rs.setMsg("数据超过30000条无法下载");
+				rs.setCode(500);
+				return rs;
+			}else{
+				for(int i = 0; i < jiaShiYuanLedgerVOS.size() ; i++) {
+					Map<String, Object> map = new HashMap<>();
+					String templateFile = templatePath;
+					// 渲染文本
+					JiaShiYuanLedgerVO t = jiaShiYuanLedgerVOS.get(i);
+					JiaShiYuanLedgerVO jiaShiYuanLedgerVO1 = new JiaShiYuanLedgerVO();
+					jiaShiYuanLedgerVO1.setDeptId(t.getDeptId());
+
+					// 模板注意 用{} 来表示你要用的变量 如果本来就有"{","}" 特殊字符 用"\{","\}"代替
+					// {} 代表普通变量 {.} 代表是list的变量
+					// 这里模板 删除了list以后的数据，也就是统计的这一行
+					String templateFileName = templateFile;
+					//alarmServer.getTemplateUrl()+
+//					String fileName = "D:\\ExcelTest\\"+t.getDeptName()+"-保险台账"+a+".xlsx";
+//					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+"-保险台账"+".xlsx";
+					FillConfig fillConfig = FillConfig.builder().forceNewRow(Boolean.TRUE).build();
+					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+"/"+"车险";
+					String fileName2 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+"/"+"人险";
+					File newFile = new File(fileName);
+					File newFile2 = new File(fileName2);
+					//判断目标文件所在目录是否存在
+					if(!newFile.exists()){
+						//如果目标文件所在的目录不存在，则创建父目录
+						newFile.mkdirs();
+					}
+					//判断目标文件所在目录是否存在
+					if(!newFile2.exists()){
+						//如果目标文件所在的目录不存在，则创建父目录
+						newFile2.mkdirs();
+					}
+
+					map.put("deptName", t.getDeptName());
+					if(StrUtil.isNotEmpty(t.getJiashiyuanrenshu())){
+						map.put("jiashiyuanrenshu", t.getJiashiyuanrenshu());
+					}else {
+						map.put("jiashiyuanrenshu", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getCheliangshuliang())){
+						map.put("cheliangshuliang", t.getCheliangshuliang());
+					}else {
+						map.put("cheliangshuliang", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getHuoguizongbaoxianjine())){
+						map.put("huoguizongbaoxianjine", t.getHuoguizongbaoxianjine());
+					}else {
+						map.put("huoguizongbaoxianjine", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getHuoguizongbaofeijine())){
+						map.put("huoguizongbaofeijine", t.getHuoguizongbaofeijine());
+					}else {
+						map.put("huoguizongbaofeijine", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getAnzezongbaoxianjine())){
+						map.put("anzezongbaoxianjine", t.getAnzezongbaoxianjine());
+					}else {
+						map.put("anzezongbaoxianjine", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getAnzezongbaofeijine())){
+						map.put("anzezongbaofeijine", t.getAnzezongbaofeijine());
+					}else {
+						map.put("anzezongbaofeijine", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getQitazongbaoxianjineqiye())){
+						map.put("qitazongbaoxianjineqiye", t.getQitazongbaoxianjineqiye());
+					}else {
+						map.put("qitazongbaoxianjineqiye", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getQitazongbaofeijineqiye())){
+						map.put("qitazongbaofeijineqiye", t.getQitazongbaofeijineqiye());
+					}else {
+						map.put("qitazongbaofeijineqiye", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getHuoguiInsuranceDays())){
+						map.put("huoguiInsuranceDays", t.getHuoguiInsuranceDays());
+					}else {
+						map.put("huoguiInsuranceDays", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getAnzeInsuranceDays())){
+						map.put("anzeInsuranceDays", t.getAnzeInsuranceDays());
+					}else {
+						map.put("anzeInsuranceDays", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getQitaInsuranceDays())){
+						map.put("qitaInsuranceDays", t.getQitaInsuranceDays());
+					}else {
+						map.put("qitaInsuranceDays", "0");
+					}
+					map.put("datetime", DateUtil.now());
+					JiaShiYuanLedgerVO jiaShiYuanLedgerVO4 = jiashiyuanBaoxianService.selectDeptTotalTmountInsurance(t);
+					map.put("totaltmount",jiaShiYuanLedgerVO4.getTotalTmount());
+
+					//车辆
+					List<JiaShiYuanLedgerVO> jiaShiYuanLedgerVOS2 = jiashiyuanBaoxianService.selectVehicleInsurance(jiaShiYuanLedgerVO1);
+					for (JiaShiYuanLedgerVO aa:jiaShiYuanLedgerVOS2) {
+						HashMap<String, Object> map2 = new HashMap<>();
+						map2.put("cheliangpaizhao",aa.getCheliangpaizhao());
+						JiaShiYuanLedgerVO jiaShiYuanLedgerVO2 = jiashiyuanBaoxianService.selectHeavyTrafficInsurance(aa);
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO2.getJiaoqiangxianzongjine()) && !jiaShiYuanLedgerVO2.getJiaoqiangxianzongjine().equals("null")){
+							map2.put("jiaoqiangxianzongjine",aa.getJiaoqiangxianzongjine());
+						}else {
+							map2.put("jiaoqiangxianzongjine","0");
+						}
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO2.getJiaoqiangxianzongjine()) && !jiaShiYuanLedgerVO2.getJiaoqiangxianzongjine().equals("null")){
+							map2.put("jiaoqiangxianzongbaoxianjine",aa.getJiaoqiangxianzongjine());
+						}else {
+							map2.put("jiaoqiangxianzongbaoxianjine","0");
+						}
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO2.getJiaoqiangxianzongbaofeijine()) && !jiaShiYuanLedgerVO2.getJiaoqiangxianzongbaofeijine().equals("null")){
+							map2.put("jiaoqiangxianzongbaofeijine",jiaShiYuanLedgerVO2.getJiaoqiangxianzongbaofeijine());
+						}else {
+							map2.put("jiaoqiangxianzongbaofeijine","0");
+						}
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO2.getJiaoqiangxianzongbaofeijine()) && !jiaShiYuanLedgerVO2.getJiaoqiangxianzongbaofeijine().equals("null")){
+							map2.put("jiaoqiangxianzongfeiyong",jiaShiYuanLedgerVO2.getJiaoqiangxianzongbaofeijine());
+						}else {
+							map2.put("jiaoqiangxianzongfeiyong","0");
+						}
+//						if(StrUtil.isNotEmpty(aa.getJiaoqiangxianzongbaofeijine())){
+//							map2.put("jiaoqiangxianzongfeiyong",aa.getJiaoqiangxianzongbaofeijine());
+//						}
+						JiaShiYuanLedgerVO jiaShiYuanLedgerVO3 = jiashiyuanBaoxianService.selectNotHeavyTrafficInsurance(aa);
+
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getJidongchesunshixianjine()) && !jiaShiYuanLedgerVO3.getJidongchesunshixianjine().equals("null")){
+							map2.put("jidongchesunshixianjine",jiaShiYuanLedgerVO3.getJidongchesunshixianjine());
+						}else {
+							map2.put("jidongchesunshixianjine","0");
+						}
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getJidongchesunshixianbaofeijine()) && !jiaShiYuanLedgerVO3.getJidongchesunshixianbaofeijine().equals("null")){
+							map2.put("jidongchesunshixianbaofeijine",jiaShiYuanLedgerVO3.getJidongchesunshixianbaofeijine());
+						}else {
+							map2.put("jidongchesunshixianbaofeijine","0");
+						}
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getSanzhezerenxianjine()) && !jiaShiYuanLedgerVO3.getSanzhezerenxianjine().equals("null")){
+							map2.put("sanzhezerenxianjine",jiaShiYuanLedgerVO3.getSanzhezerenxianjine());
+						}else {
+							map2.put("sanzhezerenxianjine","0");
+						}
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getSanzhezerenxianbaofeijine()) && !jiaShiYuanLedgerVO3.getSanzhezerenxianbaofeijine().equals("null")){
+							map2.put("sanzhezerenxianbaofeijine",jiaShiYuanLedgerVO3.getSanzhezerenxianbaofeijine());
+						}else {
+							map2.put("sanzhezerenxianbaofeijine","0");
+						}
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getSijijine()) && !jiaShiYuanLedgerVO3.getSijijine().equals("null")){
+							map2.put("sijijine",jiaShiYuanLedgerVO3.getSijijine());
+						}else {
+							map2.put("sijijine","0");
+						}
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getSijibaofeijine()) && !jiaShiYuanLedgerVO3.getSijibaofeijine().equals("null")){
+							map2.put("sijibaofeijine",jiaShiYuanLedgerVO3.getSijibaofeijine());
+						}
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getChengkejine()) && !jiaShiYuanLedgerVO3.getChengkejine().equals("null")){
+							map2.put("chengkejine",jiaShiYuanLedgerVO3.getChengkejine());
+						}else {
+							map2.put("chengkejine","0");
+						}
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getChengkebaofeijine()) && !jiaShiYuanLedgerVO3.getChengkebaofeijine().equals("null")){
+							map2.put("chengkebaofeijine",jiaShiYuanLedgerVO3.getChengkebaofeijine());
+						}else {
+							map2.put("chengkebaofeijine","0");
+						}
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getQitajine()) && !jiaShiYuanLedgerVO3.getQitajine().equals("null")){
+							map2.put("qitajine",jiaShiYuanLedgerVO3.getQitajine());
+						}else {
+							map2.put("qitajine","0");
+						}
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getQitabaofeijine()) && !jiaShiYuanLedgerVO3.getQitabaofeijine().equals("null")){
+							map2.put("qitabaofeijine",jiaShiYuanLedgerVO3.getQitabaofeijine());
+						}else {
+							map2.put("qitabaofeijine","0");
+						}
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getChexianzongbaoxianjine()) && !jiaShiYuanLedgerVO3.getChexianzongbaoxianjine().equals("null")){
+							map2.put("chexianzongbaoxianjine",jiaShiYuanLedgerVO3.getChexianzongbaoxianjine());
+						}else {
+							map2.put("chexianzongbaoxianjine","0");
+						}
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getChexianzongbaofei()) && !jiaShiYuanLedgerVO3.getChexianzongbaofei().equals("null")){
+							map2.put("chexianzongbaofei",jiaShiYuanLedgerVO3.getChexianzongbaofei());
+						}else {
+							map2.put("chexianzongbaofei","0");
+						}
+						map2.put("avbInsureName",aa.getAvbInsureName());
+						map2.put("avbInsuranceDays",aa.getAvbInsuranceDays());
+						map2.put("fileName",fileName+"/"+t.getDeptName()+"-"+aa.getCheliangpaizhao()+"-保险明细台账.xlsx")  ;
+						ExcelWriter excelWriter = EasyExcel.write(map2.get("fileName").toString()).withTemplate(templateFileName).build();
+						WriteSheet companyInsuranceSheet = EasyExcel.writerSheet("公司保险明细台账").build();
+						// 写入list之前的数据
+						excelWriter.fill(map, companyInsuranceSheet);
+						WriteSheet vehiclesInsuranceSheet = EasyExcel.writerSheet("车辆保险明细").build();
+						// 直接写入数据
+						excelWriter.fill(map2, vehiclesInsuranceSheet);
+						excelWriter.finish();
+
+					}
+
+
+					//人员
+					List<JiaShiYuanLedgerVO> jiaShiYuanLedgerVOS3 = jiashiyuanBaoxianService.selectPersonInsurance(jiaShiYuanLedgerVO1);
+					for (JiaShiYuanLedgerVO aa:jiaShiYuanLedgerVOS3) {
+						HashMap<String, Object> map3 = new HashMap<>();
+						map3.put("ajbInsuredName",aa.getAjbInsuredName());
+						map3.put("ajbInsureName",aa.getAjbInsureName());
+						map3.put("AjbInsuranceDays",aa.getAjbInsuranceDays());
+						JiaShiYuanLedgerVO jiaShiYuanLedgerVO2 = jiashiyuanBaoxianService.selectAccidentInsurance(aa);
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO2.getYiwaixianbaoxianjine()) && !jiaShiYuanLedgerVO2.getYiwaixianbaoxianjine().equals("null")){
+							map3.put("yiwaixianbaoxianjine",jiaShiYuanLedgerVO2.getYiwaixianbaoxianjine());
+						}else {
+							map3.put("yiwaixianbaoxianjine","0");
+						}
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO2.getYiwaixianbaoxianjine()) && !jiaShiYuanLedgerVO2.getYiwaixianbaoxianjine().equals("null")){
+							map3.put("yiwaixianzongbaoxianjine",jiaShiYuanLedgerVO2.getYiwaixianbaoxianjine());
+						}else {
+							map3.put("yiwaixianzongbaoxianjine","0");
+						}
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO2.getYiwaixianbaofeijine()) && !jiaShiYuanLedgerVO2.getYiwaixianbaofeijine().equals("null")){
+							map3.put("yiwaixianbaofeijine",jiaShiYuanLedgerVO2.getYiwaixianbaofeijine());
+						}else {
+							map3.put("yiwaixianbaofeijine","0");
+						}
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO2.getYiwaixianbaofeijine()) && !jiaShiYuanLedgerVO2.getYiwaixianbaofeijine().equals("null")){
+							map3.put("yiwaixianzongbaofeijine",jiaShiYuanLedgerVO2.getYiwaixianbaofeijine());
+						}else {
+							map3.put("yiwaixianzongbaofeijine","0");
+						}
+						JiaShiYuanLedgerVO jiaShiYuanLedgerVO3 = jiashiyuanBaoxianService.selectNotAccidentInsurance(aa);
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getRenyuanqitabaoxianjine()) && !jiaShiYuanLedgerVO3.getRenyuanqitabaoxianjine().equals("null")){
+							map3.put("renyuanqitabaoxianjine",jiaShiYuanLedgerVO3.getRenyuanqitabaoxianjine());
+						}else {
+							map3.put("renyuanqitabaoxianjine","0");
+						}
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getRenyuanqitabaoxianjine()) && !jiaShiYuanLedgerVO3.getRenyuanqitabaoxianjine().equals("null")){
+							map3.put("renyuanqitazongbaoxianjine",jiaShiYuanLedgerVO3.getRenyuanqitabaoxianjine());
+						}else {
+							map3.put("renyuanqitazongbaoxianjine","0");
+						}
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getRenyuanqitabaofeijine()) && !jiaShiYuanLedgerVO3.getRenyuanqitabaofeijine().equals("null")){
+							map3.put("renyuanqitabaofeijine",jiaShiYuanLedgerVO3.getRenyuanqitabaofeijine());
+						}else {
+							map3.put("renyuanqitabaofeijine","0");
+						}
+						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getRenyuanqitabaofeijine()) && !jiaShiYuanLedgerVO3.getRenyuanqitabaofeijine().equals("null")){
+							map3.put("renyuanqitazongbaofeijine",jiaShiYuanLedgerVO3.getRenyuanqitabaofeijine());
+						}else {
+							map3.put("renyuanqitazongbaofeijine","0");
+						}
+
+						map3.put("fileName",fileName2+"/"+t.getDeptName()+"-"+aa.getAjbInsuredName()+"-保险明细台账.xlsx")  ;
+						ExcelWriter excelWriter = EasyExcel.write(map3.get("fileName").toString()).withTemplate(templatePath2).build();
+						WriteSheet companyInsuranceSheet = EasyExcel.writerSheet("公司保险明细台账").build();
+						// 写入list之前的数据
+						excelWriter.fill(map, companyInsuranceSheet);
+						WriteSheet jiashiyuanInsuranceSheet = EasyExcel.writerSheet("驾驶员保险明细").build();
+						// 直接写入数据
+						excelWriter.fill(map3, jiashiyuanInsuranceSheet);
+						excelWriter.finish();
+					}
+
+//					excelWriter.fill(ListData,fillConfig, vehiclesInsuranceSheet);
+//					excelWriter.fill(ListData2, vehiclesInsuranceSheet);
+					urlList.add(fileName);
+					a++;
+				}
+			}
+		}
+		String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"保险明细台账.zip";
+		PackageToZIp.toZip(fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2], fileName);
+
+//		ExcelUtils.deleteFile(fileName);
+//		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(fileName));
+//		ApacheZipUtils.doCompress1(urlList, bizOut);
+//		//不要忘记调用
+//		bizOut.close();
+
+		rs.setMsg("下载成功");
+		rs.setCode(200);
+		rs.setData(fileName);
+		rs.setSuccess(true);
+		return rs;
+	}
+
+//	@GetMapping("/goExport_MingXi2_Excel")
+//	@ApiLog("保险明细信息-导出")
+//	@ApiOperation(value = "保险信息-导出", notes = "传入JiaShiYuanLedgerPage", position = 22)
+//	public R goExport_MingXi2_Excel(@RequestBody JiaShiYuanLedgerVO jiaShiYuanLedgerVO) throws IOException {
+//		R rs = new R();
+//
+//		List<JiaShiYuanLedgerVO> jiaShiYuanLedgerVOS = jiashiyuanBaoxianService.selectAccidentInsurance(jiaShiYuanLedgerVO);
+//
+//		rs.setMsg("下载成功");
+//		rs.setCode(200);
+//		rs.setSuccess(true);
+//		rs.setData(jiaShiYuanLedgerVOS);
+//		return rs;
+//	}
 
 }

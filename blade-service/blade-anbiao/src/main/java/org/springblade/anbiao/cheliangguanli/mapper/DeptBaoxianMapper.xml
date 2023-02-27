@@ -124,7 +124,7 @@
         adb.avb_special_agreement,
         adb.avb_enclosure,
         adb.avb_delete,bd.dept_name,IFNULL(cc.ajbm_company_amount,0) as ajbmInsuranceAmount,IFNULL(ajbm_basic_premium,0) as ajbmBasicPremium,
-        case WHEN IFNULL(DATEDIFF(adb.avb_insurance_period_end,adb.avb_insurance_period_start),'')='' then 0 else DATEDIFF(adb.avb_insurance_period_end,adb.avb_insurance_period_start) end as adb_insurance_days
+        case WHEN IFNULL(DATEDIFF(adb.avb_insurance_period_end,adb.avb_insurance_period_start),'')='' then 0 else DATEDIFF(adb.avb_insurance_period_end,adb.avb_insurance_period_start) end as avb_insurance_days
         from
             anbiao_dept_baoxian adb
         inner join  (
