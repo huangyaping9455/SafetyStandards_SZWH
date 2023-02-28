@@ -26,10 +26,8 @@ import org.springblade.anbiao.configure.service.IConfigureService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.feign.IOrganizationsClient;
 import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
-import org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuan;
-import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
-import org.springblade.anbiao.jiashiyuan.service.IAnbiaoCheliangJiashiyuanService;
-import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
+import org.springblade.anbiao.jiashiyuan.entity.*;
+import org.springblade.anbiao.jiashiyuan.service.*;
 import org.springblade.common.configurationBean.FileServer;
 import org.springblade.common.constant.FilePathConstant;
 import org.springblade.common.tool.*;
@@ -37,6 +35,7 @@ import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
+import org.springblade.core.tool.utils.DigestUtil;
 import org.springblade.core.tool.utils.StringUtil;
 import org.springblade.system.entity.Dept;
 import org.springblade.system.entity.Dict;
@@ -91,8 +90,19 @@ public class VehicleController {
 	private IVehicleDaoluyunshuzhengService vehicleDaoluyunshuzhengService;
 	private IVehicleXingnengbaogaoService vehicleXingnengbaogaoService;
 	private IVehicleDengjizhengshuService vehicleDengjizhengshuService;
+	private IAnbiaoJiashiyuanRuzhiService ruzhiService;
+	private IAnbiaoJiashiyuanJiashizhengService jiashizhengService;
+	private IAnbiaoJiashiyuanCongyezigezhengService congyezigezhengService;
+	private IAnbiaoJiashiyuanTijianService tijianService;
+	private IAnbiaoJiashiyuanGangqianpeixunService gangqianpeixunService;
+	private IAnbiaoJiashiyuanWuzezhengmingService wuzezhengmingService;
+	private IAnbiaoJiashiyuanAnquanzerenshuService anquanzerenshuService;
+	private IAnbiaoJiashiyuanWeihaigaozhishuService weihaigaozhishuService;
+	private IAnbiaoJiashiyuanLaodonghetongService laodonghetongService;
+	private IAnbiaoJiashiyuanQitaService qitaService;
 
-    @PostMapping("/list")
+
+	@PostMapping("/list")
 	@ApiLog("分页-车辆资料管理")
     @ApiOperation(value = "分页-车辆资料管理", notes = "传入VehiclePage", position = 1)
     public R<VehiclePage<VehicleListVO>> list(@RequestBody VehiclePage vehiclepage) {
@@ -391,7 +401,7 @@ public class VehicleController {
 					dengjizhengshuService.save(dengjizhengshu);
 
 					VehicleJingyingxukezheng jingyingxukezheng = new VehicleJingyingxukezheng();		//经营许可证
-					jingyingxukezheng.setAvjVehicleIds(dept.getId());
+					jingyingxukezheng.setAvjVehicleIds(vehicle.getId());
 					jingyingxukezheng.setAvjOperatorName(dept.getDeptName());
 					jingyingxukezheng.setAvjLicenseNo(v.getJingyingxukezhenghao());
 					jingyingxukezheng.setAvjBusinessLicense(v.getJingyingxukezhenghao());
@@ -2313,6 +2323,187 @@ public class VehicleController {
 							cheliangJiashiyuan.setCreatetime(DateUtil.now());
 							cheliangJiashiyuanService.save(cheliangJiashiyuan);
 						}
+
+						if (StringUtils.isNotBlank(vehicle.getJiashiyuanxingming())  && !vehicle.getJiashiyuanxingming().equals("null")){
+							QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
+							jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getJiashiyuanxingming,vehicle.getJiashiyuanxingming());
+							jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShoujihaoma,vehicle.getJiashiyuandianhua());
+							jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,"0");
+							jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId,vehicle.getDeptId());
+							JiaShiYuan jiaShiYuan = iJiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+							if (jiaShiYuan==null){
+								jiaShiYuan.setJiashiyuanxingming(vehicle.getJiashiyuanxingming());
+								jiaShiYuan.setDeptId(vehicle.getDeptId());
+								jiaShiYuan.setShoujihaoma(vehicle.getJiashiyuandianhua());
+								jiaShiYuan.setCaozuoren(user.getUserName());
+								jiaShiYuan.setCaozuorenid(user.getUserId());
+								jiaShiYuan.setCreatetime(DateUtil.now());
+								jiaShiYuan.setDenglumima(DigestUtil.encrypt(jiaShiYuan.getShoujihaoma().substring(jiaShiYuan.getShoujihaoma().length() - 6)));
+								jiaShiYuan.setIsdelete(0);
+								jiaShiYuan.setStatus(0);
+								iJiaShiYuanService.save(jiaShiYuan);
+
+								QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper1 = new QueryWrapper<>();
+								jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getJiashiyuanxingming,vehicle.getJiashiyuanxingming());
+								jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getShoujihaoma,vehicle.getJiashiyuandianhua());
+								jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getIsdelete,"0");
+								jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getDeptId,vehicle.getDeptId());
+								JiaShiYuan jiaShiYuan1 = iJiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+
+								//向入职登记表添加信息
+								AnbiaoJiashiyuanRuzhi ruzhi = new AnbiaoJiashiyuanRuzhi();
+								QueryWrapper<AnbiaoJiashiyuanRuzhi> ruzhiQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanRuzhi>();
+								ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrAjIds, jiaShiYuan1.getId());
+								ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrDelete, "0");
+								AnbiaoJiashiyuanRuzhi rzdeail = ruzhiService.getBaseMapper().selectOne(ruzhiQueryWrapper);
+								if (rzdeail == null) {
+									ruzhi.setAjrCreateByName(user.getUserName());
+									ruzhi.setAjrCreateByIds(user.getUserId().toString());
+									ruzhi.setAjrCreateTime(DateUtil.now());
+									ruzhi.setAjrDelete("0");
+									ruzhi.setAjrAjIds(jiaShiYuan1.getId());
+									ruzhi.setAjrName(jiaShiYuan1.getJiashiyuanxingming());
+									ruzhi.setAjrApproverStatus("0");
+									ruzhiService.save(ruzhi);
+								}
+
+								//向驾驶证信息表添加数据
+								AnbiaoJiashiyuanJiashizheng jiashizheng = new AnbiaoJiashiyuanJiashizheng();
+								QueryWrapper<AnbiaoJiashiyuanJiashizheng> jiashizhengQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanJiashizheng>();
+								jiashizhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanJiashizheng::getAjjAjIds, jiaShiYuan1.getId());
+								jiashizhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanJiashizheng::getAjjDelete, "0");
+								AnbiaoJiashiyuanJiashizheng jszdeail = jiashizhengService.getBaseMapper().selectOne(jiashizhengQueryWrapper);
+								if (jszdeail == null) {
+									jiashizheng.setAjjAjIds(jiaShiYuan1.getId());
+									jiashizheng.setAjjStatus("0");
+									jiashizheng.setAjjDelete("0");
+									jiashizheng.setAjjCreateByIds(user.getUserId().toString());
+									jiashizheng.setAjjCreateByName(user.getUserName());
+									jiashizheng.setAjjCreateTime(DateUtil.now());
+									jiashizhengService.save(jiashizheng);
+								}
+
+								//向从业资格证信息表添加数据
+								AnbiaoJiashiyuanCongyezigezheng congyezigezheng = new AnbiaoJiashiyuanCongyezigezheng();
+								QueryWrapper<AnbiaoJiashiyuanCongyezigezheng> congyezigezhengQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanCongyezigezheng>();
+								congyezigezhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanCongyezigezheng::getAjcAjIds, jiaShiYuan1.getId());
+								congyezigezhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanCongyezigezheng::getAjcDelete, "0");
+								AnbiaoJiashiyuanCongyezigezheng cyzdeail = congyezigezhengService.getBaseMapper().selectOne(congyezigezhengQueryWrapper);
+								if (cyzdeail == null) {
+									congyezigezheng.setAjcAjIds(jiaShiYuan1.getId());
+									congyezigezheng.setAjcStatus("0");
+									congyezigezheng.setAjcCreateTime(DateUtil.now());
+									congyezigezheng.setAjcDelete("0");
+									congyezigezhengService.save(congyezigezheng);
+								}
+
+								//向体检信息表添加数据
+								AnbiaoJiashiyuanTijian tijian = new AnbiaoJiashiyuanTijian();
+								QueryWrapper<AnbiaoJiashiyuanTijian> tijianQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanTijian>();
+								tijianQueryWrapper.lambda().eq(AnbiaoJiashiyuanTijian::getAjtAjIds, jiaShiYuan1.getId());
+								tijianQueryWrapper.lambda().eq(AnbiaoJiashiyuanTijian::getAjtDelete, "0");
+								AnbiaoJiashiyuanTijian tjdeail = tijianService.getBaseMapper().selectOne(tijianQueryWrapper);
+								if (tjdeail == null) {
+									tijian.setAjtCreateByName(user.getUserName());
+									tijian.setAjtCreateByIds(user.getUserId().toString());
+									tijian.setAjtCreateTime(DateUtil.now());
+									tijian.setAjtDelete("0");
+									tijian.setAjtAjIds(jiaShiYuan1.getId());
+									tijianService.save(tijian);
+								}
+
+								//向岗前培训信息表添加数据
+								AnbiaoJiashiyuanGangqianpeixun gangqianpeixun = new AnbiaoJiashiyuanGangqianpeixun();
+								QueryWrapper<AnbiaoJiashiyuanGangqianpeixun> gangqianpeixunQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanGangqianpeixun>();
+								gangqianpeixunQueryWrapper.lambda().eq(AnbiaoJiashiyuanGangqianpeixun::getAjgAjIds, jiaShiYuan1.getId());
+								gangqianpeixunQueryWrapper.lambda().eq(AnbiaoJiashiyuanGangqianpeixun::getAjgDelete, "0");
+								AnbiaoJiashiyuanGangqianpeixun gqpxdeail = gangqianpeixunService.getBaseMapper().selectOne(gangqianpeixunQueryWrapper);
+								if (gqpxdeail == null) {
+									gangqianpeixun.setAjgCreateByName(user.getUserName());
+									gangqianpeixun.setAjgCreateByIds(user.getUserId().toString());
+									gangqianpeixun.setAjgCreateTime(DateUtil.now());
+									gangqianpeixun.setAjgDelete("0");
+									gangqianpeixun.setAjgAjIds(jiaShiYuan1.getId());
+									gangqianpeixunService.save(gangqianpeixun);
+								}
+
+								//向三年无重大责任事故证明信息表添加数据
+								AnbiaoJiashiyuanWuzezhengming wuzezhengming = new AnbiaoJiashiyuanWuzezhengming();
+								QueryWrapper<AnbiaoJiashiyuanWuzezhengming> wuzezhengmingQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanWuzezhengming>();
+								wuzezhengmingQueryWrapper.lambda().eq(AnbiaoJiashiyuanWuzezhengming::getAjwAjIds, jiaShiYuan1.getId());
+								wuzezhengmingQueryWrapper.lambda().eq(AnbiaoJiashiyuanWuzezhengming::getAjwDelete, "0");
+								AnbiaoJiashiyuanWuzezhengming wzzmdeail = wuzezhengmingService.getBaseMapper().selectOne(wuzezhengmingQueryWrapper);
+								if (wzzmdeail == null) {
+									wuzezhengming.setAjwCreateByName(user.getUserName());
+									wuzezhengming.setAjwCreateByIds(user.getUserId().toString());
+									wuzezhengming.setAjwCreateTime(DateUtil.now());
+									wuzezhengming.setAjwDelete("0");
+									wuzezhengming.setAjwAjIds(jiaShiYuan1.getId());
+									wuzezhengmingService.save(wuzezhengming);
+								}
+
+								//向驾驶员安全责任书信息表添加数据
+								AnbiaoJiashiyuanAnquanzerenshu anquanzerenshu = new AnbiaoJiashiyuanAnquanzerenshu();
+								QueryWrapper<AnbiaoJiashiyuanAnquanzerenshu> anquanzerenshuQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanAnquanzerenshu>();
+								anquanzerenshuQueryWrapper.lambda().eq(AnbiaoJiashiyuanAnquanzerenshu::getAjaAjIds, jiaShiYuan1.getId());
+								anquanzerenshuQueryWrapper.lambda().eq(AnbiaoJiashiyuanAnquanzerenshu::getAjaDelete, "0");
+								AnbiaoJiashiyuanAnquanzerenshu aqzesdeail = anquanzerenshuService.getBaseMapper().selectOne(anquanzerenshuQueryWrapper);
+								if (aqzesdeail == null) {
+									anquanzerenshu.setAjaCreateByName(user.getUserName());
+									anquanzerenshu.setAjaCreateByIds(user.getUserId().toString());
+									anquanzerenshu.setAjaCreateTime(DateUtil.now());
+									anquanzerenshu.setAjaDelete("0");
+									anquanzerenshu.setAjaAjIds(jiaShiYuan1.getId());
+									anquanzerenshuService.save(anquanzerenshu);
+								}
+
+								//向驾驶员职业危害告知书信息表添加数据
+								AnbiaoJiashiyuanWeihaigaozhishu weihaigaozhishu = new AnbiaoJiashiyuanWeihaigaozhishu();
+								QueryWrapper<AnbiaoJiashiyuanWeihaigaozhishu> weihaigaozhishuQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanWeihaigaozhishu>();
+								weihaigaozhishuQueryWrapper.lambda().eq(AnbiaoJiashiyuanWeihaigaozhishu::getAjwAjIds, jiaShiYuan1.getId());
+								weihaigaozhishuQueryWrapper.lambda().eq(AnbiaoJiashiyuanWeihaigaozhishu::getAjwDelete, "0");
+								AnbiaoJiashiyuanWeihaigaozhishu whgzsdeail = weihaigaozhishuService.getBaseMapper().selectOne(weihaigaozhishuQueryWrapper);
+								if (whgzsdeail == null) {
+									weihaigaozhishu.setAjwCreateByName(user.getUserName());
+									weihaigaozhishu.setAjwCreateByIds(user.getUserId().toString());
+									weihaigaozhishu.setAjwCreateTime(DateUtil.now());
+									weihaigaozhishu.setAjwDelete("0");
+									weihaigaozhishu.setAjwAjIds(jiaShiYuan1.getId());
+									weihaigaozhishuService.save(weihaigaozhishu);
+								}
+
+								//向劳动合同信息表添加数据
+								AnbiaoJiashiyuanLaodonghetong laodonghetong = new AnbiaoJiashiyuanLaodonghetong();
+								QueryWrapper<AnbiaoJiashiyuanLaodonghetong> laodonghetongQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanLaodonghetong>();
+								laodonghetongQueryWrapper.lambda().eq(AnbiaoJiashiyuanLaodonghetong::getAjwAjIds, jiaShiYuan1.getId());
+								laodonghetongQueryWrapper.lambda().eq(AnbiaoJiashiyuanLaodonghetong::getAjwDelete, "0");
+								AnbiaoJiashiyuanLaodonghetong ldhtdeail = laodonghetongService.getBaseMapper().selectOne(laodonghetongQueryWrapper);
+								if (ldhtdeail == null) {
+									laodonghetong.setAjwCreateByName(user.getUserName());
+									laodonghetong.setAjwCreateByIds(user.getUserId().toString());
+									laodonghetong.setAjwCreateTime(DateUtil.now());
+									laodonghetong.setAjwDelete("0");
+									laodonghetong.setAjwAjIds(jiaShiYuan1.getId());
+									laodonghetongService.save(laodonghetong);
+								}
+
+								//向其他信息表添加数据
+								AnbiaoJiashiyuanQita qita = new AnbiaoJiashiyuanQita();
+								QueryWrapper<AnbiaoJiashiyuanQita> qitaQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanQita>();
+								qitaQueryWrapper.lambda().eq(AnbiaoJiashiyuanQita::getAjtAjIds, jiaShiYuan1.getId());
+								qitaQueryWrapper.lambda().eq(AnbiaoJiashiyuanQita::getAjtDelete, "0");
+								AnbiaoJiashiyuanQita qtdeail = qitaService.getBaseMapper().selectOne(qitaQueryWrapper);
+								if (qtdeail == null) {
+									qita.setAjtCreateByName(user.getUserName());
+									qita.setAjtCreateByIds(user.getUserId().toString());
+									qita.setAjtCreateTime(DateUtil.now());
+									qita.setAjtDelete("0");
+									qita.setAjtAjIds(jiaShiYuan1.getId());
+									qitaService.save(qita);
+								}
+							}
+						}
+
 
 					}
 				}).start();
