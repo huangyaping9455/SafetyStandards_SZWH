@@ -2030,8 +2030,14 @@ public class VehicleController {
 			if (StringUtils.isNotBlank(String.valueOf(a.get("jiashiyuanxingming")).trim())  && !String.valueOf(a.get("jiashiyuanxingming")).equals("null")) {
 				vehicle.setJiashiyuanxingming(String.valueOf(a.get("jiashiyuanxingming")).trim());
 			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("jiashiyuanxingming")).trim())  && !String.valueOf(a.get("jiashiyuanxingming")).equals("null")) {
+				vehicle.setChezhu(String.valueOf(a.get("jiashiyuanxingming")).trim());
+			}
 			if (StringUtils.isNotBlank(String.valueOf(a.get("jiashiyuandianhua")).trim())  && !String.valueOf(a.get("jiashiyuandianhua")).equals("null")) {
 				vehicle.setJiashiyuandianhua(String.valueOf(a.get("jiashiyuandianhua")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("jiashiyuandianhua")).trim())  && !String.valueOf(a.get("jiashiyuandianhua")).equals("null")) {
+				vehicle.setChezhudianhua(String.valueOf(a.get("jiashiyuandianhua")).trim());
 			}
 			if (StringUtils.isNotBlank(String.valueOf(a.get("daoluyunshuzheng")).trim())  && !String.valueOf(a.get("daoluyunshuzheng")).equals("null")) {
 				vehicle.setDaoluyunshuzheng(String.valueOf(a.get("daoluyunshuzheng")).trim());

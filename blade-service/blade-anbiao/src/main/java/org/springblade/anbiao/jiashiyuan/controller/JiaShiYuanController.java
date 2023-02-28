@@ -2309,7 +2309,6 @@ public class JiaShiYuanController {
 			jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getDeptId,driver.getDeptId());
 			jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getJiashiyuanxingming,driver.getJiashiyuanxingming());
 			jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getShoujihaoma,driver.getShoujihaoma());
-			jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getShenfenzhenghao,driver.getShenfenzhenghao());
 			jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getIsdelete,0);
 			JiaShiYuan jiaShiYuan1 = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper1);
 			if (jiaShiYuan1 != null) {
@@ -2323,9 +2322,6 @@ public class JiaShiYuanController {
 
 			QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<JiaShiYuan>();
 			jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId, driver.getId());
-			jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShoujihaoma, driver.getShoujihaoma());
-			jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete, 0);
-			jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId, driver.getDeptId());
 			JiaShiYuan jiaShiYuan = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
 
 			//向入职登记表添加信息
