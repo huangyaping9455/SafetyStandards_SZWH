@@ -2533,14 +2533,21 @@ public class JiaShiYuanController {
 					vehicle.setJiashiyuanid(driver.getId());
 					vehicle.setJiashiyuanxingming(driver.getJiashiyuanxingming());
 					vehicle.setJiashiyuandianhua(driver.getShoujihaoma());
+					vehicle.setChezhu(driver.getJiashiyuanxingming());
+					vehicle.setChezhudianhua(driver.getShoujihaoma());
 					vehicle.setCaozuoshijian(LocalDateTime.now());
 					vehicleService.getBaseMapper().updateById(vehicle);
 				}else {
+					vehicle=new Vehicle();
+					System.out.println(driver);
+					System.out.println(driver.getDeptId());
 					vehicle.setDeptId(driver.getDeptId());
 					vehicle.setCheliangpaizhao(driver.getCheliangpaizhao());
 					vehicle.setJiashiyuanid(driver.getId());
 					vehicle.setJiashiyuanxingming(driver.getJiashiyuanxingming());
 					vehicle.setJiashiyuandianhua(driver.getShoujihaoma());
+					vehicle.setChezhu(driver.getJiashiyuanxingming());
+					vehicle.setChezhudianhua(driver.getShoujihaoma());
 					vehicle.setCaozuoren(driver.getCaozuoren());
 					vehicle.setCaozuorenid(driver.getCaozuorenid());
 					vehicle.setIsdel(0);
@@ -2622,14 +2629,19 @@ public class JiaShiYuanController {
 					vehicle2.setJiashiyuanid(driver.getId());
 					vehicle2.setJiashiyuanxingming(driver.getJiashiyuanxingming());
 					vehicle2.setJiashiyuandianhua(driver.getShoujihaoma());
+					vehicle2.setChezhu(driver.getJiashiyuanxingming());
+					vehicle2.setChezhudianhua(driver.getShoujihaoma());
 					vehicle2.setCaozuoshijian(LocalDateTime.now());
 					vehicleService.getBaseMapper().updateById(vehicle2);
 				}else {
+					vehicle2=new Vehicle();
 					vehicle2.setDeptId(driver.getDeptId());
 					vehicle2.setCheliangpaizhao(driver.getTrailerNumber());
 					vehicle2.setJiashiyuanid(driver.getId());
 					vehicle2.setJiashiyuanxingming(driver.getJiashiyuanxingming());
 					vehicle2.setJiashiyuandianhua(driver.getShoujihaoma());
+					vehicle2.setChezhu(driver.getJiashiyuanxingming());
+					vehicle2.setChezhudianhua(driver.getShoujihaoma());
 					vehicle2.setCaozuoren(driver.getCaozuoren());
 					vehicle2.setCaozuorenid(driver.getCaozuorenid());
 					vehicle2.setIsdel(0);

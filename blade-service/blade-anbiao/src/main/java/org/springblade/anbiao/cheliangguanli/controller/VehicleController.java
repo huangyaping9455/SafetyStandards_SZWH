@@ -1458,21 +1458,21 @@ public class VehicleController {
 			//验证驾驶员
 			String jiashiyuan = String.valueOf(a.get("驾驶员")).trim();
 			if(StringUtils.isNotBlank(jiashiyuan) && !jiashiyuan.equals("null")){
-				QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
-				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId,vehicle.getDeptId());
-				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShoujihaoma,vehicle.getJiashiyuandianhua());
-				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getJiashiyuanxingming,jiashiyuan);
-				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,0);
-				JiaShiYuan jiaShiYuan = iJiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
-				if (jiaShiYuan != null){
-					vehicle.setJiashiyuanid(jiaShiYuan.getId());
+//				QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
+//				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId,vehicle.getDeptId());
+//				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShoujihaoma,vehicle.getJiashiyuandianhua());
+//				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getJiashiyuanxingming,jiashiyuan);
+//				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,0);
+//				JiaShiYuan jiaShiYuan = iJiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+//				if (jiaShiYuan != null){
+//					vehicle.setJiashiyuanid(jiaShiYuan.getId());
 					vehicle.setJiashiyuanxingming(jiashiyuan);
-				}else {
-					errorStr+=jiashiyuan+"该驾驶员不存在;";
-					vehicle.setMsg(jiashiyuan+"该驾驶员不存在;");
-					vehicle.setImportUrl("icon_cha.png");
-					bb++;
-				}
+//				}else {
+//					errorStr+=jiashiyuan+"该驾驶员不存在;";
+//					vehicle.setMsg(jiashiyuan+"该驾驶员不存在;");
+//					vehicle.setImportUrl("icon_cha.png");
+//					bb++;
+//				}
 			}
 
 			//验证行驶证注册日期
@@ -2145,7 +2145,11 @@ public class VehicleController {
 				vehicle.setCaozuorenid(user.getUserId());
 			}
 			vehicle.setIsdel(0);
-			vehicle.setJiashiyuanid(String.valueOf(a.get("jiashiyuanid")).trim());
+//			vehicle.setJiashiyuanid(String.valueOf(a.get("jiashiyuanid")).trim());
+			vehicle.setCreatetime(LocalDateTime.now());
+			vehicle.setCaozuoshijian(LocalDateTime.now());
+
+
 
 			QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<>();
 			vehicleQueryWrapper.lambda().eq(Vehicle::getDeptId,vehicle.getDeptId());
@@ -2317,18 +2321,18 @@ public class VehicleController {
 							daoluyunshuzhengService.save(daoluyunshuzheng);
 						}
 
-						//新增-车辆-驾驶员绑定信息
-						AnbiaoCheliangJiashiyuan cheliangJiashiyuan = new AnbiaoCheliangJiashiyuan();
-						QueryWrapper<AnbiaoCheliangJiashiyuan> cheliangJiashiyuanQueryWrapper = new QueryWrapper<>();
-						cheliangJiashiyuanQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuan::getJiashiyuanid,vehicle.getJiashiyuanid());
-						cheliangJiashiyuanQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuan::getVehid,vehicle.getId());
-						AnbiaoCheliangJiashiyuan deail = cheliangJiashiyuanService.getBaseMapper().selectOne(cheliangJiashiyuanQueryWrapper);
-						if (deail == null){
-							cheliangJiashiyuan.setJiashiyuanid(vehicle.getJiashiyuanid());
-							cheliangJiashiyuan.setVehid(vehicle.getId());
-							cheliangJiashiyuan.setCreatetime(DateUtil.now());
-							cheliangJiashiyuanService.save(cheliangJiashiyuan);
-						}
+//						//新增-车辆-驾驶员绑定信息
+//						AnbiaoCheliangJiashiyuan cheliangJiashiyuan = new AnbiaoCheliangJiashiyuan();
+//						QueryWrapper<AnbiaoCheliangJiashiyuan> cheliangJiashiyuanQueryWrapper = new QueryWrapper<>();
+//						cheliangJiashiyuanQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuan::getJiashiyuanid,vehicle.getJiashiyuanid());
+//						cheliangJiashiyuanQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuan::getVehid,vehicle.getId());
+//						AnbiaoCheliangJiashiyuan deail = cheliangJiashiyuanService.getBaseMapper().selectOne(cheliangJiashiyuanQueryWrapper);
+//						if (deail == null){
+//							cheliangJiashiyuan.setJiashiyuanid(vehicle.getJiashiyuanid());
+//							cheliangJiashiyuan.setVehid(vehicle.getId());
+//							cheliangJiashiyuan.setCreatetime(DateUtil.now());
+//							cheliangJiashiyuanService.save(cheliangJiashiyuan);
+//						}
 
 						if (StringUtils.isNotBlank(vehicle.getJiashiyuanxingming())  && !vehicle.getJiashiyuanxingming().equals("null")){
 							QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
@@ -2338,6 +2342,7 @@ public class VehicleController {
 							jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId,vehicle.getDeptId());
 							JiaShiYuan jiaShiYuan = iJiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
 							if (jiaShiYuan==null){
+								jiaShiYuan = new JiaShiYuan();
 								jiaShiYuan.setJiashiyuanxingming(vehicle.getJiashiyuanxingming());
 								jiaShiYuan.setDeptId(vehicle.getDeptId());
 								jiaShiYuan.setShoujihaoma(vehicle.getJiashiyuandianhua());
@@ -2507,6 +2512,19 @@ public class VehicleController {
 									qita.setAjtAjIds(jiaShiYuan1.getId());
 									qitaService.save(qita);
 								}
+
+								QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper2 = new QueryWrapper<>();
+								jiaShiYuanQueryWrapper2.lambda().eq(JiaShiYuan::getJiashiyuanxingming,vehicle.getJiashiyuanxingming());
+								jiaShiYuanQueryWrapper2.lambda().eq(JiaShiYuan::getIsdelete,"0");
+								jiaShiYuanQueryWrapper2.lambda().eq(JiaShiYuan::getShoujihaoma,vehicle.getJiashiyuandianhua());
+								jiaShiYuanQueryWrapper2.lambda().eq(JiaShiYuan::getDeptId,vehicle.getDeptId());
+								JiaShiYuan jiaShiYuan2 = iJiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper2);
+								vehicle.setJiashiyuanid(jiaShiYuan2.getId());
+								vehicleService.getBaseMapper().updateById(vehicle);
+
+							}else {
+								vehicle.setJiashiyuanid(jiaShiYuan.getId());
+								vehicleService.getBaseMapper().updateById(vehicle);
 							}
 						}
 
