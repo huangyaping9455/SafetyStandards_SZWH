@@ -802,6 +802,7 @@ values
                 where a.jiashiyuanid = #{jsyId}
                   and a.vehid = b.id
                   and a.vstatus = 1
+                  and b.is_deleted=0
 <!--                  and b.shiyongxingzhi = '车头'-->
                 ORDER BY a.createtime desc
                 limit 1
@@ -811,6 +812,7 @@ values
                 where a.jiashiyuanid = #{jsyId}
                   and a.gvehid = b.id
                   and a.gstatus = 1
+                  and b.is_deleted=0
 <!--                  and b.shiyongxingzhi = '挂车'-->
                 ORDER BY a.createtime desc
                     limit 1
