@@ -1764,19 +1764,24 @@ public class JiaShiYuanController {
 
 			//验证身份证：结束日期
 			String shenfenzhengyouxiaoqi = String.valueOf(a.get("身份证：结束日期")).trim();
-			if (StringUtils.isNotBlank(shenfenzhengyouxiaoqi) && !shenfenzhengyouxiaoqi.equals("null")) {
-				if (shenfenzhengyouxiaoqi.length() >= 10) {
-					shenfenzhengyouxiaoqi = shenfenzhengyouxiaoqi.substring(0, 10);
-					if (StringUtils.isNotBlank(shenfenzhengyouxiaoqi) && !shenfenzhengyouxiaoqi.equals("null")) {
-						if (DateUtils.isDateString(shenfenzhengyouxiaoqi, null) == true) {
-							driver.setShenfenzhengyouxiaoqi(shenfenzhengyouxiaoqi);
-							driver.setImportUrl("icon_gou.png");
-						} else {
-							driver.setMsg(shenfenzhengyouxiaoqi + ",该身份证有效期,不是时间格式;");
-							errorStr += shenfenzhengyouxiaoqi + ",该身份证有效期,不是时间格式;";
-							driver.setImportUrl("icon_cha.png");
-							bb++;
+			if (StringUtils.isNotBlank(shenfenzhengyouxiaoqi) && !shenfenzhengyouxiaoqi.equals("null") ) {
+				if (shenfenzhengyouxiaoqi.length() >= 10 || shenfenzhengyouxiaoqi.equals("长期")) {
+					if (!shenfenzhengyouxiaoqi.equals("长期")) {
+						shenfenzhengyouxiaoqi = shenfenzhengyouxiaoqi.substring(0, 10);
+						if (StringUtils.isNotBlank(shenfenzhengyouxiaoqi) && !shenfenzhengyouxiaoqi.equals("null")) {
+							if (DateUtils.isDateString(shenfenzhengyouxiaoqi, null) == true) {
+								driver.setShenfenzhengyouxiaoqi(shenfenzhengyouxiaoqi);
+								driver.setImportUrl("icon_gou.png");
+							} else {
+								driver.setMsg(shenfenzhengyouxiaoqi + ",该身份证有效期,不是时间格式;");
+								errorStr += shenfenzhengyouxiaoqi + ",该身份证有效期,不是时间格式;";
+								driver.setImportUrl("icon_cha.png");
+								bb++;
+							}
 						}
+					} else if(shenfenzhengyouxiaoqi.equals("长期")){
+						driver.setShenfenzhengyouxiaoqi(shenfenzhengyouxiaoqi);
+						driver.setImportUrl("icon_gou.png");
 					}
 				} else {
 					driver.setMsg(shenfenzhengyouxiaoqi + ",该身份证有效期,不是时间格式;");
@@ -1787,7 +1792,7 @@ public class JiaShiYuanController {
 			}
 
 			//验证 身份证：开始日期 不能大于 身份证：结束日期
-			if (StringUtils.isNotBlank(shenfenzhengchulingriqi) && !shenfenzhengchulingriqi.equals("null") && StringUtils.isNotBlank(shenfenzhengyouxiaoqi) && !shenfenzhengyouxiaoqi.equals("null")) {
+			if (StringUtils.isNotBlank(shenfenzhengchulingriqi) && !shenfenzhengchulingriqi.equals("null") && StringUtils.isNotBlank(shenfenzhengyouxiaoqi) && !shenfenzhengyouxiaoqi.equals("null") && !shenfenzhengyouxiaoqi.equals("长期")) {
 				int a1 = shenfenzhengchulingriqi.length();
 				int b1 = shenfenzhengyouxiaoqi.length();
 				if (a1 == b1) {
@@ -1898,7 +1903,7 @@ public class JiaShiYuanController {
 			}
 
 			//验证 驾驶证开始日期 不能大于 驾驶证结束日期
-			if (StringUtils.isNotBlank(jiashizhengchulingriqi) && !jiashizhengchulingriqi.equals("null") && StringUtils.isNotBlank(jiashizhengyouxiaoqi) && !jiashizhengyouxiaoqi.equals("null")) {
+			if (StringUtils.isNotBlank(jiashizhengchulingriqi) && !jiashizhengchulingriqi.equals("null") && StringUtils.isNotBlank(jiashizhengyouxiaoqi) && !jiashizhengyouxiaoqi.equals("null") && !jiashizhengyouxiaoqi.equals("长期")) {
 				int a1 = jiashizhengchulingriqi.length();
 				int b1 = jiashizhengyouxiaoqi.length();
 				if (a1 == b1) {
@@ -2387,7 +2392,7 @@ public class JiaShiYuanController {
 					congyezigezheng.setAjcCertificateNo(jiaShiYuan.getCongyezigezheng());
 				}
 				if (StringUtils.isNotBlank(jiaShiYuan.getCongyezhengchulingri())  && !jiaShiYuan.getCongyezhengchulingri().equals("null")){
-					congyezigezheng.setAjcIssueDate(jiaShiYuan.getCongyezhengchulingri());
+					congyezigezheng.setAjcInitialIssuing(jiaShiYuan.getCongyezhengchulingri());
 				}
 				if (StringUtils.isNotBlank(jiaShiYuan.getCongyezhengyouxiaoqi())  && !jiaShiYuan.getCongyezhengyouxiaoqi().equals("null")){
 					congyezigezheng.setAjcValidUntil(jiaShiYuan.getCongyezhengyouxiaoqi());
