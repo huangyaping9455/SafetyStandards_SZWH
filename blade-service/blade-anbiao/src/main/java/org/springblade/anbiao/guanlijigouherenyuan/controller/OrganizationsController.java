@@ -944,7 +944,7 @@ public class OrganizationsController extends BladeController {
 
 			//验证Excel导入时，是否存在重复数据
 			for (Organizations item : organizations) {
-				if (item.getDeptName().equals(deptName) && item.getJigoubianma().equals(jiGouBianMa) && item.getDaoluxukezhenghao().equals(daoluxukezhenghao) && item.getGangweimingcheng().equals(gangwei)) {
+				if (item.getDeptName().equals(deptName)  && item.getGangweimingcheng().equals(gangwei) && item.getXingming().equals(xingming) && item.getShoujihaoma().equals(shoujihaoma)) {
 					organization.setImportUrl("icon_cha.png");
 					errorStr += organizations + "机构信息重复；";
 					organization.setMsg(organizations + "机构信息重复；");
@@ -1018,13 +1018,16 @@ public class OrganizationsController extends BladeController {
 			organization.setDeptName(String.valueOf(a.get("deptName")).trim());
 			int q = iSysClient.selectByName(organization.getDeptName());
 			if(q > 0){
+				Organizations organizationsInfo = organizationService.getorganizationByOne(null, organization.getDeptName(),null, organization.getJigouleixing(),null);
 				dept.setTreeCode(treeCode);
-				dept.setId(Integer.parseInt(organization.getDeptId()));
+				dept.setId(Integer.parseInt(organizationsInfo.getDeptId()));
 				dept.setExtendType("机构");
 				dept.setParentId(Integer.parseInt(organization.getParentId()));
 				dept.setDeptName(organization.getDeptName());
 				dept.setFullName(organization.getDeptName());
+				organization.setDeptId(organizationsInfo.getDeptId());
 			}else{
+
 				dept.setTreeCode(treeCode);
 				dept.setId(iSysClient.selectMaxId() + 1);
 				dept.setExtendType("机构");
@@ -1054,7 +1057,7 @@ public class OrganizationsController extends BladeController {
 				organization.setCaozuoren(user.getUserName());
 				organization.setCaozuorenid(user.getUserId());
 			}
-			Organizations organizationsInfo = organizationService.getorganizationByOne(organization.getDeptId(), organization.getDeptName(), organization.getJigoubianma(), organization.getJigouleixing(), organization.getDaoluxukezhenghao());
+			Organizations organizationsInfo = organizationService.getorganizationByOne(organization.getDeptId(), organization.getDeptName(),null, organization.getJigouleixing(),null);
 			if (organizationsInfo != null) {
 				organization.setId(organizationsInfo.getId());
 				isDataValidity = organizationService.updateById(organization);
