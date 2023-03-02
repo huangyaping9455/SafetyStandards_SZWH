@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tools.zip.ZipOutputStream;
+import org.springblade.anbiao.anquanhuiyi.VO.AnbiaoAnquanhuiyiDetailVO;
 import org.springblade.anbiao.anquanhuiyi.VO.AnbiaoAnquanhuiyiVO;
 import org.springblade.anbiao.anquanhuiyi.VO.AnquanhuiyiledgerVO;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
@@ -497,7 +498,7 @@ public class AnbiaoAnquanhuiyiController {
 					List<AnbiaoAnquanhuiyiDetail> details = anquanhuiyiDetailService.getBaseMapper().selectList(anquanhuiyiDetailQueryWrapper);
 					if(details.size() > 0 ){
 						for (int q = 0; q <= details.size() - 1; q++) {
-							AnbiaoAnquanhuiyiDetail aa = new AnbiaoAnquanhuiyiDetail();
+							AnbiaoAnquanhuiyiDetailVO aa = new AnbiaoAnquanhuiyiDetailVO();
 							AnbiaoAnquanhuiyiDetail anbiaoAnquanhuiyiDetail = details.get(q);
 							aa.setAddTime(anbiaoAnquanhuiyiDetail.getAddTime());
 							aa.setAadApName(anbiaoAnquanhuiyiDetail.getAadApName());

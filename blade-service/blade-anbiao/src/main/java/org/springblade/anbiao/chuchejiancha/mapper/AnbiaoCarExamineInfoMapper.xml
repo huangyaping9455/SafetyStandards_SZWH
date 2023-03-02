@@ -61,8 +61,9 @@
                         b.jcrsignatrue,
                         b.address,
                         case when IFNULL(b.id,'') = '' then '未完成' else '已完成' end as statusshow
-                    from
-                        anbiao_vehicle a
+                    from(
+                        select * from anbiao_vehicle where is_deleted = 0
+                    ) a
                     left join (
                         select * from anbiao_car_examine_info
                         where left(date,10) &lt;= left(#{date},10)

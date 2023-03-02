@@ -148,8 +148,16 @@ public class AnbiaoCarExamineInfoController {
 										maintenanceDTO.setDriverId(finalDeail.getJsyid());
 										maintenanceDTO.setSendDate(finalDeail.getDate());
 										maintenanceDTO.setMaintainDictId(0);
-										maintenanceDTO.setAcbMaintenanceContent(finalDeail.getRemark());
-										maintenanceDTO.setAcbRepairReason(remark.getFlgremark());
+										if(StringUtils.isEmpty(finalDeail.getRemark())){
+											maintenanceDTO.setAcbMaintenanceContent("未填写");
+										}else{
+											maintenanceDTO.setAcbMaintenanceContent(finalDeail.getRemark());
+										}
+										if(StringUtils.isEmpty(remark.getFlgremark())){
+											maintenanceDTO.setAcbRepairReason("未填写");
+										}else{
+											maintenanceDTO.setAcbRepairReason(remark.getFlgremark());
+										}
 										maintenanceDTO.setMaintenanceDeptName(dept.getDeptName());
 										maintenanceDTO.setAcbBeforeMaintenance(remark.getFlgimg());
 										maintenanceDTO.setCreateid(finalDeail.getJsyid());
@@ -170,7 +178,11 @@ public class AnbiaoCarExamineInfoController {
 										danger.setAhdHiddendangerEnclosure(remark.getFlgimg());
 										danger.setAhdCreateTime(DateUtil.now());
 										danger.setAhdCreateByIds(finalDeail.getJsyid());
-										danger.setAhdDescribe(remark.getFlgremark());
+										if(StringUtils.isEmpty(remark.getFlgremark())){
+											danger.setAhdDescribe("未填写");
+										}else{
+											danger.setAhdDescribe(remark.getFlgremark());
+										}
 										danger.setAhdAddress("车辆设备");
 										hiddenDangerService.save(danger);
 									}

@@ -19,10 +19,12 @@ import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiDetail;
 import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
+import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamineInfo;
 import org.springblade.anbiao.configure.entity.Configure;
 import org.springblade.anbiao.configure.service.IConfigureService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.*;
 import org.springblade.anbiao.guanlijigouherenyuan.page.OrganizationsPage;
+import org.springblade.anbiao.guanlijigouherenyuan.service.IBladeDeptService;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IDepartmentpostService;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IPersonnelService;
@@ -81,6 +83,7 @@ public class OrganizationsController extends BladeController {
 	private IDepartmentpostService departmentpostService;
 	private IPersonnelService personnelService;
 	private FileServer fileServer;
+	private IBladeDeptService iBladeDeptService;
 
 	/**
 	 * 详情
@@ -1078,27 +1081,38 @@ public class OrganizationsController extends BladeController {
 			dept.setDeptName(organization.getGangweimingcheng());
 			dept.setFullName(organization.getGangweimingcheng());
 			dept.setParentId(Integer.parseInt(departmentpost.getParentId()));
-			isDataValidity = iSysClient.insertDept(dept);
-			departmentpost.setMingcheng(organization.getGangweimingcheng());
-			departmentpost.setCaozuoren(user.getUserName());
-			departmentpost.setCaozuorenid(user.getUserId());
-			departmentpost.setCaozuoshijian(DateUtil.now());
-			departmentpost.setCreatetime(DateUtil.now());
-			departmentpost.setDeptId(dept.getId());
-			departmentpost.setType(departmentpost.getExtendType());
-			departmentpost.setExtendType(type);
-			departmentpost.setLeixing(type);
-			departmentpost.setType(type);
-			if (type.equals(departmentpost.getExtendType())) {
-				//新增岗位时默认给岗位赋权
-				//默认给企业端赋权
-				String menuId = "288,289,291,296,295,292,299";
-				iSysClient.ABgrant(dept.getId() + "", menuId, 1);
+			QueryWrapper<Dept> deptQueryWrapper = new QueryWrapper<Dept>();
+			deptQueryWrapper.lambda().eq(Dept::getDeptName, organization.getGangweimingcheng());
+			deptQueryWrapper.lambda().eq(Dept::getIsDeleted, 0);
+			Dept deail = iBladeDeptService.getBaseMapper().selectOne(deptQueryWrapper);
+			if(deail == null){
+				isDataValidity = iSysClient.insertDept(dept);
+				departmentpost.setMingcheng(organization.getGangweimingcheng());
+				departmentpost.setCaozuoren(user.getUserName());
+				departmentpost.setCaozuorenid(user.getUserId());
+				departmentpost.setCaozuoshijian(DateUtil.now());
+				departmentpost.setCreatetime(DateUtil.now());
+				departmentpost.setDeptId(dept.getId());
+				departmentpost.setType(departmentpost.getExtendType());
+				departmentpost.setExtendType(type);
+				departmentpost.setLeixing(type);
+				departmentpost.setType(type);
+				if (type.equals(departmentpost.getExtendType())) {
+					//新增岗位时默认给岗位赋权
+					//默认给企业端赋权
+					String menuId = "288,289,291,296,295,292,299";
+					iSysClient.ABgrant(dept.getId() + "", menuId, 1);
+				}
+				if (isDataValidity == true) {
+					departmentpostService.insertSelective(departmentpost);
+				}
+			}else{
+				QueryWrapper<Departmentpost> departmentpostQueryWrapper = new QueryWrapper<Departmentpost>();
+				departmentpostQueryWrapper.lambda().eq(Departmentpost::getDeptId, deail.getId());
+				departmentpostQueryWrapper.lambda().eq(Departmentpost::getMingcheng, organization.getGangweimingcheng());
+				departmentpostQueryWrapper.lambda().eq(Departmentpost::getIsDeleted, 0);
+				departmentpost = departmentpostService.getBaseMapper().selectOne(departmentpostQueryWrapper);
 			}
-			if (isDataValidity == true) {
-				departmentpostService.insertSelective(departmentpost);
-			}
-
 			//添加用户信息
 			User userInfo = new User();
 			Personnel personnel = new Personnel();

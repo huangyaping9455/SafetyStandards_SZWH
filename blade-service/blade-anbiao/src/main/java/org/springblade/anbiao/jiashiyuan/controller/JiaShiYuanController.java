@@ -423,12 +423,14 @@ public class JiaShiYuanController {
 			jiaShiYuan.setStatus(0);
 			boolean i = iJiaShiYuanService.save(jiaShiYuan);
 			if (i) {
-				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShoujihaoma, jiaShiYuan.getShoujihaoma());
+				QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper2 = new QueryWrapper<JiaShiYuan>();
+				jiaShiYuanQueryWrapper2.lambda().eq(JiaShiYuan::getShoujihaoma, jiaShiYuan.getShoujihaoma());
 				if(StringUtils.isNotEmpty(jiaShiYuan.getShenfenzhenghao()) && jiaShiYuan.getShenfenzhenghao() != "null"){
-					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getShenfenzhenghao, jiaShiYuan.getShenfenzhenghao());
+					jiaShiYuanQueryWrapper2.lambda().eq(JiaShiYuan::getShenfenzhenghao, jiaShiYuan.getShenfenzhenghao());
 				}
-				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId, jiaShiYuan.getDeptId());
-				jiaShiYuan = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+				jiaShiYuanQueryWrapper2.lambda().eq(JiaShiYuan::getDeptId, jiaShiYuan.getDeptId());
+				jiaShiYuanQueryWrapper2.lambda().eq(JiaShiYuan::getIsdelete, 0);
+				jiaShiYuan = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper2);
 
 				//向入职登记表添加信息
 				AnbiaoJiashiyuanRuzhi ruzhi = new AnbiaoJiashiyuanRuzhi();
