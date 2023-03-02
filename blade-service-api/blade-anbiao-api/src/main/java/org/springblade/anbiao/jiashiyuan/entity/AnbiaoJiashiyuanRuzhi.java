@@ -59,7 +59,7 @@ public class AnbiaoJiashiyuanRuzhi implements Serializable {
 
 	@ApiModelProperty(value = "年龄")
 	@TableField("ajr_age")
-	private Integer ajrAge;
+	private Integer ajrAge = 0;
 
 	@ApiModelProperty(value = "政治面貌")
 	@TableField("ajr_political_outlook")
