@@ -18,6 +18,9 @@ public class AnQuanHuiYiPage<T> extends BasePage<T> {
 	@ApiModelProperty(value = "企业ID",required = true)
 	private String deptId;
 
+	@ApiModelProperty(value = "数据ID")
+	private String Id;
+
 	@ApiModelProperty(value = "企业名称")
 	private String deptname;
 

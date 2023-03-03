@@ -726,11 +726,29 @@ public class AnbiaoCarExamineInfoController {
 		//返回一个包含所有对象的指定类型的数组
 		String[] idss= listid.toArray(new String[1]);
 		for(int j = 0;j< idss.length;j++){
+			String templateFile = templatePath;
+			//Excel中的结果集ListData
+			List<CarExamineTJMX> ListData1 = new ArrayList<>();
+			Map<String, Object> map = new HashMap<>();
 			anBiaoCheckCarPage.setSize(0);
 			anBiaoCheckCarPage.setCurrent(0);
 			anBiaoCheckCarPage.setBeginTime(beginTime);
 			anBiaoCheckCarPage.setEndTime(endTime);
 			anBiaoCheckCarPage.setDeptId(idss[j]);
+			anBiaoCheckCarPage.setVehId(vehId);
+			if(StringUtils.isNotBlank(anBiaoCheckCarPage.getVehId())){
+				String[] vehIdidsss = anBiaoCheckCarPage.getVehId().split(",");
+				//去除素组中重复的数组
+				List<String> vehIdlistid = new ArrayList<String>();
+				for (int i=0; i<vehIdidsss.length; i++) {
+					if(!vehIdlistid.contains(vehIdidsss[i])) {
+						vehIdlistid.add(vehIdidsss[i]);
+					}
+				}
+				//返回一个包含所有对象的指定类型的数组
+				String[] vehIdidss = vehIdlistid.toArray(new String[1]);
+				anBiaoCheckCarPage.setVehIdidss(vehIdidss);
+			}
 			List<AnbiaoCarExamineInfoVO> examineInfoList = iAnbiaoCarExamineInfoService.selectAnBiaoCheckCarALLPage(anBiaoCheckCarPage);
 			if(examineInfoList.size()==0){
 
@@ -740,10 +758,6 @@ public class AnbiaoCarExamineInfoController {
 				return rs;
 			}else{
 				for( int i = 0 ; i < examineInfoList.size() ; i++) {
-					//Excel中的结果集ListData
-					List<CarExamineTJMX> ListData1 = new ArrayList<>();
-					Map<String, Object> map = new HashMap<>();
-					String templateFile = templatePath;
 					// 渲染文本
 					AnbiaoCarExamineInfoVO t = examineInfoList.get(i);
 					Class c1 = Class.forName("org.springblade.anbiao.chuchejiancha.entity.CarExamineTJMX");
@@ -780,29 +794,28 @@ public class AnbiaoCarExamineInfoController {
 						}
 						ListData1.add(ca);
 					}
-
-					// 模板注意 用{} 来表示你要用的变量 如果本来就有"{","}" 特殊字符 用"\{","\}"代替
-					// {} 代表普通变量 {.} 代表是list的变量
-					// 这里模板 删除了list以后的数据，也就是统计的这一行
-					String templateFileName = templateFile;
-					//alarmServer.getTemplateUrl()+
-					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2];
-					File newFile = new File(fileName);
-					//判断目标文件所在目录是否存在
-					if(!newFile.exists()){
-						//如果目标文件所在的目录不存在，则创建父目录
-						newFile.mkdirs();
-					}
-					fileName = fileName+"/"+t.getDeptName()+"-车辆安全检查台账.xlsx";
-					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
-					WriteSheet writeSheet = EasyExcel.writerSheet().build();
-					// 写入list之前的数据
-					excelWriter.fill(map, writeSheet);
-					// 直接写入数据
-					excelWriter.fill(ListData1, writeSheet);
-					excelWriter.finish();
-					urlList.add(fileName);
 				}
+				// 模板注意 用{} 来表示你要用的变量 如果本来就有"{","}" 特殊字符 用"\{","\}"代替
+				// {} 代表普通变量 {.} 代表是list的变量
+				// 这里模板 删除了list以后的数据，也就是统计的这一行
+				String templateFileName = templateFile;
+				//alarmServer.getTemplateUrl()+
+				String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2];
+				File newFile = new File(fileName);
+				//判断目标文件所在目录是否存在
+				if(!newFile.exists()){
+					//如果目标文件所在的目录不存在，则创建父目录
+					newFile.mkdirs();
+				}
+				fileName = fileName+"/"+examineInfoList.get(0).getDeptName()+"-车辆安全检查台账.xlsx";
+				ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
+				WriteSheet writeSheet = EasyExcel.writerSheet().build();
+				// 写入list之前的数据
+				excelWriter.fill(map, writeSheet);
+				// 直接写入数据
+				excelWriter.fill(ListData1, writeSheet);
+				excelWriter.finish();
+				urlList.add(fileName);
 			}
 		}
 		String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"车辆安全检查台账.zip";

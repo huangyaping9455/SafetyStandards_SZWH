@@ -21,7 +21,12 @@ import java.net.URL;
 public class AnbiaoAnquanhuiyiDetailVO extends AnbiaoAnquanhuiyiDetail {
 
 	@ColumnWidth(15)
-	@ExcelProperty("图片")
+	@ExcelProperty("人脸照片")
 	@TableField(exist = false)
-	private URL imgUrl;
+	private URL addApHeadPortraitImgUrl;
+
+	@ColumnWidth(15)
+	@ExcelProperty("签名")
+	@TableField(exist = false)
+	private URL addApAutographImgUrl;
 }

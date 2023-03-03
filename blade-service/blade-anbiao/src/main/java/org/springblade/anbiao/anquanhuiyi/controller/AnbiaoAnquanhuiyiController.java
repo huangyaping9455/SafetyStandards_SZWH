@@ -437,7 +437,7 @@ public class AnbiaoAnquanhuiyiController {
 	@GetMapping("/goExport_Excel")
 	@ApiLog("安全会议台账-导出")
 	@ApiOperation(value = "安全会议台账-导出", notes = "传入deptId、date", position = 22)
-	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String deptId , String date, BladeUser user) throws IOException {
+	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String Id, String deptId , String date, BladeUser user) throws IOException {
 		int a=1;
 		R rs = new R();
 		List<String> urlList = new ArrayList<>();
@@ -464,6 +464,7 @@ public class AnbiaoAnquanhuiyiController {
 			anQuanHuiYiPage.setSize(0);
 			anQuanHuiYiPage.setCurrent(0);
 			anQuanHuiYiPage.setDeptId(idss[j]);
+			anQuanHuiYiPage.setId(Id);
 			anquanhuiyiService.selectGetAll(anQuanHuiYiPage);
 			List<AnbiaoAnquanhuiyi> anbiaoAnquanhuiyiList = anQuanHuiYiPage.getRecords();
 			//Excel中的结果集ListData
@@ -508,41 +509,41 @@ public class AnbiaoAnquanhuiyiController {
 								aa.setAddApHeadPortrait(fileUploadClient.getUrl(aa.getAddApHeadPortrait()));
 								//添加图片到工作表的指定位置
 								try {
-									aa.setImgUrl(new URL(aa.getAddApHeadPortrait()));
+									aa.setAddApHeadPortraitImgUrl(new URL(aa.getAddApHeadPortrait()));
 								} catch (MalformedURLException e) {
 									e.printStackTrace();
 								}
-								aa.setImgUrl(aa.getImgUrl());
+								aa.setAddApHeadPortraitImgUrl(aa.getAddApHeadPortraitImgUrl());
 							}else if(StrUtil.isNotEmpty(aa.getAddApHeadPortrait())){
 								//添加图片到工作表的指定位置
 								try {
-									aa.setImgUrl(new URL(aa.getAddApHeadPortrait()));
+									aa.setAddApHeadPortraitImgUrl(new URL(aa.getAddApHeadPortrait()));
 								} catch (MalformedURLException e) {
 									e.printStackTrace();
 								}
-								aa.setImgUrl(aa.getImgUrl());
+								aa.setAddApHeadPortraitImgUrl(aa.getAddApHeadPortraitImgUrl());
 							}else{
-								aa.setImgUrl(null);
+								aa.setAddApHeadPortraitImgUrl(null);
 							}
 							if (StrUtil.isNotEmpty(aa.getAddApAutograph()) && aa.getAddApAutograph().contains("http") == false) {
 								aa.setAddApHeadPortrait(fileUploadClient.getUrl(aa.getAddApAutograph()));
 								//添加图片到工作表的指定位置
 								try {
-									aa.setImgUrl(new URL(aa.getAddApAutograph()));
+									aa.setAddApAutographImgUrl(new URL(aa.getAddApAutograph()));
 								} catch (MalformedURLException e) {
 									e.printStackTrace();
 								}
-								aa.setImgUrl(aa.getImgUrl());
+								aa.setAddApAutographImgUrl(aa.getAddApAutographImgUrl());
 							}else if(StrUtil.isNotEmpty(aa.getAddApAutograph())){
 								//添加图片到工作表的指定位置
 								try {
-									aa.setImgUrl(new URL(aa.getAddApAutograph()));
+									aa.setAddApAutographImgUrl(new URL(aa.getAddApAutograph()));
 								} catch (MalformedURLException e) {
 									e.printStackTrace();
 								}
-								aa.setImgUrl(aa.getImgUrl());
+								aa.setAddApAutographImgUrl(aa.getAddApAutographImgUrl());
 							}else{
-								aa.setImgUrl(null);
+								aa.setAddApAutographImgUrl(null);
 							}
 							ListData.add(aa);
 						}

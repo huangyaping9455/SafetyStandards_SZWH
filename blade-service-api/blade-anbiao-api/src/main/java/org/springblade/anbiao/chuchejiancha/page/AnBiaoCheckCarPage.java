@@ -33,4 +33,6 @@ public class AnBiaoCheckCarPage<T> extends BasePage<T> {
 	@ApiModelProperty(value = "结束日期")
 	private String endTime;
 
+	private String[] vehIdidss;
+
 }

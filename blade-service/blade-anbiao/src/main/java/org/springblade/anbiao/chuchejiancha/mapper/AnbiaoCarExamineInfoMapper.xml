@@ -187,8 +187,15 @@
             and b.dept_name like '%${deptName}%'
         </if>
 
-        <if test="vehId != null and vehId != ''">
+        <if test="vehId != null and vehId != '' and vehIdidss == null">
             and a.vehId = #{vehId}
+        </if>
+
+        <if test="vehIdidss != null and vehIdidss != ''">
+            and a.vehId in
+            <foreach collection="vehIdidss" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
         </if>
 
         <if test="date != null and date != ''">
