@@ -13,7 +13,6 @@ package org.springblade.common.tool;
  * @描述
  */
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.text.DateFormat;
@@ -610,27 +609,44 @@ public class DateUtils {
 		}
 	}
 
+	public static String formatDateZero(String pattern) throws ParseException {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date time = simpleDateFormat.parse(pattern);
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(time);
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH) + 1;
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+		String months = month >= 10 ? String.valueOf(month) : "0" + month;
+		String days = day >= 10 ? String.valueOf(day) : "0" + day;
+		pattern =  year+"-"+months+"-"+days;
+		return pattern;
+	}
+
 
 	public static void main(String[] args) throws Exception {
 
 		String time="2023-02-18";
 
-		Date date=null;
-		SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd");
-		date=formatter.parse(time);
+		System.out.println(DateUtils.formatDateZero("2023-12-1"));
 
-		SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
-		Date startTime = ft.parse("2022-04-18");
-		Date endTime = ft.parse("2022-04-18");
-
-		Date nowTime = date;
-
-		boolean effectiveDate = isEffectiveDate(nowTime, startTime, endTime);
-		if (effectiveDate) {
-			System.out.println("当前时间在范围内");
-		}else {
-			System.out.println("当前时间在不在范围内");
-		}
+//		Date date=null;
+//		SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd");
+//		date=formatter.parse(time);
+//
+//		SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
+//		Date startTime = ft.parse("2022-04-18");
+//		Date endTime = ft.parse("2022-04-18");
+//
+//		Date nowTime = date;
+//
+//		boolean effectiveDate = isEffectiveDate(nowTime, startTime, endTime);
+//		if (effectiveDate) {
+//			System.out.println("当前时间在范围内");
+//		}else {
+//			System.out.println("当前时间在不在范围内");
+//		}
 
 
 
