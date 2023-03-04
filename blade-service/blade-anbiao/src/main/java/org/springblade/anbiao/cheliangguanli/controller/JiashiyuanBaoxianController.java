@@ -60,6 +60,7 @@ import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
+import org.springblade.core.tool.utils.DigestUtil;
 import org.springblade.core.tool.utils.StringUtil;
 import org.springblade.system.entity.Dept;
 import org.springblade.system.feign.ISysClient;
@@ -740,8 +741,8 @@ public class JiashiyuanBaoxianController extends BladeController {
 
 
 	@GetMapping("/goExport_MingXi_Excel")
-	@ApiLog("保险信息-导出")
-	@ApiOperation(value = "保险信息-导出", notes = "传入JiaShiYuanLedgerPage", position = 22)
+	@ApiLog("保险明细信息-导出")
+	@ApiOperation(value = "保险明细信息-导出", notes = "传入JiaShiYuanLedgerPage", position = 22)
 	public R goExport_MingXi_Excel(HttpServletRequest request, HttpServletResponse response, String deptId , String date, BladeUser user) throws IOException {
 		int a=1;
 		int b=0;
@@ -758,6 +759,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 		//word模板地址
 		String templatePath =fileServer.getPathPrefix()+"muban\\"+"chexian.xlsx";
 		String templatePath2 =fileServer.getPathPrefix()+"muban\\"+"renxian.xlsx";
+		String templatePath3 =fileServer.getPathPrefix()+"muban\\"+"deptxian.xlsx";
 		String [] nyr= DateUtil.today().split("-");
 		String[] idsss = jiaShiYuanLedgerVO.getDeptId().split(",");
 		//去除素组中重复的数组
@@ -800,8 +802,10 @@ public class JiashiyuanBaoxianController extends BladeController {
 					FillConfig fillConfig = FillConfig.builder().forceNewRow(Boolean.TRUE).build();
 					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+"/"+"车险";
 					String fileName2 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+"/"+"人险";
+					String fileName3 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+"/"+"企业险";
 					File newFile = new File(fileName);
 					File newFile2 = new File(fileName2);
+					File newFile3 = new File(fileName3);
 					//判断目标文件所在目录是否存在
 					if(!newFile.exists()){
 						//如果目标文件所在的目录不存在，则创建父目录
@@ -811,6 +815,11 @@ public class JiashiyuanBaoxianController extends BladeController {
 					if(!newFile2.exists()){
 						//如果目标文件所在的目录不存在，则创建父目录
 						newFile2.mkdirs();
+					}
+					//判断目标文件所在目录是否存在
+					if(!newFile3.exists()){
+						//如果目标文件所在的目录不存在，则创建父目录
+						newFile3.mkdirs();
 					}
 
 					map.put("deptName", t.getDeptName());
@@ -872,6 +881,16 @@ public class JiashiyuanBaoxianController extends BladeController {
 					map.put("datetime", DateUtil.now());
 					JiaShiYuanLedgerVO jiaShiYuanLedgerVO4 = jiashiyuanBaoxianService.selectDeptTotalTmountInsurance(t);
 					map.put("totaltmount",jiaShiYuanLedgerVO4.getTotalTmount());
+					map.put("cheliangzongbaoxianjine",t.getCheliangzongbaoxianjine());
+					map.put("cheliangzongbaofeijine",t.getCheliangzongbaofeijine());
+					map.put("renyuanzongbaoxianjine",t.getRenyuanzongbaoxianjine());
+					map.put("renyuanzongbaofeijine",t.getRenyuanzongbaofeijine());
+					map.put("fileName",fileName3+"/"+t.getDeptName()+".xlsx")  ;
+					ExcelWriter excelWriter2 = EasyExcel.write(map.get("fileName").toString()).withTemplate(templatePath3).build();
+					WriteSheet deptInsuranceSheet = EasyExcel.writerSheet("公司保险").build();
+					// 直接写入数据
+					excelWriter2.fill(map, deptInsuranceSheet);
+					excelWriter2.finish();
 
 					//车辆
 					List<JiaShiYuanLedgerVO> jiaShiYuanLedgerVOS2 = jiashiyuanBaoxianService.selectVehicleInsurance(jiaShiYuanLedgerVO1);
@@ -963,19 +982,18 @@ public class JiashiyuanBaoxianController extends BladeController {
 							map2.put("chexianzongbaofei","0");
 						}
 						map2.put("avbInsureName",aa.getAvbInsureName());
-						map2.put("avbInsuranceDays",aa.getAvbInsuranceDays());
-						map2.put("fileName",fileName+"/"+t.getDeptName()+"-"+aa.getCheliangpaizhao()+"-保险明细台账.xlsx")  ;
+						map2.put("avbInsurancePeriodEnd",aa.getAvbInsurancePeriodEnd());
+						map2.put("fileName",fileName+"/"+aa.getCheliangpaizhao()+".xlsx")  ;
 						ExcelWriter excelWriter = EasyExcel.write(map2.get("fileName").toString()).withTemplate(templateFileName).build();
-						WriteSheet companyInsuranceSheet = EasyExcel.writerSheet("公司保险明细台账").build();
-						// 写入list之前的数据
-						excelWriter.fill(map, companyInsuranceSheet);
-						WriteSheet vehiclesInsuranceSheet = EasyExcel.writerSheet("车辆保险明细").build();
+//						WriteSheet companyInsuranceSheet = EasyExcel.writerSheet("公司保险明细台账").build();
+//						// 写入list之前的数据
+//						excelWriter.fill(map, companyInsuranceSheet);
+						WriteSheet vehiclesInsuranceSheet = EasyExcel.writerSheet("车辆保险").build();
 						// 直接写入数据
 						excelWriter.fill(map2, vehiclesInsuranceSheet);
 						excelWriter.finish();
 
 					}
-
 
 					//人员
 					List<JiaShiYuanLedgerVO> jiaShiYuanLedgerVOS3 = jiashiyuanBaoxianService.selectPersonInsurance(jiaShiYuanLedgerVO1);
@@ -983,7 +1001,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 						HashMap<String, Object> map3 = new HashMap<>();
 						map3.put("ajbInsuredName",aa.getAjbInsuredName());
 						map3.put("ajbInsureName",aa.getAjbInsureName());
-						map3.put("AjbInsuranceDays",aa.getAjbInsuranceDays());
+						map3.put("ajbInsurancePeriodEnd",aa.getAjbInsurancePeriodEnd());
 						JiaShiYuanLedgerVO jiaShiYuanLedgerVO2 = jiashiyuanBaoxianService.selectAccidentInsurance(aa);
 						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO2.getYiwaixianbaoxianjine()) && !jiaShiYuanLedgerVO2.getYiwaixianbaoxianjine().equals("null")){
 							map3.put("yiwaixianbaoxianjine",jiaShiYuanLedgerVO2.getYiwaixianbaoxianjine());
@@ -1027,12 +1045,12 @@ public class JiashiyuanBaoxianController extends BladeController {
 							map3.put("renyuanqitazongbaofeijine","0");
 						}
 
-						map3.put("fileName",fileName2+"/"+t.getDeptName()+"-"+aa.getAjbInsuredName()+"-保险明细台账.xlsx")  ;
+						map3.put("fileName",fileName2+"/"+aa.getAjbInsuredName()+".xlsx")  ;
 						ExcelWriter excelWriter = EasyExcel.write(map3.get("fileName").toString()).withTemplate(templatePath2).build();
-						WriteSheet companyInsuranceSheet = EasyExcel.writerSheet("公司保险明细台账").build();
-						// 写入list之前的数据
-						excelWriter.fill(map, companyInsuranceSheet);
-						WriteSheet jiashiyuanInsuranceSheet = EasyExcel.writerSheet("驾驶员保险明细").build();
+//						WriteSheet companyInsuranceSheet = EasyExcel.writerSheet("公司保险明细台账").build();
+//						// 写入list之前的数据
+//						excelWriter.fill(map, companyInsuranceSheet);
+						WriteSheet jiashiyuanInsuranceSheet = EasyExcel.writerSheet("驾驶员保险").build();
 						// 直接写入数据
 						excelWriter.fill(map3, jiashiyuanInsuranceSheet);
 						excelWriter.finish();
@@ -1067,12 +1085,22 @@ public class JiashiyuanBaoxianController extends BladeController {
 //	public R goExport_MingXi2_Excel(@RequestBody JiaShiYuanLedgerVO jiaShiYuanLedgerVO) throws IOException {
 //		R rs = new R();
 //
-//		List<JiaShiYuanLedgerVO> jiaShiYuanLedgerVOS = jiashiyuanBaoxianService.selectAccidentInsurance(jiaShiYuanLedgerVO);
+//		QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
+//		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,"0");
+//		List<JiaShiYuan> jiaShiYuans = jiaShiYuanService.getBaseMapper().selectList(jiaShiYuanQueryWrapper);
+//		for (JiaShiYuan j: jiaShiYuans) {
+//			String shoujihaoma = j.getShoujihaoma();
+//			String substring = shoujihaoma.substring(5, 11);
+//
+//			//登录密码
+//			String encrypt = DigestUtil.encrypt(substring);
+//			j.setDenglumima(encrypt);
+//			jiaShiYuanService.getBaseMapper().updateById(j);
+//		}
 //
 //		rs.setMsg("下载成功");
 //		rs.setCode(200);
 //		rs.setSuccess(true);
-//		rs.setData(jiaShiYuanLedgerVOS);
 //		return rs;
 //	}
 

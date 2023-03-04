@@ -130,4 +130,16 @@ public class JiaShiYuanLedgerVO {
 	private String renyuanqitabaofeijine;
 
 	private String date;
+
+	private String ajbInsurancePeriodEnd;
+
+	private String avbInsurancePeriodEnd;
+
+	private String renyuanzongbaoxianjine;
+
+	private String renyuanzongbaofeijine;
+
+	private String cheliangzongbaoxianjine;
+
+	private String cheliangzongbaofeijine;
 }

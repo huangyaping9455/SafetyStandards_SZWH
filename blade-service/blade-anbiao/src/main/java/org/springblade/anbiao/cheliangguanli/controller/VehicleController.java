@@ -1478,8 +1478,9 @@ public class VehicleController {
 			//验证行驶证注册日期
 			String avxRegisterDate = String.valueOf(a.get("行驶证注册日期")).trim();
 			if(StringUtils.isNotBlank(avxRegisterDate) && !avxRegisterDate.equals("null")){
-				if (DateUtils.isDateString(avxRegisterDate, null) == true){
-					LocalDate parse = LocalDate.parse(avxRegisterDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+				String s = DateUtils.formatDateZero(avxRegisterDate);
+				if (DateUtils.isDateString(s, null) == true){
+					LocalDate parse = LocalDate.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 					vehicle.setAvxRegisterDate(parse);
 				}else {
 					errorStr+=avxRegisterDate+"该行驶证注册日期不是时间格式;";
@@ -1492,8 +1493,9 @@ public class VehicleController {
 			//验证行驶证发证日期
 			String avxIssueDate = String.valueOf(a.get("行驶证发证日期")).trim();
 			if(StringUtils.isNotBlank(avxIssueDate) && !avxIssueDate.equals("null")){
-				if (DateUtils.isDateString(avxIssueDate, null) == true){
-					LocalDate parse = LocalDate.parse(avxIssueDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+				String s = DateUtils.formatDateZero(avxIssueDate);
+				if (DateUtils.isDateString(s, null) == true){
+					LocalDate parse = LocalDate.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 					vehicle.setAvxIssueDate(parse);
 				}else {
 					errorStr+=avxIssueDate+"该行驶证发证日期不是时间格式;";
@@ -1506,8 +1508,9 @@ public class VehicleController {
 			//验证行驶证：结束日期
 			String xingshizhengdaoqishijian = String.valueOf(a.get("行驶证：结束日期")).trim();
 			if(StringUtils.isNotBlank(xingshizhengdaoqishijian) && !xingshizhengdaoqishijian.equals("null")){
-				if (DateUtils.isDateString(xingshizhengdaoqishijian, null) == true){
-					vehicle.setXingshizhengdaoqishijian(xingshizhengdaoqishijian);
+				String s = DateUtils.formatDateZero(xingshizhengdaoqishijian);
+				if (DateUtils.isDateString(s, null) == true){
+					vehicle.setXingshizhengdaoqishijian(s);
 				}else {
 					errorStr+=xingshizhengdaoqishijian+"该行驶证：结束日期不是时间格式;";
 					vehicle.setMsg(xingshizhengdaoqishijian+"该行驶证：结束日期不是时间格式;");
@@ -1519,8 +1522,9 @@ public class VehicleController {
 			//验证强制报废日期
 			String qiangzhibaofeishijian = String.valueOf(a.get("强制报废日期")).trim();
 			if(StringUtils.isNotBlank(qiangzhibaofeishijian) && !qiangzhibaofeishijian.equals("null")){
-				if (DateUtils.isDateString(qiangzhibaofeishijian, null) == true){
-					vehicle.setQiangzhibaofeishijian(qiangzhibaofeishijian);
+				String s = DateUtils.formatDateZero(qiangzhibaofeishijian);
+				if (DateUtils.isDateString(s, null) == true){
+					vehicle.setQiangzhibaofeishijian(s);
 				}else {
 					errorStr+=qiangzhibaofeishijian+"该强制报废日期不是时间格式;";
 					vehicle.setMsg(qiangzhibaofeishijian+"该强制报废日期不是时间格式;");
@@ -1532,14 +1536,14 @@ public class VehicleController {
 			//验证车辆类型
 			String cheliangleixing = String.valueOf(a.get("车辆类型")).trim();
 			if(StringUtils.isNotBlank(cheliangleixing) && !cheliangleixing.equals("null")){
-				if (cheliangleixing.equals("重型半挂牵引车") || cheliangleixing.equals("重型集装箱半挂车")){
+//				if (cheliangleixing.equals("重型半挂牵引车") || cheliangleixing.equals("重型集装箱半挂车")){
 					vehicle.setXinghao(cheliangleixing);
-				} else{
-					vehicle.setImportUrl("icon_cha.png");
-					errorStr += cheliangpaiz+",车辆类型输入错误,请校验”;";
-					vehicle.setMsg(cheliangpaiz+",车辆类型输入错误,请校验;");
-					bb++;
-				}
+//				} else{
+//					vehicle.setImportUrl("icon_cha.png");
+//					errorStr += cheliangpaiz+",车辆类型输入错误,请校验”;";
+//					vehicle.setMsg(cheliangpaiz+",车辆类型输入错误,请校验;");
+//					bb++;
+//				}
 			}
 
 			//验证车辆型号
@@ -1758,31 +1762,59 @@ public class VehicleController {
 			//验证核定载人数
 			String hedingzairenshu = String.valueOf(a.get("核定载人数")).trim();
 			if(StringUtils.isNotBlank(hedingzairenshu) && !hedingzairenshu.equals("null")){
-				vehicle.setHedingzaike(hedingzairenshu);
+				if(StringUtils.isNumeric(hedingzairenshu)){
+					vehicle.setHedingzaike(hedingzairenshu);
+				}else {
+					vehicle.setHedingzaike("0");
+				}
 			}
 
 			//验证驾驶室载客
 			String jiashishizaike = String.valueOf(a.get("驾驶室载客")).trim();
 			if(StringUtils.isNotBlank(jiashishizaike) && !jiashishizaike.equals("null")){
-				vehicle.setJiashishizaike(jiashishizaike);
+				if(StringUtils.isNumeric(jiashishizaike)){
+					vehicle.setJiashishizaike(jiashishizaike);
+				}else {
+					vehicle.setJiashishizaike("0");
+				}
 			}
 
 			//验证总质量
 			String zongzhiliang = String.valueOf(a.get("总质量")).trim();
 			if(StringUtils.isNotBlank(zongzhiliang) && !zongzhiliang.equals("null")){
-				vehicle.setZongzhiliang(zongzhiliang);
+				zongzhiliang=zongzhiliang.trim();
+				String zongzhiliang2="";
+				if(zongzhiliang != null && !"".equals(zongzhiliang)){
+					for(int i = 0; i < zongzhiliang.length(); i++){
+						if(zongzhiliang.charAt(i) >= 48 && zongzhiliang.charAt(i) <= 57){
+							zongzhiliang2 += zongzhiliang.charAt(i);
+						}
+					}
+					vehicle.setZongzhiliang(zongzhiliang2);
+				}
 			}
 
 			//验证核定载质量
 			String hedingzaizhiliang = String.valueOf(a.get("核定载质量")).trim();
 			if(StringUtils.isNotBlank(hedingzaizhiliang) && !hedingzaizhiliang.equals("null")){
-				vehicle.setHedingzaizhiliang(hedingzaizhiliang);
+				hedingzaizhiliang=hedingzaizhiliang.trim();
+				String hedingzaizhiliang2="";
+				if(hedingzaizhiliang != null && !"".equals(hedingzaizhiliang)){
+					for(int i = 0; i < hedingzaizhiliang.length(); i++){
+						if(hedingzaizhiliang.charAt(i) >= 48 && hedingzaizhiliang.charAt(i) <= 57){
+							hedingzaizhiliang2 += hedingzaizhiliang.charAt(i);
+						}
+					}
+					vehicle.setHedingzaizhiliang(hedingzaizhiliang2);
+				}
 			}
 
 			//验证准牵引总质量
 			String zhunqianyinzongzhiliang = String.valueOf(a.get("准牵引总质量")).trim();
 			if(StringUtils.isNotBlank(zhunqianyinzongzhiliang) && !zhunqianyinzongzhiliang.equals("null")){
 				vehicle.setZhunqianyinzongzhiliang(zhunqianyinzongzhiliang);
+			}else {
+				vehicle.setZhunqianyinzongzhiliang("0");
 			}
 
 			//验证外廓尺寸
@@ -1794,13 +1826,29 @@ public class VehicleController {
 			//验证车辆出厂日期
 			String cheliangchuchangriqi = String.valueOf(a.get("车辆出厂日期")).trim();
 			if(StringUtils.isNotBlank(cheliangchuchangriqi) && !cheliangchuchangriqi.equals("null")){
-				vehicle.setChuchangriqi(cheliangchuchangriqi);
+				String s = DateUtils.formatDateZero(cheliangchuchangriqi);
+				if (DateUtils.isDateString(s, null) == true){
+					vehicle.setChuchangriqi(s);
+				}else {
+					errorStr+=qiangzhibaofeishijian+"该车辆出厂日期不是时间格式;";
+					vehicle.setMsg(qiangzhibaofeishijian+"该车辆出厂日期不是时间格式;");
+					vehicle.setImportUrl("icon_cha.png");
+					bb++;
+				}
 			}
 
 			//验证综合性能检测、技术等级评定信息:开始日期
 			String bencijipingriqi = String.valueOf(a.get("综合性能检测、技术等级评定信息:开始日期")).trim();
 			if(StringUtils.isNotBlank(bencijipingriqi) && !bencijipingriqi.equals("null")){
-				vehicle.setBencijipingriqi(bencijipingriqi);
+				String s = DateUtils.formatDateZero(bencijipingriqi);
+				if (DateUtils.isDateString(s, null) == true){
+					vehicle.setBencijipingriqi(s);
+				}else {
+					errorStr+=qiangzhibaofeishijian+"该车辆出厂日期不是时间格式;";
+					vehicle.setMsg(qiangzhibaofeishijian+"该车辆出厂日期不是时间格式;");
+					vehicle.setImportUrl("icon_cha.png");
+					bb++;
+				}
 			}
 
 			//验证道路运输证:证件号码
@@ -1812,8 +1860,9 @@ public class VehicleController {
 			//验证道路运输证:开始日期
 			String daoluyunshuzhengchulingriqi = String.valueOf(a.get("道路运输证:开始日期")).trim();
 			if(StringUtils.isNotBlank(daoluyunshuzhengchulingriqi) && !daoluyunshuzhengchulingriqi.equals("null")){
-				if (DateUtils.isDateString(daoluyunshuzhengchulingriqi, null) == true){
-					vehicle.setDaoluyunshuzhengchulingriqi(daoluyunshuzhengchulingriqi);
+				String s = DateUtils.formatDateZero(daoluyunshuzhengchulingriqi);
+				if (DateUtils.isDateString(s, null) == true){
+					vehicle.setDaoluyunshuzhengchulingriqi(s);
 				}else {
 					errorStr+=daoluyunshuzhengchulingriqi+"该道路运输证:开始日期不是时间格式;";
 					vehicle.setMsg(daoluyunshuzhengchulingriqi+"该道路运输证:开始日期不是时间格式;");
@@ -1825,8 +1874,9 @@ public class VehicleController {
 			//验证道路运输证:结束日期
 			String daoluyunshuzhengyouxiaoqi = String.valueOf(a.get("道路运输证:结束日期")).trim();
 			if(StringUtils.isNotBlank(daoluyunshuzhengyouxiaoqi) && !daoluyunshuzhengyouxiaoqi.equals("null")){
-				if (DateUtils.isDateString(daoluyunshuzhengyouxiaoqi, null) == true){
-					vehicle.setDaoluyunshuzhengyouxiaoqi(daoluyunshuzhengyouxiaoqi);
+				String s = DateUtils.formatDateZero(daoluyunshuzhengchulingriqi);
+				if (DateUtils.isDateString(s, null) == true){
+					vehicle.setDaoluyunshuzhengyouxiaoqi(s);
 				}else {
 					errorStr+=daoluyunshuzhengyouxiaoqi+"该道路运输证:结束日期不是时间格式;";
 					vehicle.setMsg(daoluyunshuzhengyouxiaoqi+"该道路运输证:结束日期不是时间格式;");
@@ -1993,6 +2043,9 @@ public class VehicleController {
 			if (StringUtils.isNotBlank(String.valueOf(a.get("qiangzhibaofeishijian")).trim())  && !String.valueOf(a.get("qiangzhibaofeishijian")).equals("null")) {
 				vehicle.setQiangzhibaofeishijian(String.valueOf(a.get("qiangzhibaofeishijian")).trim());
 			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("qiangzhibaofeishijian")).trim())  && !String.valueOf(a.get("qiangzhibaofeishijian")).equals("null")) {
+				vehicle.setBaofeiriqi(String.valueOf(a.get("qiangzhibaofeishijian")).trim());
+			}
 			vehicle.setCheliangzhuangtai("0");
 			if (StringUtils.isNotBlank(String.valueOf(a.get("fadongjipailianggonglv")).trim())  && !String.valueOf(a.get("fadongjipailianggonglv")).equals("null")) {
 				vehicle.setFadongjipailianggonglv(String.valueOf(a.get("fadongjipailianggonglv")).trim());
@@ -2154,7 +2207,7 @@ public class VehicleController {
 			QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<>();
 			vehicleQueryWrapper.lambda().eq(Vehicle::getDeptId,vehicle.getDeptId());
 			vehicleQueryWrapper.lambda().eq(Vehicle::getCheliangpaizhao,vehicle.getCheliangpaizhao());
-			vehicleQueryWrapper.lambda().eq(Vehicle::getChepaiyanse,vehicle.getChepaiyanse());
+//			vehicleQueryWrapper.lambda().eq(Vehicle::getChepaiyanse,vehicle.getChepaiyanse());
 			vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel,0);
 			Vehicle vehicle1 = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper);
 			if(vehicle1 !=null){
@@ -2271,7 +2324,9 @@ public class VehicleController {
 							xingshizheng.setAvxTotalMass(Integer.parseInt(vehicle.getZongzhiliang()));
 						}
 						if (StringUtils.isNotBlank(vehicle.getHedingzaike())  && !vehicle.getHedingzaike().equals("null")){
-							xingshizheng.setAvxAuthorizedSeatingCapacity(Integer.parseInt(vehicle.getHedingzaike()));
+							if (StringUtils.isNumeric(vehicle.getHedingzaike())){
+								xingshizheng.setAvxAuthorizedSeatingCapacity(Integer.parseInt(vehicle.getHedingzaike()));
+							}
 						}
 						if (StringUtils.isNotBlank(vehicle.getCheliangwaikuochicun())  && !vehicle.getCheliangwaikuochicun().equals("null")){
 							xingshizheng.setAvxOverallDimensions(vehicle.getCheliangwaikuochicun());
@@ -2281,6 +2336,9 @@ public class VehicleController {
 						}
 						if (StringUtils.isNotBlank(vehicle.getHedingzaizhiliang())  && !vehicle.getHedingzaizhiliang().equals("null")){
 							xingshizheng.setAvxApprovedLoadCapacity(Integer.parseInt(vehicle.getHedingzaizhiliang()));
+						}
+						if (StringUtils.isNotBlank(vehicle.getQiangzhibaofeishijian())  && !vehicle.getQiangzhibaofeishijian().equals("null")){
+							xingshizheng.setAvxBaofeiTime(vehicle.getQiangzhibaofeishijian());
 						}
 						QueryWrapper<VehicleXingshizheng> xingshizhengQueryWrapper = new QueryWrapper<>();
 						xingshizhengQueryWrapper.lambda().eq(VehicleXingshizheng::getAvxAvIds,xingshizheng.getAvxAvIds());

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * <p>
  *  前端控制器
@@ -88,17 +90,16 @@ public class AnbiaoRiskConfigurationController {
 	@PostMapping("/select")
 	@ApiLog("查看风险配置信息")
 	@ApiOperation(value = "查看风险配置信息", notes = "传入id", position = 1)
-	public R select( String id, BladeUser user) {
+	public R select(  BladeUser user) {
 		R r = new R();
 		QueryWrapper<AnbiaoRiskConfiguration> anbiaoRiskConfigurationQueryWrapper = new QueryWrapper<>();
-		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getId, id);
 		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getIsDeleted, 0);
-		AnbiaoRiskConfiguration deal = anbiaoRiskConfigurationService.getBaseMapper().selectOne(anbiaoRiskConfigurationQueryWrapper);
-		if (deal != null) {
+		List<AnbiaoRiskConfiguration> anbiaoRiskConfigurations = anbiaoRiskConfigurationService.getBaseMapper().selectList(anbiaoRiskConfigurationQueryWrapper);
+		if (anbiaoRiskConfigurations != null) {
 			r.setMsg("查询成功");
 			r.setCode(200);
 			r.setSuccess(true);
-			r.setData(deal);
+			r.setData(anbiaoRiskConfigurations);
 			return r;
 
 		} else {

@@ -722,7 +722,8 @@
         ajb_dept_ids as deptId,
         ajb_insure_name as ajbInsureName,
         ajb_insured_name AS ajbInsuredName,
-        case WHEN IFNULL(DATEDIFF(ajb_insurance_period_end,ajb_insurance_period_start),'')='' then 0 else DATEDIFF(ajb_insurance_period_end,ajb_insurance_period_start) end as  AjbInsuranceDays
+        ajb_insurance_period_end AS ajbInsurancePeriodEnd
+--         case WHEN IFNULL(DATEDIFF(ajb_insurance_period_end,ajb_insurance_period_start),'')='' then 0 else DATEDIFF(ajb_insurance_period_end,ajb_insurance_period_start) end as  AjbInsuranceDays
         FROM
         anbiao_jiashiyuan_baoxian
         INNER JOIN (
@@ -815,11 +816,12 @@
         j.qitajine ,
         j.qitabaofeijine,
         avb_insure_name AS avbInsureName,
-        CASE
-
-        WHEN IFNULL( DATEDIFF( avb_insurance_period_end, avb_insurance_period_start ), '' )= '' THEN
-        0 ELSE DATEDIFF( avb_insurance_period_end, avb_insurance_period_start )
-        END AS avbInsuranceDays
+        avb_insurance_period_end as avbInsurancePeriodEnd
+--         CASE
+--
+--         WHEN IFNULL( DATEDIFF( avb_insurance_period_end, avb_insurance_period_start ), '' )= '' THEN
+--         0 ELSE DATEDIFF( avb_insurance_period_end, avb_insurance_period_start )
+--         END AS avbInsuranceDays
         FROM
         anbiao_vehicle_baoxian
         INNER JOIN (
@@ -951,77 +953,165 @@
     <select id="selectDeptInsurance"
             parameterType="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanLedgerVO"
             resultType="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanLedgerVO">
-        SELECT a.id as deptId,a.dept_name,b.jiashiyuanrenshu,c.cheliangshuliang,g.huoguizongbaoxianjine,g.huoguizongbaofeijine,g.huoguiInsuranceDays,h.anzezongbaoxianjine,h.anzezongbaofeijine,h.anzeInsuranceDays,j.qitazongbaoxianjine,j.qitazongbaofeijine,j.qitaInsuranceDays
+        SELECT
+        a.id AS deptId,
+        a.dept_name,
+        IFNULL(b.jiashiyuanrenshu,0) as jiashiyuanrenshu,
+        IFNULL(c.cheliangshuliang,0) as cheliangshuliang,
+        IFNULL(g.huoguizongbaoxianjine,0) as huoguizongbaoxianjine,
+        IFNULL(g.huoguizongbaofeijine,0) as huoguizongbaofeijine,
+        IFNULL(g.avb_insurance_period_end,"/") as huoguiInsuranceDays,
+        IFNULL(h.anzezongbaoxianjine,0) as anzezongbaoxianjine,
+        IFNULL(h.anzezongbaofeijine,0) as anzezongbaofeijine,
+        IFNULL(h.avb_insurance_period_end,"/") as anzeInsuranceDays,
+        IFNULL(j.qitazongbaoxianjine,0) as qitazongbaoxianjine,
+        IFNULL(j.qitazongbaofeijine,0) as qitazongbaofeijine,
+        IFNULL(j.avb_insurance_period_end,"/") as qitaInsuranceDays,
+        (IFNULL(d.yiwaixianzongbaoxianjine,0)+IFNULL(i.qitazongbaoxianjine,0)) as renyuanzongbaoxianjine,
+        (IFNULL(d.yiwaixianzongbaofeijine,0)+IFNULL(i.qitazongbaofeijine,0)) as renyuanzongbaofeijine,
+        (IFNULL(e.chexianzongbaoxianjine,0)+IFNULL(f.jiaoqiangxianzongjine,0)) as cheliangzongbaoxianjine,
+        (IFNULL(e.chexianzongbaofeijine,0)+IFNULL(f.jiaoqiangxianzongbaofeijine,0)) as cheliangzongbaofeijine
 
         FROM
-            (SELECT
-                 DISTINCT
-                 xiaji.id,
-                 xiaji.parent_id,
-                 xiaji.dept_name,
-                 xiaji.is_deleted
-             FROM
-                 blade_dept shangji,
-                 blade_dept xiaji
+        (SELECT
+        DISTINCT
+        xiaji.id,
+        xiaji.parent_id,
+        xiaji.dept_name,
+        xiaji.is_deleted
+        FROM
+        blade_dept shangji,
+        blade_dept xiaji
 
-             WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
-               AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
-                  <if test="deptId != null">
-                      and shangji.id=#{deptId}
-                  </if>
-            ) a
-                INNER JOIN anbiao_organization k on a.id = k.dept_id and k.jigouleixing in('qiye','geti')
-                LEFT JOIN ( SELECT dept_id, COUNT( id ) AS jiashiyuanrenshu FROM anbiao_jiashiyuan WHERE  isdelete = 0 GROUP BY dept_id) b ON b.dept_id = a.id
-                LEFT JOIN ( SELECT dept_id, COUNT( id ) AS cheliangshuliang FROM anbiao_vehicle WHERE  is_deleted = 0 GROUP BY dept_id) c ON c.dept_id = a.id
+        WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+        AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+        and shangji.id=1
+        ) a
+        INNER JOIN anbiao_organization k on a.id = k.dept_id and k.jigouleixing in('qiye','geti')
+        LEFT JOIN ( SELECT dept_id, COUNT( id ) AS jiashiyuanrenshu FROM anbiao_jiashiyuan WHERE  isdelete = 0 GROUP BY dept_id) b ON b.dept_id = a.id
+        LEFT JOIN ( SELECT dept_id, COUNT( id ) AS cheliangshuliang FROM anbiao_vehicle WHERE  is_deleted = 0 GROUP BY dept_id) c ON c.dept_id = a.id
 
-                -- 货柜险
-                LEFT JOIN (
-                SELECT
-                    avb_dept_ids,
-                    sum(d.avbm_insurance_amount) as huoguizongbaoxianjine,
-                    sum(d.avbm_basic_premium ) as huoguizongbaofeijine,
-                    CASE	WHEN IFNULL( DATEDIFF( avb_insurance_period_end, avb_insurance_period_start ), '' )= '' THEN 0 ELSE DATEDIFF( avb_insurance_period_end, avb_insurance_period_start ) END AS huoguiInsuranceDays
-                FROM
-                    anbiao_dept_baoxian
-                        LEFT JOIN anbiao_dept_baoxian_mingxi d ON avb_ids = d.avbm_avb_ids
-                WHERE
-                    avb_delete=0
-                  and avbm_risk = "货柜险"
-                GROUP BY avb_dept_ids
-            )g on g.avb_dept_ids	=a.id
 
-                -- 安责险
-                LEFT JOIN (
-                SELECT
-                    avb_dept_ids,
-                    sum(d.avbm_insurance_amount) as anzezongbaoxianjine,
-                    sum(d.avbm_basic_premium ) as anzezongbaofeijine,
-                    CASE	WHEN IFNULL( DATEDIFF( avb_insurance_period_end, avb_insurance_period_start ), '' )= '' THEN 0 ELSE DATEDIFF( avb_insurance_period_end, avb_insurance_period_start ) END AS anzeInsuranceDays
-                FROM
-                    anbiao_dept_baoxian
-                        LEFT JOIN anbiao_dept_baoxian_mingxi d ON avb_ids = d.avbm_avb_ids
-                WHERE
-                    avb_delete=0
-                  and avbm_risk = "安责险"
-                GROUP BY avb_dept_ids
-            )h on h.avb_dept_ids	=a.id
+        -- 意外险
+        LEFT JOIN (
+        SELECT
+        ajb_dept_ids,
+        sum(d.yiwaixianzongbaoxianjine) as yiwaixianzongbaoxianjine ,
+        sum(d.yiwaixianzongbaofeijine) as  yiwaixianzongbaofeijine
+        FROM
+        anbiao_jiashiyuan_baoxian
+        LEFT JOIN ( SELECT ajbm_avb_ids,SUM( ajbm_company_amount ) AS yiwaixianzongbaoxianjine, SUM( ajbm_basic_premium ) AS yiwaixianzongbaofeijine FROM anbiao_jiashiyuan_baoxian_mingxi WHERE ajbm_risk = "意外险" GROUP BY ajbm_avb_ids) d ON ajb_ids = d.ajbm_avb_ids
+        WHERE
+        ajb_delete=0
+        <if test="date != null and date != ''">
+            and ajb_insurance_period_start >= #{date}
+        </if>
+        GROUP BY ajb_dept_ids
+        ) d ON d.ajb_dept_ids = a.id
 
-                -- 其他（企业）
-                LEFT JOIN (
-                SELECT
-                    avb_dept_ids,
-                    sum(d.avbm_insurance_amount) as qitazongbaoxianjine,
-                    sum(d.avbm_basic_premium ) as qitazongbaofeijine,
-                    CASE	WHEN IFNULL( DATEDIFF( avb_insurance_period_end, avb_insurance_period_start ), '' )= '' THEN 0 ELSE DATEDIFF( avb_insurance_period_end, avb_insurance_period_start ) END AS qitaInsuranceDays
-                FROM
-                    anbiao_dept_baoxian
-                        LEFT JOIN anbiao_dept_baoxian_mingxi d ON avb_ids = d.avbm_avb_ids
-                WHERE
-                    avb_delete=0
-                  and avbm_risk != "安责险"
-            and avbm_risk != "货柜险"
-                GROUP BY avb_dept_ids
-            )j on j.avb_dept_ids	=a.id
+        -- 其他（人员）
+        LEFT JOIN (
+        SELECT
+        ajb_dept_ids,
+        sum(d.qitazongbaoxianjine) as qitazongbaoxianjine ,
+        sum(d.qitazongbaofeijine) as  qitazongbaofeijine
+        FROM
+        anbiao_jiashiyuan_baoxian
+        LEFT JOIN ( SELECT ajbm_avb_ids,SUM( ajbm_company_amount ) AS qitazongbaoxianjine, SUM( ajbm_basic_premium ) AS qitazongbaofeijine FROM anbiao_jiashiyuan_baoxian_mingxi WHERE ajbm_risk != "意外险" GROUP BY ajbm_avb_ids) d ON ajb_ids = d.ajbm_avb_ids
+        WHERE
+        ajb_delete=0
+        <if test="date != null and date != ''">
+            and ajb_insurance_period_start >= #{date}
+        </if>
+        GROUP BY ajb_dept_ids
+        ) i ON i.ajb_dept_ids = a.id
+
+        -- 车险
+        LEFT JOIN (
+        SELECT
+        avb_dept_ids,
+        sum(d.chexianzongbaoxianjine) as chexianzongbaoxianjine,
+        sum(d.chexianzongbaofeijine ) as chexianzongbaofeijine
+        FROM
+        anbiao_vehicle_baoxian
+        LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS chexianzongbaoxianjine, sum(avbm_basic_premium) AS chexianzongbaofeijine FROM anbiao_vehicle_baoxian_mingxi WHERE avbm_risk != "交强险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
+        WHERE
+        avb_delete=0
+        <if test="date != null and date != ''">
+            and avb_insurance_period_start >= #{date}
+        </if>
+        GROUP BY avb_dept_ids
+        )e on e.avb_dept_ids	=a.id
+
+        -- 交强险
+        LEFT JOIN (
+        SELECT
+        avb_dept_ids,
+        sum(d.jiaoqiangxianzongjine) as jiaoqiangxianzongjine,
+        sum(d.jiaoqiangxianzongbaofeijine ) as jiaoqiangxianzongbaofeijine
+        FROM
+        anbiao_vehicle_baoxian
+        LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS jiaoqiangxianzongjine, sum(avbm_basic_premium) AS jiaoqiangxianzongbaofeijine FROM anbiao_vehicle_baoxian_mingxi WHERE avbm_risk = "交强险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
+        WHERE
+        avb_delete=0
+        <if test="date != null and date != ''">
+            and avb_insurance_period_start >= #{date}
+        </if>
+        GROUP BY avb_dept_ids
+        )f on f.avb_dept_ids	=a.id
+
+
+        -- 货柜险
+        LEFT JOIN (
+        SELECT
+        avb_dept_ids,
+        avb_insurance_period_end,
+        sum(d.avbm_insurance_amount) as huoguizongbaoxianjine,
+        sum(d.avbm_basic_premium ) as huoguizongbaofeijine,
+        CASE	WHEN IFNULL( DATEDIFF( avb_insurance_period_end, avb_insurance_period_start ), '' )= '' THEN 0 ELSE DATEDIFF( avb_insurance_period_end, avb_insurance_period_start ) END AS huoguiInsuranceDays
+        FROM
+        anbiao_dept_baoxian
+        LEFT JOIN anbiao_dept_baoxian_mingxi d ON avb_ids = d.avbm_avb_ids
+        WHERE
+        avb_delete=0
+        and avbm_risk = "货柜险"
+        GROUP BY avb_dept_ids
+        )g on g.avb_dept_ids	=a.id
+
+        -- 安责险
+        LEFT JOIN (
+        SELECT
+        avb_dept_ids,
+        avb_insurance_period_end,
+        sum(d.avbm_insurance_amount) as anzezongbaoxianjine,
+        sum(d.avbm_basic_premium ) as anzezongbaofeijine,
+        CASE	WHEN IFNULL( DATEDIFF( avb_insurance_period_end, avb_insurance_period_start ), '' )= '' THEN 0 ELSE DATEDIFF( avb_insurance_period_end, avb_insurance_period_start ) END AS anzeInsuranceDays
+        FROM
+        anbiao_dept_baoxian
+        LEFT JOIN anbiao_dept_baoxian_mingxi d ON avb_ids = d.avbm_avb_ids
+        WHERE
+        avb_delete=0
+        and avbm_risk = "安责险"
+        GROUP BY avb_dept_ids
+        )h on h.avb_dept_ids	=a.id
+
+        -- 其他（企业）
+        LEFT JOIN (
+        SELECT
+        avb_dept_ids,
+        avb_insurance_period_end,
+        sum(d.avbm_insurance_amount) as qitazongbaoxianjine,
+        sum(d.avbm_basic_premium ) as qitazongbaofeijine,
+        CASE	WHEN IFNULL( DATEDIFF( avb_insurance_period_end, avb_insurance_period_start ), '' )= '' THEN 0 ELSE DATEDIFF( avb_insurance_period_end, avb_insurance_period_start ) END AS qitaInsuranceDays
+        FROM
+        anbiao_dept_baoxian
+        LEFT JOIN anbiao_dept_baoxian_mingxi d ON avb_ids = d.avbm_avb_ids
+        WHERE
+        avb_delete=0
+        and avbm_risk != "安责险"
+        and avbm_risk != "货柜险"
+        GROUP BY avb_dept_ids
+        )j on j.avb_dept_ids	=a.id
     </select>
 
     <select id="selectDeptTotalTmountInsurance"

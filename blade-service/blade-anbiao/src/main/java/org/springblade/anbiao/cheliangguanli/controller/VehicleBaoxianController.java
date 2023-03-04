@@ -262,21 +262,21 @@ public class VehicleBaoxianController extends BladeController {
 						errorStr += "没有查询到被保车辆，请查证后重新导入！";
 					}
 				}
-				if(StringUtil.isNotBlank(avbInsuranceCompany)) {
+				if(StringUtil.isNotBlank(avbInsuranceCompany)&& avbInsuranceCompany != "null") {
 					baoxian.setAvbInsuranceCompany(avbInsuranceCompany);
 				}
 				baoxian.setAvbPolicyNo(avbPolicyNo);
-				if(StringUtil.isNotBlank(daysRemaining)) {
+				if(StringUtil.isNotBlank(daysRemaining)&& daysRemaining != "null") {
 					baoxian.setAvbInsuranceDays(Integer.parseInt(daysRemaining));
 				}
 				baoxian.setAvbDelete(0);
-				if(StringUtil.isNotBlank(avbInsurancePeriodStart)) {
+				if(StringUtil.isNotBlank(avbInsurancePeriodStart)&& avbInsurancePeriodStart != "null") {
 					baoxian.setAvbInsurancePeriodStart(dateFormat2.parse(avbInsurancePeriodStart).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 				}
-				if(StringUtil.isNotBlank(avbInsurancePeriodEnd)) {
+				if(StringUtil.isNotBlank(avbInsurancePeriodEnd) && avbInsurancePeriodEnd != "null") {
 					baoxian.setAvbInsurancePeriodEnd(dateFormat2.parse(avbInsurancePeriodEnd).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 				}
-				if(StringUtil.isNotBlank(avbInsurancePeriodStart) && StringUtil.isNotBlank(avbInsurancePeriodEnd)) {
+				if(StringUtil.isNotBlank(avbInsurancePeriodStart) && StringUtil.isNotBlank(avbInsurancePeriodEnd) && avbInsurancePeriodStart != "null" && avbInsurancePeriodEnd != "null") {
 					Date startTime = dateFormat2.parse(avbInsurancePeriodStart);
 					Date endTime = dateFormat2.parse(avbInsurancePeriodEnd);
 					long s = endTime.getTime() - startTime.getTime();
@@ -293,8 +293,17 @@ public class VehicleBaoxianController extends BladeController {
 			VehicleBaoxianMingxi mingxi = new VehicleBaoxianMingxi();
 			mingxi.setAvbmRisk(avbmRisk);
 			mingxi.setAvbmName(avbmName);
-			mingxi.setAvbmBasicPremium(new BigDecimal(avbmBasicPremium));
-			mingxi.setAvbmInsuranceAmount(new BigDecimal(avbmInsuranceAmount));
+			if (StringUtil.isNotBlank(avbmBasicPremium) && avbmBasicPremium != "null"){
+				mingxi.setAvbmBasicPremium(new BigDecimal(avbmBasicPremium));
+			}else {
+				mingxi.setAvbmBasicPremium(new BigDecimal(0));
+			}
+			if (StringUtil.isNotBlank(avbmInsuranceAmount) && avbmInsuranceAmount != "null"){
+				mingxi.setAvbmInsuranceAmount(new BigDecimal(avbmInsuranceAmount));
+			}else {
+				mingxi.setAvbmInsuranceAmount(new BigDecimal(0));
+			}
+
 			insurance.add(mingxi);
 			if(isFail) {
 				failNum++;

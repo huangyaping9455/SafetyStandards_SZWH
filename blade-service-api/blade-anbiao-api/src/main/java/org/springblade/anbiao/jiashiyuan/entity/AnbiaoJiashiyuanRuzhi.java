@@ -181,5 +181,11 @@ public class AnbiaoJiashiyuanRuzhi implements Serializable {
 	@TableField("ajr_update_by_name")
 	private String ajrUpdateByName;
 
+	@ApiModelProperty(value = "签字时间")
+	@TableField("ajr_autograph_time")
+	private String ajrAutographTime;
 
+	@ApiModelProperty(value = "入职时间")
+	@TableField("ajr_entry_time")
+	private String ajrEntryTime;
 }
