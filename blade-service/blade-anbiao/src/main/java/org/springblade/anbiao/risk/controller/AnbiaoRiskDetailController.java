@@ -44,12 +44,13 @@ import org.springblade.anbiao.labor.service.laborLingquService;
 import org.springblade.anbiao.labor.service.laborService;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetailInfo;
+import org.springblade.anbiao.risk.page.JiashiyuanRiskAllPage;
+import org.springblade.anbiao.risk.page.RiskConfigurationPage;
+import org.springblade.anbiao.risk.page.RiskDeptConfigurationPage;
 import org.springblade.anbiao.risk.page.RiskPage;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailInfoService;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
-import org.springblade.anbiao.risk.vo.AnbiaoRiskDetailVO;
-import org.springblade.anbiao.risk.vo.AnbiaoSystemRiskVO;
-import org.springblade.anbiao.risk.vo.LedgerDetailVO;
+import org.springblade.anbiao.risk.vo.*;
 import org.springblade.anbiao.yinhuanpaicha.entity.AnbiaoHiddenDanger;
 import org.springblade.anbiao.yinhuanpaicha.service.IAnbiaoHiddenDangerService;
 import org.springblade.common.tool.JSONUtils;
@@ -2146,7 +2147,13 @@ public class AnbiaoRiskDetailController {
 		return r;
 	}
 
-
+	@GetMapping("/jiashiyuanRiskAll")
+	@ApiLog("详情-台账风险统计信息")
+	@ApiOperation(value = "详情-台账风险统计信息", position = 1)
+	public R<JiashiyuanRiskAllPage<JiashiyuanRiskAllVO>> jiashiyuanRiskAll(@RequestBody JiashiyuanRiskAllPage jiashiyuanRiskAllPage) {
+		JiashiyuanRiskAllPage<JiashiyuanRiskAllVO> pages = riskDetailService.selectJiashiyuanRiskAll(jiashiyuanRiskAllPage);
+		return R.data(pages);
+	}
 
 }
 

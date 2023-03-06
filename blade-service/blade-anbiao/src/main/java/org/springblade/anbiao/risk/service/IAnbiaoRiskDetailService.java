@@ -2,9 +2,11 @@ package org.springblade.anbiao.risk.service;
 
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springblade.anbiao.risk.page.JiashiyuanRiskAllPage;
 import org.springblade.anbiao.risk.page.RiskPage;
 import org.springblade.anbiao.risk.vo.AnbiaoRiskDetailVO;
 import org.springblade.anbiao.risk.vo.AnbiaoSystemRiskVO;
+import org.springblade.anbiao.risk.vo.JiashiyuanRiskAllVO;
 import org.springblade.anbiao.risk.vo.LedgerDetailVO;
 
 import java.util.List;
@@ -32,4 +34,6 @@ public interface IAnbiaoRiskDetailService extends IService<AnbiaoRiskDetail> {
 	List<AnbiaoSystemRiskVO> selectSystemRisk();
 
 	List<LedgerDetailVO> ledgerDetail(String deptId);
+
+	JiashiyuanRiskAllPage<JiashiyuanRiskAllVO> selectJiashiyuanRiskAll(JiashiyuanRiskAllPage jiashiyuanRiskAllPage);
 }

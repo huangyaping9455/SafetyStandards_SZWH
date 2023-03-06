@@ -5,19 +5,20 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
+import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanListVO;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskConfiguration;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDeptConfiguration;
+import org.springblade.anbiao.risk.page.RiskDeptConfigurationPage;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskConfigurationService;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDeptConfigurationService;
+import org.springblade.anbiao.risk.vo.RiskDeptConfigurationListVO;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
 import org.springblade.system.entity.Dept;
 import org.springblade.system.feign.ISysClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -220,5 +221,17 @@ public class AnbiaoRiskDeptConfigurationController {
 			r.setSuccess(false);
 			return r;
 		}
+	}
+
+
+	/**
+	 * 分页
+	 */
+	@GetMapping("/list")
+	@ApiLog("分页-企业风险配置")
+	@ApiOperation(value = "分页-企业风险配置", notes = "传入RiskDeptConfigurationPage", position = 5)
+	public R<RiskDeptConfigurationPage<RiskDeptConfigurationListVO>> list(@RequestBody RiskDeptConfigurationPage riskDeptConfigurationPage) {
+		RiskDeptConfigurationPage<RiskDeptConfigurationListVO> pages = anbiaoRiskDeptConfigurationService.selectPageList(riskDeptConfigurationPage);
+		return R.data(pages);
 	}
 }

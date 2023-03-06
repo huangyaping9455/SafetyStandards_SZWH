@@ -7,10 +7,10 @@ import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.springblade.anbiao.risk.page.JiashiyuanRiskAllPage;
+import org.springblade.anbiao.risk.page.RiskDeptConfigurationPage;
 import org.springblade.anbiao.risk.page.RiskPage;
-import org.springblade.anbiao.risk.vo.AnbiaoRiskDetailVO;
-import org.springblade.anbiao.risk.vo.AnbiaoSystemRiskVO;
-import org.springblade.anbiao.risk.vo.LedgerDetailVO;
+import org.springblade.anbiao.risk.vo.*;
 
 import java.util.List;
 
@@ -50,4 +50,13 @@ public interface AnbiaoRiskDetailMapper extends BaseMapper<AnbiaoRiskDetail> {
 	List<AnbiaoSystemRiskVO> selectSystemRisk();
 
 	List<LedgerDetailVO> ledgerDetail(@Param("deptId") String deptId);
+
+	List<JiashiyuanRiskAllVO> selectJiashiyuanRiskAll(JiashiyuanRiskAllPage jiashiyuanRiskAllPage);
+
+	/**
+	 * 统计
+	 * @param
+	 * @return
+	 */
+	int selectTotal(JiashiyuanRiskAllPage jiashiyuanRiskAllPage);
 }

@@ -6,14 +6,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskConfiguration;
+import org.springblade.anbiao.risk.page.RiskConfigurationPage;
+import org.springblade.anbiao.risk.page.RiskDeptConfigurationPage;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskConfigurationService;
+import org.springblade.anbiao.risk.vo.RiskConfigurationVO;
+import org.springblade.anbiao.risk.vo.RiskDeptConfigurationListVO;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,10 +37,11 @@ public class AnbiaoRiskConfigurationController {
 	@PostMapping("/insert")
 	@ApiLog("插入风险配置信息")
 	@ApiOperation(value = "插入风险配置信息", notes = "传入id,yujingxiang,shuoming", position = 1)
-	public R insert( String id,String yujingxiang, String shuoming, BladeUser user) {
+	public R insert( String yujingxiang, String shuoming, BladeUser user) {
 		R r = new R();
 		QueryWrapper<AnbiaoRiskConfiguration> anbiaoRiskConfigurationQueryWrapper = new QueryWrapper<>();
-		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getId, id);
+		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getYujingxiang, yujingxiang);
+		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getShuoming, shuoming);
 		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getIsDeleted, 0);
 		AnbiaoRiskConfiguration deal = anbiaoRiskConfigurationService.getBaseMapper().selectOne(anbiaoRiskConfigurationQueryWrapper);
 		if (deal == null) {
@@ -64,28 +66,50 @@ public class AnbiaoRiskConfigurationController {
 				return r;
 			}
 		} else {
+			r.setMsg("风险配置已存在");
+			r.setCode(200);
+			r.setSuccess(true);
+			r.setData(yujingxiang);
+			return r;
+		}
+
+	}
+
+	@PostMapping("/update")
+	@ApiLog("修改风险配置信息")
+	@ApiOperation(value = "修改风险配置信息", notes = "传入id,yujingxiang,shuoming", position = 1)
+	public R update( String id,String yujingxiang, String shuoming, BladeUser user) {
+		R r = new R();
+		QueryWrapper<AnbiaoRiskConfiguration> anbiaoRiskConfigurationQueryWrapper = new QueryWrapper<>();
+		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getId, id);
+		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getIsDeleted, 0);
+		AnbiaoRiskConfiguration deal = anbiaoRiskConfigurationService.getBaseMapper().selectOne(anbiaoRiskConfigurationQueryWrapper);
+		if (deal != null) {
 			deal.setYujingxiang(yujingxiang);
 			deal.setShuoming(shuoming);
 			deal.setUpdatetime(DateUtil.now());
 			deal.setCaozuoren(user.getUserName());
-			int i = anbiaoRiskConfigurationService.getBaseMapper().updateById(deal);
-			if (i>0){
-				r.setMsg("更新成功");
+			boolean save = anbiaoRiskConfigurationService.updateById(deal);
+			if (save == true) {
+				r.setMsg("修改成功");
 				r.setCode(200);
 				r.setSuccess(true);
 				r.setData(deal);
 				return r;
-			}else {
-				r.setMsg("更新失败");
+			} else {
+				r.setMsg("修改失败");
 				r.setCode(500);
 				r.setSuccess(false);
 				r.setData(deal);
 				return r;
 			}
+		} else {
+			r.setMsg("风险配置不存在");
+			r.setCode(200);
+			r.setSuccess(true);
+			return r;
 		}
-
 	}
-
 
 	@PostMapping("/select")
 	@ApiLog("查看风险配置信息")
@@ -139,6 +163,17 @@ public class AnbiaoRiskConfigurationController {
 
 	}
 
+
+	/**
+	 * 分页
+	 */
+	@GetMapping("/list")
+	@ApiLog("分页-风险配置")
+	@ApiOperation(value = "分页-风险配置", notes = "传入RiskDeptConfigurationPage", position = 5)
+	public R<RiskConfigurationPage<RiskConfigurationVO>> list(@RequestBody RiskConfigurationPage riskConfigurationPage) {
+		RiskConfigurationPage<RiskConfigurationVO> pages = anbiaoRiskConfigurationService.selectPageList(riskConfigurationPage);
+		return R.data(pages);
+	}
 }
 
 

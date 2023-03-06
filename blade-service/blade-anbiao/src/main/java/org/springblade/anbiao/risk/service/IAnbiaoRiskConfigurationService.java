@@ -2,6 +2,10 @@ package org.springblade.anbiao.risk.service;
 
 import org.springblade.anbiao.risk.entity.AnbiaoRiskConfiguration;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springblade.anbiao.risk.page.RiskConfigurationPage;
+import org.springblade.anbiao.risk.vo.RiskConfigurationVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +16,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2023-03-01
  */
 public interface IAnbiaoRiskConfigurationService extends IService<AnbiaoRiskConfiguration> {
+
+	RiskConfigurationPage<RiskConfigurationVO> selectPageList(RiskConfigurationPage riskConfigurationPage);
 
 }

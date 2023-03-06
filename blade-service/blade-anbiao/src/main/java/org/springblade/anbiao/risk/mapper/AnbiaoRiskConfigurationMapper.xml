@@ -11,4 +11,62 @@
         <result column="updatetime" property="updatetime" />
     </resultMap>
 
+
+    <select id="selectPageList" parameterType="org.springblade.anbiao.risk.page.RiskConfigurationPage" resultType="org.springblade.anbiao.risk.vo.RiskConfigurationVO">
+        <if test="size == 0" >
+            SELECT
+            id,
+            yujingxiang,
+            shuoming
+            FROM
+            anbiao_risk_configuration
+            WHERE
+            is_deleted =0
+            <if test="id !=null and id != ''">
+            and id=#{id}
+            </if>
+            <if test="yujingxiang !=null and yujingxiang != ''">
+                and yujingxiang like '%${yujingxiang}%'
+            </if>
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            SELECT
+            id,
+            yujingxiang,
+            shuoming
+            FROM
+            anbiao_risk_configuration
+            WHERE
+            is_deleted =0
+            <if test="id !=null and id != ''">
+                and id=#{id}
+            </if>
+            <if test="yujingxiang !=null and yujingxiang != ''">
+                and yujingxiang like '%${yujingxiang}%'
+            </if>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectTotal" parameterType="org.springblade.anbiao.risk.page.RiskConfigurationPage" resultType="int">
+        select COUNT(1) from
+        (
+        SELECT
+        id,
+        yujingxiang,
+        shuoming
+        FROM
+        anbiao_risk_configuration
+        WHERE
+        is_deleted =0
+        <if test="id !=null and id != ''">
+            and id=#{id}
+        </if>
+        <if test="yujingxiang !=null and yujingxiang != ''">
+            and yujingxiang like '%${yujingxiang}%'
+        </if>
+        )d
+    </select>
+
 </mapper>

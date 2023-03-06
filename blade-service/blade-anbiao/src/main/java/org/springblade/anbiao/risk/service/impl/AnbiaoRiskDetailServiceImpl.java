@@ -7,12 +7,12 @@ import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTJMX;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.mapper.AnbiaoRiskDetailMapper;
+import org.springblade.anbiao.risk.page.JiashiyuanRiskAllPage;
+import org.springblade.anbiao.risk.page.RiskDeptConfigurationPage;
 import org.springblade.anbiao.risk.page.RiskPage;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springblade.anbiao.risk.vo.AnbiaoRiskDetailVO;
-import org.springblade.anbiao.risk.vo.AnbiaoSystemRiskVO;
-import org.springblade.anbiao.risk.vo.LedgerDetailVO;
+import org.springblade.anbiao.risk.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -206,4 +206,43 @@ public class AnbiaoRiskDetailServiceImpl extends ServiceImpl<AnbiaoRiskDetailMap
 	public List<LedgerDetailVO> ledgerDetail(String deptId) {
 		return mapper.ledgerDetail(deptId);
 	}
+
+	@Override
+	public JiashiyuanRiskAllPage<JiashiyuanRiskAllVO> selectJiashiyuanRiskAll(JiashiyuanRiskAllPage jiashiyuanRiskAllPage) {
+		Integer total = mapper.selectTotal(jiashiyuanRiskAllPage);
+		Integer pagetotal = 0;
+		if(jiashiyuanRiskAllPage.getSize()==0){
+			if(jiashiyuanRiskAllPage.getTotal()==0){
+				jiashiyuanRiskAllPage.setTotal(total);
+			}
+			if(jiashiyuanRiskAllPage.getTotal()==0){
+				return jiashiyuanRiskAllPage;
+			}else {
+				List<JiashiyuanRiskAllVO> jiashiyuanRiskAllVOS = mapper.selectJiashiyuanRiskAll(jiashiyuanRiskAllPage);
+				jiashiyuanRiskAllPage.setRecords(jiashiyuanRiskAllVOS);
+				return jiashiyuanRiskAllPage;
+			}
+		}
+		if (total > 0) {
+			if(total%jiashiyuanRiskAllPage.getSize()==0){
+				pagetotal = total / jiashiyuanRiskAllPage.getSize();
+			}else {
+				pagetotal = total / jiashiyuanRiskAllPage.getSize() + 1;
+			}
+		}
+		if (pagetotal < jiashiyuanRiskAllPage.getCurrent()) {
+			return jiashiyuanRiskAllPage;
+		} else {
+			jiashiyuanRiskAllPage.setPageTotal(pagetotal);
+			Integer offsetNo = 0;
+			if (jiashiyuanRiskAllPage.getCurrent() > 1) {
+				offsetNo = jiashiyuanRiskAllPage.getSize() * (jiashiyuanRiskAllPage.getCurrent() - 1);
+			}
+			jiashiyuanRiskAllPage.setTotal(total);
+			jiashiyuanRiskAllPage.setOffsetNo(offsetNo);
+			List<JiashiyuanRiskAllVO> jiashiyuanRiskAllVOS = mapper.selectJiashiyuanRiskAll(jiashiyuanRiskAllPage);
+			return (JiashiyuanRiskAllPage<JiashiyuanRiskAllVO>) jiashiyuanRiskAllPage.setRecords(jiashiyuanRiskAllVOS);
+		}
+	}
+
 }

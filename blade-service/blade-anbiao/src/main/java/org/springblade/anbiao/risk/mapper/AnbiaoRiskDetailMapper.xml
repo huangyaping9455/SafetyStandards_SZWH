@@ -280,4 +280,91 @@
               ) bb on a.ard_dept_ids = bb.id
     </select>
 
+    <select id="selectJiashiyuanRiskAll" parameterType="org.springblade.anbiao.risk.page.JiashiyuanRiskAllPage" resultType="org.springblade.anbiao.risk.vo.JiashiyuanRiskAllVO">
+        <if test="size == 0" >
+        SELECT
+        ard_dept_ids as deptId,
+        a.dept_name ,
+        ard_title ,
+        ard_content,
+        ard_discovery_date,
+        ard_association_value,
+        j.jiashiyuanxingming
+        FROM
+        anbiao_risk_detail rd
+        INNER JOIN(
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) a on a.id=rd.ard_dept_ids
+
+        INNER JOIN anbiao_organization k on a.id = k.dept_id and k.jigouleixing in('qiye','geti')
+        LEFT JOIN  anbiao_jiashiyuan j on j.id=rd.ard_association_value
+        WHERE
+        ard_is_rectification = 0
+        and ard_association_table = "anbiao_jiashiyuan"
+        and ard_association_field = "id"
+        and j.isdelete=0
+        <if test="deptName != null or deptName != ''">
+        and a.dept_name like '%${deptName}%'
+        </if>
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            SELECT
+            ard_dept_ids as deptId,
+            a.dept_name ,
+            ard_title ,
+            ard_content,
+            ard_discovery_date,
+            ard_association_value,
+            j.jiashiyuanxingming
+            FROM
+            anbiao_risk_detail rd
+            INNER JOIN(
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) a on a.id=rd.ard_dept_ids
+
+            INNER JOIN anbiao_organization k on a.id = k.dept_id and k.jigouleixing in('qiye','geti')
+            LEFT JOIN  anbiao_jiashiyuan j on j.id=rd.ard_association_value
+            WHERE
+            ard_is_rectification = 0
+            and ard_association_table = "anbiao_jiashiyuan"
+            and ard_association_field = "id"
+            and j.isdelete=0
+            <if test="deptName != null or deptName != ''">
+                and a.dept_name like '%${deptName}%'
+            </if>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+
+    <select id="selectTotal" parameterType="org.springblade.anbiao.risk.page.JiashiyuanRiskAllPage" resultType="int">
+        select COUNT(1) from
+        (
+        SELECT
+        ard_dept_ids as deptId,
+        a.dept_name ,
+        ard_title ,
+        ard_content,
+        ard_discovery_date,
+        ard_association_value,
+        j.jiashiyuanxingming
+        FROM
+        anbiao_risk_detail rd
+        INNER JOIN(
+        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) a on a.id=rd.ard_dept_ids
+
+        INNER JOIN anbiao_organization k on a.id = k.dept_id and k.jigouleixing in('qiye','geti')
+        LEFT JOIN  anbiao_jiashiyuan j on j.id=rd.ard_association_value
+        WHERE
+        ard_is_rectification = 0
+        and ard_association_table = "anbiao_jiashiyuan"
+        and ard_association_field = "id"
+        and j.isdelete=0
+        <if test="deptName != null or deptName != ''">
+            and a.dept_name like '%${deptName}%'
+        </if>
+        )d
+    </select>
 </mapper>
