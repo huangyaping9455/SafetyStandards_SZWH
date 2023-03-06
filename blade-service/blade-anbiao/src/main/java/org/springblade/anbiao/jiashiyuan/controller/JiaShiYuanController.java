@@ -2320,7 +2320,7 @@ public class JiaShiYuanController {
 			JiaShiYuan jiaShiYuan1 = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper1);
 			if (jiaShiYuan1 != null) {
 				driver.setId(jiaShiYuan1.getId());
-				isDataValidity = iJiaShiYuanService.updateSelective(driver);
+				isDataValidity = iJiaShiYuanService.updateById(driver);
 			} else {
 				String id = IdUtil.simpleUUID();
 				driver.setId(id);

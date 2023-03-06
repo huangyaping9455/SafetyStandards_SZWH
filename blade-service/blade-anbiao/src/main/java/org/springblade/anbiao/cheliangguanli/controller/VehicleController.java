@@ -613,7 +613,7 @@ public class VehicleController {
 //								biangengjilu.setAvbjCreateByIds(user.getUserId().toString());
 //								biangengjilu.setAvbjCreateTime(LocalDateTime.now());
 //								vehicleBiangengjiluService.save(biangengjilu);
-//							}
+//							}=
 //
 //
 ////							QueryWrapper<VehicleBiangengjilu> biangengjiluQueryWrapper = new QueryWrapper<VehicleBiangengjilu>();
@@ -1812,9 +1812,16 @@ public class VehicleController {
 			//验证准牵引总质量
 			String zhunqianyinzongzhiliang = String.valueOf(a.get("准牵引总质量")).trim();
 			if(StringUtils.isNotBlank(zhunqianyinzongzhiliang) && !zhunqianyinzongzhiliang.equals("null")){
-				vehicle.setZhunqianyinzongzhiliang(zhunqianyinzongzhiliang);
-			}else {
-				vehicle.setZhunqianyinzongzhiliang("0");
+				zhunqianyinzongzhiliang=zhunqianyinzongzhiliang.trim();
+				String zhunqianyinzongzhiliang2="";
+				if(zhunqianyinzongzhiliang != null && !"".equals(zhunqianyinzongzhiliang)){
+					for(int i = 0; i < zhunqianyinzongzhiliang.length(); i++){
+						if(zhunqianyinzongzhiliang.charAt(i) >= 48 && zhunqianyinzongzhiliang.charAt(i) <= 57){
+							zhunqianyinzongzhiliang2 += zhunqianyinzongzhiliang.charAt(i);
+						}
+					}
+					vehicle.setZhunqianyinzongzhiliang(zhunqianyinzongzhiliang2);
+				}
 			}
 
 			//验证外廓尺寸
@@ -2261,7 +2268,9 @@ public class VehicleController {
 
 						VehicleJingyingxukezheng jingyingxukezheng = new VehicleJingyingxukezheng();		//经营许可证
 						jingyingxukezheng.setAvjVehicleIds(vehicle.getId());
+						if (StringUtils.isNotBlank(dept.getDeptName())  && !dept.getDeptName().equals("null")){
 						jingyingxukezheng.setAvjOperatorName(dept.getDeptName());
+						}
 						jingyingxukezheng.setAvjDelete("0");
 						jingyingxukezheng.setAvjCreateByName(user.getUserName());
 						jingyingxukezheng.setAvjCreateByIds(user.getUserId().toString());
