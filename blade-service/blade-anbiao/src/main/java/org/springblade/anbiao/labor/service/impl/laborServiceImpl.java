@@ -15,6 +15,7 @@ import org.springblade.anbiao.labor.mapper.laborMapper;
 import org.springblade.anbiao.labor.page.LaborPage;
 import org.springblade.anbiao.labor.page.laborledgerPage;
 import org.springblade.anbiao.labor.service.laborService;
+import org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoHiddenDangerVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -65,6 +66,45 @@ public class laborServiceImpl extends ServiceImpl<laborMapper,LaborEntity> imple
 			laborPage.setOffsetNo(offsetNo);
 			List<LaborVO> laborVOS = laborMapper.selectList(laborPage);
 			laborPage.setRecords(laborVOS);
+			return laborPage;
+		}
+	}
+
+	@Override
+	public LaborPage<LaborVO> selectLaborPage(LaborPage laborPage) {
+		Integer total = laborMapper.selectTotal(laborPage);
+		Integer pagetotal = 0;
+		if(laborPage.getSize()==0){
+			if(laborPage.getTotal()==0){
+				laborPage.setTotal(total);
+			}
+			if(laborPage.getTotal()==0){
+				return laborPage;
+			}else {
+				List<LaborVO> laborVOList = laborMapper.selectLaborPage(laborPage);
+				laborPage.setRecords(laborVOList);
+				return laborPage;
+			}
+		}
+		if (total > 0) {
+			if(total%laborPage.getSize()==0){
+				pagetotal = total / laborPage.getSize();
+			}else {
+				pagetotal = total / laborPage.getSize() + 1;
+			}
+		}
+		if (pagetotal < laborPage.getCurrent()) {
+			return laborPage;
+		} else {
+			laborPage.setPageTotal(pagetotal);
+			Integer offsetNo = 0;
+			if (laborPage.getCurrent() > 1) {
+				offsetNo = laborPage.getSize() * (laborPage.getCurrent() - 1);
+			}
+			laborPage.setTotal(total);
+			laborPage.setOffsetNo(offsetNo);
+			List<LaborVO> laborVOList = laborMapper.selectLaborPage(laborPage);
+			laborPage.setRecords(laborVOList);
 			return laborPage;
 		}
 	}

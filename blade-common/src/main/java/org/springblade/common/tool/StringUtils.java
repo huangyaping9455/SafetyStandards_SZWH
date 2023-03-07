@@ -2,9 +2,17 @@ package org.springblade.common.tool;
 
 import cn.afterturn.easypoi.word.entity.WordImageEntity;
 import cn.hutool.core.text.StrFormatter;
+import io.swagger.annotations.ApiModelProperty;
 import org.springblade.common.constant.Constants;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.util.AntPathMatcher;
 
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 /**
@@ -497,8 +505,104 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return url;
 	}
 
+	/**
+	 * @Title: getNullPropertyNames
+	 * @Description: 获取值为空的属性名称
+	 * @createdBy:byrc
+	 */
+	private static String[] getNullPropertyNames(Object source) {
+		final BeanWrapper src = new BeanWrapperImpl(source);
+		java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
+
+		Set<String> emptyNames = new HashSet<>();
+		for(java.beans.PropertyDescriptor pd : pds) {
+			Object srcValue = src.getPropertyValue(pd.getName());
+			if (srcValue == null) emptyNames.add(pd.getName());
+		}
+		String[] result = new String[emptyNames.size()];
+		return emptyNames.toArray(result);
+	}
+
+	public static List<String> getValue(Object object,List<String> list){
+		Field[] field = object.getClass().getDeclaredFields();
+		for(int j=0 ; j<field.length ; j++){
+			String name = field[j].getName();
+			name = name.substring(0,1).toUpperCase()+name.substring(1);
+			String type = field[j].getGenericType().toString();
+			Method m;
+			Object value;
+			try {
+				m = object.getClass().getMethod("get"+name);
+				value = m.invoke(object);
+				if(value == null || "".equals(value)){
+					list.add(name);
+				}
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * 根据实体对象地址获取对象的字段名和ApiModelProperty value值；
+	 * @param classPath
+	 * @return
+	 */
+	public static Properties getApiModelProperty(String classPath) {
+		Properties p = new Properties();
+		try {
+			// 1.根据类路径获取类
+			Class<?> c = Class.forName(classPath);
+			// 2.获取类的属性
+			Field[] declaredFields = c.getDeclaredFields();
+			// 3.遍历属性，获取属性上ApiModelProperty的值，属性的名，存入Properties
+			if (declaredFields.length != 0) {
+				for (Field field : declaredFields) {
+					if (field.getAnnotation(ApiModelProperty.class) != null) {
+						// key和value可根据需求存
+						// 这存的key为注解的值，value为类属性名
+						p.put(field.getName(),field.getAnnotation(ApiModelProperty.class).value());
+					}
+				}
+				return p;
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+
 	public static void main(String[] args) {
-		System.out.println(splits("https://swhaq.com:8204/AttachFiles/2023/02/anbiao_vehicle/1676177580362.jpg"));
+//		System.out.println(splits("https://swhaq.com:8204/AttachFiles/2023/02/anbiao_vehicle/1676177580362.jpg"));
+
+		User u1 = new User();
+		User u2 = new User();
+		u1.setName("AAA");
+		u1.setArea("中国东莞");
+		u2.setName("BB");
+
+//		getNullPropertyNames(u2);
+		String msg = "";
+		String[] result = getNullPropertyNames(u2);
+		msg += u2.getName()+"的";
+		for(int i=0;i<result.length;i++) {
+			Properties dingLinkMessageModel = getApiModelProperty("org.springblade.common.tool.User");
+			String nameValue = dingLinkMessageModel.getProperty(result[i]);
+			msg += nameValue+",";
+		}
+		msg += "未填写!!";
+		System.out.println(msg);
+
 	}
 
 }

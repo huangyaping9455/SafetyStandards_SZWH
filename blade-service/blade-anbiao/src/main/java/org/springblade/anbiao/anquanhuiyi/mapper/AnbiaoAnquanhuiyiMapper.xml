@@ -46,7 +46,7 @@
 		where a.is_deleted = 0
 			and year(a.huiyikaishishijian) >= year(#{huiyikaishishijian})
         <if test="aadApIds != null and aadApIds != '' ">
-            and a.aad_ap_ids = #{aadApIds}
+            and c.aad_ap_ids = #{aadApIds}
         </if>
         <if test="Id != null and Id != '' ">
             and a.id = #{Id}

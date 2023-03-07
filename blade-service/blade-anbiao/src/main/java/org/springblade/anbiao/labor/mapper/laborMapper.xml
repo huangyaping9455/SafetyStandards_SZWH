@@ -2,6 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.springblade.anbiao.labor.mapper.laborMapper">
 
+    <resultMap id="LaborVOResultMap" type="org.springblade.anbiao.labor.VO.LaborVO">
+    </resultMap>
 
     <!--劳保列表-->
     <select id="selectList" parameterType="org.springblade.anbiao.labor.page.LaborPage" resultType="org.springblade.anbiao.labor.VO.LaborVO">
@@ -411,4 +413,78 @@
                                 </if>
                             ) d
     </select>
+
+
+    <sql id="tableLaborSql">
+        select
+            distinct
+            a.ali_name AS aliName,a.ali_issue_date AS aliIssueDate,a.ali_issue_quantity AS aliIssueQuantity,
+            a.ali_issue_people_number AS aliIssuePeopleNumber,a.ali_status AS aliStatus,a.ali_ids AS aliIds,
+            a.ali_application_scope AS aliApplicationScope,b.dept_name as detName
+            <if test="alrPersonIds!=null and alrPersonIds!=''">
+                ,d.alr_person_autograph as alrPersonAutograph,
+                d.alr_receipt_date as alrReceiptDate,
+                d.alr_receipts_number as alrReceiptsNumber
+            </if>
+        from
+            anbiao_labor_insurance a
+        inner join (
+            <include
+                refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b on a.ali_dept_ids = b.id
+        left join anbiao_labor_receive d on d.alr_ali_ids = a.ali_ids
+        where a.ali_delete = 0
+        <if test="asiYear!=null and asiYear!=''">
+            AND year(a.ali_issue_date) >= year(#{asiYear})
+        </if>
+        <if test="deptName!=null and deptName!=''">
+            AND b.dept_name= #{deptName}
+        </if>
+        <if test="aliName!=null and aliName!=''">
+            AND a.ali_name= #{aliName}
+        </if>
+        <if test="alrPersonIds!=null and alrPersonIds!=''">
+            AND d.alr_person_ids = #{alrPersonIds}
+        </if>
+    </sql>
+
+    <sql id="queryLaborSql">
+    </sql>
+
+    <sql id="orderLaborSql">
+        <!-- 默认排序规则 -->
+        ORDER BY aliIssueDate desc
+    </sql>
+
+    <select id="selectLaborPage" resultMap="LaborVOResultMap" parameterType="org.springblade.anbiao.labor.page.LaborPage" >
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableLaborSql" />
+            )b
+            where 1=1
+            <include refid="queryLaborSql" />
+            <include refid="orderLaborSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableLaborSql" />
+            )b
+            where 1=1
+            <include refid="queryLaborSql" />
+            <include refid="orderLaborSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectLaborTotal"
+            parameterType="org.springblade.anbiao.labor.page.LaborPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableLaborSql" />
+        )d
+        where 1 = 1
+        <include refid="queryLaborSql" />
+    </select>
+
 </mapper>
