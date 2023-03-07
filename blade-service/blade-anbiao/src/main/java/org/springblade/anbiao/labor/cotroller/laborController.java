@@ -239,7 +239,7 @@ public class laborController {
 	@GetMapping("/goExport_Excel")
 	@ApiLog("劳保信息-导出")
 	@ApiOperation(value = "劳保信息-导出", notes = "传入laborledgerPage", position = 22)
-	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String id, BladeUser user) throws IOException {
+	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String id, BladeUser user,String deptId) throws IOException {
 		int a=1;
 		R rs = new R();
 		List<String> urlList = new ArrayList<>();
