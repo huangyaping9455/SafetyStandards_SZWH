@@ -2148,8 +2148,8 @@ public class AnbiaoRiskDetailController {
 	}
 
 	@GetMapping("/jiashiyuanRiskAll")
-	@ApiLog("详情-台账风险统计信息")
-	@ApiOperation(value = "详情-台账风险统计信息", position = 1)
+	@ApiLog("详情-驾驶员风险统计信息")
+	@ApiOperation(value = "详情-驾驶员风险统计信息", position = 1)
 	public R<JiashiyuanRiskAllPage<JiashiyuanRiskAllVO>> jiashiyuanRiskAll(@RequestBody JiashiyuanRiskAllPage jiashiyuanRiskAllPage) {
 		JiashiyuanRiskAllPage<JiashiyuanRiskAllVO> pages = riskDetailService.selectJiashiyuanRiskAll(jiashiyuanRiskAllPage);
 		return R.data(pages);
