@@ -102,9 +102,6 @@ public class JiaShiYuanController {
 	private IVehicleDaoluyunshuzhengService daoluyunshuzhengService;
 
 
-
-
-
 	@PostMapping("/insert")
 	@ApiLog("新增-驾驶员资料管理")
 	@ApiOperation(value = "新增-驾驶员资料管理", notes = "传入jiaShiYuan", position = 1)
@@ -3731,5 +3728,27 @@ public class JiaShiYuanController {
 //		System.out.println(DigestUtil.encrypt("139788"));
 //	}
 
+	/**
+	 * 修改驾驶员手机号码
+	 */
+	@PostMapping("/updatePhone")
+	@ApiLog("修改-驾驶员手机号码")
+	@ApiOperation(value = "修改-驾驶员手机号码", notes = "传入数据id，手机号码", position = 4)
+	public R updatePhone(String Id,String Phone,BladeUser user) {
+		R r = new R();
+		if(user == null) {
+			r.setCode(401);
+			r.setMsg("未授权，请重新登录！");
+			return r;
+		}
+		JiaShiYuan jiaShiYuan = new JiaShiYuan();
+		jiaShiYuan.setCaozuoren(user.getUserName());
+		jiaShiYuan.setCaozuorenid(user.getUserId());
+		jiaShiYuan.setCaozuoshijian(DateUtil.now());
+		jiaShiYuan.setId(Id);
+		jiaShiYuan.setShoujihaoma(Phone);
+		jiaShiYuan.setDenglumima(DigestUtil.encrypt(jiaShiYuan.getShoujihaoma().substring(jiaShiYuan.getShoujihaoma().length() - 6)));
+		return R.status(jiaShiYuanService.updateById(jiaShiYuan));
+	}
 
 }
