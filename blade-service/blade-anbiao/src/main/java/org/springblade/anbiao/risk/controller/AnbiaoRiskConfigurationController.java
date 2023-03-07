@@ -3,6 +3,7 @@ package org.springblade.anbiao.risk.controller;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskConfiguration;
@@ -30,6 +31,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/anbiao/riskConfiguration")
+@Api(value = "风险配置信息", tags = "风险配置信息")
 public class AnbiaoRiskConfigurationController {
 
 	private IAnbiaoRiskConfigurationService anbiaoRiskConfigurationService;
