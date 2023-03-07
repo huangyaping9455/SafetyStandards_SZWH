@@ -18,7 +18,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ApiModel(value = "劳保分页对象", description = "劳保分页对象")
-public class LaborPage extends BasePage{
+public class LaborPage<T> extends BasePage<T>{
 
 	@ApiModelProperty(value = "物品名")
 	private String aliName;

@@ -18,6 +18,8 @@ import org.apache.commons.lang.StringUtils;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -344,7 +346,7 @@ public class DateUtils {
 	 *
 	 * @param date 指定日期
 	 * @param pattern 日期格式
-	 * @param isNeedHms是否需要时分秒
+	 * @param isNeedHms 是否需要时分秒
 	 * @return
 	 */
 	public static Map<String, Object> getFirstLastDayByMonth(Date date,
@@ -627,7 +629,10 @@ public class DateUtils {
 
 	public static void main(String[] args) throws Exception {
 
-		String time="2023-02-18";
+		String time="2023-02-18 00:00:00";
+
+		LocalDate daese = LocalDate.parse(time, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		System.out.println(daese);
 
 		System.out.println(DateUtils.formatDateZero("2023-12-1"));
 

@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.apache.tools.zip.ZipOutputStream;
 import org.springblade.anbiao.labor.DTO.laborDTO;
 
+import org.springblade.anbiao.labor.VO.LaborVO;
 import org.springblade.anbiao.labor.VO.LaborledgerVO;
 import org.springblade.anbiao.labor.entity.Labor;
 import org.springblade.anbiao.labor.entity.LaborEntity;
@@ -21,6 +22,8 @@ import org.springblade.anbiao.labor.page.LaborPage;
 import org.springblade.anbiao.labor.page.laborledgerPage;
 import org.springblade.anbiao.labor.service.laborLingquService;
 import org.springblade.anbiao.labor.service.laborService;
+import org.springblade.anbiao.yinhuanpaicha.page.AnbiaoHiddenDangerPage;
+import org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoHiddenDangerVO;
 import org.springblade.common.configurationBean.FileServer;
 import org.springblade.common.constant.FilePathConstant;
 import org.springblade.common.tool.ApacheZipUtils;
@@ -63,12 +66,21 @@ public class laborController {
 
 	private IFileUploadClient fileUploadClient;
 
-	@PostMapping("list")
+//	@PostMapping("list")
+//	@ApiLog("列表-劳保用品信息")
+//	@ApiOperation(value = "分页劳保用品信息", notes = "传入LaborPage ", position = 1)
+//	public R saList(@RequestBody LaborPage laborPage) {
+//		LaborPage laborPage1 = service.selectPage(laborPage);
+//		return R.data(laborPage1);
+//	}
+
+	@PostMapping("/list")
 	@ApiLog("列表-劳保用品信息")
-	@ApiOperation(value = "分页劳保用品信息", notes = "传入LaborPage ", position = 1)
-	public R saList(@RequestBody LaborPage laborPage) {
-		LaborPage laborPage1 = service.selectPage(laborPage);
-		return R.data(laborPage1);
+	@ApiOperation(value = "列表-劳保用品信息", notes = "传入LaborPage", position = 2)
+	public R<LaborPage<LaborVO>> getHiddenDangerPage(@RequestBody LaborPage laborPage, BladeUser user) {
+		R rs = new R();
+		LaborPage<LaborVO> list= service.selectLaborPage(laborPage);
+		return R.data(list);
 	}
 
 //

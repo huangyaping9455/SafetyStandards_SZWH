@@ -34,6 +34,9 @@ public interface laborMapper extends BaseMapper<LaborEntity> {
 	List<LaborVO> selectList(LaborPage laborPage);
 	int selectTotal(LaborPage laborPage);
 
+	List<LaborVO> selectLaborPage(LaborPage laborPage);
+	int selectLaborTotal(LaborPage laborPage);
+
 	LaborEntity selectAll(LaborPage laborPage);
 	List<Labor> selectC(LaborPage laborPage);
 //	/**

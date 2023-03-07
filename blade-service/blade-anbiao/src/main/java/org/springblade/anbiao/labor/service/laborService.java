@@ -3,6 +3,7 @@ package org.springblade.anbiao.labor.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springblade.anbiao.labor.DTO.laborDTO;
+import org.springblade.anbiao.labor.VO.LaborVO;
 import org.springblade.anbiao.labor.VO.LaborledgerVO;
 import org.springblade.anbiao.labor.VO.graphicsVO;
 import org.springblade.anbiao.labor.entity.Labor;
@@ -26,6 +27,7 @@ public interface laborService extends IService<LaborEntity> {
 	 * @return
 	 */
 	LaborPage selectPage(LaborPage laborPage);
+	LaborPage<LaborVO> selectLaborPage(LaborPage laborPage);
 
 	/**
 	 * 查询信息

@@ -2908,6 +2908,7 @@ public class JiaShiYuanController {
 			}
 		}
 		String title = new String(jiaShiYuanPage.getDeptName().getBytes(StandardCharsets.UTF_8))+ "-驾驶员信息统计表";
+		title = new String(title.getBytes(),"UTF-8");
 		// 模板注意 用{} 来表示你要用的变量 如果本来就有"{","}" 特殊字符 用"\{","\}"代替
 		// {} 代表普通变量 {.} 代表是list的变量
 		// 这里模板 删除了list以后的数据，也就是统计的这一行
