@@ -306,6 +306,7 @@
         <if test="deptName != null or deptName != ''">
         and a.dept_name like '%${deptName}%'
         </if>
+        ORDER BY j.jiashiyuanxingming
             limit ${total}
         </if>
         <if test="current != 0" >
@@ -333,6 +334,7 @@
             <if test="deptName != null or deptName != ''">
                 and a.dept_name like '%${deptName}%'
             </if>
+            ORDER BY j.jiashiyuanxingming
             limit ${offsetNo},${size}
         </if>
     </select>
@@ -365,6 +367,336 @@
         <if test="deptName != null or deptName != ''">
             and a.dept_name like '%${deptName}%'
         </if>
+        ORDER BY j.jiashiyuanxingming
         )d
     </select>
+
+    <select id="selectRuZhiRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanRuzhi">
+        SELECT
+            a.dept_id as deptId
+             ,b.dept_name AS deptName
+             ,ajr_aj_ids
+             ,ajr_name as xingming
+             ,(case when IFNULL(ajr_name,'') = '' then 1 else 0 end) as ajr_name
+             ,(case when IFNULL(ajr_sex,'') = '' then 1 else 0 end) as ajr_sex
+             ,(case when IFNULL(ajr_nation,'') = '' then 1 else 0 end) as ajr_nation
+             ,(case when IFNULL(ajr_native_place,'') = '' then 1 else 0 end) as ajr_native_place
+             ,(case when IFNULL(ajr_birth,'') = '' then 1 else 0 end) as ajr_birth
+             ,(case when IFNULL(ajr_age,'') = '' then 1 else 0 end) as ajr_age
+             ,(case when IFNULL(ajr_political_outlook,'') = '' then 1 else 0 end) as ajr_political_outlook
+             ,(case when IFNULL(ajr_education,'') = '' then 1 else 0 end) as ajr_education
+             ,(case when IFNULL(ajr_graduation_school,'') = '' then 1 else 0 end) as ajr_graduation_school
+             ,(case when IFNULL(ajr_graduation_date,'') = '' then 1 else 0 end) as ajr_graduation_date
+             ,(case when IFNULL(ajr_id_number,'') = '' then 1 else 0 end) as ajr_id_number
+             ,(case when IFNULL(ajr_address,'') = '' then 1 else 0 end) as ajr_address
+             ,(case when IFNULL(ajr_receive_driving_license,'') = '' then 1 else 0 end) as ajr_receive_driving_license
+             ,(case when IFNULL(ajr_class,'') = '' then 1 else 0 end) as ajr_class
+             ,(case when IFNULL(ajr_driving_experience,'') = '' then 1 else 0 end) as ajr_driving_experience
+             ,(case when IFNULL(ajr_health_status,'') = '' then 1 else 0 end) as ajr_health_status
+             ,(case when IFNULL(ajr_head_portrait,'') = '' then 1 else 0 end) as ajr_head_portrait
+             ,(case when IFNULL(ajr_work_experience,'') = '' then 1 else 0 end) as ajr_work_experience
+             ,(case when IFNULL(ajr_safe_driving_record1,'') = '' then 1 else 0 end) as ajr_safe_driving_record1
+             ,(case when IFNULL(ajr_safe_driving_record2,'') = '' then 1 else 0 end) as ajr_safe_driving_record2
+             ,(case when IFNULL(ajr_safe_driving_record3,'') = '' then 1 else 0 end) as ajr_safe_driving_record3
+             ,(case when IFNULL(ajr_integrity_assessment_results,'') = '' then 1 else 0 end) as ajr_integrity_assessment_results
+
+                 FROM anbiao_jiashiyuan_ruzhi
+                 left join anbiao_jiashiyuan a on  ajr_aj_ids=a.id
+                 inner join (SELECT
+                                 DISTINCT
+                                 xiaji.id,
+                                 xiaji.parent_id,
+                                 xiaji.dept_name,
+                                 xiaji.is_deleted
+                             FROM
+                                 blade_dept shangji,
+                                 blade_dept xiaji
+                             WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                               AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+                               and shangji.id=1
+        ) b on a.dept_id=b.id
+                 INNER JOIN anbiao_organization k on b.id = k.dept_id and k.jigouleixing in('qiye','geti')
+        where
+            ajr_delete=0
+-- and b.id=5534
+        ORDER BY a.dept_id
+    </select>
+
+    <select id="selectShenFenZhengRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan">
+        SELECT a.dept_id
+             ,a.id
+             ,a.jiashiyuanxingming
+             ,( CASE WHEN ( ifnull( `shenfenzhenghao`, '' ) = '' ) THEN 1 ELSE 0 END ) as shenfenzhenghao
+             , ( CASE WHEN ( ifnull( `shenfenzhengchulingriqi`, '' ) = '' ) THEN 1 ELSE 0 END ) as shenfenzhengchulingriqi
+             , ( CASE WHEN ( ifnull( `shenfenzhengyouxiaoqi`, '' ) = '' ) THEN 1 ELSE 0 END ) as shenfenzhengyouxiaoqi
+             , ( CASE WHEN ( ifnull( `shenfenzhengfujian`, '' ) = '' ) THEN 1 ELSE 0 END ) as shenfenzhengfujian
+             , ( CASE WHEN ( ifnull( `shenfenzhengfanmianfujian`, '' ) = '' ) THEN 1 ELSE 0 END ) as shenfenzhengfanmianfujian
+        FROM
+            anbiao_jiashiyuan a
+                inner join (SELECT
+                                DISTINCT
+                                xiaji.id,
+                                xiaji.parent_id,
+                                xiaji.dept_name,
+                                xiaji.is_deleted
+                            FROM
+                                blade_dept shangji,
+                                blade_dept xiaji
+                            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                              AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+                              and shangji.id=1
+            ) b on a.dept_id=b.id
+                INNER JOIN anbiao_organization k on b.id = k.dept_id and k.jigouleixing in('qiye','geti')
+        WHERE
+            a.isdelete=0
+        ORDER BY
+            dept_id
+    </select>
+
+    <select id="selectJiaShiZhengRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanJiashizheng">
+        SELECT
+               b.id as deptId
+             , jsy.jiashiyuanxingming as jiashiyuanxingming
+             , ajj_aj_ids
+             , (case when (ifnull(`ajj_file_no`,'') = '') then 1 else 0 end) as ajj_file_no
+             , (case when (ifnull(`ajj_valid_period_start`,'') = '') then 1 else 0 end) as ajj_valid_period_start
+             , (case when (ifnull(`ajj_valid_period_end`,'') = '') then 1 else 0 end) as ajj_valid_period_end
+             , (case when (ifnull(`ajj_front_photo_address`,'') = '') then 1 else 0 end) as ajj_front_photo_address
+             , (case when (ifnull(`ajj_attached_photos`,'') = '') then 1 else 0 end) as ajj_attached_photos
+        FROM
+            anbiao_jiashiyuan_jiashizheng jsz
+                LEFT JOIN anbiao_jiashiyuan jsy on jsy.id=jsz.ajj_aj_ids
+                inner join (SELECT
+                                DISTINCT
+                                xiaji.id,
+                                xiaji.parent_id,
+                                xiaji.dept_name,
+                                xiaji.is_deleted
+                            FROM
+                                blade_dept shangji,
+                                blade_dept xiaji
+                            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                              AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+                              and shangji.id=1
+            ) b on jsy.dept_id=b.id
+                INNER JOIN anbiao_organization k on b.id = k.dept_id and k.jigouleixing in('qiye','geti')
+
+        WHERE
+            ajj_delete=0
+          and jsy.isdelete=0
+        ORDER BY b.id
+    </select>
+
+    <select id="selectCongYeZhengRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanCongyezigezheng">
+        SELECT
+            b.id as deptId
+             , jsy.jiashiyuanxingming as jiashiyuanxingming
+             ,	ajc_aj_ids
+             , (case when (ifnull(`ajc_certificate_no`,'') = '') then 1 else 0 end) as ajc_certificate_no
+             , (case when (ifnull(`ajc_initial_issuing`,'') = '') then 1 else 0 end) as ajc_initial_issuing
+             , (case when (ifnull(`ajc_valid_until`,'') = '') then 1 else 0 end) as ajc_valid_until
+             , (case when (ifnull(`ajc_licence`,'') = '') then 1 else 0 end) as ajc_licence
+        FROM
+            anbiao_jiashiyuan_congyezigezheng cyz
+                LEFT JOIN anbiao_jiashiyuan jsy on jsy.id=cyz.ajc_aj_ids
+                inner join (SELECT
+                                DISTINCT
+                                xiaji.id,
+                                xiaji.parent_id,
+                                xiaji.dept_name,
+                                xiaji.is_deleted
+                            FROM
+                                blade_dept shangji,
+                                blade_dept xiaji
+                            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                              AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+                              and shangji.id=1
+            ) b on jsy.dept_id=b.id
+                INNER JOIN anbiao_organization k on b.id = k.dept_id and k.jigouleixing in('qiye','geti')
+        where
+              ajc_delete=0
+          and jsy.isdelete=0
+        ORDER BY b.id
+    </select>
+
+    <select id="selectTiJianRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanTijian">
+        SELECT
+            b.id as deptId
+             , jsy.jiashiyuanxingming as jiashiyuanxingming
+             , ajt_aj_ids
+             , (case when (ifnull(`ajt_physical_examination_date`,'') = '') then 1 else 0 end) as ajt_physical_examination_date
+             , (case when (ifnull(`ajt_enclosure`,'') = '') then 1 else 0 end) as ajt_enclosure
+        FROM
+            anbiao_jiashiyuan_tijian tj
+                LEFT JOIN anbiao_jiashiyuan jsy on jsy.id=tj.ajt_aj_ids
+                inner join (SELECT
+                                DISTINCT
+                                xiaji.id,
+                                xiaji.parent_id,
+                                xiaji.dept_name,
+                                xiaji.is_deleted
+                            FROM
+                                blade_dept shangji,
+                                blade_dept xiaji
+                            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                              AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+                              and shangji.id=1
+            ) b on jsy.dept_id=b.id
+                INNER JOIN anbiao_organization k on b.id = k.dept_id and k.jigouleixing in('qiye','geti')
+        WHERE
+            ajt_delete=0
+          and jsy.isdelete=0
+        ORDER BY b.id
+    </select>
+
+
+    <select id="selectGangQianPeiXunRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanGangqianpeixun">
+        SELECT
+            b.id as deptId
+             , jsy.jiashiyuanxingming as jiashiyuanxingming
+             , ajg_aj_ids
+             , case when (ifnull(`ajg_training_enclosure`,'') = '') then 1 else 0 end as ajg_training_enclosure
+        FROM
+            anbiao_jiashiyuan_gangqianpeixun gqpx
+                LEFT JOIN anbiao_jiashiyuan jsy on jsy.id=gqpx.ajg_aj_ids
+                inner join (SELECT
+                                DISTINCT
+                                xiaji.id,
+                                xiaji.parent_id,
+                                xiaji.dept_name,
+                                xiaji.is_deleted
+                            FROM
+                                blade_dept shangji,
+                                blade_dept xiaji
+                            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                              AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+                              and shangji.id=1
+            ) b on jsy.dept_id=b.id
+                INNER JOIN anbiao_organization k on b.id = k.dept_id and k.jigouleixing in('qiye','geti')
+        WHERE
+            ajg_delete=0
+          and jsy.isdelete=0
+        ORDER BY b.id
+    </select>
+
+    <select id="selectWuZeZhengMingRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanWuzezhengming">
+        SELECT
+            b.id as deptId
+             , jsy.jiashiyuanxingming as jiashiyuanxingming
+             , ajw_aj_ids
+             , (case when (ifnull(`ajw_date`,'') = '') then 1 else 0 end) as ajw_date
+             , (case when (ifnull(`ajw_enclosure`,'') = '') then 1 else 0 end) as ajw_enclosure
+        FROM
+            anbiao_jiashiyuan_wuzezhengming wzzm
+                LEFT JOIN anbiao_jiashiyuan jsy on jsy.id=wzzm.ajw_aj_ids
+                inner join (SELECT
+                                DISTINCT
+                                xiaji.id,
+                                xiaji.parent_id,
+                                xiaji.dept_name,
+                                xiaji.is_deleted
+                            FROM
+                                blade_dept shangji,
+                                blade_dept xiaji
+                            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                              AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+                              and shangji.id=1
+            ) b on jsy.dept_id=b.id
+                INNER JOIN anbiao_organization k on b.id = k.dept_id and k.jigouleixing in('qiye','geti')
+        WHERE
+            ajw_delete=0
+          and jsy.isdelete=0
+        ORDER BY b.id
+    </select>
+
+    <select id="selectAnQuanZeRenShuRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanAnquanzerenshu">
+        SELECT
+            b.id as deptId
+             , jsy.jiashiyuanxingming as jiashiyuanxingming
+             , aja_aj_ids
+             , (case when (ifnull(`aja_autograph_time`,'') = '') then 1 else 0 end) as aja_autograph_time
+             , (case when (ifnull(`aja_autograph_enclosure`,'') = '') then 1 else 0 end) as aja_autograph_enclosure
+        FROM
+            anbiao_jiashiyuan_anquanzerenshu aqzrs
+                LEFT JOIN anbiao_jiashiyuan jsy on jsy.id=aqzrs.aja_aj_ids
+                inner join (SELECT
+                                DISTINCT
+                                xiaji.id,
+                                xiaji.parent_id,
+                                xiaji.dept_name,
+                                xiaji.is_deleted
+                            FROM
+                                blade_dept shangji,
+                                blade_dept xiaji
+                            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                              AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+                              and shangji.id=1
+            ) b on jsy.dept_id=b.id
+                INNER JOIN anbiao_organization k on b.id = k.dept_id and k.jigouleixing in('qiye','geti')
+        WHERE
+            aja_delete=0
+          and jsy.isdelete=0
+        ORDER BY b.id
+    </select>
+
+    <select id="selectWeiHaiGaoZhiShuRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanWeihaigaozhishu">
+        SELECT
+            b.id as deptId
+             , jsy.jiashiyuanxingming as jiashiyuanxingming
+             , ajw_aj_ids
+             ,	(case when (ifnull(`ajw_autograph_time`,'') = '') then 1 else 0 end) as ajw_autograph_time
+             , (case when (ifnull(`ajw_autograph_enclosure`,'') = '') then 1 else 0 end) as ajw_autograph_enclosure
+        FROM
+            anbiao_jiashiyuan_weihaigaozhishu whgzs
+                LEFT JOIN anbiao_jiashiyuan jsy on jsy.id=whgzs.ajw_aj_ids
+                inner join (SELECT
+                                DISTINCT
+                                xiaji.id,
+                                xiaji.parent_id,
+                                xiaji.dept_name,
+                                xiaji.is_deleted
+                            FROM
+                                blade_dept shangji,
+                                blade_dept xiaji
+                            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                              AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+                              and shangji.id=1
+            ) b on jsy.dept_id=b.id
+                INNER JOIN anbiao_organization k on b.id = k.dept_id and k.jigouleixing in('qiye','geti')
+        WHERE
+            ajw_delete=0
+          and jsy.isdelete=0
+        ORDER BY b.id
+    </select>
+
+    <select id="selectLaoDongHeTongRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanLaodonghetong">
+        SELECT
+            b.id as deptId
+             , jsy.jiashiyuanxingming as jiashiyuanxingming
+             , ajw_aj_ids
+             ,	(case when (ifnull(`ajw_autograph_time`,'') = '') then 1 else 0 end) as ajw_autograph_time
+             ,  (case when (ifnull(`ajw_autograph_enclosure` ,'') = '') then 1 else 0 end) as ajw_autograph_enclosure
+        FROM
+            anbiao_jiashiyuan_laodonghetong ldht
+                LEFT JOIN anbiao_jiashiyuan jsy on jsy.id=ldht.ajw_aj_ids
+                inner join (SELECT
+                                DISTINCT
+                                xiaji.id,
+                                xiaji.parent_id,
+                                xiaji.dept_name,
+                                xiaji.is_deleted
+                            FROM
+                                blade_dept shangji,
+                                blade_dept xiaji
+                            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                              AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+                              and shangji.id=1
+            ) b on jsy.dept_id=b.id
+                INNER JOIN anbiao_organization k on b.id = k.dept_id and k.jigouleixing in('qiye','geti')
+        WHERE
+            ajw_delete=0
+          and jsy.isdelete=0
+        ORDER BY b.id
+    </select>
+
 </mapper>

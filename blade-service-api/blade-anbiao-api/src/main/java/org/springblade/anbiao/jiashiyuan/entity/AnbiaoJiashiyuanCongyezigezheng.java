@@ -105,5 +105,7 @@ public class AnbiaoJiashiyuanCongyezigezheng implements Serializable {
     @TableField("ajc_update_by_name")
     private String ajcUpdateByName;
 
-
+	@ApiModelProperty(value = "企业id")
+	@TableField(exist = false)
+	private String deptId;
 }

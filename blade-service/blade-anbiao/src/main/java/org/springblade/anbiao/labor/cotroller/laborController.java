@@ -251,12 +251,13 @@ public class laborController {
 	@GetMapping("/goExport_Excel")
 	@ApiLog("劳保信息-导出")
 	@ApiOperation(value = "劳保信息-导出", notes = "传入laborledgerPage", position = 22)
-	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String id, BladeUser user,String deptId) throws IOException {
+	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String Id, BladeUser user,String deptId) throws IOException {
 		int a=1;
 		R rs = new R();
 		List<String> urlList = new ArrayList<>();
 		laborledgerPage laborledgerPage = new laborledgerPage();
-		laborledgerPage.setAliIds(id);
+		laborledgerPage.setAliIds(Id);
+//		laborledgerPage.setDeptId(deptId);
 //		laborledgerPage.setDate(date);
 		// TODO 渲染其他类型的数据请参考官方文档
 		DecimalFormat df = new DecimalFormat("######0.00");
@@ -303,7 +304,7 @@ public class laborController {
 					map.put("aliIssueQuantity", t.getAliIssueQuantity());
 					QueryWrapper<LaborlingquEntity> laborledgerVOQueryWrapper = new QueryWrapper<>();
 					laborledgerVOQueryWrapper.lambda().eq(LaborlingquEntity::getAlrAliIds,t.getAliIds());
-					laborledgerVOQueryWrapper.lambda().eq(LaborlingquEntity::getAlrDelete,"0");
+//					laborledgerVOQueryWrapper.lambda().eq(LaborlingquEntity::getAlrDelete,"0");
 					List<LaborlingquEntity> list=lingquService.getBaseMapper().selectList(laborledgerVOQueryWrapper);
 					for (LaborlingquEntity laborlingquEntity:list) {
 						LaborledgerVO laborledgerVO = new LaborledgerVO();

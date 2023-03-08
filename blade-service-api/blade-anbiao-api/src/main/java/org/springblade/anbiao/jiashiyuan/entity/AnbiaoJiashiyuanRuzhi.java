@@ -188,4 +188,9 @@ public class AnbiaoJiashiyuanRuzhi implements Serializable {
 	@ApiModelProperty(value = "入职时间")
 	@TableField("ajr_entry_time")
 	private String ajrEntryTime;
+
+	@ApiModelProperty(value = "企业id")
+	@TableField(exist = false)
+	private String deptId;
+
 }

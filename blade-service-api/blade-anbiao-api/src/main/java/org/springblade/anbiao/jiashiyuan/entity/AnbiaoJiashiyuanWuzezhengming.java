@@ -77,4 +77,7 @@ public class AnbiaoJiashiyuanWuzezhengming implements Serializable {
 	@TableField("ajw_start_date")
 	private String ajwStartDate;
 
+	@ApiModelProperty(value = "企业id")
+	@TableField(exist = false)
+	private String deptId;
 }
