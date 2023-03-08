@@ -3,8 +3,7 @@ package org.springblade.anbiao.risk.service.impl;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
-import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
-import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTJMX;
+import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.mapper.AnbiaoRiskDetailMapper;
 import org.springblade.anbiao.risk.page.JiashiyuanRiskAllPage;
@@ -243,6 +242,56 @@ public class AnbiaoRiskDetailServiceImpl extends ServiceImpl<AnbiaoRiskDetailMap
 			List<JiashiyuanRiskAllVO> jiashiyuanRiskAllVOS = mapper.selectJiashiyuanRiskAll(jiashiyuanRiskAllPage);
 			return (JiashiyuanRiskAllPage<JiashiyuanRiskAllVO>) jiashiyuanRiskAllPage.setRecords(jiashiyuanRiskAllVOS);
 		}
+	}
+
+	@Override
+	public List<AnbiaoJiashiyuanRuzhi> selectRuZhiRisk() {
+		return mapper.selectRuZhiRisk();
+	}
+
+	@Override
+	public List<JiaShiYuan> selectShenFenZhengRisk() {
+		return mapper.selectShenFenZhengRisk();
+	}
+
+	@Override
+	public List<AnbiaoJiashiyuanJiashizheng> selectJiaShiZhengRisk() {
+		return mapper.selectJiaShiZhengRisk();
+	}
+
+	@Override
+	public List<AnbiaoJiashiyuanCongyezigezheng> selectCongYeZhengRisk() {
+		return mapper.selectCongYeZhengRisk();
+	}
+
+	@Override
+	public List<AnbiaoJiashiyuanTijian> selectTiJianRisk() {
+		return mapper.selectTiJianRisk();
+	}
+
+	@Override
+	public List<AnbiaoJiashiyuanGangqianpeixun> selectGangQianPeiXunRisk() {
+		return mapper.selectGangQianPeiXunRisk();
+	}
+
+	@Override
+	public List<AnbiaoJiashiyuanWuzezhengming> selectWuZeZhengMingRisk() {
+		return mapper.selectWuZeZhengMingRisk();
+	}
+
+	@Override
+	public List<AnbiaoJiashiyuanAnquanzerenshu> selectAnQuanZeRenShuRisk() {
+		return mapper.selectAnQuanZeRenShuRisk();
+	}
+
+	@Override
+	public List<AnbiaoJiashiyuanWeihaigaozhishu> selectWeiHaiGaoZhiShuRisk() {
+		return mapper.selectWeiHaiGaoZhiShuRisk();
+	}
+
+	@Override
+	public List<AnbiaoJiashiyuanLaodonghetong> selectLaoDongHeTongRisk() {
+		return mapper.selectLaoDongHeTongRisk();
 	}
 
 }

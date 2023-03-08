@@ -116,4 +116,8 @@ public class AnbiaoJiashiyuanLaodonghetong implements Serializable {
 	@ApiModelProperty(value = "联系电话")
 	@TableField(exist = false)
 	private String driverPhone;
+
+	@ApiModelProperty(value = "企业id")
+	@TableField(exist = false)
+	private String deptId;
 }

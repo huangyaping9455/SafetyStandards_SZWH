@@ -77,5 +77,7 @@ public class AnbiaoJiashiyuanTijian implements Serializable {
     @TableField("ajt_update_by_name")
     private String ajtUpdateByName;
 
-
+	@ApiModelProperty(value = "企业id")
+	@TableField(exist = false)
+	private String deptId;
 }

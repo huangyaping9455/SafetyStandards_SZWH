@@ -96,4 +96,8 @@ public class AnbiaoJiashiyuanWeihaigaozhishu implements Serializable {
 	@ApiModelProperty(value = "起始日期")
 	@TableField("ajw_start_date")
 	private String ajwStartDate;
+
+	@ApiModelProperty(value = "企业id")
+	@TableField(exist = false)
+	private String deptId;
 }

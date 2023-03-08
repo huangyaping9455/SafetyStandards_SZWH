@@ -4,7 +4,7 @@ import feign.Param;
 import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
 import org.springblade.anbiao.configure.entity.Configure;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
-import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springblade.anbiao.risk.page.JiashiyuanRiskAllPage;
@@ -59,4 +59,24 @@ public interface AnbiaoRiskDetailMapper extends BaseMapper<AnbiaoRiskDetail> {
 	 * @return
 	 */
 	int selectTotal(JiashiyuanRiskAllPage jiashiyuanRiskAllPage);
+
+	List<AnbiaoJiashiyuanRuzhi> selectRuZhiRisk();
+
+	List<JiaShiYuan> selectShenFenZhengRisk();
+
+	List<AnbiaoJiashiyuanJiashizheng> selectJiaShiZhengRisk();
+
+	List<AnbiaoJiashiyuanCongyezigezheng> selectCongYeZhengRisk();
+
+	List<AnbiaoJiashiyuanTijian> selectTiJianRisk();
+
+	List<AnbiaoJiashiyuanGangqianpeixun> selectGangQianPeiXunRisk();
+
+	List<AnbiaoJiashiyuanWuzezhengming> selectWuZeZhengMingRisk();
+
+	List<AnbiaoJiashiyuanAnquanzerenshu> selectAnQuanZeRenShuRisk();
+
+	List<AnbiaoJiashiyuanWeihaigaozhishu> selectWeiHaiGaoZhiShuRisk();
+
+	List<AnbiaoJiashiyuanLaodonghetong> selectLaoDongHeTongRisk();
 }
