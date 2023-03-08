@@ -701,6 +701,136 @@ public class AnbiaoCarExamineInfoController {
 		return rs;
 	}
 
+//	@GetMapping("/goExport_ExamineInfo_Excel")
+//	@ApiLog("安全检查数据-车辆安全检查台账统计表-导出")
+//	@ApiOperation(value = "安全检查数据-车辆安全检查台账统计表-导出", notes = "传入deptId、vehId、beginTime、endTime", position = 22)
+//	public R goExport_ExamineInfo_Excel(HttpServletRequest request, HttpServletResponse response, String deptId, String vehId ,String deptname, String beginTime , String endTime , BladeUser user) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+//		R rs = new R();
+//		List<String> urlList = new ArrayList<>();
+//		AnBiaoCheckCarPage anBiaoCheckCarPage = new AnBiaoCheckCarPage();
+//		anBiaoCheckCarPage.setDeptId(deptId);
+//		// TODO 渲染其他类型的数据请参考官方文档
+//		DecimalFormat df = new DecimalFormat("######0.00");
+//		Calendar now = Calendar.getInstance();
+//		//word模板地址
+//		String templatePath =fileServer.getPathPrefix()+"muban\\"+"DayliExamineInfo.xlsx";
+//		String [] nyr= DateUtil.today().split("-");
+//		String[] idsss = anBiaoCheckCarPage.getDeptId().split(",");
+//		//去除素组中重复的数组
+//		List<String> listid = new ArrayList<String>();
+//		for (int i=0; i<idsss.length; i++) {
+//			if(!listid.contains(idsss[i])) {
+//				listid.add(idsss[i]);
+//			}
+//		}
+//		//返回一个包含所有对象的指定类型的数组
+//		String[] idss= listid.toArray(new String[1]);
+//		for(int j = 0;j< idss.length;j++){
+//			String templateFile = templatePath;
+//			//Excel中的结果集ListData
+//			List<CarExamineTJMX> ListData1 = new ArrayList<>();
+//			Map<String, Object> map = new HashMap<>();
+//			anBiaoCheckCarPage.setSize(0);
+//			anBiaoCheckCarPage.setCurrent(0);
+//			anBiaoCheckCarPage.setBeginTime(beginTime);
+//			anBiaoCheckCarPage.setEndTime(endTime);
+//			anBiaoCheckCarPage.setDeptId(idss[j]);
+//			anBiaoCheckCarPage.setVehId(vehId);
+//			if(StringUtils.isNotBlank(anBiaoCheckCarPage.getVehId())){
+//				String[] vehIdidsss = anBiaoCheckCarPage.getVehId().split(",");
+//				//去除素组中重复的数组
+//				List<String> vehIdlistid = new ArrayList<String>();
+//				for (int i=0; i<vehIdidsss.length; i++) {
+//					if(!vehIdlistid.contains(vehIdidsss[i])) {
+//						vehIdlistid.add(vehIdidsss[i]);
+//					}
+//				}
+//				//返回一个包含所有对象的指定类型的数组
+//				String[] vehIdidss = vehIdlistid.toArray(new String[1]);
+//				anBiaoCheckCarPage.setVehIdidss(vehIdidss);
+//			}
+//			List<AnbiaoCarExamineInfoVO> examineInfoList = iAnbiaoCarExamineInfoService.selectAnBiaoCheckCarALLPage(anBiaoCheckCarPage);
+//			if(examineInfoList.size()==0){
+//
+//			}else if(examineInfoList.size()>3000){
+//				rs.setMsg("数据超过30000条无法下载");
+//				rs.setCode(500);
+//				return rs;
+//			}else{
+//				for( int i = 0 ; i < examineInfoList.size() ; i++) {
+//					// 渲染文本
+//					AnbiaoCarExamineInfoVO t = examineInfoList.get(i);
+//					Class c1 = Class.forName("org.springblade.anbiao.chuchejiancha.entity.CarExamineTJMX");
+//					CarExamineTJMX ca = (CarExamineTJMX) c1.newInstance();
+//					String str = "";
+//					String dates = "";
+//					ca.setXuhao(i+1);
+//					ca.setVehNo(t.getCheliangpaizhao());
+//					for( int p = 1 ; p < 32 ; p++) {
+//						String pp = String.valueOf(p);
+//						if(pp.length() > 1){
+//							System.out.println(t.getDate().substring(t.getDate().length() - 2));
+//							dates = t.getDate().substring(t.getDate().length() - 2);
+//						}else{
+//							dates = t.getDate().substring(t.getDate().length() - 1);
+//						}
+//						if(dates.equals(pp)){
+//							if(t.getStatus().equals(0)){
+//								str +="a"+p+":√,";
+//							}else if(t.getStatus().equals(6)){
+//								str +="a"+p+":√,";
+//							}else{
+//								str +="a"+p+":√,";
+//							}
+//						}
+//					}
+//					System.out.println(str);
+//					if(StringUtils.isNotEmpty(str)){
+//						String[] arr = str.split(",");
+//						for(String arrStr : arr){
+//							Field item = c1.getDeclaredField(arrStr.split(":")[0]);
+//							item.setAccessible(true);
+//							item.set(ca,arrStr.split(":")[1]);
+//						}
+//						ListData1.add(ca);
+//					}
+//				}
+//				// 模板注意 用{} 来表示你要用的变量 如果本来就有"{","}" 特殊字符 用"\{","\}"代替
+//				// {} 代表普通变量 {.} 代表是list的变量
+//				// 这里模板 删除了list以后的数据，也就是统计的这一行
+//				String templateFileName = templateFile;
+//				//alarmServer.getTemplateUrl()+
+//				String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2];
+//				File newFile = new File(fileName);
+//				//判断目标文件所在目录是否存在
+//				if(!newFile.exists()){
+//					//如果目标文件所在的目录不存在，则创建父目录
+//					newFile.mkdirs();
+//				}
+//				fileName = fileName+"/"+examineInfoList.get(0).getDeptName()+"-车辆安全检查台账.xlsx";
+//				ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
+//				WriteSheet writeSheet = EasyExcel.writerSheet().build();
+//				// 写入list之前的数据
+//				excelWriter.fill(map, writeSheet);
+//				// 直接写入数据
+//				excelWriter.fill(ListData1, writeSheet);
+//				excelWriter.finish();
+//				urlList.add(fileName);
+//			}
+//		}
+//		String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"车辆安全检查台账.zip";
+//		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(fileName));
+//		ApacheZipUtils.doCompress1(urlList, bizOut);
+//		//不要忘记调用
+//		bizOut.close();
+//
+//		rs.setMsg("下载成功");
+//		rs.setCode(200);
+//		rs.setData(fileName);
+//		rs.setSuccess(true);
+//		return rs;
+//	}
+
 	@GetMapping("/goExport_ExamineInfo_Excel")
 	@ApiLog("安全检查数据-车辆安全检查台账统计表-导出")
 	@ApiOperation(value = "安全检查数据-车辆安全检查台账统计表-导出", notes = "传入deptId、vehId、beginTime、endTime", position = 22)
@@ -749,7 +879,7 @@ public class AnbiaoCarExamineInfoController {
 				String[] vehIdidss = vehIdlistid.toArray(new String[1]);
 				anBiaoCheckCarPage.setVehIdidss(vehIdidss);
 			}
-			List<AnbiaoCarExamineInfoVO> examineInfoList = iAnbiaoCarExamineInfoService.selectAnBiaoCheckCarALLPage(anBiaoCheckCarPage);
+			List<AnbiaoCarExamineInfoTZVO> examineInfoList = iAnbiaoCarExamineInfoService.selectDeptVeh(anBiaoCheckCarPage);
 			if(examineInfoList.size()==0){
 
 			}else if(examineInfoList.size()>3000){
@@ -759,31 +889,39 @@ public class AnbiaoCarExamineInfoController {
 			}else{
 				for( int i = 0 ; i < examineInfoList.size() ; i++) {
 					// 渲染文本
-					AnbiaoCarExamineInfoVO t = examineInfoList.get(i);
+					AnbiaoCarExamineInfoTZVO t = examineInfoList.get(i);
+					List<AnbiaoCarExamineInfoTZVO> tt = examineInfoList.get(i).getExamineInfoTZVOList();
 					Class c1 = Class.forName("org.springblade.anbiao.chuchejiancha.entity.CarExamineTJMX");
 					CarExamineTJMX ca = (CarExamineTJMX) c1.newInstance();
 					String str = "";
 					String dates = "";
 					ca.setXuhao(i+1);
 					ca.setVehNo(t.getCheliangpaizhao());
-					for( int p = 1 ; p < 32 ; p++) {
-						String pp = String.valueOf(p);
-						if(pp.length() > 1){
-							System.out.println(t.getDate().substring(t.getDate().length() - 2));
-							dates = t.getDate().substring(t.getDate().length() - 2);
-						}else{
-							dates = t.getDate().substring(t.getDate().length() - 1);
-						}
-						if(dates.equals(pp)){
-							if(t.getStatus().equals(0)){
-								str +="a"+p+":√,";
-							}else if(t.getStatus().equals(6)){
-								str +="a"+p+":√,";
-							}else{
-								str +="a"+p+":√,";
+//					if(tt.size() > 0 && tt != null){
+						for(int ts = 0 ; ts < tt.size() ; ts++) {
+							for( int p = 1 ; p < 32 ; p++) {
+								String pp = String.valueOf(p);
+								if(pp.length() > 1){
+									System.out.println(tt.get(ts).getDate().substring(tt.get(ts).getDate().length() - 2));
+									dates = tt.get(ts).getDate().substring(tt.get(ts).getDate().length() - 2);
+								}else{
+									dates = tt.get(ts).getDate().substring(tt.get(ts).getDate().length() - 1);
+								}
+								if(dates.equals(pp)){
+									if(tt.get(ts).getStatus().equals(0)){
+										str +="a"+p+":√,";
+									}else if(tt.get(ts).getStatus().equals(6)){
+										str +="a"+p+":√,";
+									}else if(tt.get(ts).getStatus().equals(1)){
+										str +="a"+p+":x,";
+									}else{
+										str +="a"+p+":--,";
+									}
+								}
 							}
 						}
-					}
+//					}
+
 					System.out.println(str);
 					if(StringUtils.isNotEmpty(str)){
 						String[] arr = str.split(",");
@@ -792,8 +930,8 @@ public class AnbiaoCarExamineInfoController {
 							item.setAccessible(true);
 							item.set(ca,arrStr.split(":")[1]);
 						}
-						ListData1.add(ca);
 					}
+					ListData1.add(ca);
 				}
 				// 模板注意 用{} 来表示你要用的变量 如果本来就有"{","}" 特殊字符 用"\{","\}"代替
 				// {} 代表普通变量 {.} 代表是list的变量
@@ -830,6 +968,7 @@ public class AnbiaoCarExamineInfoController {
 		rs.setSuccess(true);
 		return rs;
 	}
+
 
 //	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchFieldException {
 ////		AnbiaoCarExamineInfoVO t = new AnbiaoCarExamineInfoVO();

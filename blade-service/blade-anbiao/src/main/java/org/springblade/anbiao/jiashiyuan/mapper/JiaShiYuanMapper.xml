@@ -133,7 +133,7 @@ values
         </if>
 
         <if test="shoujihaoma !=null and shoujihaoma != ''">
-            AND shoujihaoma = #{shoujihaoma}
+            AND shoujihaoma LIKE '%${shoujihaoma}%'
         </if>
 
     </sql>

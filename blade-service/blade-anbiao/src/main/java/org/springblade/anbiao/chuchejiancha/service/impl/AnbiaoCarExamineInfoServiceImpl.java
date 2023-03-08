@@ -170,5 +170,23 @@ public class AnbiaoCarExamineInfoServiceImpl extends ServiceImpl<AnbiaoCarExamin
 		return anbiaoCarExamineInfoPage;
 	}
 
+	@Override
+	public List<AnbiaoCarExamineInfoTZVO> selectDeptVeh(AnBiaoCheckCarPage anbiaoCarExamineInfoPage) {
+		List<AnbiaoCarExamineInfoTZVO> carExamineInfoTZVOS = mapper.selectDeptVeh(anbiaoCarExamineInfoPage);
+		carExamineInfoTZVOS.forEach(item-> {
+			anbiaoCarExamineInfoPage.setVehId(item.getVehId());
+			List<AnbiaoCarExamineInfoTZVO> carExamineInfoTZVOList = mapper.selectDeptVehExamine(anbiaoCarExamineInfoPage);
+			if(carExamineInfoTZVOList != null){
+				item.setExamineInfoTZVOList(carExamineInfoTZVOList);
+			}
+		});
+		return carExamineInfoTZVOS;
+	}
+
+	@Override
+	public List<AnbiaoCarExamineInfoTZVO> selectDeptVehExamine(AnBiaoCheckCarPage anbiaoCarExamineInfoPage) {
+		return mapper.selectDeptVehExamine(anbiaoCarExamineInfoPage);
+	}
+
 
 }

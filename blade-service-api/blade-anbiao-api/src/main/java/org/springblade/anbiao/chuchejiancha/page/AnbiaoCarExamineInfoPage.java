@@ -38,6 +38,9 @@ public class AnbiaoCarExamineInfoPage<T> extends BasePage<T> {
 	@ApiModelProperty(value = "车辆牌照")
 	private String cheliangpaizhao;
 
+	@ApiModelProperty(value = "车辆ID")
+	private String vehId;
+
 	@ApiModelProperty(value = "排序字段")
 	private String orderColumns;
 

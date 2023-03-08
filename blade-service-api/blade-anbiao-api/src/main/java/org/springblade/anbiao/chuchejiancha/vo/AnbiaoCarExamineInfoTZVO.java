@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamineInfo;
 
+import java.util.List;
+
 /**
  * <p>
  *
@@ -47,6 +49,8 @@ public class AnbiaoCarExamineInfoTZVO {
 
 	@ApiModelProperty(value = "检查天数")
 	private Integer count = 0;
+
+	private List<AnbiaoCarExamineInfoTZVO> examineInfoTZVOList;
 
 
 }

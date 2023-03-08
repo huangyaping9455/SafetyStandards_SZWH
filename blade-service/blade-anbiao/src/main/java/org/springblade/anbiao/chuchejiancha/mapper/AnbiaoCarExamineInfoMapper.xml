@@ -319,4 +319,47 @@
 		where 1 = 1
 		<include refid="queryDeptYHTZSql" />
 	</select>
+
+    <select timeout="600" id="selectDeptVeh" resultMap="AnbiaoCarExamineInfoTZVOResultMap"
+            parameterType="org.springblade.anbiao.chuchejiancha.page.AnBiaoCheckCarPage">
+        SELECT
+            DISTINCT
+            b.dept_name AS deptName,
+            v.cheliangpaizhao,
+            v.id as vehId
+        FROM(
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b
+            INNER JOIN anbiao_vehicle v ON v.dept_id = b.id and v.cheliangpaizhao not like '%挂'
+        where 1=1
+        <if test="vehId != null and vehId != '' and vehIdidss == null">
+            and v.id = #{vehId}
+        </if>
+
+        <if test="vehIdidss != null and vehIdidss != ''">
+            and v.id in
+            <foreach collection="vehIdidss" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+
+    <select timeout="600" id="selectDeptVehExamine" resultMap="AnbiaoCarExamineInfoTZVOResultMap"
+            parameterType="org.springblade.anbiao.chuchejiancha.page.AnBiaoCheckCarPage">
+        SELECT
+            RIGHT (date, 2 ) AS date,
+            `status`
+        from
+            anbiao_car_examine_info
+        where 1=1
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != '' ">
+            and date >= #{beginTime}
+            and date &lt;= #{endTime}
+        </if>
+        <if test="vehId != null and vehId != '' ">
+            and vehid = #{vehId}
+        </if>
+    </select>
+
+
 </mapper>
