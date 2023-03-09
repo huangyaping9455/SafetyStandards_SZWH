@@ -2939,4 +2939,12 @@ public class VehicleController {
 		return r;
 	}
 
+	@GetMapping("/getDriverVehicle")
+	@ApiLog("根据驾驶员ID获取绑定车辆")
+	@ApiOperation(value = "根据驾驶员ID获取绑定车辆", notes = "传入jsyId", position = 32)
+	public R<List<VehicleVO>> getDriverVehicle(String jsyId) {
+		List<VehicleVO> detail = vehicleService.selectDriverVehicle(jsyId);
+		return R.data(detail);
+	}
+
 }
