@@ -232,7 +232,7 @@
         c.avx_model as pinpaixinghao,
         c.avx_vin as cheliangshibiedaima,
         a.cheshenyanse ,
-        f.jingyingxukezhengbianma ,
+        cc.jingyingxukezhengbianma ,
         a.jingjileixing ,
         a.jingyingzuzhifangshi ,
         a.cheliangyunyingleixing ,
@@ -276,7 +276,6 @@
         left join anbiao_jiashiyuan b on a.jiashiyuanid = b.id
         left join anbiao_vehicle_xingshizheng c on a.id = c.avx_av_ids
         left join anbiao_vehicle_daoluyunshuzheng d on a.id = d.avd_av_ids
-        left join anbiao_organization f on f.dept_id = a.dept_id
     WHERE 1=1
         and ifnull(a.is_deleted,0) = 0
         and ifnull(cheliangzhuangtai,0) != 2
@@ -1616,6 +1615,34 @@
                 left join anbiao_vehicle_dengjizhengshu e on a.id = e.avd_vehicle_ids and e.avd_delete = 0
         where a.is_deleted = 0
           and a.id = #{vehId}
+    </select>
+
+    <select id="selectDriverVehicle" resultMap="vehicleVOResultMap" parameterType="java.lang.String">
+        SELECT
+            a.jiashiyuanid,
+            c.cheliangpaizhao,
+            c.id
+        from
+            anbiao_cheliang_jiashiyuan_daily a
+                left join anbiao_jiashiyuan b on a.jiashiyuanid = b.id
+                left join anbiao_vehicle c on a.vehid = c.id and c.cheliangpaizhao not like '%挂%'
+        where b.id = #{jsyId}
+          and a.vstatus = 1
+          and b.isdelete = 0
+          and c.is_deleted = 0
+    union
+        SELECT
+            a.jiashiyuanid,
+            d.cheliangpaizhao,
+            d.id
+        from
+            anbiao_cheliang_jiashiyuan_daily a
+                left join anbiao_jiashiyuan b on a.jiashiyuanid = b.id
+                left join anbiao_vehicle d on a.gvehid = d.id and d.cheliangpaizhao like '%挂%'
+        where b.id = #{jsyId}
+          and a.gstatus = 1
+          and b.isdelete = 0
+          and d.is_deleted = 0
     </select>
 
 </mapper>

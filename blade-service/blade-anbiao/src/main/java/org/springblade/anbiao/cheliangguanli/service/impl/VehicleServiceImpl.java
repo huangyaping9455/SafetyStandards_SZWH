@@ -346,5 +346,10 @@ public class VehicleServiceImpl extends ServiceImpl<VehicleMapper, Vehicle> impl
 		return vehImg;
 	}
 
+	@Override
+	public List<VehicleVO> selectDriverVehicle(String jsyId) {
+		return vehicleMapper.selectDriverVehicle(jsyId);
+	}
+
 
 }

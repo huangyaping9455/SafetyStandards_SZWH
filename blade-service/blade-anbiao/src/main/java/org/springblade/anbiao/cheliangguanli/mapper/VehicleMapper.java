@@ -259,4 +259,6 @@ public interface VehicleMapper extends BaseMapper<Vehicle> {
 	 */
 	VehicleImg getByVehImg(@Param("vehId") String vehId);
 
+	List<VehicleVO> selectDriverVehicle(@Param("jsyId") String jsyId);
+
 }

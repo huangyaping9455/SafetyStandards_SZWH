@@ -247,5 +247,6 @@ public interface IVehicleService extends IService<Vehicle> {
 	 */
 	VehicleImg getByVehImg(@Param("vehId") String vehId);
 
+	List<VehicleVO> selectDriverVehicle(@Param("jsyId") String jsyId);
 
 }
