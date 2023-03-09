@@ -21,6 +21,7 @@ import org.springblade.system.entity.Dept;
 import org.springblade.system.feign.ISysClient;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,60 +45,96 @@ public class AnbiaoRiskDeptConfigurationController {
 	@PostMapping("/insert")
 	@ApiLog("插入企业风险配置信息")
 	@ApiOperation(value = "插入企业风险配置信息", notes = "传入rcId，deptId", position = 1)
-	public R insert(String rcId, String deptId, BladeUser user) {
+	public R insert(@RequestBody AnbiaoRiskDeptConfiguration riskDeptConfiguration, BladeUser user) {
 		R r = new R();
-		QueryWrapper<AnbiaoRiskConfiguration> anbiaoRiskConfigurationQueryWrapper = new QueryWrapper<>();
-		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getId,rcId);
-		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getIsDeleted,"0");
-		AnbiaoRiskConfiguration anbiaoRiskConfiguration = riskConfigurationService.getBaseMapper().selectOne(anbiaoRiskConfigurationQueryWrapper);
-		if (anbiaoRiskConfiguration!=null){
-			Dept dept = iSysClient.selectDeptById(Integer.parseInt(deptId));
-			if (dept!=null){
-			QueryWrapper<AnbiaoRiskDeptConfiguration> riskDeptConfigurationQueryWrapper = new QueryWrapper<>();
-			riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getRcId, rcId);
-			riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getDeptId, deptId);
-			riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getIsDeleted, 0);
-			AnbiaoRiskDeptConfiguration deal = anbiaoRiskDeptConfigurationService.getBaseMapper().selectOne(riskDeptConfigurationQueryWrapper);
-			if (deal == null) {
-				AnbiaoRiskDeptConfiguration anbiaoRiskDeptConfiguration = new AnbiaoRiskDeptConfiguration();
-				anbiaoRiskDeptConfiguration.setRcId(rcId);
-				anbiaoRiskDeptConfiguration.setDeptId(deptId);
-				anbiaoRiskDeptConfiguration.setCreattime(DateUtil.now());
-				anbiaoRiskDeptConfiguration.setChuangjianren(user.getUserName());
-				anbiaoRiskDeptConfiguration.setStatus("1");
-				anbiaoRiskDeptConfiguration.setIsDeleted("0");
-				boolean save = anbiaoRiskDeptConfigurationService.save(anbiaoRiskDeptConfiguration);
-				if (save == true) {
-					r.setMsg("新增权限成功");
+//		QueryWrapper<AnbiaoRiskConfiguration> anbiaoRiskConfigurationQueryWrapper = new QueryWrapper<>();
+//		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getId,rcId);
+//		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getIsDeleted,"0");
+//		AnbiaoRiskConfiguration anbiaoRiskConfiguration = riskConfigurationService.getBaseMapper().selectOne(anbiaoRiskConfigurationQueryWrapper);
+//		if (anbiaoRiskConfiguration!=null){
+//			Dept dept = iSysClient.selectDeptById(Integer.parseInt(deptId));
+//			if (dept!=null){
+		//企业
+		String[] deptIds = riskDeptConfiguration.getDeptId().split(",");
+		//去除数组中重复的数组
+		List<String> listdeptid = new ArrayList<>();
+		for (int i = 0; i < deptIds.length; i++) {
+			if(!listdeptid.contains(deptIds[i])){
+				listdeptid.add(deptIds[i]);
+			}
+		}
+		//返回一个包含所有指定对象类型的数组
+		String[] deptIdss = listdeptid.toArray(new String[1]);
+
+
+		//风险项
+		String[] rcIds = riskDeptConfiguration.getRcId().split(",");
+		//去除数组中重复的数组
+		List<String> listdeptid2 = new ArrayList<>();
+		for (int i = 0; i < rcIds.length; i++) {
+			if(!listdeptid2.contains(rcIds[i])){
+				listdeptid2.add(rcIds[i]);
+			}
+		}
+		//返回一个包含所有指定对象类型的数组
+		String[] rcIdss = listdeptid.toArray(new String[1]);
+
+		for (int i = 0; i < deptIdss.length; i++) {
+			riskDeptConfiguration.setDeptId(deptIdss[i]);
+			for (int j = 0; j < rcIdss.length; j++) {
+				riskDeptConfiguration.setRcId(rcIdss[j]);
+
+				QueryWrapper<AnbiaoRiskDeptConfiguration> riskDeptConfigurationQueryWrapper = new QueryWrapper<>();
+				riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getRcId, riskDeptConfiguration.getRcId());
+				riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getDeptId, riskDeptConfiguration.getDeptId());
+				riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getIsDeleted, 0);
+				AnbiaoRiskDeptConfiguration deal = anbiaoRiskDeptConfigurationService.getBaseMapper().selectOne(riskDeptConfigurationQueryWrapper);
+				if (deal == null) {
+					AnbiaoRiskDeptConfiguration anbiaoRiskDeptConfiguration = new AnbiaoRiskDeptConfiguration();
+					anbiaoRiskDeptConfiguration.setRcId(riskDeptConfiguration.getRcId());
+					anbiaoRiskDeptConfiguration.setDeptId(riskDeptConfiguration.getDeptId());
+					anbiaoRiskDeptConfiguration.setCreattime(DateUtil.now());
+					anbiaoRiskDeptConfiguration.setChuangjianren(user.getUserName());
+					anbiaoRiskDeptConfiguration.setStatus("1");
+					anbiaoRiskDeptConfiguration.setIsDeleted("0");
+					boolean save = anbiaoRiskDeptConfigurationService.save(anbiaoRiskDeptConfiguration);
+					if (save == true) {
+						r.setMsg("新增权限成功");
+						r.setCode(200);
+						r.setSuccess(true);
+						r.setData(anbiaoRiskDeptConfiguration);
+						return r;
+					} else {
+						r.setMsg("新增权限失败");
+						r.setCode(500);
+						r.setSuccess(false);
+						r.setData(anbiaoRiskDeptConfiguration);
+						return r;
+					}
+				}else {
+					r.setMsg("权限已存在");
 					r.setCode(200);
 					r.setSuccess(true);
-					r.setData(anbiaoRiskDeptConfiguration);
-					return r;
-				} else {
-					r.setMsg("新增权限失败");
-					r.setCode(500);
-					r.setSuccess(false);
-					r.setData(anbiaoRiskDeptConfiguration);
 					return r;
 				}
-			}else {
-				r.setMsg("权限已存在");
-				r.setCode(200);
-				r.setSuccess(true);
-				return r;
-				}
-			}else {
-				r.setMsg("企业不存在");
-				r.setCode(500);
-				r.setSuccess(false);
-				return r;
+
+
 			}
-		}else {
-			r.setMsg("对应权限不存在");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
 		}
+
+//			}else {
+//				r.setMsg("企业不存在");
+//				r.setCode(500);
+//				r.setSuccess(false);
+//				return r;
+//			}
+//		}else {
+//			r.setMsg("对应权限不存在");
+//			r.setCode(500);
+//			r.setSuccess(false);
+//			return r;
+//		}
+		return r;
 	}
 
 	@PostMapping("/update")
