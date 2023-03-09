@@ -41,7 +41,7 @@ public class AnbiaoRiskConfigurationController {
 		R r = new R();
 		QueryWrapper<AnbiaoRiskConfiguration> anbiaoRiskConfigurationQueryWrapper = new QueryWrapper<>();
 		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getYujingxiang, yujingxiang);
-		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getYuujingleixing, yujingleixing);
+		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getYujingleixing, yujingleixing);
 		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getIsDeleted, 0);
 		AnbiaoRiskConfiguration deal = anbiaoRiskConfigurationService.getBaseMapper().selectOne(anbiaoRiskConfigurationQueryWrapper);
 		if (deal == null) {
@@ -61,7 +61,7 @@ public class AnbiaoRiskConfigurationController {
 				ss=anbiaoRiskConfiguration.getYujingxiang()+"逾期";
 			}
 			anbiaoRiskConfiguration.setShuoming(ss);
-			anbiaoRiskConfiguration.setYuujingleixing(yujingleixing);
+			anbiaoRiskConfiguration.setYujingleixing(yujingleixing);
 			boolean save = anbiaoRiskConfigurationService.save(anbiaoRiskConfiguration);
 			if (save == true) {
 				r.setMsg("新增成功");
@@ -108,7 +108,7 @@ public class AnbiaoRiskConfigurationController {
 				ss=deal.getYujingxiang()+"逾期";
 			}
 			deal.setShuoming(ss);
-			deal.setYuujingleixing(yujingleixing);
+			deal.setYujingleixing(yujingleixing);
 			deal.setUpdatetime(DateUtil.now());
 			deal.setCaozuoren(user.getUserName());
 			boolean save = anbiaoRiskConfigurationService.updateById(deal);

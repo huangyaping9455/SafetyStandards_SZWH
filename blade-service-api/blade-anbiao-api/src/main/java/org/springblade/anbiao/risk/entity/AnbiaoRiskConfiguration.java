@@ -53,5 +53,5 @@ public class AnbiaoRiskConfiguration implements Serializable {
 	private String chuangjianren;
 
 	@ApiModelProperty(value = "预警类型")
-	private int yuujingleixing;
+	private int yujingleixing;
 }
