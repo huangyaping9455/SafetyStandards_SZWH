@@ -17,7 +17,8 @@
             SELECT
             id,
             yujingxiang,
-            shuoming
+            shuoming,
+            yujingleixing
             FROM
             anbiao_risk_configuration
             WHERE
@@ -34,7 +35,8 @@
             SELECT
             id,
             yujingxiang,
-            shuoming
+            shuoming,
+            yujingleixing
             FROM
             anbiao_risk_configuration
             WHERE
@@ -55,7 +57,8 @@
         SELECT
         id,
         yujingxiang,
-        shuoming
+        shuoming,
+        yujingleixing
         FROM
         anbiao_risk_configuration
         WHERE

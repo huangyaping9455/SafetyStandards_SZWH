@@ -50,8 +50,8 @@ values
         jiashiyuanxingming ,
         case when xingbie = 1 then '男' else '女' end as xingbie,
         shoujihaoma ,
-        b.cheliangpaizhao ,
-        c.cheliangpaizhao as cheliangpaizhaoguache,
+        case when IFNULL(b.cheliangpaizhao,'') = '' then (SELECT v.cheliangpaizhao from anbiao_vehicle as v where v.is_deleted = 0 and v.jiashiyuanid = a.id and cheliangpaizhao not like '%挂%' limit 1) else b.cheliangpaizhao end as cheliangpaizhao,
+        case when IFNULL(c.cheliangpaizhao,'') = '' then (SELECT v.cheliangpaizhao from anbiao_vehicle as v where v.is_deleted = 0 and v.jiashiyuanid = a.id and cheliangpaizhao like '%挂%' limit 1) else c.cheliangpaizhao end as cheliangpaizhaoguache,
         d.ajr_create_time as sijiruzhiriqi,
         e.ajw_start_date as laodonghetongkaishiriqi,
         e.ajw_end_date as laodonghetongjieshuriqi,
@@ -86,36 +86,38 @@ values
         else CONCAT(TIMESTAMPDIFF(DAY,NOW(),DATE_ADD(k.ajt_physical_examination_date, INTERVAL 1 YEAR)),'天') end as tijianbaogaoshengyuyouxiaoqi,
         l.ajw_start_date as wuzhongdazerenshiguqishiriqi
         FROM
-            anbiao_jiashiyuan a
+        anbiao_jiashiyuan a
         inner join  (
             <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) bb on a.dept_id = bb.id
         left join (
-        select cheliangpaizhao,a.jiashiyuanid from anbiao_vehicle a,anbiao_cheliang_jiashiyuan_daily b
+        select cheliangpaizhao,b.jiashiyuanid from anbiao_vehicle a,anbiao_cheliang_jiashiyuan_daily b
         where a.is_deleted = 0
         and a.id = b.vehid
         and b.vstatus = 1
---         and b.jiashiyuanid = a.jiashiyuanid
+        --         and b.jiashiyuanid = a.jiashiyuanid
         and cheliangpaizhao not like '%挂%'
         ) b on a.id = b.jiashiyuanid
         left join (
-        select cheliangpaizhao,a.jiashiyuanid from anbiao_vehicle a,anbiao_cheliang_jiashiyuan_daily b
+        select cheliangpaizhao,b.jiashiyuanid from anbiao_vehicle a,anbiao_cheliang_jiashiyuan_daily b
         where a.is_deleted = 0
         and a.id = b.gvehid
         and b.gstatus = 1
---         and b.jiashiyuanid = a.jiashiyuanid
+        --         and b.jiashiyuanid = a.jiashiyuanid
         and cheliangpaizhao like '%挂%'
+
         ) c on a.id = c.jiashiyuanid
-        left join anbiao_jiashiyuan_ruzhi d on a.id = d.ajr_aj_ids
-        left join anbiao_jiashiyuan_laodonghetong e on a.id = e.ajw_aj_ids
-        left join anbiao_jiashiyuan_jiashizheng f on a.id = f.ajj_aj_ids
-        left join anbiao_jiashiyuan_congyezigezheng g on a.id = g.ajc_aj_ids
-        left join anbiao_jiashiyuan_anquanzerenshu h on a.id = h.aja_aj_ids
-        left join anbiao_jiashiyuan_weihaigaozhishu j on a.id = j.ajw_aj_ids
-        left join anbiao_jiashiyuan_tijian k on a.id = k.ajt_aj_ids
-        left join anbiao_jiashiyuan_wuzezhengming l on a.id = l.ajw_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_ruzhi WHERE ajr_delete = 0) d on a.id = d.ajr_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_laodonghetong WHERE ajw_delete = 0) e on a.id = e.ajw_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_jiashizheng WHERE ajj_delete = 0) f on a.id = f.ajj_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_congyezigezheng WHERE ajc_delete = 0) g on a.id = g.ajc_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_anquanzerenshu WHERE aja_delete = 0) h on a.id = h.aja_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_weihaigaozhishu WHERE ajw_delete = 0) j on a.id = j.ajw_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_tijian WHERE ajt_delete = 0) k on a.id = k.ajt_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_wuzezhengming WHERE ajw_delete = 0) l on a.id = l.ajw_aj_ids
         WHERE 1=1
-            and ifnull(a.isdelete,0) = 0
+        and ifnull(a.isdelete,0) = 0
+        order BY jiashiyuanxingming
 <!--            and a.status = 0-->
     </sql>
 

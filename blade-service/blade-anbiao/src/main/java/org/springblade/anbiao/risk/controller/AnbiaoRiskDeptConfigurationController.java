@@ -140,11 +140,11 @@ public class AnbiaoRiskDeptConfigurationController {
 	@PostMapping("/update")
 	@ApiLog("开关企业风险配置信息")
 	@ApiOperation(value = "开关企业风险配置信息", notes = "传入rcId，deptId", position = 1)
-	public R update(String rcId, String deptId, BladeUser user) {
+	public R update(@RequestBody AnbiaoRiskDeptConfiguration riskDeptConfiguration, BladeUser user) {
 		R r = new R();
 		QueryWrapper<AnbiaoRiskDeptConfiguration> riskDeptConfigurationQueryWrapper = new QueryWrapper<>();
-		riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getRcId, rcId);
-		riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getDeptId, deptId);
+		riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getRcId, riskDeptConfiguration.getRcId());
+		riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getDeptId, riskDeptConfiguration.getDeptId());
 		riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getIsDeleted, "0");
 		AnbiaoRiskDeptConfiguration deal = anbiaoRiskDeptConfigurationService.getBaseMapper().selectOne(riskDeptConfigurationQueryWrapper);
 		if (deal != null) {
@@ -182,7 +182,7 @@ public class AnbiaoRiskDeptConfigurationController {
 				}
 			}
 		}else {
-			r.setMsg("无对应权限关系");
+			r.setMsg("无数据");
 			r.setCode(200);
 			r.setSuccess(true);
 			return r;
@@ -192,18 +192,14 @@ public class AnbiaoRiskDeptConfigurationController {
 	@PostMapping("/del")
 	@ApiLog("删除企业风险配置信息")
 	@ApiOperation(value = "删除企业风险配置信息", notes = "传入rcId，deptId", position = 1)
-	public R del(String rcId, String deptId, BladeUser user) {
+	public R del(@RequestBody AnbiaoRiskDeptConfiguration riskDeptConfiguration, BladeUser user) {
 		R r = new R();
 		QueryWrapper<AnbiaoRiskDeptConfiguration> riskDeptConfigurationQueryWrapper = new QueryWrapper<>();
-		riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getRcId, rcId);
-		riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getDeptId, deptId);
-		riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getIsDeleted, 0);
+		riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getRcId, riskDeptConfiguration.getRcId());
+		riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getDeptId, riskDeptConfiguration.getDeptId());
+		riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getIsDeleted, "0");
 		AnbiaoRiskDeptConfiguration deal = anbiaoRiskDeptConfigurationService.getBaseMapper().selectOne(riskDeptConfigurationQueryWrapper);
 		if (deal != null) {
-			QueryWrapper<AnbiaoRiskConfiguration> anbiaoRiskConfigurationQueryWrapper = new QueryWrapper<>();
-			anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getId,rcId);
-			anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getIsDeleted,"0");
-			AnbiaoRiskConfiguration anbiaoRiskConfiguration = riskConfigurationService.getBaseMapper().selectOne(anbiaoRiskConfigurationQueryWrapper);
 			deal.setUpdatetime(DateUtil.now());
 			deal.setCaozuoren(user.getUserName());
 			deal.setIsDeleted("1");
@@ -212,17 +208,15 @@ public class AnbiaoRiskDeptConfigurationController {
 				r.setMsg("删除企业风险权限成功");
 				r.setCode(200);
 				r.setSuccess(true);
-				r.setData(anbiaoRiskConfiguration.getYujingxiang());
 				return r;
 			} else {
 				r.setMsg("删除企业风险权限失败");
 				r.setCode(500);
 				r.setSuccess(false);
-				r.setData(anbiaoRiskConfiguration.getYujingxiang());
 				return r;
 			}
 		}else {
-			r.setMsg("无对应企业风险配置");
+			r.setMsg("无数据");
 			r.setCode(200);
 			r.setSuccess(true);
 			return r;
@@ -233,12 +227,12 @@ public class AnbiaoRiskDeptConfigurationController {
 	@PostMapping("/select")
 	@ApiLog("查看企业风险配置信息")
 	@ApiOperation(value = "查看企业风险配置信息", notes = "传入deptId", position = 1)
-	public R select( String deptId, BladeUser user) {
+	public R select( @RequestBody AnbiaoRiskDeptConfiguration riskDeptConfiguration, BladeUser user) {
 		R r = new R();
-		Dept dept = iSysClient.selectDeptById(Integer.parseInt(deptId));
+		Dept dept = iSysClient.selectDeptById(Integer.parseInt(riskDeptConfiguration.getDeptId()));
 		if(dept!=null){
 			QueryWrapper<AnbiaoRiskDeptConfiguration> riskDeptConfigurationQueryWrapper = new QueryWrapper<>();
-			riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getDeptId, deptId);
+			riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getDeptId, riskDeptConfiguration.getDeptId());
 			riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getIsDeleted, 0);
 			List<AnbiaoRiskDeptConfiguration> anbiaoRiskDeptConfigurations = anbiaoRiskDeptConfigurationService.getBaseMapper().selectList(riskDeptConfigurationQueryWrapper);
 
@@ -266,7 +260,7 @@ public class AnbiaoRiskDeptConfigurationController {
 	/**
 	 * 分页
 	 */
-	@GetMapping("/list")
+	@PostMapping("/list")
 	@ApiLog("分页-企业风险配置")
 	@ApiOperation(value = "分页-企业风险配置", notes = "传入RiskDeptConfigurationPage", position = 5)
 	public R<RiskDeptConfigurationPage<RiskDeptConfigurationListVO>> list(@RequestBody RiskDeptConfigurationPage riskDeptConfigurationPage) {

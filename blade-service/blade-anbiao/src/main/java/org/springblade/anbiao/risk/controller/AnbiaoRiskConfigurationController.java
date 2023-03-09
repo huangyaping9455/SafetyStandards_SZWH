@@ -36,32 +36,32 @@ public class AnbiaoRiskConfigurationController {
 
 	@PostMapping("/insert")
 	@ApiLog("插入风险配置信息")
-	@ApiOperation(value = "插入风险配置信息", notes = "传入yujingxiang,shuoming", position = 1)
-	public R insert(String yujingxiang ,int yujingleixing, BladeUser user) {
+	@ApiOperation(value = "插入风险配置信息", notes = "传入yujingxiang,yujingleixing", position = 1)
+	public R insert(@RequestBody AnbiaoRiskConfiguration riskConfiguration,  BladeUser user) {
 		R r = new R();
 		QueryWrapper<AnbiaoRiskConfiguration> anbiaoRiskConfigurationQueryWrapper = new QueryWrapper<>();
-		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getYujingxiang, yujingxiang);
-		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getYujingleixing, yujingleixing);
+		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getYujingxiang, riskConfiguration.getYujingxiang());
+		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getYujingleixing, riskConfiguration.getYujingleixing());
 		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getIsDeleted, 0);
 		AnbiaoRiskConfiguration deal = anbiaoRiskConfigurationService.getBaseMapper().selectOne(anbiaoRiskConfigurationQueryWrapper);
 		if (deal == null) {
 			AnbiaoRiskConfiguration anbiaoRiskConfiguration = new AnbiaoRiskConfiguration();
-			anbiaoRiskConfiguration.setYujingxiang(yujingxiang);
+			anbiaoRiskConfiguration.setYujingxiang(riskConfiguration.getYujingxiang());
 			anbiaoRiskConfiguration.setCreattime(DateUtil.now());
 			anbiaoRiskConfiguration.setChuangjianren(user.getUserName());
 			anbiaoRiskConfiguration.setIsDeleted("0");
 			String ss="";
-			if (yujingleixing==1){
+			if (riskConfiguration.getYujingleixing()==1){
 				ss=anbiaoRiskConfiguration.getYujingxiang()+"未完善";
 			}
-			if (yujingleixing==2){
+			if (riskConfiguration.getYujingleixing()==2){
 				ss=anbiaoRiskConfiguration.getYujingxiang()+"预警";
 			}
-			if (yujingleixing==3){
+			if (riskConfiguration.getYujingleixing()==3){
 				ss=anbiaoRiskConfiguration.getYujingxiang()+"逾期";
 			}
 			anbiaoRiskConfiguration.setShuoming(ss);
-			anbiaoRiskConfiguration.setYujingleixing(yujingleixing);
+			anbiaoRiskConfiguration.setYujingleixing(riskConfiguration.getYujingleixing());
 			boolean save = anbiaoRiskConfigurationService.save(anbiaoRiskConfiguration);
 			if (save == true) {
 				r.setMsg("新增成功");
@@ -80,7 +80,7 @@ public class AnbiaoRiskConfigurationController {
 			r.setMsg("风险配置已存在");
 			r.setCode(200);
 			r.setSuccess(true);
-			r.setData(yujingxiang);
+			r.setData(riskConfiguration.getYujingleixing());
 			return r;
 		}
 
@@ -88,27 +88,27 @@ public class AnbiaoRiskConfigurationController {
 
 	@PostMapping("/update")
 	@ApiLog("修改风险配置信息")
-	@ApiOperation(value = "修改风险配置信息", notes = "传入id,yujingxiang,shuoming", position = 1)
-	public R update(String id, String yujingxiang, int yujingleixing, BladeUser user) {
+	@ApiOperation(value = "修改风险配置信息", notes = "传入id,yujingxiang,yujingleixing", position = 1)
+	public R update(@RequestBody AnbiaoRiskConfiguration riskConfiguration, BladeUser user) {
 		R r = new R();
 		QueryWrapper<AnbiaoRiskConfiguration> anbiaoRiskConfigurationQueryWrapper = new QueryWrapper<>();
-		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getId, id);
+		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getId, riskConfiguration.getId());
 		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getIsDeleted, 0);
 		AnbiaoRiskConfiguration deal = anbiaoRiskConfigurationService.getBaseMapper().selectOne(anbiaoRiskConfigurationQueryWrapper);
 		if (deal != null) {
-			deal.setYujingxiang(yujingxiang);
+			deal.setYujingxiang(riskConfiguration.getYujingxiang());
 			String ss="";
-			if (yujingleixing==1){
+			if (riskConfiguration.getYujingleixing()==1){
 				ss=deal.getYujingxiang()+"未完善";
 			}
-			if (yujingleixing==2){
+			if (riskConfiguration.getYujingleixing()==2){
 				ss=deal.getYujingxiang()+"预警";
 			}
-			if (yujingleixing==3){
+			if (riskConfiguration.getYujingleixing()==3){
 				ss=deal.getYujingxiang()+"逾期";
 			}
 			deal.setShuoming(ss);
-			deal.setYujingleixing(yujingleixing);
+			deal.setYujingleixing(riskConfiguration.getYujingleixing());
 			deal.setUpdatetime(DateUtil.now());
 			deal.setCaozuoren(user.getUserName());
 			boolean save = anbiaoRiskConfigurationService.updateById(deal);
@@ -160,10 +160,10 @@ public class AnbiaoRiskConfigurationController {
 	@PostMapping("/del")
 	@ApiLog("删除风险配置信息")
 	@ApiOperation(value = "删除风险配置信息", notes = "传入id", position = 1)
-	public R del(String id, BladeUser user) {
+	public R del(@RequestBody AnbiaoRiskConfiguration riskConfiguration, BladeUser user) {
 		R r = new R();
 		QueryWrapper<AnbiaoRiskConfiguration> anbiaoRiskConfigurationQueryWrapper = new QueryWrapper<>();
-		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getId, id);
+		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getId, riskConfiguration.getId());
 		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getIsDeleted, 0);
 		AnbiaoRiskConfiguration deal = anbiaoRiskConfigurationService.getBaseMapper().selectOne(anbiaoRiskConfigurationQueryWrapper);
 		if (deal != null) {
@@ -177,7 +177,7 @@ public class AnbiaoRiskConfigurationController {
 			r.setData(deal);
 			return r;
 		} else {
-			r.setMsg("无对应配置");
+			r.setMsg("无数据");
 			r.setCode(200);
 			r.setSuccess(true);
 			return r;
@@ -189,13 +189,15 @@ public class AnbiaoRiskConfigurationController {
 	/**
 	 * 分页
 	 */
-	@GetMapping("/list")
+	@PostMapping("/list")
 	@ApiLog("分页-风险配置")
 	@ApiOperation(value = "分页-风险配置", notes = "传入RiskDeptConfigurationPage", position = 5)
 	public R<RiskConfigurationPage<RiskConfigurationVO>> list(@RequestBody RiskConfigurationPage riskConfigurationPage) {
 		RiskConfigurationPage<RiskConfigurationVO> pages = anbiaoRiskConfigurationService.selectPageList(riskConfigurationPage);
 		return R.data(pages);
 	}
+
+
 }
 
 
