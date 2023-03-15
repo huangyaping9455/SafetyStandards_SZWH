@@ -50,6 +50,7 @@
             left join anbiao_vehicle c on a.ahd_vehicle_ids = c.id
 			left join anbiao_jiashiyuan j on j.id = a.ahd_driver_ids
         where a.ahd_delete = 0
+            and j.isdelete=0
             and year(a.ahd_discovery_time) >= year(#{date})
     </sql>
 
@@ -68,6 +69,9 @@
 		</if>
         <if test="ahdAddress != null and ahdAddress != '' and ahdAddress != '车辆设备' ">
             and ahd_address != #{ahdAddress}
+        </if>
+        <if test="jiashiyuanid != null and jiashiyuanid != '' ">
+            and ahd_driver_ids != #{jiashiyuanid}
         </if>
     </sql>
 
