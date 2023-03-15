@@ -1083,6 +1083,7 @@ public class OrganizationsController extends BladeController {
 			dept.setParentId(Integer.parseInt(departmentpost.getParentId()));
 			QueryWrapper<Dept> deptQueryWrapper = new QueryWrapper<Dept>();
 			deptQueryWrapper.lambda().eq(Dept::getDeptName, organization.getGangweimingcheng());
+			deptQueryWrapper.lambda().eq(Dept::getParentId, organization.getDeptId());
 			deptQueryWrapper.lambda().eq(Dept::getIsDeleted, 0);
 			Dept deail = iBladeDeptService.getBaseMapper().selectOne(deptQueryWrapper);
 			if(deail == null){

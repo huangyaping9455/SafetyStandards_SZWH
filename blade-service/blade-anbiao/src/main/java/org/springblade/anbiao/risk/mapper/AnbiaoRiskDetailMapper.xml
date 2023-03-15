@@ -304,7 +304,10 @@
         and ard_association_field = "id"
         and j.isdelete=0
         <if test="deptName != null or deptName != ''">
-        and a.dept_name like '%${deptName}%'
+            and a.dept_name like '%${deptName}%'
+        </if>
+        <if test="jiashiyuanxingming != null or jiashiyuanxingming != ''">
+            and j.jiashiyuanxingming like '%${jiashiyuanxingming}%'
         </if>
         ORDER BY j.jiashiyuanxingming
             limit ${total}
@@ -333,6 +336,9 @@
             and j.isdelete=0
             <if test="deptName != null or deptName != ''">
                 and a.dept_name like '%${deptName}%'
+            </if>
+            <if test="jiashiyuanxingming != null or jiashiyuanxingming != ''">
+                and j.jiashiyuanxingming like '%${jiashiyuanxingming}%'
             </if>
             ORDER BY j.jiashiyuanxingming
             limit ${offsetNo},${size}

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.lawsRegulations.mapper.AnbiaoLawsRegulationsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.lawsRegulations.entity.AnbiaoLawsRegulations">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="type" property="type" />
+        <result column="number" property="number" />
+        <result column="authority" property="authority" />
+        <result column="status" property="status" />
+        <result column="releaseDate" property="releaseDate" />
+        <result column="materialDate" property="materialDate" />
+        <result column="fileUrl" property="fileUrl" />
+        <result column="createTime" property="createTime" />
+        <result column="createUser" property="createUser" />
+        <result column="isdelete" property="isdelete" />
+        <result column="updatetime" property="updatetime" />
+        <result column="updateuser" property="updateuser" />
+        <result column="filePdfUrl" property="filePdfUrl" />
+    </resultMap>
+
+    <!-- 添加法律法规 -->
+    <insert id="insertLawsRegulationsSelective" parameterType="org.springblade.anbiao.lawsRegulations.entity.AnbiaoLawsRegulations">
+        insert into anbiao_laws_regulations
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="name != null">
+                name,
+            </if>
+
+            <if test="type != null">
+                type,
+            </if>
+
+            <if test="number != null">
+                number,
+            </if>
+
+            <if test="authority != null">
+                authority,
+            </if>
+
+            <if test="status != null">
+                status,
+            </if>
+
+            <if test="releaseDate != null">
+                releaseDate,
+            </if>
+
+            <if test="materialDate != null">
+                materialDate,
+            </if>
+
+            <if test="fileUrl != null">
+                fileUrl,
+            </if>
+
+            <if test="filePdfUrl != null">
+                filePdfUrl,
+            </if>
+
+            <if test="createTime != null">
+                createTime,
+            </if>
+
+            <if test="createUser != null">
+                createUser,
+            </if>
+            isdelete
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+
+            <if test="type != null">
+                #{type},
+            </if>
+
+            <if test="number != null">
+                #{number},
+            </if>
+
+            <if test="authority != null">
+                #{authority},
+            </if>
+
+            <if test="status != null">
+                #{status},
+            </if>
+
+            <if test="releaseDate != null">
+                #{releaseDate},
+            </if>
+
+            <if test="materialDate != null">
+                #{materialDate},
+            </if>
+
+            <if test="fileUrl != null">
+                #{fileUrl},
+            </if>
+
+            <if test="filePdfUrl != null">
+                #{filePdfUrl},
+            </if>
+
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+
+            <if test="createUser != null">
+                #{createUser},
+            </if>
+            0
+        </trim>
+    </insert>
+
+    <!-- 法律法规列表 -->
+    <sql id="tablelawsRegulationsSql">
+        select * from anbiao_laws_regulations where isdelete = 0
+    </sql>
+
+    <sql id="orderlawsRegulationsSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by releaseDate desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order == 0">
+            asc
+        </if>
+    </sql>
+
+    <sql id="querylawsRegulationsSql">
+
+        <if test="releaseDate != null and releaseDate != '' ">
+            and releaseDate >= #{releaseDate}
+        </if>
+
+        <if test="materialDate != null and materialDate != '' ">
+            and materialDate >= #{materialDate}
+        </if>
+
+        <if test="type != null and type != '' ">
+            and type in (#{type})
+        </if>
+
+        <if test="name != null and name != '' ">
+            and name LIKE '%${name}%'
+        </if>
+
+        <if test="number != null and number != '' ">
+            and number LIKE '%${number}%'
+        </if>
+
+    </sql>
+
+    <select timeout="600" id="selectlawsRegulationsGetAll" resultMap="BaseResultMap"
+            parameterType="org.springblade.anbiao.lawsRegulations.page.AnBiaoLawsRegulationsPage">
+        <if test="size == 0">
+            select * from (
+            <include refid="tablelawsRegulationsSql"/>
+            )b
+            where 1=1
+            <include refid="querylawsRegulationsSql"/>
+            <include refid="orderlawsRegulationsSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="tablelawsRegulationsSql"/>
+            )b
+            where 1=1
+            <include refid="querylawsRegulationsSql"/>
+            <include refid="orderlawsRegulationsSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectlawsRegulationsGetAllTotal"
+            parameterType="org.springblade.anbiao.lawsRegulations.page.AnBiaoLawsRegulationsPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tablelawsRegulationsSql"/>
+        )d where 1 = 1
+        <include refid="querylawsRegulationsSql"/>
+    </select>
+
+    <!-- 根据数据ID查询法律法规 -->
+    <select id="selectlawsRegulationsById" resultType="org.springblade.anbiao.lawsRegulations.entity.AnbiaoLawsRegulations">
+        select * from anbiao_laws_regulations
+        where isdelete = 0
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        <if test="name != null">
+            and name = #{name}
+        </if>
+    </select>
+
+    <!-- 编辑法律法规 -->
+    <update id="updateLawsRegulationsSelective" parameterType="org.springblade.anbiao.lawsRegulations.entity.AnbiaoLawsRegulations" >
+        update anbiao_laws_regulations
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+
+            <if test="type != null">
+                type = #{type},
+            </if>
+
+            <if test="number != null">
+                number = #{number},
+            </if>
+
+            <if test="authority != null">
+                authority = #{authority},
+            </if>
+
+            <if test="status != null">
+                status = #{status},
+            </if>
+
+            <if test="releaseDate != null">
+                releaseDate = #{releaseDate},
+            </if>
+
+            <if test="materialDate != null">
+                materialDate = #{materialDate},
+            </if>
+
+            <if test="fileUrl != null">
+                fileUrl = #{fileUrl},
+            </if>
+
+            <if test="filePdfUrl != null">
+                filePdfUrl = #{filePdfUrl},
+            </if>
+
+            <if test="updatetime != null">
+                updatetime = #{updatetime},
+            </if>
+
+            <if test="updateuser != null">
+                updateuser = #{updateuser},
+            </if>
+
+            <if test="isdelete != null">
+                isdelete = #{isdelete}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

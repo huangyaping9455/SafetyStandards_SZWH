@@ -232,7 +232,6 @@
             cheliangpaizhao,
             vehId,
             jiashiyuanxingming,
-<!--            status,-->
             COUNT(date) as count,
             CONCAT(#{beginTime},'至',#{endTime}) as date
         FROM(
@@ -242,33 +241,44 @@
                 b.dept_name as deptName,
                 v.cheliangpaizhao,
                 v.id as vehId,
-                case when ifnull(j.jiashiyuanxingming,'') = '' then u.name else j.jiashiyuanxingming end as jiashiyuanxingming,
+                a.jiashiyuanxingming,
                 a.date,
                 a.`status`,
-                case when IFNULL(a.id,'') != '' then '1' else '0' end as statusshow,
-                case when IFNULL(a.jcrsignatrue,'') != '' then '1' else '0' end as jcrsignatrueshow
+                a.statusshow,
+                a.jcrsignatrueshow
             from
-                anbiao_car_examine_info a
+                anbiao_vehicle v
+            LEFT JOIN(
+                select
+                    a.Vehid,
+                    case when ifnull(j.jiashiyuanxingming,'') = '' then u.name else j.jiashiyuanxingming end as jiashiyuanxingming,
+                    a.date,
+                    a.`status`,
+                    case when IFNULL(a.id,'') != '' then '1' else '0' end as statusshow,
+                    case when IFNULL(a.jcrsignatrue,'') != '' then '1' else '0' end as jcrsignatrueshow
+                from
+                    anbiao_car_examine_info a
+                    LEFT JOIN anbiao_jiashiyuan j on j.id = a.jsyid
+                    LEFT JOIN blade_user u ON u.id = a.jsyid
+                where a.isdelete = 0
+                <if test="beginTime != null and beginTime != '' and endTime != null and endTime != '' ">
+                    and a.date >= #{beginTime}
+                    and a.date &lt;= #{endTime}
+                </if>
+                ) a on v.id = a.Vehid
             inner join  (
                 <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
-            ) b on a.deptid = b.id
-            LEFT JOIN anbiao_vehicle v on v.id = a.Vehid
-            LEFT JOIN anbiao_jiashiyuan j on j.id = a.jsyid
-            LEFT JOIN blade_user u ON u.id = a.jsyid
-            where a.isdelete = 0
-            <if test="beginTime != null and beginTime != '' and endTime != null and endTime != '' ">
-                and a.date >= #{beginTime}
-                and a.date &lt;= #{endTime}
-            </if>
-            ) b
+            ) b on v.dept_id = b.id
+        where 1=1
+            and v.is_deleted = 0
+            and v.cheliangpaizhao not like '%挂%'
+        ) b
         GROUP BY
             deptId,
             deptName,
             cheliangpaizhao,
             vehId,
             jiashiyuanxingming
-<!--        ,-->
-<!--            status-->
 	</sql>
 
 	<sql id="queryDeptYHTZSql">

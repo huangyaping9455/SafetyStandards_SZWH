@@ -329,9 +329,9 @@ public class SafetyEducationController extends BaseController {
 //		});
 		Unit unit = iTrainService.getUnitByName(deptName);
 		if(unit == null){
-			rs.setCode(500);
+			rs.setCode(200);
 			rs.setSuccess(false);
-			rs.setMsg("当前所属单位未在教育系统中");
+			rs.setMsg("暂无数据");
 		}else{
 			rs.setCode(200);
 			rs.setSuccess(true);

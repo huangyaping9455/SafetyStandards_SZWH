@@ -113,7 +113,7 @@ public class AnbiaoAnquanhuiyi implements Serializable {
 
     @ApiModelProperty(value = "参会人数")
     @TableField("canhuirenshu")
-    private Integer canhuirenshu;
+    private Integer canhuirenshu = 0;
 
     @ApiModelProperty(value = "附件")
 	@TableField("fujian")
@@ -150,4 +150,13 @@ public class AnbiaoAnquanhuiyi implements Serializable {
 	@ApiModelProperty(value = "实际参会人数")
 	@TableField(exist = false)
 	private Integer shijicanhuirenshu = 0;
+
+	@ApiModelProperty(value = "企业ID字符串（多个以英文逗号隔开）")
+	@TableField(exist = false)
+	private String deptIds;
+
+	@ApiModelProperty(value = "会议ID")
+	@TableField(exist = false)
+	private String huiYiId;
+
 }

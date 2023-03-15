@@ -38,6 +38,14 @@ spring:
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
 
+#  kafka:
+#    consumer:
+#      properties:
+#        spring:
+#          json:
+#            trusted:
+#              packages: xxx.xxxx
+
 #文件的物理路径前缀与url前缀
 fileserver:
   path-prefix: ${fileserver.dev.path}

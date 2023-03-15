@@ -2144,7 +2144,7 @@ public class AnbiaoRiskDetailController {
 		return r;
 	}
 
-	@GetMapping("/jiashiyuanRiskAll")
+	@PostMapping("/jiashiyuanRiskAll")
 	@ApiLog("详情-驾驶员风险统计信息")
 	@ApiOperation(value = "详情-驾驶员风险统计信息", position = 1)
 	public R<JiashiyuanRiskAllPage<JiashiyuanRiskAllVO>> jiashiyuanRiskAll(@RequestBody JiashiyuanRiskAllPage jiashiyuanRiskAllPage) {

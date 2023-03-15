@@ -20,11 +20,15 @@ import org.springblade.anbiao.anquanhuiyi.VO.AnbiaoAnquanhuiyiVO;
 import org.springblade.anbiao.anquanhuiyi.VO.AnquanhuiyiledgerVO;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiDetail;
+import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiSource;
 import org.springblade.anbiao.anquanhuiyi.page.AnQuanHuiYiPage;
 import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiDetailService;
 import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiService;
+import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiSourceService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
+import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.anbiao.labor.VO.LaborledgerVO;
 import org.springblade.anbiao.labor.entity.LaborlingquEntity;
 import org.springblade.anbiao.labor.page.laborledgerPage;
@@ -38,6 +42,11 @@ import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
+import org.springblade.system.entity.Dept;
+import org.springblade.system.feign.ISysClient;
+import org.springblade.system.user.entity.User;
+import org.springblade.system.user.feign.IUserClient;
+import org.springblade.system.user.page.UserPage;
 import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,6 +87,13 @@ public class AnbiaoAnquanhuiyiController {
 
 	private FileServer fileServer;
 
+	private IUserClient userClient;
+
+	private IJiaShiYuanService iJiaShiYuanService;
+
+	private IAnbiaoAnquanhuiyiSourceService anquanhuiyiSourceService;
+
+	private ISysClient iSysClient;
 
 	/**
 	 *新增
@@ -622,6 +638,229 @@ public class AnbiaoAnquanhuiyiController {
 			r.setMsg("暂无数据");
 			return r;
 		}
+	}
+
+	/**
+	 *新增（批量）
+	 */
+	@PostMapping("/batchInsert")
+	@ApiLog("安全会议记录信息-发布")
+	@ApiOperation(value = "安全会议记录信息-发布", notes = "传入deptIds，huiYiId")
+	public R batchInsert(@RequestBody AnbiaoAnquanhuiyi anquanhuiyi, BladeUser user) throws ParseException {
+		R r = new R();
+		if (user == null) {
+			r.setCode(401);
+			r.setMsg("用户权限验证失败");
+			r.setData(null);
+			r.setSuccess(false);
+			return r;
+		}
+		AnbiaoAnquanhuiyiSource anquanhuiyiSource = anquanhuiyiSourceService.getById(anquanhuiyi.getHuiYiId());
+		if(anquanhuiyiSource == null){
+			r.setMsg("该会议不存在！");
+			r.setCode(500);
+			r.setSuccess(false);
+			return r;
+		}
+		QueryWrapper<AnbiaoAnquanhuiyi> anquanhuiyiQueryWrapper = new QueryWrapper<>();
+		String[] idsss = anquanhuiyi.getDeptIds().split(",");
+		//去除素组中重复的数组
+		List<String> listid = new ArrayList<String>();
+		for (int i=0; i<idsss.length; i++) {
+			if(!listid.contains(idsss[i])) {
+				listid.add(idsss[i]);
+			}
+		}
+		//返回一个包含所有对象的指定类型的数组
+		String[] idss= listid.toArray(new String[1]);
+		for(int q = 0;q< idss.length;q++){
+			anquanhuiyi.setDeptId(Integer.parseInt(idss[q]));
+			anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getDeptId,idss[q]);
+			anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getIsDeleted,0);
+			anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getHuiyimingcheng,anquanhuiyi.getHuiyimingcheng());
+			anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getHuiyikaishishijian,anquanhuiyi.getHuiyikaishishijian());
+			anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getHuiyijieshushijian,anquanhuiyi.getHuiyijieshushijian());
+			anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getHuiyixingshi,anquanhuiyi.getHuiyixingshi());
+			AnbiaoAnquanhuiyi deail = anquanhuiyiService.getBaseMapper().selectOne(anquanhuiyiQueryWrapper);
+			//验证会议开始时间
+			if (anquanhuiyi.getHuiyikaishishijian().length() >= 10){
+				String huiyikaishishijian = anquanhuiyi.getHuiyikaishishijian().substring(0, 10);
+				if (StringUtils.isNotBlank(huiyikaishishijian) && !huiyikaishishijian.equals("null")){
+					if (DateUtils.isDateString(huiyikaishishijian,null) == true){
+						anquanhuiyi.setHuiyikaishishijian(huiyikaishishijian);
+					}else {
+						r.setMsg(anquanhuiyi.getHuiyikaishishijian()+",该会议开始时间，不是时间格式；");
+						r.setCode(500);
+						r.setSuccess(false);
+						return r;
+					}
+				}
+			}else {
+				r.setMsg(anquanhuiyi.getHuiyikaishishijian()+",该会议开始时间，不是时间格式；");
+				r.setCode(500);
+				r.setSuccess(false);
+				return r;
+			}
+			//验证会议结束时间
+			if (anquanhuiyi.getHuiyijieshushijian().length() >= 10){
+				if (StringUtils.isNotBlank(anquanhuiyi.getHuiyijieshushijian()) && !anquanhuiyi.getHuiyijieshushijian().equals("null")){
+					String huiyikaishishijian = anquanhuiyi.getHuiyijieshushijian().substring(0, 10);
+					if (DateUtils.isDateString(huiyikaishishijian,null) == true){
+						anquanhuiyi.setHuiyijieshushijian(huiyikaishishijian);
+					}else {
+						r.setMsg(anquanhuiyi.getHuiyijieshushijian()+",该会议结束时间，不是时间格式；");
+						r.setCode(500);
+						r.setSuccess(false);
+						return r;
+					}
+				}
+			}else {
+				r.setMsg(anquanhuiyi.getHuiyijieshushijian()+",该会议结束时间，不是时间格式；");
+				r.setCode(500);
+				r.setSuccess(false);
+				return r;
+			}
+
+			//验证 会议开始时间 不能大于 会议结束时间
+			if(StringUtils.isNotBlank(anquanhuiyi.getHuiyikaishishijian()) && !anquanhuiyi.getHuiyikaishishijian().equals("null") && StringUtils.isNotBlank(anquanhuiyi.getHuiyijieshushijian()) && !anquanhuiyi.getHuiyijieshushijian().equals("null")) {
+				int a1 = anquanhuiyi.getHuiyikaishishijian().length();
+				int b1 = anquanhuiyi.getHuiyijieshushijian().length();
+				if (a1 == b1) {
+					if (a1 <= 10) {
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+						if (DateUtils.belongCalendar(format.parse(anquanhuiyi.getHuiyikaishishijian()), format.parse(anquanhuiyi.getHuiyijieshushijian()))==false) {
+							r.setMsg("会议开始日期,不能大于会议结束日期;");
+							r.setCode(500);
+							r.setSuccess(false);
+							return r;
+						}
+					}
+					if (a1 > 10) {
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						if (DateUtils.belongCalendar(format.parse(anquanhuiyi.getHuiyikaishishijian()), format.parse(anquanhuiyi.getHuiyijieshushijian()))==false) {
+							r.setMsg("会议开始日期,不能大于会议结束日期;");
+							r.setCode(500);
+							r.setSuccess(false);
+							return r;
+						}
+					}
+				} else {
+					r.setMsg("会议开始日期与会议结束日期,时间格式不一致;");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
+			}
+
+			if (anquanhuiyi.getHuiyixingshi().equals("线下")){
+				if (anquanhuiyi.getHuiyikaishishijian().equals(anquanhuiyi.getHuiyijieshushijian())){
+					anquanhuiyi.setHuiyikaishishijian(anquanhuiyi.getHuiyikaishishijian());
+					anquanhuiyi.setHuiyijieshushijian(anquanhuiyi.getHuiyijieshushijian());
+				}else{
+					r.setMsg("会议开始日期与会议结束日期不是同一天;");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
+			}
+			boolean is = false;
+			int count = 0;
+			UserPage<User> userPage = userClient.selectUserByDeptPage(anquanhuiyi.getDeptId(),0);
+			List<User> userList = userPage.getRecords();
+			count += userList.size();
+			List<JiaShiYuan> jiaShiYuanList = iJiaShiYuanService.jiaShiYuanList(anquanhuiyi.getDeptId().toString());
+			count += jiaShiYuanList.size();
+			if (deail == null){
+				String uuid1 = UUID.randomUUID().toString().replace("-", "");
+				anquanhuiyi.setId(uuid1);
+				anquanhuiyi.setCanhuirenshu(count);
+				anquanhuiyi.setDeptId(anquanhuiyi.getDeptId());
+				anquanhuiyi.setCaozuoren(user.getUserName());
+				anquanhuiyi.setCaozuorenid(user.getUserId());
+				anquanhuiyi.setCreatetime(DateUtil.now());
+				if (anquanhuiyi.getHuiyixingshi().equals("线上")){
+					anquanhuiyi.setHuiyixingshi("0");
+				}else if (anquanhuiyi.getHuiyixingshi().equals("线下")){
+					anquanhuiyi.setHuiyixingshi("1");
+				}else {
+					anquanhuiyi.setHuiyixingshi(anquanhuiyi.getHuiyixingshi());
+				}
+				anquanhuiyi.setIsDeleted(0);
+
+				if(anquanhuiyi.getCanhuirenshu() < 1){
+					Dept dept = iSysClient.selectDeptById(anquanhuiyi.getDeptId());
+					if(dept != null){
+						String deptName = dept.getDeptName();
+						r.setMsg(deptName+"，该企业无人员资料，请校验后再发布会议！");
+						r.setCode(500);
+						r.setSuccess(false);
+						return r;
+					}
+				}
+				boolean i = anquanhuiyiService.save(anquanhuiyi);
+				if (i){
+					AnbiaoAnquanhuiyi deail2 = anquanhuiyiService.getBaseMapper().selectById(anquanhuiyi.getId());
+					if (deail2 != null){
+						//管理员
+						if(userList.size() > 0 && userList != null){
+							for (int j = 0; j <= userList.size()-1; j++) {
+								AnbiaoAnquanhuiyiDetail anbiaoAnquanhuiyiDetail = new AnbiaoAnquanhuiyiDetail();
+								QueryWrapper<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailQueryWrapper = new QueryWrapper<>();
+								anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,deail2.getId());
+								anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadApIds,userList.get(j).getId());
+								AnbiaoAnquanhuiyiDetail anquanhuiyiDetail = anquanhuiyiDetailService.getBaseMapper().selectOne(anquanhuiyiDetailQueryWrapper);
+								if (anquanhuiyiDetail == null){
+									anbiaoAnquanhuiyiDetail.setAadAaIds(deail2.getId());
+									anbiaoAnquanhuiyiDetail.setAadApIds(userList.get(j).getId().toString());
+									anbiaoAnquanhuiyiDetail.setAadApName(userList.get(j).getName());
+									anbiaoAnquanhuiyiDetail.setAadApType("0");
+									is = anquanhuiyiDetailService.save(anbiaoAnquanhuiyiDetail);
+								}
+							}
+						}
+
+						//驾驶员
+						if(jiaShiYuanList.size() > 0 && jiaShiYuanList != null){
+							for (int j = 0; j <= jiaShiYuanList.size()-1; j++) {
+								AnbiaoAnquanhuiyiDetail anbiaoAnquanhuiyiDetail = new AnbiaoAnquanhuiyiDetail();
+								QueryWrapper<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailQueryWrapper = new QueryWrapper<>();
+								anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,deail2.getId());
+								anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadApIds,jiaShiYuanList.get(j).getId());
+								AnbiaoAnquanhuiyiDetail anquanhuiyiDetail = anquanhuiyiDetailService.getBaseMapper().selectOne(anquanhuiyiDetailQueryWrapper);
+								if (anquanhuiyiDetail == null){
+									anbiaoAnquanhuiyiDetail.setAadAaIds(deail2.getId());
+									anbiaoAnquanhuiyiDetail.setAadApIds(jiaShiYuanList.get(j).getId());
+									anbiaoAnquanhuiyiDetail.setAadApName(jiaShiYuanList.get(j).getJiashiyuanxingming());
+									anbiaoAnquanhuiyiDetail.setAadApType("1");
+									is = anquanhuiyiDetailService.save(anbiaoAnquanhuiyiDetail);
+								}
+							}
+						}
+					}
+				}else {
+					r.setMsg("新增失败");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
+			}
+			if (is){
+				r.setMsg("新增成功");
+				r.setCode(200);
+				r.setSuccess(false);
+			}else {
+				r.setMsg("新增失败");
+				r.setCode(500);
+				r.setSuccess(false);
+			}
+//			else {
+//				r.setMsg("该会议已存在");
+//				r.setCode(500);
+//				r.setSuccess(false);
+//				return r;
+//			}
+		}
+		return r;
 	}
 
 }

@@ -77,7 +77,7 @@ public class AnbiaoRiskDeptConfigurationController {
 			}
 		}
 		//返回一个包含所有指定对象类型的数组
-		String[] rcIdss = listdeptid.toArray(new String[1]);
+		String[] rcIdss = listdeptid2.toArray(new String[1]);
 
 		for (int i = 0; i < deptIdss.length; i++) {
 			riskDeptConfiguration.setDeptId(deptIdss[i]);
@@ -113,7 +113,7 @@ public class AnbiaoRiskDeptConfigurationController {
 					}
 				}else {
 					r.setMsg("权限已存在");
-					r.setCode(200);
+					r.setCode(500);
 					r.setSuccess(true);
 					return r;
 				}
