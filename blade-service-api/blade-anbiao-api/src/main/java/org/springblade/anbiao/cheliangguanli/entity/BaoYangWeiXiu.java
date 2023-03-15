@@ -15,6 +15,7 @@
  */
 package org.springblade.anbiao.cheliangguanli.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -200,5 +201,6 @@ public class BaoYangWeiXiu implements Serializable {
 	 */
 	@ApiModelProperty(value = "创建者ID")
 	private Integer createid;
+
 
 }

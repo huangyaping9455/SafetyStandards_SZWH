@@ -151,6 +151,12 @@ public class AnbiaoAnquanhuiyi implements Serializable {
 	@TableField(exist = false)
 	private Integer shijicanhuirenshu = 0;
 
+	@ApiModelProperty(value = "驾驶员id")
+	@TableField(exist = false)
+	private String jiashiyuanid;
+
+
+
 	@ApiModelProperty(value = "企业ID字符串（多个以英文逗号隔开）")
 	@TableField(exist = false)
 	private String deptIds;

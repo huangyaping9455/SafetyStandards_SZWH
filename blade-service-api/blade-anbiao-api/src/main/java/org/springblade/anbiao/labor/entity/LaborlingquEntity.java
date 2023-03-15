@@ -44,4 +44,6 @@ public class LaborlingquEntity {
 	@TableField(exist = false)
 	@ExcelProperty("图片")
 	private URL imgUrl;
+	@TableField(exist = false)
+	private String aliName;
 }

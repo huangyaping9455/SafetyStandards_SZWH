@@ -1,6 +1,7 @@
 package org.springblade.anbiao.yinhuanpaicha.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -109,6 +110,5 @@ public class AnbiaoHiddenDanger implements Serializable {
 
     @ApiModelProperty(value = "审核时间")
     private String ahdAuditTime;
-
 
 }

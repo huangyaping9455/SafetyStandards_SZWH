@@ -1,6 +1,11 @@
 package org.springblade.anbiao.risk.service;
 
+import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
+import org.springblade.anbiao.cheliangguanli.entity.BaoYangWeiXiu;
+import org.springblade.anbiao.cheliangguanli.vo.BaoYangWeiXiuVO;
+import org.springblade.anbiao.jiaoyupeixun.entity.AnbiaoSafetyTraining;
 import org.springblade.anbiao.jiashiyuan.entity.*;
+import org.springblade.anbiao.labor.entity.LaborlingquEntity;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springblade.anbiao.risk.page.JiashiyuanRiskAllPage;
@@ -9,6 +14,8 @@ import org.springblade.anbiao.risk.vo.AnbiaoRiskDetailVO;
 import org.springblade.anbiao.risk.vo.AnbiaoSystemRiskVO;
 import org.springblade.anbiao.risk.vo.JiashiyuanRiskAllVO;
 import org.springblade.anbiao.risk.vo.LedgerDetailVO;
+import org.springblade.anbiao.yinhuanpaicha.entity.AnbiaoHiddenDanger;
+import org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoHiddenDangerVO;
 
 import java.util.List;
 
@@ -57,4 +64,16 @@ public interface IAnbiaoRiskDetailService extends IService<AnbiaoRiskDetail> {
 	List<AnbiaoJiashiyuanWeihaigaozhishu> selectWeiHaiGaoZhiShuRisk();
 
 	List<AnbiaoJiashiyuanLaodonghetong> selectLaoDongHeTongRisk();
+
+	List<AnbiaoAnquanhuiyi> selectAnQuanHuiYiRisk();
+
+	List<AnbiaoSafetyTraining> selectAnQuanPeiXunRisk();
+
+	List<AnbiaoHiddenDangerVO> selectYinHuanPaiChaRisk();
+
+	List<BaoYangWeiXiuVO> selectWeiXiuDengJiRisk();
+
+	List<LaborlingquEntity> selectLaBorRisk();
+
+	List<AnbiaoCheliangJiashiyuanDaily> selectAnQuanJianChaRisk();
 }

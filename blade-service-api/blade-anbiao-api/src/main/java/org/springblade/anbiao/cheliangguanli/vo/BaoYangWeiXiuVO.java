@@ -15,6 +15,7 @@
  */
 package org.springblade.anbiao.cheliangguanli.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -36,4 +37,20 @@ public class BaoYangWeiXiuVO extends BaoYangWeiXiu {
 	private String cheliangpaizhao;
 	@ApiModelProperty(value = "车牌颜色")
 	private String chepaiyanse;
+	/**
+	 * ID
+	 */
+	@ApiModelProperty(value = "ID")
+	private String id;
+
+	/**
+	 * 维修原因
+	 */
+	@ApiModelProperty(value = "维修原因")
+	private String acbRepairReason;
+	/**
+	 * 送修司机ID
+	 */
+	@ApiModelProperty(value = "送修司机ID")
+	private String driverId;
 }

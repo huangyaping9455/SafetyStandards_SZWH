@@ -18,8 +18,10 @@ import org.springblade.anbiao.SafeInvestment.DTO.SafeInvestmentDTO;
 import org.springblade.anbiao.SafeInvestment.service.impl.SafeInvestmentServiceImpl;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiService;
+import org.springblade.anbiao.cheliangguanli.entity.BaoYangWeiXiu;
 import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
+import org.springblade.anbiao.cheliangguanli.vo.BaoYangWeiXiuVO;
 import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamineInfo;
 import org.springblade.anbiao.chuchejiancha.service.IAnbiaoCarExamineInfoService;
 import org.springblade.anbiao.chuchejiancha.service.IAnbiaoCarExamineService;
@@ -50,6 +52,7 @@ import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.anbiao.risk.vo.*;
 import org.springblade.anbiao.yinhuanpaicha.entity.AnbiaoHiddenDanger;
 import org.springblade.anbiao.yinhuanpaicha.service.IAnbiaoHiddenDangerService;
+import org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoHiddenDangerVO;
 import org.springblade.common.tool.JSONUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
@@ -132,20 +135,20 @@ public class AnbiaoRiskDetailController {
 				riskDetail.setArdAssociationField("id");
 				riskDetail.setArdAssociationValue(deail.getId());
 				if (StringUtils.isBlank(deail.getShenfenzhengyouxiaoqi()) || deail.getShenfenzhengyouxiaoqi().equals("null")) {
-					riskDetail.setArdContent("身份证有效期缺项");
-					riskDetail.setArdType("缺项");
-					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
-					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds, riskDetail.getArdDeptIds());
-					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue, riskDetail.getArdAssociationValue());
-					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent, riskDetail.getArdContent());
-					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification, "0");
-					AnbiaoRiskDetail riskDetail1 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
-					if (riskDetail1 == null) {
-						int insert = riskDetailService.getBaseMapper().insert(riskDetail);
-						if (insert > 0) {
-							aa++;
-						}
-					}
+//					riskDetail.setArdContent("身份证有效期缺项");
+//					riskDetail.setArdType("缺项");
+//					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+//					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds, riskDetail.getArdDeptIds());
+//					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue, riskDetail.getArdAssociationValue());
+//					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent, riskDetail.getArdContent());
+//					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification, "0");
+//					AnbiaoRiskDetail riskDetail1 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+//					if (riskDetail1 == null) {
+//						int insert = riskDetailService.getBaseMapper().insert(riskDetail);
+//						if (insert > 0) {
+//							aa++;
+//						}
+//					}
 				} else if (!deail.getShenfenzhengyouxiaoqi().equals("长期")) {
 					Date shenfenzhengyouxiaoqi = formatter.parse(deail.getShenfenzhengyouxiaoqi());
 					Date now = formatter.parse(DateUtil.now());
@@ -211,20 +214,20 @@ public class AnbiaoRiskDetailController {
 				riskDetail2.setArdAssociationField("id");
 				riskDetail2.setArdAssociationValue(deail.getId());
 				if (StringUtils.isBlank(deail.getJiashizhengyouxiaoqi()) || deail.getJiashizhengyouxiaoqi().equals("null")) {
-					riskDetail2.setArdContent("驾驶证有效截止日期缺项");
-					riskDetail2.setArdType("缺项");
-					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
-					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds, riskDetail2.getArdDeptIds());
-					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue, riskDetail2.getArdAssociationValue());
-					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent, riskDetail2.getArdContent());
-					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification, "0");
-					AnbiaoRiskDetail riskDetail1 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
-					if (riskDetail1 == null) {
-						int insert2 = riskDetailService.getBaseMapper().insert(riskDetail2);
-						if (insert2 > 0) {
-							aa++;
-						}
-					}
+//					riskDetail2.setArdContent("驾驶证有效截止日期缺项");
+//					riskDetail2.setArdType("缺项");
+//					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+//					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds, riskDetail2.getArdDeptIds());
+//					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue, riskDetail2.getArdAssociationValue());
+//					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent, riskDetail2.getArdContent());
+//					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification, "0");
+//					AnbiaoRiskDetail riskDetail1 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+//					if (riskDetail1 == null) {
+//						int insert2 = riskDetailService.getBaseMapper().insert(riskDetail2);
+//						if (insert2 > 0) {
+//							aa++;
+//						}
+//					}
 				} else if (!deail.getJiashizhengyouxiaoqi().equals("长期")) {
 					Date jiashizhengyouxiaoqi = formatter.parse(deail.getJiashizhengyouxiaoqi());
 					Date now2 = formatter.parse(DateUtil.now());
@@ -290,20 +293,20 @@ public class AnbiaoRiskDetailController {
 				riskDetail3.setArdAssociationField("id");
 				riskDetail3.setArdAssociationValue(deail.getId());
 				if (StringUtils.isBlank(deail.getCongyezhengyouxiaoqi()) || deail.getCongyezhengyouxiaoqi().equals("null")) {
-					riskDetail3.setArdContent("从业资格证有效期缺项");
-					riskDetail3.setArdType("缺项");
-					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
-					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds, riskDetail3.getArdDeptIds());
-					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue, riskDetail3.getArdAssociationValue());
-					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent, riskDetail3.getArdContent());
-					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification, "0");
-					AnbiaoRiskDetail riskDetail1 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
-					if (riskDetail1 == null) {
-						int insert3 = riskDetailService.getBaseMapper().insert(riskDetail3);
-						if (insert3 > 0) {
-							aa++;
-						}
-					}
+//					riskDetail3.setArdContent("从业资格证有效期缺项");
+//					riskDetail3.setArdType("缺项");
+//					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+//					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds, riskDetail3.getArdDeptIds());
+//					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue, riskDetail3.getArdAssociationValue());
+//					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent, riskDetail3.getArdContent());
+//					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification, "0");
+//					AnbiaoRiskDetail riskDetail1 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+//					if (riskDetail1 == null) {
+//						int insert3 = riskDetailService.getBaseMapper().insert(riskDetail3);
+//						if (insert3 > 0) {
+//							aa++;
+//						}
+//					}
 				} else {
 					Date congyezhengyouxiaoqi = formatter.parse(deail.getCongyezhengyouxiaoqi());
 					Date now3 = formatter.parse(DateUtil.now());
@@ -368,21 +371,21 @@ public class AnbiaoRiskDetailController {
 				riskDetail4.setArdAssociationTable("anbiao_jiashiyuan");
 				riskDetail4.setArdAssociationField("id");
 				riskDetail4.setArdAssociationValue(deail.getId());
-				if (StringUtils.isBlank(deail.getTijianriqi()) || deail.getTijianriqi().equals("null")) {
-					riskDetail4.setArdContent("体检日期缺项");
-					riskDetail4.setArdType("缺项");
-					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
-					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds, riskDetail4.getArdDeptIds());
-					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue, riskDetail4.getArdAssociationValue());
-					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent, riskDetail4.getArdContent());
-					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification, "0");
-					AnbiaoRiskDetail riskDetail1 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
-					if (riskDetail1 == null) {
-						int insert4 = riskDetailService.getBaseMapper().insert(riskDetail4);
-						if (insert4 > 0) {
-							aa++;
-						}
-					}
+				if (StringUtils.isBlank(deail.getTijianyouxiaoqi()) || deail.getTijianyouxiaoqi().equals("null")) {
+//					riskDetail4.setArdContent("体检日期缺项");
+//					riskDetail4.setArdType("缺项");
+//					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+//					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds, riskDetail4.getArdDeptIds());
+//					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue, riskDetail4.getArdAssociationValue());
+//					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent, riskDetail4.getArdContent());
+//					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification, "0");
+//					AnbiaoRiskDetail riskDetail1 = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+//					if (riskDetail1 == null) {
+//						int insert4 = riskDetailService.getBaseMapper().insert(riskDetail4);
+//						if (insert4 > 0) {
+//							aa++;
+//						}
+//					}
 				} else {
 					Date tijianyouxiaoqi = formatter.parse(deail.getTijianyouxiaoqi());
 					Date now4 = formatter.parse(DateUtil.now());
@@ -3117,7 +3120,239 @@ public class AnbiaoRiskDetailController {
 		}
 		return r;
 	}
-}
+
+
+	@PostMapping("/jiashiyuanAnQuanHuiYiRiskinsert")
+	@ApiLog("新增-驾驶员安全会议风险统计信息")
+	@ApiOperation(value = "新增-驾驶员安全会议风险统计信息", position = 1)
+	public R jiashiyuanAnQuanHuiYiRiskinsert(BladeUser user) throws ParseException{
+		R r = new R();
+		List<AnbiaoAnquanhuiyi> anbiaoAnquanhuiyis = riskDetailService.selectAnQuanHuiYiRisk();
+		for (AnbiaoAnquanhuiyi anquanhuiyi:anbiaoAnquanhuiyis) {
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"未按时参加安全会议");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,anquanhuiyi.getJiashiyuanid());
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,anquanhuiyi.getHuiyimingcheng());
+			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+			if (riskDetail==null){
+				AnbiaoRiskDetail riskDetail1 = new AnbiaoRiskDetail();
+				riskDetail1.setArdDeptIds(anquanhuiyi.getDeptId().toString());
+				riskDetail1.setArdMajorCategories("2");
+				riskDetail1.setArdSubCategory("202");
+				riskDetail1.setArdTitle("未按时参加安全会议");
+				riskDetail1.setArdType("未按时参加");
+				riskDetail1.setArdDiscoveryDate(DateUtil.now().substring(0,10));
+				riskDetail1.setArdAssociationTable("anbiao_jiashiyuan");
+				riskDetail1.setArdAssociationField("id");
+				riskDetail1.setArdAssociationValue(anquanhuiyi.getJiashiyuanid());
+				riskDetail1.setArdIsRectification("0");
+				riskDetail1.setArdContent(anquanhuiyi.getHuiyimingcheng());
+				riskDetailService.getBaseMapper().insert(riskDetail1);
+			}
+		}
+		return r;
+	}
+
+
+	@PostMapping("/jiashiyuanAnQuanPeiXunRiskinsert")
+	@ApiLog("新增-驾驶员安全培训风险统计信息")
+	@ApiOperation(value = "新增-驾驶员安全培训风险统计信息", position = 1)
+	public R jiashiyuanAnQuanPeiXunRiskinsert(BladeUser user) throws ParseException{
+		R r = new R();
+		List<AnbiaoSafetyTraining> safetyTrainings = riskDetailService.selectAnQuanPeiXunRisk();
+		for (AnbiaoSafetyTraining safetyTraining:safetyTrainings) {
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"未按时参加安全培训");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,safetyTraining.getJiashiyuanid());
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,safetyTraining.getAstTrainingTopic());
+			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+			if (riskDetail==null){
+				AnbiaoRiskDetail riskDetail1 = new AnbiaoRiskDetail();
+				riskDetail1.setArdDeptIds(safetyTraining.getAstDeptIds());
+				riskDetail1.setArdMajorCategories("2");
+				riskDetail1.setArdSubCategory("200");
+				riskDetail1.setArdTitle("未按时参加安全培训");
+				riskDetail1.setArdType("未按时参加");
+				riskDetail1.setArdDiscoveryDate(DateUtil.now().substring(0,10));
+				riskDetail1.setArdAssociationTable("anbiao_jiashiyuan");
+				riskDetail1.setArdAssociationField("id");
+				riskDetail1.setArdAssociationValue(safetyTraining.getJiashiyuanid());
+				riskDetail1.setArdIsRectification("0");
+				String A=safetyTraining.getAstTrainingTopic();
+				riskDetail1.setArdContent(A);
+				riskDetailService.getBaseMapper().insert(riskDetail1);
+			}
+		}
+		return r;
+	}
+
+
+	@PostMapping("/jiashiyuanYinHuanPaiChaRiskinsert")
+	@ApiLog("新增-驾驶员隐患排查风险统计信息")
+	@ApiOperation(value = "新增-驾驶员隐患排查风险统计信息", position = 1)
+	public R jiashiyuanYinHuanPaiChaRiskinsert(BladeUser user) throws ParseException{
+		R r = new R();
+		List<AnbiaoHiddenDangerVO> yinHuanPaiChas = riskDetailService.selectYinHuanPaiChaRisk();
+		for (AnbiaoHiddenDangerVO yinHuanPaiCha:yinHuanPaiChas) {
+			if (StringUtils.isBlank(yinHuanPaiCha.getAhdDescribe()) || yinHuanPaiCha.getAhdDescribe().equals("null")){
+				yinHuanPaiCha.setAhdDescribe("");
+			}
+			String s = yinHuanPaiCha.getCheliangpaizhao() + yinHuanPaiCha.getAhdDescribe();
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"隐患排查");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,yinHuanPaiCha.getJiashiyuanid());
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,s);
+			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+			if (riskDetail==null){
+				AnbiaoRiskDetail riskDetail1 = new AnbiaoRiskDetail();
+				riskDetail1.setArdDeptIds(yinHuanPaiCha.getAhdDeptIds());
+				riskDetail1.setArdMajorCategories("2");
+				riskDetail1.setArdSubCategory("206");
+				riskDetail1.setArdTitle("隐患排查");
+				riskDetail1.setArdType("未整改");
+				riskDetail1.setArdDiscoveryDate(DateUtil.now().substring(0,10));
+				riskDetail1.setArdAssociationTable("anbiao_jiashiyuan");
+				riskDetail1.setArdAssociationField("id");
+				riskDetail1.setArdAssociationValue(yinHuanPaiCha.getJiashiyuanid());
+				riskDetail1.setArdIsRectification("0");
+				riskDetail1.setArdContent(s);
+				riskDetailService.getBaseMapper().insert(riskDetail1);
+			}
+		}
+		return r;
+	}
+
+
+	@PostMapping("/jiashiyuanWeiXiuDengJiRiskinsert")
+	@ApiLog("新增-驾驶员维修登记风险统计信息")
+	@ApiOperation(value = "新增-驾驶员维修登记风险统计信息", position = 1)
+	public R jiashiyuanWeiXiuDengJiRiskinsert(BladeUser user) throws ParseException{
+		R r = new R();
+		List<BaoYangWeiXiuVO> baoYangWeiXius = riskDetailService.selectWeiXiuDengJiRisk();
+		for (BaoYangWeiXiuVO baoYangWeiXiu:baoYangWeiXius) {
+			if (StringUtils.isBlank(baoYangWeiXiu.getAcbRepairReason()) || baoYangWeiXiu.getAcbRepairReason().equals("null")){
+				baoYangWeiXiu.setAcbRepairReason("");
+			}
+			String s = baoYangWeiXiu.getCheliangpaizhao() + baoYangWeiXiu.getAcbRepairReason();
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"维修登记");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,baoYangWeiXiu.getDriverId());
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,s);
+			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+			if (riskDetail==null){
+				AnbiaoRiskDetail riskDetail1 = new AnbiaoRiskDetail();
+				riskDetail1.setArdDeptIds(baoYangWeiXiu.getDeptId().toString());
+				riskDetail1.setArdMajorCategories("2");
+				riskDetail1.setArdSubCategory("208");
+				riskDetail1.setArdTitle("维修登记");
+				riskDetail1.setArdType("未整改");
+				riskDetail1.setArdDiscoveryDate(DateUtil.now().substring(0,10));
+				riskDetail1.setArdAssociationTable("anbiao_jiashiyuan");
+				riskDetail1.setArdAssociationField("id");
+				riskDetail1.setArdAssociationValue(baoYangWeiXiu.getDriverId());
+				riskDetail1.setArdIsRectification("0");
+				riskDetail1.setArdContent(s);
+				riskDetailService.getBaseMapper().insert(riskDetail1);
+			}
+		}
+		return r;
+	}
+
+
+	@PostMapping("/jiashiyuanLaBorRiskinsert")
+	@ApiLog("新增-驾驶员劳保用品风险统计信息")
+	@ApiOperation(value = "新增-驾驶员劳保用品风险统计信息", position = 1)
+	public R jiashiyuanLaBorRiskinsert(BladeUser user) throws ParseException{
+		R r = new R();
+		List<LaborlingquEntity> laborlingquEntities = riskDetailService.selectLaBorRisk();
+		for (LaborlingquEntity laborlingqu:laborlingquEntities) {
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"劳保用品未领取");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,laborlingqu.getAlrPersonIds());
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,laborlingqu.getAliName());
+			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+			if (riskDetail==null){
+				AnbiaoRiskDetail riskDetail1 = new AnbiaoRiskDetail();
+				riskDetail1.setArdDeptIds(laborlingqu.getAsiDeptIds());
+				riskDetail1.setArdMajorCategories("2");
+				riskDetail1.setArdSubCategory("203");
+				riskDetail1.setArdTitle("劳保用品未领取");
+				riskDetail1.setArdType("用品未领取");
+				riskDetail1.setArdDiscoveryDate(DateUtil.now().substring(0,10));
+				riskDetail1.setArdAssociationTable("anbiao_jiashiyuan");
+				riskDetail1.setArdAssociationField("id");
+				riskDetail1.setArdAssociationValue(laborlingqu.getAlrPersonIds());
+				riskDetail1.setArdIsRectification("0");
+				riskDetail1.setArdContent(laborlingqu.getAliName());
+				riskDetailService.getBaseMapper().insert(riskDetail1);
+			}
+		}
+		return r;
+	}
+
+
+	@PostMapping("/jiashiyuanAnQuanJianChaRiskinsert")
+	@ApiLog("新增-驾驶员安全检查风险统计信息")
+	@ApiOperation(value = "新增-驾驶员安全检查风险统计信息", position = 1)
+	public R jiashiyuanAnQuanJianChaRiskinsert(BladeUser user) throws ParseException{
+		R r = new R();
+		String today = DateUtil.now().substring(0, 10);
+		List<AnbiaoCheliangJiashiyuanDaily> anQuanJianChaRisks = riskDetailService.selectAnQuanJianChaRisk();
+		for (AnbiaoCheliangJiashiyuanDaily anQuanJianChaRisk:anQuanJianChaRisks) {
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"未按时进行安全检查");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,anQuanJianChaRisk.getJiashiyuanid());
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDiscoveryDate,today);
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,anQuanJianChaRisk.getCheliangpaizhao());
+			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+			if (riskDetail==null){
+				if (StringUtils.isNotBlank(anQuanJianChaRisk.getCreatetime()) && !anQuanJianChaRisk.getCreatetime().equals("null")){
+					String createtime = anQuanJianChaRisk.getCreatetime().substring(0, 10);
+					if (!createtime.equals(today)){
+						AnbiaoRiskDetail riskDetail1 = new AnbiaoRiskDetail();
+						riskDetail1.setArdDeptIds(anQuanJianChaRisk.getDeptId());
+						riskDetail1.setArdMajorCategories("2");
+						riskDetail1.setArdSubCategory("201");
+						riskDetail1.setArdTitle("未按时进行安全检查");
+						riskDetail1.setArdType("未按时检查");
+						riskDetail1.setArdDiscoveryDate(today);
+						riskDetail1.setArdAssociationTable("anbiao_jiashiyuan");
+						riskDetail1.setArdAssociationField("id");
+						riskDetail1.setArdAssociationValue(anQuanJianChaRisk.getJiashiyuanid());
+						riskDetail1.setArdIsRectification("0");
+						riskDetail1.setArdContent(anQuanJianChaRisk.getCheliangpaizhao());
+						riskDetailService.getBaseMapper().insert(riskDetail1);}
+					}else if (StringUtils.isBlank(anQuanJianChaRisk.getCreatetime()) || anQuanJianChaRisk.getCreatetime().equals("null")){
+								AnbiaoRiskDetail riskDetail1 = new AnbiaoRiskDetail();
+								riskDetail1.setArdDeptIds(anQuanJianChaRisk.getDeptId());
+								riskDetail1.setArdMajorCategories("2");
+								riskDetail1.setArdSubCategory("201");
+								riskDetail1.setArdTitle("未按时进行安全检查");
+								riskDetail1.setArdType("未按时检查");
+								riskDetail1.setArdDiscoveryDate(today);
+								riskDetail1.setArdAssociationTable("anbiao_jiashiyuan");
+								riskDetail1.setArdAssociationField("id");
+								riskDetail1.setArdAssociationValue(anQuanJianChaRisk.getJiashiyuanid());
+								riskDetail1.setArdIsRectification("0");
+								riskDetail1.setArdContent(anQuanJianChaRisk.getCheliangpaizhao());
+								riskDetailService.getBaseMapper().insert(riskDetail1);
+					}
+				}
+			}
+			return r;
+		}
+
+
+
+	}
+
+
 
 
 

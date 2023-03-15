@@ -1084,19 +1084,19 @@ public class JiashiyuanBaoxianController extends BladeController {
 //	@ApiOperation(value = "保险信息-导出", notes = "传入JiaShiYuanLedgerPage", position = 22)
 //	public R goExport_MingXi2_Excel(@RequestBody JiaShiYuanLedgerVO jiaShiYuanLedgerVO) throws IOException {
 //		R rs = new R();
-//
-//		QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
-//		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,"0");
-//		List<JiaShiYuan> jiaShiYuans = jiaShiYuanService.getBaseMapper().selectList(jiaShiYuanQueryWrapper);
-//		for (JiaShiYuan j: jiaShiYuans) {
-//			String shoujihaoma = j.getShoujihaoma();
-//			String substring = shoujihaoma.substring(5, 11);
-//
+////
+////		QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
+////		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,"0");
+////		List<JiaShiYuan> jiaShiYuans = jiaShiYuanService.getBaseMapper().selectList(jiaShiYuanQueryWrapper);
+////		for (JiaShiYuan j: jiaShiYuans) {
+////			String shoujihaoma = j.getShoujihaoma();
+////			String substring = shoujihaoma.substring(5, 11);
 //			//登录密码
-//			String encrypt = DigestUtil.encrypt(substring);
-//			j.setDenglumima(encrypt);
-//			jiaShiYuanService.getBaseMapper().updateById(j);
-//		}
+//			String encrypt = DigestUtil.encrypt("799629");
+//			System.out.println(encrypt);
+////			j.setDenglumima(encrypt);
+////			jiaShiYuanService.getBaseMapper().updateById(j);
+////		}
 //
 //		rs.setMsg("下载成功");
 //		rs.setCode(200);

@@ -106,4 +106,8 @@ public class AnbiaoSafetyTraining implements Serializable {
 	@ApiModelProperty(value = "月份")
 	@TableField(exist = false)
 	private String months;
+
+	@ApiModelProperty(value = "驾驶员id")
+	@TableField(exist = false)
+	private String jiashiyuanid;
 }

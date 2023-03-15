@@ -705,4 +705,134 @@
         ORDER BY b.id
     </select>
 
+    <select id="selectAnQuanHuiYiRisk"  resultType="org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi">
+        SELECT
+        a.id,
+        a.dept_id,
+        huiyimingcheng,
+        huiyikaishishijian,
+        huiyijieshushijian,
+        b.aad_ap_name as jiashiyuanxingming,
+        c.id as jiashiyuanid,
+        SYSDATE()
+        FROM
+        `anbiao_anquanhuiyi`  a
+        LEFT JOIN anbiao_anquanhuiyi_detail b on a.id=b.aad_aa_ids
+        LEFT JOIN anbiao_jiashiyuan c on c.jiashiyuanxingming=b.aad_ap_name
+        WHERE
+        is_deleted = 0
+        and b.add_ap_being_joined = 0
+        and DATE_FORMAT(huiyijieshushijian, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m')
+        and c.isdelete=0
+        ORDER BY a.id
+    </select>
+
+    <select id="selectAnQuanPeiXunRisk"  resultType="org.springblade.anbiao.jiaoyupeixun.entity.AnbiaoSafetyTraining">
+        SELECT
+            ast_ids,
+            ast_dept_ids,
+            ast_training_topic,
+            ast_training_start_time,
+            ast_training_end_time,
+            b.aad_ap_name as jiashiyuanxingming,
+            c.id as jiashiyuanid,
+            SYSDATE()
+        FROM
+            `anbiao_safety_training`  a
+            LEFT JOIN anbiao_safety_training_detail b on a.ast_ids=b.aad_ast_ids
+            LEFT JOIN anbiao_jiashiyuan c on c.jiashiyuanxingming=b.aad_ap_name
+        WHERE
+            ast_delete = 0
+            and b.add_ap_being_joined = 0
+            and DATE_FORMAT(ast_training_end_time, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m')
+            and c.isdelete=0
+        ORDER BY a.ast_ids
+    </select>
+
+    <select id="selectYinHuanPaiChaRisk"  resultType="org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoHiddenDangerVO">
+        SELECT
+            ahd_ids,
+            ahd_dept_ids,
+            ahd_describe,
+            c.id as jiashiyuanid,
+            ahd_driver_name,
+            b.cheliangpaizhao
+        FROM
+            anbiao_hidden_danger  a
+                LEFT JOIN anbiao_vehicle b on a.ahd_vehicle_ids=b.id
+                LEFT JOIN anbiao_jiashiyuan c on c.jiashiyuanxingming=a.ahd_driver_name
+        WHERE
+              (ahd_rectification_situation = 0 or ahd_rectification_situation is null)
+          and ahd_delete = 0
+          and c.isdelete=0
+        ORDER BY ahd_dept_ids
+    </select>
+
+    <select id="selectWeiXiuDengJiRisk"  resultType="org.springblade.anbiao.cheliangguanli.vo.BaoYangWeiXiuVO">
+        SELECT
+            a.dept_Id,
+            driver_Id,
+            b.jiashiyuanxingming,
+            vehicle_Id,
+            c.cheliangpaizhao,
+            acb_maintenance_content,
+            acb_repair_reason
+        FROM
+            anbiao_cheliang_baoyangweixiu a
+                LEFT JOIN anbiao_jiashiyuan b on a.driver_Id=b.id
+                LEFT JOIN anbiao_vehicle c on a.vehicle_Id=c.id
+        WHERE
+            a.is_Deleted = 0
+          AND (
+                acb_after_maintenance = ""
+                OR acb_after_maintenance IS NULL
+            )
+          and b.isdelete=0
+          and c.is_deleted=0
+        ORDER BY driver_Id
+    </select>
+
+    <select id="selectLaBorRisk"  resultType="org.springblade.anbiao.labor.entity.LaborlingquEntity">
+        SELECT
+            b.ali_dept_ids,
+            b.ali_name,
+            a.alr_person_ids,
+            a.alr_person_name
+        FROM
+            `anbiao_labor_receive` a
+                LEFT JOIN anbiao_labor_insurance b on b.ali_ids=a.alr_ali_ids
+                LEFT JOIN anbiao_jiashiyuan c on c.id=a.alr_person_ids
+        WHERE
+            alr_delete = 0
+          AND (
+                alr_receipts_number = ""
+                OR alr_receipts_number IS NULL
+            )
+          and b.ali_delete=0
+          and c.isdelete=0
+        ORDER BY b.ali_ids
+    </select>
+
+    <select id="selectAnQuanJianChaRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuanDaily">
+        SELECT
+            b.dept_id,
+            a.vehid,
+            c.cheliangpaizhao,
+            a.jiashiyuanid,
+            b.jiashiyuanxingming,
+            d.createtime
+        FROM
+            `anbiao_cheliang_jiashiyuan_daily` a
+                LEFT JOIN anbiao_jiashiyuan b ON a.jiashiyuanid = b.id
+                LEFT JOIN anbiao_vehicle c ON a.vehid = c.id
+                LEFT JOIN ( SELECT jsyid,vehid,MAX(createtime) createtime FROM `anbiao_car_examine_info` GROUP BY jsyid ORDER BY createtime desc ) as d on d.jsyid=a.jiashiyuanid
+        WHERE
+            a.vstatus = 1
+          AND b.isdelete = 0
+          AND c.is_deleted = 0
+        ORDER BY
+            b.dept_id
+    </select>
+
+
 </mapper>

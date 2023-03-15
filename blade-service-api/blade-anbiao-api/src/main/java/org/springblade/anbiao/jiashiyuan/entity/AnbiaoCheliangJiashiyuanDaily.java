@@ -73,6 +73,10 @@ public class AnbiaoCheliangJiashiyuanDaily implements Serializable {
 	@TableField(exist = false)
 	private String deptName;
 
+	@ApiModelProperty(value = "企业id")
+	@TableField(exist = false)
+	private String deptId;
+
 
 
 }

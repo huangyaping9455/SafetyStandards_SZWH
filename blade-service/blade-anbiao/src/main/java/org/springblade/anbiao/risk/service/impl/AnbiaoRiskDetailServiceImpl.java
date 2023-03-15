@@ -1,9 +1,14 @@
 package org.springblade.anbiao.risk.service.impl;
 
 import lombok.AllArgsConstructor;
+import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
+import org.springblade.anbiao.cheliangguanli.entity.BaoYangWeiXiu;
 import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
+import org.springblade.anbiao.cheliangguanli.vo.BaoYangWeiXiuVO;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
+import org.springblade.anbiao.jiaoyupeixun.entity.AnbiaoSafetyTraining;
 import org.springblade.anbiao.jiashiyuan.entity.*;
+import org.springblade.anbiao.labor.entity.LaborlingquEntity;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.mapper.AnbiaoRiskDetailMapper;
 import org.springblade.anbiao.risk.page.JiashiyuanRiskAllPage;
@@ -12,6 +17,8 @@ import org.springblade.anbiao.risk.page.RiskPage;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springblade.anbiao.risk.vo.*;
+import org.springblade.anbiao.yinhuanpaicha.entity.AnbiaoHiddenDanger;
+import org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoHiddenDangerVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -292,6 +299,36 @@ public class AnbiaoRiskDetailServiceImpl extends ServiceImpl<AnbiaoRiskDetailMap
 	@Override
 	public List<AnbiaoJiashiyuanLaodonghetong> selectLaoDongHeTongRisk() {
 		return mapper.selectLaoDongHeTongRisk();
+	}
+
+	@Override
+	public List<AnbiaoAnquanhuiyi> selectAnQuanHuiYiRisk() {
+		return mapper.selectAnQuanHuiYiRisk();
+	}
+
+	@Override
+	public List<AnbiaoSafetyTraining> selectAnQuanPeiXunRisk() {
+		return mapper.selectAnQuanPeiXunRisk();
+	}
+
+	@Override
+	public List<AnbiaoHiddenDangerVO> selectYinHuanPaiChaRisk() {
+		return mapper.selectYinHuanPaiChaRisk();
+	}
+
+	@Override
+	public List<BaoYangWeiXiuVO> selectWeiXiuDengJiRisk() {
+		return mapper.selectWeiXiuDengJiRisk();
+	}
+
+	@Override
+	public List<LaborlingquEntity> selectLaBorRisk() {
+		return mapper.selectLaBorRisk();
+	}
+
+	@Override
+	public List<AnbiaoCheliangJiashiyuanDaily> selectAnQuanJianChaRisk() {
+		return mapper.selectAnQuanJianChaRisk();
 	}
 
 }
