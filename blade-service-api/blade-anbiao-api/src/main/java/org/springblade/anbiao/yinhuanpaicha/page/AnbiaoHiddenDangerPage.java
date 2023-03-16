@@ -41,7 +41,8 @@ public class AnbiaoHiddenDangerPage<T> extends BasePage<T> {
 	@ApiModelProperty(value = "排序字段")
 	private String orderColumns;
 
-
+	@ApiModelProperty(value = "驾驶员id")
+	private String jiashiyuanid;
 }
 
 
