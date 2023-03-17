@@ -111,5 +111,16 @@ public class VehicleXingnengbaogao implements Serializable {
 	@TableField(exist = false)
 	private String avxFileNo;
 
+	@ApiModelProperty(value = "车辆id")
+	@TableField(exist = false)
+	private String vehicleId;
+
+	@ApiModelProperty(value = "车辆牌照")
+	@TableField(exist = false)
+	private String cheliangpaizhao;
+
+	@ApiModelProperty(value = "企业id")
+	@TableField(exist = false)
+	private String deptId;
 
 }

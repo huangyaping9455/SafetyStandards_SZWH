@@ -97,11 +97,17 @@ public class VehicleXingshizheng implements Serializable {
      */
     @ApiModelProperty(value = "注册日期")
     private LocalDate avxRegisterDate;
+	@ApiModelProperty(value = "注册日期")
+	@TableField(exist = false)
+	private String avxRegisterDate2;
     /**
      * 发证日期
      */
     @ApiModelProperty(value = "发证日期")
     private LocalDate avxIssueDate;
+	@ApiModelProperty(value = "发证日期2")
+	@TableField(exist = false)
+	private String avxIssueDate2;
     /**
      * 正本附件
      */
@@ -157,6 +163,9 @@ public class VehicleXingshizheng implements Serializable {
      */
     @ApiModelProperty(value = "有效期至")
     private LocalDate avxValidUntil;
+	@ApiModelProperty(value = "有效期至")
+	@TableField(exist = false)
+	private String avxValidUntil2;
     /**
      * 副本附件
      */
@@ -216,6 +225,18 @@ public class VehicleXingshizheng implements Serializable {
 	@ApiModelProperty(value = "主要负责人地址")
 	@TableField(exist = false)
 	private String deptByUserAddress;
+
+	@ApiModelProperty(value = "车辆id")
+	@TableField(exist = false)
+	private String vehicleId;
+
+	@ApiModelProperty(value = "车辆牌照")
+	@TableField(exist = false)
+	private String cheliangpaizhao;
+
+	@ApiModelProperty(value = "企业id")
+	@TableField(exist = false)
+	private String deptId;
 
 
 }

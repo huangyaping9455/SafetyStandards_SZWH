@@ -116,4 +116,17 @@ public class VehicleDengjizhengshu implements Serializable {
 	@ApiModelProperty(value = "车辆型号")
 	private String avdVehicleModel;
 
+	@ApiModelProperty(value = "车辆id")
+	@TableField(exist = false)
+	private String vehicleId;
+
+	@ApiModelProperty(value = "车辆牌照")
+	@TableField(exist = false)
+	private String cheliangpaizhao;
+
+	@ApiModelProperty(value = "企业id")
+	@TableField(exist = false)
+	private String deptId;
+
+
 }

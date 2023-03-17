@@ -127,4 +127,12 @@ public class AnbiaoRiskDetail implements Serializable {
 	@ApiModelProperty(value = "风险百分比")
 	@TableField("ard_percentage")
 	private String ardPercentage;
+
+	@ApiModelProperty(value = "车辆id")
+	@TableField("vehicleId")
+	private String vehicleId;
+
+	@ApiModelProperty(value = "车辆牌照")
+	@TableField("cheliangpaizhao")
+	private String cheliangpaizhao;
 }

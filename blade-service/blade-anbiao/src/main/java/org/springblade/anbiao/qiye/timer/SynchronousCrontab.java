@@ -834,24 +834,26 @@ public class SynchronousCrontab {
 				riskDetail.setArdAssociationTable("anbiao_vehicle");
 				riskDetail.setArdAssociationField("id");
 				riskDetail.setArdAssociationValue(xingshizheng.getAvxAvIds());
+				riskDetail.setVehicleId(xingshizheng.getAvxAvIds());
+				riskDetail.setCheliangpaizhao(xingshizheng.getAvxPlateNo());
 				if(StringUtils.isBlank(xingshizheng.getAvxFileNo())) {
-					riskDetail.setArdTitle("行驶证号");
-					riskDetail.setArdContent("行驶证号缺项");
-					riskDetail.setArdType("缺项");
-					riskDetail.setArdRectificationField("avx_file_no");		//整改字段
-					riskDetail.setArdRectificationFieldType("string");
-					queryRiskOrInsert(riskDetail);
+//					riskDetail.setArdTitle("行驶证号");
+//					riskDetail.setArdContent("行驶证号缺项");
+//					riskDetail.setArdType("缺项");
+//					riskDetail.setArdRectificationField("avx_file_no");		//整改字段
+//					riskDetail.setArdRectificationFieldType("string");
+//					queryRiskOrInsert(riskDetail);
 				}
 
 				//注册日期
 				if(xingshizheng.getAvxRegisterDate() != null) {
 				} else {
-					riskDetail.setArdTitle("注册日期");
-					riskDetail.setArdContent("注册日期缺项");
-					riskDetail.setArdType("缺项");
-					riskDetail.setArdRectificationField("avx_register_date");		//整改字段
-					riskDetail.setArdRectificationFieldType("date");
-					queryRiskOrInsert(riskDetail);
+//					riskDetail.setArdTitle("注册日期");
+//					riskDetail.setArdContent("注册日期缺项");
+//					riskDetail.setArdType("缺项");
+//					riskDetail.setArdRectificationField("avx_register_date");		//整改字段
+//					riskDetail.setArdRectificationFieldType("date");
+//					queryRiskOrInsert(riskDetail);
 				}
 
 				//有效期
@@ -872,11 +874,11 @@ public class SynchronousCrontab {
 					}
 				} else {
 					riskDetail.setArdTitle("行驶证有效期");
-					riskDetail.setArdContent("行驶证有效期缺项");
-					riskDetail.setArdType("缺项");
-					riskDetail.setArdRectificationField("avx_valid_until");		//整改字段
-					riskDetail.setArdRectificationFieldType("date");
-					queryRiskOrInsert(riskDetail);
+//					riskDetail.setArdContent("行驶证有效期缺项");
+//					riskDetail.setArdType("缺项");
+//					riskDetail.setArdRectificationField("avx_valid_until");		//整改字段
+//					riskDetail.setArdRectificationFieldType("date");
+//					queryRiskOrInsert(riskDetail);
 				}
 			}
 
@@ -895,24 +897,26 @@ public class SynchronousCrontab {
 				riskDetail.setArdAssociationTable("anbiao_vehicle");
 				riskDetail.setArdAssociationField("id");
 				riskDetail.setArdAssociationValue(daoluyunshuzheng.getAvdAvIds());
+				riskDetail.setVehicleId(daoluyunshuzheng.getAvdAvIds());
+				riskDetail.setCheliangpaizhao(daoluyunshuzheng.getAvdPlateNo());
 				if(StringUtils.isBlank(daoluyunshuzheng.getAvdRoadTransportCertificateNo())) {
-					riskDetail.setArdTitle("道路运输证号");
-					riskDetail.setArdContent("道路运输证号缺项");
-					riskDetail.setArdType("缺项");
-					riskDetail.setArdRectificationField("avd_road_transport_certificate_no");		//整改字段
-					riskDetail.setArdRectificationFieldType("string");
-					queryRiskOrInsert(riskDetail);
+//					riskDetail.setArdTitle("道路运输证号");
+//					riskDetail.setArdContent("道路运输证号缺项");
+//					riskDetail.setArdType("缺项");
+//					riskDetail.setArdRectificationField("avd_road_transport_certificate_no");		//整改字段
+//					riskDetail.setArdRectificationFieldType("string");
+//					queryRiskOrInsert(riskDetail);
 				}
 
 				//注册日期
 				if(daoluyunshuzheng.getAvdIssueDate() != null) {
 				} else {
-					riskDetail.setArdTitle("发证日期");
-					riskDetail.setArdContent("发证日期缺项");
-					riskDetail.setArdType("缺项");
-					riskDetail.setArdRectificationField("avd_issue_date");		//整改字段
-					riskDetail.setArdRectificationFieldType("date");
-					queryRiskOrInsert(riskDetail);
+//					riskDetail.setArdTitle("发证日期");
+//					riskDetail.setArdContent("发证日期缺项");
+//					riskDetail.setArdType("缺项");
+//					riskDetail.setArdRectificationField("avd_issue_date");		//整改字段
+//					riskDetail.setArdRectificationFieldType("date");
+//					queryRiskOrInsert(riskDetail);
 				}
 
 				//有效期
@@ -932,12 +936,12 @@ public class SynchronousCrontab {
 						queryRiskOrInsert(riskDetail);
 					}
 				} else {
-					riskDetail.setArdTitle("道路运输证有效期");
-					riskDetail.setArdContent("道路运输证有效期缺项");
-					riskDetail.setArdType("缺项");
-					riskDetail.setArdRectificationField("avd_valid_until");		//整改字段
-					riskDetail.setArdRectificationFieldType("date");
-					queryRiskOrInsert(riskDetail);
+//					riskDetail.setArdTitle("道路运输证有效期");
+//					riskDetail.setArdContent("道路运输证有效期缺项");
+//					riskDetail.setArdType("缺项");
+//					riskDetail.setArdRectificationField("avd_valid_until");		//整改字段
+//					riskDetail.setArdRectificationFieldType("date");
+//					queryRiskOrInsert(riskDetail);
 				}
 			}
 		}
@@ -2110,7 +2114,7 @@ public class SynchronousCrontab {
 	//每6小时执行一次
 	@Scheduled(cron = "0 0 */6 * * ?")
 	//每天凌晨5点执行一次
-//	@Scheduled(cron = "0 44 15 * * ?")
+//	@Scheduled(cron = "0 52 18 * * ?")
 	public void configureTasks_static_data() {
 		synchronized (KEY) {
 			if (SynchronousCrontab.taskFlag) {

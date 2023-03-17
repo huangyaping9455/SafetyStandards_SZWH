@@ -794,7 +794,7 @@
 
     <select id="selectLaBorRisk"  resultType="org.springblade.anbiao.labor.entity.LaborlingquEntity">
         SELECT
-            b.ali_dept_ids,
+            b.ali_dept_ids as deptId,
             b.ali_name,
             a.alr_person_ids,
             a.alr_person_name
@@ -834,5 +834,155 @@
             b.dept_id
     </select>
 
+    <select id="selectXingShiZhengRisk"  resultType="org.springblade.anbiao.cheliangguanli.entity.VehicleXingshizheng">
+        SELECT
+            a.id as vehicleId
+             , a.dept_id
+             , cheliangpaizhao
+             , d.jiashiyuanxingming
+             , d.id as jiashiyuanid
+             , (case when ((ifnull(`avx_plate_no`,'') = '') ) then 1 else 0 end) as avx_plate_no
+             , (case when ((ifnull(`avx_owner`,'') = '') ) then 1 else 0 end) as avx_owner
+             , (case when ((ifnull(`avx_use_charter`,'') = '') ) then 1 else 0 end) as avx_use_charter
+             , (case when ((ifnull(`avx_model`,'') = '') ) then 1 else 0 end) as avx_model
+             , (case when ((ifnull(`avx_vin`,'') = '') ) then 1 else 0 end) as avx_vin
+             , (case when ((ifnull(`avx_engine_no`,'') = '') ) then 1 else 0 end) as avx_engine_no
+             , (case when ((ifnull(`avx_register_date`,'') = '') ) then 1 else 0 end) as avx_register_date2
+             , (case when ((ifnull(`avx_issue_date`,'') = '') ) then 1 else 0 end) as avx_issue_date2
+             , (case when ((ifnull(`avx_authorized_seating_capacity`,'') = '') ) then 1 else 0 end) as avx_authorized_seating_capacity
+             , (case when ((ifnull(`avx_total_mass`,'') = '') ) then 1 else 0 end) as avx_total_mass
+             , (case when ((ifnull(`avx_curb_weight`,'') = '') ) then 1 else 0 end) as avx_curb_weight
+             , (case when ((ifnull(`avx_overall_dimensions`,'') = '') ) then 1 else 0 end) as avx_overall_dimensions
+             , (case when ((ifnull(`avx_quasi_tractive_mass`,'') = '') ) then 1 else 0 end) as avx_quasi_tractive_mass
+             , (case when ((ifnull(`avx_valid_until`,'') = '') ) then 1 else 0 end) as avx_valid_until2
+             , (case when ((ifnull(`avx_file_no`,'') = '') ) then 1 else 0 end) as avx_file_no
+             , (case when ((ifnull(`avx_original_enclosure`,'') = '') ) then 1 else 0 end) as avx_original_enclosure
+             , (case when ((ifnull(`avx_copy_enclosure`,'') = '') ) then 1 else 0 end) as avx_copy_enclosure
+        FROM
+            anbiao_vehicle a
+                INNER JOIN (
+                SELECT DISTINCT
+                    xiaji.id,
+                    xiaji.parent_id,
+                    xiaji.dept_name,
+                    xiaji.is_deleted
+                FROM
+                    blade_dept shangji,
+                    blade_dept xiaji
+                WHERE
+                    xiaji.tree_code LIKE CONCAT( shangji.tree_code, '%' )
+                  AND xiaji.is_deleted = 0
+                  AND xiaji.extend_type = '机构'
+                  AND shangji.id = 1
+            ) b ON a.dept_id = b.id
+                LEFT JOIN anbiao_vehicle_xingshizheng c ON a.id = c.avx_av_ids
+                LEFT JOIN anbiao_jiashiyuan d ON a.jiashiyuanid = d.id
+        WHERE
+            a.is_deleted = 0
+        ORDER BY
+            a.id
+    </select>
+
+    <select id="selectDaoLuYunShuZhengRisk"  resultType="org.springblade.anbiao.cheliangguanli.entity.VehicleDaoluyunshuzheng">
+        SELECT
+               a.id as vehicleId
+             , a.dept_id
+             , cheliangpaizhao
+             , d.jiashiyuanxingming
+             , d.id as jiashiyuanid
+             , (case when ((ifnull(`avd_road_transport_certificate_no`,'') = '') ) then 1 else 0 end) as avd_road_transport_certificate_no
+             , (case when ((ifnull(`avd_issue_date`,'') = '') ) then 1 else 0 end) as avd_issue_date2
+             , (case when ((ifnull(`avd_valid_until`,'') = '') ) then 1 else 0 end) as avd_valid_until2
+             , (case when ((ifnull(`avd_enclosure`,'') = '') ) then 1 else 0 end) as avd_enclosure
+        FROM
+            anbiao_vehicle a
+                INNER JOIN (
+                SELECT DISTINCT
+                    xiaji.id,
+                    xiaji.parent_id,
+                    xiaji.dept_name,
+                    xiaji.is_deleted
+                FROM
+                    blade_dept shangji,
+                    blade_dept xiaji
+                WHERE
+                    xiaji.tree_code LIKE CONCAT( shangji.tree_code, '%' )
+                  AND xiaji.is_deleted = 0
+                  AND xiaji.extend_type = '机构'
+                  AND shangji.id = 1
+            ) b ON a.dept_id = b.id
+                LEFT JOIN anbiao_vehicle_daoluyunshuzheng c ON a.id = c.avd_av_ids
+                LEFT JOIN anbiao_jiashiyuan d ON a.jiashiyuanid = d.id
+        WHERE
+            a.is_deleted = 0
+        ORDER BY
+            a.id
+    </select>
+
+    <select id="selectXingNengBaoGaoRisk"  resultType="org.springblade.anbiao.cheliangguanli.entity.VehicleXingnengbaogao">
+        SELECT
+               a.id as vehicleId
+             , a.dept_id
+             , cheliangpaizhao
+             , d.jiashiyuanxingming
+             , d.id as jiashiyuanid
+             , (case when (ifnull(`avx_enclosure`,'') = '') then 1 else 0 end) as avx_enclosure
+        FROM
+            anbiao_vehicle a
+                INNER JOIN (
+                SELECT DISTINCT
+                    xiaji.id,
+                    xiaji.parent_id,
+                    xiaji.dept_name,
+                    xiaji.is_deleted
+                FROM
+                    blade_dept shangji,
+                    blade_dept xiaji
+                WHERE
+                    xiaji.tree_code LIKE CONCAT( shangji.tree_code, '%' )
+                  AND xiaji.is_deleted = 0
+                  AND xiaji.extend_type = '机构'
+                  AND shangji.id = 1
+            ) b ON a.dept_id = b.id
+                LEFT JOIN anbiao_vehicle_xingnengbaogao c ON a.id = c.avx_av_ids
+                LEFT JOIN anbiao_jiashiyuan d ON a.jiashiyuanid = d.id
+        WHERE
+            a.is_deleted = 0
+        ORDER BY
+            a.id
+    </select>
+
+    <select id="selectDengJiZhengShuRisk"  resultType="org.springblade.anbiao.cheliangguanli.entity.VehicleDengjizhengshu">
+        SELECT
+               a.id as vehicleId
+             , a.dept_id
+             , cheliangpaizhao
+             , d.jiashiyuanxingming
+             , d.id as jiashiyuanid
+             , (case when (ifnull(`avd_enclosure`,'') = '') then 1 else 0 end) as avd_enclosure
+        FROM
+            anbiao_vehicle a
+                INNER JOIN (
+                SELECT DISTINCT
+                    xiaji.id,
+                    xiaji.parent_id,
+                    xiaji.dept_name,
+                    xiaji.is_deleted
+                FROM
+                    blade_dept shangji,
+                    blade_dept xiaji
+                WHERE
+                    xiaji.tree_code LIKE CONCAT( shangji.tree_code, '%' )
+                  AND xiaji.is_deleted = 0
+                  AND xiaji.extend_type = '机构'
+                  AND shangji.id = 1
+            ) b ON a.dept_id = b.id
+                LEFT JOIN anbiao_vehicle_dengjizhengshu c ON a.id = c.avd_vehicle_ids
+                LEFT JOIN anbiao_jiashiyuan d ON a.jiashiyuanid = d.id
+        WHERE
+            a.is_deleted = 0
+        ORDER BY
+            a.id
+    </select>
 
 </mapper>

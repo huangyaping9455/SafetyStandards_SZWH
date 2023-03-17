@@ -1,7 +1,7 @@
 package org.springblade.anbiao.risk.service;
 
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
-import org.springblade.anbiao.cheliangguanli.entity.BaoYangWeiXiu;
+import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.vo.BaoYangWeiXiuVO;
 import org.springblade.anbiao.jiaoyupeixun.entity.AnbiaoSafetyTraining;
 import org.springblade.anbiao.jiashiyuan.entity.*;
@@ -16,7 +16,9 @@ import org.springblade.anbiao.risk.vo.JiashiyuanRiskAllVO;
 import org.springblade.anbiao.risk.vo.LedgerDetailVO;
 import org.springblade.anbiao.yinhuanpaicha.entity.AnbiaoHiddenDanger;
 import org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoHiddenDangerVO;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -27,6 +29,7 @@ import java.util.List;
  * @author hyp
  * @since 2022-12-06
  */
+@Resource
 public interface IAnbiaoRiskDetailService extends IService<AnbiaoRiskDetail> {
 
 	List<AnbiaoRiskDetailVO> selectByCount(String deptId, String date);
@@ -76,4 +79,13 @@ public interface IAnbiaoRiskDetailService extends IService<AnbiaoRiskDetail> {
 	List<LaborlingquEntity> selectLaBorRisk();
 
 	List<AnbiaoCheliangJiashiyuanDaily> selectAnQuanJianChaRisk();
+
+	List<VehicleXingshizheng> selectXingShiZhengRisk();
+
+	List<VehicleDaoluyunshuzheng> selectDaoLuYunShuZhengRisk();
+
+	List<VehicleXingnengbaogao> selectXingNengBaoGaoRisk();
+
+	List<VehicleDengjizhengshu> selectDengJiZhengShuRisk();
+
 }

@@ -2,8 +2,7 @@ package org.springblade.anbiao.risk.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
-import org.springblade.anbiao.cheliangguanli.entity.BaoYangWeiXiu;
-import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
+import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.vo.BaoYangWeiXiuVO;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.jiaoyupeixun.entity.AnbiaoSafetyTraining;
@@ -330,5 +329,26 @@ public class AnbiaoRiskDetailServiceImpl extends ServiceImpl<AnbiaoRiskDetailMap
 	public List<AnbiaoCheliangJiashiyuanDaily> selectAnQuanJianChaRisk() {
 		return mapper.selectAnQuanJianChaRisk();
 	}
+
+	@Override
+	public List<VehicleXingshizheng> selectXingShiZhengRisk() {
+		return mapper.selectXingShiZhengRisk();
+	}
+
+	@Override
+	public List<VehicleDaoluyunshuzheng> selectDaoLuYunShuZhengRisk() {
+		return mapper.selectDaoLuYunShuZhengRisk();
+	}
+
+	@Override
+	public List<VehicleXingnengbaogao> selectXingNengBaoGaoRisk() {
+		return mapper.selectXingNengBaoGaoRisk();
+	}
+
+	@Override
+	public List<VehicleDengjizhengshu> selectDengJiZhengShuRisk() {
+		return mapper.selectDengJiZhengShuRisk();
+	}
+
 
 }

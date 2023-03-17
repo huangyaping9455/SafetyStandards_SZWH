@@ -3,8 +3,7 @@ package org.springblade.anbiao.risk.mapper;
 import com.baomidou.mybatisplus.annotation.SqlParser;
 import feign.Param;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
-import org.springblade.anbiao.cheliangguanli.entity.BaoYangWeiXiu;
-import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
+import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.vo.BaoYangWeiXiuVO;
 import org.springblade.anbiao.configure.entity.Configure;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
@@ -101,5 +100,13 @@ public interface AnbiaoRiskDetailMapper extends BaseMapper<AnbiaoRiskDetail> {
 	List<LaborlingquEntity> selectLaBorRisk();
 
 	List<AnbiaoCheliangJiashiyuanDaily> selectAnQuanJianChaRisk();
+
+	List<VehicleXingshizheng> selectXingShiZhengRisk();
+
+	List<VehicleDaoluyunshuzheng> selectDaoLuYunShuZhengRisk();
+
+	List<VehicleXingnengbaogao> selectXingNengBaoGaoRisk();
+
+	List<VehicleDengjizhengshu> selectDengJiZhengShuRisk();
 
 }

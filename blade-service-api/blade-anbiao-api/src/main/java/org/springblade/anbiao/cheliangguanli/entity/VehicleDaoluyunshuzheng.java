@@ -102,6 +102,9 @@ public class VehicleDaoluyunshuzheng implements Serializable {
      */
     @ApiModelProperty(value = "发证日期")
     private LocalDate avdIssueDate;
+	@ApiModelProperty(value = "发证日期")
+	@TableField(exist = false)
+	private String avdIssueDate2;
     /**
      * 车牌颜色
      */
@@ -133,6 +136,9 @@ public class VehicleDaoluyunshuzheng implements Serializable {
      */
     @ApiModelProperty(value = "有效期至")
     private LocalDate avdValidUntil;
+	@ApiModelProperty(value = "有效期至")
+	@TableField(exist = false)
+	private String avdValidUntil2;
     /**
      * 备注
      */
@@ -183,5 +189,16 @@ public class VehicleDaoluyunshuzheng implements Serializable {
 	@TableField(exist = false)
 	private String avxPlateNo;
 
+	@ApiModelProperty(value = "车辆id")
+	@TableField(exist = false)
+	private String vehicleId;
+
+	@ApiModelProperty(value = "车辆牌照")
+	@TableField(exist = false)
+	private String cheliangpaizhao;
+
+	@ApiModelProperty(value = "企业id")
+	@TableField(exist = false)
+	private String deptId;
 
 }

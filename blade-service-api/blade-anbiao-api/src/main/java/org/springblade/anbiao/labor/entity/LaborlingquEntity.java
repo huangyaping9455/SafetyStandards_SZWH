@@ -46,4 +46,6 @@ public class LaborlingquEntity {
 	private URL imgUrl;
 	@TableField(exist = false)
 	private String aliName;
+	@TableField(exist = false)
+	private String deptId;
 }

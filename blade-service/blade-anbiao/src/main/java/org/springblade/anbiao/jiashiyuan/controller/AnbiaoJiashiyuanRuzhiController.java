@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanRuzhi;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanRuzhiService;
+import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
+import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.common.tool.DateUtils;
 import org.springblade.common.tool.IdCardUtil;
 import org.springblade.core.log.annotation.ApiLog;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -39,13 +42,16 @@ public class AnbiaoJiashiyuanRuzhiController {
 
 	private IAnbiaoJiashiyuanRuzhiService ruzhiService;
 
+	private IAnbiaoRiskDetailService riskDetailService;
+
+
 	/**
 	 * 新增
 	 */
 	@PostMapping("/insert")
 	@ApiLog("新增-入职登记表")
 	@ApiOperation(value = "新增-入职登记表", notes = "传入AnbiaoJiashiyuanRuzhi", position = 1)
-	public R insert(@RequestBody AnbiaoJiashiyuanRuzhi ruzhi, BladeUser user) {
+	public R insert(@RequestBody AnbiaoJiashiyuanRuzhi ruzhi, BladeUser user) throws ParseException {
 		R r = new R();
 		QueryWrapper<AnbiaoJiashiyuanRuzhi> ruzhiQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanRuzhi>();
 		ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrAjIds, ruzhi.getAjrAjIds());
@@ -114,6 +120,8 @@ public class AnbiaoJiashiyuanRuzhiController {
 				ruzhi.setAjrUpdateByIds(ruzhi.getAjrUpdateByIds());
 			}
 			ruzhi.setAjrUpdateTime(DateUtil.now());
+			AnbiaoRiskDetailController anbiaoRiskDetailController = new AnbiaoRiskDetailController();
+			anbiaoRiskDetailController.jiashiyuanRuZhiRiskinsert(user);
 			return R.status(ruzhiService.updateById(ruzhi));
 		}
 	}
