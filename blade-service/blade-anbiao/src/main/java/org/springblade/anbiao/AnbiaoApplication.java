@@ -1,4 +1,5 @@
 package org.springblade.anbiao;
+
 import org.springblade.core.launch.BladeApplication;
 import org.springblade.core.launch.constant.AppConstant;
 import org.springframework.cloud.client.SpringCloudApplication;

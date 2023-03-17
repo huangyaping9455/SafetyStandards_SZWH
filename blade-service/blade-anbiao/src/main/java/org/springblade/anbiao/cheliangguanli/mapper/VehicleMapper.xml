@@ -1621,7 +1621,11 @@
         SELECT
             a.jiashiyuanid,
             c.cheliangpaizhao,
-            c.id
+            c.id,
+            c.chepaiyanse,
+            c.shiyongxingzhi,
+            c.cheliangzhaopian,
+            c.caozuoshijian
         from
             anbiao_cheliang_jiashiyuan_daily a
                 left join anbiao_jiashiyuan b on a.jiashiyuanid = b.id
@@ -1634,7 +1638,11 @@
         SELECT
             a.jiashiyuanid,
             d.cheliangpaizhao,
-            d.id
+            d.id,
+            d.chepaiyanse,
+            d.shiyongxingzhi,
+            d.cheliangzhaopian,
+            d.caozuoshijian
         from
             anbiao_cheliang_jiashiyuan_daily a
                 left join anbiao_jiashiyuan b on a.jiashiyuanid = b.id

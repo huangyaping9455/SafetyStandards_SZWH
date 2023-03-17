@@ -2944,6 +2944,12 @@ public class VehicleController {
 	@ApiOperation(value = "根据驾驶员ID获取绑定车辆", notes = "传入jsyId", position = 32)
 	public R<List<VehicleVO>> getDriverVehicle(String jsyId) {
 		List<VehicleVO> detail = vehicleService.selectDriverVehicle(jsyId);
+		for (int i = 0; i <detail.size() ; i++) {
+			//车辆照片
+			if (StrUtil.isNotEmpty(detail.get(i).getCheliangzhaopian()) && detail.get(i).getCheliangzhaopian().contains("http") == false) {
+				detail.get(i).setCheliangzhaopian(fileUploadClient.getUrl(detail.get(i).getCheliangzhaopian()));
+			}
+		}
 		return R.data(detail);
 	}
 
