@@ -1,23 +1,20 @@
 package org.springblade.anbiao.risk.mapper;
 
 import com.baomidou.mybatisplus.annotation.SqlParser;
-import feign.Param;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.vo.BaoYangWeiXiuVO;
-import org.springblade.anbiao.configure.entity.Configure;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.jiaoyupeixun.entity.AnbiaoSafetyTraining;
 import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.labor.entity.LaborlingquEntity;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springblade.anbiao.risk.page.JiashiyuanRiskAllPage;
-import org.springblade.anbiao.risk.page.RiskDeptConfigurationPage;
 import org.springblade.anbiao.risk.page.RiskPage;
 import org.springblade.anbiao.risk.page.VehicleRiskAllPage;
 import org.springblade.anbiao.risk.vo.*;
-import org.springblade.anbiao.yinhuanpaicha.entity.AnbiaoHiddenDanger;
 import org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoHiddenDangerVO;
 
 import java.util.List;

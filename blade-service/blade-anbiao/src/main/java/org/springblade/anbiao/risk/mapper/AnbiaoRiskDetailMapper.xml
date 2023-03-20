@@ -377,7 +377,7 @@
         )d
     </select>
 
-    <select id="selectRuZhiRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanRuzhi" parameterType="java.lang.String" >
+    <select id="selectRuZhiRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanRuzhi" parameterType="java.lang.String">
         SELECT
               a.dept_id as deptId
              ,b.dept_name AS deptName
@@ -424,10 +424,10 @@
                  INNER JOIN anbiao_organization k on b.id = k.dept_id and k.jigouleixing in('qiye','geti')
         where
             ajr_delete=0
-        <if test="jiashiyuanId != null and jiashiyuanId != ''">
+        <if test="jiashiyuanId != null and jiashiyuanId != '' ">
             and ajr_aj_ids = #{jiashiyuanId}
         </if>
--- and b.id=5534
+<!--&#45;&#45; and b.id=5534-->
         ORDER BY a.dept_id
     </select>
 
