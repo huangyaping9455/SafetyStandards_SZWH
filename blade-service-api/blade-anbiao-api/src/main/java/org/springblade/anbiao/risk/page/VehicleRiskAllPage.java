@@ -1,15 +1,16 @@
-package org.springblade.anbiao.risk.vo;
+package org.springblade.anbiao.risk.page;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import java.io.Serializable;
+import lombok.EqualsAndHashCode;
+import org.springblade.common.BasePage;
 
 @Data
-//@EqualsAndHashCode(callSuper = true)
-@ApiModel(value = "JiashiyuanRiskAllVO", description = "JiashiyuanRiskAllVO对象")
-public class JiashiyuanRiskAllVO implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+@ApiModel(value = "JiashiyuanRiskAllPage", description = "JiashiyuanRiskAllPage")
+public class VehicleRiskAllPage<T> extends BasePage<T> {
+
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "企业ID")
@@ -32,4 +33,14 @@ public class JiashiyuanRiskAllVO implements Serializable {
 
 	@ApiModelProperty(value = "驾驶员姓名")
 	private String jiashiyuanxingming;
+
+	@ApiModelProperty(value = "驾驶员id")
+	private String jiashiyuanid;
+
+	@ApiModelProperty(value = "车辆id")
+	private String vehicleId;
+
+	@ApiModelProperty(value = "车辆牌照")
+	private String cheliangpaizhao;
+
 }

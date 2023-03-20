@@ -15,6 +15,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springblade.anbiao.risk.page.JiashiyuanRiskAllPage;
 import org.springblade.anbiao.risk.page.RiskDeptConfigurationPage;
 import org.springblade.anbiao.risk.page.RiskPage;
+import org.springblade.anbiao.risk.page.VehicleRiskAllPage;
 import org.springblade.anbiao.risk.vo.*;
 import org.springblade.anbiao.yinhuanpaicha.entity.AnbiaoHiddenDanger;
 import org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoHiddenDangerVO;
@@ -59,12 +60,6 @@ public interface AnbiaoRiskDetailMapper extends BaseMapper<AnbiaoRiskDetail> {
 	List<LedgerDetailVO> ledgerDetail(@Param("deptId") String deptId);
 
 	List<JiashiyuanRiskAllVO> selectJiashiyuanRiskAll(JiashiyuanRiskAllPage jiashiyuanRiskAllPage);
-
-	/**
-	 * 统计
-	 * @param
-	 * @return
-	 */
 	int selectTotal(JiashiyuanRiskAllPage jiashiyuanRiskAllPage);
 
 	List<AnbiaoJiashiyuanRuzhi> selectRuZhiRisk();
@@ -108,5 +103,8 @@ public interface AnbiaoRiskDetailMapper extends BaseMapper<AnbiaoRiskDetail> {
 	List<VehicleXingnengbaogao> selectXingNengBaoGaoRisk();
 
 	List<VehicleDengjizhengshu> selectDengJiZhengShuRisk();
+
+	List<VehicleRiskAllVO> selectVehicleRiskAll(VehicleRiskAllPage vehicleRiskAllPage);
+	int selectVehicleRiskTotal(VehicleRiskAllPage vehicleRiskAllPage);
 
 }

@@ -7,10 +7,8 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-//@EqualsAndHashCode(callSuper = true)
-@ApiModel(value = "JiashiyuanRiskAllVO", description = "JiashiyuanRiskAllVO对象")
-public class JiashiyuanRiskAllVO implements Serializable {
-	private static final long serialVersionUID = 1L;
+@ApiModel(value = "VehicleRiskAllVOVO", description = "VehicleRiskAllVO对象")
+public class VehicleRiskAllVO implements Serializable {
 
 	@ApiModelProperty(value = "企业ID")
 	private String deptId;
@@ -32,4 +30,13 @@ public class JiashiyuanRiskAllVO implements Serializable {
 
 	@ApiModelProperty(value = "驾驶员姓名")
 	private String jiashiyuanxingming;
+
+	@ApiModelProperty(value = "驾驶员id")
+	private String jiashiyuanid;
+
+	@ApiModelProperty(value = "车辆id")
+	private String vehicleId;
+
+	@ApiModelProperty(value = "车辆牌照")
+	private String cheliangpaizhao;
 }

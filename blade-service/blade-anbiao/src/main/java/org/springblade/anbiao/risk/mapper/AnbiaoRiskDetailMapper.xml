@@ -985,4 +985,138 @@
             a.id
     </select>
 
+    <select id="selectVehicleRiskAll" parameterType="org.springblade.anbiao.risk.page.VehicleRiskAllPage" resultType="org.springblade.anbiao.risk.vo.VehicleRiskAllVO">
+        <if test="size == 0" >
+            SELECT
+            a.ard_dept_ids as deptId,
+            e.dept_name,
+            c.jiashiyuanid,
+            d.jiashiyuanxingming,
+            ard_title ,
+            ard_content,
+            ard_discovery_date,
+            ard_association_value,
+            a.vehicleId,
+            a.cheliangpaizhao
+            FROM
+            `anbiao_risk_detail` a
+            LEFT JOIN anbiao_vehicle b on b.id=a.ard_association_value
+            LEFT JOIN anbiao_cheliang_jiashiyuan_daily c on (c.vehid=a.ard_association_value or c.gvehid=a.ard_association_value)
+            LEFT JOIN anbiao_jiashiyuan d on c.jiashiyuanid=d.id
+            INNER JOIN(
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) e on e.id=a.ard_dept_ids
+            WHERE
+            ard_association_table = "anbiao_vehicle"
+            and ard_is_rectification=0
+            and b.is_deleted=0
+            and (c.vstatus=1 or c.gstatus=1)
+            and d.isdelete=0
+            and e.is_deleted=0
+         <if test="jiashiyuanxingming != null or jiashiyuanxingming != ''">
+            and d.jiashiyuanxingming like '%${jiashiyuanxingming}%'
+         </if>
+        <if test="cheliangpaizhao != null or cheliangpaizhao != ''">
+            and a.cheliangpaizhao like '%${cheliangpaizhao}%'
+        </if>
+        <if test="jiashiyuanid != null or jiashiyuanid != ''">
+            AND c.jiashiyuanid like '%${jiashiyuanid}%'
+        </if>
+            <if test="deptName != null or deptName != ''">
+                and e.dept_name like '%${deptName}%'
+            </if>
+            ORDER BY
+            ard_association_value
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            SELECT
+            a.ard_dept_ids as deptId,
+            e.dept_name,
+            c.jiashiyuanid,
+            d.jiashiyuanxingming,
+            ard_title ,
+            ard_content,
+            ard_discovery_date,
+            ard_association_value,
+            a.vehicleId,
+            a.cheliangpaizhao
+            FROM
+            `anbiao_risk_detail` a
+            LEFT JOIN anbiao_vehicle b on b.id=a.ard_association_value
+            LEFT JOIN anbiao_cheliang_jiashiyuan_daily c on (c.vehid=a.ard_association_value or c.gvehid=a.ard_association_value)
+            LEFT JOIN anbiao_jiashiyuan d on c.jiashiyuanid=d.id
+            INNER JOIN(
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) e on e.id=a.ard_dept_ids
+            WHERE
+            ard_association_table = "anbiao_vehicle"
+            and ard_is_rectification=0
+            and b.is_deleted=0
+            and (c.vstatus=1 or c.gstatus=1)
+            and d.isdelete=0
+            and e.is_deleted=0
+            <if test="jiashiyuanxingming != null or jiashiyuanxingming != ''">
+                and d.jiashiyuanxingming like '%${jiashiyuanxingming}%'
+            </if>
+            <if test="cheliangpaizhao != null or cheliangpaizhao != ''">
+                and a.cheliangpaizhao like '%${cheliangpaizhao}%'
+            </if>
+            <if test="jiashiyuanid != null or jiashiyuanid != ''">
+                AND c.jiashiyuanid like '%${jiashiyuanid}%'
+            </if>
+            <if test="deptName != null or deptName != ''">
+                and e.dept_name like '%${deptName}%'
+            </if>
+            ORDER BY
+            ard_association_value
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectVehicleRiskTotal" parameterType="org.springblade.anbiao.risk.page.VehicleRiskAllPage" resultType="int">
+        select COUNT(1) from
+        (
+        SELECT
+        a.ard_dept_ids as deptId,
+        e.dept_name,
+        c.jiashiyuanid,
+        d.jiashiyuanxingming,
+        ard_title ,
+        ard_content,
+        ard_discovery_date,
+        ard_association_value,
+        a.vehicleId,
+        a.cheliangpaizhao
+        FROM
+        `anbiao_risk_detail` a
+        LEFT JOIN anbiao_vehicle b on b.id=a.ard_association_value
+        LEFT JOIN anbiao_cheliang_jiashiyuan_daily c on (c.vehid=a.ard_association_value or c.gvehid=a.ard_association_value)
+        LEFT JOIN anbiao_jiashiyuan d on c.jiashiyuanid=d.id
+        INNER JOIN(
+        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) e on e.id=a.ard_dept_ids
+        WHERE
+        ard_association_table = "anbiao_vehicle"
+        and ard_is_rectification=0
+        and b.is_deleted=0
+        and (c.vstatus=1 or c.gstatus=1)
+        and d.isdelete=0
+        and e.is_deleted=0
+        <if test="jiashiyuanxingming != null or jiashiyuanxingming != ''">
+            and d.jiashiyuanxingming like '%${jiashiyuanxingming}%'
+        </if>
+        <if test="cheliangpaizhao != null or cheliangpaizhao != ''">
+            and a.cheliangpaizhao like '%${cheliangpaizhao}%'
+        </if>
+        <if test="jiashiyuanid != null or jiashiyuanid != ''">
+            AND c.jiashiyuanid like '%${jiashiyuanid}%'
+        </if>
+        <if test="deptName != null or deptName != ''">
+            and e.dept_name like '%${deptName}%'
+        </if>
+        ORDER BY
+        ard_association_value
+        )d
+    </select>
 </mapper>

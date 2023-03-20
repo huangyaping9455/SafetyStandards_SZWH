@@ -13,6 +13,7 @@ import org.springblade.anbiao.risk.mapper.AnbiaoRiskDetailMapper;
 import org.springblade.anbiao.risk.page.JiashiyuanRiskAllPage;
 import org.springblade.anbiao.risk.page.RiskDeptConfigurationPage;
 import org.springblade.anbiao.risk.page.RiskPage;
+import org.springblade.anbiao.risk.page.VehicleRiskAllPage;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springblade.anbiao.risk.vo.*;
@@ -348,6 +349,44 @@ public class AnbiaoRiskDetailServiceImpl extends ServiceImpl<AnbiaoRiskDetailMap
 	@Override
 	public List<VehicleDengjizhengshu> selectDengJiZhengShuRisk() {
 		return mapper.selectDengJiZhengShuRisk();
+	}
+
+	@Override
+	public VehicleRiskAllPage<VehicleRiskAllVO> selectVehicleRiskAll(VehicleRiskAllPage vehicleRiskAllPage) {
+		Integer total = mapper.selectVehicleRiskTotal(vehicleRiskAllPage);
+		Integer pagetotal = 0;
+		if(vehicleRiskAllPage.getSize()==0){
+			if(vehicleRiskAllPage.getTotal()==0){
+				vehicleRiskAllPage.setTotal(total);
+			}
+			if(vehicleRiskAllPage.getTotal()==0){
+				return vehicleRiskAllPage;
+			}else {
+				List<VehicleRiskAllVO> vehicleRiskAllVOS = mapper.selectVehicleRiskAll(vehicleRiskAllPage);
+				vehicleRiskAllPage.setRecords(vehicleRiskAllVOS);
+				return vehicleRiskAllPage;
+			}
+		}
+		if (total > 0) {
+			if(total%vehicleRiskAllPage.getSize()==0){
+				pagetotal = total / vehicleRiskAllPage.getSize();
+			}else {
+				pagetotal = total / vehicleRiskAllPage.getSize() + 1;
+			}
+		}
+		if (pagetotal < vehicleRiskAllPage.getCurrent()) {
+			return vehicleRiskAllPage;
+		} else {
+			vehicleRiskAllPage.setPageTotal(pagetotal);
+			Integer offsetNo = 0;
+			if (vehicleRiskAllPage.getCurrent() > 1) {
+				offsetNo = vehicleRiskAllPage.getSize() * (vehicleRiskAllPage.getCurrent() - 1);
+			}
+			vehicleRiskAllPage.setTotal(total);
+			vehicleRiskAllPage.setOffsetNo(offsetNo);
+			List<VehicleRiskAllVO> vehicleRiskAllVOS = mapper.selectVehicleRiskAll(vehicleRiskAllPage);
+			return (VehicleRiskAllPage<VehicleRiskAllVO>) vehicleRiskAllPage.setRecords(vehicleRiskAllVOS);
+		}
 	}
 
 

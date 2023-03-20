@@ -10,10 +10,8 @@ import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springblade.anbiao.risk.page.JiashiyuanRiskAllPage;
 import org.springblade.anbiao.risk.page.RiskPage;
-import org.springblade.anbiao.risk.vo.AnbiaoRiskDetailVO;
-import org.springblade.anbiao.risk.vo.AnbiaoSystemRiskVO;
-import org.springblade.anbiao.risk.vo.JiashiyuanRiskAllVO;
-import org.springblade.anbiao.risk.vo.LedgerDetailVO;
+import org.springblade.anbiao.risk.page.VehicleRiskAllPage;
+import org.springblade.anbiao.risk.vo.*;
 import org.springblade.anbiao.yinhuanpaicha.entity.AnbiaoHiddenDanger;
 import org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoHiddenDangerVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,5 +85,7 @@ public interface IAnbiaoRiskDetailService extends IService<AnbiaoRiskDetail> {
 	List<VehicleXingnengbaogao> selectXingNengBaoGaoRisk();
 
 	List<VehicleDengjizhengshu> selectDengJiZhengShuRisk();
+
+	VehicleRiskAllPage<VehicleRiskAllVO> selectVehicleRiskAll(VehicleRiskAllPage vehicleRiskAllPage);
 
 }
