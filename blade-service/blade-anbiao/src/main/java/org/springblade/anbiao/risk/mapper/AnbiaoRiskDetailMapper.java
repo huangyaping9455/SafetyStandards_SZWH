@@ -62,7 +62,9 @@ public interface AnbiaoRiskDetailMapper extends BaseMapper<AnbiaoRiskDetail> {
 	List<JiashiyuanRiskAllVO> selectJiashiyuanRiskAll(JiashiyuanRiskAllPage jiashiyuanRiskAllPage);
 	int selectTotal(JiashiyuanRiskAllPage jiashiyuanRiskAllPage);
 
-	List<AnbiaoJiashiyuanRuzhi> selectRuZhiRisk();
+//	List<AnbiaoJiashiyuanRuzhi> selectRuZhiRisk();
+
+	List<AnbiaoJiashiyuanRuzhi> selectRuZhiRisk(@Param("jiashiyuanId") String jiashiyuanId);
 
 	List<JiaShiYuan> selectShenFenZhengRisk();
 

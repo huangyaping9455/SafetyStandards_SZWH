@@ -2186,9 +2186,9 @@ public class AnbiaoRiskDetailController {
 	@PostMapping("/jiashiyuanRuZhiRiskinsert")
 	@ApiLog("新增-驾驶员入职表风险统计信息")
 	@ApiOperation(value = "新增-驾驶员入职表风险统计信息", position = 1)
-	public R jiashiyuanRuZhiRiskinsert(BladeUser user) throws ParseException{
+	public R jiashiyuanRuZhiRiskinsert(String jiashiyuanId, BladeUser user) throws ParseException{
 		R r = new R();
-		List<AnbiaoJiashiyuanRuzhi> anbiaoJiashiyuanRuzhis = riskDetailService.selectRuZhiRisk();
+		List<AnbiaoJiashiyuanRuzhi> anbiaoJiashiyuanRuzhis = riskDetailService.selectRuZhiRisk(jiashiyuanId);
 		for (AnbiaoJiashiyuanRuzhi ruzhi:anbiaoJiashiyuanRuzhis) {
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"入职表信息未完善");

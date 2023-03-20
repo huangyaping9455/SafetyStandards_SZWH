@@ -47,6 +47,7 @@ public interface IAnbiaoRiskDetailService extends IService<AnbiaoRiskDetail> {
 	JiashiyuanRiskAllPage<JiashiyuanRiskAllVO> selectJiashiyuanRiskAll(JiashiyuanRiskAllPage jiashiyuanRiskAllPage);
 
 	List<AnbiaoJiashiyuanRuzhi> selectRuZhiRisk();
+	List<AnbiaoJiashiyuanRuzhi> selectRuZhiRisk(String jiashiyuanId);
 
 	List<JiaShiYuan> selectShenFenZhengRisk();
 

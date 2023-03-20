@@ -303,10 +303,10 @@
         and ard_association_table = "anbiao_jiashiyuan"
         and ard_association_field = "id"
         and j.isdelete=0
-        <if test="deptName != null or deptName != ''">
+        <if test="deptName != null and deptName != ''">
             and a.dept_name like '%${deptName}%'
         </if>
-        <if test="jiashiyuanxingming != null or jiashiyuanxingming != ''">
+        <if test="jiashiyuanxingming != null and jiashiyuanxingming != ''">
             and j.jiashiyuanxingming like '%${jiashiyuanxingming}%'
         </if>
         ORDER BY j.jiashiyuanxingming
@@ -334,10 +334,10 @@
             and ard_association_table = "anbiao_jiashiyuan"
             and ard_association_field = "id"
             and j.isdelete=0
-            <if test="deptName != null or deptName != ''">
+            <if test="deptName != null and deptName != ''">
                 and a.dept_name like '%${deptName}%'
             </if>
-            <if test="jiashiyuanxingming != null or jiashiyuanxingming != ''">
+            <if test="jiashiyuanxingming != null and jiashiyuanxingming != ''">
                 and j.jiashiyuanxingming like '%${jiashiyuanxingming}%'
             </if>
             ORDER BY j.jiashiyuanxingming
@@ -370,16 +370,16 @@
         and ard_association_table = "anbiao_jiashiyuan"
         and ard_association_field = "id"
         and j.isdelete=0
-        <if test="deptName != null or deptName != ''">
+        <if test="deptName != null and deptName != ''">
             and a.dept_name like '%${deptName}%'
         </if>
         ORDER BY j.jiashiyuanxingming
         )d
     </select>
 
-    <select id="selectRuZhiRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanRuzhi">
+    <select id="selectRuZhiRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanRuzhi" parameterType="java.lang.String" >
         SELECT
-            a.dept_id as deptId
+              a.dept_id as deptId
              ,b.dept_name AS deptName
              ,ajr_aj_ids
              ,ajr_name as xingming
@@ -424,6 +424,9 @@
                  INNER JOIN anbiao_organization k on b.id = k.dept_id and k.jigouleixing in('qiye','geti')
         where
             ajr_delete=0
+        <if test="jiashiyuanId != null and jiashiyuanId != ''">
+            and ajr_aj_ids = #{jiashiyuanId}
+        </if>
 -- and b.id=5534
         ORDER BY a.dept_id
     </select>
@@ -1013,16 +1016,16 @@
             and (c.vstatus=1 or c.gstatus=1)
             and d.isdelete=0
             and e.is_deleted=0
-         <if test="jiashiyuanxingming != null or jiashiyuanxingming != ''">
+         <if test="jiashiyuanxingming != null and jiashiyuanxingming != ''">
             and d.jiashiyuanxingming like '%${jiashiyuanxingming}%'
          </if>
-        <if test="cheliangpaizhao != null or cheliangpaizhao != ''">
+        <if test="cheliangpaizhao != null and cheliangpaizhao != ''">
             and a.cheliangpaizhao like '%${cheliangpaizhao}%'
         </if>
-        <if test="jiashiyuanid != null or jiashiyuanid != ''">
-            AND c.jiashiyuanid like '%${jiashiyuanid}%'
-        </if>
-            <if test="deptName != null or deptName != ''">
+            <if test="jiashiyuanid != null and jiashiyuanid != ''">
+                AND c.jiashiyuanid = #{jiashiyuanid}
+            </if>
+            <if test="deptName != null and deptName != ''">
                 and e.dept_name like '%${deptName}%'
             </if>
             ORDER BY
@@ -1056,16 +1059,16 @@
             and (c.vstatus=1 or c.gstatus=1)
             and d.isdelete=0
             and e.is_deleted=0
-            <if test="jiashiyuanxingming != null or jiashiyuanxingming != ''">
+            <if test="jiashiyuanxingming != null and jiashiyuanxingming != ''">
                 and d.jiashiyuanxingming like '%${jiashiyuanxingming}%'
             </if>
-            <if test="cheliangpaizhao != null or cheliangpaizhao != ''">
+            <if test="cheliangpaizhao != null and cheliangpaizhao != ''">
                 and a.cheliangpaizhao like '%${cheliangpaizhao}%'
             </if>
-            <if test="jiashiyuanid != null or jiashiyuanid != ''">
-                AND c.jiashiyuanid like '%${jiashiyuanid}%'
+            <if test="jiashiyuanid != null and jiashiyuanid != ''">
+                AND c.jiashiyuanid = #{jiashiyuanid}
             </if>
-            <if test="deptName != null or deptName != ''">
+            <if test="deptName != null and deptName != ''">
                 and e.dept_name like '%${deptName}%'
             </if>
             ORDER BY
@@ -1103,16 +1106,16 @@
         and (c.vstatus=1 or c.gstatus=1)
         and d.isdelete=0
         and e.is_deleted=0
-        <if test="jiashiyuanxingming != null or jiashiyuanxingming != ''">
+        <if test="jiashiyuanxingming != null and jiashiyuanxingming != ''">
             and d.jiashiyuanxingming like '%${jiashiyuanxingming}%'
         </if>
-        <if test="cheliangpaizhao != null or cheliangpaizhao != ''">
+        <if test="cheliangpaizhao != null and cheliangpaizhao != ''">
             and a.cheliangpaizhao like '%${cheliangpaizhao}%'
         </if>
-        <if test="jiashiyuanid != null or jiashiyuanid != ''">
-            AND c.jiashiyuanid like '%${jiashiyuanid}%'
+        <if test="jiashiyuanid != null and jiashiyuanid != ''">
+            AND c.jiashiyuanid like #{jiashiyuanid}
         </if>
-        <if test="deptName != null or deptName != ''">
+        <if test="deptName != null and deptName != ''">
             and e.dept_name like '%${deptName}%'
         </if>
         ORDER BY

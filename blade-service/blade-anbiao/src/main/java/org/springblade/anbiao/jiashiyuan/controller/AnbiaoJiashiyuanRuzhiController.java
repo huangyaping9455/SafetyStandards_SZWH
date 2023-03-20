@@ -45,7 +45,7 @@ public class AnbiaoJiashiyuanRuzhiController {
 	private IAnbiaoJiashiyuanRuzhiService ruzhiService;
 
 	@Autowired
-	private IAnbiaoRiskDetailService riskDetailService;
+	private AnbiaoRiskDetailController riskDetailController;
 
 
 	/**
@@ -123,8 +123,8 @@ public class AnbiaoJiashiyuanRuzhiController {
 				ruzhi.setAjrUpdateByIds(ruzhi.getAjrUpdateByIds());
 			}
 			ruzhi.setAjrUpdateTime(DateUtil.now());
-//			AnbiaoRiskDetailController anbiaoRiskDetailController = new AnbiaoRiskDetailController();
-//			anbiaoRiskDetailController.jiashiyuanRuZhiRiskinsert(user);
+			String jiashiyuanId = ruzhi.getAjrAjIds();
+			riskDetailController.jiashiyuanRuZhiRiskinsert(jiashiyuanId,user);
 			return R.status(ruzhiService.updateById(ruzhi));
 		}
 	}
