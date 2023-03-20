@@ -16,6 +16,7 @@ import org.springblade.common.tool.IdCardUtil;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,8 +41,10 @@ import java.util.Date;
 @Api(value = "驾驶员资料管理--入职登记表", tags = "驾驶员资料管理--入职登记表")
 public class AnbiaoJiashiyuanRuzhiController {
 
+	@Autowired
 	private IAnbiaoJiashiyuanRuzhiService ruzhiService;
 
+	@Autowired
 	private IAnbiaoRiskDetailService riskDetailService;
 
 
@@ -120,8 +123,8 @@ public class AnbiaoJiashiyuanRuzhiController {
 				ruzhi.setAjrUpdateByIds(ruzhi.getAjrUpdateByIds());
 			}
 			ruzhi.setAjrUpdateTime(DateUtil.now());
-			AnbiaoRiskDetailController anbiaoRiskDetailController = new AnbiaoRiskDetailController();
-			anbiaoRiskDetailController.jiashiyuanRuZhiRiskinsert(user);
+//			AnbiaoRiskDetailController anbiaoRiskDetailController = new AnbiaoRiskDetailController();
+//			anbiaoRiskDetailController.jiashiyuanRuZhiRiskinsert(user);
 			return R.status(ruzhiService.updateById(ruzhi));
 		}
 	}
