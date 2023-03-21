@@ -11,6 +11,7 @@ import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanJiashizheng;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanJiashizhengService;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
+import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetailInfo;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailInfoService;
@@ -19,6 +20,7 @@ import org.springblade.common.tool.DateUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +49,8 @@ public class AnbiaoJiashiyuanJiashizhengController {
 	private IAnbiaoRiskDetailService riskDetailService;
 	private IAnbiaoRiskDetailInfoService detailInfoService;
 	private IJiaShiYuanService jiaShiYuanService;
+	@Autowired
+	private AnbiaoRiskDetailController riskDetailController;
 
 	/**
 	 * 新增
@@ -219,6 +223,9 @@ public class AnbiaoJiashiyuanJiashizhengController {
 			jiaShiYuan.setJiashizhengchulingriqi(jiashizheng.getAjjValidPeriodStart());
 			jiaShiYuan.setJiashizhengyouxiaoqi(jiashizheng.getAjjValidPeriodEnd());
 			jiaShiYuanService.updateById(jiaShiYuan);
+
+			String jiashiyuanId = jiashizheng.getAjjAjIds();
+			riskDetailController.jiashiyuanJiaShiZhengRiskinsert(jiashiyuanId,user);
 
 			return R.status(jiashizhengService.updateById(jiashizheng));
 		}

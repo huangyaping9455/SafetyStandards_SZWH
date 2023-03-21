@@ -18,10 +18,13 @@ import org.springblade.anbiao.jiaoyupeixun.page.AnbiaoSafetyTrainingPage;
 import org.springblade.anbiao.jiaoyupeixun.service.IAnbiaoSafetyTrainingDetailService;
 import org.springblade.anbiao.jiaoyupeixun.service.IAnbiaoSafetyTrainingService;
 import org.springblade.anbiao.jiaoyupeixun.vo.AnbiaoSafetyTrainingVO;
+import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
+import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
 import org.springblade.upload.upload.feign.IFileUploadClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,6 +50,9 @@ public class AnbiaoSafetyTrainingController {
 	private IFileUploadClient fileUploadClient;
 
 	private IOrganizationsService organizationService;
+
+	@Autowired
+	private IAnbiaoRiskDetailService riskDetailService;
 
 
 	/**
@@ -288,6 +294,24 @@ public class AnbiaoSafetyTrainingController {
 		if (detail != null){
 			safetyTrainingDetail.setAddTime(DateUtil.now());
 			safetyTrainingDetail.setAddApBeingJoined("1");
+
+			QueryWrapper<AnbiaoSafetyTraining> safetyTrainingQueryWrapper = new QueryWrapper<>();
+			safetyTrainingQueryWrapper.lambda().eq(AnbiaoSafetyTraining::getAstIds,safetyTrainingDetail.getAadAstIds());
+			safetyTrainingQueryWrapper.lambda().eq(AnbiaoSafetyTraining::getAstDelete,"0");
+			AnbiaoSafetyTraining safetyTraining = service.getBaseMapper().selectOne(safetyTrainingQueryWrapper);
+
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"未按时参加安全培训");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,safetyTrainingDetail.getAadApIds());
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,safetyTraining.getAstTrainingTopic());
+			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+			if (riskDetail != null){
+				riskDetail.setArdIsRectification("1");
+				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
+				riskDetailService.getBaseMapper().updateById(riskDetail);
+			}
+
 			return R.status(detailService.updateById(safetyTrainingDetail));
 		}else{
 			r.setCode(500);

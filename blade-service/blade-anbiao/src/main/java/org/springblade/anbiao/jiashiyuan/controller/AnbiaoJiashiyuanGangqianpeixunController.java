@@ -9,14 +9,18 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanGangqianpeixun;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanGangqianpeixunService;
+import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
 import org.springblade.common.tool.DateUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.text.ParseException;
 
 /**
  * <p>
@@ -33,6 +37,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class AnbiaoJiashiyuanGangqianpeixunController {
 
 	private IAnbiaoJiashiyuanGangqianpeixunService gangqianpeixunService;
+	@Autowired
+	private AnbiaoRiskDetailController riskDetailController;
 
 	/**
 	 * 新增
@@ -40,7 +46,7 @@ public class AnbiaoJiashiyuanGangqianpeixunController {
 	@PostMapping("/insert")
 	@ApiLog("新增-岗前培训信息")
 	@ApiOperation(value = "新增-岗前培训信息", notes = "传入AnbiaoJiashiyuanGangqianpeixun", position = 1)
-	public R insert(@RequestBody AnbiaoJiashiyuanGangqianpeixun gangqianpeixun, BladeUser user) {
+	public R insert(@RequestBody AnbiaoJiashiyuanGangqianpeixun gangqianpeixun, BladeUser user) throws ParseException {
 		R r = new R();
 		QueryWrapper<AnbiaoJiashiyuanGangqianpeixun> gangqianpeixunQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanGangqianpeixun>();
 		gangqianpeixunQueryWrapper.lambda().eq(AnbiaoJiashiyuanGangqianpeixun::getAjgAjIds, gangqianpeixun.getAjgAjIds());
@@ -82,6 +88,10 @@ public class AnbiaoJiashiyuanGangqianpeixunController {
 				gangqianpeixun.setAjgUpdateByIds(gangqianpeixun.getAjgUpdateByIds());
 			}
 			gangqianpeixun.setAjgUpdateTime(DateUtil.now());
+
+			String jiashiyuanId = gangqianpeixun.getAjgAjIds();
+			riskDetailController.jiashiyuanGangQianPeiXunRiskinsert(jiashiyuanId,user);
+
 			return R.status(gangqianpeixunService.updateById(gangqianpeixun));
 		}
 	}

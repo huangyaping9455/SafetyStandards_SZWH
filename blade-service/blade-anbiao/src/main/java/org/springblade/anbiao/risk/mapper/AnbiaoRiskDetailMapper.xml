@@ -431,7 +431,7 @@
         ORDER BY a.dept_id
     </select>
 
-    <select id="selectShenFenZhengRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan">
+    <select id="selectShenFenZhengRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan" parameterType="java.lang.String">
         SELECT a.dept_id
              ,a.id
              ,a.jiashiyuanxingming
@@ -458,11 +458,14 @@
                 INNER JOIN anbiao_organization k on b.id = k.dept_id and k.jigouleixing in('qiye','geti')
         WHERE
             a.isdelete=0
+        <if test="jiashiyuanId != null and jiashiyuanId != '' ">
+            and a.id = #{jiashiyuanId}
+        </if>
         ORDER BY
             dept_id
     </select>
 
-    <select id="selectJiaShiZhengRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanJiashizheng">
+    <select id="selectJiaShiZhengRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanJiashizheng" parameterType="java.lang.String">
         SELECT
                b.id as deptId
              , jsy.jiashiyuanxingming as jiashiyuanxingming
@@ -493,10 +496,13 @@
         WHERE
             ajj_delete=0
           and jsy.isdelete=0
+          <if test="jiashiyuanId != null and jiashiyuanId != '' ">
+              and ajj_aj_ids = #{jiashiyuanId}
+          </if>
         ORDER BY b.id
     </select>
 
-    <select id="selectCongYeZhengRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanCongyezigezheng">
+    <select id="selectCongYeZhengRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanCongyezigezheng" parameterType="java.lang.String">
         SELECT
             b.id as deptId
              , jsy.jiashiyuanxingming as jiashiyuanxingming
@@ -525,10 +531,13 @@
         where
               ajc_delete=0
           and jsy.isdelete=0
+        <if test="jiashiyuanId != null and jiashiyuanId != '' ">
+            and ajc_aj_ids = #{jiashiyuanId}
+        </if>
         ORDER BY b.id
     </select>
 
-    <select id="selectTiJianRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanTijian">
+    <select id="selectTiJianRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanTijian" parameterType="java.lang.String">
         SELECT
             b.id as deptId
              , jsy.jiashiyuanxingming as jiashiyuanxingming
@@ -555,11 +564,14 @@
         WHERE
             ajt_delete=0
           and jsy.isdelete=0
+          <if test="jiashiyuanId != null and jiashiyuanId != '' ">
+              and ajt_aj_ids = #{jiashiyuanId}
+          </if>
         ORDER BY b.id
     </select>
 
 
-    <select id="selectGangQianPeiXunRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanGangqianpeixun">
+    <select id="selectGangQianPeiXunRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanGangqianpeixun" parameterType="java.lang.String">
         SELECT
             b.id as deptId
              , jsy.jiashiyuanxingming as jiashiyuanxingming
@@ -585,10 +597,13 @@
         WHERE
             ajg_delete=0
           and jsy.isdelete=0
+          <if test="jiashiyuanId != null and jiashiyuanId != '' ">
+              and ajg_aj_ids = #{jiashiyuanId}
+          </if>
         ORDER BY b.id
     </select>
 
-    <select id="selectWuZeZhengMingRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanWuzezhengming">
+    <select id="selectWuZeZhengMingRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanWuzezhengming" parameterType="java.lang.String">
         SELECT
             b.id as deptId
              , jsy.jiashiyuanxingming as jiashiyuanxingming
@@ -615,10 +630,13 @@
         WHERE
             ajw_delete=0
           and jsy.isdelete=0
+        <if test="jiashiyuanId != null and jiashiyuanId != '' ">
+            and ajw_aj_ids = #{jiashiyuanId}
+        </if>
         ORDER BY b.id
     </select>
 
-    <select id="selectAnQuanZeRenShuRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanAnquanzerenshu">
+    <select id="selectAnQuanZeRenShuRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanAnquanzerenshu" parameterType="java.lang.String">
         SELECT
             b.id as deptId
              , jsy.jiashiyuanxingming as jiashiyuanxingming
@@ -645,10 +663,13 @@
         WHERE
             aja_delete=0
           and jsy.isdelete=0
+        <if test="jiashiyuanId != null and jiashiyuanId != '' ">
+            and aja_aj_ids = #{jiashiyuanId}
+        </if>
         ORDER BY b.id
     </select>
 
-    <select id="selectWeiHaiGaoZhiShuRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanWeihaigaozhishu">
+    <select id="selectWeiHaiGaoZhiShuRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanWeihaigaozhishu" parameterType="java.lang.String">
         SELECT
             b.id as deptId
              , jsy.jiashiyuanxingming as jiashiyuanxingming
@@ -675,10 +696,13 @@
         WHERE
             ajw_delete=0
           and jsy.isdelete=0
+          <if test="jiashiyuanId != null and jiashiyuanId != '' ">
+              and ajw_aj_ids = #{jiashiyuanId}
+          </if>
         ORDER BY b.id
     </select>
 
-    <select id="selectLaoDongHeTongRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanLaodonghetong">
+    <select id="selectLaoDongHeTongRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanLaodonghetong" parameterType="java.lang.String">
         SELECT
             b.id as deptId
              , jsy.jiashiyuanxingming as jiashiyuanxingming
@@ -705,6 +729,9 @@
         WHERE
             ajw_delete=0
           and jsy.isdelete=0
+        <if test="jiashiyuanId != null and jiashiyuanId != '' ">
+            and ajw_aj_ids = #{jiashiyuanId}
+        </if>
         ORDER BY b.id
     </select>
 

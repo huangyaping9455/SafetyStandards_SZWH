@@ -32,6 +32,8 @@ import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.anbiao.labor.VO.LaborledgerVO;
 import org.springblade.anbiao.labor.entity.LaborlingquEntity;
 import org.springblade.anbiao.labor.page.laborledgerPage;
+import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
+import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.common.configurationBean.FileServer;
 import org.springblade.common.constant.FilePathConstant;
 import org.springblade.common.tool.ApacheZipUtils;
@@ -48,6 +50,7 @@ import org.springblade.system.user.entity.User;
 import org.springblade.system.user.feign.IUserClient;
 import org.springblade.system.user.page.UserPage;
 import org.springblade.upload.upload.feign.IFileUploadClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -94,6 +97,9 @@ public class AnbiaoAnquanhuiyiController {
 	private IAnbiaoAnquanhuiyiSourceService anquanhuiyiSourceService;
 
 	private ISysClient iSysClient;
+
+	@Autowired
+	private IAnbiaoRiskDetailService riskDetailService;
 
 	/**
 	 *新增
@@ -433,6 +439,25 @@ public class AnbiaoAnquanhuiyiController {
 			detail.setAddApBeingJoined(anquanhuiyiDetail.getAddApBeingJoined());
 			detail.setAddTime(DateUtil.now());
 			detail.setAddApBeingJoined("1");
+
+			QueryWrapper<AnbiaoAnquanhuiyi> anquanhuiyiQueryWrapper = new QueryWrapper<>();
+			anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getId,anquanhuiyiDetail.getAadAaIds());
+			anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getIsDeleted,0);
+			AnbiaoAnquanhuiyi anquanhuiyi = anquanhuiyiService.getBaseMapper().selectOne(anquanhuiyiQueryWrapper);
+
+
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"未按时参加安全会议");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,detail.getAadApIds());
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,anquanhuiyi.getHuiyimingcheng());
+			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+			if (riskDetail != null){
+				riskDetail.setArdIsRectification("1");
+				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
+				riskDetailService.getBaseMapper().updateById(riskDetail);
+			}
+
 			return R.status(anquanhuiyiDetailService.updateById(detail));
 		}else{
 			r.setCode(200);

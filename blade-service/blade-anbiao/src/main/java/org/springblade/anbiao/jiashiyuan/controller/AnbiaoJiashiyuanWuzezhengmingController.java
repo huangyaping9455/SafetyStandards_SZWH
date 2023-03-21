@@ -10,15 +10,18 @@ import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanWeihaigaozhishu;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanWuzezhengming;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanWeihaigaozhishuService;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanWuzezhengmingService;
+import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
 import java.time.LocalDateTime;
 
 /**
@@ -36,6 +39,8 @@ import java.time.LocalDateTime;
 public class AnbiaoJiashiyuanWuzezhengmingController {
 
 	private IAnbiaoJiashiyuanWuzezhengmingService wuzezhengmingService;
+	@Autowired
+	private AnbiaoRiskDetailController riskDetailController;
 
 	/**
 	 * 新增
@@ -43,7 +48,7 @@ public class AnbiaoJiashiyuanWuzezhengmingController {
 	@PostMapping("/insert")
 	@ApiLog("新增-无责证明书信息")
 	@ApiOperation(value = "新增-无责证明书信息", notes = "传入AnbiaoJiashiyuanWuzezhengming", position = 1)
-	public R insert(@RequestBody AnbiaoJiashiyuanWuzezhengming wuzezhengming, BladeUser user) {
+	public R insert(@RequestBody AnbiaoJiashiyuanWuzezhengming wuzezhengming, BladeUser user) throws ParseException {
 		R r = new R();
 		QueryWrapper<AnbiaoJiashiyuanWuzezhengming> wuzezhengmingQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanWuzezhengming>();
 		wuzezhengmingQueryWrapper.lambda().eq(AnbiaoJiashiyuanWuzezhengming::getAjwAjIds, wuzezhengming.getAjwAjIds());
@@ -70,6 +75,10 @@ public class AnbiaoJiashiyuanWuzezhengmingController {
 				wuzezhengming.setAjwUpdateByIds(wuzezhengming.getAjwUpdateByIds());
 			}
 			wuzezhengming.setAjwUpdateTime(DateUtil.now());
+
+			String jiashiyuanId = wuzezhengming.getAjwAjIds();
+			riskDetailController.jiashiyuanWuZeZhengMingRiskinsert(jiashiyuanId,user);
+
 			return R.status(wuzezhengmingService.updateById(wuzezhengming));
 		}
 	}

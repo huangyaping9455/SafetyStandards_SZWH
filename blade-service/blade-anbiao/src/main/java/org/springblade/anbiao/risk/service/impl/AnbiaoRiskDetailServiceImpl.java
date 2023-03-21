@@ -255,57 +255,101 @@ public class AnbiaoRiskDetailServiceImpl extends ServiceImpl<AnbiaoRiskDetailMap
 	public List<AnbiaoJiashiyuanRuzhi> selectRuZhiRisk() {
 		return mapper.selectRuZhiRisk(null);
 	}
-
 	@Override
 	public List<AnbiaoJiashiyuanRuzhi> selectRuZhiRisk(String jiashiyuanId) {
 		return mapper.selectRuZhiRisk(jiashiyuanId);
 	}
 
+
 	@Override
 	public List<JiaShiYuan> selectShenFenZhengRisk() {
-		return mapper.selectShenFenZhengRisk();
+		return mapper.selectShenFenZhengRisk(null);
 	}
+	@Override
+	public List<JiaShiYuan> selectShenFenZhengRisk(String jiashiyuanId) {
+		return mapper.selectShenFenZhengRisk(jiashiyuanId);
+	}
+
 
 	@Override
 	public List<AnbiaoJiashiyuanJiashizheng> selectJiaShiZhengRisk() {
-		return mapper.selectJiaShiZhengRisk();
+		return mapper.selectJiaShiZhengRisk(null);
+	}
+	@Override
+	public List<AnbiaoJiashiyuanJiashizheng> selectJiaShiZhengRisk(String jiashiyuanId) {
+		return mapper.selectJiaShiZhengRisk(jiashiyuanId);
 	}
 
 
 	@Override
 	public List<AnbiaoJiashiyuanCongyezigezheng> selectCongYeZhengRisk() {
-		return mapper.selectCongYeZhengRisk();
+		return mapper.selectCongYeZhengRisk(null);
+	}
+	@Override
+	public List<AnbiaoJiashiyuanCongyezigezheng> selectCongYeZhengRisk(String jiashiyuanId) {
+		return mapper.selectCongYeZhengRisk(jiashiyuanId);
 	}
 
 	@Override
 	public List<AnbiaoJiashiyuanTijian> selectTiJianRisk() {
-		return mapper.selectTiJianRisk();
+		return mapper.selectTiJianRisk(null);
+	}
+	@Override
+	public List<AnbiaoJiashiyuanTijian> selectTiJianRisk(String jiashiyuanId) {
+		return mapper.selectTiJianRisk(jiashiyuanId);
 	}
 
 	@Override
 	public List<AnbiaoJiashiyuanGangqianpeixun> selectGangQianPeiXunRisk() {
-		return mapper.selectGangQianPeiXunRisk();
+		return mapper.selectGangQianPeiXunRisk(null);
 	}
+	@Override
+	public List<AnbiaoJiashiyuanGangqianpeixun> selectGangQianPeiXunRisk(String jiashiyuanId) {
+		return mapper.selectGangQianPeiXunRisk(jiashiyuanId);
+	}
+
 
 	@Override
 	public List<AnbiaoJiashiyuanWuzezhengming> selectWuZeZhengMingRisk() {
-		return mapper.selectWuZeZhengMingRisk();
+		return mapper.selectWuZeZhengMingRisk(null);
 	}
+	@Override
+	public List<AnbiaoJiashiyuanWuzezhengming> selectWuZeZhengMingRisk(String jiashiyuanId) {
+		return mapper.selectWuZeZhengMingRisk(jiashiyuanId);
+	}
+
 
 	@Override
 	public List<AnbiaoJiashiyuanAnquanzerenshu> selectAnQuanZeRenShuRisk() {
-		return mapper.selectAnQuanZeRenShuRisk();
+		return mapper.selectAnQuanZeRenShuRisk(null);
 	}
+	@Override
+	public List<AnbiaoJiashiyuanAnquanzerenshu> selectAnQuanZeRenShuRisk(String jiashiyuanId) {
+		return mapper.selectAnQuanZeRenShuRisk(jiashiyuanId);
+	}
+
 
 	@Override
 	public List<AnbiaoJiashiyuanWeihaigaozhishu> selectWeiHaiGaoZhiShuRisk() {
-		return mapper.selectWeiHaiGaoZhiShuRisk();
+		return mapper.selectWeiHaiGaoZhiShuRisk(null);
 	}
+	@Override
+	public List<AnbiaoJiashiyuanWeihaigaozhishu> selectWeiHaiGaoZhiShuRisk(String jiashiyuanId) {
+		return mapper.selectWeiHaiGaoZhiShuRisk(jiashiyuanId);
+	}
+
+
 
 	@Override
 	public List<AnbiaoJiashiyuanLaodonghetong> selectLaoDongHeTongRisk() {
-		return mapper.selectLaoDongHeTongRisk();
+		return mapper.selectLaoDongHeTongRisk(null);
 	}
+	@Override
+	public List<AnbiaoJiashiyuanLaodonghetong> selectLaoDongHeTongRisk(String jiashiyuanId) {
+		return mapper.selectLaoDongHeTongRisk(jiashiyuanId);
+	}
+
+
 
 	@Override
 	public List<AnbiaoAnquanhuiyi> selectAnQuanHuiYiRisk() {

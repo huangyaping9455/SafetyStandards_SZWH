@@ -10,15 +10,18 @@ import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanAnquanzerenshu;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanCongyezigezheng;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanAnquanzerenshuService;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanCongyezigezhengService;
+import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
 import java.time.LocalDateTime;
 
 /**
@@ -36,6 +39,8 @@ import java.time.LocalDateTime;
 public class AnbiaoJiashiyuanAnquanzerenshuController {
 
 	private IAnbiaoJiashiyuanAnquanzerenshuService anquanzerenshuService;
+	@Autowired
+	private AnbiaoRiskDetailController riskDetailController;
 
 	/**
 	 * 新增
@@ -43,7 +48,7 @@ public class AnbiaoJiashiyuanAnquanzerenshuController {
 	@PostMapping("/insert")
 	@ApiLog("新增-安全责任书信息")
 	@ApiOperation(value = "新增-安全责任书信息", notes = "传入AnbiaoJiashiyuanAnquanzerenshu", position = 1)
-	public R insert(@RequestBody AnbiaoJiashiyuanAnquanzerenshu anquanzerenshu, BladeUser user) {
+	public R insert(@RequestBody AnbiaoJiashiyuanAnquanzerenshu anquanzerenshu, BladeUser user) throws ParseException {
 		R r = new R();
 		QueryWrapper<AnbiaoJiashiyuanAnquanzerenshu> anquanzerenshuQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanAnquanzerenshu>();
 		anquanzerenshuQueryWrapper.lambda().eq(AnbiaoJiashiyuanAnquanzerenshu::getAjaAjIds, anquanzerenshu.getAjaAjIds());
@@ -71,6 +76,10 @@ public class AnbiaoJiashiyuanAnquanzerenshuController {
 			}
 			anquanzerenshu.setAjaUpdateTime(DateUtil.now());
 			anquanzerenshu.setAjaAutographTime(DateUtil.now());
+
+			String jiashiyuanId = anquanzerenshu.getAjaAjIds();
+			riskDetailController.jiashiyuanAnQuanZeRenShuRiskinsert(jiashiyuanId,user);
+
 			return R.status(anquanzerenshuService.updateById(anquanzerenshu));
 		}
 	}

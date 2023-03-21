@@ -11,16 +11,19 @@ import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanGangqianpeixun;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanLaodonghetong;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanGangqianpeixunService;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanLaodonghetongService;
+import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
 import org.springblade.common.tool.DateUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
 import java.time.LocalDateTime;
 
 /**
@@ -38,6 +41,8 @@ import java.time.LocalDateTime;
 public class AnbiaoJiashiyuanLaodonghetongController {
 
 	private IAnbiaoJiashiyuanLaodonghetongService laodonghetongService;
+	@Autowired
+	private AnbiaoRiskDetailController riskDetailController;
 
 	/**
 	 * 新增
@@ -45,7 +50,7 @@ public class AnbiaoJiashiyuanLaodonghetongController {
 	@PostMapping("/insert")
 	@ApiLog("新增-劳动合同信息")
 	@ApiOperation(value = "新增-劳动合同信息", notes = "传入AnbiaoJiashiyuanLaodonghetong", position = 1)
-	public R insert(@RequestBody AnbiaoJiashiyuanLaodonghetong laodonghetong, BladeUser user) {
+	public R insert(@RequestBody AnbiaoJiashiyuanLaodonghetong laodonghetong, BladeUser user) throws ParseException {
 		R r = new R();
 		QueryWrapper<AnbiaoJiashiyuanLaodonghetong> gangqianpeixunQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanLaodonghetong>();
 		gangqianpeixunQueryWrapper.lambda().eq(AnbiaoJiashiyuanLaodonghetong::getAjwAjIds, laodonghetong.getAjwAjIds());
@@ -87,6 +92,10 @@ public class AnbiaoJiashiyuanLaodonghetongController {
 			}
 			laodonghetong.setAjwUpdateTime(DateUtil.now());
 			laodonghetong.setAjwAutographTime(DateUtil.now());
+
+			String jiashiyuanId = laodonghetong.getAjwAjIds();
+			riskDetailController.jiashiyuanWeiHaiGaoZhiShuRiskinsert(jiashiyuanId,user);
+
 			return R.status(laodonghetongService.updateById(laodonghetong));
 		}
 	}

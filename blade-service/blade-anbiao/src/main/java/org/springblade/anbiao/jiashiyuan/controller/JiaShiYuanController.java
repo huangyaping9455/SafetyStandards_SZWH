@@ -27,6 +27,7 @@ import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.service.*;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanListVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
+import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetailInfo;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailInfoService;
@@ -45,6 +46,7 @@ import org.springblade.system.entity.Dept;
 import org.springblade.system.feign.IDictClient;
 import org.springblade.system.feign.ISysClient;
 import org.springblade.upload.upload.feign.IFileUploadClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -100,6 +102,8 @@ public class JiaShiYuanController {
 	private IVehicleXingnengbaogaoService xingnengbaogaoService;
 	private IVehicleXingshizhengService xingshizhengService;
 	private IVehicleDaoluyunshuzhengService daoluyunshuzhengService;
+	@Autowired
+	private AnbiaoRiskDetailController riskDetailController;
 
 
 	@PostMapping("/insert")
@@ -774,6 +778,10 @@ public class JiaShiYuanController {
 					return r;
 				}
 			}
+
+			String jiashiyuanId = jiaShiYuan.getId();
+			riskDetailController.jiashiyuanShenFenZhengRiskinsert(jiashiyuanId,user);
+
 			boolean i = iJiaShiYuanService.updateById(jiaShiYuan);
 			if (i) {
 				r.setMsg("更新成功");

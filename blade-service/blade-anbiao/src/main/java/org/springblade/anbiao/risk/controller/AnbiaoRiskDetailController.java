@@ -2445,6 +2445,7 @@ public class AnbiaoRiskDetailController {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 				}
 			}
@@ -2456,9 +2457,9 @@ public class AnbiaoRiskDetailController {
 	@PostMapping("/jiashiyuanShenFenZhengRiskinsert")
 	@ApiLog("新增-驾驶员身份证风险统计信息")
 	@ApiOperation(value = "新增-驾驶员身份证风险统计信息", position = 1)
-	public R jiashiyuanShenFenZhengRiskinsert(BladeUser user) throws ParseException{
+	public R jiashiyuanShenFenZhengRiskinsert(String jiashiyuanId,BladeUser user) throws ParseException{
 		R r = new R();
-		List<JiaShiYuan> jiaShiYuans = riskDetailService.selectShenFenZhengRisk();
+		List<JiaShiYuan> jiaShiYuans = riskDetailService.selectShenFenZhengRisk(jiashiyuanId);
 		for (JiaShiYuan jiaShiYuan:jiaShiYuans) {
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"身份证信息未完善");
@@ -2544,6 +2545,7 @@ public class AnbiaoRiskDetailController {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 				}
 			}
@@ -2555,9 +2557,9 @@ public class AnbiaoRiskDetailController {
 	@PostMapping("/jiashiyuanJiaShiZhengRiskinsert")
 	@ApiLog("新增-驾驶员驾驶证风险统计信息")
 	@ApiOperation(value = "新增-驾驶员驾驶证风险统计信息", position = 1)
-	public R jiashiyuanJiaShiZhengRiskinsert(BladeUser user) throws ParseException{
+	public R jiashiyuanJiaShiZhengRiskinsert(String jiashiyuanId,BladeUser user) throws ParseException{
 		R r = new R();
-		List<AnbiaoJiashiyuanJiashizheng> jiashiyuanJiashizhengs = riskDetailService.selectJiaShiZhengRisk();
+		List<AnbiaoJiashiyuanJiashizheng> jiashiyuanJiashizhengs = riskDetailService.selectJiaShiZhengRisk(jiashiyuanId);
 		for (AnbiaoJiashiyuanJiashizheng jiashizheng:jiashiyuanJiashizhengs) {
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"驾驶证信息未完善");
@@ -2643,6 +2645,7 @@ public class AnbiaoRiskDetailController {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 
 				}
@@ -2655,9 +2658,9 @@ public class AnbiaoRiskDetailController {
 	@PostMapping("/jiashiyuanCongYeZhengRiskinsert")
 	@ApiLog("新增-驾驶员从业资格证风险统计信息")
 	@ApiOperation(value = "新增-驾驶员从业资格证风险统计信息", position = 1)
-	public R jiashiyuanCongYeZhengRiskinsert(BladeUser user) throws ParseException{
+	public R jiashiyuanCongYeZhengRiskinsert(String jiashiyuanId,BladeUser user) throws ParseException{
 		R r = new R();
-		List<AnbiaoJiashiyuanCongyezigezheng> jiashiyuanCongyezigezhengs = riskDetailService.selectCongYeZhengRisk();
+		List<AnbiaoJiashiyuanCongyezigezheng> jiashiyuanCongyezigezhengs = riskDetailService.selectCongYeZhengRisk(jiashiyuanId);
 		for (AnbiaoJiashiyuanCongyezigezheng congyezigezheng:jiashiyuanCongyezigezhengs) {
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"从业资格证信息未完善");
@@ -2733,6 +2736,7 @@ public class AnbiaoRiskDetailController {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 
 				}
@@ -2745,9 +2749,9 @@ public class AnbiaoRiskDetailController {
 	@PostMapping("/jiashiyuanTiJianRiskinsert")
 	@ApiLog("新增-驾驶员体检表风险统计信息")
 	@ApiOperation(value = "新增-驾驶员体检表风险统计信息", position = 1)
-	public R jiashiyuanTiJianRiskinsert(BladeUser user) throws ParseException{
+	public R jiashiyuanTiJianRiskinsert(String jiashiyuanId,BladeUser user) throws ParseException{
 		R r = new R();
-		List<AnbiaoJiashiyuanTijian> tijians = riskDetailService.selectTiJianRisk();
+		List<AnbiaoJiashiyuanTijian> tijians = riskDetailService.selectTiJianRisk(jiashiyuanId);
 		for (AnbiaoJiashiyuanTijian tijian:tijians) {
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"体检表信息未完善");
@@ -2803,6 +2807,7 @@ public class AnbiaoRiskDetailController {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 
 				}
@@ -2815,9 +2820,9 @@ public class AnbiaoRiskDetailController {
 	@PostMapping("/jiashiyuanGangQianPeiXunRiskinsert")
 	@ApiLog("新增-驾驶员岗前培训风险统计信息")
 	@ApiOperation(value = "新增-驾驶员岗前培训风险统计信息", position = 1)
-	public R jiashiyuanGangQianPeiXunRiskinsert(BladeUser user) throws ParseException{
+	public R jiashiyuanGangQianPeiXunRiskinsert(String jiashiyuanId,BladeUser user) throws ParseException{
 		R r = new R();
-		List<AnbiaoJiashiyuanGangqianpeixun> gangqianpeixuns = riskDetailService.selectGangQianPeiXunRisk();
+		List<AnbiaoJiashiyuanGangqianpeixun> gangqianpeixuns = riskDetailService.selectGangQianPeiXunRisk(jiashiyuanId);
 		for (AnbiaoJiashiyuanGangqianpeixun gangqianpeixun:gangqianpeixuns) {
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"岗前培训信息未完善");
@@ -2863,6 +2868,7 @@ public class AnbiaoRiskDetailController {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 
 				}
@@ -2874,9 +2880,9 @@ public class AnbiaoRiskDetailController {
 	@PostMapping("/jiashiyuanWuZeZhengMingRiskinsert")
 	@ApiLog("新增-驾驶员无责证明风险统计信息")
 	@ApiOperation(value = "新增-驾驶员无责证明风险统计信息", position = 1)
-	public R jiashiyuanWuZeZhengMingRiskinsert(BladeUser user) throws ParseException{
+	public R jiashiyuanWuZeZhengMingRiskinsert(String jiashiyuanId,BladeUser user) throws ParseException{
 		R r = new R();
-		List<AnbiaoJiashiyuanWuzezhengming> wuzezhengmings = riskDetailService.selectWuZeZhengMingRisk();
+		List<AnbiaoJiashiyuanWuzezhengming> wuzezhengmings = riskDetailService.selectWuZeZhengMingRisk(jiashiyuanId);
 		for (AnbiaoJiashiyuanWuzezhengming wuzezhengming:wuzezhengmings) {
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"无责证明信息未完善");
@@ -2932,6 +2938,7 @@ public class AnbiaoRiskDetailController {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 
 				}
@@ -2943,9 +2950,9 @@ public class AnbiaoRiskDetailController {
 	@PostMapping("/jiashiyuanAnQuanZeRenShuRiskinsert")
 	@ApiLog("新增-驾驶员安全责任书风险统计信息")
 	@ApiOperation(value = "新增-驾驶员安全责任书风险统计信息", position = 1)
-	public R jiashiyuanAnQuanZeRenShuRiskinsert(BladeUser user) throws ParseException{
+	public R jiashiyuanAnQuanZeRenShuRiskinsert(String jiashiyuanId,BladeUser user) throws ParseException{
 		R r = new R();
-		List<AnbiaoJiashiyuanAnquanzerenshu> anquanzerenshus = riskDetailService.selectAnQuanZeRenShuRisk();
+		List<AnbiaoJiashiyuanAnquanzerenshu> anquanzerenshus = riskDetailService.selectAnQuanZeRenShuRisk(jiashiyuanId);
 		for (AnbiaoJiashiyuanAnquanzerenshu anquanzerenshu:anquanzerenshus) {
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"安全责任书信息未完善");
@@ -3001,6 +3008,7 @@ public class AnbiaoRiskDetailController {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 
 				}
@@ -3013,9 +3021,9 @@ public class AnbiaoRiskDetailController {
 	@PostMapping("/jiashiyuanWeiHaiGaoZhiShuRiskinsert")
 	@ApiLog("新增-驾驶员危害告知书风险统计信息")
 	@ApiOperation(value = "新增-驾驶员危害告知书风险统计信息", position = 1)
-	public R jiashiyuanWeiHaiGaoZhiShuRiskinsert(BladeUser user) throws ParseException{
+	public R jiashiyuanWeiHaiGaoZhiShuRiskinsert(String jiashiyuanId,BladeUser user) throws ParseException{
 		R r = new R();
-		List<AnbiaoJiashiyuanWeihaigaozhishu> weihaigaozhishus = riskDetailService.selectWeiHaiGaoZhiShuRisk();
+		List<AnbiaoJiashiyuanWeihaigaozhishu> weihaigaozhishus = riskDetailService.selectWeiHaiGaoZhiShuRisk(jiashiyuanId);
 		for (AnbiaoJiashiyuanWeihaigaozhishu weihaigaozhishu:weihaigaozhishus) {
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"危害告知书信息未完善");
@@ -3071,6 +3079,7 @@ public class AnbiaoRiskDetailController {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 
 				}
@@ -3082,9 +3091,9 @@ public class AnbiaoRiskDetailController {
 	@PostMapping("/jiashiyuanLaoDongHeTongRiskinsert")
 	@ApiLog("新增-驾驶员劳动合同风险统计信息")
 	@ApiOperation(value = "新增-驾驶员劳动合同风险统计信息", position = 1)
-	public R jiashiyuanLaoDongHeTongRiskinsert(BladeUser user) throws ParseException{
+	public R jiashiyuanLaoDongHeTongRiskinsert(String jiashiyuanId,BladeUser user) throws ParseException{
 		R r = new R();
-		List<AnbiaoJiashiyuanLaodonghetong> laodonghetongs = riskDetailService.selectLaoDongHeTongRisk();
+		List<AnbiaoJiashiyuanLaodonghetong> laodonghetongs = riskDetailService.selectLaoDongHeTongRisk(jiashiyuanId);
 		for (AnbiaoJiashiyuanLaodonghetong laodonghetong:laodonghetongs) {
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"劳动合同信息未完善");
@@ -3140,6 +3149,7 @@ public class AnbiaoRiskDetailController {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 
 				}
@@ -3593,6 +3603,7 @@ public class AnbiaoRiskDetailController {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 
 				}
@@ -3687,6 +3698,7 @@ public class AnbiaoRiskDetailController {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 
 				}
@@ -3751,6 +3763,7 @@ public class AnbiaoRiskDetailController {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 
 				}
@@ -3815,6 +3828,7 @@ public class AnbiaoRiskDetailController {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 
 				}

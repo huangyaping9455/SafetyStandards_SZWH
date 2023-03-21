@@ -13,6 +13,7 @@ import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanQitaService;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanTijianService;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
+import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetailInfo;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailInfoService;
@@ -21,6 +22,7 @@ import org.springblade.common.tool.DateUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,6 +52,8 @@ public class AnbiaoJiashiyuanTijianController {
 	private IAnbiaoRiskDetailService riskDetailService;
 	private IAnbiaoRiskDetailInfoService detailInfoService;
 	private IJiaShiYuanService jiaShiYuanService;
+	@Autowired
+	private AnbiaoRiskDetailController riskDetailController;
 
 	/**
 	 * 新增
@@ -205,6 +209,9 @@ public class AnbiaoJiashiyuanTijianController {
 			jiaShiYuan.setTijianriqi(tijian.getAjtPhysicalExaminationDate());
 			jiaShiYuan.setTijianyouxiaoqi(tijian.getAjtTermValidity());
 			jiaShiYuanService.updateById(jiaShiYuan);
+
+			String jiashiyuanId = tijian.getAjtAjIds();
+			riskDetailController.jiashiyuanTiJianRiskinsert(jiashiyuanId,user);
 
 			return R.status(tijianService.updateById(tijian));
 		}

@@ -50,22 +50,31 @@ public interface IAnbiaoRiskDetailService extends IService<AnbiaoRiskDetail> {
 	List<AnbiaoJiashiyuanRuzhi> selectRuZhiRisk(String jiashiyuanId);
 
 	List<JiaShiYuan> selectShenFenZhengRisk();
+	List<JiaShiYuan> selectShenFenZhengRisk(String jiashiyuanId);
 
 	List<AnbiaoJiashiyuanJiashizheng> selectJiaShiZhengRisk();
+	List<AnbiaoJiashiyuanJiashizheng> selectJiaShiZhengRisk(String jiashiyuanId);
 
 	List<AnbiaoJiashiyuanCongyezigezheng> selectCongYeZhengRisk();
+	List<AnbiaoJiashiyuanCongyezigezheng> selectCongYeZhengRisk(String jiashiyuanId);
 
 	List<AnbiaoJiashiyuanTijian> selectTiJianRisk();
+	List<AnbiaoJiashiyuanTijian> selectTiJianRisk(String jiashiyuanId);
 
 	List<AnbiaoJiashiyuanGangqianpeixun> selectGangQianPeiXunRisk();
+	List<AnbiaoJiashiyuanGangqianpeixun> selectGangQianPeiXunRisk(String jiashiyuanId);
 
 	List<AnbiaoJiashiyuanWuzezhengming> selectWuZeZhengMingRisk();
+	List<AnbiaoJiashiyuanWuzezhengming> selectWuZeZhengMingRisk(String jiashiyuanId);
 
 	List<AnbiaoJiashiyuanAnquanzerenshu> selectAnQuanZeRenShuRisk();
+	List<AnbiaoJiashiyuanAnquanzerenshu> selectAnQuanZeRenShuRisk(String jiashiyuanId);
 
 	List<AnbiaoJiashiyuanWeihaigaozhishu> selectWeiHaiGaoZhiShuRisk();
+	List<AnbiaoJiashiyuanWeihaigaozhishu> selectWeiHaiGaoZhiShuRisk(String jiashiyuanId);
 
 	List<AnbiaoJiashiyuanLaodonghetong> selectLaoDongHeTongRisk();
+	List<AnbiaoJiashiyuanLaodonghetong> selectLaoDongHeTongRisk(String jiashiyuanId);
 
 	List<AnbiaoAnquanhuiyi> selectAnQuanHuiYiRisk();
 

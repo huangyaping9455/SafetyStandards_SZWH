@@ -6,9 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
-import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
-import org.springblade.anbiao.cheliangguanli.entity.VehicleDaoluyunshuzheng;
-import org.springblade.anbiao.cheliangguanli.entity.VehicleXingshizheng;
+import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleDaoluyunshuzhengService;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleXingshizhengService;
@@ -2111,10 +2109,442 @@ public class SynchronousCrontab {
 		}
 	}
 
+	//行驶证风险
+	private void XingShiZhengRiskinsert() throws IOException, ParseException {
+		List<VehicleXingshizheng> vehicleXingshizhengs = riskDetailService.selectXingShiZhengRisk();
+		for (VehicleXingshizheng vehicleXingshizheng:vehicleXingshizhengs) {
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"行驶证信息未完善");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,vehicleXingshizheng.getVehicleId());
+			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+			if (riskDetail==null){
+				int a=0;
+				String A="";
+				AnbiaoRiskDetail riskDetail1 = new AnbiaoRiskDetail();
+				riskDetail1.setArdDeptIds(vehicleXingshizheng.getDeptId());
+				riskDetail1.setArdMajorCategories("0");
+				riskDetail1.setArdSubCategory("001");
+				riskDetail1.setArdTitle("行驶证信息未完善");
+				riskDetail1.setArdType("信息未完善");
+				riskDetail1.setArdDiscoveryDate(DateUtil.now().substring(0,10));
+				riskDetail1.setArdAssociationTable("anbiao_vehicle");
+				riskDetail1.setArdAssociationField("id");
+				riskDetail1.setArdAssociationValue(vehicleXingshizheng.getVehicleId());
+				riskDetail1.setArdIsRectification("0");
+				riskDetail1.setVehicleId(vehicleXingshizheng.getVehicleId());
+				riskDetail1.setCheliangpaizhao(vehicleXingshizheng.getCheliangpaizhao());
+				if (!vehicleXingshizheng.getAvxPlateNo().equals("0")){
+					A=A+"车辆牌照、";
+					riskDetail1.setArdContent(A);
+					a++;
+				}else {
+					A=vehicleXingshizheng.getCheliangpaizhao();
+				}
+				if (!vehicleXingshizheng.getAvxOwner().equals("0")){
+					A=A+"所有人、";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxUseCharter().equals("0")){
+					A=A+"使用性质、";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxModel().equals("0")){
+					A=A+"品牌型号、";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxVin().equals("0")){
+					A=A+"车辆识别代码、";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxEngineNo().equals("0")){
+					A=A+"发动机号码、";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxRegisterDate2().equals("0")){
+					A=A+"注册日期、";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if (vehicleXingshizheng.getAvxAuthorizedSeatingCapacity()!=0){
+					A=A+"核定载人数、";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if (vehicleXingshizheng.getAvxTotalMass()!=0){
+					A=A+"总质量、";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if (vehicleXingshizheng.getAvxCurbWeight()!=0){
+					A=A+"整备质量、";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxOverallDimensions().equals("0")){
+					A=A+"外廓尺寸、";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if (vehicleXingshizheng.getAvxQuasiTractiveMass()!=0){
+					A=A+"准牵引质量、";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxFileNo().equals("0")){
+					A=A+"行驶证号、";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxValidUntil2().equals("0")){
+					A=A+"检验有效期、有效日期结束日期";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxIssueDate2().equals("0")){
+					A=A+"发证日期、有效日期开始日期、";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxOriginalEnclosure().equals("0")){
+					A=A+"行驶证正面照片、";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxCopyEnclosure().equals("0")){
+					A=A+"行驶证反面照片、";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if(a>0){
+					A=A+"未完善";
+					riskDetail1.setArdContent(A);
+					riskDetailService.getBaseMapper().insert(riskDetail1);
+				}
+			}else {
+				int a=0;
+				String A="";
+				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
+				if (!vehicleXingshizheng.getAvxPlateNo().equals("0")){
+					A=A+"车辆牌照、";
+					riskDetail.setArdContent(A);
+					a++;
+				}else {
+					A=vehicleXingshizheng.getCheliangpaizhao();
+				}
+				if (!vehicleXingshizheng.getAvxOwner().equals("0")){
+					A=A+"所有人、";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxUseCharter().equals("0")){
+					A=A+"使用性质、";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxModel().equals("0")){
+					A=A+"品牌型号、";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxVin().equals("0")){
+					A=A+"车辆识别代码、";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxEngineNo().equals("0")){
+					A=A+"发动机号码、";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxRegisterDate2().equals("0")){
+					A=A+"注册日期、";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (vehicleXingshizheng.getAvxAuthorizedSeatingCapacity()!=0){
+					A=A+"核定载人数、";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (vehicleXingshizheng.getAvxTotalMass()!=0){
+					A=A+"总质量、";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (vehicleXingshizheng.getAvxCurbWeight()!=0){
+					A=A+"整备质量、";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxOverallDimensions().equals("0")){
+					A=A+"外廓尺寸、";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (vehicleXingshizheng.getAvxQuasiTractiveMass()!=0){
+					A=A+"准牵引质量、";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxFileNo().equals("0")){
+					A=A+"行驶证号、";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxValidUntil2().equals("0")){
+					A=A+"检验有效期、有效日期结束日期";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxIssueDate2().equals("0")){
+					A=A+"发证日期、有效日期开始日期、";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxOriginalEnclosure().equals("0")){
+					A=A+"行驶证正面照片、";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (!vehicleXingshizheng.getAvxCopyEnclosure().equals("0")){
+					A=A+"行驶证反面照片、";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (a>0){
+					A=A+"未完善";
+					riskDetail.setArdContent(A);
+					riskDetailService.updateById(riskDetail);
+				}else if (a==0){
+					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
+					riskDetailService.updateById(riskDetail);
+
+				}
+			}
+		}
+	}
+
+	//道路运输证风险
+	private void DaoLuYunShuZhengRiskinsert() throws IOException, ParseException {
+		List<VehicleDaoluyunshuzheng> vehicleDaoluyunshuzhengs = riskDetailService.selectDaoLuYunShuZhengRisk();
+		for (VehicleDaoluyunshuzheng vehicleDaoluyunshuzheng:vehicleDaoluyunshuzhengs) {
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"道路运输证信息未完善");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,vehicleDaoluyunshuzheng.getVehicleId());
+			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+			if (riskDetail==null){
+				int a=0;
+				String A="";
+				AnbiaoRiskDetail riskDetail1 = new AnbiaoRiskDetail();
+				riskDetail1.setArdDeptIds(vehicleDaoluyunshuzheng.getDeptId());
+				riskDetail1.setArdMajorCategories("0");
+				riskDetail1.setArdSubCategory("001");
+				riskDetail1.setArdTitle("道路运输证信息未完善");
+				riskDetail1.setArdType("信息未完善");
+				riskDetail1.setArdDiscoveryDate(DateUtil.now().substring(0,10));
+				riskDetail1.setArdAssociationTable("anbiao_vehicle");
+				riskDetail1.setArdAssociationField("id");
+				riskDetail1.setArdAssociationValue(vehicleDaoluyunshuzheng.getVehicleId());
+				riskDetail1.setArdIsRectification("0");
+				riskDetail1.setVehicleId(vehicleDaoluyunshuzheng.getVehicleId());
+				riskDetail1.setCheliangpaizhao(vehicleDaoluyunshuzheng.getCheliangpaizhao());
+				A=vehicleDaoluyunshuzheng.getCheliangpaizhao();
+				if (!vehicleDaoluyunshuzheng.getAvdRoadTransportCertificateNo().equals("0")){
+					A=A+"道路运输证号、";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if (!vehicleDaoluyunshuzheng.getAvdIssueDate2().equals("0")){
+					A=A+"有效日期开始日期、";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if (!vehicleDaoluyunshuzheng.getAvdValidUntil2().equals("0")){
+					A=A+"有效日期结束日期、";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if (!vehicleDaoluyunshuzheng.getAvdEnclosure().equals("0")){
+					A=A+"证件照片、";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if(a>0){
+					A=A+"未完善";
+					riskDetail1.setArdContent(A);
+					riskDetailService.getBaseMapper().insert(riskDetail1);
+				}
+			}else {
+				int a=0;
+				String A="";
+				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
+				A=vehicleDaoluyunshuzheng.getCheliangpaizhao();
+				if (!vehicleDaoluyunshuzheng.getAvdRoadTransportCertificateNo().equals("0")){
+					A=A+"道路运输证号、";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (!vehicleDaoluyunshuzheng.getAvdIssueDate2().equals("0")){
+					A=A+"有效日期开始日期、";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (!vehicleDaoluyunshuzheng.getAvdValidUntil2().equals("0")){
+					A=A+"有效日期结束日期、";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (!vehicleDaoluyunshuzheng.getAvdEnclosure().equals("0")){
+					A=A+"证件照片、";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (a>0){
+					A=A+"未完善";
+					riskDetail.setArdContent(A);
+					riskDetailService.updateById(riskDetail);
+				}else if (a==0){
+					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
+					riskDetailService.updateById(riskDetail);
+
+				}
+			}
+		}
+	}
+
+	//性能报告风险
+	private void XingNengBaoGaoRiskinsert() throws IOException, ParseException {
+		List<VehicleXingnengbaogao> xingnengbaogaos = riskDetailService.selectXingNengBaoGaoRisk();
+		for (VehicleXingnengbaogao xingnengbaogao:xingnengbaogaos) {
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"性能报告信息未完善");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,xingnengbaogao.getVehicleId());
+			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+			if (riskDetail==null){
+				int a=0;
+				String A="";
+				AnbiaoRiskDetail riskDetail1 = new AnbiaoRiskDetail();
+				riskDetail1.setArdDeptIds(xingnengbaogao.getDeptId());
+				riskDetail1.setArdMajorCategories("0");
+				riskDetail1.setArdSubCategory("001");
+				riskDetail1.setArdTitle("性能报告信息未完善");
+				riskDetail1.setArdType("信息未完善");
+				riskDetail1.setArdDiscoveryDate(DateUtil.now().substring(0,10));
+				riskDetail1.setArdAssociationTable("anbiao_vehicle");
+				riskDetail1.setArdAssociationField("id");
+				riskDetail1.setArdAssociationValue(xingnengbaogao.getVehicleId());
+				riskDetail1.setArdIsRectification("0");
+				riskDetail1.setVehicleId(xingnengbaogao.getVehicleId());
+				riskDetail1.setCheliangpaizhao(xingnengbaogao.getCheliangpaizhao());
+				A=xingnengbaogao.getCheliangpaizhao();
+				if (!xingnengbaogao.getAvxEnclosure().equals("0")){
+					A=A+"性能报告附件";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if(a>0){
+					A=A+"未完善";
+					riskDetail1.setArdContent(A);
+					riskDetailService.getBaseMapper().insert(riskDetail1);
+				}
+			}else {
+				int a=0;
+				String A="";
+				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
+				A=xingnengbaogao.getCheliangpaizhao();
+				if (!xingnengbaogao.getAvxEnclosure().equals("0")){
+					A=A+"性能报告附件";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (a>0){
+					A=A+"未完善";
+					riskDetail.setArdContent(A);
+					riskDetailService.updateById(riskDetail);
+				}else if (a==0){
+					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
+					riskDetailService.updateById(riskDetail);
+
+				}
+			}
+		}
+	}
+
+	//登记证书风险
+	private void DengJiZhengShuRiskinsert() throws IOException, ParseException {
+		List<VehicleDengjizhengshu> dengjizhengshus = riskDetailService.selectDengJiZhengShuRisk();
+		for (VehicleDengjizhengshu dengjizhengshu:dengjizhengshus) {
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"登记证书信息未完善");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,dengjizhengshu.getVehicleId());
+			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+			if (riskDetail==null){
+				int a=0;
+				String A="";
+				AnbiaoRiskDetail riskDetail1 = new AnbiaoRiskDetail();
+				riskDetail1.setArdDeptIds(dengjizhengshu.getDeptId());
+				riskDetail1.setArdMajorCategories("0");
+				riskDetail1.setArdSubCategory("001");
+				riskDetail1.setArdTitle("登记证书信息未完善");
+				riskDetail1.setArdType("信息未完善");
+				riskDetail1.setArdDiscoveryDate(DateUtil.now().substring(0,10));
+				riskDetail1.setArdAssociationTable("anbiao_vehicle");
+				riskDetail1.setArdAssociationField("id");
+				riskDetail1.setArdAssociationValue(dengjizhengshu.getVehicleId());
+				riskDetail1.setArdIsRectification("0");
+				riskDetail1.setVehicleId(dengjizhengshu.getVehicleId());
+				riskDetail1.setCheliangpaizhao(dengjizhengshu.getCheliangpaizhao());
+				A=dengjizhengshu.getCheliangpaizhao();
+				if (!dengjizhengshu.getAvdEnclosure().equals("0")){
+					A=A+"登记证书附件";
+					riskDetail1.setArdContent(A);
+					a++;
+				}
+				if(a>0){
+					A=A+"未完善";
+					riskDetail1.setArdContent(A);
+					riskDetailService.getBaseMapper().insert(riskDetail1);
+				}
+			}else {
+				int a=0;
+				String A="";
+				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
+				A=dengjizhengshu.getCheliangpaizhao();
+				if (!dengjizhengshu.getAvdEnclosure().equals("0")){
+					A=A+"登记证书附件";
+					riskDetail.setArdContent(A);
+					a++;
+				}
+				if (a>0){
+					A=A+"未完善";
+					riskDetail.setArdContent(A);
+					riskDetailService.updateById(riskDetail);
+				}else if (a==0){
+					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
+					riskDetailService.updateById(riskDetail);
+
+				}
+			}
+		}
+	}
+
 	//每6小时执行一次
 	@Scheduled(cron = "0 0 */6 * * ?")
 	//每天凌晨5点执行一次
-//	@Scheduled(cron = "0 52 18 * * ?")
+//	@Scheduled(cron = "0 20 18 * * ?")
 	public void configureTasks_static_data() {
 		synchronized (KEY) {
 			if (SynchronousCrontab.taskFlag) {
@@ -2181,6 +2611,18 @@ public class SynchronousCrontab {
 
 			//安全检查风险
 			AnQuanJianChaRiskinsert();
+
+			//行驶证风险
+			XingShiZhengRiskinsert();
+
+			//道路运输证风险
+			DaoLuYunShuZhengRiskinsert();
+
+			//登记证书风险
+			DengJiZhengShuRiskinsert();
+
+			//性能报告风险
+			XingNengBaoGaoRiskinsert();
 
 			System.out.println("执行完成");
 		} catch (Exception e) {

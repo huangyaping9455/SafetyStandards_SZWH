@@ -63,23 +63,23 @@ public interface AnbiaoRiskDetailMapper extends BaseMapper<AnbiaoRiskDetail> {
 
 	List<AnbiaoJiashiyuanRuzhi> selectRuZhiRisk(@Param("jiashiyuanId") String jiashiyuanId);
 
-	List<JiaShiYuan> selectShenFenZhengRisk();
+	List<JiaShiYuan> selectShenFenZhengRisk(@Param("jiashiyuanId") String jiashiyuanId);
 
-	List<AnbiaoJiashiyuanJiashizheng> selectJiaShiZhengRisk();
+	List<AnbiaoJiashiyuanJiashizheng> selectJiaShiZhengRisk(@Param("jiashiyuanId") String jiashiyuanId);
 
-	List<AnbiaoJiashiyuanCongyezigezheng> selectCongYeZhengRisk();
+	List<AnbiaoJiashiyuanCongyezigezheng> selectCongYeZhengRisk(@Param("jiashiyuanId") String jiashiyuanId);
 
-	List<AnbiaoJiashiyuanTijian> selectTiJianRisk();
+	List<AnbiaoJiashiyuanTijian> selectTiJianRisk(@Param("jiashiyuanId") String jiashiyuanId);
 
-	List<AnbiaoJiashiyuanGangqianpeixun> selectGangQianPeiXunRisk();
+	List<AnbiaoJiashiyuanGangqianpeixun> selectGangQianPeiXunRisk(@Param("jiashiyuanId") String jiashiyuanId);
 
-	List<AnbiaoJiashiyuanWuzezhengming> selectWuZeZhengMingRisk();
+	List<AnbiaoJiashiyuanWuzezhengming> selectWuZeZhengMingRisk(@Param("jiashiyuanId") String jiashiyuanId);
 
-	List<AnbiaoJiashiyuanAnquanzerenshu> selectAnQuanZeRenShuRisk();
+	List<AnbiaoJiashiyuanAnquanzerenshu> selectAnQuanZeRenShuRisk(@Param("jiashiyuanId") String jiashiyuanId);
 
-	List<AnbiaoJiashiyuanWeihaigaozhishu> selectWeiHaiGaoZhiShuRisk();
+	List<AnbiaoJiashiyuanWeihaigaozhishu> selectWeiHaiGaoZhiShuRisk(@Param("jiashiyuanId") String jiashiyuanId);
 
-	List<AnbiaoJiashiyuanLaodonghetong> selectLaoDongHeTongRisk();
+	List<AnbiaoJiashiyuanLaodonghetong> selectLaoDongHeTongRisk(@Param("jiashiyuanId") String jiashiyuanId);
 
 	List<AnbiaoAnquanhuiyi> selectAnQuanHuiYiRisk();
 
