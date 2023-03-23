@@ -779,10 +779,12 @@ public class JiaShiYuanController {
 				}
 			}
 
+
+			boolean i = iJiaShiYuanService.updateById(jiaShiYuan);
+
 			String jiashiyuanId = jiaShiYuan.getId();
 			riskDetailController.jiashiyuanShenFenZhengRiskinsert(jiashiyuanId,user);
 
-			boolean i = iJiaShiYuanService.updateById(jiaShiYuan);
 			if (i) {
 				r.setMsg("更新成功");
 				r.setCode(200);

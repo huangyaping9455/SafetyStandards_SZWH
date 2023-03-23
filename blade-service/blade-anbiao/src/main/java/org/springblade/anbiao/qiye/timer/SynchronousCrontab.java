@@ -1396,7 +1396,7 @@ public class SynchronousCrontab {
 					a++;
 				}
 				if (!jiashizheng.getAjjAttachedPhotos().equals("0")){
-					A=A+"驾驶证正面照片、";
+					A=A+"驾驶证反面照片、";
 					riskDetail1.setArdContent(A);
 					a++;
 				}
@@ -1430,7 +1430,7 @@ public class SynchronousCrontab {
 					a++;
 				}
 				if (!jiashizheng.getAjjAttachedPhotos().equals("0")){
-					A=A+"驾驶证正面照片、";
+					A=A+"驾驶证反面照片、";
 					riskDetail.setArdContent(A);
 					a++;
 				}
@@ -2114,7 +2114,7 @@ public class SynchronousCrontab {
 		List<VehicleXingshizheng> vehicleXingshizhengs = riskDetailService.selectXingShiZhengRisk();
 		for (VehicleXingshizheng vehicleXingshizheng:vehicleXingshizhengs) {
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
-			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"行驶证信息未完善");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"车辆行驶证信息未完善");
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,vehicleXingshizheng.getVehicleId());
 			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
@@ -2125,7 +2125,7 @@ public class SynchronousCrontab {
 				riskDetail1.setArdDeptIds(vehicleXingshizheng.getDeptId());
 				riskDetail1.setArdMajorCategories("0");
 				riskDetail1.setArdSubCategory("001");
-				riskDetail1.setArdTitle("行驶证信息未完善");
+				riskDetail1.setArdTitle("车辆行驶证信息未完善");
 				riskDetail1.setArdType("信息未完善");
 				riskDetail1.setArdDiscoveryDate(DateUtil.now().substring(0,10));
 				riskDetail1.setArdAssociationTable("anbiao_vehicle");
@@ -2426,7 +2426,7 @@ public class SynchronousCrontab {
 		List<VehicleXingnengbaogao> xingnengbaogaos = riskDetailService.selectXingNengBaoGaoRisk();
 		for (VehicleXingnengbaogao xingnengbaogao:xingnengbaogaos) {
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
-			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"性能报告信息未完善");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"车辆性能检测报告信息未完善");
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,xingnengbaogao.getVehicleId());
 			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
@@ -2437,7 +2437,7 @@ public class SynchronousCrontab {
 				riskDetail1.setArdDeptIds(xingnengbaogao.getDeptId());
 				riskDetail1.setArdMajorCategories("0");
 				riskDetail1.setArdSubCategory("001");
-				riskDetail1.setArdTitle("性能报告信息未完善");
+				riskDetail1.setArdTitle("车辆性能检测报告信息未完善");
 				riskDetail1.setArdType("信息未完善");
 				riskDetail1.setArdDiscoveryDate(DateUtil.now().substring(0,10));
 				riskDetail1.setArdAssociationTable("anbiao_vehicle");

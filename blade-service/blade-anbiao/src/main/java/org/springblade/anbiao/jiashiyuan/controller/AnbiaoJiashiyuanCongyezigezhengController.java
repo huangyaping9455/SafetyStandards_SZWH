@@ -218,6 +218,8 @@ public class AnbiaoJiashiyuanCongyezigezhengController {
 			jiaShiYuan.setCongyezhengyouxiaoqi(congyezigezheng.getAjcValidUntil());
 			jiaShiYuanService.updateById(jiaShiYuan);
 
+			congyezigezhengService.updateById(congyezigezheng);
+
 			String jiashiyuanId = congyezigezheng.getAjcAjIds();
 			riskDetailController.jiashiyuanCongYeZhengRiskinsert(jiashiyuanId,user);
 

@@ -89,6 +89,8 @@ public class AnbiaoJiashiyuanGangqianpeixunController {
 			}
 			gangqianpeixun.setAjgUpdateTime(DateUtil.now());
 
+			gangqianpeixunService.updateById(gangqianpeixun);
+
 			String jiashiyuanId = gangqianpeixun.getAjgAjIds();
 			riskDetailController.jiashiyuanGangQianPeiXunRiskinsert(jiashiyuanId,user);
 

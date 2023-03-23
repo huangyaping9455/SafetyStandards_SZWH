@@ -864,7 +864,7 @@
             b.dept_id
     </select>
 
-    <select id="selectXingShiZhengRisk"  resultType="org.springblade.anbiao.cheliangguanli.entity.VehicleXingshizheng">
+    <select id="selectXingShiZhengRisk"  resultType="org.springblade.anbiao.cheliangguanli.entity.VehicleXingshizheng" parameterType="java.lang.String">
         SELECT
             a.id as vehicleId
              , a.dept_id
@@ -909,11 +909,14 @@
                 LEFT JOIN anbiao_jiashiyuan d ON a.jiashiyuanid = d.id
         WHERE
             a.is_deleted = 0
+        <if test="vehicleId != null and vehicleId != '' ">
+            and a.id = #{vehicleId}
+        </if>
         ORDER BY
             a.id
     </select>
 
-    <select id="selectDaoLuYunShuZhengRisk"  resultType="org.springblade.anbiao.cheliangguanli.entity.VehicleDaoluyunshuzheng">
+    <select id="selectDaoLuYunShuZhengRisk"  resultType="org.springblade.anbiao.cheliangguanli.entity.VehicleDaoluyunshuzheng" parameterType="java.lang.String">
         SELECT
                a.id as vehicleId
              , a.dept_id
@@ -945,11 +948,14 @@
                 LEFT JOIN anbiao_jiashiyuan d ON a.jiashiyuanid = d.id
         WHERE
             a.is_deleted = 0
+        <if test="vehicleId != null and vehicleId != '' ">
+            and a.id = #{vehicleId}
+        </if>
         ORDER BY
             a.id
     </select>
 
-    <select id="selectXingNengBaoGaoRisk"  resultType="org.springblade.anbiao.cheliangguanli.entity.VehicleXingnengbaogao">
+    <select id="selectXingNengBaoGaoRisk"  resultType="org.springblade.anbiao.cheliangguanli.entity.VehicleXingnengbaogao" parameterType="java.lang.String">
         SELECT
                a.id as vehicleId
              , a.dept_id
@@ -978,11 +984,14 @@
                 LEFT JOIN anbiao_jiashiyuan d ON a.jiashiyuanid = d.id
         WHERE
             a.is_deleted = 0
+        <if test="vehicleId != null and vehicleId != '' ">
+            and a.id = #{vehicleId}
+        </if>
         ORDER BY
             a.id
     </select>
 
-    <select id="selectDengJiZhengShuRisk"  resultType="org.springblade.anbiao.cheliangguanli.entity.VehicleDengjizhengshu">
+    <select id="selectDengJiZhengShuRisk"  resultType="org.springblade.anbiao.cheliangguanli.entity.VehicleDengjizhengshu" parameterType="java.lang.String">
         SELECT
                a.id as vehicleId
              , a.dept_id
@@ -1011,6 +1020,9 @@
                 LEFT JOIN anbiao_jiashiyuan d ON a.jiashiyuanid = d.id
         WHERE
             a.is_deleted = 0
+        <if test="vehicleId != null and vehicleId != '' ">
+            and a.id = #{vehicleId}
+        </if>
         ORDER BY
             a.id
     </select>

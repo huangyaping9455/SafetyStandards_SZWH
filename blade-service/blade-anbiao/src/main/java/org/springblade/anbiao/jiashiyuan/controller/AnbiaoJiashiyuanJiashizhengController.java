@@ -224,6 +224,8 @@ public class AnbiaoJiashiyuanJiashizhengController {
 			jiaShiYuan.setJiashizhengyouxiaoqi(jiashizheng.getAjjValidPeriodEnd());
 			jiaShiYuanService.updateById(jiaShiYuan);
 
+			jiashizhengService.updateById(jiashizheng);
+
 			String jiashiyuanId = jiashizheng.getAjjAjIds();
 			riskDetailController.jiashiyuanJiaShiZhengRiskinsert(jiashiyuanId,user);
 

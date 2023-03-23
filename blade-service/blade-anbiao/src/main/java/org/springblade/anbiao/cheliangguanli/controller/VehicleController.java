@@ -28,6 +28,7 @@ import org.springblade.anbiao.guanlijigouherenyuan.feign.IOrganizationsClient;
 import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
 import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.jiashiyuan.service.*;
+import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
 import org.springblade.common.configurationBean.FileServer;
 import org.springblade.common.constant.FilePathConstant;
 import org.springblade.common.tool.*;
@@ -41,6 +42,7 @@ import org.springblade.system.entity.Dept;
 import org.springblade.system.entity.Dict;
 import org.springblade.system.feign.ISysClient;
 import org.springblade.upload.upload.feign.IFileUploadClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -100,6 +102,8 @@ public class VehicleController {
 	private IAnbiaoJiashiyuanWeihaigaozhishuService weihaigaozhishuService;
 	private IAnbiaoJiashiyuanLaodonghetongService laodonghetongService;
 	private IAnbiaoJiashiyuanQitaService qitaService;
+	@Autowired
+	private AnbiaoRiskDetailController riskDetailController;
 
 
 	@PostMapping("/list")
@@ -740,7 +744,7 @@ public class VehicleController {
 	@PostMapping("/updateDetailedSave")
 	@ApiLog("更新-车辆详细档案【新版】")
 	@ApiOperation(value = "更新-车辆详细档案【新版】", notes = "传入Vehicle", position = 32)
-	public R updateDetailed(@RequestBody VehicleDetailed vd,BladeUser user) {
+	public R updateDetailed(@RequestBody VehicleDetailed vd,BladeUser user) throws ParseException {
     	R r = new R();
     	if(!StringUtil.isNotBlank(vd.getVehicleId())) {
     		r.setMsg("请传入车辆主键信息！");
@@ -781,6 +785,9 @@ public class VehicleController {
 			}
 			if (xingshizhengService.saveOrUpdate(xsz)) {
 				stringBuilder.append("更新车辆行驶证信息成功！"+"\r\n");
+				String vehicleId=vd.getVehicleId();
+				riskDetailController.vehicleXingShiZhengRiskinsert(vehicleId,user);
+
 			} else {
 				stringBuilder.append("更新车辆行驶证信息失败！"+"\r\n");
 			}
@@ -812,6 +819,9 @@ public class VehicleController {
 
 			if(daoluyunshuzhengService.saveOrUpdate(dlysz)) {
 				stringBuilder.append("更新道路运输证信息成功！"+"\r\n");
+				String vehicleId=vd.getVehicleId();
+				riskDetailController.vehicleDaoLuYunShuZhengRiskinsert(vehicleId,user);
+
 			} else {
 				stringBuilder.append("更新道路运输证信息失败！"+"\r\n");
 			}
@@ -839,6 +849,9 @@ public class VehicleController {
 
 			if(xingnengbaogaoService.saveOrUpdate(xlbg)) {
 				stringBuilder.append("更新性能报告成功！"+"\r\n");
+				String vehicleId=vd.getVehicleId();
+				riskDetailController.vehicleXingNengBaoGaoRiskinsert(vehicleId,user);
+
 			} else {
 				stringBuilder.append("更新性能报告失败！"+"\r\n");
 			}
@@ -891,6 +904,9 @@ public class VehicleController {
 			}
 			if(dengjizhengshuService.saveOrUpdate(djzs)) {
 				stringBuilder.append("更新登记证书成功！"+"\r\n");
+				String vehicleId=vd.getVehicleId();
+				riskDetailController.vehicleDengJiZhengShuRiskinsert(vehicleId,user);
+
 			} else {
 				stringBuilder.append("更新登记证书失败！"+"\r\n");
 			}

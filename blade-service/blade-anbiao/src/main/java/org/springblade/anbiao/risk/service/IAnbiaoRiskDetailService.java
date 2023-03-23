@@ -89,12 +89,16 @@ public interface IAnbiaoRiskDetailService extends IService<AnbiaoRiskDetail> {
 	List<AnbiaoCheliangJiashiyuanDaily> selectAnQuanJianChaRisk();
 
 	List<VehicleXingshizheng> selectXingShiZhengRisk();
+	List<VehicleXingshizheng> selectXingShiZhengRisk(String vehicleId);
 
 	List<VehicleDaoluyunshuzheng> selectDaoLuYunShuZhengRisk();
+	List<VehicleDaoluyunshuzheng> selectDaoLuYunShuZhengRisk(String vehicleId);
 
 	List<VehicleXingnengbaogao> selectXingNengBaoGaoRisk();
+	List<VehicleXingnengbaogao> selectXingNengBaoGaoRisk(String vehicleId);
 
 	List<VehicleDengjizhengshu> selectDengJiZhengShuRisk();
+	List<VehicleDengjizhengshu> selectDengJiZhengShuRisk(String vehicleId);
 
 	VehicleRiskAllPage<VehicleRiskAllVO> selectVehicleRiskAll(VehicleRiskAllPage vehicleRiskAllPage);
 

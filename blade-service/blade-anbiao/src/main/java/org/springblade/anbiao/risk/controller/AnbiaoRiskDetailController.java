@@ -2601,7 +2601,7 @@ public class AnbiaoRiskDetailController {
 					a++;
 				}
 				if (!jiashizheng.getAjjAttachedPhotos().equals("0")){
-					A=A+"驾驶证正面照片、";
+					A=A+"驾驶证反面照片、";
 					riskDetail1.setArdContent(A);
 					a++;
 				}
@@ -2635,7 +2635,7 @@ public class AnbiaoRiskDetailController {
 					a++;
 				}
 				if (!jiashizheng.getAjjAttachedPhotos().equals("0")){
-					A=A+"驾驶证正面照片、";
+					A=A+"驾驶证反面照片、";
 					riskDetail.setArdContent(A);
 					a++;
 				}
@@ -3389,12 +3389,12 @@ public class AnbiaoRiskDetailController {
 	@PostMapping("/vehicleXingShiZhengRiskinsert")
 	@ApiLog("新增-行驶证风险统计信息")
 	@ApiOperation(value = "新增-车头行驶证风险统计信息", position = 1)
-	public R vehicleXingShiZhengRiskinsert(BladeUser user) throws ParseException{
+	public R vehicleXingShiZhengRiskinsert(String vehicleId,BladeUser user) throws ParseException{
 		R r = new R();
-		List<VehicleXingshizheng> vehicleXingshizhengs = riskDetailService.selectXingShiZhengRisk();
+		List<VehicleXingshizheng> vehicleXingshizhengs = riskDetailService.selectXingShiZhengRisk(vehicleId);
 		for (VehicleXingshizheng vehicleXingshizheng:vehicleXingshizhengs) {
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
-			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"行驶证信息未完善");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"车辆行驶证信息未完善");
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,vehicleXingshizheng.getVehicleId());
 			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
@@ -3405,7 +3405,7 @@ public class AnbiaoRiskDetailController {
 				riskDetail1.setArdDeptIds(vehicleXingshizheng.getDeptId());
 				riskDetail1.setArdMajorCategories("0");
 				riskDetail1.setArdSubCategory("001");
-				riskDetail1.setArdTitle("行驶证信息未完善");
+				riskDetail1.setArdTitle("车辆行驶证信息未完善");
 				riskDetail1.setArdType("信息未完善");
 				riskDetail1.setArdDiscoveryDate(DateUtil.now().substring(0,10));
 				riskDetail1.setArdAssociationTable("anbiao_vehicle");
@@ -3616,9 +3616,9 @@ public class AnbiaoRiskDetailController {
 	@PostMapping("/vehicleDaoLuYunShuZhengRiskinsert")
 	@ApiLog("新增-道路运输证风险统计信息")
 	@ApiOperation(value = "新增-道路运输证风险统计信息", position = 1)
-	public R vehicleDaoLuYunShuZhengRiskinsert(BladeUser user) throws ParseException{
+	public R vehicleDaoLuYunShuZhengRiskinsert(String vehicleId,BladeUser user) throws ParseException{
 		R r = new R();
-		List<VehicleDaoluyunshuzheng> vehicleDaoluyunshuzhengs = riskDetailService.selectDaoLuYunShuZhengRisk();
+		List<VehicleDaoluyunshuzheng> vehicleDaoluyunshuzhengs = riskDetailService.selectDaoLuYunShuZhengRisk(vehicleId);
 		for (VehicleDaoluyunshuzheng vehicleDaoluyunshuzheng:vehicleDaoluyunshuzhengs) {
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"道路运输证信息未完善");
@@ -3711,12 +3711,12 @@ public class AnbiaoRiskDetailController {
 	@PostMapping("/vehicleXingNengBaoGaoRiskinsert")
 	@ApiLog("新增-性能报告风险统计信息")
 	@ApiOperation(value = "新增-性能报告风险统计信息", position = 1)
-	public R vehicleXingNengBaoGaoRiskinsert(BladeUser user) throws ParseException{
+	public R vehicleXingNengBaoGaoRiskinsert(String vehicleId,BladeUser user) throws ParseException{
 		R r = new R();
-		List<VehicleXingnengbaogao> xingnengbaogaos = riskDetailService.selectXingNengBaoGaoRisk();
+		List<VehicleXingnengbaogao> xingnengbaogaos = riskDetailService.selectXingNengBaoGaoRisk(vehicleId);
 		for (VehicleXingnengbaogao xingnengbaogao:xingnengbaogaos) {
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
-			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"性能报告信息未完善");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"车辆性能检测报告信息未完善");
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,xingnengbaogao.getVehicleId());
 			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
@@ -3727,7 +3727,7 @@ public class AnbiaoRiskDetailController {
 				riskDetail1.setArdDeptIds(xingnengbaogao.getDeptId());
 				riskDetail1.setArdMajorCategories("0");
 				riskDetail1.setArdSubCategory("001");
-				riskDetail1.setArdTitle("性能报告信息未完善");
+				riskDetail1.setArdTitle("车辆性能检测报告信息未完善");
 				riskDetail1.setArdType("信息未完善");
 				riskDetail1.setArdDiscoveryDate(DateUtil.now().substring(0,10));
 				riskDetail1.setArdAssociationTable("anbiao_vehicle");
@@ -3776,9 +3776,9 @@ public class AnbiaoRiskDetailController {
 	@PostMapping("/vehicleDengJiZhengShuRiskinsert")
 	@ApiLog("新增-登记证书风险统计信息")
 	@ApiOperation(value = "新增-登记证书风险统计信息", position = 1)
-	public R vehicleDengJiZhengShuRiskinsert(BladeUser user) throws ParseException{
+	public R vehicleDengJiZhengShuRiskinsert(String vehicleId,BladeUser user) throws ParseException{
 		R r = new R();
-		List<VehicleDengjizhengshu> dengjizhengshus = riskDetailService.selectDengJiZhengShuRisk();
+		List<VehicleDengjizhengshu> dengjizhengshus = riskDetailService.selectDengJiZhengShuRisk(vehicleId);
 		for (VehicleDengjizhengshu dengjizhengshu:dengjizhengshus) {
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"登记证书信息未完善");

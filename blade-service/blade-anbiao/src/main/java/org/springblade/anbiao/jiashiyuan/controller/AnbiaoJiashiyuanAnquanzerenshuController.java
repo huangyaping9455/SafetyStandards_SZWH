@@ -77,6 +77,8 @@ public class AnbiaoJiashiyuanAnquanzerenshuController {
 			anquanzerenshu.setAjaUpdateTime(DateUtil.now());
 			anquanzerenshu.setAjaAutographTime(DateUtil.now());
 
+			anquanzerenshuService.updateById(anquanzerenshu);
+
 			String jiashiyuanId = anquanzerenshu.getAjaAjIds();
 			riskDetailController.jiashiyuanAnQuanZeRenShuRiskinsert(jiashiyuanId,user);
 

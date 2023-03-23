@@ -71,7 +71,7 @@
             and ahd_address != #{ahdAddress}
         </if>
         <if test="jiashiyuanid != null and jiashiyuanid != '' ">
-            and ahd_driver_ids != #{jiashiyuanid}
+            and ahd_driver_ids = #{jiashiyuanid}
         </if>
     </sql>
 

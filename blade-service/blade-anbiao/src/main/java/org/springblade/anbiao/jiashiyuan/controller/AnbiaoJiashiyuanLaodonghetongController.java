@@ -93,6 +93,8 @@ public class AnbiaoJiashiyuanLaodonghetongController {
 			laodonghetong.setAjwUpdateTime(DateUtil.now());
 			laodonghetong.setAjwAutographTime(DateUtil.now());
 
+			laodonghetongService.updateById(laodonghetong);
+
 			String jiashiyuanId = laodonghetong.getAjwAjIds();
 			riskDetailController.jiashiyuanWeiHaiGaoZhiShuRiskinsert(jiashiyuanId,user);
 

@@ -75,6 +75,7 @@ public class AnbiaoJiashiyuanWuzezhengmingController {
 				wuzezhengming.setAjwUpdateByIds(wuzezhengming.getAjwUpdateByIds());
 			}
 			wuzezhengming.setAjwUpdateTime(DateUtil.now());
+			wuzezhengmingService.updateById(wuzezhengming);
 
 			String jiashiyuanId = wuzezhengming.getAjwAjIds();
 			riskDetailController.jiashiyuanWuZeZhengMingRiskinsert(jiashiyuanId,user);

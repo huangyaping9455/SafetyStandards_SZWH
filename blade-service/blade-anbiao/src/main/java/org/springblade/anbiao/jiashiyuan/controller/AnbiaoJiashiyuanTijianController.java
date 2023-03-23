@@ -210,6 +210,8 @@ public class AnbiaoJiashiyuanTijianController {
 			jiaShiYuan.setTijianyouxiaoqi(tijian.getAjtTermValidity());
 			jiaShiYuanService.updateById(jiaShiYuan);
 
+			tijianService.updateById(tijian);
+
 			String jiashiyuanId = tijian.getAjtAjIds();
 			riskDetailController.jiashiyuanTiJianRiskinsert(jiashiyuanId,user);
 

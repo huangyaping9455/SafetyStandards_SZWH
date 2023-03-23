@@ -381,25 +381,49 @@ public class AnbiaoRiskDetailServiceImpl extends ServiceImpl<AnbiaoRiskDetailMap
 		return mapper.selectAnQuanJianChaRisk();
 	}
 
+
+
 	@Override
 	public List<VehicleXingshizheng> selectXingShiZhengRisk() {
-		return mapper.selectXingShiZhengRisk();
+		return mapper.selectXingShiZhengRisk(null);
 	}
+	@Override
+	public List<VehicleXingshizheng> selectXingShiZhengRisk(String vehicleId) {
+		return mapper.selectXingShiZhengRisk(vehicleId);
+	}
+
 
 	@Override
 	public List<VehicleDaoluyunshuzheng> selectDaoLuYunShuZhengRisk() {
-		return mapper.selectDaoLuYunShuZhengRisk();
+		return mapper.selectDaoLuYunShuZhengRisk(null);
 	}
+	@Override
+	public List<VehicleDaoluyunshuzheng> selectDaoLuYunShuZhengRisk(String vehicleId) {
+		return mapper.selectDaoLuYunShuZhengRisk(vehicleId);
+	}
+
 
 	@Override
 	public List<VehicleXingnengbaogao> selectXingNengBaoGaoRisk() {
-		return mapper.selectXingNengBaoGaoRisk();
+		return mapper.selectXingNengBaoGaoRisk(null);
 	}
+	@Override
+	public List<VehicleXingnengbaogao> selectXingNengBaoGaoRisk(String vehicleId) {
+		return mapper.selectXingNengBaoGaoRisk(vehicleId);
+	}
+
+
 
 	@Override
 	public List<VehicleDengjizhengshu> selectDengJiZhengShuRisk() {
-		return mapper.selectDengJiZhengShuRisk();
+		return mapper.selectDengJiZhengShuRisk(null);
 	}
+	@Override
+	public List<VehicleDengjizhengshu> selectDengJiZhengShuRisk(String vehicleId) {
+		return mapper.selectDengJiZhengShuRisk(vehicleId);
+	}
+
+
 
 	@Override
 	public VehicleRiskAllPage<VehicleRiskAllVO> selectVehicleRiskAll(VehicleRiskAllPage vehicleRiskAllPage) {

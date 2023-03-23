@@ -123,6 +123,7 @@ public class AnbiaoJiashiyuanRuzhiController {
 				ruzhi.setAjrUpdateByIds(ruzhi.getAjrUpdateByIds());
 			}
 			ruzhi.setAjrUpdateTime(DateUtil.now());
+			ruzhiService.updateById(ruzhi);
 
 			String jiashiyuanId = ruzhi.getAjrAjIds();
 			riskDetailController.jiashiyuanRuZhiRiskinsert(jiashiyuanId,user);

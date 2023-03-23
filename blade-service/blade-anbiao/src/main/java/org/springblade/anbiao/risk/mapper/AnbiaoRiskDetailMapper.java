@@ -95,13 +95,13 @@ public interface AnbiaoRiskDetailMapper extends BaseMapper<AnbiaoRiskDetail> {
 
 	List<AnbiaoCheliangJiashiyuanDaily> selectAnQuanJianChaRisk();
 
-	List<VehicleXingshizheng> selectXingShiZhengRisk();
+	List<VehicleXingshizheng> selectXingShiZhengRisk(@Param("vehicleId") String vehicleId);
 
-	List<VehicleDaoluyunshuzheng> selectDaoLuYunShuZhengRisk();
+	List<VehicleDaoluyunshuzheng> selectDaoLuYunShuZhengRisk(@Param("vehicleId") String vehicleId);
 
-	List<VehicleXingnengbaogao> selectXingNengBaoGaoRisk();
+	List<VehicleXingnengbaogao> selectXingNengBaoGaoRisk(@Param("vehicleId") String vehicleId);
 
-	List<VehicleDengjizhengshu> selectDengJiZhengShuRisk();
+	List<VehicleDengjizhengshu> selectDengJiZhengShuRisk(@Param("vehicleId") String vehicleId);
 
 	List<VehicleRiskAllVO> selectVehicleRiskAll(VehicleRiskAllPage vehicleRiskAllPage);
 	int selectVehicleRiskTotal(VehicleRiskAllPage vehicleRiskAllPage);
