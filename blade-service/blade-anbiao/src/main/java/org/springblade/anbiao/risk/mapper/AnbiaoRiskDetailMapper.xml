@@ -1036,6 +1036,7 @@
             d.jiashiyuanxingming,
             ard_title ,
             ard_content,
+            ard_type,
             ard_discovery_date,
             ard_association_value,
             a.vehicleId,
@@ -1079,6 +1080,7 @@
             d.jiashiyuanxingming,
             ard_title ,
             ard_content,
+            ard_type,
             ard_discovery_date,
             ard_association_value,
             a.vehicleId,
@@ -1126,6 +1128,7 @@
         d.jiashiyuanxingming,
         ard_title ,
         ard_content,
+        ard_type,
         ard_discovery_date,
         ard_association_value,
         a.vehicleId,
@@ -1161,4 +1164,42 @@
         ard_association_value
         )d
     </select>
+
+    <select id="selectJiaShiYuanBaoXianRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan" parameterType="java.lang.String">
+        SELECT
+            a.id ,
+            a.dept_id,
+            a.jiashiyuanxingming
+        FROM
+            anbiao_jiashiyuan a
+                LEFT JOIN anbiao_jiashiyuan_baoxian b ON a.id = b.ajb_insured_ids AND b.ajb_delete = 0
+        WHERE
+            a.isdelete = 0
+          AND (b.ajb_insured_ids IS NULL OR b.ajb_insured_ids = '')
+        <if test="jiashiyuanId != null and jiashiyuanId != '' ">
+            and a.id = #{jiashiyuanId}
+        </if>
+        ORDER BY
+            a.id
+    </select>
+
+    <select id="selectVehicleBaoXianRisk"  resultType="org.springblade.anbiao.cheliangguanli.entity.Vehicle" parameterType="java.lang.String">
+
+        SELECT
+        id,
+        cheliangpaizhao,
+        dept_id
+        FROM
+        anbiao_vehicle j
+        LEFT JOIN anbiao_vehicle_baoxian o ON j.id = o.avb_av_ids AND o.avb_delete = 0
+        WHERE
+        j.is_deleted = 0
+        and (avb_av_ids IS NULL OR avb_av_ids = '')
+        <if test="vehicleId != null and vehicleId != '' ">
+            and id = #{vehicleId}
+        </if>
+
+    </select>
+
+
 </mapper>

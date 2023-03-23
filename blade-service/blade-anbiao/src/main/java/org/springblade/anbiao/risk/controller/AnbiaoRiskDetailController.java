@@ -148,7 +148,7 @@ public class AnbiaoRiskDetailController {
 				riskDetail.setArdDeptIds(deail.getDeptId().toString());
 				riskDetail.setArdMajorCategories("0");
 				riskDetail.setArdSubCategory("003");
-				riskDetail.setArdTitle("身份证有效截止日期");
+				riskDetail.setArdTitle("身份证有效期");
 				riskDetail.setArdDiscoveryDate(DateUtil.now().substring(0, 10));
 				riskDetail.setArdIsRectification("0");
 				riskDetail.setArdAssociationTable("anbiao_jiashiyuan");
@@ -227,7 +227,7 @@ public class AnbiaoRiskDetailController {
 				riskDetail2.setArdDeptIds(deail.getDeptId().toString());
 				riskDetail2.setArdMajorCategories("0");
 				riskDetail2.setArdSubCategory("003");
-				riskDetail2.setArdTitle("驾驶证有效截止日期");
+				riskDetail2.setArdTitle("驾驶证有效期");
 				riskDetail2.setArdDiscoveryDate(DateUtil.now().substring(0, 10));
 				riskDetail2.setArdIsRectification("0");
 				riskDetail2.setArdAssociationTable("anbiao_jiashiyuan");
@@ -277,10 +277,10 @@ public class AnbiaoRiskDetailController {
 						timeDifference = day4 - day3;
 					}
 					if (timeDifference <= 30 && timeDifference > 0) {
-						riskDetail2.setArdContent("驾驶证有效截止日期预警");
+						riskDetail2.setArdContent("驾驶证有效期预警");
 						riskDetail2.setArdType("预警");
 					} else if (timeDifference < 0) {
-						riskDetail2.setArdContent("驾驶证有效截止日期逾期");
+						riskDetail2.setArdContent("驾驶证有效期逾期");
 						riskDetail2.setArdType("逾期");
 					} else {
 						riskDetail2.setArdType("正常");
@@ -306,7 +306,7 @@ public class AnbiaoRiskDetailController {
 				riskDetail3.setArdDeptIds(deail.getDeptId().toString());
 				riskDetail3.setArdMajorCategories("0");
 				riskDetail3.setArdSubCategory("003");
-				riskDetail3.setArdTitle("从业资格证有效截止日期");
+				riskDetail3.setArdTitle("从业资格证有效期");
 				riskDetail3.setArdDiscoveryDate(DateUtil.now().substring(0, 10));
 				riskDetail3.setArdIsRectification("0");
 				riskDetail3.setArdAssociationTable("anbiao_jiashiyuan");
@@ -385,7 +385,7 @@ public class AnbiaoRiskDetailController {
 				riskDetail4.setArdDeptIds(deail.getDeptId().toString());
 				riskDetail4.setArdMajorCategories("0");
 				riskDetail4.setArdSubCategory("003");
-				riskDetail4.setArdTitle("体检有效截止日期");
+				riskDetail4.setArdTitle("体检有效期");
 				riskDetail4.setArdDiscoveryDate(DateUtil.now().substring(0, 10));
 				riskDetail4.setArdIsRectification("0");
 				riskDetail4.setArdAssociationTable("anbiao_jiashiyuan");
@@ -532,7 +532,7 @@ public class AnbiaoRiskDetailController {
 				riskDetail.setArdRectificationByIds(user.getUserId().toString());
 				riskDetail.setArdRectificationByName(user.getUserName());
 				riskDetail.setArdRectificationDate(DateUtil.now());
-				riskDetail.setArdModularName("身份证有效截止日期");
+				riskDetail.setArdModularName("身份证有效期");
 				riskDetail.setArdRectificationField("shenfenzhengyouxiaoqi");
 				riskDetail.setArdRectificationValue(date);
 				riskDetail.setArdRectificationFieldType("String");
@@ -573,7 +573,7 @@ public class AnbiaoRiskDetailController {
 				riskDetail.setArdRectificationByIds(user.getUserId().toString());
 				riskDetail.setArdRectificationByName(user.getUserName());
 				riskDetail.setArdRectificationDate(DateUtil.now());
-				riskDetail.setArdModularName("驾驶证有效截止日期");
+				riskDetail.setArdModularName("驾驶证有效期");
 				riskDetail.setArdRectificationField("jiashizhengyouxiaoqi");
 				riskDetail.setArdRectificationValue(date);
 				riskDetail.setArdRectificationFieldType("String");
@@ -627,7 +627,7 @@ public class AnbiaoRiskDetailController {
 				riskDetail.setArdRectificationByIds(user.getUserId().toString());
 				riskDetail.setArdRectificationByName(user.getUserName());
 				riskDetail.setArdRectificationDate(DateUtil.now());
-				riskDetail.setArdModularName("从业资格证有效截止日期");
+				riskDetail.setArdModularName("从业资格证有效期");
 				riskDetail.setArdRectificationField("congyezhengyouxiaoqi");
 				riskDetail.setArdRectificationValue(date);
 				riskDetail.setArdRectificationFieldType("String");
@@ -681,7 +681,7 @@ public class AnbiaoRiskDetailController {
 				riskDetail.setArdRectificationByIds(user.getUserId().toString());
 				riskDetail.setArdRectificationByName(user.getUserName());
 				riskDetail.setArdRectificationDate(DateUtil.now());
-				riskDetail.setArdModularName("体检有效截止日期");
+				riskDetail.setArdModularName("体检有效期");
 				riskDetail.setArdRectificationField("tijianriqi");
 				riskDetail.setArdRectificationValue(date);
 				riskDetail.setArdRectificationFieldType("String");
@@ -3832,6 +3832,74 @@ public class AnbiaoRiskDetailController {
 					riskDetailService.updateById(riskDetail);
 
 				}
+			}
+		}
+		return r;
+	}
+
+
+	@PostMapping("/JiaShiYuanBaoXianRiskinsert")
+	@ApiLog("新增-驾驶员保险风险统计信息")
+	@ApiOperation(value = "新增-驾驶员保险风险统计信息", position = 1)
+	public R JiaShiYuanBaoXianRiskinsert(String jiashiyuanId,BladeUser user) throws ParseException{
+		R r = new R();
+		List<JiaShiYuan> jiaShiYuanBaoXianRisks = riskDetailService.selectJiaShiYuanBaoXianRisk(jiashiyuanId);
+		for (JiaShiYuan jiaShiYuanBaoXianRisk:jiaShiYuanBaoXianRisks) {
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"驾驶员保险");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,jiaShiYuanBaoXianRisk.getId());
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,"无保险");
+			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+			if (riskDetail==null){
+				AnbiaoRiskDetail riskDetail1 = new AnbiaoRiskDetail();
+				riskDetail1.setArdDeptIds(jiaShiYuanBaoXianRisk.getDeptId().toString());
+				riskDetail1.setArdMajorCategories("0");
+				riskDetail1.setArdSubCategory("004");
+				riskDetail1.setArdTitle("驾驶员保险");
+				riskDetail1.setArdType("未购买");
+				riskDetail1.setArdDiscoveryDate(DateUtil.now().substring(0,10));
+				riskDetail1.setArdAssociationTable("anbiao_jiashiyuan");
+				riskDetail1.setArdAssociationField("id");
+				riskDetail1.setArdAssociationValue(jiaShiYuanBaoXianRisk.getId());
+				riskDetail1.setArdIsRectification("0");
+				riskDetail1.setArdContent("无保险");
+				riskDetailService.getBaseMapper().insert(riskDetail1);
+			}
+		}
+		return r;
+	}
+
+
+	@PostMapping("/VehicleBaoXianRiskinsert")
+	@ApiLog("新增-车辆保险风险统计信息")
+	@ApiOperation(value = "新增-车辆保险风险统计信息", position = 1)
+	public R VehicleBaoXianRiskinsert(String vehicleId,BladeUser user) throws ParseException{
+		R r = new R();
+		List<Vehicle> vehicleBaoXianRisks = riskDetailService.selectVehicleBaoXianRisk(vehicleId);
+		for (Vehicle vehicleBaoXianRisk:vehicleBaoXianRisks) {
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"车辆保险");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,vehicleBaoXianRisk.getId());
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,"无保险");
+			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+			if (riskDetail==null){
+				AnbiaoRiskDetail riskDetail1 = new AnbiaoRiskDetail();
+				riskDetail1.setArdDeptIds(vehicleBaoXianRisk.getDeptId().toString());
+				riskDetail1.setArdMajorCategories("0");
+				riskDetail1.setArdSubCategory("004");
+				riskDetail1.setArdTitle("车辆保险");
+				riskDetail1.setArdType("未购买");
+				riskDetail1.setArdDiscoveryDate(DateUtil.now().substring(0,10));
+				riskDetail1.setArdAssociationTable("anbiao_vehicle");
+				riskDetail1.setArdAssociationField("id");
+				riskDetail1.setArdAssociationValue(vehicleBaoXianRisk.getId());
+				riskDetail1.setArdIsRectification("0");
+				riskDetail1.setArdContent("无保险");
+				riskDetail1.setVehicleId(vehicleBaoXianRisk.getId());
+				riskDetail1.setCheliangpaizhao(vehicleBaoXianRisk.getCheliangpaizhao());
+				riskDetailService.getBaseMapper().insert(riskDetail1);
 			}
 		}
 		return r;

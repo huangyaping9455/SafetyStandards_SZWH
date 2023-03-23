@@ -463,5 +463,24 @@ public class AnbiaoRiskDetailServiceImpl extends ServiceImpl<AnbiaoRiskDetailMap
 		}
 	}
 
+	@Override
+	public List<JiaShiYuan> selectJiaShiYuanBaoXianRisk() {
+		return mapper.selectJiaShiYuanBaoXianRisk(null);
+	}
+	@Override
+	public List<JiaShiYuan> selectJiaShiYuanBaoXianRisk(String jiashiyuanId) {
+		return mapper.selectJiaShiYuanBaoXianRisk(jiashiyuanId);
+	}
+
+
+	@Override
+	public List<Vehicle> selectVehicleBaoXianRisk() {
+		return mapper.selectVehicleBaoXianRisk(null);
+	}
+	@Override
+	public List<Vehicle> selectVehicleBaoXianRisk(String vehicleId) {
+		return mapper.selectVehicleBaoXianRisk(vehicleId);
+	}
+
 
 }

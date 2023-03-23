@@ -1,5 +1,6 @@
 package org.springblade.anbiao.risk.service;
 
+import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.vo.BaoYangWeiXiuVO;
@@ -101,5 +102,11 @@ public interface IAnbiaoRiskDetailService extends IService<AnbiaoRiskDetail> {
 	List<VehicleDengjizhengshu> selectDengJiZhengShuRisk(String vehicleId);
 
 	VehicleRiskAllPage<VehicleRiskAllVO> selectVehicleRiskAll(VehicleRiskAllPage vehicleRiskAllPage);
+
+	List<JiaShiYuan> selectJiaShiYuanBaoXianRisk();
+	List<JiaShiYuan> selectJiaShiYuanBaoXianRisk(String jiashiyuanId);
+
+	List<Vehicle> selectVehicleBaoXianRisk();
+	List<Vehicle> selectVehicleBaoXianRisk(String vehicleId);
 
 }
