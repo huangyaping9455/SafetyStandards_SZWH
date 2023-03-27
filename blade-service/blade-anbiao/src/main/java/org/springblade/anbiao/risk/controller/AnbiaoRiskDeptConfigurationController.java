@@ -47,13 +47,6 @@ public class AnbiaoRiskDeptConfigurationController {
 	@ApiOperation(value = "插入企业风险配置信息", notes = "传入rcId，deptId", position = 1)
 	public R insert(@RequestBody AnbiaoRiskDeptConfiguration riskDeptConfiguration, BladeUser user) {
 		R r = new R();
-//		QueryWrapper<AnbiaoRiskConfiguration> anbiaoRiskConfigurationQueryWrapper = new QueryWrapper<>();
-//		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getId,rcId);
-//		anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRiskConfiguration::getIsDeleted,"0");
-//		AnbiaoRiskConfiguration anbiaoRiskConfiguration = riskConfigurationService.getBaseMapper().selectOne(anbiaoRiskConfigurationQueryWrapper);
-//		if (anbiaoRiskConfiguration!=null){
-//			Dept dept = iSysClient.selectDeptById(Integer.parseInt(deptId));
-//			if (dept!=null){
 		//企业
 		String[] deptIds = riskDeptConfiguration.getDeptId().split(",");
 		//去除数组中重复的数组
@@ -65,8 +58,6 @@ public class AnbiaoRiskDeptConfigurationController {
 		}
 		//返回一个包含所有指定对象类型的数组
 		String[] deptIdss = listdeptid.toArray(new String[1]);
-
-
 		//风险项
 		String[] rcIds = riskDeptConfiguration.getRcId().split(",");
 		//去除数组中重复的数组
@@ -78,12 +69,11 @@ public class AnbiaoRiskDeptConfigurationController {
 		}
 		//返回一个包含所有指定对象类型的数组
 		String[] rcIdss = listdeptid2.toArray(new String[1]);
-
+		boolean save = false;
 		for (int i = 0; i < deptIdss.length; i++) {
 			riskDeptConfiguration.setDeptId(deptIdss[i]);
 			for (int j = 0; j < rcIdss.length; j++) {
 				riskDeptConfiguration.setRcId(rcIdss[j]);
-
 				QueryWrapper<AnbiaoRiskDeptConfiguration> riskDeptConfigurationQueryWrapper = new QueryWrapper<>();
 				riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getRcId, riskDeptConfiguration.getRcId());
 				riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getDeptId, riskDeptConfiguration.getDeptId());
@@ -97,44 +87,21 @@ public class AnbiaoRiskDeptConfigurationController {
 					anbiaoRiskDeptConfiguration.setChuangjianren(user.getUserName());
 					anbiaoRiskDeptConfiguration.setStatus("1");
 					anbiaoRiskDeptConfiguration.setIsDeleted("0");
-					boolean save = anbiaoRiskDeptConfigurationService.save(anbiaoRiskDeptConfiguration);
-					if (save == true) {
-						r.setMsg("新增权限成功");
-						r.setCode(200);
-						r.setSuccess(true);
-						r.setData(anbiaoRiskDeptConfiguration);
-						return r;
-					} else {
-						r.setMsg("新增权限失败");
-						r.setCode(500);
-						r.setSuccess(false);
-						r.setData(anbiaoRiskDeptConfiguration);
-						return r;
-					}
-				}else {
-					r.setMsg("权限已存在");
-					r.setCode(500);
-					r.setSuccess(true);
-					return r;
+					save = anbiaoRiskDeptConfigurationService.save(anbiaoRiskDeptConfiguration);
 				}
-
-
 			}
 		}
-
-//			}else {
-//				r.setMsg("企业不存在");
-//				r.setCode(500);
-//				r.setSuccess(false);
-//				return r;
-//			}
-//		}else {
-//			r.setMsg("对应权限不存在");
-//			r.setCode(500);
-//			r.setSuccess(false);
-//			return r;
-//		}
-		return r;
+		if (save == true) {
+			r.setMsg("新增权限成功");
+			r.setCode(200);
+			r.setSuccess(true);
+			return r;
+		} else {
+			r.setMsg("新增权限失败");
+			r.setCode(500);
+			r.setSuccess(false);
+			return r;
+		}
 	}
 
 	@PostMapping("/update")
@@ -255,7 +222,6 @@ public class AnbiaoRiskDeptConfigurationController {
 			return r;
 		}
 	}
-
 
 	/**
 	 * 分页
