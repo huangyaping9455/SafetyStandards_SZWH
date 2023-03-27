@@ -130,7 +130,7 @@
         ajb.ajb_delete,
         ajb.ajb_insure_deptid
         ,bd.dept_name,IFNULL(cc.ajbm_company_amount,0) as ajbmInsuranceAmount,IFNULL(ajbm_basic_premium,0) as ajbmBasicPremium,
-        case WHEN IFNULL(DATEDIFF(ajb.ajb_insurance_period_end,ajb.ajb_insurance_period_start),'')='' then 0 else DATEDIFF(ajb.ajb_insurance_period_end,ajb.ajb_insurance_period_start) end as ajb_insurance_days
+        case WHEN IFNULL(DATEDIFF(ajb.ajb_insurance_period_end,SYSDATE()),'')='' then 0 else DATEDIFF(ajb.ajb_insurance_period_end,SYSDATE()) end as ajb_insurance_days
         from
             anbiao_jiashiyuan_baoxian ajb
         inner join  (

@@ -22,6 +22,8 @@ import org.springblade.anbiao.labor.page.LaborPage;
 import org.springblade.anbiao.labor.page.laborledgerPage;
 import org.springblade.anbiao.labor.service.laborLingquService;
 import org.springblade.anbiao.labor.service.laborService;
+import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
+import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.anbiao.yinhuanpaicha.page.AnbiaoHiddenDangerPage;
 import org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoHiddenDangerVO;
 import org.springblade.common.configurationBean.FileServer;
@@ -65,6 +67,8 @@ public class laborController {
 	private FileServer fileServer;
 
 	private IFileUploadClient fileUploadClient;
+
+	private IAnbiaoRiskDetailService riskDetailService;
 
 //	@PostMapping("list")
 //	@ApiLog("列表-劳保用品信息")
@@ -221,6 +225,24 @@ public class laborController {
 			laborlingqu.setAlrIds(laborEntity1.getAlrIds());
 			laborlingqu.setAlrUpdateByIds(laborlingqu.getAlrPersonIds());
 			laborlingqu.setAlrUpdateTime(DateUtil.now());
+
+			QueryWrapper<LaborEntity> laborQueryWrapper1 = new QueryWrapper<>();
+			laborQueryWrapper1.lambda().eq(LaborEntity::getAliIds,laborlingqu.getAlrAliIds());
+			laborQueryWrapper1.lambda().eq(LaborEntity::getAliDelete,"0");
+			LaborEntity laborEntity = service.getBaseMapper().selectOne(laborQueryWrapper1);
+
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"劳保用品未领取");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,laborlingqu.getAlrPersonIds());
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,laborEntity.getAliName());
+			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+			if (riskDetail!=null){
+				riskDetail.setArdIsRectification("1");
+				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
+				riskDetailService.getBaseMapper().updateById(riskDetail);
+			}
+
 			return R.status(service.updateL(laborlingqu));
 		}else{
 			R rs = new R();

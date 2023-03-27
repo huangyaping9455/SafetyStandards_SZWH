@@ -2314,11 +2314,6 @@ public class AnbiaoRiskDetailController {
 					riskDetail1.setArdContent(A);
 					a++;
 				}
-				if (!ruzhi.getAjrIntegrityAssessmentResults().equals("0")){
-					A=A+"诚信考核结果、";
-					riskDetail1.setArdContent(A);
-					a++;
-				}
 				if(a>0){
 					A=A+"未完善";
 					riskDetail1.setArdContent(A);
@@ -2431,11 +2426,6 @@ public class AnbiaoRiskDetailController {
 				}
 				if (!ruzhi.getAjrSafeDrivingRecord3().equals("0")){
 					A=A+"安全驾驶记录3、";
-					riskDetail.setArdContent(A);
-					a++;
-				}
-				if (!ruzhi.getAjrIntegrityAssessmentResults().equals("0")){
-					A=A+"诚信考核结果、";
 					riskDetail.setArdContent(A);
 					a++;
 				}

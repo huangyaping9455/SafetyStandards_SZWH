@@ -404,7 +404,6 @@
              ,(case when IFNULL(ajr_safe_driving_record1,'') = '' then 1 else 0 end) as ajr_safe_driving_record1
              ,(case when IFNULL(ajr_safe_driving_record2,'') = '' then 1 else 0 end) as ajr_safe_driving_record2
              ,(case when IFNULL(ajr_safe_driving_record3,'') = '' then 1 else 0 end) as ajr_safe_driving_record3
-             ,(case when IFNULL(ajr_integrity_assessment_results,'') = '' then 1 else 0 end) as ajr_integrity_assessment_results
 
                  FROM anbiao_jiashiyuan_ruzhi
                  left join anbiao_jiashiyuan a on  ajr_aj_ids=a.id

@@ -14,6 +14,12 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.tools.zip.ZipOutputStream;
+import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
+import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
+import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
+import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
+import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.anbiao.yinhuanpaicha.entity.AnbiaoHiddenDanger;
 import org.springblade.anbiao.yinhuanpaicha.page.AnbiaoHiddenDangerPage;
 import org.springblade.anbiao.yinhuanpaicha.service.IAnbiaoHiddenDangerService;
@@ -62,6 +68,12 @@ public class AnbiaoHiddenDangerController {
 	private AlarmServer alarmServer;
 
 	private FileServer fileServer;
+
+	private IVehicleService vehicleService;
+
+	private IJiaShiYuanService jiaShiYuanService;
+
+	private IAnbiaoRiskDetailService riskDetailService;
 
 	/**
 	 * 新增
@@ -123,6 +135,33 @@ public class AnbiaoHiddenDangerController {
 		}
 		danger.setAhdUpdateTime(DateUtil.now());
 		danger.setAhdIds(danger.getAhdIds());
+
+		QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<>();
+		vehicleQueryWrapper.lambda().eq(Vehicle::getId,danger.getAhdVehicleIds());
+		Vehicle vehicle = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper);
+
+		QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
+		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getJiashiyuanxingming,danger.getAhdDriverName());
+		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,0);
+		JiaShiYuan jiaShiYuan = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+
+		if (org.apache.commons.lang.StringUtils.isBlank(danger.getAhdDescribe()) || danger.getAhdDescribe().equals("null")){
+			danger.setAhdDescribe("");
+		}
+		String s = vehicle.getCheliangpaizhao() + danger.getAhdDescribe();
+
+		QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"隐患排查");
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,jiaShiYuan.getId());
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,s);
+		AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+		if (riskDetail!=null){
+			riskDetail.setArdIsRectification("1");
+			riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
+			riskDetailService.getBaseMapper().updateById(riskDetail);
+		}
+
 		boolean i = service.updateById(danger);
 		if(i){
 			r.setMsg("编辑成功");

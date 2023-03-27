@@ -15,6 +15,7 @@
  */
 package org.springblade.anbiao.cheliangguanli.controller;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -34,6 +35,8 @@ import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanRuzhi;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanRuzhiService;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
+import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
+import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.core.boot.ctrl.BladeController;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.mp.support.Condition;
@@ -80,6 +83,7 @@ public class VehicleBaoxianController extends BladeController {
 	private ISysClient iSysClient;
 	private IJiashiyuanBaoxianService jiashiyuanBaoxianService;
 	private IAnbiaoJiashiyuanRuzhiService ruzhiService;
+	private IAnbiaoRiskDetailService riskDetailService;
 
 	/**
 	 * 详情
@@ -349,6 +353,19 @@ public class VehicleBaoxianController extends BladeController {
 					}
 				}else {
 					boolean isSave = vehicleBaoxianService.save(baoxian);
+
+					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"车辆保险");
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,baoxian.getAvbAvIds());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,"无保险");
+					AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+					if (riskDetail!=null){
+						riskDetail.setArdIsRectification("1");
+						riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
+						riskDetailService.getBaseMapper().updateById(riskDetail);
+					}
+
 					for (VehicleBaoxianMingxi baoxianMingxi: insurance) {
 						baoxianMingxi.setAvbmAvbIds(baoxian.getAvbIds());
 						if(StringUtil.isEmpty(baoxianMingxi.getAvbmName())){
@@ -404,6 +421,19 @@ public class VehicleBaoxianController extends BladeController {
 		baoxian.setAvbCreateByName(user.getUserName());
 		baoxian.setAvbCreateTime(LocalDateTime.now());
 		boolean isSave = vehicleBaoxianService.save(baoxian);
+
+		QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"车辆保险");
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,baoxian.getAvbAvIds());
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,"无保险");
+		AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+		if (riskDetail!=null){
+			riskDetail.setArdIsRectification("1");
+			riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
+			riskDetailService.getBaseMapper().updateById(riskDetail);
+		}
+
 		if(vehicleBaoxian.getBaoxianMingxis() != null && vehicleBaoxian.getBaoxianMingxis().size() > 0) {
 			for (VehicleBaoxianMingxi baoxianMingxi: vehicleBaoxian.getBaoxianMingxis()) {
 				baoxianMingxi.setAvbmAvbIds(vehicleBaoxian.getBaoxian().getAvbIds());

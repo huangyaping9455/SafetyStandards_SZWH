@@ -49,6 +49,8 @@ import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanLedgerVO;
 import org.springblade.anbiao.labor.VO.LaborledgerVO;
 import org.springblade.anbiao.labor.entity.LaborlingquEntity;
 import org.springblade.anbiao.labor.page.laborledgerPage;
+import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
+import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.common.configurationBean.FileServer;
 import org.springblade.common.constant.FilePathConstant;
 import org.springblade.common.tool.ApacheZipUtils;
@@ -104,6 +106,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 	private IAnbiaoJiashiyuanRuzhiService ruzhiService;
 	private FileServer fileServer;
 	private IFileUploadClient fileUploadClient;
+	private IAnbiaoRiskDetailService riskDetailService;
 
 	/**
 	 * 详情
@@ -313,6 +316,19 @@ public class JiashiyuanBaoxianController extends BladeController {
 			baoxian.setAjbCreateByIds(user.getUserId().toString());
 			baoxian.setAjbCreateByName(user.getUserName());
 			boolean isSave = jiashiyuanBaoxianService.save(baoxian);
+
+			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"驾驶员保险");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,baoxian.getAjbInsuredIds());
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,"无保险");
+			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+			if (riskDetail!=null){
+				riskDetail.setArdIsRectification("1");
+				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
+				riskDetailService.getBaseMapper().updateById(riskDetail);
+			}
+
 			for (JiashiyuanBaoxianMingxi baoxianMingxi: insurance) {
 				baoxianMingxi.setAjbmAvbIds(baoxian.getAjbIds());
 				if(StringUtil.isEmpty(baoxianMingxi.getAjbmName())){
@@ -385,6 +401,19 @@ public class JiashiyuanBaoxianController extends BladeController {
 		baoxian.setAjbCreateByName(user.getUserName());
 		baoxian.setAjbCreateTime(LocalDateTime.now());
 		boolean isSave = jiashiyuanBaoxianService.save(baoxian);
+
+		QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"驾驶员保险");
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,baoxian.getAjbInsuredIds());
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,"无保险");
+		AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+		if (riskDetail!=null){
+			riskDetail.setArdIsRectification("1");
+			riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
+			riskDetailService.getBaseMapper().updateById(riskDetail);
+		}
+
 		if(jiashiyuanBaoxian.getMingxiList() != null && jiashiyuanBaoxian.getMingxiList().size() > 0) {
 			for (JiashiyuanBaoxianMingxi baoxianMingxi: jiashiyuanBaoxian.getMingxiList()) {
 				baoxianMingxi.setAjbmAvbIds(jiashiyuanBaoxian.getBaoxian().getAjbIds());

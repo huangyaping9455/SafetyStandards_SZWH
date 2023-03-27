@@ -264,7 +264,7 @@
         a.xiacijipingriqi ,
         case when IFNULL(a.bencijipingriqi,'') = '' then '0天'
         else CONCAT(TIMESTAMPDIFF(day,NOW(),a.bencijipingriqi),'天') end as jishupingdingshengyuyouxiaoqi,
-        ifnull(chezhu,'') as chezhu,
+        ifnull(b.jiashiyuanxingming,'') as chezhu,
         d.avd_road_transport_certificate_no as daoluyunshuzhenghao,
         d.avd_issue_date as daoluyunshuzhengkaishiriqi,
         d.avd_valid_until as daoluyunshuzhengjieshuriqi,
@@ -273,7 +273,7 @@
     FROM
         anbiao_vehicle a
         inner join anbiao_organization cc on a.dept_id = cc.dept_id and cc.isdelete = 0
-        left join anbiao_jiashiyuan b on a.jiashiyuanid = b.id
+        left join anbiao_jiashiyuan b on a.jiashiyuanid = b.id and b.isdelete=0
         left join anbiao_vehicle_xingshizheng c on a.id = c.avx_av_ids
         left join anbiao_vehicle_daoluyunshuzheng d on a.id = d.avd_av_ids
     WHERE 1=1

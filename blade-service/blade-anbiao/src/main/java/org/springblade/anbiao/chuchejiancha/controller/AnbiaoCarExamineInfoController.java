@@ -13,6 +13,8 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.tools.zip.ZipOutputStream;
+import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
+import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamine;
 import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamineInfo;
 import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamineInfoRemark;
@@ -27,6 +29,8 @@ import org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineInfoVO;
 import org.springblade.anbiao.chuchejiancha.vo.CarExamineMessageVO;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
 import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
+import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
+import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
 import org.springblade.anbiao.weixiucheliang.service.MaintenanceService;
 import org.springblade.anbiao.yinhuanpaicha.entity.AnbiaoHiddenDanger;
@@ -81,6 +85,10 @@ public class AnbiaoCarExamineInfoController {
 
 	private FileServer fileServer;
 
+	private IVehicleService vehicleService;
+
+	private IAnbiaoRiskDetailService riskDetailService;
+
 	@PostMapping("/saveCarExamineInfo")
 	@ApiLog("安全检查数据-新增")
 	@ApiOperation(value = "安全检查数据-新增", notes = "传入AnbiaoCarExamineInfo", position = 1)
@@ -117,6 +125,27 @@ public class AnbiaoCarExamineInfoController {
 				}
 			}else{
 				anbiaoCarExamineInfo.setStatus(1);
+
+				QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<>();
+				vehicleQueryWrapper.lambda().eq(Vehicle::getId,anbiaoCarExamineInfo.getVehid());
+				vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel,0);
+				Vehicle vehicle = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper);
+
+				String today = DateUtil.now().substring(0, 10);
+
+				QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+				riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"未按时进行安全检查");
+				riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+				riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,anbiaoCarExamineInfo.getJsyid());
+				riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDiscoveryDate,today);
+				riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,vehicle.getCheliangpaizhao());
+				AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+				if (riskDetail!=null){
+					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
+					riskDetailService.getBaseMapper().updateById(riskDetail);
+				}
+
 				ii = iAnbiaoCarExamineInfoService.save(anbiaoCarExamineInfo);
 				if(ii == true) {
 					deail = iAnbiaoCarExamineInfoService.getBaseMapper().selectOne(examineQueryWrapper);

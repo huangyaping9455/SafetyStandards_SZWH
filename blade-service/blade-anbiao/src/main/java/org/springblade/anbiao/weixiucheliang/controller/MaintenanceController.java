@@ -13,6 +13,11 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.tools.zip.ZipOutputStream;
+import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
+import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
+import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
+import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.anbiao.weixiu.VO.MaintenanceEntityV;
 import org.springblade.anbiao.weixiu.VO.MaintenanceTZVO;
 import org.springblade.anbiao.weixiu.entity.FittingEntity;
@@ -69,6 +74,10 @@ public class MaintenanceController {
 	private FileServer fileServer;
 
 	private IFileUploadClient fileUploadClient;
+
+	private IVehicleService vehicleService;
+
+	private IAnbiaoRiskDetailService riskDetailService;
 
 	@PostMapping("list")
 	@ApiLog("查询-维修列表")
@@ -184,6 +193,28 @@ public class MaintenanceController {
 				maintenanceEntity1.setCreateid(maintenanceEntity.getCreateid());
 				maintenanceEntity1.setAcbMaintenanceContent(maintenanceEntity.getAcbMaintenanceContent());
 				maintenanceEntity1.setAcbRepairReason(maintenanceEntity.getAcbRepairReason());
+
+				if (org.apache.commons.lang.StringUtils.isNotBlank(maintenanceEntity1.getAcbAfterMaintenance()) && !maintenanceEntity1.getAcbAfterMaintenance().equals("null")){
+					QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<>();
+					vehicleQueryWrapper.lambda().eq(Vehicle::getId,maintenanceEntity1.getVehicleId());
+					Vehicle vehicle = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper);
+
+					if (org.apache.commons.lang.StringUtils.isBlank(maintenanceEntity1.getAcbRepairReason()) || maintenanceEntity1.getAcbRepairReason().equals("null")){
+						maintenanceEntity1.setAcbRepairReason("");
+					}
+					String s = vehicle.getCheliangpaizhao() + maintenanceEntity1.getAcbRepairReason();
+					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"维修登记");
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,maintenanceEntity1.getDriverId());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,s);
+					AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+					if (riskDetail!=null){
+						riskDetail.setArdIsRectification("1");
+						riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
+						riskDetailService.getBaseMapper().updateById(riskDetail);
+					}}
+
 				int i = service.getBaseMapper().updateById(maintenanceEntity1);
 				if (i > 0) {
 					QueryWrapper<FittingEntity> fittingEntityQueryWrapper = new QueryWrapper<>();
