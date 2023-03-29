@@ -286,7 +286,7 @@
         ard_dept_ids as deptId,
         a.dept_name ,
         ard_title ,
-        ard_content as ard_content2,
+        CASE WHEN IFNULL( daoqishijian, '' )= '' THEN ard_content ELSE CONCAT(IFNULL(ard_content, ''), "(到期时间：",IFNULL(daoqishijian, ''),"  剩余天数：", IFNULL(l.youxiaoqi, ''),")") end as ard_content2,
         ard_discovery_date,
         ard_association_value,
         j.jiashiyuanxingming,
@@ -313,7 +313,8 @@
         <if test="jiashiyuanxingming != null and jiashiyuanxingming != ''">
             and j.jiashiyuanxingming like '%${jiashiyuanxingming}%'
         </if>
-        ORDER BY j.jiashiyuanxingming
+            HAVING daoqishijian IS NOT NULL AND daoqishijian != ''
+            ORDER BY daoqishijian,youxiaoqi
             limit ${total}
         </if>
         <if test="current != 0" >
@@ -321,7 +322,7 @@
             ard_dept_ids as deptId,
             a.dept_name ,
             ard_title ,
-            ard_content as ard_content2,
+            CASE WHEN IFNULL( daoqishijian, '' )= '' THEN ard_content ELSE CONCAT(IFNULL(ard_content, ''), "(到期时间：",IFNULL(daoqishijian, ''),"  剩余天数：", IFNULL(l.youxiaoqi, ''),")") end as ard_content2,
             ard_discovery_date,
             ard_association_value,
             j.jiashiyuanxingming,
@@ -348,7 +349,8 @@
             <if test="jiashiyuanxingming != null and jiashiyuanxingming != ''">
                 and j.jiashiyuanxingming like '%${jiashiyuanxingming}%'
             </if>
-            ORDER BY j.jiashiyuanxingming
+            HAVING daoqishijian IS NOT NULL AND daoqishijian != ''
+            ORDER BY daoqishijian,youxiaoqi
             limit ${offsetNo},${size}
         </if>
     </select>
@@ -361,7 +363,7 @@
         ard_dept_ids as deptId,
         a.dept_name ,
         ard_title ,
-        ard_content as ard_content2,
+        CASE WHEN IFNULL( daoqishijian, '' )= '' THEN ard_content ELSE CONCAT(IFNULL(ard_content, ''), "(到期时间：",IFNULL(daoqishijian, ''),"  剩余天数：", IFNULL(l.youxiaoqi, ''),")") end as ard_content2,
         ard_discovery_date,
         ard_association_value,
         j.jiashiyuanxingming,
@@ -385,7 +387,8 @@
         <if test="deptName != null and deptName != ''">
             and a.dept_name like '%${deptName}%'
         </if>
-        ORDER BY j.jiashiyuanxingming
+        HAVING daoqishijian IS NOT NULL AND daoqishijian != ''
+        ORDER BY daoqishijian,youxiaoqi
         )d
     </select>
 

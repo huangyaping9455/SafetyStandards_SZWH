@@ -1,5 +1,6 @@
 package org.springblade.anbiao.jiashiyuan.controller;
 
+import cn.afterturn.easypoi.entity.ImageEntity;
 import cn.afterturn.easypoi.word.entity.WordImageEntity;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
@@ -12,11 +13,19 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.deepoove.poi.data.PictureRenderData;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.apache.http.util.TextUtils;
+import org.apache.poi.util.Units;
 import org.apache.tools.zip.ZipOutputStream;
 import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.service.*;
@@ -55,12 +64,11 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -3953,44 +3961,27 @@ public class JiaShiYuanController {
 						map.put("a23", "-");
 					}
 
-					//附件
-					// 渲染图片
-					if (StrUtil.isNotEmpty(t.getAjrHeadPortrait())) {
-						if (t.getAjrHeadPortrait().startsWith("http")) {
-							// 如果图片是网络图片，则直接使用原路径
-							map.put("a3", t.getAjrHeadPortrait());
-						} else {
-							// 如果图片是本地图片，则先把图片复制到指定目录
-							File oldFile = new File(t.getAjrHeadPortrait());
-							File newFile = new File(fileServer.getPathPrefix() + "img/" + oldFile.getName());
-							FileUtils.copyFile(oldFile, newFile);
-							map.put("a3", newFile.getAbsolutePath());
-						}
-					} else {
+
+					if (StrUtil.isNotEmpty(t.getAjrHeadPortrait()) && t.getAjrHeadPortrait().contains("http") == false) {
+						t.setAjrHeadPortrait(fileUploadClient.getUrl(t.getAjrHeadPortrait()));
+						//添加图片到工作表的指定位置
+						t.setAjrHeadPortraitUrl(new URL(t.getAjrHeadPortrait()));
+						t.setAjrHeadPortraitUrl(t.getAjrHeadPortraitUrl());
+					}else if(StrUtil.isNotEmpty(t.getAjrHeadPortrait())){
+						//添加图片到工作表的指定位置
+						t.setAjrHeadPortraitUrl(new URL(t.getAjrHeadPortrait()));
+						t.setAjrHeadPortraitUrl(t.getAjrHeadPortraitUrl());
+					}else{
 						t.setAjrHeadPortraitUrl(null);
-						map.put("a3", t.getAjrHeadPortraitUrl());
 					}
-//					map.put("a3", t.getAjrHeadPortraitUrl());
-//					WordImageEntity image = new WordImageEntity();
-//					image.setHeight(240);
-//					image.setWidth(440);
-//					if (StrUtil.isNotEmpty(t.getAjrHeadPortrait()) && t.getAjrHeadPortrait().contains("http") == false) {
-//						t.setAjrHeadPortrait(fileUploadClient.getUrl(t.getAjrHeadPortrait()));
-//						url = t.getAjrHeadPortrait();
-//						url = fileServer.getPathPrefix() + org.springblade.common.tool.StringUtils.splits(url);
-//						System.out.println(url);
-//						image.setUrl(url);
-//						image.setType(WordImageEntity.URL);
-//						map.put("a3", image);
-//					}else if(StrUtil.isNotEmpty(t.getAjrHeadPortrait())){
-//						url = t.getAjrHeadPortrait();
-//						url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
-//						image.setUrl(url);
-//						image.setType(WordImageEntity.URL);
-//						map.put("a3", image);
-//					}else{
-//						map.put("a3", "无");
-//					}
+					ImageEntity imageEntity = new ImageEntity();
+					imageEntity.setUrl(t.getAjrHeadPortraitUrl().toString());
+					// 这里的宽高必须要设置
+					imageEntity.setWidth(500);
+					imageEntity.setHeight(300);
+					map.put("a3",imageEntity);
+
+
 
 					// TODO 渲染其他类型的数据请参考官方文档
 					//=================生成文件保存在本地D盘某目录下=================
@@ -4004,6 +3995,16 @@ public class JiaShiYuanController {
 					String wjName = t.getJiashiyuanxingming()+"_"+"人车台账";
 					// 拼接后的文件名
 					fileName = wjName + formatSuffix;//文件名  带后缀
+
+					XWPFDocument word = WordExportUtil.exportWord07(templatePath, map);
+					response.setHeader("content-disposition", "attachment;filename=" + new String(fileName.getBytes(), "ISO8859-1"));
+					response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+					ServletOutputStream outputStream = response.getOutputStream();
+					word.write(outputStream);
+					outputStream.close();
+					word.close();
+
+
 					//导出word
 					WordUtil2.exportDataWord3(templatePath, temDir, fileName, map, request, response);
 					urlList.add(temDir);
