@@ -12,6 +12,7 @@ import org.springblade.anbiao.jiashiyuan.mapper.JiaShiYuanMapper;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.anbiao.jiashiyuan.vo.DriverInfoVO;
+import org.springblade.anbiao.jiashiyuan.vo.DriverTJMingXiVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanListVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
 import org.springblade.common.tool.StringUtils;
@@ -328,6 +329,11 @@ public class JiaShiYuanServiceImpl extends ServiceImpl<JiaShiYuanMapper, JiaShiY
 			driverImg.setCount(count);
 		}
 		return driverImg;
+	}
+
+	@Override
+	public List<DriverTJMingXiVO> selectDriverTJMingXi(DriverTJMingXiVO driverTJMingXiVO) {
+		return jiaShiYuanMapper.getDriverTJMingXi(driverTJMingXiVO);
 	}
 
 

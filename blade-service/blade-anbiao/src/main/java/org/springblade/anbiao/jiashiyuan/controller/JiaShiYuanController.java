@@ -14,6 +14,7 @@ import com.alibaba.excel.write.metadata.WriteSheet;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.util.TextUtils;
 import org.apache.tools.zip.ZipOutputStream;
@@ -25,6 +26,7 @@ import org.springblade.anbiao.guanlijigouherenyuan.service.IBladeDeptService;
 import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.service.*;
+import org.springblade.anbiao.jiashiyuan.vo.DriverTJMingXiVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanListVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
 import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
@@ -32,6 +34,8 @@ import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetailInfo;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailInfoService;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
+import org.springblade.anbiao.yinhuanpaicha.page.AnbiaoHiddenDangerPage;
+import org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoHiddenDangerVO;
 import org.springblade.common.configurationBean.AlarmServer;
 import org.springblade.common.configurationBean.FileServer;
 import org.springblade.common.constant.CommonConstant;
@@ -53,9 +57,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -3759,6 +3766,263 @@ public class JiaShiYuanController {
 		jiaShiYuan.setShoujihaoma(Phone);
 		jiaShiYuan.setDenglumima(DigestUtil.encrypt(jiaShiYuan.getShoujihaoma().substring(jiaShiYuan.getShoujihaoma().length() - 6)));
 		return R.status(jiaShiYuanService.updateById(jiaShiYuan));
+	}
+
+	@GetMapping("/goExport_getDriverTJMingXi")
+	@ApiLog("驾驶员统计信息明细-导出")
+	@ApiOperation(value = "驾驶员统计信息明细-导出", notes = "传入AnbiaoHiddenDangerPage", position = 22)
+	public R goExport_HiddenDanger(HttpServletRequest request, HttpServletResponse response, String deptId , BladeUser user) throws IOException {
+		R rs = new R();
+		List<String> urlList = new ArrayList<>();
+		DriverTJMingXiVO driverTJMingXiVO = new DriverTJMingXiVO();
+		driverTJMingXiVO.setDeptId(deptId);
+		// TODO 渲染其他类型的数据请参考官方文档
+		DecimalFormat df = new DecimalFormat("######0.00");
+		Calendar now = Calendar.getInstance();
+		//word模板地址
+		String templatePath =fileServer.getPathPrefix()+"muban\\"+"jiashiyuanvehicle.docx";
+		String folder = "";
+		String [] nyr=DateUtil.today().split("-");
+		String[] idsss = driverTJMingXiVO.getDeptId().split(",");
+		//去除素组中重复的数组
+		List<String> listid = new ArrayList<String>();
+		for (int i=0; i<idsss.length; i++) {
+			if(!listid.contains(idsss[i])) {
+				listid.add(idsss[i]);
+			}
+		}
+		//返回一个包含所有对象的指定类型的数组
+		String[] idss= listid.toArray(new String[1]);
+		for(int j = 0;j< idss.length;j++){
+			driverTJMingXiVO.setDeptName("");
+			driverTJMingXiVO.setDeptId(idss[j]);
+			List<DriverTJMingXiVO> driverTJMingXiVOS = jiaShiYuanService.selectDriverTJMingXi(driverTJMingXiVO);
+
+			if(driverTJMingXiVOS.size()==0){
+
+			}else if(driverTJMingXiVOS.size()>3000){
+				rs.setMsg("数据超过30000条无法下载");
+				rs.setCode(500);
+				return rs;
+			}else{
+				for( int i = 0 ; i < driverTJMingXiVOS.size() ; i++) {
+					Map<String, Object> map = new HashMap<>();
+					String temDir = "";
+					String fileName = "";
+					String url = "";
+					// 渲染文本
+					DriverTJMingXiVO t = driverTJMingXiVOS.get(i);
+					DriverTJMingXiVO driverTJMingXiVO1 = new DriverTJMingXiVO();
+					if (StringUtils.isNotBlank(t.getJiashiyuanxingming()) && !t.getJiashiyuanxingming().equals("null")){
+						map.put("a1", t.getJiashiyuanxingming());
+					}else {
+						map.put("a1", "-");
+					}
+					driverTJMingXiVO1.setJiashiyuanxingming(t.getJiashiyuanxingming());
+					if (t.getXingbie().equals("1")){
+						t.setXingbie("男");
+					}else {
+						t.setXingbie("女");
+					}
+					if (StringUtils.isNotBlank(t.getXingbie()) && !t.getXingbie().equals("null")){
+						map.put("a2", t.getXingbie());
+					}else {
+						map.put("a2", "-");
+					}
+
+//					map.put("a3", t.getAjrHeadPortrait());
+					if (StringUtils.isNotBlank(t.getNation()) && !t.getNation().equals("null")){
+						map.put("a4", t.getNation());
+					}else {
+						map.put("a4", "-");
+					}
+					if (StringUtils.isNotBlank(t.getNativePlace()) && !t.getNativePlace().equals("null")){
+						map.put("a5", t.getNativePlace());
+					}else {
+						map.put("a5", "-");
+					}
+					if (StringUtils.isNotBlank(t.getBirth()) && !t.getBirth().equals("null")){
+						map.put("a6", t.getBirth());
+					}else {
+						map.put("a6", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAge()) && !t.getAge().equals("null")){
+						map.put("a7", t.getAge());
+					}else {
+						map.put("a7", "-");
+					}
+					if (StringUtils.isNotBlank(t.getPoliticalOutlook()) && !t.getPoliticalOutlook().equals("null")){
+						map.put("a8", t.getPoliticalOutlook());
+					}else {
+						map.put("a8", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrEducation()) && !t.getAjrEducation().equals("null")){
+						map.put("a9", t.getAjrEducation());
+					}else {
+						map.put("a9", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrGraduationSchool()) && !t.getAjrGraduationSchool().equals("null")){
+						map.put("a10", t.getAjrGraduationSchool());
+					}else {
+						map.put("a10", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrGraduationDate()) && !t.getAjrGraduationDate().equals("null")){
+						map.put("a11", t.getAjrGraduationDate());
+					}else {
+						map.put("a11", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrIdNumber()) && !t.getAjrIdNumber().equals("null")){
+						map.put("a12", t.getAjrIdNumber());
+					}else {
+						map.put("a12", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrAddress()) && !t.getAjrAddress().equals("null")){
+						map.put("a13", t.getAjrAddress());
+					}else {
+						map.put("a13", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrReceiveDrivingLicense()) && !t.getAjrReceiveDrivingLicense().equals("null")){
+						map.put("a14", t.getAjrReceiveDrivingLicense());
+					}else {
+						map.put("a14", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrClass()) && !t.getAjrClass().equals("null")){
+						map.put("a15", t.getAjrClass());
+					}else {
+						map.put("a15", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrDrivingExperience()) && !t.getAjrDrivingExperience().equals("null")){
+						map.put("a16", t.getAjrDrivingExperience());
+					}else {
+						map.put("a16", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrHealthStatus()) && !t.getAjrHealthStatus().equals("null")){
+						map.put("a17", t.getAjrHealthStatus());
+					}else {
+						map.put("a17", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrWorkExperience()) && !t.getAjrWorkExperience().equals("null")){
+						map.put("a18", t.getAjrWorkExperience());
+					}else {
+						map.put("a18", "-");
+					}
+					if (t.getAjrSafeDrivingRecord1().equals("1")){
+						t.setAjrSafeDrivingRecord1("是");
+					}else if (t.getAjrSafeDrivingRecord1().equals("2")){
+						t.setAjrSafeDrivingRecord1("否");
+					}else {
+						t.setAjrSafeDrivingRecord1(t.getAjrSafeDrivingRecord1());
+					}
+					if (StringUtils.isNotBlank(t.getAjrSafeDrivingRecord1()) && !t.getAjrSafeDrivingRecord1().equals("null")){
+						map.put("a19", t.getAjrSafeDrivingRecord1());
+					}else {
+						map.put("a19", "-");
+					}
+					if (t.getAjrSafeDrivingRecord2().equals("1")){
+						t.setAjrSafeDrivingRecord2("是");
+					}else if (t.getAjrSafeDrivingRecord2().equals("2")){
+						t.setAjrSafeDrivingRecord2("否");
+					}else {
+						t.setAjrSafeDrivingRecord2(t.getAjrSafeDrivingRecord2());
+					}
+					if (StringUtils.isNotBlank(t.getAjrSafeDrivingRecord2()) && !t.getAjrSafeDrivingRecord2().equals("null")){
+						map.put("a20", t.getAjrSafeDrivingRecord2());
+					}else {
+						map.put("a20", "-");
+					}
+					if (t.getAjrSafeDrivingRecord3().equals("1")){
+						t.setAjrSafeDrivingRecord3("是");
+					}else if (t.getAjrSafeDrivingRecord3().equals("2")){
+						t.setAjrSafeDrivingRecord3("否");
+					}else {
+						t.setAjrSafeDrivingRecord3(t.getAjrSafeDrivingRecord3());
+					}
+					if (StringUtils.isNotBlank(t.getAjrSafeDrivingRecord3()) && !t.getAjrSafeDrivingRecord3().equals("null")){
+						map.put("a21", t.getAjrSafeDrivingRecord3());
+					}else {
+						map.put("a21", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrPhysicalExaminationResults()) && !t.getAjrPhysicalExaminationResults().equals("null")){
+						map.put("a22", t.getAjrPhysicalExaminationResults());
+					}else {
+						map.put("a22", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrIntegrityAssessmentResults()) && !t.getAjrIntegrityAssessmentResults().equals("null")){
+						map.put("a23", t.getAjrIntegrityAssessmentResults());
+					}else {
+						map.put("a23", "-");
+					}
+
+					//附件
+					// 渲染图片
+					if (StrUtil.isNotEmpty(t.getAjrHeadPortrait())) {
+						if (t.getAjrHeadPortrait().startsWith("http")) {
+							// 如果图片是网络图片，则直接使用原路径
+							map.put("a3", t.getAjrHeadPortrait());
+						} else {
+							// 如果图片是本地图片，则先把图片复制到指定目录
+							File oldFile = new File(t.getAjrHeadPortrait());
+							File newFile = new File(fileServer.getPathPrefix() + "img/" + oldFile.getName());
+							FileUtils.copyFile(oldFile, newFile);
+							map.put("a3", newFile.getAbsolutePath());
+						}
+					} else {
+						t.setAjrHeadPortraitUrl(null);
+						map.put("a3", t.getAjrHeadPortraitUrl());
+					}
+//					map.put("a3", t.getAjrHeadPortraitUrl());
+//					WordImageEntity image = new WordImageEntity();
+//					image.setHeight(240);
+//					image.setWidth(440);
+//					if (StrUtil.isNotEmpty(t.getAjrHeadPortrait()) && t.getAjrHeadPortrait().contains("http") == false) {
+//						t.setAjrHeadPortrait(fileUploadClient.getUrl(t.getAjrHeadPortrait()));
+//						url = t.getAjrHeadPortrait();
+//						url = fileServer.getPathPrefix() + org.springblade.common.tool.StringUtils.splits(url);
+//						System.out.println(url);
+//						image.setUrl(url);
+//						image.setType(WordImageEntity.URL);
+//						map.put("a3", image);
+//					}else if(StrUtil.isNotEmpty(t.getAjrHeadPortrait())){
+//						url = t.getAjrHeadPortrait();
+//						url = fileServer.getPathPrefix()+org.springblade.common.tool.StringUtils.splits(url);
+//						image.setUrl(url);
+//						image.setType(WordImageEntity.URL);
+//						map.put("a3", image);
+//					}else{
+//						map.put("a3", "无");
+//					}
+
+					// TODO 渲染其他类型的数据请参考官方文档
+					//=================生成文件保存在本地D盘某目录下=================
+					//			temDir = "D:/mimi/file/word/"; ;//生成临时文件存放地址
+					nyr=DateUtil.today().split("-");
+					//附件存放地址(服务器生成地址)
+					temDir = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2]+"\\"+t.getDeptName()+"\\";
+					//生成文件名
+					// 生成的word格式
+					String formatSuffix = ".docx";
+					String wjName = t.getJiashiyuanxingming()+"_"+"人车台账";
+					// 拼接后的文件名
+					fileName = wjName + formatSuffix;//文件名  带后缀
+					//导出word
+					WordUtil2.exportDataWord3(templatePath, temDir, fileName, map, request, response);
+					urlList.add(temDir);
+				}
+			}
+		}
+		folder = fileServer.getPathPrefix()+FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+"人车台账.zip";
+		ExcelUtils.deleteFile(folder);
+//		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(folder));
+//		ApacheZipUtils.doCompress1(urlList, bizOut);
+		PackageToZIp.toZip(fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2], folder);
+		//不要忘记调用
+//		bizOut.close();
+
+		rs.setMsg("下载成功");
+		rs.setCode(200);
+		rs.setData(folder);
+		rs.setSuccess(true);
+		return rs;
 	}
 
 }

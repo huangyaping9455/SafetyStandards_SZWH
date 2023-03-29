@@ -170,6 +170,7 @@ public class AnbiaoRiskDetailController {
 //						}
 //					}
 				} else if (!deail.getShenfenzhengyouxiaoqi().equals("长期")) {
+					riskDetail.setDaoqishijian(deail.getShenfenzhengyouxiaoqi());
 					Date shenfenzhengyouxiaoqi = formatter.parse(deail.getShenfenzhengyouxiaoqi());
 					Date now = formatter.parse(DateUtil.now());
 					Calendar calendar1 = Calendar.getInstance();
@@ -249,6 +250,7 @@ public class AnbiaoRiskDetailController {
 //						}
 //					}
 				} else if (!deail.getJiashizhengyouxiaoqi().equals("长期")) {
+					riskDetail2.setDaoqishijian(deail.getJiashizhengyouxiaoqi());
 					Date jiashizhengyouxiaoqi = formatter.parse(deail.getJiashizhengyouxiaoqi());
 					Date now2 = formatter.parse(DateUtil.now());
 					Calendar calendar3 = Calendar.getInstance();
@@ -328,6 +330,7 @@ public class AnbiaoRiskDetailController {
 //						}
 //					}
 				} else {
+					riskDetail3.setDaoqishijian(deail.getCongyezhengyouxiaoqi());
 					Date congyezhengyouxiaoqi = formatter.parse(deail.getCongyezhengyouxiaoqi());
 					Date now3 = formatter.parse(DateUtil.now());
 					Calendar calendar5 = Calendar.getInstance();
@@ -407,6 +410,7 @@ public class AnbiaoRiskDetailController {
 //						}
 //					}
 				} else {
+					riskDetail4.setDaoqishijian(deail.getTijianyouxiaoqi());
 					Date tijianyouxiaoqi = formatter.parse(deail.getTijianyouxiaoqi());
 					Date now4 = formatter.parse(DateUtil.now());
 					Calendar calendar7 = Calendar.getInstance();

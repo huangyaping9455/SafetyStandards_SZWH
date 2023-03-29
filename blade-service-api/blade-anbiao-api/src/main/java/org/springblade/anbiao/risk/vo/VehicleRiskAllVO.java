@@ -39,4 +39,13 @@ public class VehicleRiskAllVO implements Serializable {
 
 	@ApiModelProperty(value = "车辆牌照")
 	private String cheliangpaizhao;
+
+	@ApiModelProperty(value = "风险内容2")
+	private String ardContent2;
+
+	@ApiModelProperty(value = "到期时间")
+	private String daoqishijian;
+
+	@ApiModelProperty(value = "有效期")
+	private String youxiaoqi;
 }

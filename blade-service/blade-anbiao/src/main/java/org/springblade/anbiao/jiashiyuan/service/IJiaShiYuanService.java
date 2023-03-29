@@ -10,6 +10,7 @@ import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTJMX;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTrain;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.vo.DriverInfoVO;
+import org.springblade.anbiao.jiashiyuan.vo.DriverTJMingXiVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanListVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
 
@@ -151,5 +152,7 @@ public interface IJiaShiYuanService extends IService<JiaShiYuan> {
 	 * @return
 	 */
 	DriverImg getByDriverImg(@Param("jsyId") String jsyId);
+
+	List<DriverTJMingXiVO> selectDriverTJMingXi( DriverTJMingXiVO driverTJMingXiVO );
 
 }

@@ -286,10 +286,13 @@
         ard_dept_ids as deptId,
         a.dept_name ,
         ard_title ,
-        ard_content,
+        ard_content as ard_content2,
         ard_discovery_date,
         ard_association_value,
-        j.jiashiyuanxingming
+        j.jiashiyuanxingming,
+        CASE WHEN IFNULL( daoqishijian, '' )= '' THEN '' ELSE daoqishijian END AS daoqishijian ,
+        CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi,
+        CASE WHEN IFNULL( daoqishijian, '' )= '' THEN ard_content ELSE CONCAT(IFNULL(ard_content, ''), "(到期时间：",IFNULL(daoqishijian, ''),"  剩余天数：", IFNULL(l.youxiaoqi, ''),")") end AS ard_content
         FROM
         anbiao_risk_detail rd
         INNER JOIN(
@@ -298,6 +301,7 @@
 
         INNER JOIN anbiao_organization k on a.id = k.dept_id and k.jigouleixing in('qiye','geti')
         LEFT JOIN  anbiao_jiashiyuan j on j.id=rd.ard_association_value
+        left join (SELECT ard_ids,CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi from 	`anbiao_risk_detail` )l on l.ard_ids=rd.ard_ids
         WHERE
         ard_is_rectification = 0
         and ard_association_table = "anbiao_jiashiyuan"
@@ -317,10 +321,13 @@
             ard_dept_ids as deptId,
             a.dept_name ,
             ard_title ,
-            ard_content,
+            ard_content as ard_content2,
             ard_discovery_date,
             ard_association_value,
-            j.jiashiyuanxingming
+            j.jiashiyuanxingming,
+            CASE WHEN IFNULL( daoqishijian, '' )= '' THEN '' ELSE daoqishijian END AS daoqishijian ,
+            CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi,
+            CASE WHEN IFNULL( daoqishijian, '' )= '' THEN ard_content ELSE CONCAT(IFNULL(ard_content, ''), "(到期时间：",IFNULL(daoqishijian, ''),"  剩余天数：", IFNULL(l.youxiaoqi, ''),")") end AS ard_content
             FROM
             anbiao_risk_detail rd
             INNER JOIN(
@@ -329,6 +336,7 @@
 
             INNER JOIN anbiao_organization k on a.id = k.dept_id and k.jigouleixing in('qiye','geti')
             LEFT JOIN  anbiao_jiashiyuan j on j.id=rd.ard_association_value
+            left join (SELECT ard_ids,CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi from 	`anbiao_risk_detail` )l on l.ard_ids=rd.ard_ids
             WHERE
             ard_is_rectification = 0
             and ard_association_table = "anbiao_jiashiyuan"
@@ -353,10 +361,13 @@
         ard_dept_ids as deptId,
         a.dept_name ,
         ard_title ,
-        ard_content,
+        ard_content as ard_content2,
         ard_discovery_date,
         ard_association_value,
-        j.jiashiyuanxingming
+        j.jiashiyuanxingming,
+        CASE WHEN IFNULL( daoqishijian, '' )= '' THEN '' ELSE daoqishijian END AS daoqishijian ,
+        CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi,
+        CASE WHEN IFNULL( daoqishijian, '' )= '' THEN ard_content ELSE CONCAT(IFNULL(ard_content, ''), "(到期时间：",IFNULL(daoqishijian, ''),"  剩余天数：", IFNULL(l.youxiaoqi, ''),")") end AS ard_content
         FROM
         anbiao_risk_detail rd
         INNER JOIN(
@@ -365,6 +376,7 @@
 
         INNER JOIN anbiao_organization k on a.id = k.dept_id and k.jigouleixing in('qiye','geti')
         LEFT JOIN  anbiao_jiashiyuan j on j.id=rd.ard_association_value
+        left join (SELECT ard_ids,CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi from 	`anbiao_risk_detail` )l on l.ard_ids=rd.ard_ids
         WHERE
         ard_is_rectification = 0
         and ard_association_table = "anbiao_jiashiyuan"
@@ -1034,12 +1046,15 @@
             c.jiashiyuanid,
             d.jiashiyuanxingming,
             ard_title ,
-            ard_content,
+            ard_content as ard_content2,
             ard_type,
             ard_discovery_date,
             ard_association_value,
             a.vehicleId,
-            a.cheliangpaizhao
+            a.cheliangpaizhao,
+            CASE WHEN IFNULL( daoqishijian, '' )= '' THEN '' ELSE daoqishijian END AS daoqishijian ,
+            CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi,
+            CASE WHEN IFNULL( daoqishijian, '' )= '' THEN ard_content ELSE CONCAT(IFNULL(ard_content, ''), "(到期时间：",IFNULL(daoqishijian, ''),"  剩余天数：", IFNULL(l.youxiaoqi, ''),")") end AS ard_content
             FROM
             `anbiao_risk_detail` a
             LEFT JOIN anbiao_vehicle b on b.id=a.ard_association_value
@@ -1048,6 +1063,7 @@
             INNER JOIN(
             <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) e on e.id=a.ard_dept_ids
+            left join (SELECT ard_ids,CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi from 	`anbiao_risk_detail` )l on l.ard_ids=a.ard_ids
             WHERE
             ard_association_table = "anbiao_vehicle"
             and ard_is_rectification=0
@@ -1078,12 +1094,15 @@
             c.jiashiyuanid,
             d.jiashiyuanxingming,
             ard_title ,
-            ard_content,
+            ard_content as ard_content2,
             ard_type,
             ard_discovery_date,
             ard_association_value,
             a.vehicleId,
-            a.cheliangpaizhao
+            a.cheliangpaizhao,
+            CASE WHEN IFNULL( daoqishijian, '' )= '' THEN '' ELSE daoqishijian END AS daoqishijian ,
+            CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi,
+            CASE WHEN IFNULL( daoqishijian, '' )= '' THEN ard_content ELSE CONCAT(IFNULL(ard_content, ''), "(到期时间：",IFNULL(daoqishijian, ''),"  剩余天数：", IFNULL(l.youxiaoqi, ''),")") end AS ard_content
             FROM
             `anbiao_risk_detail` a
             LEFT JOIN anbiao_vehicle b on b.id=a.ard_association_value
@@ -1092,6 +1111,7 @@
             INNER JOIN(
             <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) e on e.id=a.ard_dept_ids
+            left join (SELECT ard_ids,CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi from 	`anbiao_risk_detail` )l on l.ard_ids=a.ard_ids
             WHERE
             ard_association_table = "anbiao_vehicle"
             and ard_is_rectification=0
@@ -1126,12 +1146,15 @@
         c.jiashiyuanid,
         d.jiashiyuanxingming,
         ard_title ,
-        ard_content,
+        ard_content as ard_content2,
         ard_type,
         ard_discovery_date,
         ard_association_value,
         a.vehicleId,
-        a.cheliangpaizhao
+        a.cheliangpaizhao,
+        CASE WHEN IFNULL( daoqishijian, '' )= '' THEN '' ELSE daoqishijian END AS daoqishijian ,
+        CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi,
+        CASE WHEN IFNULL( daoqishijian, '' )= '' THEN ard_content ELSE CONCAT(IFNULL(ard_content, ''), "(到期时间：",IFNULL(daoqishijian, ''),"  剩余天数：", IFNULL(l.youxiaoqi, ''),")") end AS ard_content
         FROM
         `anbiao_risk_detail` a
         LEFT JOIN anbiao_vehicle b on b.id=a.ard_association_value
@@ -1140,6 +1163,7 @@
         INNER JOIN(
         <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) e on e.id=a.ard_dept_ids
+        left join (SELECT ard_ids,CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi from 	`anbiao_risk_detail` )l on l.ard_ids=a.ard_ids
         WHERE
         ard_association_table = "anbiao_vehicle"
         and ard_is_rectification=0

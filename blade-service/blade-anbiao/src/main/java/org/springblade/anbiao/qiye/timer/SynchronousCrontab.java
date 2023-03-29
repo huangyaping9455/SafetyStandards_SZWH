@@ -259,6 +259,7 @@ public class SynchronousCrontab {
 //						}
 //					}
 				}else {
+					riskDetail3.setDaoqishijian(deail.getCongyezhengyouxiaoqi());
 					Date congyezhengyouxiaoqi = formatter.parse(deail.getCongyezhengyouxiaoqi());
 					Date now3 = formatter.parse(DateUtil.now());
 					Calendar calendar5 = Calendar.getInstance();
@@ -338,6 +339,7 @@ public class SynchronousCrontab {
 //						}
 //					}
 				}else {
+					riskDetail4.setDaoqishijian(deail.getTijianyouxiaoqi());
 					Date tijianyouxiaoqi = formatter.parse(deail.getTijianyouxiaoqi());
 					Date now4 = formatter.parse(DateUtil.now());
 					Calendar calendar7 = Calendar.getInstance();
@@ -856,6 +858,7 @@ public class SynchronousCrontab {
 
 				//有效期
 				if(xingshizheng.getAvxValidUntil() != null) {
+					riskDetail.setDaoqishijian(xingshizheng.getAvxValidUntil().toString());
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.CHINA);
 					int timeDifference = differentDays(DateUtil.now(),formatter.format(xingshizheng.getAvxValidUntil()));
 					riskDetail.setArdTitle("行驶证有效期");
@@ -919,6 +922,7 @@ public class SynchronousCrontab {
 
 				//有效期
 				if(daoluyunshuzheng.getAvdValidUntil() != null) {
+					riskDetail.setDaoqishijian(daoluyunshuzheng.getAvdValidUntil().toString());
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.CHINA);
 					int timeDifference = differentDays(DateUtil.now(),formatter.format(daoluyunshuzheng.getAvdValidUntil()));
 					riskDetail.setArdTitle("道路运输证有效期");
@@ -2592,7 +2596,7 @@ public class SynchronousCrontab {
 	//每6小时执行一次
 	@Scheduled(cron = "0 0 */6 * * ?")
 	//每天凌晨5点执行一次
-//	@Scheduled(cron = "0 56 19 * * ?")
+//	@Scheduled(cron = "0 35 11 * * ?")
 	public void configureTasks_static_data() {
 		synchronized (KEY) {
 			if (SynchronousCrontab.taskFlag) {
