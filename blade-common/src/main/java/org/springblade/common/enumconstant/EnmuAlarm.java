@@ -131,4 +131,56 @@ public interface EnmuAlarm {
         }
 
     }
+
+    /**
+     * @description: 监控中心核警结果_字典
+     * @projectName SafetyStandards
+     * @date 2019/9/249:31
+     */
+    enum NuclearJieguo{
+        /**
+         * 平台下发TTS消息提醒
+         */
+        PHONE("TTS",1, "平台下发TTS消息提醒"),
+        /**
+         * 电话提醒
+         */
+        TTS("PHONE",2, "电话提醒"),
+        /**
+         *微信推送
+         */
+        WECHAT("WECHAT",3, "微信推送");
+
+        private NuclearJieguo(String id, Integer value ,String desc) {
+            this.id = id;
+            this.value = value;
+            this.desc = desc;
+        }
+        /**
+         * 常量id
+         */
+        public final String id;
+        /**
+         * 申诉状态类型
+         */
+        public final Integer value;
+        /**
+         * 字典名称
+         */
+        public final String desc;
+
+        public final static String enumId = "NuclearJieguo";
+        public final static String enumDesc = "监控中心核警结果_字典";
+
+        public static NuclearJieguo getByValue(Integer value){
+            NuclearJieguo[] enums = NuclearJieguo.values();
+            for (NuclearJieguo anEnum : enums) {
+                if(anEnum.value.equals(value)){
+                    return anEnum;
+                }
+            }
+            return null;
+        }
+    }
+
 }

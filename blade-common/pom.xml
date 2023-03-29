@@ -26,11 +26,11 @@
             <version>${mica.auto.version}</version>
             <scope>provided</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>cn.hyp</groupId>-->
-<!--            <artifactId>utiltool</artifactId>-->
-<!--            <version>1.0.0</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>cn.hyp</groupId>
+            <artifactId>utiltool</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 <!--        <dependency>-->
 <!--            <groupId>cn.hyp</groupId>-->
 <!--            <artifactId>jxl</artifactId>-->
@@ -223,6 +223,30 @@
             <groupId>com.alibaba</groupId>
             <artifactId>easyexcel</artifactId>
             <version>3.0.5</version>
+        </dependency>
+
+        <!--配置 Free Spire.Doc for Java-->
+        <dependency>
+            <groupId>spire.doc.free</groupId>
+            <artifactId>com.e-iceblue</artifactId>
+            <version>5.2.0</version>
+            <classifier>doc</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.10</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hbis.infmgr</groupId>
+            <artifactId>infmgr-common</artifactId>
+            <version>0.0.1</version>
         </dependency>
     </dependencies>
 

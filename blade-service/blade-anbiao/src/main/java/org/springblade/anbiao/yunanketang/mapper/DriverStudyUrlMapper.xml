@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.yunanketang.mapper.DriverStudyUrlMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="DriverStudyUrlResultMap" type="org.springblade.anbiao.qiyeshouye.entity.DriverStudyUrl">
+        <result column="id" property="id"/>
+    </resultMap>
+
+    <insert id="insertSelective" parameterType="org.springblade.anbiao.qiyeshouye.entity.DriverStudyUrl" >
+        insert into anbiao_jiashiyuan_study_url
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="jiashiyuanid != null">
+				jiashiyuanid,
+            </if>
+
+            <if test="shenfenzhenghao != null">
+				shenfenzhenghao,
+            </if>
+
+            <if test="deptid != null">
+				deptid,
+            </if>
+
+            <if test="studyurl != null">
+				studyurl,
+            </if>
+
+            <if test="type != null">
+				type,
+            </if>
+
+            <if test="member != null">
+				member,
+            </if>
+
+            <if test="verified != null">
+				verified,
+            </if>
+
+            <if test="caozuoshijian != null">
+				caozuoshijian
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+			<if test="jiashiyuanid != null">
+				#{jiashiyuanid},
+			</if>
+
+			<if test="shenfenzhenghao != null">
+				#{shenfenzhenghao},
+			</if>
+
+			<if test="deptid != null">
+				#{deptid},
+			</if>
+
+			<if test="studyurl != null">
+				#{studyurl},
+			</if>
+
+			<if test="type != null">
+				#{type},
+			</if>
+
+			<if test="member != null">
+				#{member},
+			</if>
+
+			<if test="verified != null">
+				#{verified},
+			</if>
+
+			<if test="caozuoshijian != null">
+				#{caozuoshijian}
+			</if>
+
+        </trim>
+    </insert>
+
+    <update id="updateSelective" parameterType="org.springblade.anbiao.qiyeshouye.entity.DriverStudyUrl" >
+        update anbiao_jiashiyuan_study_url
+        <set>
+			<if test="jiashiyuanid != null">
+				jiashiyuanid = #{jiashiyuanid},
+			</if>
+
+			<if test="shenfenzhenghao != null">
+				shenfenzhenghao = #{shenfenzhenghao},
+			</if>
+
+			<if test="deptid != null">
+				deptid = #{deptid},
+			</if>
+
+			<if test="studyurl != null">
+				studyurl = #{studyurl},
+			</if>
+
+			<if test="type != null">
+				type = #{type},
+			</if>
+
+			<if test="member != null">
+				member = #{member},
+			</if>
+
+			<if test="verified != null">
+				verified = #{verified},
+			</if>
+
+			<if test="caozuoshijian != null">
+				caozuoshijian = #{caozuoshijian}
+			</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectByIds" resultType="org.springblade.anbiao.qiyeshouye.entity.DriverStudyUrl">
+        select * from anbiao_jiashiyuan_study_url where jiashiyuanid = #{id}
+    </select>
+
+	<insert id="insertStudyHoursSelective" parameterType="org.springblade.anbiao.qiyeshouye.entity.DriverStudyHours" >
+		insert into anbiao_jiashiyuan_study_hours
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="jiashiyuanid != null">
+				jiashiyuanid,
+			</if>
+
+			<if test="deptid != null">
+				deptid,
+			</if>
+
+			<if test="pid != null">
+				pid,
+			</if>
+
+			<if test="name != null">
+				name,
+			</if>
+
+			<if test="code != null">
+				code,
+			</if>
+
+			<if test="deptname != null">
+				deptname,
+			</if>
+
+			<if test="course != null">
+				course,
+			</if>
+
+			<if test="date != null">
+				date,
+			</if>
+
+			<if test="totalhours != null">
+				totalhours,
+			</if>
+
+			<if test="donehours != null">
+				donehours,
+			</if>
+
+			<if test="comid != null">
+				comid,
+			</if>
+
+			<if test="caozuoshijian != null">
+				caozuoshijian
+			</if>
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+
+			<if test="jiashiyuanid != null">
+				#{jiashiyuanid},
+			</if>
+
+			<if test="deptid != null">
+				#{deptid},
+			</if>
+
+			<if test="pid != null">
+				#{pid},
+			</if>
+
+			<if test="name != null">
+				#{name},
+			</if>
+
+			<if test="code != null">
+				#{code},
+			</if>
+
+			<if test="deptname != null">
+				#{deptname},
+			</if>
+
+			<if test="course != null">
+				#{course},
+			</if>
+
+			<if test="date != null">
+				#{date},
+			</if>
+
+			<if test="totalhours != null">
+				#{totalhours},
+			</if>
+
+			<if test="donehours != null">
+				#{donehours},
+			</if>
+
+			<if test="comid != null">
+				#{comid},
+			</if>
+
+			<if test="caozuoshijian != null">
+				#{caozuoshijian}
+			</if>
+
+		</trim>
+	</insert>
+
+	<update id="updateStudyHoursSelective" parameterType="org.springblade.anbiao.qiyeshouye.entity.DriverStudyHours" >
+		update anbiao_jiashiyuan_study_hours
+		<set>
+			<if test="jiashiyuanid != null">
+				jiashiyuanid = #{jiashiyuanid},
+			</if>
+
+			<if test="deptid != null">
+				deptid = #{deptid},
+			</if>
+
+			<if test="pid != null">
+				pid = #{pid},
+			</if>
+
+			<if test="name != null">
+				name = #{name},
+			</if>
+
+			<if test="code != null">
+				code = #{code},
+			</if>
+
+			<if test="deptname != null">
+				deptname = #{deptname},
+			</if>
+
+			<if test="course != null">
+				course = #{course},
+			</if>
+
+			<if test="date != null">
+				date = #{date},
+			</if>
+
+			<if test="totalhours != null">
+				totalhours = #{totalhours},
+			</if>
+
+			<if test="donehours != null">
+				donehours = #{donehours},
+			</if>
+
+			<if test="comid != null">
+				comid = #{comid},
+			</if>
+
+			<if test="caozuoshijian != null">
+				caozuoshijian = #{caozuoshijian}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<select id="selectStudyHoursByIds" resultType="org.springblade.anbiao.qiyeshouye.entity.DriverStudyHours">
+		select * from anbiao_jiashiyuan_study_hours where jiashiyuanid = #{Id} and left(date,7) = left(#{date},7)
+	</select>
+
+</mapper>

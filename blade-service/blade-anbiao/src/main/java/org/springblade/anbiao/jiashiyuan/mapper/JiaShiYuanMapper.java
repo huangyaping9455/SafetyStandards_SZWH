@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleImg;
-import org.springblade.anbiao.jiashiyuan.entity.DriverImg;
-import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
-import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTJMX;
-import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTrain;
+import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.vo.DriverInfoVO;
 import org.springblade.anbiao.jiashiyuan.vo.DriverTJMingXiVO;
@@ -164,5 +161,11 @@ public interface JiaShiYuanMapper extends BaseMapper<JiaShiYuan> {
 	DriverImg getByDriverImg(@Param("jsyId") String jsyId);
 
 	List<DriverTJMingXiVO> getDriverTJMingXi( DriverTJMingXiVO driverTJMingXiVO );
+
+	/**
+	 * 获取驾驶员档案台账数据
+	 * @return
+	 */
+	List<JiaShiYuanTable> jiaShiYuanTableList(@Param("deptId") Integer deptId);
 
 }

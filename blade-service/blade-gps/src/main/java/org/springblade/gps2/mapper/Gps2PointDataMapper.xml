@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.gps2.mapper.Gps2PointDataMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="pointResultMap" type="java.util.Map">
+    </resultMap>
+
+    <select id="selectPointData" resultType="org.springblade.gps.entity.VehilePTData" parameterType="map">
+        select
+            VehicleId as VehId,
+            GpsTime,
+            Mileage as gpsmileage,
+            Longitude as longitude,
+            Latitude as latitude,
+            Velocity as Speed
+        from
+            HistoryLocation
+        where 1=1
+            and GpsTime &gt;= #{beginTime}
+            and GpsTime &lt;= #{endTime}
+            and VehicleId = #{vehId}
+        ORDER BY GpsTime
+    </select>
+
+
+
+</mapper>

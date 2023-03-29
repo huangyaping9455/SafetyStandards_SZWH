@@ -99,7 +99,8 @@ public interface OrganizationsMapper extends BaseMapper<Organizations> {
 
 	List<OrganizationsFuJian> selectByDeptPost(@Param("deptId") String deptId);
 
-
 	List<Dept> selectDept();
+
+	List<OrganizationsVO> selectByDeptName();
 }
 

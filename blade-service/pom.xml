@@ -22,6 +22,8 @@
         <module>blade-anbiao</module>
         <module>blade-upload</module>
         <module>blade-train</module>
+        <module>blade-alarm</module>
+        <module>blade-gps</module>
     </modules>
 
     <dependencies>

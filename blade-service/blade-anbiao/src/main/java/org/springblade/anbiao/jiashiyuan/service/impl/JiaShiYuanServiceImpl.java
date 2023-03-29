@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleImg;
-import org.springblade.anbiao.jiashiyuan.entity.DriverImg;
-import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
-import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTJMX;
-import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTrain;
+import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.jiashiyuan.mapper.JiaShiYuanMapper;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
@@ -334,6 +331,11 @@ public class JiaShiYuanServiceImpl extends ServiceImpl<JiaShiYuanMapper, JiaShiY
 	@Override
 	public List<DriverTJMingXiVO> selectDriverTJMingXi(DriverTJMingXiVO driverTJMingXiVO) {
 		return jiaShiYuanMapper.getDriverTJMingXi(driverTJMingXiVO);
+	}
+
+	@Override
+	public List<JiaShiYuanTable> jiaShiYuanTableList(Integer deptId) {
+		return jiaShiYuanMapper.jiaShiYuanTableList(deptId);
 	}
 
 

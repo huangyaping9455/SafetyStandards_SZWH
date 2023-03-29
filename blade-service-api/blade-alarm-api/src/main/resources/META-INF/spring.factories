@@ -1,0 +1,4 @@
+net.dreamlu.mica.feign.MicaFeignAutoConfiguration=\
+  org.springblade.alarm.feign.IAlarmClient
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  org.springblade.alarm.feign.IAlarmClientBack

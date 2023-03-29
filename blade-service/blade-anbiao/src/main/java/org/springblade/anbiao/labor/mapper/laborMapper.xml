@@ -30,7 +30,7 @@
              AND year(a.ali_issue_date) >= year(#{asiYear})
          </if>
          <if test="deptName!=null and deptName!=''">
-             AND b.dept_name= #{deptName}
+             AND b.dept_name like CONCAT('%',#{deptName},'%')
          </if>
          <if test="aliName!=null and aliName!=''">
              AND a.ali_name= #{aliName}

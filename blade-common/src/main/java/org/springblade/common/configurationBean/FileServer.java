@@ -45,6 +45,16 @@ public class FileServer {
 	private String key;
 
 	/**
+	 * 加密字符串
+	 */
+	private String videoUrl;
+
+	/**
+	 * tts指令地址
+	 */
+	private String ttsUrl;
+
+	/**
 	 * 离线时间（判断车辆在线离线阀值）
 	 */
 	private int maxOfflineTime;
@@ -55,11 +65,73 @@ public class FileServer {
 	private String learnRecordUrl;
 
 	/**
+	 * 隐患数据获取地址
+	 */
+	private String hazardRecordUrl;
+
+	/**
 	 * 安全达标分数
 	 */
 	private int markRemindScore;
 
+	/**
+	 * 有为数据地址
+	 */
+	private String youweiUrl;
 
+	/**
+	 * 上线率分值
+	 */
+	private int onlineRateScore;
 
+	/**
+	 * 上线率占比
+	 */
+	private String onlineRatePercentage;
+
+	/**
+	 * 定位率分值
+	 */
+	private int locateRateScore;
+
+	/**
+	 * 定位率占比
+	 */
+	private String locateRatePercentage;
+
+	/**
+	 * 数据合格率分值
+	 */
+	private int qualifiedRateScore;
+
+	/**
+	 * 数据合格率占比
+	 */
+	private String qualifiedRatePercentage;
+
+	/**
+	 * 轨迹完整率分值
+	 */
+	private int trajectoryIntegrityRateScore;
+
+	/**
+	 * 轨迹完整率占比
+	 */
+	private String trajectoryIntegrityRatePercentage;
+
+	/**
+	 * 轨迹漂移率分值
+	 */
+	private int trajectoryDriftRateScore;
+
+	/**
+	 * 轨迹漂移率占比
+	 */
+	private String trajectoryDriftRatePercentage;
+
+	/**
+	 * 是否开启生成隐患数据
+	 */
+	private String hiddenDanger;
 
 }

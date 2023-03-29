@@ -1,0 +1,38 @@
+# feign调用超时时间配置
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 1000000
+        readTimeout: 6000000
+#服务器端口
+server:
+  port: 9107
+spring:
+  datasource:
+    #    gps2:
+    #      type: com.alibaba.druid.pool.DruidDataSource
+    #      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    #
+    #      url: ${blade.datasource.gps2.url}
+    #      username: ${blade.datasource.gps2.username}
+    #      password: ${blade.datasource.gps2.password}
+
+    gps3:
+      url: ${blade.datasource.gps3.url}
+      username: ${blade.datasource.gps3.username}
+      password: ${blade.datasource.gps3.password}
+
+      driver-class-name: com.mysql.jdbc.Driver    #指定数据库驱动
+      type: com.alibaba.druid.pool.DruidDataSource  #指定类型连接池
+
+gpsserver:
+  pointurlPrefix: ${gpsserver.dev.pointurl}
+  imgurlPrefix: ${gpsserver.dev.imgurl}
+  spreadurlPrefix: ${gpsserver.dev.spreadurl}
+fileserver:
+  #  离线时间阀值
+  maxOfflineTime: ${fileserver.dev.maxOfflineTime}
+
+alarmserver:
+  address-ak: ${fileserver.dev.ak}

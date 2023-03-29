@@ -22,6 +22,8 @@
         <module>blade-anbiao-api</module>
         <module>blade-upload-api</module>
         <module>blade-train-api</module>
+        <module>blade-gps-api</module>
+        <module>blade-alarm-api</module>
     </modules>
 
     <dependencies>

@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -626,6 +627,17 @@ public class DateUtils {
 		return pattern;
 	}
 
+	public static int fun(String s1, String s2) {
+		//ctrl+alt+/提示方法参数
+		//指定日期格式
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		//按照指定格式转化为LocalDate对象
+		LocalDate time1 = LocalDate.parse(s1, dateTimeFormatter);
+		LocalDate time2 = LocalDate.parse(s2, dateTimeFormatter);
+		//调方法计算两个LocalDate的天数差
+		long between = ChronoUnit.DAYS.between(time1, time2);
+		return (int) between;
+	}
 
 	public static void main(String[] args) throws Exception {
 

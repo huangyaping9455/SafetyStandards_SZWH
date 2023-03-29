@@ -29,9 +29,6 @@ import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
-import org.springblade.anbiao.labor.VO.LaborledgerVO;
-import org.springblade.anbiao.labor.entity.LaborlingquEntity;
-import org.springblade.anbiao.labor.page.laborledgerPage;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.common.configurationBean.FileServer;
@@ -291,6 +288,9 @@ public class AnbiaoAnquanhuiyiController {
 							anbiaoAnquanhuiyiDetail.setAadApIds(anquanhuiyiDetailList.get(j).getAadApIds());
 							anbiaoAnquanhuiyiDetail.setAadApName(anquanhuiyiDetailList.get(j).getAadApName());
 							anbiaoAnquanhuiyiDetail.setAadApType(anquanhuiyiDetailList.get(j).getAadApType());
+							anbiaoAnquanhuiyiDetail.setAddTime(anquanhuiyiDetailList.get(j).getAddTime());
+							anbiaoAnquanhuiyiDetail.setAddApBeingJoined(anquanhuiyiDetailList.get(j).getAddApBeingJoined());
+							anbiaoAnquanhuiyiDetail.setAddApHeadPortrait(anquanhuiyiDetailList.get(j).getAddApHeadPortrait());
 							anbiaoAnquanhuiyiDetail.setAddApAutograph(anquanhuiyiDetailList.get(j).getAddApAutograph());
 							boolean b = anquanhuiyiDetailService.save(anbiaoAnquanhuiyiDetail);
 							if (b) {

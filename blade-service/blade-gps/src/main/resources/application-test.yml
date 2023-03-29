@@ -1,0 +1,102 @@
+# feign调用超时时间配置
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 1000000
+        readTimeout: 6000000
+#服务器端口
+server:
+    port: 9107
+spring:
+    datasource:
+        gps2:
+            type: com.alibaba.druid.pool.DruidDataSource
+            driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+            #      url: ${blade.datasource.gps2.url}
+            #      username: ${blade.datasource.gps2.username}
+            #      password: ${blade.datasource.gps2.password}
+
+            #hn
+            url: jdbc:sqlserver://36.133.42.142:22437;databaseName=GpsDBServices
+            username: hbgs
+            password: Q9gSQHLQVtHAPRI#
+
+            #qingdao
+            #            url: jdbc:sqlserver://150.138.133.178:22437;databaseName=GpsDBServices
+            #            username: sa
+            #            password: h2020*Bmy@887
+
+            #xj
+#            url: jdbc:sqlserver://222.82.236.242:22437;databaseName=GpsDBServices
+#            username: sa
+#            password: Admin@mx
+
+            #唐僧
+            #      url: jdbc:sqlserver://219.153.12.86:22437;databaseName=GpsDBServices
+            #      username: sa
+            #      password: QDfht@0991a..
+
+            #   mx
+        #      url: jdbc:sqlserver://58.144.142.198:22437;databaseName=GpsDBServices
+        #      username: sa
+        #      password: Mxcx@cq
+
+        gps3:
+            #      url: ${blade.datasource.gps3.url}
+            #      username: ${blade.datasource.gps3.username}
+            #      password: ${blade.datasource.gps3.password}
+
+            #qingdao
+#            url: jdbc:mysql://150.138.133.178:3366/blade?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+#            username: root
+#            password: qd123!@#
+
+            #xj
+#            url: jdbc:mysql://222.82.236.242:3366/blade?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+#            username: root
+#            password: admin@xj
+
+            #成都三树赢城
+            url: jdbc:mysql://125.64.5.2:3366/blade?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+            username: root
+            password: admin@ssyc
+
+              #安徽
+              #      url: jdbc:mysql://60.171.241.126:3366/blade?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+              #      username: root
+              #      password: mxcx123
+
+              #ts
+            #      url: jdbc:mysql://219.153.12.86:3366/blade?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+            #      username: root
+            #      password: admin@ts
+
+            # mx
+            #      url: jdbc:mysql://58.144.142.198:3366/blade?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+            #      username: root
+            #      password: Mxcx123456
+
+            #河南
+#            url: jdbc:mysql://36.133.42.142:3366/blade?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+#            username: root
+#            password: mxcx123
+
+            driver-class-name: com.mysql.jdbc.Driver    #指定数据库驱动
+            type: com.alibaba.druid.pool.DruidDataSource  #指定类型连接池
+
+gpsserver:
+#    pointurlPrefix: ${gpsserver.dev.pointurl}
+    pointurlPrefix: http://sztoosun.com:40003/
+    imgurlPrefix: ${gpsserver.dev.imgurl}
+    spreadurlPrefix: ${gpsserver.dev.spreadurl}
+fileserver:
+    #  离线时间阀值
+#    maxOfflineTime: ${fileserver.dev.maxOfflineTime}
+  maxOfflineTime: 900
+#  pointurlPrefix: http://150.138.133.178:40003/
+#  spreadurlPrefix: http://47.108.29.76:40002/  http://36.133.42.216:40002/ http://127.0.0.1:40003/
+
+alarmserver:
+  address-ak: 8uUAMcdHlYWBzSkv3Q9amUGjUSxruG3F,euwNU9FGbNw738IMRGStLVPoxlu1YePG,

@@ -28,4 +28,9 @@ public class AlarmServer {
 	 * 下载模板地址
 	 */
 	private String templateUrl;
+
+	/**
+	 * 百度key
+	 */
+	private String addressAk;
 }

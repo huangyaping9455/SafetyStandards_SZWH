@@ -111,4 +111,6 @@ public interface IOrganizationsService extends IService<Organizations> {
 	OrganizationsFuJian selectByDeptImg(@Param("deptId") String deptId);
 
 	List<Dept> selectDept();
+
+	List<OrganizationsVO> selectByDeptName();
 }

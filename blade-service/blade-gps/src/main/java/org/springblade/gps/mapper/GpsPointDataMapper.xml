@@ -1,0 +1,748 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.gps.mapper.GpsPointDataMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="pointResultMap" type="java.util.Map">
+    </resultMap>
+
+<!--    <select id="selectPointData" resultType="org.springblade.gps.entity.VehilePTData">-->
+<!--         select a.Velocity as Speed,-->
+<!--        a.Longitude as longitude,-->
+<!--        a.Latitude as latitude,-->
+<!--        a.gpsmileage,-->
+<!--        a.[Time] as GpsTime,-->
+<!--        a.VehId as VehId,-->
+<!--        b.cph as plate-->
+<!--        from Dyndata as a-->
+<!--        inner join Vehicle b-->
+<!--        on a.VehId = b.Id-->
+<!--        where a.[Time] &gt;= #{param1}-->
+<!--        AND a.[Time] &lt;= #{param2}-->
+<!--        AND a.VehId = #{param3}-->
+<!--        ORDER BY [Time]-->
+<!--    </select>-->
+    <select id="selectPointData" resultType="org.springblade.gps.entity.VehilePTData" parameterType="map">
+        select
+            VehicleId as VehId,
+            GpsTime,
+            Longitude as longitude,
+            Latitude as latitude,
+            Velocity as Speed
+        from
+            HistoryLocation
+        where 1=1
+            and GpsTime &gt;= #{beginTime}
+            and GpsTime &lt;= #{endTime}
+            and VehicleId = #{vehId}
+        ORDER BY GpsTime
+    </select>
+    <!--获取企业车辆牌照相关信息-->
+    <select id="selectcompanyAll" resultType="org.springblade.gps.entity.VehiclePTCompany">
+
+            SELECT
+	            a.id,
+            	a.userid,
+	            a.cph,
+	            a.Deviceid,
+	            a.platecolor,
+            	a.vehtype,
+                b.khqc AS company
+            FROM
+	            Vehicle a
+            INNER JOIN Client b ON a.userid = b.id
+            WHERE
+	            b.khqc = #{company}
+
+    </select>
+    <!--根据车牌 车牌颜色查询gps库 车辆id-->
+    <select id="selectOneGpsVehicle" resultType="org.springblade.gps.entity.GpsVehicle">
+
+                SELECT
+	                TOP 1 id AS vehid,
+                	cph,
+	                platecolor
+                FROM
+	                Vehicle
+                WHERE
+	                cph = #{cph}
+                AND platecolor =#{color}
+
+    </select>
+    <!--根据车辆id 查询车辆停车点信息-->
+    <select id="selectallofVehid" resultType="org.springblade.gps.entity.VehicleStopData">
+      select * from (  SELECT
+        Longitude,
+        Latitude,
+        begintime,
+        endtime,
+        vehid,
+        velocity speed,
+        cph,
+        platecolor,
+        CONCAT (
+        (
+        floor(
+        datediff(SECOND, begintime, endtime) / 86400
+        )
+        ),
+        '天',
+        (
+        floor(
+        datediff(SECOND, begintime, endtime) / 3600
+        ) % 24
+        ),
+        '时',
+        (
+        floor(
+        datediff(SECOND, begintime, endtime) / 60
+        ) % 60
+        ),
+        '分',
+        (
+        datediff(SECOND, begintime, endtime) % 60
+        ),
+        '秒'
+        ) AS timesShow,
+        datediff(SECOND, begintime, endtime) AS times
+        FROM
+        (
+        SELECT
+        a.*, (
+        SELECT
+        MIN (TIME)
+        FROM
+        dyndata
+        WHERE
+        vehid = #{vehid}
+        AND TIME &gt;= #{begintime}
+        AND TIME &lt;= #{endtime}
+        AND velocity = 0
+        AND Latitude = a.Latitude
+        AND Longitude = a.Longitude
+        ) begintime,
+        (
+        SELECT
+        MAX (TIME)
+        FROM
+        dyndata
+        WHERE
+         vehid = #{vehid}
+        AND TIME &gt;= #{begintime}
+        AND TIME &lt;= #{endtime}
+        AND velocity = 0
+        AND Latitude = a.Latitude
+        AND Longitude = a.Longitude
+        ) endtime
+        FROM
+        (
+        SELECT
+        velocity,
+        vehicle.id vehid,
+        Longitude,
+        Latitude,
+        cph,
+        platecolor
+        FROM
+        dyndata,
+        vehicle
+        WHERE
+        vehicle.id = dyndata.vehid
+        and  vehid = #{vehid}
+        AND TIME &gt;= #{begintime}
+        AND TIME &lt;= #{endtime}
+        AND velocity = 0
+        GROUP BY
+        Longitude,
+        Latitude,
+        vehicle.id,
+        velocity,
+        cph,
+        platecolor
+        ) a
+        ) a
+        WHERE
+        datediff(SECOND, begintime, endtime) >= 600
+        ) a where 1=1
+        <include refid="querytabel"/>
+        ORDER BY
+        begintime
+
+    </select>
+    <sql id="querytabel">
+        <if test="timequery=='10分钟'.toString()">
+            AND times>600
+        </if>
+        <if test="timequery=='1小时'.toString()">
+            AND times>3600
+        </if>
+        <if test="timequery=='6小时'.toString()">
+            AND times>21600
+        </if>
+        <if test="timequery=='12小时'.toString()">
+            AND times>43200
+        </if>
+
+    </sql>
+    <!--获取企业下的所有车辆停车点-->
+    <select id="selectallofCompany" resultType="org.springblade.gps.entity.VehicleStopData">
+       select *from ( SELECT
+        Longitude,
+        Latitude,
+        begintime,
+        endtime,
+        vehid,
+        velocity speed,
+        cph,
+        platecolor,
+        CONCAT (
+        (
+        floor(
+        datediff(SECOND, begintime, endtime) / 86400
+        )
+        ),
+        '天',
+        (
+        floor(
+        datediff(SECOND, begintime, endtime) / 3600
+        ) % 24
+        ),
+        '时',
+        (
+        floor(
+        datediff(SECOND, begintime, endtime) / 60
+        ) % 60
+        ),
+        '分',
+        (
+        datediff(SECOND, begintime, endtime) % 60
+        ),
+        '秒'
+        ) AS timesShow,
+        datediff(SECOND, begintime, endtime) AS times
+        FROM
+        (
+        SELECT
+        a.*, (
+        SELECT
+        MIN (TIME)
+        FROM
+        dyndata
+        WHERE
+        vehid = a.vehid
+        AND TIME &gt;= #{begintime}
+        AND TIME &lt;= #{endtime}
+        AND velocity = 0
+        AND Latitude = a.Latitude
+        AND Longitude = a.Longitude
+        ) begintime,
+        (
+        SELECT
+        MAX (TIME)
+        FROM
+        dyndata
+        WHERE
+        vehid = a.vehid
+        AND TIME &gt;= #{begintime}
+        AND TIME &lt;= #{endtime}
+        AND velocity = 0
+        AND Latitude = a.Latitude
+        AND Longitude = a.Longitude
+        ) endtime
+        FROM
+        (
+        SELECT
+        velocity,
+        vehicle.id vehid,
+        Longitude,
+        Latitude,
+        cph,
+        platecolor
+        FROM
+        dyndata,
+        vehicle
+        WHERE
+        vehicle.id = dyndata.vehid
+        AND vehid IN (
+        SELECT
+        id
+        FROM
+        Vehicle
+        WHERE
+        userid = (
+        SELECT
+        id
+        FROM
+        Client
+        WHERE
+        khqc = #{company}
+        )
+        )
+        AND TIME &gt;= #{begintime}
+        AND TIME &lt;= #{endtime}
+        AND velocity = 0
+        GROUP BY
+        Longitude,
+        Latitude,
+        vehicle.id,
+        velocity,
+        cph,
+        platecolor
+        ) a
+        ) a
+        WHERE
+        datediff(SECOND, begintime, endtime) >= 600
+        ) aa
+        where 1=1
+
+        ORDER BY
+        vehid,
+        begintime
+
+    </select>
+    <!--查询企业下停车的车辆和gps车辆id-->
+    <select id="selectPlateVehid" resultType="org.springblade.gps.entity.GpsPlateVehid">
+        select cph,vehid from (SELECT
+        Longitude,
+        Latitude,
+        begintime,
+        endtime,
+        vehid,
+        platecolor,
+        cph,
+        CONVERT (VARCHAR(100), begintime, 23) tonjishijian,
+        CONCAT (
+        (
+        floor(
+        datediff(SECOND, begintime, endtime) / 86400
+        )
+        ),
+        '天',
+        (
+        floor(
+        datediff(SECOND, begintime, endtime) / 3600
+        ) % 24
+        ),
+        '时',
+        (
+        floor(
+        datediff(SECOND, begintime, endtime) / 60
+        ) % 60
+        ),
+        '分',
+        (
+        datediff(SECOND, begintime, endtime) % 60
+        ),
+        '秒'
+        ) AS tingcheshijian,
+        datediff(SECOND, begintime, endtime) AS times
+        FROM
+        (
+        SELECT
+        a.*, (
+        SELECT
+        MIN (TIME)
+        FROM
+        dyndata
+        WHERE
+        vehid = a.vehid
+        AND TIME &gt;= #{begintime}
+        AND TIME &lt;= #{endtime}
+        AND velocity = 0
+        AND Latitude = a.Latitude
+        AND Longitude = a.Longitude
+        ) begintime,
+        (
+        SELECT
+        MAX (TIME)
+        FROM
+        dyndata
+        WHERE
+        vehid = a.vehid
+        AND TIME &gt;= #{begintime}
+        AND TIME &lt;= #{endtime}
+        AND velocity = 0
+        AND Latitude = a.Latitude
+        AND Longitude = a.Longitude
+        ) endtime
+        FROM
+        (
+        SELECT
+        vehicle.id vehid,
+        Longitude,
+        Latitude,
+        platecolor,
+        cph
+        FROM
+        dyndata,
+        vehicle
+        WHERE
+        vehicle.id = dyndata.vehid
+        AND vehid in(
+        select id from Vehicle where userid=(
+        select  id from Client where khqc=#{company}
+
+        )
+        )
+        AND TIME &gt;= #{begintime}
+        AND TIME &lt;= #{endtime}
+        AND velocity = 0
+        GROUP BY
+        Longitude,
+        Latitude,
+        vehicle.id,
+        platecolor,
+        cph
+        ) a
+        ) a
+        WHERE
+        datediff(SECOND, begintime, endtime) >= 600
+        ) a GROUP BY cph,vehid
+    </select>
+
+    <select id="getVehiclesByCom" parameterType="java.lang.String" resultType="org.springblade.gps.entity.VehicleNode">
+        SELECT distinct
+        t.vehid as id,
+        v.cph as title,
+        c.id as parentId,
+        CASE WHEN t.systime &lt; dateadd(Minute,-10,GETDATE()) then 0 else 1 end AS isonline
+        FROM tpvehdata t
+        inner join vehicle v on t.VehId=v.id
+        inner join client c on v.userid = c.id
+        and c.khqc = #{company}
+
+    </select>
+
+    <!--根据企业ID获取车辆最新定位-->
+    <resultMap id="VehilePTDataResultMap" type="org.springblade.gps.entity.TpvehData">
+    </resultMap>
+
+    <sql id="tableTpvehdataSql">
+        select
+        *
+        from(
+            select
+                a.VehId as vehicleID,
+                a.DeptID as deptID,
+                CASE
+                WHEN ifnull(a.cheliangzhuangtai,0) = 0 THEN '在用'
+                WHEN ifnull(a.cheliangzhuangtai,0) = 1 THEN '停用'
+                END VehState,
+                a.shiyongxingzhi,
+                case when IfNULL(a.yunyingshang,'') = 'null' then '' else a.yunyingshang end as yunyingshang,
+                a.deviceID,
+                a.venumber as cph,
+                a.veColor as vehicleColor,
+                a.veColor as platecolor,
+                IfNULL(Longitude,0) as longitude,
+                IfNULL(Latitude,0) as latitude,
+                Velocity,
+                Angle,
+                LastLocateTime as gpstime,
+                '' as locationName,
+                case when IfNULL(Locate,0) = 0 then '不定位' else '定位' end as LocalFlag,
+                time as Systime,
+                case when IfNULL(Alarm,0) = 0 then '未报警' else '报警' end as alarm,
+                AlarmNote as alarmNote,
+                case
+                when Time >= DATE_SUB(NOW(), INTERVAL ${date} SECOND) then '在线'
+                else '离线'
+                end as zaixian,
+                a.ACC,
+                a.WiFiSignal,
+                a.SatelliteLen,
+                c.accessoryphone
+            from(
+                select a.*,yunyingshang from tpvehdata a,anbiao_vehicle b
+                where a.Vehid = b.id
+                    AND b.dept_id = #{deptId}
+                    AND b.is_deleted = 0
+                ) a
+            LEFT JOIN ( SELECT vehid, accessoryphone FROM anbiao_vehicle_phone WHERE is_deleted = 0 ) c ON a.VehId = c.vehid
+            )a
+        where 1=1
+        <if test="cpn !=null and cpn != ''">
+                AND cph like CONCAT('%',#{cpn},'%')
+            </if>
+
+            <if test="vehicleStatus == '在线'">
+                AND zaixian = '在线'
+            </if>
+
+            <if test="vehicleStatus == '停用'">
+                AND VehState = '停用'
+            </if>
+
+            <if test="vehicleStatus == '离线'">
+                AND (zaixian = '离线' or zaixian = '从未上线')
+            </if>
+    </sql>
+
+    <sql id="querySql">
+    </sql>
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by cph
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <select id="selectTpvehdataAllPage" resultMap="VehilePTDataResultMap"
+            parameterType="org.springblade.gps.page.VehiclePTPage" resultType="org.springblade.gps.entity.TpvehData">
+        <if test="size == 0" >
+            select * from (
+                <include refid="tableTpvehdataSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+                <include refid="tableTpvehdataSql" />
+            )b
+            where 1=1
+                <include refid="querySql" />
+                <include refid="orderSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectTpvehdataAllTotal"
+            parameterType="org.springblade.gps.page.VehiclePTPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableTpvehdataSql" />
+        )d
+        where 1 = 1
+        <include refid="querySql" />
+    </select>
+
+    <!--查询企业下各车辆状态数量-->
+    <select id="selectTpvehdataCount" resultType="org.springblade.gps.entity.TpvehDataCount" parameterType="map" >
+        select
+            deptID,
+            COUNT(DISTINCT vehicleID) as MonitorCount,
+            IFNULL(SUM(case when VehState = '停用' then 1 end),0) as DecommissioningCount,
+            IFNULL(SUM(case when VehState = '在用' then 1 end),0) as RegisterCount,
+            IFNULL(SUM(case when zaix = '离线' then 1 end),0) as offLineCount,
+            IFNULL(SUM(case when zaix = '在线' then 1 end),0) as OnLineCount
+        from(
+            select
+                b.id as vehicleID,
+                b.dept_id as deptID,
+                CASE
+                    WHEN ifnull(b.cheliangzhuangtai,0) = 0 THEN '在用'
+                    WHEN ifnull(b.cheliangzhuangtai,0) = 1 THEN '停用'
+                END VehState,
+                case when IfNULL(Locate,0) = 0 then '不定位' else '定位' end as LocalFlag,
+                case when IfNULL(Alarm,0) = 0 then '未报警' else '报警' end as alarm,
+                case
+                    when Time >= DATE_SUB(NOW(), INTERVAL ${date} SECOND) then '在线'
+                    else '离线'
+                end as zaix
+            from
+                tpvehdata a
+            inner join anbiao_vehicle b on a.Vehid = b.id
+            where b.dept_id = #{deptId}
+                and b.is_deleted = 0
+            )a where 1=1
+        GROUP BY deptID
+    </select>
+
+    <!--根据企业ID获取车辆最新定位-->
+    <resultMap id="ZFTpvehDataResultMap" type="org.springblade.gps.entity.ZFTpvehData">
+    </resultMap>
+
+    <sql id="tableZFTpvehdataSql">
+        select
+            vehicleColor,
+            yunguanmingcheng,
+            a.country,
+            VehState,
+            alarmtype,
+            a.city,
+            DeviceID,
+            DeptID,
+            shiyongxingzhi,
+            vehicleNo,
+            a.jigouleixing,
+            a.province,
+            areaName,
+            yunguanid,
+            vehicleID,
+            qiyemingcheng as DeptName,
+            VehState as zhuangtai,
+            zaixian,
+            d.area,
+            longitude,
+            latitude,
+            Velocity,
+            Angle,
+            gpstime,
+            c.yunyingshangmingcheng
+        from(
+            select * from baobiao_zhengfu_qiye
+            where jigouleixing in('qiye','geti')
+            <if test="province != null and province != '' ">
+                and province = #{province}
+            </if>
+            <if test="city != null and city != '' ">
+                and city = #{city}
+            </if>
+            <if test="country != null and country != '' ">
+                and country = #{country}
+            </if>
+            )a
+        inner join(
+            select
+                Vehid as vehicleID,
+                deptID,
+                CASE
+                    WHEN ifnull(cheliangzhuangtai,0) = 0 THEN '在用'
+                    WHEN ifnull(cheliangzhuangtai,0) = 1 THEN '停用'
+                END VehState,
+                shiyongxingzhi,
+                DeviceID,
+                VeNumber as vehicleNo,
+                VeColor as vehicleColor,
+                IfNULL(Longitude,0) as longitude,
+                IfNULL(Latitude,0) as latitude,
+                Velocity,
+                Angle,
+                LastLocateTime as gpstime,
+                '' as locationName,
+                case when IfNULL(Locate,0) = 0 then '不定位' else '定位' end as LocalFlag,
+                Systime,
+                case when IfNULL(Alarm,0) = 0 then '未报警' else '报警' end as alarm,
+                AlarmNote as alarmtype,
+                case
+                    when Time >= DATE_SUB(NOW(), INTERVAL ${date} SECOND) then '在线'
+                    else '离线'
+                end as zaixian,
+                a.ACC,
+                a.WiFiSignal,
+                a.SatelliteLen
+            from
+                tpvehdata a
+            )b on a.qiyeid = b.deptID
+            left join anbiao_organization d on b.deptID = d.dept_id
+            inner join(
+                select distinct yunyingshangmingcheng,id from anbiao_vehicle
+                where is_deleted = 0
+            <if test="yunyingshang !=null and yunyingshang != ''">
+                    and yunyingshangmingcheng = #{yunyingshang}
+            </if>
+            )c on b.vehicleID = c.id
+
+        where 1=1
+    </sql>
+
+    <sql id="queryZFSql">
+        <if test="deptname !=null and deptname != ''">
+            AND DeptName like CONCAT('%',#{deptname},'%')
+        </if>
+
+        <if test="cpn !=null and cpn != ''">
+            AND vehicleNo like CONCAT('%',#{cpn},'%')
+        </if>
+
+        <if test="shiyongxingzhi !=null and shiyongxingzhi != ''">
+            AND shiyongxingzhi like CONCAT('%',#{shiyongxingzhi},'%')
+        </if>
+
+        <if test="zaixian == '在线'">
+            AND zaixian = '在线'
+        </if>
+
+        <if test="zaixian == '离线'">
+            AND zaixian = '离线'
+        </if>
+
+        <if test="zhuangtai == '在用'">
+            AND zhuangtai = '在用'
+        </if>
+
+        <if test="zhuangtai == '停用'">
+            AND zhuangtai = '停用'
+        </if>
+
+    </sql>
+    <sql id="orderZFSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by vehicleNo
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <select id="selectZFTpvehdataAllPage" resultMap="ZFTpvehDataResultMap"
+            parameterType="org.springblade.gps.page.VehiclePTPage" resultType="org.springblade.gps.entity.ZFTpvehData">
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableZFTpvehdataSql" />
+            )b
+            where 1=1
+            <include refid="queryZFSql" />
+            <include refid="orderZFSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableZFTpvehdataSql" />
+            )b
+            where 1=1
+            <include refid="queryZFSql" />
+            <include refid="orderZFSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectZFTpvehdataAllTotal"
+            parameterType="org.springblade.gps.page.VehiclePTPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableZFTpvehdataSql" />
+        )d
+        where 1 = 1
+        <include refid="queryZFSql" />
+    </select>
+
+    <!--查询车辆月里程及行驶时间-->
+    <select id="selectVehTravel" resultType="org.springblade.gps.entity.VehTravel" parameterType="map" >
+        select
+            vehicleId,
+            LEFT(date,10) as date,
+            CONCAT(ROUND(TravelMileage,2),'公里') as travelMileage,
+            CONCAT(
+            (floor(TravelTimes / 86400)),
+            '天',
+            (floor(TravelTimes / 3600) % 24),
+            '时',
+            (floor(TravelTimes / 60) % 60),
+            '分',
+            (TravelTimes % 60),
+            '秒'
+            ) AS xingshishijian,
+            AlarmCount+dsm as alarmCount
+        from
+            statisticcensus
+        where YEAR(date) = YEAR(#{date})
+          and MONTH(date) = MONTH(#{date})
+          and vehicleId = #{vehId}
+    </select>
+
+
+</mapper>

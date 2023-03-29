@@ -990,4 +990,8 @@
           and extend_type = '岗位'
     </select>
 
+    <select id="selectByDeptName" resultType="org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO" >
+        select a.*,b.tree_code from anbiao_organization a,blade_dept b where a.dept_id = b.id and IFNULL(a.jigoubianma,'') != '' and a.dept_id != 1 and isdelete = 0
+    </select>
+
 </mapper>

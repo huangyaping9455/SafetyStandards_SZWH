@@ -202,6 +202,31 @@ values
         </if>
     </select>
 
+    <select id="jiaShiYuanTableList" resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTable">
+        SELECT
+        distinct
+        id,
+        jiashiyuanxingming,
+        case when xingbie = 1 then '男'  when xingbie = 2 then '女' else xingbie end as xingbie,
+        '' as ruzhiriqi,
+        shenfenzhenghao,
+        '' as zhiwei,
+        congyezigezheng,
+        (select dict_value from blade_dict where is_deleted = 0 and `code` = 'congyezigezhengleibie' and dict_key = congyeleibie limit 1) as congyeleibie,
+        congyezhengchulingri,
+        congyezhengyouxiaoqi,
+        shoujihaoma,
+        '' as cheliangpaizhao,
+        (select dept_name from blade_dept where id = dept_id and is_deleted = 0 limit 1) as deptName
+        FROM
+        anbiao_jiashiyuan
+        WHERE 1=1
+        AND isdelete = 0
+        <if test="deptId != null and deptId != '' ">
+            AND dept_id= #{deptId}
+        </if>
+    </select>
+
 
     <select id = "selectByCar" parameterType="java.lang.String" resultType="org.springblade.anbiao.cheliangguanli.entity.Vehicle">
         select

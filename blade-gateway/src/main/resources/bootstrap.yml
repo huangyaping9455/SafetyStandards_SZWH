@@ -10,6 +10,8 @@ blade:
     blade-upload: blade-upload
     blade-user: blade-user
     blade-train: blade-train
+    blade-gps: blade-gps
+    blade-alarm: blade-alarm
 
 spring:
   cloud:
@@ -55,6 +57,16 @@ spring:
         uri: lb://${blade.service.blade-upload}
         predicates:
           - Path=/${blade.service.blade-upload}/**
+      # 报警模块
+      - id: ${blade.service.blade-alarm}
+        uri: lb://${blade.service.blade-alarm}
+        predicates:
+          - Path=/${blade.service.blade-alarm}/**
+      # GPS报警模块
+      - id: ${blade.service.blade-gps}
+        uri: lb://${blade.service.blade-gps}
+        predicates:
+          - Path=/${blade.service.blade-gps}/**
       discovery:
         locator:
           enabled: true

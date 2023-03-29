@@ -291,4 +291,9 @@ public class OrganizationsServiceImpl extends ServiceImpl<OrganizationsMapper, O
 		return or;
 	}
 
+	@Override
+	public List<OrganizationsVO>  selectByDeptName() {
+		return mapper.selectByDeptName();
+	}
+
 }
