@@ -1,0 +1,2207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.qiyeshouye.mapper.QiYeShouYeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="ResultMap" type="org.springblade.anbiao.qiyeshouye.entity.QiYeShouYe">
+    </resultMap>
+
+    <resultMap id="AnBiaoDeptWechatInfoResultMap" type="org.springblade.anbiao.qiyeshouye.entity.AnBiaoDeptWechatInfo">
+    </resultMap>
+
+	<resultMap id="deptResultMap" type="org.springblade.system.entity.Dept">
+		<id column="id" property="id"/>
+		<result column="parent_id" property="parentId"/>
+		<result column="dept_name" property="deptName"/>
+		<result column="full_name" property="fullName"/>
+		<result column="sort" property="sort"/>
+		<result column="remark" property="remark"/>
+		<result column="is_deleted" property="isDeleted"/>
+		<result column="tree_code" property="treeCode"/>
+		<result column="extend_type" property="extendType"/>
+	</resultMap>
+
+	<select id="QiYeList"  resultMap="deptResultMap">
+		select
+			DISTINCT
+			a.id,
+			a.dept_name
+		from(
+				SELECT
+					DISTINCT
+					xiaji.id,
+					xiaji.parent_id,
+					xiaji.dept_name,
+					xiaji.is_deleted
+				FROM
+					blade_dept shangji,
+					blade_dept xiaji
+				WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+				  AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+				  AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+				  AND shangji.id= #{deptId}
+				)a
+				INNER JOIN(
+			select dept_id from anbiao_organization
+			where isdelete = 0 and jigouleixing in ('qiye','geti')
+			)b on a.id = b.dept_id
+		ORDER BY a.dept_name asc
+	</select>
+
+    <select id="selectMonthVehcile" resultType="org.springblade.anbiao.qiyeshouye.entity.QiYeShouYe">
+        select
+            deptid as deptId,
+            IFNULL(max(jkvehnum),0) as zcvehnum,
+            IFNULL(max(sxvehnum),0) as sxvehnum,
+            IFNULL(max(tyvehnum),0) as tyvehnum,
+            IFNULL(max(jkvehnum),0)-IFNULL(max(sxvehnum),0) as lxvehnum
+        from
+            baobiao_cheliangjiankong_info
+        where deptid = #{deptId}
+            and date_format(time,'%Y-%m') = date_format(CURDATE(),'%Y-%m')
+        GROUP BY
+            deptid
+    </select>
+
+    <select id="selectYearAlarm" resultType="org.springblade.anbiao.qiyeshouye.entity.QiYeShouYe">
+        select
+            id as deptId,
+            dept_name as deptName,
+            date,
+            baojingcishu,
+            bdbaojingcishu,
+            case
+                when IFNULL(bdbaojingcishu,0) = 0 or IFNULL(baojingcishu,0) = 0 then '0.00%'
+                else CONCAT(ROUND((bdbaojingcishu*1.0/baojingcishu)*100,2),'%')
+            end as bdzhanbi,
+            sbbaojingcishu,
+            case
+                when IFNULL(sbbaojingcishu,0) = 0 or IFNULL(baojingcishu,0) = 0 then '0.00%'
+                else CONCAT(ROUND((sbbaojingcishu*1.0/baojingcishu)*100,2),'%')
+            end as sbzhanbi,
+            baojingclcishu,
+            case
+                when IFNULL(baojingclcishu,0) = 0 or IFNULL(baojingcishu,0) = 0 then '0.00%'
+                else CONCAT(ROUND((baojingclcishu*1.0/baojingcishu)*100,2),'%')
+            end as zongchulilv,
+            bdbaojingclcishu,
+            case
+                when IFNULL(bdbaojingclcishu,0) = 0 or IFNULL(baojingcishu,0) = 0 then '0.00%'
+                else CONCAT(ROUND((bdbaojingclcishu*1.0/baojingcishu)*100,2),'%')
+            end as bdchulilv,
+            sbbaojingclcishu,
+            case
+                when IFNULL(sbbaojingclcishu,0) = 0 or IFNULL(baojingcishu,0) = 0 then '0.00%'
+                else CONCAT(ROUND((sbbaojingclcishu*1.0/baojingcishu)*100,2),'%')
+            end as sbchulilv,
+            ifnull(bdbaojingcishu,0) - ifnull(bdbaojingclcishu,0) as bdweichulishu,
+            ifnull(sbbaojingcishu,0) - ifnull(sbbaojingclcishu,0) as sbweichulishu
+        from
+            anbiao_baojingjiesuan_year
+        where 1=1
+            and id = #{deptId}
+            and date = #{year}
+    </select>
+
+    <select id="selectYearAlarmTendency" resultType="org.springblade.anbiao.qiyeshouye.entity.QiYeShouYe">
+        select
+            cid as deptId,
+            company as deptName,
+            CONCAT(nian,'-',yue) as date,
+            baojingcishu,
+            baojingclcishu as zcbaojingclcishu,
+            0 as csbaojingclcishu
+        from
+            baobiao_alarmmonthreport
+        where cid = #{deptId}
+            and nian = #{year}
+        order by yue asc
+    </select>
+
+    <select id="selectSevenAlarmStatistics" resultType="org.springblade.anbiao.qiyeshouye.entity.QiYeShouYe">
+        <!--select
+            right(a.day1, 5) as date,
+            IFNULL(b.baojingzongshu,0) as baojingcishu,
+            IFNULL(b.chulizongshu,0) as chulizongshu,
+            IFNULL(b.baojingzongshu,0)- IFNULL(b.chulizongshu,0) as weichulizongshu,
+            IFNULL(b.gpsbaojingshu,0) as bdbaojingcishu,
+            IFNULL(b.shebeibaojingshu,0) as sbbaojingcishu,
+            IFNULL(b.gpschulishu,0) as sevengpschulishu,
+            IFNULL(b.shebeichulishu,0) as sevenshebeichulishu,
+            IFNULL((IFNULL(b.gpsbaojingshu,0)-IFNULL(b.gpschulishu,0)),0) as bdweichulishu,
+            IFNULL((IFNULL(b.shebeibaojingshu,0)-IFNULL(b.shebeichulishu,0)),0) as sbweichulishu
+            from(
+                select * from anbiao_sevenDate
+            )a
+            left join(
+            select
+            b.time,
+            IFNULL(sum(b.gpsbaojingshu),0) as gpsbaojingshu,
+            IFNULL(sum(c.shebeibaojingshu),0) as shebeibaojingshu,
+            IFNULL(sum(b.gpschulishu),0) as gpschulishu,
+            IFNULL(sum(c.shebeichulishu),0) as shebeichulishu,
+            IFNULL(SUM(b.gpsbaojingshu),0)+IFNULL(SUM(c.shebeibaojingshu),0) as baojingzongshu,
+            IFNULL(SUM(b.gpschulishu),0)+IFNULL(SUM(c.shebeichulishu),0) as chulizongshu
+            from(
+            select
+            dept_id,dept_name as qiyemingcheng,jigouleixing,province,city,country
+            from
+            anbiao_organization
+            where jigouleixing in ('qiye','geti') and isdelete = 0
+            and dept_id = #{deptId}
+            )a
+            left join(
+            select
+            a.company,
+            time,
+            COUNT(a.AlarmReportID) as gpsbaojingshu,
+            sum(a.chulishu) as gpschulishu
+            from(
+            SELECT
+            a.company,
+            a.AlarmReportID,
+            date_format(cutofftime,'%Y-%m-%d') time,
+            b.chulizhuangtai,
+            b.remark,
+            case
+            when IFNULL(chulizhuangtai,'') = 1 then 1
+            else 0
+            end as chulishu
+            FROM
+            baobiao_alarmsummary_cutofftime AS a
+            left JOIN baobiao_alarmhandleresult AS b ON a.AlarmReportID = b.baojingid  and ifnull(b.is_deleted,0) = 0
+            where 1=1
+            and date_format(cutofftime,'%Y-%m') &gt;= date_format(DATE_SUB(curdate(),INTERVAL 7 DAY),'%Y-%m')
+            and date_format(cutofftime,'%Y-%m') &lt;= date_format(DATE_SUB(curdate(),INTERVAL 0 DAY),'%Y-%m')
+            and AlarmType in ('超速报警','疲劳驾驶报警','夜间行驶报警','无数据报警','不定位报警')
+            and passed = 100
+            and AnalyzeMode = 1
+            )a
+            group by
+            a.company,
+            time
+            )b on a.qiyemingcheng = b.company
+            left join(
+            select
+            a.company,
+            time,
+            COUNT(a.id) as shebeibaojingshu,
+            sum(a.chulishu) as shebeichulishu
+            from(
+            SELECT
+            a.id,
+            a.company,
+            b.chulizhuangtai,
+            b.remark,
+            date_format(GpsTime,'%Y-%m-%d') as time,
+            case
+            when IFNULL(chulizhuangtai,'') = 1 then 1
+            else 0
+            end as chulishu
+            FROM
+            baobiao_driverbehavior AS a
+            left JOIN baobiao_alarmhandleresult AS b ON a.id = b.baojingid AND remark = 1 and ifnull(b.is_deleted,0) = 0
+            where 1=1
+            and stateEx = '核定报警'
+            and date_format(GpsTime,'%Y-%m') &gt;= date_format(DATE_SUB(curdate(),INTERVAL 7 DAY),'%Y-%m')
+            and date_format(GpsTime,'%Y-%m') &lt;= date_format(DATE_SUB(curdate(),INTERVAL 0 DAY),'%Y-%m')
+            and AlarmType in ('接打电话报警','疲劳驾驶报警','分神驾驶报警','抽烟报警')
+            )a
+            group by
+            a.company,
+            time
+            )c on a.qiyemingcheng = c.company and b.time = c.time
+            where IFNULL(b.time,'') != ''
+            GROUP BY
+            b.time
+            )b on a.day1 = b.time
+            ORDER BY a.day1 asc -->
+
+        select
+            right(a.day1, 5) as date,
+            IFNULL(b.baojingzongshu,0) as baojingcishu,
+            IFNULL(b.chulizongshu,0) as chulizongshu,
+            IFNULL(b.baojingzongshu,0)- IFNULL(b.chulizongshu,0) as weichulizongshu,
+            IFNULL(b.gpsbaojingshu,0) as bdbaojingcishu,
+            IFNULL(b.shebeibaojingshu,0) as sbbaojingcishu,
+            IFNULL(b.gpschulishu,0) as sevengpschulishu,
+            IFNULL(b.shebeichulishu,0) as sevenshebeichulishu,
+            IFNULL((IFNULL(b.gpsbaojingshu,0)-IFNULL(b.gpschulishu,0)),0) as bdweichulishu,
+            IFNULL((IFNULL(b.shebeibaojingshu,0)-IFNULL(b.shebeichulishu,0)),0) as sbweichulishu
+        from(
+            select * from anbiao_sevenDate
+            )a
+        left join(
+            select
+                b.*
+            from(
+                select
+                    dept_id,dept_name as qiyemingcheng,jigouleixing,province,city,country
+                from
+                    anbiao_organization
+                where jigouleixing in ('qiye','geti') and isdelete = 0
+                    and dept_id = #{deptId}
+                )a
+        left join(
+            select
+                cid,
+                company,
+                date,
+                ifnull(sum(baojingcishu),0) as baojingzongshu,
+                ifnull(sum(baojingclcishu),0) as chulizongshu,
+                ifnull(sum(chaosu),0) as gpschaosu,
+                ifnull(sum(pilao),0) as gpspilao,
+                ifnull(sum(yejian),0) as gpsyejian,
+                ifnull(sum(wushuju),0)+ifnull(sum(budingwei),0) as gpsyichang,
+                ifnull(sum(chaosu),0)+ifnull(sum(pilao),0)+ifnull(sum(yejian),0)+ifnull(sum(wushuju),0)+ifnull(sum(budingwei),0) as gpsbaojingshu,
+                ifnull(sum(pilaoshipin),0) as dmspilao,
+                ifnull(sum(dadianhua),0) as dmsjiedadianhua,
+                ifnull(sum(chouyan),0) as dmschouyan,
+                ifnull(sum(fenshen),0) as dmsfenshen,
+                ifnull(sum(pilaoshipin),0)+ifnull(sum(dadianhua),0)+ifnull(sum(chouyan),0)+ifnull(sum(fenshen),0)	shebeibaojingshu,
+                ifnull(sum(chaosucl),0) as chaosucl,
+                ifnull(sum(pilaocl),0) as pilaocl,
+                ifnull(sum(yejiancl),0) as yejiancl,
+                ifnull(sum(wushujucl),0)+ifnull(sum(budingweicl),0) as yichangcl,
+                ifnull(sum(chaosucl),0)+ifnull(sum(pilaocl),0)+ifnull(sum(yejiancl),0)+ifnull(sum(wushujucl),0)+ifnull(sum(budingweicl),0) as gpschulishu,
+                ifnull(sum(pilaoshipincl),0) as pilaoshipincl,
+                ifnull(sum(dadianhuacl),0) as dadianhuacl,
+                ifnull(sum(chouyancl),0) as chouyancl,
+                ifnull(sum(fenshencl),0) as fenshencl,
+                ifnull(sum(pilaoshipincl),0)+ifnull(sum(dadianhuacl),0)+ifnull(sum(chouyancl),0)+ifnull(sum(fenshencl),0) as shebeichulishu
+            from
+                baobiao_alarmdailyreport
+            where 1=1
+                and date &gt;= date_format(DATE_SUB(curdate(),INTERVAL 7 DAY),'%Y-%m-%d')
+                and date &lt;= date_format(DATE_SUB(curdate(),INTERVAL 0 DAY),'%Y-%m-%d')
+                and cid = #{deptId}
+            GROUP BY
+                cid,
+                company,
+                date
+            )b on a.dept_id = b.cid
+            where IFNULL(b.date,'') != ''
+        )b on b.date = a.day1
+        ORDER BY a.day1 asc
+    </select>
+
+    <select id="selectOperational" resultType="org.springblade.anbiao.qiyeshouye.entity.QiYeYunWeiShouYe">
+        select
+            IFNULL(SUM(b.shu),0) as vehicleNum,
+            IFNULL(SUM(c.shu),0) as qiyeNum,
+            IFNULL(SUM(d.shu),0) as jiashiyuanNum,
+            IFNULL(SUM(e.shu),0) as vehicleZNum,
+            IFNULL(SUM(f.shu),0) as qiyeZNum,
+            IFNULL(SUM(g.shu),0) as jiashiyuanZNum,
+            IFNULL(SUM(h.shu),0) as biaozhunhuaNum,
+            IFNULL(SUM(i.shu),0) as weibangdingAreaNum
+        from(
+            SELECT
+                DISTINCT
+                xiaji.id,
+                xiaji.parent_id,
+                xiaji.dept_name,
+                xiaji.is_deleted
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                AND xiaji.is_deleted = 0
+                AND xiaji.extend_type='机构'
+                AND shangji.id = #{deptId}
+            )a
+        left join(
+            select
+                dept_id,COUNT(DISTINCT id) as shu
+            from
+                anbiao_vehicle
+            where createtime &gt;= CONCAT(SUBDATE(CURDATE(),DATE_FORMAT(CURDATE(),'%w')-1),' 00:00:00')
+                and createtime &lt;= CONCAT(SUBDATE(CURDATE(),DATE_FORMAT(CURDATE(),'%w')-1),' 23:59:59')
+                and is_deleted = 0
+            GROUP BY
+                dept_id
+            )b on a.id = b.dept_id
+        left join(
+            select
+                dept_id,COUNT(DISTINCT dept_id) as shu
+            from
+                anbiao_organization
+            where createtime &gt;= CONCAT(SUBDATE(CURDATE(),DATE_FORMAT(CURDATE(),'%w')-1),' 00:00:00')
+                and createtime &lt;= CONCAT(SUBDATE(CURDATE(),DATE_FORMAT(CURDATE(),'%w')-1),' 23:59:59')
+                and isdelete = 0
+                and jigouleixing in ('qiye','geti')
+            GROUP BY
+                dept_id
+            )c on a.id = c.dept_id
+        left join(
+            select
+                dept_id,COUNT(DISTINCT id) as shu
+            from
+                anbiao_jiashiyuan
+            where createtime &gt;= CONCAT(SUBDATE(CURDATE(),DATE_FORMAT(CURDATE(),'%w')-1),' 00:00:00')
+                and createtime &lt;= CONCAT(SUBDATE(CURDATE(),DATE_FORMAT(CURDATE(),'%w')-1),' 23:59:59')
+                and isdelete = 0
+            GROUP BY
+                dept_id
+            )d on a.id = d.dept_id
+        LEFT JOIN(
+            select
+                dept_id,COUNT(DISTINCT id) as shu
+            from
+                anbiao_vehicle
+            where 1=1
+                and is_deleted = 0
+            GROUP BY
+                dept_id
+            )e on a.id = e.dept_id
+        LEFT JOIN(
+            select
+                dept_id,COUNT(DISTINCT dept_id) as shu
+            from
+                anbiao_organization
+            where  1=1
+                and isdelete = 0
+                and jigouleixing in ('qiye','geti')
+            GROUP BY
+                dept_id
+            )f on a.id = f.dept_id
+        LEFT JOIN(
+            select
+                dept_id,COUNT(DISTINCT id) as shu
+            from
+                anbiao_jiashiyuan
+            where 1=1
+                and isdelete = 0
+            GROUP BY
+                dept_id
+            )g on a.id = g.dept_id
+        left JOIN(
+            select
+                DISTINCT
+                b.dept_id as dept_id,
+                COUNT(DISTINCT b.dept_id) as shu
+            from
+                anbiao_biaozhunhuamuban a
+            inner join (
+                select * from anbiao_organization
+                where jigouleixing in('qiye','geti')
+                )b on a.dept_id = b.dept_id
+            where a.is_deleted = 0 and b.isdelete = 0
+                and b.dept_id is not null
+            GROUP BY
+                b.dept_id
+            )h on a.id = h.dept_id
+        left JOIN(
+            select
+                dept_id,COUNT(DISTINCT dept_id) as shu from anbiao_organization
+            where isdelete = 0
+                and jigouleixing in('qiye','geti')
+                and IFNULL(province,'') = ''
+            GROUP BY
+                dept_id
+            )i on a.id = i.dept_id
+    </select>
+
+    <!--首页安全达标提醒-->
+    <select id="selectMarkRemind" resultType="org.springblade.anbiao.qiyeshouye.entity.QiYeYunWeiShouYe">
+        select
+            dept_id,
+            ifnull(SUM(nowscores),0) as totalpoints
+        from(
+            SELECT
+                anbiao.dept_id,
+                anbiao.id,
+                case
+                    when IFNULL(anbiao.score,'') != '' and COUNT(t.tier) &gt; 0 then anbiao.score
+                    when IFNULL(anbiao.score,'') != '' and COUNT(t.tier) = 0 then '0'
+                    else ''
+                end as nowscores
+            FROM
+                anbiao_biaozhunhuamuban anbiao
+            LEFT JOIN (
+                SELECT DISTINCT tier FROM anbiao_biaozhunhuamuban
+                WHERE type = '文件'
+                    and is_muban != 1
+                    and is_deleted=0
+                    and dept_id = #{deptId}
+                    and parent_id != 0
+                ) t ON t.tier LIKE concat(anbiao.tier, '-%')
+            WHERE anbiao.dept_id = #{deptId}
+                AND anbiao.is_deleted = 0
+                AND anbiao.parent_id != 0
+                AND ifnull(anbiao.remark,'') != ''
+            GROUP BY
+                id,
+                anbiao.parent_id,
+                anbiao.dept_id,
+                anbiao. NAME,
+                anbiao.type,
+                anbiao.path,
+                anbiao.sort,
+                anbiao.caozuorenid,
+                anbiao.caozuoren,
+                anbiao.caozuoshijian,
+                anbiao.file_property
+            )a
+        GROUP BY
+	        dept_id
+    </select>
+    <!--企业数-->
+    <select id="selectQiYeCount" resultType="org.springblade.anbiao.qiyeshouye.entity.QiYeYunWeiShouYe">
+        select count(DISTINCT dept_id) as qiyeshu from anbiao_organization
+        where jigouleixing in('qiye','geti')
+            and isdelete = 0
+    </select>
+    <!--安标企业数-->
+    <select id="selectABQiYeCount" resultType="org.springblade.anbiao.qiyeshouye.entity.QiYeYunWeiShouYe">
+        select
+            COUNT(DISTINCT b.dept_id) as anbiaoqiyeshu
+        from
+            anbiao_biaozhunhuamuban a
+            inner join(
+                select * from anbiao_organization
+                where jigouleixing in('qiye','geti')
+                and isdelete = 0
+            )b on a.dept_id = b.dept_id
+        where a.is_deleted = 0
+            and b.dept_id is not null
+    </select>
+
+    <!--日待办提醒-->
+    <select id="selectScheduleReminders" resultType="org.springblade.anbiao.qiyeshouye.entity.QiYeAnBiao">
+        SELECT
+            b.id,
+            dept_id,
+            renwuleixing,
+            renwubiaoti,
+            anpairen,
+            anpairen_id,
+            zerenren,
+            zerenren_id,
+            zhixingrens,
+            zhixingren_ids as zhixingrenIds,
+            is_jinji,
+            is_zhongyao,
+            renwukaishishijian,
+            renwujiezhishijian,
+            renwuneirong,
+            ziwozongjie,
+            b.is_deleted,
+            caozuoren,
+            caozuorenid,
+            caozuoshijian,
+            is_finish as isFinish,
+            renwudidian,
+            finish_user,
+            finish_userid,
+            finish_time,
+            finish_remark,
+            finish_img,
+            finish_status,
+            tier,
+            tiername
+        FROM(
+            SELECT
+                DISTINCT
+                xiaji.id,
+                xiaji.parent_id,
+                xiaji.dept_name,
+                xiaji.is_deleted
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                AND xiaji.is_deleted = 0
+                AND xiaji.extend_type='机构'
+                AND shangji.id = #{deptId}
+            )a
+        inner join anbiao_richenganpai b on a.id = b.dept_id
+        WHERE 1=1 and b.is_deleted=0 and renwuleixing = '安全标准化建设'
+            and left(#{dateTime},10) = left(renwukaishishijian,10)
+    </select>
+
+    <!--安标目录得分对比表-->
+    <select id="selectQiYeAnBiaoMuLu" resultType="org.springblade.anbiao.qiyeshouye.entity.QiYeAnBiaoMuLu">
+        select
+            DISTINCT
+            (
+            select name from anbiao_biaozhunhuamuban where id = a.ids
+            ) as name,
+            ids as muluid,
+            sum(a.score) as score,
+            sum(a.nowscores) as nowscores
+        from(
+            SELECT
+                DISTINCT
+                MAX((
+                select name from anbiao_biaozhunhuamuban where id = anbiao.parent_id and (LENGTH(tier) &lt; 10)
+                )) as parentName,
+                MAX((
+                select name from anbiao_biaozhunhuamuban where id = anbiao.parent_id and (LENGTH(tier) &gt; 10)
+                )) as erparentName,
+                MAX(ab.parent_id) as ids,
+                MAX(anbiao.tier) as tier,
+                MAX(anbiao.parent_id) as parent_id,
+                IFNULL(sum(anbiao.score),0) as score,
+                case
+                when IFNULL(anbiao.score,'') != '' and COUNT(t.tier) &gt; 0 then SUM(anbiao.score)
+                when IFNULL(anbiao.score,'') != '' and COUNT(t.tier) = 0 then '0'
+                else ''
+                end as nowscores
+            FROM
+                anbiao_biaozhunhuamuban anbiao
+                LEFT JOIN anbiao_biaozhunhuamuban ab on ab.id = anbiao.parent_id
+                LEFT JOIN (
+                    SELECT DISTINCT tier FROM anbiao_biaozhunhuamuban
+                    WHERE type = '文件' and is_deleted=0 and is_muban != 1 and dept_id = #{deptId}
+                ) t ON t.tier LIKE concat(anbiao.tier, '-%')
+            WHERE anbiao.dept_id = #{deptId}
+                AND anbiao.is_deleted = 0
+                AND ab.is_deleted = 0
+                AND anbiao.type = '文件夹'
+                AND ab.type = '文件夹'
+                AND anbiao.parent_id != 0
+                AND ab.parent_id != 0
+            GROUP BY
+                anbiao.id
+            )a
+        GROUP BY ids
+    </select>
+
+    <!--查询企业是否有生成安全标准化-->
+    <select id="selectGetByIdOnDeptId" resultType="java.lang.Integer">
+        select count(*) as shu from anbiao_biaozhunhuamuban
+        where dept_id = #{deptId}
+            and is_Deleted = 0
+    </select>
+
+    <!--安标周期评分达标率-->
+    <select id="selectPeriodControlRates" resultType="org.springblade.anbiao.qiyeshouye.entity.QiYeAnBiaoPeriodRate">
+        select
+            '16' as maxxiangshu,
+            a.minxiangshu,
+            c.dabiaoshu as maxdabiaoxiangshu,
+            d.dabiaoshu as mindabiaoxiangshu,
+            concat(ROUND(((c.dabiaoshu*1.0)/16)*100,2),'%') as dabiaolv
+        from(
+            select
+                dept_id,
+                COUNT(DISTINCT id) as minxiangshu
+            from
+                anbiao_biaozhunhuamuban
+            where 1=1
+                and (
+                    dept_Id = #{deptId} and LENGTH(tier) >= 18
+                )
+                and is_Deleted = 0
+                and type = '文件夹'
+            GROUP BY
+                dept_id
+            )a
+        LEFT JOIN(
+            select
+                a.dept_id,
+                sum(shu) as dabiaoshu
+            from(
+                select
+                    DISTINCT
+                    (
+                    select name from anbiao_biaozhunhuamuban where id = a.ids
+                    ) as name,
+                    ids,
+                    a.dept_id,
+                    sum(a.score) as score,
+                    sum(a.nowscores) as nowscores,
+                    case when sum(a.score) = sum(a.nowscores) then 1 else 0 end as shu
+                from(
+                    SELECT
+                        DISTINCT
+                        MAX((
+                        select name from anbiao_biaozhunhuamuban where id = anbiao.parent_id and (LENGTH(tier) &lt; 10)
+                        )) as parentName,
+                        MAX((
+                        select name from anbiao_biaozhunhuamuban where id = anbiao.parent_id and (LENGTH(tier) > 10)
+                        )) as erparentName,
+                        MAX(ab.parent_id) as ids,
+                        MAX(anbiao.tier) as tier,
+                        anbiao.dept_id,
+                        MAX(anbiao.parent_id) as parent_id,
+                        IFNULL(sum(anbiao.score),0) as score,
+                        case
+                        when IFNULL(anbiao.score,'') != '' and COUNT(t.tier) > 0 then SUM(anbiao.score)
+                        when IFNULL(anbiao.score,'') != '' and COUNT(t.tier) = 0 then '0'
+                        else ''
+                        end as nowscores
+                    FROM
+                        anbiao_biaozhunhuamuban anbiao
+                    LEFT JOIN anbiao_biaozhunhuamuban ab on ab.id = anbiao.parent_id
+                    LEFT JOIN (
+                        SELECT DISTINCT tier FROM anbiao_biaozhunhuamuban
+                        WHERE type = '文件' and is_deleted=0 and is_muban != 1 and dept_id = #{deptId}
+                    ) t ON t.tier LIKE concat(anbiao.tier, '-%')
+                    WHERE anbiao.dept_id = #{deptId}
+                        AND anbiao.is_deleted = 0
+                        AND ab.is_deleted = 0
+                        AND anbiao.type = '文件夹'
+                        AND ab.type = '文件夹'
+                        AND anbiao.parent_id != 0
+                        AND ab.parent_id != 0
+                    GROUP BY
+                        anbiao.id,
+                        anbiao.dept_id
+                    )a
+                GROUP BY
+                    ids,a.dept_id
+                )a
+            GROUP BY
+                a.dept_id
+            )c on c.dept_Id = a.dept_Id
+            LEFT JOIN(
+                select
+                    a.dept_id,
+                    sum(shu) as dabiaoshu
+                    from(
+                    select
+                    DISTINCT
+                    a.id,
+                    a.name,
+                    a.dept_id,
+                    case when a.score = a.nowscores then 1 else 0 end as shu
+                from(
+                    SELECT
+                        DISTINCT
+                        anbiao.id,
+                        anbiao.name,
+                        anbiao.dept_id,
+                        IFNULL(sum(anbiao.score),0) as score,
+                        case
+                        when IFNULL(anbiao.score,'') != '' and COUNT(t.tier) > 0 then SUM(anbiao.score)
+                        when IFNULL(anbiao.score,'') != '' and COUNT(t.tier) = 0 then '0'
+                        else ''
+                        end as nowscores
+                    FROM
+                        anbiao_biaozhunhuamuban anbiao
+                    LEFT JOIN anbiao_biaozhunhuamuban ab on ab.id = anbiao.parent_id
+                    LEFT JOIN (
+                        SELECT DISTINCT tier FROM anbiao_biaozhunhuamuban
+                        WHERE type = '文件' and is_deleted=0 and is_muban != 1 and dept_id = #{deptId} AND LENGTH(tier) >= 24
+                    ) t ON t.tier LIKE concat(anbiao.tier, '-%')
+                WHERE anbiao.dept_id = #{deptId}
+                    AND anbiao.is_deleted = 0
+                    AND ab.is_deleted = 0
+                    AND anbiao.type = '文件夹'
+                    AND ab.type = '文件夹'
+                    AND anbiao.parent_id != 0
+                    AND ab.parent_id != 0
+                GROUP BY
+                    anbiao.id,
+                    anbiao.name,
+                    anbiao.dept_id
+                )a
+            )a
+        GROUP BY
+            dept_id
+        )d on d.dept_Id = a.dept_Id
+    </select>
+
+    <!--安全提示-->
+    <select id="selectSafetyTips" resultType="org.springblade.anbiao.qiyeshouye.entity.QiYeAnBiaoSafetyTips">
+        select
+            a.dept_id as deptId,
+            a.name,
+            a.ids
+        from(
+            select
+                DISTINCT
+                (
+                select name from anbiao_biaozhunhuamuban where id = a.ids
+                ) as name,
+                ids,
+                a.dept_id,
+                sum(a.score) as score,
+                sum(a.nowscores) as nowscores,
+                case when sum(a.score) != sum(a.nowscores) then 1 else 0 end as shu
+            from(
+                SELECT
+                    DISTINCT
+                    MAX(anbiao.id) id,
+                    MAX((
+                    select name from anbiao_biaozhunhuamuban where id = anbiao.parent_id and (LENGTH(tier) &lt; 10)
+                    )) as parentName,
+                    MAX((
+                    select name from anbiao_biaozhunhuamuban where id = anbiao.parent_id and (LENGTH(tier) > 10)
+                    )) as erparentName,
+                    MAX(ab.parent_id) as ids,
+                    MAX(anbiao.tier) as tier,
+                    anbiao.dept_id,
+                    MAX(anbiao.parent_id) as parent_id,
+                    IFNULL(sum(anbiao.score),0) as score,
+                    case
+                    when IFNULL(anbiao.score,'') != '' and COUNT(t.tier) > 0 then SUM(anbiao.score)
+                    when IFNULL(anbiao.score,'') != '' and COUNT(t.tier) = 0 then '0'
+                    else ''
+                    end as nowscores
+                FROM
+                    anbiao_biaozhunhuamuban anbiao
+                    LEFT JOIN anbiao_biaozhunhuamuban ab on ab.id = anbiao.parent_id
+                    LEFT JOIN (
+                        SELECT DISTINCT tier FROM anbiao_biaozhunhuamuban
+                        WHERE type = '文件' and is_deleted=0 and dept_id = #{deptId} and is_muban != 1
+                    ) t ON t.tier LIKE concat(anbiao.tier, '-%')
+                WHERE anbiao.dept_id = #{deptId}
+                    AND anbiao.is_deleted = 0
+                    AND ab.is_deleted = 0
+                    AND anbiao.type = '文件夹'
+                    AND ab.type = '文件夹'
+                    AND anbiao.parent_id != 0
+                    AND ab.parent_id != 0
+                GROUP BY
+                    anbiao.id,
+                    anbiao.dept_id
+                )a
+            GROUP BY
+                ids,a.dept_id
+            )a
+        where a.shu > 0
+    </select>
+    <!--根据不达标项ID查询子小项总数-->
+    <select id="selectSafetyTipsZNum" resultType="org.springblade.anbiao.qiyeshouye.entity.QiYeAnBiaoSafetyTips">
+            select
+                (select name from anbiao_biaozhunhuamuban where id = #{xiangId}) as name,COUNT(t.tier) as minxingnum
+            FROM
+                anbiao_biaozhunhuamuban anbiao
+            LEFT JOIN (
+                SELECT DISTINCT tier,id,name FROM anbiao_biaozhunhuamuban
+                WHERE type = '文件夹' and is_deleted=0 and dept_id = #{deptId}
+            ) t ON t.tier LIKE concat(anbiao.tier, '-%')
+            WHERE anbiao.dept_id = #{deptId}
+                AND anbiao.is_deleted = 0
+                AND anbiao.parent_id = #{xiangId}
+    </select>
+    <!--根据不达标项ID查询不达标子小项数-->
+    <select id="selectSafetyTipsNum" resultType="org.springblade.anbiao.qiyeshouye.entity.QiYeAnBiaoSafetyTips">
+        select
+            DISTINCT
+            a.dept_id,
+            max(case when IFNULL(a.parentName,'') = '' and IFNULL(a.erparentName,'') != '' then (
+            select name from anbiao_biaozhunhuamuban where id = a.ids and (LENGTH(a.tier) > 10)
+            ) else a.parentName end )as parentName,
+            sum(case when ifnull(a.score,0) != ifnull(a.nowscores,0) then 1 else 0 end) as notdabiaonum
+        from(
+            SELECT
+                DISTINCT
+                MAX((
+                    select name from anbiao_biaozhunhuamuban where id = ac.parent_id and (LENGTH(tier) &lt; 10)
+                )) as parentName,
+                MAX((
+                    select name from anbiao_biaozhunhuamuban where id = anbiao.parent_id and (LENGTH(tier) > 10)
+                )) as erparentName,
+                anbiao.id,
+                anbiao.name,
+                MAX(anbiao.tier) as tier,
+                anbiao.dept_id,
+                MAX(anbiao.parent_id) as ids,
+                case
+                    when IFNULL(MAX(anbiao.score),0) = 0 then (select SUM(score) from anbiao_biaozhunhuamuban where parent_id = anbiao.id)
+                    else MAX(anbiao.score)
+                end as score,
+                case
+                    when IFNULL(anbiao.score,'') != '' and COUNT(t.tier) > 0 then MAX(t.score)
+                    when IFNULL(anbiao.score,'') != '' and COUNT(t.tier) = 0 then '0'
+                    when IFNULL(MAX(t.score),'') != '' then sum(t.score)
+                    else '0'
+                end as nowscores
+            FROM
+                anbiao_biaozhunhuamuban ac
+            LEFT JOIN anbiao_biaozhunhuamuban anbiao on ac.id = anbiao.parent_id
+            LEFT JOIN anbiao_biaozhunhuamuban ab on ab.id = anbiao.parent_id
+            LEFT JOIN (
+                SELECT DISTINCT tier,score FROM anbiao_biaozhunhuamuban
+                WHERE type = '文件' and is_deleted=0 and dept_id = #{deptId}
+            ) t ON t.tier LIKE concat(anbiao.tier, '-%')
+            WHERE anbiao.dept_id = #{deptId}
+                AND anbiao.is_deleted = 0
+                AND ab.is_deleted = 0
+                AND ac.is_deleted = 0
+                AND ac.type = '文件夹'
+                AND ab.type = '文件夹'
+                AND anbiao.type = '文件夹'
+                AND ac.parent_id = #{xiangId}
+            GROUP BY
+                anbiao.id,
+                anbiao.name,
+                anbiao.dept_id
+            )a
+        GROUP BY dept_id
+    </select>
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="PersonLearnInfoResultMap" type="org.springblade.anbiao.qiyeshouye.entity.PersonLearnInfo">
+        <result column="id" property="id"/>
+    </resultMap>
+
+    <select id="getByName" resultMap="PersonLearnInfoResultMap">
+        select * from baobiao_person_learn_info
+        where lyear = #{lyear}
+            and lmonth = #{lmonth}
+            and username = #{username}
+            and deptname = #{deptname}
+    </select>
+
+    <insert id="insertSelective" parameterType="org.springblade.anbiao.qiyeshouye.entity.PersonLearnInfo" >
+        insert into baobiao_person_learn_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="deptid != null and deptid != '' ">
+                deptid,
+            </if>
+
+            <if test="deptname != null and deptname != '' ">
+                deptname,
+            </if>
+
+            <if test="username != null and username != '' ">
+                username,
+            </if>
+
+            <if test="userphone != null and userphone != '' ">
+                userphone,
+            </if>
+
+            <if test="learntime != null and learntime != '' ">
+                learntime,
+            </if>
+
+            <if test="status != null and status != '' ">
+                status,
+            </if>
+
+            <if test="lyear != null and lyear != '' ">
+                lyear,
+            </if>
+
+            <if test="lmonth != null and lmonth != '' ">
+                lmonth,
+            </if>
+
+            <if test="luser != null and luser != '' ">
+                luser,
+            </if>
+
+            <if test="updatetime != null and updatetime != '' ">
+                updatetime,
+            </if>
+
+            <if test="usercard != null and usercard != '' ">
+                usercard,
+            </if>
+
+            <if test="learnStudy != null and learnStudy != '' ">
+                learnStudy
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptid != null and deptid != '' ">
+                #{deptid},
+            </if>
+
+            <if test="deptname != null and deptname != '' ">
+                #{deptname},
+            </if>
+
+            <if test="username != null and username != '' ">
+                #{username},
+            </if>
+
+            <if test="userphone != null and userphone != '' ">
+                #{userphone},
+            </if>
+
+            <if test="learntime != null and learntime != '' ">
+                #{learntime},
+            </if>
+
+            <if test="status != null and status != '' ">
+                #{status},
+            </if>
+
+            <if test="lyear != null and lyear != '' ">
+                #{lyear},
+            </if>
+
+            <if test="lmonth != null and lmonth != '' ">
+                #{lmonth},
+            </if>
+
+            <if test="luser != null and luser != '' ">
+                #{luser},
+            </if>
+
+            <if test="updatetime != null and updatetime != '' ">
+                #{updatetime},
+            </if>
+
+            <if test="usercard != null and usercard != '' ">
+                #{usercard},
+            </if>
+
+            <if test="learnStudy != null and learnStudy != '' ">
+                #{learnStudy}
+            </if>
+
+        </trim>
+    </insert>
+
+    <update id="updateSelective" parameterType="org.springblade.anbiao.qiyeshouye.entity.PersonLearnInfo" >
+        update baobiao_person_learn_info
+        <set>
+            <if test="deptid != null and deptid != '' ">
+                deptid = #{deptid},
+            </if>
+
+            <if test="deptname != null and deptname != '' ">
+                deptname = #{deptname},
+            </if>
+
+            <if test="username != null and username != '' ">
+                username = #{username},
+            </if>
+
+            <if test="userphone != null and userphone != '' ">
+                userphone = #{userphone},
+            </if>
+
+            <if test="learntime != null and learntime != '' ">
+                learntime = #{learntime},
+            </if>
+
+            <if test="status != null and status != '' ">
+                status = #{status},
+            </if>
+
+            <if test="lyear != null and lyear != '' ">
+                lyear = #{lyear},
+            </if>
+
+            <if test="lmonth != null and lmonth != '' ">
+                lmonth = #{lmonth},
+            </if>
+
+            <if test="luser != null and luser != '' ">
+                luser = #{luser},
+            </if>
+
+            <if test="updatetime != null and updatetime != '' ">
+                updatetime = #{updatetime},
+            </if>
+
+            <if test="usercard != null and usercard != '' ">
+                usercard = #{usercard},
+            </if>
+
+            <if test="learnStudy != null and learnStudy != '' ">
+                learnStudy = #{learnStudy}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id = "selectByNameJSY" parameterType="org.springblade.anbiao.qiyeshouye.page.QiYeShouYePage" resultType="org.springblade.anbiao.qiyeshouye.entity.PersonLearnInfo">
+        select DISTINCT * from baobiao_person_learn_info
+        where 1=1
+            and deptid = #{deptId}
+
+        <if test="username != null and username != ''">
+            and username = #{username}#
+        </if>
+
+    </select>
+
+    <!-- 查询通企业教育培训数据列表 -->
+    <sql id="tableSql">
+        select
+            b.*,
+            case
+                when IFNULL(learntime,0) >= 135 or status = '达标' then '达标'
+                when (IFNULL(learntime,0) >= 1 and IFNULL(learntime,0) &lt; 135) and status != '达标' then '未达标'
+                else '未学习'
+            end as statusshow
+        from(
+            SELECT
+                DISTINCT
+                xiaji.id,
+                xiaji.parent_id,
+                xiaji.dept_name,
+                xiaji.is_deleted
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                AND xiaji.is_deleted = 0
+                AND xiaji.extend_type='机构'
+                AND shangji.id = #{deptId}
+            )a
+        left join(
+            select
+				DISTINCT
+				a.jiashiyuanxingming as username,
+				a.dept_id as deptid,
+				b.deptname,
+				a.shoujihaoma as userphone,
+				b.learntime,
+				b.status,
+				b.lyear,
+				b.lmonth,
+				b.luser,
+				b.learnStudy,
+				a.shenfenzhenghao as usercard
+            from(
+                select * from anbiao_jiashiyuan where dept_id = #{deptId} and isdelete = 0
+<!--                    select * from anbiao_jiashiyuan_enterprise where dept_id = #{deptId} and isdelete = 0-->
+                ) a
+                left join (
+                select *from baobiao_person_learn_info where deptid = #{deptId} and lyear = #{lyear}
+                and lmonth = #{lmonth}
+                ) b on a.jiashiyuanxingming = b.username
+            )b on a.id = b.deptid
+        where 1=1
+            and ifnull(b.username,'') != ''
+    </sql>
+
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by statusshow desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order == 0">
+            asc
+        </if>
+    </sql>
+
+    <sql id="querySql">
+
+        <if test="deptName != null and deptName != ''">
+            and deptname like '%${deptName}%'
+        </if>
+
+        <if test="user_name != null and user_name != ''">
+            and username like '%${user_name}%'
+        </if>
+
+        <if test="learnStudy != null and learnStudy != ''">
+            and learnStudy = #{learnStudy}
+        </if>
+
+        <if test="status != null and status != ''">
+            and statusshow = #{status}
+        </if>
+
+        <if test="luser != null and luser != ''">
+            and luser like '%${luser}%'
+        </if>
+
+    </sql>
+
+    <select timeout="600" id="selectPersonLearnInfoAll" resultMap="PersonLearnInfoResultMap"
+            parameterType="org.springblade.anbiao.qiyeshouye.page.QiYeShouYePage">
+        <if test="size == 0">
+            select * from (
+            <include refid="tableSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="tableSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectPersonLearnInfoAllTotal"
+            parameterType="org.springblade.anbiao.qiyeshouye.page.QiYeShouYePage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql"/>
+        )d where 1 = 1
+        <include refid="querySql"/>
+    </select>
+
+    <!-- 查询政府教育培训数据列表 -->
+    <sql id="zftableSql">
+        select
+            b.*
+        from(
+            select * from baobiao_zhengfu_qiye
+            where 1=1
+            <if test="province != null and province != '' ">
+                and province = #{province}
+            </if>
+
+            <if test="city != null and city != '' ">
+                and city = #{city}
+            </if>
+
+            <if test="country != null and country != '' ">
+                and country = #{country}
+            </if>
+            )a
+        inner join(
+            select * from baobiao_person_learn_info
+            where lyear = #{lyear}
+                and lmonth = #{lmonth}
+            )b on b.deptid =  a.qiyeid
+        where 1=1
+    </sql>
+
+    <select timeout="600" id="selectZFPersonLearnInfoAll" resultMap="PersonLearnInfoResultMap"
+            parameterType="org.springblade.anbiao.qiyeshouye.page.QiYeShouYePage">
+        <if test="size == 0">
+            select * from (
+            <include refid="zftableSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="zftableSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectZFPersonLearnInfoAllTotal"
+            parameterType="org.springblade.anbiao.qiyeshouye.page.QiYeShouYePage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="zftableSql"/>
+        )d where 1 = 1
+        <include refid="querySql"/>
+    </select>
+
+    <!-- 查询政府教育培训数据统计列表 -->
+    <sql id="zfCounttableSql">
+        select
+            b.deptid,
+            a.qiyemingcheng as deptname,
+            CONCAT(b.lyear,'-',b.lmonth) as learnmonth,
+            COUNT(DISTINCT c.id) as yxnum,
+            COUNT(DISTINCT c.id) - MAX(yixnum) as wxnum,
+            MAX(dbnum) as dbnum,
+            MAX(wdbnum) as wdbnum
+        from(
+            select * from baobiao_zhengfu_qiye
+            where 1=1
+            <if test="province != null and province != '' ">
+                and province = #{province}
+            </if>
+
+            <if test="city != null and city != '' ">
+                and city = #{city}
+            </if>
+
+            <if test="country != null and country != '' ">
+                and country = #{country}
+            </if>
+            )a
+        inner join(
+            select
+                deptid,
+                lyear,
+                lmonth,
+                COUNT(case when learntime > 0  then 1 else null end ) as yixnum,
+                COUNT(case when learntime >= 135 or status = '达标' then 1 else null end ) as dbnum,
+                COUNT(case when (learntime > 0 and learntime &lt; 135 ) or status != '达标' then 1 else null end) as wdbnum
+            from
+                baobiao_person_learn_info a
+                right join anbiao_jiashiyuan b on a.username = b.jiashiyuanxingming and a.deptid = b.dept_id
+            where 1=1
+                and a.lyear = #{lyear}
+                and a.lmonth = #{lmonth}
+                and b.isdelete = 0
+            GROUP BY
+                deptid,
+                lyear,
+                lmonth
+            )b on b.deptid =  a.qiyeid
+        inner join(
+            select id,dept_id from anbiao_jiashiyuan
+            where 1=1
+                and isdelete = 0
+            )c on c.dept_Id = a.qiyeid and b.deptid = c.dept_id
+        where 1=1
+        GROUP BY
+            b.deptid,
+            a.qiyemingcheng,
+            b.lyear,
+            b.lmonth
+    </sql>
+
+    <sql id="orderZFSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by deptname desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order == 0">
+            asc
+        </if>
+    </sql>
+
+    <select timeout="600" id="selectZFPersonLearnCoutAll" resultMap="PersonLearnInfoResultMap"
+            parameterType="org.springblade.anbiao.qiyeshouye.page.QiYeShouYePage">
+        <if test="size == 0">
+            select * from (
+            <include refid="zfCounttableSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderZFSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="zfCounttableSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderZFSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectZFPersonLearnCoutAllTotal"
+            parameterType="org.springblade.anbiao.qiyeshouye.page.QiYeShouYePage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="zfCounttableSql"/>
+        )d where 1 = 1
+        <include refid="querySql"/>
+    </select>
+
+
+    <insert id="insertOffLearnSelective" parameterType="org.springblade.anbiao.qiyeshouye.entity.PersonLearnRemark" >
+        insert into baobiao_person_learn_remak
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="deptid != null and deptid != '' ">
+                deptid,
+            </if>
+
+            <if test="deptname != null and deptname != '' ">
+                deptname,
+            </if>
+
+            <if test="userid != null and userid != '' ">
+                userid,
+            </if>
+
+            <if test="username != null and username != '' ">
+                username,
+            </if>
+
+            <if test="learntime != null and learntime != '' ">
+                learntime,
+            </if>
+
+            <if test="status != null and status != '' ">
+                status,
+            </if>
+
+            <if test="lyear != null and lyear != '' ">
+                lyear,
+            </if>
+
+            <if test="lmonth != null and lmonth != '' ">
+                lmonth,
+            </if>
+
+            <if test="luser != null and luser != '' ">
+                luser,
+            </if>
+
+            <if test="updatetime != null and updatetime != '' ">
+                updatetime,
+            </if>
+
+            <if test="learnStudy != null and learnStudy != '' ">
+                learnStudy,
+            </if>
+
+            <if test="learnTheme != null and learnTheme != '' ">
+                learnTheme,
+            </if>
+
+            <if test="compere != null and compere != '' ">
+                compere,
+            </if>
+
+            <if test="learncontent != null and learncontent != '' ">
+                learncontent,
+            </if>
+
+            <if test="img != null and img != '' ">
+                img
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptid != null and deptid != '' ">
+                #{deptid},
+            </if>
+
+            <if test="deptname != null and deptname != '' ">
+                #{deptname},
+            </if>
+
+            <if test="userid != null and userid != '' ">
+                #{userid},
+            </if>
+
+            <if test="username != null and username != '' ">
+                #{username},
+            </if>
+
+            <if test="learntime != null and learntime != '' ">
+                #{learntime},
+            </if>
+
+            <if test="status != null and status != '' ">
+                #{status},
+            </if>
+
+            <if test="lyear != null and lyear != '' ">
+                #{lyear},
+            </if>
+
+            <if test="lmonth != null and lmonth != '' ">
+                #{lmonth},
+            </if>
+
+            <if test="luser != null and luser != '' ">
+                #{luser},
+            </if>
+
+            <if test="updatetime != null and updatetime != '' ">
+                #{updatetime},
+            </if>
+
+            <if test="learnStudy != null and learnStudy != '' ">
+                #{learnStudy},
+            </if>
+
+            <if test="learnTheme != null and learnTheme != '' ">
+                #{learnTheme},
+            </if>
+
+            <if test="compere != null and compere != '' ">
+                #{compere},
+            </if>
+
+            <if test="learncontent != null and learncontent != '' ">
+                #{learncontent},
+            </if>
+
+            <if test="img != null and img != '' ">
+                #{img}
+            </if>
+
+        </trim>
+    </insert>
+
+    <update id="updateOffLearnSelective" parameterType="org.springblade.anbiao.qiyeshouye.entity.PersonLearnRemark" >
+        update baobiao_person_learn_remak
+        <set>
+            <if test="deptid != null and deptid != '' ">
+                deptid = #{deptid},
+            </if>
+
+            <if test="deptname != null and deptname != '' ">
+                deptname = #{deptname},
+            </if>
+
+            <if test="userid != null and userid != '' ">
+                userid = #{userid},
+            </if>
+
+            <if test="username != null and username != '' ">
+                username = #{username},
+            </if>
+
+            <if test="learntime != null and learntime != '' ">
+                learntime = #{learntime},
+            </if>
+
+            <if test="status != null and status != '' ">
+                status = #{status},
+            </if>
+
+            <if test="lyear != null and lyear != '' ">
+                lyear = #{lyear},
+            </if>
+
+            <if test="lmonth != null and lmonth != '' ">
+                lmonth = #{lmonth},
+            </if>
+
+            <if test="luser != null and luser != '' ">
+                luser = #{luser},
+            </if>
+
+            <if test="updatetime != null and updatetime != '' ">
+                updatetime = #{updatetime},
+            </if>
+
+            <if test="learnStudy != null and learnStudy != '' ">
+                learnStudy = #{learnStudy},
+            </if>
+
+            <if test="learnTheme != null and learnTheme != '' ">
+                learnTheme = #{learnTheme},
+            </if>
+
+            <if test="compere != null and compere != '' ">
+                compere = #{compere},
+            </if>
+
+            <if test="learncontent != null and learncontent != '' ">
+                learncontent = #{learncontent},
+            </if>
+
+            <if test="img != null and img != '' ">
+                img = #{img}
+            </if>
+
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectByIds" resultType="org.springblade.anbiao.qiyeshouye.entity.PersonLearnRemark">
+        select * from baobiao_person_learn_remak
+        where id=#{id}
+    </select>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="PersonLearnRemarkResultMap" type="org.springblade.anbiao.qiyeshouye.entity.PersonLearnRemark">
+        <result column="id" property="id"/>
+    </resultMap>
+
+    <!-- 查询通企业线下学习数据列表 -->
+    <sql id="remarktableSql">
+        select
+            b.*
+        from(
+            SELECT
+                DISTINCT
+                xiaji.id,
+                xiaji.parent_id,
+                xiaji.dept_name,
+                xiaji.is_deleted
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                AND xiaji.is_deleted = 0
+                AND xiaji.extend_type='机构'
+                AND shangji.id = #{deptId}
+            )a
+        inner join(
+            select
+                *
+            from
+                baobiao_person_learn_remak
+            where lyear = #{lyear}
+                and lmonth = #{lmonth}
+            )b on b.deptid =  a.id
+        where 1=1
+    </sql>
+
+    <select timeout="600" id="selectPersonLearnRemarkAll" resultMap="PersonLearnRemarkResultMap"
+            parameterType="org.springblade.anbiao.qiyeshouye.page.QiYeShouYePage">
+        <if test="size == 0">
+            select * from (
+            <include refid="remarktableSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="remarktableSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectPersonLearnRemarkAllTotal"
+            parameterType="org.springblade.anbiao.qiyeshouye.page.QiYeShouYePage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="remarktableSql"/>
+        )d where 1 = 1
+        <include refid="querySql"/>
+    </select>
+
+    <!-- 新增微信消息推送配置 -->
+    <insert id="insertDeptWechatSelective" parameterType="org.springblade.anbiao.qiyeshouye.entity.AnBiaoDeptWechatInfo" >
+        insert into anbiao_dept_wechat_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="id != null">
+                id,
+            </if>
+
+            <if test="weChatCode != null">
+                weChatCode,
+            </if>
+
+            <if test="weChatName != null">
+                weChatName,
+            </if>
+
+            <if test="deptId != null">
+                deptId,
+            </if>
+
+            <if test="isdelete != null">
+                isdelete,
+            </if>
+
+            <if test="createtime != null">
+                createtime,
+            </if>
+
+            <if test="reportforms != null">
+                reportforms
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+
+            <if test="weChatCode != null">
+                #{weChatCode},
+            </if>
+
+            <if test="weChatName != null">
+                #{weChatName},
+            </if>
+
+            <if test="deptId != null">
+                #{deptId},
+            </if>
+
+            <if test="isdelete != null">
+                #{isdelete},
+            </if>
+
+            <if test="createtime != null">
+                #{createtime},
+            </if>
+
+            <if test="reportforms != null">
+                #{reportforms}
+            </if>
+
+        </trim>
+    </insert>
+
+    <!-- 根据数据ID更新微信消息推送配置 -->
+    <update id="updateDeptWechatSelective" parameterType="org.springblade.anbiao.qiyeshouye.entity.AnBiaoDeptWechatInfo" >
+        update anbiao_dept_wechat_info
+        <set>
+            <if test="weChatCode != null">
+                weChatCode = #{weChatCode},
+            </if>
+
+            <if test="weChatName != null">
+                weChatName = #{weChatName},
+            </if>
+
+            <if test="deptId != null">
+                deptId = #{deptId},
+            </if>
+
+            <if test="isdelete != null">
+                isdelete = #{isdelete},
+            </if>
+
+            <if test="createtime != null">
+                createtime = #{createtime},
+            </if>
+
+            <if test="updatetime != null">
+                updatetime = #{updatetime},
+            </if>
+
+            <if test="updateuser != null">
+                updateuser = #{updateuser},
+            </if>
+
+            <if test="reportforms != null">
+                reportforms = #{reportforms}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 微信消息推送配置列表 -->
+    <sql id="tableDeptWechatSql">
+        select
+            b.id,
+            b.weChatCode,
+            b.weChatName,
+            b.deptId,
+            a.dept_name as deptName,
+            b.createtime,
+            b.updatetime,
+            b.updateuser,
+            b.reportforms
+        from(
+            SELECT
+                DISTINCT
+                xiaji.id,
+                xiaji.parent_id,
+                xiaji.dept_name,
+                xiaji.is_deleted
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+              AND xiaji.is_deleted = 0
+              AND xiaji.extend_type='机构'
+              AND shangji.id = #{deptId}
+            )a
+        inner join(
+            select * from anbiao_dept_wechat_info
+            where isdelete = 0
+        )b on a.id = b.deptId
+        where 1=1
+    </sql>
+
+    <sql id="orderDeptWechatSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by deptId desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order == 0">
+            asc
+        </if>
+    </sql>
+
+    <sql id="queryDeptWechatSql">
+
+        <if test="deptName != null and deptName != ''">
+            and deptName like '%${deptName}%'
+        </if>
+
+        <if test="weChatCode != null and weChatCode != ''">
+            and weChatCode like '%${weChatCode}%'
+        </if>
+
+        <if test="weChatName != null and weChatName != ''">
+            and weChatName like '%${weChatName}%'
+        </if>
+
+    </sql>
+
+    <select timeout="600" id="selectDeptWechatGetAll" resultMap="AnBiaoDeptWechatInfoResultMap"
+            parameterType="org.springblade.anbiao.qiyeshouye.page.AnBiaoDeptWechatInfoPage">
+        <if test="size == 0">
+            select * from (
+            <include refid="tableDeptWechatSql"/>
+            )b
+            where 1=1
+            <include refid="queryDeptWechatSql"/>
+            <include refid="orderDeptWechatSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="tableDeptWechatSql"/>
+            )b
+            where 1=1
+            <include refid="queryDeptWechatSql"/>
+            <include refid="orderDeptWechatSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectDeptWechatGetAllTotal"
+            parameterType="org.springblade.anbiao.qiyeshouye.page.AnBiaoDeptWechatInfoPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableDeptWechatSql"/>
+        )d where 1 = 1
+        <include refid="queryDeptWechatSql"/>
+    </select>
+
+    <!-- 根据数据ID删除微信消息推送配置 -->
+    <delete id="deleteDeptWechatInfo">
+        update
+            anbiao_dept_wechat_info
+        set
+            isdelete = 1,
+            updatetime = #{updateTime},
+            updateuser = #{updateUser}
+        where id = #{Id}
+    </delete>
+
+    <!-- 根据数据ID查询微信消息推送配置 -->
+    <select id="selectDeptWechatInfoById" resultType="org.springblade.anbiao.qiyeshouye.entity.AnBiaoDeptWechatInfo">
+        select * from anbiao_dept_wechat_info where isdelete = 0
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        <if test="weChatCode != null">
+            and weChatCode = #{weChatCode}
+        </if>
+        <if test="deptId != null">
+            and deptId = #{deptId}
+        </if>
+    </select>
+
+    <!-- 获取微信消息推送配置最大数据ID -->
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        select case when IFNULL(max(id),'') = '' then 0 else max(id) end as id from anbiao_dept_wechat_info
+    </select>
+
+    <!-- 新增微信消息推送配置详情 -->
+    <insert id="insertDeptWechatRemarkSelective" parameterType="org.springblade.anbiao.qiyeshouye.entity.AnBiaoDeptWechatRemark" >
+        insert into anbiao_dept_wechat_remark
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="wechatid != null">
+                wechatid,
+            </if>
+
+            <if test="isdelete != null">
+                isdelete,
+            </if>
+
+            <if test="createtime != null">
+                createtime,
+            </if>
+
+            <if test="updatetime != null">
+                updatetime,
+            </if>
+
+            <if test="updateuser != null">
+                updateuser,
+            </if>
+
+            <if test="alarmtype != null">
+                alarmtype,
+            </if>
+
+            <if test="alarmlevel != null">
+                alarmlevel,
+            </if>
+
+            <if test="reminder != null">
+                reminder
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="wechatid != null">
+                #{wechatid},
+            </if>
+
+            <if test="isdelete != null">
+                #{isdelete},
+            </if>
+
+            <if test="createtime != null">
+                #{createtime},
+            </if>
+
+            <if test="updatetime != null">
+                #{updatetime},
+            </if>
+
+            <if test="updateuser != null">
+                #{updateuser},
+            </if>
+
+            <if test="alarmtype != null">
+                #{alarmtype},
+            </if>
+
+            <if test="alarmlevel != null">
+                #{alarmlevel},
+            </if>
+
+            <if test="reminder != null">
+                #{reminder}
+            </if>
+
+        </trim>
+    </insert>
+
+    <!-- 根据数据ID更新微信消息推送配置详情 -->
+    <update id="updateDeptWechatRemarkSelective" parameterType="org.springblade.anbiao.qiyeshouye.entity.AnBiaoDeptWechatRemark" >
+        update anbiao_dept_wechat_remark
+        <set>
+            <if test="isdelete != null">
+                isdelete = #{isdelete},
+            </if>
+
+            <if test="createtime != null">
+                createtime = #{createtime},
+            </if>
+
+            <if test="updatetime != null">
+                updatetime = #{updatetime},
+            </if>
+
+            <if test="updateuser != null">
+                updateuser = #{updateuser},
+            </if>
+
+            <if test="alarmtype != null">
+                alarmtype = #{alarmtype},
+            </if>
+
+            <if test="alarmlevel != null">
+                alarmlevel = #{alarmlevel},
+            </if>
+
+            <if test="reminder != null">
+                reminder = #{reminder}
+            </if>
+        </set>
+        where wechatid = #{wechatid}
+    </update>
+
+    <!-- 根据数据ID删除微信消息推送配置详情 -->
+    <delete id="deleteDeptWechatRemark">
+        update
+            anbiao_dept_wechat_remark
+        set
+            isdelete = 1,
+            updatetime = #{updateTime},
+            updateuser = #{updateUser}
+        where wechatid = #{Id}
+    </delete>
+
+    <!-- 根据微信配置ID查询微信消息推送配置详情 -->
+    <select id="selectDeptWechatRemarkById" resultType="org.springblade.anbiao.qiyeshouye.entity.AnBiaoDeptWechatRemark">
+        select * from anbiao_dept_wechat_remark
+        where isdelete = 0
+        <if test="Id != null">
+           and wechatid = #{Id}
+        </if>
+        <if test="alarmtype != null">
+            and alarmtype = #{alarmtype}
+        </if>
+        <if test="reminder != null">
+            and reminder = #{reminder}
+        </if>
+    </select>
+
+    <!-- 新增周隐患数据 -->
+        <insert id="insertWeeksHiddenTroubleSelective" parameterType="org.springblade.anbiao.qiyeshouye.entity.AnBiaoWeeksHiddenTrouble" >
+        insert into anbiao_weeks_hidden_trouble
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="deptId != null">
+                deptId,
+            </if>
+
+            <if test="date != null">
+                date,
+            </if>
+
+            <if test="examineItem != null">
+                examineItem,
+            </if>
+
+            <if test="examineImg != null">
+                examineImg,
+            </if>
+
+            <if test="examineSituation != null">
+                examineSituation,
+            </if>
+
+            <if test="createUser != null">
+                createUser,
+            </if>
+
+            <if test="createTime != null">
+                createTime,
+            </if>
+
+            <if test="type != null">
+                type,
+            </if>
+
+            <if test="vehId != null">
+                vehId,
+            </if>
+
+            <if test="examineUser != null">
+                examineUser,
+            </if>
+
+            <if test="isdelete != null">
+                isdelete
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptId != null">
+                #{deptId},
+            </if>
+
+            <if test="date != null">
+                #{date},
+            </if>
+
+            <if test="examineItem != null">
+                #{examineItem},
+            </if>
+
+            <if test="examineImg != null">
+                #{examineImg},
+            </if>
+
+            <if test="examineSituation != null">
+                #{examineSituation},
+            </if>
+
+            <if test="createUser != null">
+                #{createUser},
+            </if>
+
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+
+            <if test="type != null">
+                #{type},
+            </if>
+
+            <if test="vehId != null">
+                #{vehId},
+            </if>
+
+            <if test="examineUser != null">
+                #{examineUser},
+            </if>
+
+            <if test="isdelete != null">
+                #{isdelete}
+            </if>
+
+        </trim>
+    </insert>
+
+    <!-- 编辑周隐患数据 -->
+    <update id="updateWeeksHiddenTroubleSelective" parameterType="org.springblade.anbiao.qiyeshouye.entity.AnBiaoWeeksHiddenTrouble" >
+        update anbiao_weeks_hidden_trouble
+        <set>
+            <if test="deptId != null">
+                deptId = #{deptId},
+            </if>
+
+            <if test="date != null">
+                date = #{date},
+            </if>
+
+            <if test="examineItem != null">
+                examineItem = #{examineItem},
+            </if>
+
+            <if test="examineImg != null">
+                examineImg = #{examineImg},
+            </if>
+
+            <if test="examineSituation != null">
+                examineSituation = #{examineSituation},
+            </if>
+
+            <if test="createUser != null">
+                createUser = #{createUser},
+            </if>
+
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
+
+            <if test="type != null">
+                type = #{type},
+            </if>
+
+            <if test="vehId != null">
+                vehId = #{vehId},
+            </if>
+
+            <if test="examineUser != null">
+                examineUser = #{examineUser},
+            </if>
+
+            <if test="isdelete != null">
+                isdelete = #{isdelete}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 根据ID查询周隐患数据详情 -->
+    <select id="selectWeeksHiddenTroubleById" resultType="org.springblade.anbiao.qiyeshouye.entity.AnBiaoWeeksHiddenTrouble">
+        select * from anbiao_weeks_hidden_trouble
+        where isdelete = 0
+        <if test="Id != null">
+            and id = #{Id}
+        </if>
+        <if test="type != null">
+            and type = #{type}
+        </if>
+        <if test="deptId != null">
+            and deptId = #{deptId}
+        </if>
+        <if test="vehId != null">
+            and vehId = #{vehId}
+        </if>
+        <if test="bignDate != null">
+            and date >= #{bignDate}
+        </if>
+        <if test="endDate != null">
+            and date &lt;= #{endDate}
+        </if>
+        limit 1
+    </select>
+
+    <resultMap id="AnBiaoWeeksHiddenTroubleResultMap" type="org.springblade.anbiao.qiyeshouye.entity.AnBiaoWeeksHiddenTrouble">
+    </resultMap>
+
+    <!-- 微信消息推送配置列表 -->
+    <sql id="tableWeeksHiddenTroubleSql">
+        select
+            a.dept_name as deptName,
+            b.*
+        from(
+            SELECT
+                DISTINCT
+                xiaji.id,
+                xiaji.parent_id,
+                xiaji.dept_name,
+                xiaji.is_deleted
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+              AND xiaji.is_deleted = 0
+              AND xiaji.extend_type='机构'
+              AND shangji.id = #{deptId}
+            )a
+        inner join(
+            select * from anbiao_weeks_hidden_trouble
+            where isdelete = 0
+        )b on a.id = b.deptId
+        where 1=1
+    </sql>
+
+    <sql id="orderWeeksHiddenTroubleSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by date desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order == 0">
+            asc
+        </if>
+    </sql>
+
+    <sql id="queryWeeksHiddenTroubleSql">
+
+        <if test="date != null and date != ''">
+            and year(date) = year(#{date})
+            and month(date) = month(#{date})
+        </if>
+
+        <if test="type != null">
+            and type = #{type}
+        </if>
+
+    </sql>
+
+    <select timeout="600" id="selectWeeksHiddenTroubleGetAll" resultMap="AnBiaoWeeksHiddenTroubleResultMap"
+            parameterType="org.springblade.anbiao.qiyeshouye.page.AnBiaoWeeksHiddenTroublePage">
+        <if test="size == 0">
+            select * from (
+            <include refid="tableWeeksHiddenTroubleSql"/>
+            )b
+            where 1=1
+            <include refid="queryWeeksHiddenTroubleSql"/>
+            <include refid="orderWeeksHiddenTroubleSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="tableWeeksHiddenTroubleSql"/>
+            )b
+            where 1=1
+            <include refid="queryWeeksHiddenTroubleSql"/>
+            <include refid="orderWeeksHiddenTroubleSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectWeeksHiddenTroubleGetAllTotal"
+            parameterType="org.springblade.anbiao.qiyeshouye.page.AnBiaoWeeksHiddenTroublePage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableWeeksHiddenTroubleSql"/>
+        )d where 1 = 1
+        <include refid="queryWeeksHiddenTroubleSql"/>
+    </select>
+
+
+</mapper>

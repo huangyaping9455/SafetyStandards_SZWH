@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.qiyeshouye.mapper.AnbiaoIllegalInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="ResultMap" type="org.springblade.anbiao.qiyeshouye.entity.AnbiaoIllegalInfo">
+        <result column="id" property="id"/>
+    </resultMap>
+
+	<resultMap id="ResultTJMap" type="org.springblade.anbiao.qiyeshouye.entity.AnbiaoIllegalInfoTJ">
+	</resultMap>
+
+    <!-- 查询违法违章列表 -->
+    <sql id="tableSql">
+        select
+            b.*,
+            a.dept_name as deptName
+        from(
+            SELECT
+                DISTINCT
+                xiaji.id,
+                xiaji.parent_id,
+                xiaji.dept_name,
+                xiaji.is_deleted
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+              AND xiaji.is_deleted = 0
+              AND xiaji.extend_type='机构'
+              AND shangji.id = #{deptId}
+            )a
+        inner join(
+            select
+                a.*,
+                b.cheliangpaizhao,
+                b.chepaiyanse,
+                b.shiyongxingzhi,
+                c.jiashiyuanxingming,
+                c.shoujihaoma,
+                d.chulizhuangtai
+            from
+                anbiao_illegal_info a
+                left join anbiao_vehicle b on a.vehId = b.id
+                left join anbiao_jiashiyuan c on a.jsyId = c.id
+                left join anbiao_illegal_info_remark d on a.id = d.illegalid
+            where 1=1
+                and date &gt;= #{beginTime}
+                and date &lt;= #{endTime}
+                and b.is_deleted = 0
+                and c.isdelete = 0
+                and a.isdelete = 0
+            )b on a.id = b.deptId
+        where 1=1
+    </sql>
+
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by date desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order == 0">
+            asc
+        </if>
+    </sql>
+
+    <sql id="querySql">
+
+        <if test="status != null">
+            and status = #{status}
+        </if>
+
+        <if test="unlawfulAct != null and unlawfulAct != ''">
+            and unlawfulAct = '%${unlawfulAct}%'
+        </if>
+
+        <if test="jiashiyuanxingming != null and jiashiyuanxingming != ''">
+            and jiashiyuanxingming like '%${jiashiyuanxingming}%'
+        </if>
+
+        <if test="cheliangpaizhao != null and cheliangpaizhao != ''">
+            and cheliangpaizhao like '%${cheliangpaizhao}%'
+        </if>
+
+    </sql>
+
+    <select timeout="600" id="selectGetAll" resultMap="ResultMap"
+            parameterType="org.springblade.anbiao.qiyeshouye.page.AnbiaoIllegalInfoPage">
+        <if test="size == 0">
+            select * from (
+            <include refid="tableSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="tableSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectGetAllTotal"
+            parameterType="org.springblade.anbiao.qiyeshouye.page.AnbiaoIllegalInfoPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql"/>
+        )d where 1 = 1
+        <include refid="querySql"/>
+    </select>
+
+
+	<!-- 违章排查登记册 -->
+	<sql id="tableTJSql">
+		select
+			a.date,
+			d.dept_name as deptName,
+			a.vehId,
+			jsyId,
+			a.address,
+			a.unlawfulAct,
+			c.cheliangpaizhao,
+			c.chepaiyanse,
+			b.jiashiyuanxingming,
+			b.shoujihaoma,
+			a.dataSources
+		from
+			anbiao_illegal_info a,
+			anbiao_jiashiyuan b,
+			anbiao_vehicle c,
+			blade_dept d
+		where a.jsyId = b.id
+		  and a.vehId = c.id
+		  and a.isdelete = 0
+		  and a.deptId = d.id
+		  and a.deptId = #{deptId}
+		  and a.date &gt;= #{beginTime}
+		  and a.date &lt;= #{endTime}
+          and a.status = 1
+	</sql>
+
+	<sql id="orderTJSql">
+		<!-- 默认排序规则 -->
+		<if test="orderColumn == null or orderColumn == ''">
+			order by date desc
+		</if>
+		<if test="orderColumn != null and orderColumn != ''">
+			order by ${orderColumn}
+		</if>
+		<if test="orderColumn != null and orderColumn != '' and order != 0">
+			desc
+		</if>
+		<if test="orderColumn != null and orderColumn != '' and order == 0">
+			asc
+		</if>
+	</sql>
+
+	<sql id="queryTJSql">
+
+		<if test="unlawfulAct != null and unlawfulAct != ''">
+			and unlawfulAct = '%${unlawfulAct}%'
+		</if>
+
+		<if test="jiashiyuanxingming != null and jiashiyuanxingming != ''">
+			and jiashiyuanxingming like '%${jiashiyuanxingming}%'
+		</if>
+
+		<if test="cheliangpaizhao != null and cheliangpaizhao != ''">
+			and cheliangpaizhao like '%${cheliangpaizhao}%'
+		</if>
+
+	</sql>
+
+	<select timeout="600" id="selectGetAllTJ" resultMap="ResultTJMap"
+			parameterType="org.springblade.anbiao.qiyeshouye.page.AnbiaoIllegalInfoPage">
+		<if test="size == 0">
+			select * from (
+			<include refid="tableTJSql"/>
+			)b
+			where 1=1
+			<include refid="queryTJSql"/>
+			<include refid="orderTJSql"/>
+			limit ${total}
+		</if>
+		<if test="current != 0">
+			select * from (
+			<include refid="tableTJSql"/>
+			)b
+			where 1=1
+			<include refid="queryTJSql"/>
+			<include refid="orderTJSql"/>
+			limit ${offsetNo},${size}
+		</if>
+	</select>
+
+	<select timeout="90" id="selectGetAllTotalTJ"
+			parameterType="org.springblade.anbiao.qiyeshouye.page.AnbiaoIllegalInfoPage"
+			resultType="int">
+		select COUNT(1) from (
+		<include refid="tableTJSql"/>
+		)d where 1 = 1
+		<include refid="queryTJSql"/>
+	</select>
+
+    <select id="selectByIds" resultType="org.springblade.anbiao.qiyeshouye.entity.AnbiaoIllegalInfo">
+        select
+            b.*,
+            a.dept_name as deptName
+        from(
+            SELECT
+                DISTINCT
+                xiaji.id,
+                xiaji.parent_id,
+                xiaji.dept_name,
+                xiaji.is_deleted
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+              AND xiaji.is_deleted = 0
+              AND xiaji.extend_type='机构'
+              AND shangji.id = #{deptId}
+            )a
+        inner join(
+            select
+                a.*,
+                b.cheliangpaizhao,
+                b.chepaiyanse,
+                b.shiyongxingzhi,
+                c.jiashiyuanxingming,
+                c.shoujihaoma
+            from
+                anbiao_illegal_info a,
+                anbiao_vehicle b,
+                anbiao_jiashiyuan c
+            where 1=1
+              and a.id = #{Id}
+              and a.vehId = b.id
+              and a.jsyId = c.id
+              and b.is_deleted = 0
+              and c.isdelete = 0
+              and a.isdelete = 0
+        )b on a.id = b.deptId
+        where 1=1
+    </select>
+
+</mapper>

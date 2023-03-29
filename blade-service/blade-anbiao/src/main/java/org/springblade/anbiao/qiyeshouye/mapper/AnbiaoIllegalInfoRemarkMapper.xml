@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.qiyeshouye.mapper.AnbiaoIllegalInfoRemarkMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="ResultMap" type="org.springblade.anbiao.qiyeshouye.entity.AnbiaoIllegalInfoRemark">
+        <result column="id" property="id"/>
+    </resultMap>
+
+    <update id="updateSelective" parameterType="org.springblade.anbiao.qiyeshouye.entity.AnbiaoIllegalInfoRemark" >
+        update anbiao_illegal_info_remark
+        <set>
+            <if test="isDeleted != null and isDeleted != '' ">
+                is_deleted = #{isDeleted},
+            </if>
+
+            <if test="updateTime != null and updateTime != '' ">
+                updateTime = #{updateTime},
+            </if>
+
+            <if test="updateId != null and updateId != '' ">
+                updateId = #{updateId}
+            </if>
+
+        </set>
+        where illegalid = #{id}
+    </update>
+
+    <select id="selectByIds" resultType="org.springblade.anbiao.qiyeshouye.entity.AnbiaoIllegalInfoRemark">
+        select * from anbiao_illegal_info_remark where illegalid = #{illegalid}
+    </select>
+
+</mapper>

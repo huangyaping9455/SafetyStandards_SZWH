@@ -1,0 +1,81 @@
+#服务器端口
+server:
+  port: 8109
+
+#数据源配置
+spring:
+  redis:
+    host: edu.swhaq.com
+    port: 18003
+    password: lingyi
+    database: 0
+    ssl: false
+
+  datasource:
+    #    url: ${blade.datasource.train.url}
+    #    username: ${blade.datasource.train.username}
+    #    password: ${blade.datasource.train.password}
+
+    #河南
+    #    url: jdbc:mysql://36.133.42.45:23406/ote?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+    #    username: root
+    #    password: Root@123456
+
+    #唐僧
+    url: jdbc:mysql://219.153.12.86:3366/ote-cs?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+    username: root
+    password: admin@ts
+
+    #青岛
+    #    url: jdbc:mysql://150.138.133.178:3366/ote?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+    #    username: root
+    #    password: qd123!@#
+
+    #新疆
+    #    url: jdbc:mysql://60.13.135.42:3306/ote?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+    #    username: dev
+    #    password: Dev@lingyi
+
+    driver-class-name: com.mysql.jdbc.Driver    #指定数据库驱动
+    type: com.alibaba.druid.pool.DruidDataSource  #指定类型连接池
+    #数据源其他配置
+    initialSize: 5  #初始化连接数
+    minIdle: 5      #最小空闲连接数
+    maxActive: 20   #最大连接数
+    maxWait: 60000  #最大等待值
+    timeBetweenEvictionRunsMillis: 60000  #// 连接回收器的运行周期时间，时间到了清理池中空闲的连接，testWhileIdle根据这个判断
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL  #//用来检测连接是否有效的sql，要求是一个查询语句
+    testWhileIdle: true   #//建议配置为true，不影响性能，并且保证安全性。 申请连接的时候检测，如果空闲时间大于
+    testOnBorrow: false     #//申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。设置为false
+    testOnReturn: false  # //归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能,设置为flase
+    poolPreparedStatements: true  # //是否缓存preparedStatement，也就是PSCache
+    #配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    filters: stat,wall
+    maxPoolPreparedStatementPerConnectionSize: 20  # // 池中能够缓冲的preparedStatements语句数量
+    useGlobalDataSourceStat: true
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+
+
+trainserver:
+  #  file-server: ${trainserver.dev.fileServer}
+  #  file-server: https://education.zhongkeguangtong.com:18002
+  #  file-server: https://edu.sztoosun.com:18002/
+  file-server: https://edu.sztoosun.com:18002/
+  #  video-server: ${trainserver.dev.videoServer}
+  video-server: D:/media/transcoding
+  #  uploadVideo-server: ${trainserver.dev.uploadVideoServer}
+  uploadVideo-server: https://edu.sztoosun.com:18005/picApi/group1/upload
+  client-id: QEbLaP18zPu8mkKrtethmgt4
+  client-secret: yUnHQD6PDHrnFu3noGC9t7v8oilaT2m1
+  access-token-url: https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials
+  group-add-url: https://aip.baidubce.com/rest/2.0/face/v3/faceset/group/add?access_token=
+  group-delete-url: https://aip.baidubce.com/rest/2.0/face/v3/faceset/group/delete?access_token=
+  user-add-url: https://aip.baidubce.com/rest/2.0/face/v3/faceset/user/add?access_token=
+  user-delete-url: https://aip.baidubce.com/rest/2.0/face/v3/faceset/user/delete?access_token=
+  search-face-url: https://aip.baidubce.com/rest/2.0/face/v3/search?access_token=
+  user-get-url: https://aip.baidubce.com/rest/2.0/face/v3/faceset/user/get?access_token=
+  image-type: BASE64
+  face-platform-id: henanote
+  search-score: 35
+  enable: true
