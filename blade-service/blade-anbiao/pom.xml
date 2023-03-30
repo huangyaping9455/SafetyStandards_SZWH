@@ -100,6 +100,12 @@
             <artifactId>easyexcel</artifactId>
             <version>3.0.5</version>
         </dependency>
+        <dependency>
+            <groupId>org.springblade</groupId>
+            <artifactId>blade-gps-api</artifactId>
+            <version>2.1.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 

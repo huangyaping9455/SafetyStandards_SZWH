@@ -113,4 +113,38 @@ public class DriverTJMingXiVO {
 
 	private URL AjrHeadPortraitUrl;
 
+	@ApiModelProperty(value = "安全责任书签名附件")
+	private String ajaAutographEnclosure;
+
+	@ApiModelProperty(value = "安全责任书签字时间")
+	private String ajaAutographTime;
+
+	@ApiModelProperty(value = "危害告知书签名附件")
+	private String ajwAutographEnclosure;
+
+	@ApiModelProperty(value = "危害告知书签字时间")
+	private String ajwAutographTime;
+
+	@ApiModelProperty(value = "身份证号")
+	private String shenfenzhenghao;
+
+	@ApiModelProperty(value = "住址")
+	private String jiatingzhuzhi;
+
+	@ApiModelProperty(value = "手机号")
+	private String shoujihaoma;
+
+	@ApiModelProperty(value = "劳动合同开始时间")
+	private String ajwStartDate;
+
+	@ApiModelProperty(value = "劳动合同结束时间")
+	private String ajwEndDate;
+
+	@ApiModelProperty(value = "劳动合同签字时间")
+	private String ajwAutographTime2;
+
+	@ApiModelProperty(value = "劳动合同签字附件")
+	private String ajwAutographEnclosure2;
+
+
 }

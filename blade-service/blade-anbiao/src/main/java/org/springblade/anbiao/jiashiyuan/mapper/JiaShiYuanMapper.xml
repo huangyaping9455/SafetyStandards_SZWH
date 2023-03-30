@@ -1042,6 +1042,7 @@ values
     </select>
 
     <select id="getDriverTJMingXi" resultType="org.springblade.anbiao.jiashiyuan.vo.DriverTJMingXiVO" parameterType="org.springblade.anbiao.jiashiyuan.vo.DriverTJMingXiVO">
+
         SELECT
         a.dept_id as deptId,
         h.dept_name as deptName,
@@ -1076,7 +1077,19 @@ values
         IFNULL(d.ajc_licence, '') as ajcLicence,
         IFNULL(e.ajt_enclosure, '') as ajtEnclosure,
         IFNULL(f.ajg_training_enclosure, '') as ajgTrainingEnclosure,
-        IFNULL(g.ajw_enclosure, '') as ajwEnclosure
+        IFNULL(g.ajw_enclosure, '') as ajwEnclosure,
+        IFNULL(i.aja_autograph_enclosure, '') as ajaAutographEnclosure,
+        IFNULL(i.aja_autograph_time, '') as ajaAutographTime,
+        IFNULL(j.ajw_autograph_enclosure, '') as ajwAutographEnclosure,
+        IFNULL(j.ajw_autograph_time, '') as ajwAutographTime,
+        IFNULL(a.shenfenzhenghao, '') as shenfenzhenghao,
+        IFNULL(a.jiatingzhuzhi, '') as jiatingzhuzhi,
+        IFNULL(a.shoujihaoma, '') as shoujihaoma,
+        IFNULL(k.ajw_start_date, '') as ajwStartDate,
+        IFNULL(k.ajw_end_date, '') as ajwEndDate,
+        IFNULL(k.ajw_autograph_time, '') as ajwAutographTime2,
+        IFNULL(k.ajw_autograph_enclosure, '') as ajwAutographEnclosure2
+
         FROM
         `anbiao_jiashiyuan` a
         LEFT JOIN anbiao_jiashiyuan_ruzhi b on b.ajr_aj_ids = a.id
@@ -1088,6 +1101,10 @@ values
         INNER JOIN (
         <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) h on h.id = a.dept_id
+        LEFT JOIN anbiao_jiashiyuan_anquanzerenshu i on i.aja_aj_ids = a.id
+        LEFT JOIN anbiao_jiashiyuan_weihaigaozhishu j on j.ajw_aj_ids = a.id
+        LEFT JOIN anbiao_jiashiyuan_laodonghetong k on k.ajw_aj_ids = a.id
+
         WHERE
         a.isdelete = 0
         and b.ajr_delete = 0
@@ -1096,9 +1113,15 @@ values
         and e.ajt_delete = 0
         and f.ajg_delete = 0
         and g.ajw_delete = 0
-                  <if test="deptName != null and deptName != '' ">
-                      and h.deptName like concat('%', #{deptName} ,'%')
-                  </if>
+        and i.aja_delete = 0
+        and j.ajw_delete = 0
+        and k.ajw_delete = 0
+
+        <if test="deptName != null and deptName != '' ">
+            and h.deptName like concat('%', #{deptName} ,'%')
+        </if>
+
+            and a.id ='043f3cc2fdda266a07fa533ecba50e8e'
 
     </select>
 
