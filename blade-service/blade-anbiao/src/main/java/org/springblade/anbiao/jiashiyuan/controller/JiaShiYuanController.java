@@ -4,6 +4,7 @@ import cn.afterturn.easypoi.entity.ImageEntity;
 import cn.afterturn.easypoi.word.WordExportUtil;
 import cn.afterturn.easypoi.word.entity.WordImageEntity;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
@@ -5139,9 +5140,9 @@ public class JiaShiYuanController {
 					//生成文件名
 					// 生成的word格式
 					String formatSuffix = ".docx";
-					String wjName = t.getJiashiyuanxingming()+"_"+"人车台账";
-					String wjName2 = t.getCheliangpaizhao()+"_"+"人车台账";
-					String wjName3 = t.getCheliangpaizhaoGUA()+"_"+"人车台账";
+					String wjName = t.getJiashiyuanxingming();
+					String wjName2 = t.getCheliangpaizhao();
+					String wjName3 = t.getCheliangpaizhaoGUA();
 					// 拼接后的文件名
 					fileName = wjName + formatSuffix;//文件名  带后缀
 					String fileName2 = wjName2 + formatSuffix;
@@ -5151,6 +5152,17 @@ public class JiaShiYuanController {
 					WordUtil2.exportDataWord3(templatePath2, temDir2, fileName2, map, request, response);
 					WordUtil2.exportDataWord3(templatePath2, temDir3, fileName3, map2, request, response);
 					urlList.add(temDir);
+
+
+						//替换路径前缀,获得pdf文件路径
+						String pdfPath = temDir+"\\"+wjName+".pdf";
+						//生成文件父级目录
+						FileUtil.mkParentDirs(pdfPath);
+						//生成pdf到pdf文件路径
+						temDir=temDir+"\\"+wjName+formatSuffix;
+						CommonUtil.world2pdf(temDir,pdfPath);
+						System.out.println("已生成pdf"+pdfPath);
+
 				}
 			}
 		}

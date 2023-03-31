@@ -248,6 +248,7 @@
             <artifactId>infmgr-common</artifactId>
             <version>0.0.1</version>
         </dependency>
+
     </dependencies>
 
     <build>
