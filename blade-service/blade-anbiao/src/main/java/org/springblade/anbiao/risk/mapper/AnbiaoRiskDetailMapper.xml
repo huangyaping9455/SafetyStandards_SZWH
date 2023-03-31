@@ -387,6 +387,9 @@
         <if test="deptName != null and deptName != ''">
             and a.dept_name like '%${deptName}%'
         </if>
+        <if test="jiashiyuanxingming != null and jiashiyuanxingming != ''">
+            and j.jiashiyuanxingming like '%${jiashiyuanxingming}%'
+        </if>
         HAVING daoqishijian IS NOT NULL AND daoqishijian != ''
         ORDER BY daoqishijian,youxiaoqi
         )d
