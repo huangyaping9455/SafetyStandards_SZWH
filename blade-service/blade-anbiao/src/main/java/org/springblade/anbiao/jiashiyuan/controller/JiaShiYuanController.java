@@ -5154,14 +5154,32 @@ public class JiaShiYuanController {
 					urlList.add(temDir);
 
 
-						//替换路径前缀,获得pdf文件路径
-						String pdfPath = temDir+"\\"+wjName+".pdf";
-						//生成文件父级目录
-						FileUtil.mkParentDirs(pdfPath);
-						//生成pdf到pdf文件路径
-						temDir=temDir+"\\"+wjName+formatSuffix;
-						CommonUtil.world2pdf(temDir,pdfPath);
-						System.out.println("已生成pdf"+pdfPath);
+					//替换路径前缀,获得pdf文件路径
+					String pdfPath = temDir+"\\"+wjName+".pdf";
+					//生成文件父级目录
+					FileUtil.mkParentDirs(pdfPath);
+					//生成pdf到pdf文件路径
+					temDir=temDir+"\\"+wjName+formatSuffix;
+					CommonUtil.world2pdf(temDir,pdfPath);
+					System.out.println("已生成驾驶员pdf"+pdfPath);
+
+					//替换路径前缀,获得pdf文件路径
+					String pdfPath2 = temDir2+"\\"+wjName2+".pdf";
+					//生成文件父级目录
+					FileUtil.mkParentDirs(pdfPath2);
+					//生成pdf到pdf文件路径
+					temDir2=temDir2+"\\"+wjName2+formatSuffix;
+					CommonUtil.world2pdf(temDir2,pdfPath2);
+					System.out.println("已生成车头pdf"+pdfPath2);
+
+					//替换路径前缀,获得pdf文件路径
+					String pdfPath3 = temDir3+"\\"+wjName3+".pdf";
+					//生成文件父级目录
+					FileUtil.mkParentDirs(pdfPath3);
+					//生成pdf到pdf文件路径
+					temDir3=temDir3+"\\"+wjName3+formatSuffix;
+					CommonUtil.world2pdf(temDir3,pdfPath3);
+					System.out.println("已生成挂车pdf"+pdfPath3);
 
 				}
 			}

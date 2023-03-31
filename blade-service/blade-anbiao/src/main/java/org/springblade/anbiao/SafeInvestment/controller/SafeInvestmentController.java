@@ -216,7 +216,7 @@ public class SafeInvestmentController extends BladeController {
 	@GetMapping("/goExport_Excel")
 	@ApiLog("安全投入信息-导出")
 	@ApiOperation(value = "安全投入信息-导出", notes = "传入SafelInfoledgerPage", position = 22)
-	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String asiIds, BladeUser user) throws IOException {
+	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String asiIds,String date,String deptId, BladeUser user) throws IOException {
 		int a=1;
 		R rs = new R();
 		List<String> urlList = new ArrayList<>();
