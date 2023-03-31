@@ -313,8 +313,8 @@
         <if test="jiashiyuanxingming != null and jiashiyuanxingming != ''">
             and j.jiashiyuanxingming like '%${jiashiyuanxingming}%'
         </if>
-            HAVING daoqishijian IS NOT NULL AND daoqishijian != ''
-            ORDER BY daoqishijian,youxiaoqi
+
+            ORDER BY CASE WHEN daoqishijian IS NULL THEN 1 ELSE 0 END, daoqishijian
             limit ${total}
         </if>
         <if test="current != 0" >
@@ -349,8 +349,7 @@
             <if test="jiashiyuanxingming != null and jiashiyuanxingming != ''">
                 and j.jiashiyuanxingming like '%${jiashiyuanxingming}%'
             </if>
-            HAVING daoqishijian IS NOT NULL AND daoqishijian != ''
-            ORDER BY daoqishijian,youxiaoqi
+            ORDER BY CASE WHEN daoqishijian IS NULL THEN 1 ELSE 0 END, daoqishijian
             limit ${offsetNo},${size}
         </if>
     </select>
@@ -390,7 +389,7 @@
         <if test="jiashiyuanxingming != null and jiashiyuanxingming != ''">
             and j.jiashiyuanxingming like '%${jiashiyuanxingming}%'
         </if>
-        HAVING daoqishijian IS NOT NULL AND daoqishijian != ''
+        ORDER BY CASE WHEN daoqishijian IS NULL THEN 1 ELSE 0 END, daoqishijian
         ORDER BY daoqishijian,youxiaoqi
         )d
     </select>
