@@ -241,7 +241,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 					}
 				} else {
 					isFail=true;
-					errorStr += "被保车辆不能为空！";
+					errorStr += "被保险单位不能为空！";
 				}
 				//被保险人
 				if(StringUtil.isNotBlank(avbInsureContacts)) {

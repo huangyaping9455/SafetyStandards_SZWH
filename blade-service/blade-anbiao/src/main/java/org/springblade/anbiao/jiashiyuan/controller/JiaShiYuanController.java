@@ -3794,6 +3794,7 @@ public class JiaShiYuanController {
 		Calendar now = Calendar.getInstance();
 		//word模板地址
 		String templatePath =fileServer.getPathPrefix()+"muban\\"+"jiashiyuanvehicle.docx";
+		String templatePath2 =fileServer.getPathPrefix()+"muban\\"+"vehicle.docx";
 		String folder = "";
 		String [] nyr=DateUtil.today().split("-");
 		String[] idsss = driverTJMingXiVO.getDeptId().split(",");
@@ -4022,14 +4023,12 @@ public class JiaShiYuanController {
 					image = new WordImageEntity();
 					image.setHeight(220);
 					image.setWidth(350);
-//					String jsonObject = t.getShenfenzhengfujian();
 					if (StringUtils.isNotBlank(t.getShenfenzhengfujian()) && !t.getShenfenzhengfujian().equals("null")){
 						if (StrUtil.isNotEmpty(t.getShenfenzhengfujian()) && t.getShenfenzhengfujian().contains("http") == false) {
 							url1 = fileUploadClient.getUrl(t.getShenfenzhengfujian());
 							t.setShenfenzhengfujian(url1);
 							//添加图片到工作表的指定位置
 
-//							String s = new URL(t.getAjcLicence()).toString();
 							String url2 = new URL(t.getShenfenzhengfujian()).toString();
 							//获得第一个点的位置
 							int index = url2.indexOf("/");
@@ -4218,8 +4217,8 @@ public class JiaShiYuanController {
 //					String jsonObject = t.getShenfenzhengfujian();
 					if (StringUtils.isNotBlank(t.getAjcLicence()) && !t.getAjcLicence().equals("null")) {
 						if (StrUtil.isNotEmpty(t.getAjcLicence()) && t.getAjcLicence().contains("http") == false) {
-							String ajcLicence = fileUploadClient.getUrl(t.getAjcLicence());
-							t.setAjcLicence(ajcLicence);
+							url1 = fileUploadClient.getUrl(t.getAjcLicence());
+							t.setAjcLicence(url1);
 							//添加图片到工作表的指定位置
 
 //							String s = new URL(t.getAjcLicence()).toString();
@@ -4666,20 +4665,491 @@ public class JiaShiYuanController {
 					}
 
 
+					//行驶证正面
+					image = new WordImageEntity();
+					image.setHeight(220);
+					image.setWidth(350);
+					if (StringUtils.isNotBlank(t.getAvxOriginalEnclosure()) && !t.getAvxOriginalEnclosure().equals("null")){
+						if (StrUtil.isNotEmpty(t.getAvxOriginalEnclosure()) && t.getAvxOriginalEnclosure().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getAvxOriginalEnclosure());
+							t.setAvxOriginalEnclosure(url1);
+							//添加图片到工作表的指定位置
+
+							String url2 = new URL(t.getAvxOriginalEnclosure()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("i1", image);
+						}else if (StrUtil.isNotEmpty(t.getAvxOriginalEnclosure())){
+							String url2 = t.getAvxOriginalEnclosure();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index+2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix()+result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("i1", image);
+						}
+					}else{
+						map.put("i1", "-");
+					}
+
+					//行驶证反面
+					image = new WordImageEntity();
+					image.setHeight(220);
+					image.setWidth(350);
+					if (StringUtils.isNotBlank(t.getAvxCopyEnclosure()) && !t.getAvxCopyEnclosure().equals("null")){
+						if (StrUtil.isNotEmpty(t.getAvxCopyEnclosure()) && t.getAvxCopyEnclosure().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getAvxCopyEnclosure());
+							t.setAvxCopyEnclosure(url1);
+							//添加图片到工作表的指定位置
+
+							String url2 = new URL(t.getAvxCopyEnclosure()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("i2", image);
+						}else if (StrUtil.isNotEmpty(t.getAvxCopyEnclosure())){
+							String url2 = t.getAvxCopyEnclosure();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index+2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix()+result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("i2", image);
+						}
+					}else{
+						map.put("i2", "-");
+					}
+
+					//道路运输证
+					image = new WordImageEntity();
+					image.setHeight(220);
+					image.setWidth(350);
+					if (StringUtils.isNotBlank(t.getAvdEnclosure()) && !t.getAvdEnclosure().equals("null")){
+						if (StrUtil.isNotEmpty(t.getAvdEnclosure()) && t.getAvdEnclosure().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getAvdEnclosure());
+							t.setAvdEnclosure(url1);
+							//添加图片到工作表的指定位置
+
+							String url2 = new URL(t.getAvdEnclosure()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("i3", image);
+						}else if (StrUtil.isNotEmpty(t.getAvdEnclosure())){
+							String url2 = t.getAvdEnclosure();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index+2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix()+result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("i3", image);
+						}
+					}else{
+						map.put("i3", "-");
+					}
+
+					//性能检测报告
+					image = new WordImageEntity();
+					image.setHeight(220);
+					image.setWidth(350);
+					if (StringUtils.isNotBlank(t.getAvxEnclosure()) && !t.getAvxEnclosure().equals("null")){
+						if (StrUtil.isNotEmpty(t.getAvxEnclosure()) && t.getAvxEnclosure().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getAvxEnclosure());
+							t.setAvdEnclosure(url1);
+							//添加图片到工作表的指定位置
+
+							String url2 = new URL(t.getAvxEnclosure()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("i4", image);
+						}else if (StrUtil.isNotEmpty(t.getAvxEnclosure())){
+							String url2 = t.getAvxEnclosure();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index+2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix()+result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("i4", image);
+						}
+					}else{
+						map.put("i4", "-");
+					}
+
+					//登记证书
+					image = new WordImageEntity();
+					image.setHeight(220);
+					image.setWidth(350);
+					if (StringUtils.isNotBlank(t.getAvdEnclosure2()) && !t.getAvdEnclosure2().equals("null")){
+						if (StrUtil.isNotEmpty(t.getAvdEnclosure2()) && t.getAvdEnclosure2().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getAvdEnclosure2());
+							t.setAvdEnclosure(url1);
+							//添加图片到工作表的指定位置
+
+							String url2 = new URL(t.getAvdEnclosure2()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("i5", image);
+						}else if (StrUtil.isNotEmpty(t.getAvdEnclosure2())){
+							String url2 = t.getAvdEnclosure2();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index+2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix()+result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("i5", image);
+						}
+					}else{
+						map.put("i5", "-");
+					}
+
+					Map<String, Object> map2 = new HashMap<>();
+					//行驶证正面
+					image = new WordImageEntity();
+					image.setHeight(220);
+					image.setWidth(350);
+					if (StringUtils.isNotBlank(t.getAvxOriginalEnclosureGUA()) && !t.getAvxOriginalEnclosureGUA().equals("null")){
+						if (StrUtil.isNotEmpty(t.getAvxOriginalEnclosureGUA()) && t.getAvxOriginalEnclosureGUA().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getAvxOriginalEnclosureGUA());
+							t.setAvxOriginalEnclosureGUA(url1);
+							//添加图片到工作表的指定位置
+
+							String url2 = new URL(t.getAvxOriginalEnclosureGUA()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map2.put("i1", image);
+						}else if (StrUtil.isNotEmpty(t.getAvxOriginalEnclosureGUA())){
+							String url2 = t.getAvxOriginalEnclosureGUA();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index+2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix()+result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map2.put("i1", image);
+						}
+					}else{
+						map2.put("i1", "-");
+					}
+
+					//行驶证反面
+					image = new WordImageEntity();
+					image.setHeight(220);
+					image.setWidth(350);
+					if (StringUtils.isNotBlank(t.getAvxCopyEnclosureGUA()) && !t.getAvxCopyEnclosureGUA().equals("null")){
+						if (StrUtil.isNotEmpty(t.getAvxCopyEnclosureGUA()) && t.getAvxCopyEnclosureGUA().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getAvxCopyEnclosureGUA());
+							t.setAvxCopyEnclosureGUA(url1);
+							//添加图片到工作表的指定位置
+
+							String url2 = new URL(t.getAvxCopyEnclosureGUA()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map2.put("i2", image);
+						}else if (StrUtil.isNotEmpty(t.getAvxCopyEnclosureGUA())){
+							String url2 = t.getAvxCopyEnclosureGUA();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index+2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix()+result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map2.put("i2", image);
+						}
+					}else{
+						map2.put("i2", "-");
+					}
+
+					//道路运输证
+					image = new WordImageEntity();
+					image.setHeight(220);
+					image.setWidth(350);
+					if (StringUtils.isNotBlank(t.getAvdEnclosureGUA()) && !t.getAvdEnclosureGUA().equals("null")){
+						if (StrUtil.isNotEmpty(t.getAvdEnclosureGUA()) && t.getAvdEnclosureGUA().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getAvdEnclosureGUA());
+							t.setAvdEnclosureGUA(url1);
+							//添加图片到工作表的指定位置
+
+							String url2 = new URL(t.getAvdEnclosureGUA()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map2.put("i3", image);
+						}else if (StrUtil.isNotEmpty(t.getAvdEnclosureGUA())){
+							String url2 = t.getAvdEnclosureGUA();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index+2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix()+result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map2.put("i3", image);
+						}
+					}else{
+						map2.put("i3", "-");
+					}
+
+					//性能检测报告
+					image = new WordImageEntity();
+					image.setHeight(220);
+					image.setWidth(350);
+					if (StringUtils.isNotBlank(t.getAvxEnclosureGUA()) && !t.getAvxEnclosureGUA().equals("null")){
+						if (StrUtil.isNotEmpty(t.getAvxEnclosureGUA()) && t.getAvxEnclosureGUA().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getAvxEnclosureGUA());
+							t.setAvxEnclosureGUA(url1);
+							//添加图片到工作表的指定位置
+
+							String url2 = new URL(t.getAvxEnclosureGUA()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map2.put("i4", image);
+						}else if (StrUtil.isNotEmpty(t.getAvxEnclosureGUA())){
+							String url2 = t.getAvxEnclosureGUA();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index+2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix()+result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map2.put("i4", image);
+						}
+					}else{
+						map2.put("i4", "-");
+					}
+
+					//登记证书
+					image = new WordImageEntity();
+					image.setHeight(220);
+					image.setWidth(350);
+					if (StringUtils.isNotBlank(t.getAvdEnclosure2GUA()) && !t.getAvdEnclosure2GUA().equals("null")){
+						if (StrUtil.isNotEmpty(t.getAvdEnclosure2GUA()) && t.getAvdEnclosure2GUA().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getAvdEnclosure2GUA());
+							t.setAvdEnclosure2GUA(url1);
+							//添加图片到工作表的指定位置
+
+							String url2 = new URL(t.getAvdEnclosure2GUA()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map2.put("i5", image);
+						}else if (StrUtil.isNotEmpty(t.getAvdEnclosure2GUA())){
+							String url2 = t.getAvdEnclosure2GUA();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index+2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix()+result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map2.put("i5", image);
+						}
+					}else{
+						map2.put("i5", "-");
+					}
+
+
 					// TODO 渲染其他类型的数据请参考官方文档
 					//=================生成文件保存在本地D盘某目录下=================
 					//			temDir = "D:/mimi/file/word/"; ;//生成临时文件存放地址
 					nyr=DateUtil.today().split("-");
 					//附件存放地址(服务器生成地址)
-					temDir = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2]+"\\"+t.getDeptName()+"\\";
+					temDir = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2]+"\\"+t.getDeptName()+"\\"+"驾驶员"+"\\";
+					String temDir2 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2]+"\\"+t.getDeptName()+"\\"+"车头"+"\\";
+					String temDir3 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2]+"\\"+t.getDeptName()+"\\"+"挂车"+"\\";
+
 					//生成文件名
 					// 生成的word格式
 					String formatSuffix = ".docx";
 					String wjName = t.getJiashiyuanxingming()+"_"+"人车台账";
+					String wjName2 = t.getCheliangpaizhao()+"_"+"人车台账";
+					String wjName3 = t.getCheliangpaizhaoGUA()+"_"+"人车台账";
 					// 拼接后的文件名
 					fileName = wjName + formatSuffix;//文件名  带后缀
+					String fileName2 = wjName2 + formatSuffix;
+					String fileName3 = wjName3 + formatSuffix;
 					//导出word
 					WordUtil2.exportDataWord3(templatePath, temDir, fileName, map, request, response);
+					WordUtil2.exportDataWord3(templatePath2, temDir2, fileName2, map, request, response);
+					WordUtil2.exportDataWord3(templatePath2, temDir3, fileName3, map2, request, response);
 					urlList.add(temDir);
 				}
 			}

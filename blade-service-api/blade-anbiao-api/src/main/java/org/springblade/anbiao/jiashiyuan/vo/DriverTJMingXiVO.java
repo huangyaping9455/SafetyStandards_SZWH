@@ -146,5 +146,41 @@ public class DriverTJMingXiVO {
 	@ApiModelProperty(value = "劳动合同签字附件")
 	private String ajwAutographEnclosure2;
 
+	@ApiModelProperty(value = "车辆牌照")
+	private String cheliangpaizhao;
+
+	@ApiModelProperty(value = "行驶证主页附件")
+	private String avxOriginalEnclosure;
+
+	@ApiModelProperty(value = "行驶证副页附件")
+	private String avxCopyEnclosure;
+
+	@ApiModelProperty(value = "道路运输证")
+	private String avdEnclosure;
+
+	@ApiModelProperty(value = "综合性能报告")
+	private String avxEnclosure;
+
+	@ApiModelProperty(value = "登记证书")
+	private String avdEnclosure2;
+
+	@ApiModelProperty(value = "挂车牌照")
+	private String cheliangpaizhaoGUA;
+
+	@ApiModelProperty(value = "挂车行驶证主页附件")
+	private String avxOriginalEnclosureGUA;
+
+	@ApiModelProperty(value = "挂车行驶证副页附件")
+	private String avxCopyEnclosureGUA;
+
+	@ApiModelProperty(value = "挂车道路运输证")
+	private String avdEnclosureGUA;
+
+	@ApiModelProperty(value = "挂车综合性能报告")
+	private String avxEnclosureGUA;
+
+	@ApiModelProperty(value = "挂车登记证书")
+	private String avdEnclosure2GUA;
+
 
 }

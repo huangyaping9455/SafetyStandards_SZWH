@@ -925,6 +925,7 @@ values
         LEFT JOIN anbiao_vehicle_xingnengbaogao m on j.id = m.avx_av_ids
         LEFT JOIN anbiao_vehicle_dengjizhengshu n on j.id = n.avd_vehicle_ids
         WHERE j.cheliangpaizhao like '%挂'
+        and j.is_deleted = 0
         and k.avx_delete = 0
         and l.avd_delete = 0
         and m.avx_delete = 0
@@ -937,6 +938,7 @@ values
         LEFT JOIN anbiao_vehicle_xingnengbaogao m on j.id = m.avx_av_ids
         LEFT JOIN anbiao_vehicle_dengjizhengshu n on j.id = n.avd_vehicle_ids
         WHERE j.cheliangpaizhao not like '%挂'
+        and j.is_deleted = 0
         and k.avx_delete = 0
         and l.avd_delete = 0
         and m.avx_delete = 0
@@ -954,7 +956,7 @@ values
         and o.avb_delete = 0
         )k on a.id=k.jiashiyuanid
         WHERE ifnull( a.isdelete, 0 ) = 0
-        GROUP BY a.jiashiyuanxingming
+        GROUP BY a.id
     </sql>
     <sql id="queryTJMXSql">
 
@@ -1044,84 +1046,141 @@ values
     <select id="getDriverTJMingXi" resultType="org.springblade.anbiao.jiashiyuan.vo.DriverTJMingXiVO" parameterType="org.springblade.anbiao.jiashiyuan.vo.DriverTJMingXiVO">
 
         SELECT
-        a.dept_id as deptId,
-        h.dept_name as deptName,
-        a.id as jiashiyuanId,
+        a.dept_id AS deptId,
+        h.dept_name AS deptName,
+        a.id AS jiashiyuanId,
         a.jiashiyuanxingming,
-        b.ajr_head_portrait as ajrHeadPortrait,
-        IFNULL(a.xingbie, '1') as xingbie,
-        IFNULL(b.ajr_nation, '') as nation,
-        IFNULL(b.ajr_native_place, '') as nativePlace,
-        IFNULL(b.ajr_birth, '') as birth,
-        IFNULL(b.ajr_age, '0') as age,
-        IFNULL(b.ajr_political_outlook, '') as politicalOutlook,
-        IFNULL(b.ajr_education, '') as ajrEducation,
-        IFNULL(b.ajr_graduation_school, '') as ajrGraduationSchool,
-        IFNULL(b.ajr_graduation_date, '') as ajrGraduationDate,
-        IFNULL(b.ajr_id_number, '') as ajrIdNumber,
-        IFNULL(b.ajr_address, '') as ajrAddress,
-        IFNULL(b.ajr_receive_driving_license, '') as ajrReceiveDrivingLicense,
-        IFNULL(b.ajr_class, '') as ajrClass,
-        IFNULL(b.ajr_driving_experience, '') as ajrDrivingExperience,
-        IFNULL(b.ajr_health_status, '') as ajrHealthStatus,
-        IFNULL(b.ajr_work_experience, '') as ajrWorkExperience,
-        IFNULL(b.ajr_safe_driving_record1, '') as ajrSafeDrivingRecord1,
-        IFNULL(b.ajr_safe_driving_record2, '') as ajrSafeDrivingRecord2,
-        IFNULL(b.ajr_safe_driving_record3, '') as ajrSafeDrivingRecord3,
-        IFNULL(b.ajr_physical_examination_results, '') as ajrPhysicalExaminationResults,
-        IFNULL(b.ajr_integrity_assessment_results, '') as ajrIntegrityAssessmentResults,
-        IFNULL(a.shenfenzhengfujian, '') as shenfenzhengfujian,
-        IFNULL(a.shenfenzhengfanmianfujian, '') as shenfenzhengfanmianfujian,
-        IFNULL(c.ajj_front_photo_address, '') as ajjFrontPhotoAddress,
-        IFNULL(c.ajj_attached_photos, '') as ajjAttachedPhotos,
-        IFNULL(d.ajc_licence, '') as ajcLicence,
-        IFNULL(e.ajt_enclosure, '') as ajtEnclosure,
-        IFNULL(f.ajg_training_enclosure, '') as ajgTrainingEnclosure,
-        IFNULL(g.ajw_enclosure, '') as ajwEnclosure,
-        IFNULL(i.aja_autograph_enclosure, '') as ajaAutographEnclosure,
-        IFNULL(i.aja_autograph_time, '') as ajaAutographTime,
-        IFNULL(j.ajw_autograph_enclosure, '') as ajwAutographEnclosure,
-        IFNULL(j.ajw_autograph_time, '') as ajwAutographTime,
-        IFNULL(a.shenfenzhenghao, '') as shenfenzhenghao,
-        IFNULL(a.jiatingzhuzhi, '') as jiatingzhuzhi,
-        IFNULL(a.shoujihaoma, '') as shoujihaoma,
-        IFNULL(k.ajw_start_date, '') as ajwStartDate,
-        IFNULL(k.ajw_end_date, '') as ajwEndDate,
-        IFNULL(k.ajw_autograph_time, '') as ajwAutographTime2,
-        IFNULL(k.ajw_autograph_enclosure, '') as ajwAutographEnclosure2
+        b.ajr_head_portrait AS ajrHeadPortrait,
+        IFNULL( a.xingbie, '1' ) AS xingbie,
+        IFNULL( b.ajr_nation, '' ) AS nation,
+        IFNULL( b.ajr_native_place, '' ) AS nativePlace,
+        IFNULL( b.ajr_birth, '' ) AS birth,
+        IFNULL( b.ajr_age, '0' ) AS age,
+        IFNULL( b.ajr_political_outlook, '' ) AS politicalOutlook,
+        IFNULL( b.ajr_education, '' ) AS ajrEducation,
+        IFNULL( b.ajr_graduation_school, '' ) AS ajrGraduationSchool,
+        IFNULL( b.ajr_graduation_date, '' ) AS ajrGraduationDate,
+        IFNULL( b.ajr_id_number, '' ) AS ajrIdNumber,
+        IFNULL( b.ajr_address, '' ) AS ajrAddress,
+        IFNULL( b.ajr_receive_driving_license, '' ) AS ajrReceiveDrivingLicense,
+        IFNULL( b.ajr_class, '' ) AS ajrClass,
+        IFNULL( b.ajr_driving_experience, '' ) AS ajrDrivingExperience,
+        IFNULL( b.ajr_health_status, '' ) AS ajrHealthStatus,
+        IFNULL( b.ajr_work_experience, '' ) AS ajrWorkExperience,
+        IFNULL( b.ajr_safe_driving_record1, '' ) AS ajrSafeDrivingRecord1,
+        IFNULL( b.ajr_safe_driving_record2, '' ) AS ajrSafeDrivingRecord2,
+        IFNULL( b.ajr_safe_driving_record3, '' ) AS ajrSafeDrivingRecord3,
+        IFNULL( b.ajr_physical_examination_results, '' ) AS ajrPhysicalExaminationResults,
+        IFNULL( b.ajr_integrity_assessment_results, '' ) AS ajrIntegrityAssessmentResults,
+        IFNULL( a.shenfenzhengfujian, '' ) AS shenfenzhengfujian,
+        IFNULL( a.shenfenzhengfanmianfujian, '' ) AS shenfenzhengfanmianfujian,
+        IFNULL( c.ajj_front_photo_address, '' ) AS ajjFrontPhotoAddress,
+        IFNULL( c.ajj_attached_photos, '' ) AS ajjAttachedPhotos,
+        IFNULL( d.ajc_licence, '' ) AS ajcLicence,
+        IFNULL( e.ajt_enclosure, '' ) AS ajtEnclosure,
+        IFNULL( f.ajg_training_enclosure, '' ) AS ajgTrainingEnclosure,
+        IFNULL( g.ajw_enclosure, '' ) AS ajwEnclosure,
+        IFNULL( i.aja_autograph_enclosure, '' ) AS ajaAutographEnclosure,
+        IFNULL( i.aja_autograph_time, '' ) AS ajaAutographTime,
+        IFNULL( j.ajw_autograph_enclosure, '' ) AS ajwAutographEnclosure,
+        IFNULL( j.ajw_autograph_time, '' ) AS ajwAutographTime,
+        IFNULL( a.shenfenzhenghao, '' ) AS shenfenzhenghao,
+        IFNULL( a.jiatingzhuzhi, '' ) AS jiatingzhuzhi,
+        IFNULL( a.shoujihaoma, '' ) AS shoujihaoma,
+        IFNULL( m.ajw_start_date, '' ) AS ajwStartDate,
+        IFNULL( m.ajw_end_date, '' ) AS ajwEndDate,
+        IFNULL( m.ajw_autograph_time, '' ) AS ajwAutographTime2,
+        IFNULL( m.ajw_autograph_enclosure, '' ) AS ajwAutographEnclosure2,
 
+        IFNULL( l.cheliangpaizhao, '' ) AS cheliangpaizhao,
+        IFNULL( l.avx_original_enclosure, '' ) AS avxOriginalEnclosure,
+        IFNULL( l.avx_copy_enclosure, '' ) AS avxCopyEnclosure,
+        IFNULL( l.avd_enclosure, '' ) AS avdEnclosure,
+        IFNULL( l.avx_enclosure, '' ) AS avxEnclosure,
+        IFNULL( l.avd_enclosure2, '' ) AS avdEnclosure2,
+        IFNULL( k.cheliangpaizhao, '' ) AS cheliangpaizhaoGUA,
+        IFNULL( k.avx_original_enclosure, '' ) AS avxOriginalEnclosureGUA,
+        IFNULL( k.avx_copy_enclosure, '' ) AS avxCopyEnclosureGUA,
+        IFNULL( k.avd_enclosure, '' ) AS avdEnclosureGUA,
+        IFNULL( k.avx_enclosure, '' ) AS avxEnclosureGUA,
+        IFNULL( k.avd_enclosure2, '' ) AS avdEnclosure2GUA
         FROM
         `anbiao_jiashiyuan` a
-        LEFT JOIN anbiao_jiashiyuan_ruzhi b on b.ajr_aj_ids = a.id
-        LEFT JOIN anbiao_jiashiyuan_jiashizheng c on c.ajj_aj_ids = a.id
-        LEFT JOIN anbiao_jiashiyuan_congyezigezheng d on d.ajc_aj_ids = a.id
-        LEFT JOIN anbiao_jiashiyuan_tijian e on e.ajt_aj_ids = a.id
-        LEFT JOIN anbiao_jiashiyuan_gangqianpeixun f on f.ajg_aj_ids = a.id
-        LEFT JOIN anbiao_jiashiyuan_wuzezhengming g on g.ajw_aj_ids = a.id
+        LEFT JOIN anbiao_jiashiyuan_ruzhi b ON b.ajr_aj_ids = a.id
+        LEFT JOIN anbiao_jiashiyuan_jiashizheng c ON c.ajj_aj_ids = a.id
+        LEFT JOIN anbiao_jiashiyuan_congyezigezheng d ON d.ajc_aj_ids = a.id
+        LEFT JOIN anbiao_jiashiyuan_tijian e ON e.ajt_aj_ids = a.id
+        LEFT JOIN anbiao_jiashiyuan_gangqianpeixun f ON f.ajg_aj_ids = a.id
+        LEFT JOIN anbiao_jiashiyuan_wuzezhengming g ON g.ajw_aj_ids = a.id
         INNER JOIN (
         <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
-        ) h on h.id = a.dept_id
-        LEFT JOIN anbiao_jiashiyuan_anquanzerenshu i on i.aja_aj_ids = a.id
-        LEFT JOIN anbiao_jiashiyuan_weihaigaozhishu j on j.ajw_aj_ids = a.id
-        LEFT JOIN anbiao_jiashiyuan_laodonghetong k on k.ajw_aj_ids = a.id
-
+        ) h ON h.id = a.dept_id
+        LEFT JOIN anbiao_jiashiyuan_anquanzerenshu i ON i.aja_aj_ids = a.id
+        LEFT JOIN anbiao_jiashiyuan_weihaigaozhishu j ON j.ajw_aj_ids = a.id
+        LEFT JOIN (
+        SELECT
+        cheliangpaizhao,
+        avx_original_enclosure,
+        avx_copy_enclosure,
+        l.avd_enclosure,
+        avx_enclosure,
+        n.avd_enclosure AS avd_enclosure2,
+        jiashiyuanid
+        FROM
+        anbiao_vehicle j
+        LEFT JOIN anbiao_vehicle_xingshizheng k ON j.id = k.avx_av_ids
+        LEFT JOIN anbiao_vehicle_daoluyunshuzheng l ON j.id = l.avd_av_ids
+        LEFT JOIN anbiao_vehicle_xingnengbaogao m ON j.id = m.avx_av_ids
+        LEFT JOIN anbiao_vehicle_dengjizhengshu n ON j.id = n.avd_vehicle_ids
+        WHERE
+        j.cheliangpaizhao LIKE '%挂'
+        AND j.is_deleted = 0
+        AND k.avx_delete = 0
+        AND l.avd_delete = 0
+        AND m.avx_delete = 0
+        AND n.avd_delete = 0
+        ) k ON a.id = k.jiashiyuanid
+        LEFT JOIN (
+        SELECT
+        cheliangpaizhao,
+        avx_original_enclosure,
+        avx_copy_enclosure,
+        l.avd_enclosure,
+        avx_enclosure,
+        n.avd_enclosure AS avd_enclosure2,
+        jiashiyuanid
+        FROM
+        anbiao_vehicle j
+        LEFT JOIN anbiao_vehicle_xingshizheng k ON j.id = k.avx_av_ids
+        LEFT JOIN anbiao_vehicle_daoluyunshuzheng l ON j.id = l.avd_av_ids
+        LEFT JOIN anbiao_vehicle_xingnengbaogao m ON j.id = m.avx_av_ids
+        LEFT JOIN anbiao_vehicle_dengjizhengshu n ON j.id = n.avd_vehicle_ids
+        WHERE
+        j.cheliangpaizhao NOT LIKE '%挂'
+        AND j.is_deleted = 0
+        AND k.avx_delete = 0
+        AND l.avd_delete = 0
+        AND m.avx_delete = 0
+        AND n.avd_delete = 0
+        ) l ON a.id = l.jiashiyuanid
+        LEFT JOIN anbiao_jiashiyuan_laodonghetong m on m.ajw_aj_ids=a.id
         WHERE
         a.isdelete = 0
-        and b.ajr_delete = 0
-        and c.ajj_delete = 0
-        and d.ajc_delete = 0
-        and e.ajt_delete = 0
-        and f.ajg_delete = 0
-        and g.ajw_delete = 0
-        and i.aja_delete = 0
-        and j.ajw_delete = 0
-        and k.ajw_delete = 0
-
+        AND b.ajr_delete = 0
+        AND c.ajj_delete = 0
+        AND d.ajc_delete = 0
+        AND e.ajt_delete = 0
+        AND f.ajg_delete = 0
+        AND g.ajw_delete = 0
+        AND i.aja_delete = 0
+        AND j.ajw_delete = 0
+        and m.ajw_delete = 0
         <if test="deptName != null and deptName != '' ">
             and h.deptName like concat('%', #{deptName} ,'%')
         </if>
-
-            and a.id ='043f3cc2fdda266a07fa533ecba50e8e'
+--         AND a.id = '043f3cc2fdda266a07fa533ecba50e8e'
+        GROUP BY
+        a.id
 
     </select>
 
