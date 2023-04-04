@@ -3783,13 +3783,14 @@ public class JiaShiYuanController {
 
 	@GetMapping("/goExport_getDriverTJMingXi")
 	@ApiLog("驾驶员统计信息明细-导出")
-	@ApiOperation(value = "驾驶员统计信息明细-导出", notes = "传入AnbiaoHiddenDangerPage", position = 22)
-	public R goExport_HiddenDanger(HttpServletRequest request, HttpServletResponse response, String deptId , BladeUser user) throws Exception {
+	@ApiOperation(value = "驾驶员统计信息明细-导出", notes = "传入deptId，jiashiyuanId", position = 22)
+	public R goExport_HiddenDanger(HttpServletRequest request, HttpServletResponse response, String deptId ,String jiashiyuanId, BladeUser user) throws Exception {
 		R rs = new R();
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 		List<String> urlList = new ArrayList<>();
 		DriverTJMingXiVO driverTJMingXiVO = new DriverTJMingXiVO();
 		driverTJMingXiVO.setDeptId(deptId);
+		driverTJMingXiVO.setJiashiyuanId(jiashiyuanId);
 		// TODO 渲染其他类型的数据请参考官方文档
 		DecimalFormat df = new DecimalFormat("######0.00");
 		Calendar now = Calendar.getInstance();
