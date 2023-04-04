@@ -3799,7 +3799,8 @@ public class JiaShiYuanController {
 		String templatePath2 =fileServer.getPathPrefix()+"muban\\"+"vehicle.docx";
 		String folder = "";
 		String [] nyr=DateUtil.today().split("-");
-		String[] idsss = driverTJMingXiVO.getDeptId().split(",");
+//		String[] idsss = driverTJMingXiVO.getDeptId().split(",");
+		String[] idsss = driverTJMingXiVO.getJiashiyuanId().split(",");
 		//去除素组中重复的数组
 		List<String> listid = new ArrayList<String>();
 		for (int i=0; i<idsss.length; i++) {
@@ -3811,7 +3812,8 @@ public class JiaShiYuanController {
 		String[] idss= listid.toArray(new String[1]);
 		for(int j = 0;j< idss.length;j++){
 			driverTJMingXiVO.setDeptName("");
-			driverTJMingXiVO.setDeptId(idss[j]);
+//			driverTJMingXiVO.setDeptId(idss[j]);
+			driverTJMingXiVO.setJiashiyuanId(idss[j]);
 			List<DriverTJMingXiVO> driverTJMingXiVOS = jiaShiYuanService.selectDriverTJMingXi(driverTJMingXiVO);
 
 			if(driverTJMingXiVOS.size()==0){

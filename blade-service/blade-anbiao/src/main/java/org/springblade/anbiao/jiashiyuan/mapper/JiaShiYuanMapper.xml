@@ -882,6 +882,7 @@ values
     <sql id="tableTJMXSql">
         SELECT
         bb.dept_name deptName ,
+        a.id as jiashiyuanId,
         a.jiashiyuanxingming as a,
         ruzhi_compeleted as a1,
         sfz_compeleted as a2,
