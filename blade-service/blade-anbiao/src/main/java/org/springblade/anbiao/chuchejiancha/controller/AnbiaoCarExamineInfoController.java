@@ -113,6 +113,18 @@ public class AnbiaoCarExamineInfoController {
 			if(anbiaoCarExamineInfo.getStatus() == 0 || anbiaoCarExamineInfo.getStatus() == 6){
 				anbiaoCarExamineInfo.setStatus(0);
 				anbiaoCarExamineInfo.setIsdelete(0);
+
+				QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+				riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"未按时进行安全检查");
+				riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+				riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,anbiaoCarExamineInfo.getJsyid());
+				AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+				if (riskDetail!=null){
+					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
+					riskDetailService.getBaseMapper().updateById(riskDetail);
+				}
+
 				ii = iAnbiaoCarExamineInfoService.save(anbiaoCarExamineInfo);
 				if (ii == true) {
 					rs.setCode(200);
@@ -126,19 +138,10 @@ public class AnbiaoCarExamineInfoController {
 			}else{
 				anbiaoCarExamineInfo.setStatus(1);
 
-				QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<>();
-				vehicleQueryWrapper.lambda().eq(Vehicle::getId,anbiaoCarExamineInfo.getVehid());
-				vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel,0);
-				Vehicle vehicle = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper);
-
-				String today = DateUtil.now().substring(0, 10);
-
 				QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
 				riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"未按时进行安全检查");
 				riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
 				riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,anbiaoCarExamineInfo.getJsyid());
-				riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDiscoveryDate,today);
-				riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,vehicle.getCheliangpaizhao());
 				AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
 				if (riskDetail!=null){
 					riskDetail.setArdIsRectification("1");

@@ -972,39 +972,42 @@
     </select>
 
     <select id="selectXingNengBaoGaoRisk"  resultType="org.springblade.anbiao.cheliangguanli.entity.VehicleXingnengbaogao" parameterType="java.lang.String">
+
         SELECT
-               a.id as vehicleId
-             , a.dept_id
-             , cheliangpaizhao
-             , d.jiashiyuanxingming
-             , d.id as jiashiyuanid
-             , (case when (ifnull(`avx_enclosure`,'') = '') then 1 else 0 end) as avx_enclosure
+        a.id as vehicleId
+        , a.dept_id
+        , cheliangpaizhao
+        , d.jiashiyuanxingming
+        , d.id as jiashiyuanid
+        , (case when (ifnull(`avx_inspection_date`,'') = '') then 1 else 0 end) as avx_inspection_date
+        , (case when (ifnull(`avx_last_date`,'') = '') then 1 else 0 end) as avx_last_date
         FROM
-            anbiao_vehicle a
-                INNER JOIN (
-                SELECT DISTINCT
-                    xiaji.id,
-                    xiaji.parent_id,
-                    xiaji.dept_name,
-                    xiaji.is_deleted
-                FROM
-                    blade_dept shangji,
-                    blade_dept xiaji
-                WHERE
-                    xiaji.tree_code LIKE CONCAT( shangji.tree_code, '%' )
-                  AND xiaji.is_deleted = 0
-                  AND xiaji.extend_type = '机构'
-                  AND shangji.id = 1
-            ) b ON a.dept_id = b.id
-                LEFT JOIN anbiao_vehicle_xingnengbaogao c ON a.id = c.avx_av_ids
-                LEFT JOIN anbiao_jiashiyuan d ON a.jiashiyuanid = d.id
+        anbiao_vehicle a
+        INNER JOIN (
+        SELECT DISTINCT
+        xiaji.id,
+        xiaji.parent_id,
+        xiaji.dept_name,
+        xiaji.is_deleted
+        FROM
+        blade_dept shangji,
+        blade_dept xiaji
         WHERE
-            a.is_deleted = 0
+        xiaji.tree_code LIKE CONCAT( shangji.tree_code, '%' )
+        AND xiaji.is_deleted = 0
+        AND xiaji.extend_type = '机构'
+        AND shangji.id = 1
+        ) b ON a.dept_id = b.id
+        LEFT JOIN anbiao_vehicle_xingnengbaogao c ON a.id = c.avx_av_ids
+        LEFT JOIN anbiao_jiashiyuan d ON a.jiashiyuanid = d.id
+        WHERE
+        a.is_deleted = 0
         <if test="vehicleId != null and vehicleId != '' ">
             and a.id = #{vehicleId}
         </if>
         ORDER BY
-            a.id
+        a.id
+
     </select>
 
     <select id="selectDengJiZhengShuRisk"  resultType="org.springblade.anbiao.cheliangguanli.entity.VehicleDengjizhengshu" parameterType="java.lang.String">

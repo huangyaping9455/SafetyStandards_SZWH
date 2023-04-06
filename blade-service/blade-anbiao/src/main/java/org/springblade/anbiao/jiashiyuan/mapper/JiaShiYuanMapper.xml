@@ -880,6 +880,7 @@ values
     </select>
 
     <sql id="tableTJMXSql">
+
         SELECT
         bb.dept_name deptName ,
         a.id as jiashiyuanId,
@@ -894,21 +895,25 @@ values
         aqzrs_compeleted as a8,
         whgzs_compeleted as a9,
         ldht_compeleted as a10,
+
+        h.cheliangpaizhao as cheliangpaizhao,
         case when IFNULL(h.xsz_compeleted,'') = '' then 0 else h.xsz_compeleted end as b1,
         case when IFNULL(h.ysz_compeleted,'') = '' then 0 else h.ysz_compeleted end as b2,
         case when IFNULL(h.xnbg_compeleted,'') = '' then 0 else h.xnbg_compeleted end as b3,
         case when IFNULL(h.djzs_compeleted,'') = '' then 0 else h.djzs_compeleted end as b4,
+        j.cheliangpaizhao as cheliangpaizhaoGUA,
         case when IFNULL(j.xsz_compeleted,'') = '' then 0 else j.xsz_compeleted end as b5,
         case when IFNULL(j.ysz_compeleted,'') = '' then 0 else j.ysz_compeleted end as b6,
         case when IFNULL(j.xnbg_compeleted,'') = '' then 0 else j.xnbg_compeleted end as b7,
         case when IFNULL(j.djzs_compeleted,'') = '' then 0 else j.djzs_compeleted end as b8,
+
         case when IFNULL(jsybx.ajb_insured_ids,'') = '' then 1 else 0 end as c1,
         case when IFNULL(k.avb_av_ids,'') = '' then 1 else 0 end as c2,
         case when IFNULL(i.avb_av_ids,'') = '' then 1 else 0 end as c3
         FROM
         anbiao_jiashiyuan a
-         inner join  (
-         <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        inner join  (
+        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) bb on a.dept_id = bb.id
         LEFT JOIN anbiao_jiashiyuan_ruzhi o ON a.id = o.ajr_aj_ids AND o.ajr_delete = 0
         LEFT JOIN anbiao_jiashiyuan_jiashizheng b ON a.id = b.ajj_aj_ids AND b.ajj_delete = 0
@@ -920,7 +925,7 @@ values
         LEFT JOIN anbiao_jiashiyuan_weihaigaozhishu h ON a.id = h.ajw_aj_ids AND h.ajw_delete = 0
         LEFT JOIN anbiao_jiashiyuan_laodonghetong i ON a.id = i.ajw_aj_ids AND i.ajw_delete = 0
         LEFT JOIN (
-        SELECT xsz_compeleted,ysz_compeleted,xnbg_compeleted,jiashiyuanid,djzs_compeleted FROM anbiao_vehicle j
+        SELECT xsz_compeleted,ysz_compeleted,xnbg_compeleted,jiashiyuanid,djzs_compeleted,cheliangpaizhao FROM anbiao_vehicle j
         LEFT JOIN anbiao_vehicle_xingshizheng k on j.id = k.avx_av_ids
         LEFT JOIN anbiao_vehicle_daoluyunshuzheng l on j.id = l.avd_av_ids
         LEFT JOIN anbiao_vehicle_xingnengbaogao m on j.id = m.avx_av_ids
@@ -933,7 +938,7 @@ values
         and n.avd_delete = 0
         ) j on a.id = j.jiashiyuanid
         LEFT JOIN (
-        SELECT xsz_compeleted,ysz_compeleted,xnbg_compeleted,jiashiyuanid,djzs_compeleted FROM anbiao_vehicle j
+        SELECT xsz_compeleted,ysz_compeleted,xnbg_compeleted,jiashiyuanid,djzs_compeleted,cheliangpaizhao FROM anbiao_vehicle j
         LEFT JOIN anbiao_vehicle_xingshizheng k on j.id = k.avx_av_ids
         LEFT JOIN anbiao_vehicle_daoluyunshuzheng l on j.id = l.avd_av_ids
         LEFT JOIN anbiao_vehicle_xingnengbaogao m on j.id = m.avx_av_ids
@@ -958,6 +963,7 @@ values
         )k on a.id=k.jiashiyuanid
         WHERE ifnull( a.isdelete, 0 ) = 0
         GROUP BY a.id
+
     </sql>
     <sql id="queryTJMXSql">
 
