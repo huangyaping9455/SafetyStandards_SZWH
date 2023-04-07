@@ -65,6 +65,7 @@ import org.springblade.system.feign.ISysClient;
 import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -3786,6 +3787,8 @@ public class JiaShiYuanController {
 	@ApiOperation(value = "驾驶员统计信息明细-导出", notes = "传入deptId，jiashiyuanId", position = 22)
 	public R goExport_HiddenDanger(HttpServletRequest request, HttpServletResponse response, String deptId ,String jiashiyuanId, BladeUser user) throws Exception {
 		R rs = new R();
+		String deptName="";
+		String uuid = UUID.randomUUID().toString().replace("-", "");
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 		List<String> urlList = new ArrayList<>();
 		DriverTJMingXiVO driverTJMingXiVO = new DriverTJMingXiVO();
@@ -5136,9 +5139,13 @@ public class JiaShiYuanController {
 					//			temDir = "D:/mimi/file/word/"; ;//生成临时文件存放地址
 					nyr=DateUtil.today().split("-");
 					//附件存放地址(服务器生成地址)
-					temDir = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2]+"\\"+t.getDeptName()+"\\"+"驾驶员"+"\\";
-					String temDir2 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2]+"\\"+t.getDeptName()+"\\"+"车头"+"\\";
-					String temDir3 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2]+"\\"+t.getDeptName()+"\\"+"挂车"+"\\";
+//					temDir = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2]+"\\"+t.getDeptName()+"\\"+"驾驶员"+"\\";
+//					String temDir2 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2]+"\\"+t.getDeptName()+"\\"+"车头"+"\\";
+//					String temDir3 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2]+"\\"+t.getDeptName()+"\\"+"挂车"+"\\";
+
+					temDir = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+uuid+"\\"+t.getDeptName()+"\\"+"驾驶员"+"\\";
+					String temDir2 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+uuid+"\\"+t.getDeptName()+"\\"+"车头"+"\\";
+					String temDir3 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+uuid+"\\"+t.getDeptName()+"\\"+"挂车"+"\\";
 
 					//生成文件名
 					// 生成的word格式
@@ -5184,14 +5191,19 @@ public class JiaShiYuanController {
 					CommonUtil.world2pdf(temDir3,pdfPath3);
 					System.out.println("已生成挂车pdf"+pdfPath3);
 
+					FileSystemUtils.deleteRecursively(new File(temDir));
+					FileSystemUtils.deleteRecursively(new File(temDir2));
+					FileSystemUtils.deleteRecursively(new File(temDir3));
+
+					deptName = t.getDeptName();
 				}
 			}
 		}
-		folder = fileServer.getPathPrefix()+FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+"人车台账.zip";
+		folder = fileServer.getPathPrefix()+FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+deptName+"人车台账.zip";
 		ExcelUtils.deleteFile(folder);
 //		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(folder));
 //		ApacheZipUtils.doCompress1(urlList, bizOut);
-		PackageToZIp.toZip(fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2], folder);
+		PackageToZIp.toZip(fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+uuid+"\\"+deptName, folder);
 		//不要忘记调用
 //		bizOut.close();
 

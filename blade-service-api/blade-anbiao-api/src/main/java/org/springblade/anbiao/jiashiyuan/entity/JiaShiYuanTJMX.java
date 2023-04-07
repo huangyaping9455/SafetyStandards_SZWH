@@ -88,4 +88,10 @@ public class JiaShiYuanTJMX implements Serializable {
 	@ApiModelProperty(value = "挂车牌照")
 	private String cheliangpaizhaoGUA;
 
+	@ApiModelProperty(value = "车辆ID")
+	private String vehicleId;
+
+	@ApiModelProperty(value = "车辆ID")
+	private String vehicleIdGUA;
+
 }

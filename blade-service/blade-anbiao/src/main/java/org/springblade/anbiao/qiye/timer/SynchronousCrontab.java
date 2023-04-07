@@ -2099,6 +2099,36 @@ public class SynchronousCrontab {
 					riskDetail1.setArdContent(anQuanJianChaRisk.getCheliangpaizhao());
 					riskDetailService.getBaseMapper().insert(riskDetail1);
 				}
+			}else{
+				if (StringUtils.isNotBlank(anQuanJianChaRisk.getCreatetime()) && !anQuanJianChaRisk.getCreatetime().equals("null")){
+					String createtime = anQuanJianChaRisk.getCreatetime().substring(0, 10);
+					if (!createtime.equals(today)){
+						riskDetail.setArdDeptIds(anQuanJianChaRisk.getDeptId());
+						riskDetail.setArdMajorCategories("2");
+						riskDetail.setArdSubCategory("201");
+						riskDetail.setArdTitle("未按时进行安全检查");
+						riskDetail.setArdType("未按时检查");
+						riskDetail.setArdDiscoveryDate(today);
+						riskDetail.setArdAssociationTable("anbiao_jiashiyuan");
+						riskDetail.setArdAssociationField("id");
+						riskDetail.setArdAssociationValue(anQuanJianChaRisk.getJiashiyuanid());
+						riskDetail.setArdIsRectification("0");
+						riskDetail.setArdContent(anQuanJianChaRisk.getCheliangpaizhao());
+						riskDetailService.getBaseMapper().updateById(riskDetail);}
+				}else if (StringUtils.isBlank(anQuanJianChaRisk.getCreatetime()) || anQuanJianChaRisk.getCreatetime().equals("null")){
+					riskDetail.setArdDeptIds(anQuanJianChaRisk.getDeptId());
+					riskDetail.setArdMajorCategories("2");
+					riskDetail.setArdSubCategory("201");
+					riskDetail.setArdTitle("未按时进行安全检查");
+					riskDetail.setArdType("未按时检查");
+					riskDetail.setArdDiscoveryDate(today);
+					riskDetail.setArdAssociationTable("anbiao_jiashiyuan");
+					riskDetail.setArdAssociationField("id");
+					riskDetail.setArdAssociationValue(anQuanJianChaRisk.getJiashiyuanid());
+					riskDetail.setArdIsRectification("0");
+					riskDetail.setArdContent(anQuanJianChaRisk.getCheliangpaizhao());
+					riskDetailService.getBaseMapper().updateById(riskDetail);
+				}
 			}
 		}
 	}
