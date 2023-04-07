@@ -29,6 +29,7 @@ import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
 import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.jiashiyuan.service.*;
 import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
+import org.springblade.common.configurationBean.AlarmServer;
 import org.springblade.common.configurationBean.FileServer;
 import org.springblade.common.constant.FilePathConstant;
 import org.springblade.common.tool.*;
@@ -2968,5 +2969,14 @@ public class VehicleController {
 		}
 		return R.data(detail);
 	}
+
+	private AlarmServer alarmServer;
+	public void ss() {
+		if(!alarmServer.getAddressPath().equals("swh")){
+
+		}
+	}
+
+
 
 }
