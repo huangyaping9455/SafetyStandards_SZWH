@@ -35,6 +35,7 @@ import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.jiashiyuan.service.*;
 import org.springblade.anbiao.jiashiyuan.vo.DriverTJMingXiVO;
 import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
+import org.springblade.common.configurationBean.AlarmServer;
 import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
 import org.springblade.anbiao.weixiu.page.MaintenancePage;
 import org.springblade.anbiao.weixiucheliang.service.MaintenanceService;
@@ -115,7 +116,6 @@ public class VehicleController {
 	private IAnbiaoJiashiyuanQitaService qitaService;
 	@Autowired
 	private AnbiaoRiskDetailController riskDetailController;
-	private MaintenanceService maintenanceService;
 
 
 	@PostMapping("/list")
@@ -600,7 +600,6 @@ public class VehicleController {
 			vehicle.setDaoluyunshuzhengyouxiaoqi(v.getJyxkzyouxiaoqiEnd().toString());
 		}
 		vehicle.setCheliangpinpai(v.getCheliangpinpai());
-		vehicle.setFadongjipailianggonglv(v.getPailianggonglv());
 
 //		String str="1";
 //		//登录页
@@ -2981,6 +2980,15 @@ public class VehicleController {
 		}
 		return R.data(detail);
 	}
+
+	private AlarmServer alarmServer;
+	public void ss() {
+		if(!alarmServer.getAddressPath().equals("swh")){
+
+		}
+	}
+
+
 
 	@GetMapping("/goExport_getTechnicalArchives")
 	@ApiLog("车辆技术档案-导出")
