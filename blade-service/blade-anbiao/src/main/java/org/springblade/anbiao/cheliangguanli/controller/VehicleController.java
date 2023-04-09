@@ -3336,6 +3336,7 @@ public class VehicleController {
 						data.put("Shiguzeren",aa.getShiguzeren());
 						data.put("Shigufenlei","种类："+aa.getShigufenlei()+",情况："+aa.getShigugaikuang());
 						data.put("Caichansunshi",aa.getCaichansunshi());
+						data.put("Jiashiyuan",aa.getJiashiyuan());
 						ListData3.add(data);
 
 					}
