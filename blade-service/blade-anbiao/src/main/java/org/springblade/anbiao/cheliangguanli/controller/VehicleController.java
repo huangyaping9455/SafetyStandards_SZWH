@@ -35,10 +35,10 @@ import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.jiashiyuan.service.*;
 import org.springblade.anbiao.jiashiyuan.vo.DriverTJMingXiVO;
 import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
-import org.springblade.common.configurationBean.AlarmServer;
 import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
 import org.springblade.anbiao.weixiu.page.MaintenancePage;
 import org.springblade.anbiao.weixiucheliang.service.MaintenanceService;
+import org.springblade.common.configurationBean.AlarmServer;
 import org.springblade.common.configurationBean.FileServer;
 import org.springblade.common.constant.FilePathConstant;
 import org.springblade.common.tool.*;
@@ -116,6 +116,7 @@ public class VehicleController {
 	private IAnbiaoJiashiyuanQitaService qitaService;
 	@Autowired
 	private AnbiaoRiskDetailController riskDetailController;
+	private MaintenanceService maintenanceService;
 
 
 	@PostMapping("/list")
@@ -600,6 +601,7 @@ public class VehicleController {
 			vehicle.setDaoluyunshuzhengyouxiaoqi(v.getJyxkzyouxiaoqiEnd().toString());
 		}
 		vehicle.setCheliangpinpai(v.getCheliangpinpai());
+		vehicle.setFadongjipailianggonglv(v.getPailianggonglv());
 
 //		String str="1";
 //		//登录页
@@ -2988,8 +2990,6 @@ public class VehicleController {
 		}
 	}
 
-
-
 	@GetMapping("/goExport_getTechnicalArchives")
 	@ApiLog("车辆技术档案-导出")
 	@ApiOperation(value = "车辆技术档案-导出", notes = "传入VehicleId", position = 22)
@@ -3336,7 +3336,6 @@ public class VehicleController {
 						data.put("Shiguzeren",aa.getShiguzeren());
 						data.put("Shigufenlei","种类："+aa.getShigufenlei()+",情况："+aa.getShigugaikuang());
 						data.put("Caichansunshi",aa.getCaichansunshi());
-						data.put("Jiashiyuan",aa.getJiashiyuan());
 						ListData3.add(data);
 
 					}
