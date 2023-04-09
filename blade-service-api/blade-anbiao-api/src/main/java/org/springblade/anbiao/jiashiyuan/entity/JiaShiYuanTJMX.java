@@ -33,6 +33,8 @@ public class JiaShiYuanTJMX implements Serializable {
 
     @ApiModelProperty(value = "序号")
     private Integer xuhao = 0;
+	@ApiModelProperty(value = "企业id")
+	private String deptId;
     @ApiModelProperty(value = "企业名称")
     private String deptName;
 	@ApiModelProperty(value = "驾驶员Id")

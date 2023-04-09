@@ -465,4 +465,48 @@
         where 1 = 1
         <include refid="queryTZTJSql" />
     </select>
+
+    <select id="selectNotAssemblyMaintenance" resultType="org.springblade.anbiao.weixiu.entity.MaintenanceEntity" parameterType="org.springblade.anbiao.weixiu.entity.MaintenanceEntity">
+        SELECT
+            b.jiashiyuanxingming,
+            a.*
+        FROM
+            `anbiao_cheliang_baoyangweixiu` a
+            LEFT JOIN anbiao_jiashiyuan b ON a.driver_Id = b.id AND b.isdelete = 0
+        WHERE
+            a.is_Deleted=0
+            and (maintain_Dict_Id=0 or maintain_Dict_Id=1)
+        <if test="vehicleId != null and vehicleId != ''">
+            and vehicle_Id = #{vehicleId}
+        </if>
+    </select>
+
+    <select id="selectAssemblyMaintenance" resultType="org.springblade.anbiao.weixiu.entity.MaintenanceEntity" parameterType="org.springblade.anbiao.weixiu.entity.MaintenanceEntity">
+        SELECT
+        b.jiashiyuanxingming,
+        a.*
+        FROM
+        `anbiao_cheliang_baoyangweixiu` a
+        LEFT JOIN anbiao_jiashiyuan b ON a.driver_Id = b.id AND b.isdelete = 0
+        WHERE
+        a.is_Deleted=0
+        and maintain_Dict_Id=2
+        <if test="vehicleId != null and vehicleId != ''">
+            and vehicle_Id = #{vehicleId}
+        </if>
+    </select>
+
+    <select id="selectShiGu" resultType="org.springblade.anbiao.AccidentReports.entity.AccidentReportsEntity" parameterType="org.springblade.anbiao.AccidentReports.entity.AccidentReportsEntity">
+        SELECT
+        *
+        FROM
+        anbiao_shigubaogao
+        WHERE
+        is_deleted =0
+
+        <if test="chepaihao != null and chepaihao != ''">
+            and chepaihao=#{chepaihao}
+        </if>
+    </select>
+
 </mapper>

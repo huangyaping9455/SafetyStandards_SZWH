@@ -61,4 +61,6 @@ public class MaintenanceEntity {
 	private List<FittingsEntity> fittingDTOS;
 	@TableField(exist = false)
 	private List<FittingEntity> fittingEntities;
+	@TableField(exist = false)
+	private String jiashiyuanxingming;
 }

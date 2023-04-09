@@ -2,6 +2,7 @@ package org.springblade.anbiao.weixiucheliang.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import feign.Param;
+import org.springblade.anbiao.AccidentReports.entity.AccidentReportsEntity;
 import org.springblade.anbiao.weixiu.VO.MaintenanceEntityV;
 import org.springblade.anbiao.weixiu.VO.MaintenanceTZVO;
 import org.springblade.anbiao.weixiu.entity.FittingsEntity;
@@ -71,5 +72,11 @@ public interface MaintenanceService  extends IService<MaintenanceEntity> {
 	 * @return
 	 */
 	MaintenanceTZPage<MaintenanceTZVO> selectTZTJList(MaintenanceTZPage maintenanceTZPage);
+
+	List<MaintenanceEntity> selectNotAssemblyMaintenance(MaintenanceEntity maintenanceEntity);
+
+	List<MaintenanceEntity> selectAssemblyMaintenance(MaintenanceEntity maintenanceEntity);
+
+	List<AccidentReportsEntity> selectShiGu(AccidentReportsEntity accidentReportsEntity);
 
 }

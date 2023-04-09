@@ -6,6 +6,7 @@ import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.mapper.VehicleMapper;
 import org.springblade.anbiao.cheliangguanli.page.VehiclePage;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
+import org.springblade.anbiao.cheliangguanli.vo.JiShuDangAnVO;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleListVO;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
 import org.springblade.common.tool.StringUtils;
@@ -349,6 +350,11 @@ public class VehicleServiceImpl extends ServiceImpl<VehicleMapper, Vehicle> impl
 	@Override
 	public List<VehicleVO> selectDriverVehicle(String jsyId) {
 		return vehicleMapper.selectDriverVehicle(jsyId);
+	}
+
+	@Override
+	public List<JiShuDangAnVO> selectJiShuDangAn(JiShuDangAnVO jiShuDangAnVO) {
+		return vehicleMapper.selectJiShuDangAn(jiShuDangAnVO);
 	}
 
 

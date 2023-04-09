@@ -3,6 +3,7 @@ package org.springblade.anbiao.weixiucheliang.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import feign.Param;
 import org.mapstruct.Mapper;
+import org.springblade.anbiao.AccidentReports.entity.AccidentReportsEntity;
 import org.springblade.anbiao.weixiu.VO.MaintenanceEntityV;
 import org.springblade.anbiao.weixiu.VO.MaintenanceTZVO;
 import org.springblade.anbiao.weixiu.entity.FittingEntity;
@@ -75,5 +76,11 @@ public interface MaintenanceMapper extends BaseMapper<MaintenanceEntity> {
 	 */
 	List<MaintenanceTZVO> selectTZTJList(MaintenanceTZPage maintenanceTZPage);
 	int selectTZTJTotal(MaintenanceTZPage maintenanceTZPage);
+
+	List<MaintenanceEntity> selectNotAssemblyMaintenance(MaintenanceEntity maintenanceEntity);
+
+	List<MaintenanceEntity> selectAssemblyMaintenance(MaintenanceEntity maintenanceEntity);
+
+	List<AccidentReportsEntity> selectShiGu(AccidentReportsEntity accidentReportsEntity);
 
 }

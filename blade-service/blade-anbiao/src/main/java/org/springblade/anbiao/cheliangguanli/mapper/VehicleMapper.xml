@@ -1653,4 +1653,61 @@
           and d.is_deleted = 0
     </select>
 
+    <select id="selectJiShuDangAn" resultType="org.springblade.anbiao.cheliangguanli.vo.JiShuDangAnVO" parameterType="org.springblade.anbiao.cheliangguanli.vo.JiShuDangAnVO" >
+        SELECT
+        id,
+        cheliangpaizhao ,
+        xinghao ,
+        chejiahao ,
+        createtime ,
+        chepaiyanse ,
+        b.avx_register_date AS avxRegisterDate,
+        cheliangzhaopian ,
+        chezhu ,
+        daoluyunshuzheng ,
+        jingjileixing ,
+        jingyingzuzhifangshi ,
+        cheliangyunyingleixing ,
+        c.avd_road_transport_certificate_no as avdRoadTransportCertificateNo,
+        teamno ,
+        chelianghuoqufangshi ,
+        weihuzhouqi,
+        cheliangpinpai,
+        cheshenyanse,
+        shifoujinkou,
+        fadongjihao,
+        fadongjixinghao,
+        ranliaoleibie,
+        fadongjipailianggonglv,
+        zhizhaochangshang,
+        zhuanxiangfangshi,
+        lunju,
+        luntaishu,
+        luntaiguige,
+        gangbantanhuangpianshu,
+        zhouju,
+        chezhoushu,
+        cheliangwaikuochicun,
+        huoxiangneibuchicun,
+        zongzhiliang,
+        hedingzaizhiliang,
+        hedingzaike,
+        zhunqianyinzongzhiliang,
+        jiashishizaike,
+        shiyongxingzhi,
+        chelianghuoqufangshi,
+        chuchangriqi
+
+
+        FROM
+        anbiao_vehicle a
+        LEFT JOIN anbiao_vehicle_xingshizheng b ON a.id = b.avx_av_ids AND b.avx_delete =0
+        LEFT JOIN anbiao_vehicle_daoluyunshuzheng c on a.id = c.avd_av_ids AND c.avd_delete =0
+        WHERE
+        is_deleted = 0
+        <if test=" id !=null and id != '' ">
+            and id= #{id}
+        </if>
+    </select>
+
 </mapper>

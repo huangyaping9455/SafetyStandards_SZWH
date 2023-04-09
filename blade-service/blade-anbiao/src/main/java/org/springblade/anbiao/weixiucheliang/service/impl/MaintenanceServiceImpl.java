@@ -3,6 +3,7 @@ package org.springblade.anbiao.weixiucheliang.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
+import org.springblade.anbiao.AccidentReports.entity.AccidentReportsEntity;
 import org.springblade.anbiao.weixiu.VO.MaintenanceEntityV;
 import org.springblade.anbiao.weixiu.VO.MaintenanceTZVO;
 import org.springblade.anbiao.weixiu.VO.MaintenanceVO;
@@ -132,6 +133,21 @@ public class MaintenanceServiceImpl extends ServiceImpl<MaintenanceMapper,Mainte
 			maintenanceTZPage.setRecords(maintenanceVOS);
 			return maintenanceTZPage;
 		}
+	}
+
+	@Override
+	public List<MaintenanceEntity> selectNotAssemblyMaintenance(MaintenanceEntity maintenanceEntity) {
+		return partsMapper.selectNotAssemblyMaintenance(maintenanceEntity);
+	}
+
+	@Override
+	public List<MaintenanceEntity> selectAssemblyMaintenance(MaintenanceEntity maintenanceEntity) {
+		return partsMapper.selectAssemblyMaintenance(maintenanceEntity);
+	}
+
+	@Override
+	public List<AccidentReportsEntity> selectShiGu(AccidentReportsEntity accidentReportsEntity) {
+		return partsMapper.selectShiGu(accidentReportsEntity);
 	}
 
 }

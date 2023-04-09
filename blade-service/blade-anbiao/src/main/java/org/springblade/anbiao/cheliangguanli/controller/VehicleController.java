@@ -2,6 +2,7 @@ package org.springblade.anbiao.cheliangguanli.controller;
 
 import cn.afterturn.easypoi.word.entity.WordImageEntity;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
@@ -16,9 +17,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tools.zip.ZipOutputStream;
+import org.springblade.anbiao.AccidentReports.entity.AccidentReportsEntity;
+import org.springblade.anbiao.AccidentReports.service.AccidentReportsService;
+import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiDetail;
 import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.page.VehiclePage;
 import org.springblade.anbiao.cheliangguanli.service.*;
+import org.springblade.anbiao.cheliangguanli.vo.JiShuDangAnVO;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleListVO;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
 import org.springblade.anbiao.configure.entity.Configure;
@@ -28,7 +33,11 @@ import org.springblade.anbiao.guanlijigouherenyuan.feign.IOrganizationsClient;
 import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
 import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.jiashiyuan.service.*;
+import org.springblade.anbiao.jiashiyuan.vo.DriverTJMingXiVO;
 import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
+import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
+import org.springblade.anbiao.weixiu.page.MaintenancePage;
+import org.springblade.anbiao.weixiucheliang.service.MaintenanceService;
 import org.springblade.common.configurationBean.FileServer;
 import org.springblade.common.constant.FilePathConstant;
 import org.springblade.common.tool.*;
@@ -44,6 +53,7 @@ import org.springblade.system.feign.ISysClient;
 import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,6 +63,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -104,6 +115,7 @@ public class VehicleController {
 	private IAnbiaoJiashiyuanQitaService qitaService;
 	@Autowired
 	private AnbiaoRiskDetailController riskDetailController;
+	private MaintenanceService maintenanceService;
 
 
 	@PostMapping("/list")
@@ -588,6 +600,7 @@ public class VehicleController {
 			vehicle.setDaoluyunshuzhengyouxiaoqi(v.getJyxkzyouxiaoqiEnd().toString());
 		}
 		vehicle.setCheliangpinpai(v.getCheliangpinpai());
+		vehicle.setFadongjipailianggonglv(v.getPailianggonglv());
 
 //		String str="1";
 //		//登录页
@@ -2968,5 +2981,435 @@ public class VehicleController {
 		}
 		return R.data(detail);
 	}
+
+	@GetMapping("/goExport_getTechnicalArchives")
+	@ApiLog("车辆技术档案-导出")
+	@ApiOperation(value = "车辆技术档案-导出", notes = "传入VehicleId", position = 22)
+	public R goExport_HiddenDanger(HttpServletRequest request, HttpServletResponse response, String VehicleId, BladeUser user) throws Exception {
+		R rs = new R();
+		String deptName="";
+		String uuid = UUID.randomUUID().toString().replace("-", "");
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+		List<String> urlList = new ArrayList<>();
+		JiShuDangAnVO jiShuDangAnVO = new JiShuDangAnVO();
+		jiShuDangAnVO.setId(VehicleId);
+		// TODO 渲染其他类型的数据请参考官方文档
+		DecimalFormat df = new DecimalFormat("######0.00");
+		Calendar now = Calendar.getInstance();
+		//word模板地址
+		String templatePath =fileServer.getPathPrefix()+"muban\\"+"JiShuDangAn.docx";
+		String folder = "";
+		String [] nyr=DateUtil.today().split("-");
+		String[] idsss = jiShuDangAnVO.getId().split(",");
+		//去除素组中重复的数组
+		List<String> listid = new ArrayList<String>();
+		for (int i=0; i<idsss.length; i++) {
+			if(!listid.contains(idsss[i])) {
+				listid.add(idsss[i]);
+			}
+		}
+		//返回一个包含所有对象的指定类型的数组
+		String[] idss= listid.toArray(new String[1]);
+		for(int j = 0;j< idss.length;j++){
+			jiShuDangAnVO.setId(idss[j]);
+			List<JiShuDangAnVO> jiShuDangAnVOS = vehicleService.selectJiShuDangAn(jiShuDangAnVO);
+
+			if(jiShuDangAnVOS.size()==0){
+
+			}else if(jiShuDangAnVOS.size()>3000){
+				rs.setMsg("数据超过30000条无法下载");
+				rs.setCode(500);
+				return rs;
+			}else{
+				for( int i = 0 ; i < jiShuDangAnVOS.size() ; i++) {
+					Map<String, Object> map = new HashMap<>();
+					List<Map<String, Object>> ListData = new ArrayList<>();
+					List<Map<String, Object>> ListData2 = new ArrayList<>();
+					List<Map<String, Object>> ListData3 = new ArrayList<>();
+					String temDir = "";
+					String fileName = "";
+					String url = "";
+					// 渲染文本
+					JiShuDangAnVO t = jiShuDangAnVOS.get(i);
+					JiShuDangAnVO jiShuDangAnVO1 = new JiShuDangAnVO();
+					if (StringUtils.isNotBlank(t.getCheliangpaizhao()) && !t.getCheliangpaizhao().equals("null")){
+						map.put("a1", t.getCheliangpaizhao());
+					}else {
+						map.put("a1", "-");
+					}
+
+					if (StringUtils.isNotBlank(t.getXinghao()) && !t.getXinghao().equals("null")){
+						map.put("a2", t.getXinghao());
+					}else {
+						map.put("a2", "-");
+					}
+					if (StringUtils.isNotBlank(t.getChejiahao()) && !t.getChejiahao().equals("null")){
+						map.put("a3", t.getChejiahao());
+					}else {
+						map.put("a3", "-");
+					}
+					if (StringUtils.isNotBlank(t.getCreatetime()) && !t.getCreatetime().equals("null")){
+						map.put("a4", t.getCreatetime());
+					}else {
+						map.put("a4", "-");
+					}
+					if (StringUtils.isNotBlank(t.getChepaiyanse()) && !t.getChepaiyanse().equals("null")){
+						map.put("b2", t.getChepaiyanse());
+					}else {
+						map.put("b2", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAvxRegisterDate()) && !t.getAvxRegisterDate().equals("null")){
+						map.put("b3", t.getAvxRegisterDate());
+					}else {
+						map.put("b3", "-");
+					}
+					if (StringUtils.isNotBlank(t.getChezhu()) && !t.getChezhu().equals("null")){
+						map.put("b5", t.getChezhu());
+					}else {
+						map.put("b5", "-");
+					}
+					if (StringUtils.isNotBlank(t.getDaoluyunshuzheng()) && !t.getDaoluyunshuzheng().equals("null")){
+						map.put("b6", t.getDaoluyunshuzheng());
+					}else {
+						map.put("b6", "-");
+					}
+					if (StringUtils.isNotBlank(t.getJingjileixing()) && !t.getJingjileixing().equals("null")){
+						map.put("b7", t.getJingjileixing());
+					}else {
+						map.put("b7", "-");
+					}
+					if (StringUtils.isNotBlank(t.getJingyingzuzhifangshi()) && !t.getJingyingzuzhifangshi().equals("null")){
+						map.put("b8", t.getJingyingzuzhifangshi());
+					}else {
+						map.put("b8", "-");
+					}
+					if (StringUtils.isNotBlank(t.getCheliangyunyingleixing()) && !t.getCheliangyunyingleixing().equals("null")){
+						map.put("b9", t.getCheliangyunyingleixing());
+					}else {
+						map.put("b9", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAvdRoadTransportCertificateNo()) && !t.getAvdRoadTransportCertificateNo().equals("null")){
+						map.put("b10", t.getAvdRoadTransportCertificateNo());
+					}else {
+						map.put("b10", "-");
+					}
+					if (StringUtils.isNotBlank(t.getTeamno()) && !t.getTeamno().equals("null")){
+						map.put("b11", t.getTeamno());
+					}else {
+						map.put("b11", "-");
+					}
+					if (StringUtils.isNotBlank(t.getChelianghuoqufangshi()) && !t.getChelianghuoqufangshi().equals("null")){
+						map.put("b12", t.getChelianghuoqufangshi());
+					}else {
+						map.put("b12", "-");
+					}
+					if (StringUtils.isNotBlank(t.getWeihuzhouqi()) && !t.getWeihuzhouqi().equals("null")){
+						map.put("b13", t.getWeihuzhouqi());
+					}else {
+						map.put("b13", "-");
+					}
+					if (StringUtils.isNotBlank(t.getCheliangpinpai()) && !t.getCheliangpinpai().equals("null")){
+						map.put("c4", t.getCheliangpinpai());
+					}else {
+						map.put("c4", "-");
+					}
+					if (StringUtils.isNotBlank(t.getCheshenyanse()) && !t.getCheshenyanse().equals("null")){
+						map.put("c5", t.getCheshenyanse());
+					}else {
+						map.put("c5", "-");
+					}
+					if (StringUtils.isNotBlank(t.getShifoujinkou()) && !t.getShifoujinkou().equals("null")){
+						map.put("c7", t.getShifoujinkou());
+					}else {
+						map.put("c7", "-");
+					}
+					if (StringUtils.isNotBlank(t.getFadongjihao()) && !t.getFadongjihao().equals("null")){
+						map.put("c8", t.getFadongjihao());
+					}else {
+						map.put("c8", "-");
+					}
+					if (StringUtils.isNotBlank(t.getFadongjixinghao()) && !t.getFadongjixinghao().equals("null")){
+						map.put("c9", t.getFadongjixinghao());
+					}else {
+						map.put("c9", "-");
+					}
+					if (StringUtils.isNotBlank(t.getRanliaoleibie()) && !t.getRanliaoleibie().equals("null")){
+						map.put("c10", t.getRanliaoleibie());
+					}else {
+						map.put("c10", "-");
+					}
+					if (StringUtils.isNotBlank(t.getFadongjipailianggonglv()) && !t.getFadongjipailianggonglv().equals("null")){
+						map.put("c11", t.getFadongjipailianggonglv());
+					}else {
+						map.put("c11", "-");
+					}
+					if (StringUtils.isNotBlank(t.getZhizhaochangshang()) && !t.getZhizhaochangshang().equals("null")){
+						map.put("c12", t.getZhizhaochangshang());
+					}else {
+						map.put("c12", "-");
+					}
+					if (StringUtils.isNotBlank(t.getZhuanxiangfangshi()) && !t.getZhuanxiangfangshi().equals("null")){
+						map.put("c13", t.getZhuanxiangfangshi());
+					}else {
+						map.put("c13", "-");
+					}
+					if (StringUtils.isNotBlank(t.getLunju()) && !t.getLunju().equals("null")){
+						map.put("c14", t.getLunju());
+					}else {
+						map.put("c14", "-");
+					}
+					if (StringUtils.isNotBlank(t.getLuntaishu()) && !t.getLuntaishu().equals("null")){
+						map.put("c15", t.getLuntaishu());
+					}else {
+						map.put("c15", "-");
+					}
+					if (StringUtils.isNotBlank(t.getLuntaiguige()) && !t.getLuntaiguige().equals("null")){
+						map.put("c16", t.getLuntaiguige());
+					}else {
+						map.put("c16", "-");
+					}
+					if (StringUtils.isNotBlank(t.getGangbantanhuangpianshu()) && !t.getGangbantanhuangpianshu().equals("null")){
+						map.put("c17", t.getGangbantanhuangpianshu());
+					}else {
+						map.put("c17", "-");
+					}
+					if (StringUtils.isNotBlank(t.getZhouju()) && !t.getZhouju().equals("null")){
+						map.put("c18", t.getZhouju());
+					}else {
+						map.put("c18", "-");
+					}
+					if (StringUtils.isNotBlank(t.getChezhoushu()) && !t.getChezhoushu().equals("null")){
+						map.put("c19", t.getChezhoushu());
+					}else {
+						map.put("c19", "-");
+					}
+					if (StringUtils.isNotBlank(t.getCheliangwaikuochicun()) && !t.getCheliangwaikuochicun().equals("null")){
+						map.put("c20", t.getCheliangwaikuochicun());
+					}else {
+						map.put("c20", "-");
+					}
+					if (StringUtils.isNotBlank(t.getHuoxiangneibuchicun()) && !t.getHuoxiangneibuchicun().equals("null")){
+						map.put("c21", t.getHuoxiangneibuchicun());
+					}else {
+						map.put("c21", "-");
+					}
+					if (StringUtils.isNotBlank(t.getZongzhiliang()) && !t.getZongzhiliang().equals("null")){
+						map.put("c22", t.getZongzhiliang());
+					}else {
+						map.put("c22", "-");
+					}
+					if (StringUtils.isNotBlank(t.getHedingzaizhiliang()) && !t.getHedingzaizhiliang().equals("null")){
+						map.put("c23", t.getHedingzaizhiliang());
+					}else {
+						map.put("c23", "-");
+					}
+					if (StringUtils.isNotBlank(t.getHedingzaike()) && !t.getHedingzaike().equals("null")){
+						map.put("c24", t.getHedingzaike());
+					}else {
+						map.put("c24", "-");
+					}
+					if (StringUtils.isNotBlank(t.getZhunqianyinzongzhiliang()) && !t.getZhunqianyinzongzhiliang().equals("null")){
+						map.put("c25", t.getZhunqianyinzongzhiliang());
+					}else {
+						map.put("c25", "-");
+					}
+					if (StringUtils.isNotBlank(t.getJiashishizaike()) && !t.getJiashishizaike().equals("null")){
+						map.put("c26", t.getJiashishizaike());
+					}else {
+						map.put("c26", "-");
+					}
+					if (StringUtils.isNotBlank(t.getShiyongxingzhi()) && !t.getShiyongxingzhi().equals("null")){
+						map.put("c27", t.getShiyongxingzhi());
+					}else {
+						map.put("c27", "-");
+					}
+					if (StringUtils.isNotBlank(t.getChuchangriqi()) && !t.getChuchangriqi().equals("null")){
+						map.put("c29", t.getChuchangriqi());
+					}else {
+						map.put("c29", "-");
+					}
+
+					String url1;
+
+					// 本人照片
+					WordImageEntity image = new WordImageEntity();
+					image.setHeight(220);
+					image.setWidth(180);
+//					String jsonObject = t.getAjrHeadPortrait();
+					if (StringUtils.isNotBlank(t.getCheliangzhaopian()) && !t.getCheliangzhaopian().equals("null")){
+						if (StrUtil.isNotEmpty(t.getCheliangzhaopian()) && t.getCheliangzhaopian().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getCheliangzhaopian());
+							t.setCheliangzhaopian(url1);
+							//添加图片到工作表的指定位置
+
+//							String s = new URL(t.getAjcLicence()).toString();
+							String url2 = new URL(t.getCheliangzhaopian()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("a3", image);
+						}else if (StrUtil.isNotEmpty(t.getCheliangzhaopian())){
+							String url2 = t.getCheliangzhaopian();
+
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index+2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+//						String subString = url2.substring(url2.indexOf("/", 3) + 1);  // 从第二个正斜杠位置往后截取整个路径
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix()+result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("b4", image);
+						}
+					}else{
+						map.put("b4", "-");
+					}
+
+					MaintenanceEntity maintenanceEntity = new MaintenanceEntity();
+					maintenanceEntity.setVehicleId(t.getId());
+					List<MaintenanceEntity> maintenanceEntities = maintenanceService.selectNotAssemblyMaintenance(maintenanceEntity);
+					for (MaintenanceEntity aa:maintenanceEntities) {
+						HashMap<String, Object> data = new HashMap<>();
+						data.put("SendDate",aa.getSendDate().substring(0,10));
+						if (aa.getMaintainDictId()==0){
+							data.put("MaintainDictId","一级维护");
+						}else {
+							data.put("MaintainDictId","二级维护");
+						}
+
+						data.put("acbMaintenanceContent",aa.getAcbMaintenanceContent());
+						data.put("MaintenanceDeptName",aa.getMaintenanceDeptName());
+						data.put("Jiashiyuanxingming",aa.getJiashiyuanxingming());
+						ListData.add(data);
+
+					}
+					map.put("ListData",ListData);
+
+
+					MaintenanceEntity maintenanceEntity2 = new MaintenanceEntity();
+					maintenanceEntity2.setVehicleId(t.getId());
+					List<MaintenanceEntity> maintenanceEntities2 = maintenanceService.selectAssemblyMaintenance(maintenanceEntity);
+					for (MaintenanceEntity aa:maintenanceEntities2) {
+						HashMap<String, Object> data = new HashMap<>();
+						data.put("SendDate2",aa.getSendDate().substring(0,10));
+						data.put("acbMaintenanceContent2",aa.getAcbMaintenanceContent());
+						data.put("MaintenanceDeptName2",aa.getMaintenanceDeptName());
+						data.put("Jiashiyuanxingming2",aa.getJiashiyuanxingming());
+						ListData2.add(data);
+
+					}
+					map.put("ListData2",ListData2);
+
+					AccidentReportsEntity accidentReportsEntity = new AccidentReportsEntity();
+					accidentReportsEntity.setChepaihao(t.getCheliangpaizhao());
+					List<AccidentReportsEntity> accidentReportsEntities = maintenanceService.selectShiGu(accidentReportsEntity);
+					for (AccidentReportsEntity aa:accidentReportsEntities) {
+						HashMap<String, Object> data = new HashMap<>();
+						String format = sf.format(aa.getShigufashengshijian());
+						data.put("Shigufashengshijian",format);
+						data.put("Shigufashengdidian",aa.getShigufashengdidian());
+						data.put("Shiguxingzhi",aa.getShiguxingzhi());
+						data.put("Shiguzeren",aa.getShiguzeren());
+						data.put("Shigufenlei","种类："+aa.getShigufenlei()+",情况："+aa.getShigugaikuang());
+						data.put("Caichansunshi",aa.getCaichansunshi());
+						data.put("Jiashiyuan",aa.getJiashiyuan());
+						ListData3.add(data);
+
+					}
+					map.put("ListData3",ListData3);
+
+					// TODO 渲染其他类型的数据请参考官方文档
+					//=================生成文件保存在本地D盘某目录下=================
+					//			temDir = "D:/mimi/file/word/"; ;//生成临时文件存放地址
+					nyr=DateUtil.today().split("-");
+					//附件存放地址(服务器生成地址)
+
+					temDir = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+uuid+"\\"+t.getCheliangpaizhao()+"\\";
+//					String temDir2 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+uuid+"\\"+t.getDeptName()+"\\"+"车头"+"\\";
+//					String temDir3 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+uuid+"\\"+t.getDeptName()+"\\"+"挂车"+"\\";
+
+					//生成文件名
+					// 生成的word格式
+					String formatSuffix = ".docx";
+					String wjName = t.getCheliangpaizhao();
+//					String wjName2 = t.getCheliangpaizhao();
+//					String wjName3 = t.getCheliangpaizhaoGUA();
+					// 拼接后的文件名
+					fileName = wjName + formatSuffix;//文件名  带后缀
+//					String fileName2 = wjName2 + formatSuffix;
+//					String fileName3 = wjName3 + formatSuffix;
+					//导出word
+					WordUtil2.exportDataWord3(templatePath, temDir, fileName, map, request, response);
+//					WordUtil2.exportDataWord3(templatePath2, temDir2, fileName2, map, request, response);
+//					WordUtil2.exportDataWord3(templatePath2, temDir3, fileName3, map2, request, response);
+					urlList.add(temDir);
+
+
+					//替换路径前缀,获得pdf文件路径
+					String pdfPath = temDir+"\\"+wjName+".pdf";
+					//生成文件父级目录
+					FileUtil.mkParentDirs(pdfPath);
+					//生成pdf到pdf文件路径
+					temDir=temDir+"\\"+wjName+formatSuffix;
+					CommonUtil.world2pdf(temDir,pdfPath);
+					System.out.println("已生成技术档案pdf"+pdfPath);
+
+//					//替换路径前缀,获得pdf文件路径
+//					String pdfPath2 = temDir2+"\\"+wjName2+".pdf";
+//					//生成文件父级目录
+//					FileUtil.mkParentDirs(pdfPath2);
+//					//生成pdf到pdf文件路径
+//					temDir2=temDir2+"\\"+wjName2+formatSuffix;
+//					CommonUtil.world2pdf(temDir2,pdfPath2);
+//					System.out.println("已生成车头pdf"+pdfPath2);
+//
+//					//替换路径前缀,获得pdf文件路径
+//					String pdfPath3 = temDir3+"\\"+wjName3+".pdf";
+//					//生成文件父级目录
+//					FileUtil.mkParentDirs(pdfPath3);
+//					//生成pdf到pdf文件路径
+//					temDir3=temDir3+"\\"+wjName3+formatSuffix;
+//					CommonUtil.world2pdf(temDir3,pdfPath3);
+//					System.out.println("已生成挂车pdf"+pdfPath3);
+//
+					FileSystemUtils.deleteRecursively(new File(temDir));
+//					FileSystemUtils.deleteRecursively(new File(temDir2));
+//					FileSystemUtils.deleteRecursively(new File(temDir3));
+
+					deptName = t.getCheliangpaizhao();
+				}
+			}
+		}
+		folder = fileServer.getPathPrefix()+FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+deptName+"车辆技术档案.zip";
+		ExcelUtils.deleteFile(folder);
+//		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(folder));
+//		ApacheZipUtils.doCompress1(urlList, bizOut);
+		PackageToZIp.toZip(fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+uuid+"\\"+deptName, folder);
+		//不要忘记调用
+//		bizOut.close();
+
+		rs.setMsg("下载成功");
+		rs.setCode(200);
+		rs.setData(folder);
+		rs.setSuccess(true);
+		return rs;
+	}
+
 
 }

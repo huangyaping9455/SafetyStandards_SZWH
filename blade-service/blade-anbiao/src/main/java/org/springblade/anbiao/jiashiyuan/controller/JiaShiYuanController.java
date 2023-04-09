@@ -5190,10 +5190,10 @@ public class JiaShiYuanController {
 					temDir3=temDir3+"\\"+wjName3+formatSuffix;
 					CommonUtil.world2pdf(temDir3,pdfPath3);
 					System.out.println("已生成挂车pdf"+pdfPath3);
-
-					FileSystemUtils.deleteRecursively(new File(temDir));
-					FileSystemUtils.deleteRecursively(new File(temDir2));
-					FileSystemUtils.deleteRecursively(new File(temDir3));
+//
+//					FileSystemUtils.deleteRecursively(new File(temDir));
+//					FileSystemUtils.deleteRecursively(new File(temDir2));
+//					FileSystemUtils.deleteRecursively(new File(temDir3));
 
 					deptName = t.getDeptName();
 				}

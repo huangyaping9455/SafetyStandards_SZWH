@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.page.VehiclePage;
+import org.springblade.anbiao.cheliangguanli.vo.JiShuDangAnVO;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleListVO;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
 
@@ -248,5 +249,7 @@ public interface IVehicleService extends IService<Vehicle> {
 	VehicleImg getByVehImg(@Param("vehId") String vehId);
 
 	List<VehicleVO> selectDriverVehicle(@Param("jsyId") String jsyId);
+
+	List<JiShuDangAnVO> selectJiShuDangAn(JiShuDangAnVO jiShuDangAnVO);
 
 }

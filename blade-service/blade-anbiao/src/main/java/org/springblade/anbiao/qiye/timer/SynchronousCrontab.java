@@ -2064,8 +2064,6 @@ public class SynchronousCrontab {
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"未按时进行安全检查");
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,anQuanJianChaRisk.getJiashiyuanid());
-			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDiscoveryDate,today);
-			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,anQuanJianChaRisk.getCheliangpaizhao());
 			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
 			if (riskDetail==null){
 				if (StringUtils.isNotBlank(anQuanJianChaRisk.getCreatetime()) && !anQuanJianChaRisk.getCreatetime().equals("null")){
