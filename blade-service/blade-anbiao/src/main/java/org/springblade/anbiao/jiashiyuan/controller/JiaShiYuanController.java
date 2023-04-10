@@ -5,6 +5,7 @@ import cn.afterturn.easypoi.word.WordExportUtil;
 import cn.afterturn.easypoi.word.entity.WordImageEntity;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
@@ -5143,9 +5144,9 @@ public class JiaShiYuanController {
 //					String temDir2 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2]+"\\"+t.getDeptName()+"\\"+"车头"+"\\";
 //					String temDir3 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2]+"\\"+t.getDeptName()+"\\"+"挂车"+"\\";
 
-					temDir = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+uuid+"\\"+t.getDeptName()+"\\"+"驾驶员"+"\\";
-					String temDir2 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+uuid+"\\"+t.getDeptName()+"\\"+"车头"+"\\";
-					String temDir3 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+uuid+"\\"+t.getDeptName()+"\\"+"挂车"+"\\";
+					temDir = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+uuid+"\\"+t.getDeptName()+"\\"+"驾驶员";
+					String temDir2 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+uuid+"\\"+t.getDeptName()+"\\"+"车头";
+					String temDir3 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+uuid+"\\"+t.getDeptName()+"\\"+"挂车";
 
 					//生成文件名
 					// 生成的word格式
@@ -5158,9 +5159,15 @@ public class JiaShiYuanController {
 					String fileName2 = wjName2 + formatSuffix;
 					String fileName3 = wjName3 + formatSuffix;
 					//导出word
-					WordUtil2.exportDataWord3(templatePath, temDir, fileName, map, request, response);
-					WordUtil2.exportDataWord3(templatePath2, temDir2, fileName2, map, request, response);
-					WordUtil2.exportDataWord3(templatePath2, temDir3, fileName3, map2, request, response);
+					if(StringUtils.isNotEmpty(wjName) && wjName != "null") {
+						WordUtil2.exportDataWord3(templatePath, temDir, fileName, map, request, response);
+					}
+					if(StringUtils.isNotEmpty(wjName2) && wjName2 != "null") {
+						WordUtil2.exportDataWord3(templatePath2, temDir2, fileName2, map, request, response);
+					}
+					if(StringUtils.isNotEmpty(wjName3) && wjName3 != "null") {
+						WordUtil2.exportDataWord3(templatePath2, temDir3, fileName3, map2, request, response);
+					}
 					urlList.add(temDir);
 
 
@@ -5170,40 +5177,84 @@ public class JiaShiYuanController {
 					FileUtil.mkParentDirs(pdfPath);
 					//生成pdf到pdf文件路径
 					temDir=temDir+"\\"+wjName+formatSuffix;
-					CommonUtil.world2pdf(temDir,pdfPath);
+					String finalTemDir = temDir;
+					Thread thread = new Thread(new Runnable() {
+						@Override
+						public void run() {
+							// 线程执行的逻辑
+							CommonUtil.world2pdf(finalTemDir, pdfPath);
+							FileSystemUtils.deleteRecursively(new File(finalTemDir));
+						}
+					});
+					thread.start();
 					System.out.println("已生成驾驶员pdf"+pdfPath);
-
+					Thread thread1 = null;
 					//替换路径前缀,获得pdf文件路径
-					String pdfPath2 = temDir2+"\\"+wjName2+".pdf";
-					//生成文件父级目录
-					FileUtil.mkParentDirs(pdfPath2);
-					//生成pdf到pdf文件路径
-					temDir2=temDir2+"\\"+wjName2+formatSuffix;
-					CommonUtil.world2pdf(temDir2,pdfPath2);
-					System.out.println("已生成车头pdf"+pdfPath2);
-
+					if(StringUtils.isNotEmpty(wjName2) && wjName2 != "null"){
+						String pdfPath2 = temDir2+"\\"+wjName2+".pdf";
+						//生成文件父级目录
+						FileUtil.mkParentDirs(pdfPath2);
+						//生成pdf到pdf文件路径
+						temDir2=temDir2+"\\"+wjName2+formatSuffix;
+						String finalTemDir1 = temDir2;
+						thread1 = new Thread(new Runnable() {
+							@Override
+							public void run() {
+								// 线程执行的逻辑
+								CommonUtil.world2pdf(finalTemDir1,pdfPath2);
+								FileSystemUtils.deleteRecursively(new File(finalTemDir1));
+							}
+						});
+						thread1.start();
+						System.out.println("已生成车头pdf"+pdfPath2);
+					}
+					Thread thread2 = null;
 					//替换路径前缀,获得pdf文件路径
-					String pdfPath3 = temDir3+"\\"+wjName3+".pdf";
-					//生成文件父级目录
-					FileUtil.mkParentDirs(pdfPath3);
-					//生成pdf到pdf文件路径
-					temDir3=temDir3+"\\"+wjName3+formatSuffix;
-					CommonUtil.world2pdf(temDir3,pdfPath3);
-					System.out.println("已生成挂车pdf"+pdfPath3);
-//
-//					FileSystemUtils.deleteRecursively(new File(temDir));
-//					FileSystemUtils.deleteRecursively(new File(temDir2));
-//					FileSystemUtils.deleteRecursively(new File(temDir3));
-
+					if(StringUtils.isNotEmpty(wjName3) && wjName3 != "null") {
+						String pdfPath3 = temDir3 + "\\" + wjName3 + ".pdf";
+						//生成文件父级目录
+						FileUtil.mkParentDirs(pdfPath3);
+						//生成pdf到pdf文件路径
+						temDir3 = temDir3 + "\\" + wjName3 + formatSuffix;
+						String finalTemDir2 = temDir3;
+						thread2 = new Thread(new Runnable() {
+							@Override
+							public void run() {
+								// 线程执行的逻辑
+								CommonUtil.world2pdf(finalTemDir2, pdfPath3);
+								FileSystemUtils.deleteRecursively(new File(finalTemDir2));
+							}
+						});
+						thread2.start();
+						System.out.println("已生成挂车pdf" + pdfPath3);
+					}
+					// 等待子线程执行完毕
+					try {
+						if(thread != null){
+							thread.join();
+						}
+						if(thread1 != null){
+							thread1.join();
+						}
+						if(thread2 != null){
+							thread2.join();
+						}
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					// 子线程执行完毕后的逻辑
 					deptName = t.getDeptName();
+					System.out.println(DateUtil.now());
 				}
 			}
 		}
-		folder = fileServer.getPathPrefix()+FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+deptName+"人车台账.zip";
+		folder = fileServer.getPathPrefix()+FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+deptName+"-人车台账.zip";
 		ExcelUtils.deleteFile(folder);
 //		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(folder));
 //		ApacheZipUtils.doCompress1(urlList, bizOut);
+		System.out.println(DateUtil.now());
 		PackageToZIp.toZip(fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+uuid+"\\"+deptName, folder);
+		System.out.println(DateUtil.now());
 		//不要忘记调用
 //		bizOut.close();
 
