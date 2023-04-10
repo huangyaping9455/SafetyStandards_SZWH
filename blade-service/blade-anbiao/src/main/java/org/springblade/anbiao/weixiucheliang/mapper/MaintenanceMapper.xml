@@ -509,4 +509,19 @@
         </if>
     </select>
 
+    <select id="selectShiGuJiLu" resultType="org.springblade.anbiao.AccidentReports.entity.AccidentReportsEntity" parameterType="org.springblade.anbiao.AccidentReports.entity.AccidentReportsEntity" >
+        SELECT
+            COUNT( id ) as countJiashiyuan
+        FROM
+            anbiao_shigubaogao a
+        WHERE
+            is_deleted=0
+            <if test="chepaihao != null and chepaihao != ''">
+                and chepaihao=#{chepaihao}
+            </if>
+            <if test="jiashiyuan != null and jiashiyuan != ''">
+                AND jiashiyuan = #{jiashiyuan}
+            </if>
+    </select>
+
 </mapper>

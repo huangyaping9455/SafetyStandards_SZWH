@@ -9,6 +9,7 @@ import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.cheliangguanli.vo.JiShuDangAnVO;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleListVO;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
+import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
 import org.springblade.common.tool.StringUtils;
 import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.stereotype.Service;
@@ -355,6 +356,11 @@ public class VehicleServiceImpl extends ServiceImpl<VehicleMapper, Vehicle> impl
 	@Override
 	public List<JiShuDangAnVO> selectJiShuDangAn(JiShuDangAnVO jiShuDangAnVO) {
 		return vehicleMapper.selectJiShuDangAn(jiShuDangAnVO);
+	}
+
+	@Override
+	public List<JiaShiYuanVO> selectCheLiangJiaShiYuan(JiaShiYuanVO jiaShiYuanVO) {
+		return vehicleMapper.selectCheLiangJiaShiYuan(jiaShiYuanVO);
 	}
 
 

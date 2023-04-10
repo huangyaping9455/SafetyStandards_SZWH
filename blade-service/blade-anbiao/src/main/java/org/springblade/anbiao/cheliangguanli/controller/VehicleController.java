@@ -34,6 +34,7 @@ import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
 import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.jiashiyuan.service.*;
 import org.springblade.anbiao.jiashiyuan.vo.DriverTJMingXiVO;
+import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
 import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
 import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
 import org.springblade.anbiao.weixiu.page.MaintenancePage;
@@ -3034,6 +3035,7 @@ public class VehicleController {
 					List<Map<String, Object>> ListData = new ArrayList<>();
 					List<Map<String, Object>> ListData2 = new ArrayList<>();
 					List<Map<String, Object>> ListData3 = new ArrayList<>();
+					List<Map<String, Object>> ListData4 = new ArrayList<>();
 					String temDir = "";
 					String fileName = "";
 					String url = "";
@@ -3241,8 +3243,8 @@ public class VehicleController {
 
 					// 本人照片
 					WordImageEntity image = new WordImageEntity();
-					image.setHeight(220);
-					image.setWidth(180);
+					image.setHeight(440);
+					image.setWidth(160);
 //					String jsonObject = t.getAjrHeadPortrait();
 					if (StringUtils.isNotBlank(t.getCheliangzhaopian()) && !t.getCheliangzhaopian().equals("null")){
 						if (StrUtil.isNotEmpty(t.getCheliangzhaopian()) && t.getCheliangzhaopian().contains("http") == false) {
@@ -3341,6 +3343,27 @@ public class VehicleController {
 
 					}
 					map.put("ListData3",ListData3);
+
+					JiaShiYuanVO jiaShiYuanVO = new JiaShiYuanVO();
+					jiaShiYuanVO.setCheliangpaizhao(t.getCheliangpaizhao());
+					List<JiaShiYuanVO> jiaShiYuanVOS = vehicleService.selectCheLiangJiaShiYuan(jiaShiYuanVO);
+					for (JiaShiYuanVO aa:jiaShiYuanVOS) {
+						HashMap<String, Object> data = new HashMap<>();
+						data.put("Jiashiyuanxingming",aa.getJiashiyuanxingming());
+						data.put("Shenfenzhenghao",aa.getShenfenzhenghao());
+						data.put("AjrClass",aa.getAjrClass());
+						data.put("Jiashizhenghao",aa.getJiashizhenghao());
+						data.put("Congyezigezheng",aa.getCongyezigezheng());
+						data.put("Createtime",aa.getCreatetime());
+
+						AccidentReportsEntity accidentReportsEntity1 = new AccidentReportsEntity();
+						accidentReportsEntity1.setChepaihao(aa.getCheliangpaizhao());
+						accidentReportsEntity1.setJiashiyuan(aa.getJiashiyuanxingming());
+						AccidentReportsEntity accidentReportsEntity2 = maintenanceService.selectShiGuJiLu(accidentReportsEntity1);
+						data.put("countJiashiyuan",accidentReportsEntity2.getCountJiashiyuan());
+						ListData4.add(data);
+					}
+					map.put("ListData4",ListData4);
 
 					// TODO 渲染其他类型的数据请参考官方文档
 					//=================生成文件保存在本地D盘某目录下=================
