@@ -3814,6 +3814,10 @@ public class JiaShiYuanController {
 		}
 		//返回一个包含所有对象的指定类型的数组
 		String[] idss= listid.toArray(new String[1]);
+
+		Thread thread = null;
+		Thread thread1 = null;
+		Thread thread2 = null;
 		for(int j = 0;j< idss.length;j++){
 			driverTJMingXiVO.setDeptName("");
 //			driverTJMingXiVO.setDeptId(idss[j]);
@@ -5178,7 +5182,8 @@ public class JiaShiYuanController {
 					//生成pdf到pdf文件路径
 					temDir=temDir+"\\"+wjName+formatSuffix;
 					String finalTemDir = temDir;
-					Thread thread = new Thread(new Runnable() {
+
+					thread = new Thread(new Runnable() {
 						@Override
 						public void run() {
 							// 线程执行的逻辑
@@ -5188,7 +5193,6 @@ public class JiaShiYuanController {
 					});
 					thread.start();
 					System.out.println("已生成驾驶员pdf"+pdfPath);
-					Thread thread1 = null;
 					//替换路径前缀,获得pdf文件路径
 					if(StringUtils.isNotEmpty(wjName2) && wjName2 != "null"){
 						String pdfPath2 = temDir2+"\\"+wjName2+".pdf";
@@ -5208,7 +5212,7 @@ public class JiaShiYuanController {
 						thread1.start();
 						System.out.println("已生成车头pdf"+pdfPath2);
 					}
-					Thread thread2 = null;
+
 					//替换路径前缀,获得pdf文件路径
 					if(StringUtils.isNotEmpty(wjName3) && wjName3 != "null") {
 						String pdfPath3 = temDir3 + "\\" + wjName3 + ".pdf";
@@ -5228,26 +5232,27 @@ public class JiaShiYuanController {
 						thread2.start();
 						System.out.println("已生成挂车pdf" + pdfPath3);
 					}
-					// 等待子线程执行完毕
-					try {
-						if(thread != null){
-							thread.join();
-						}
-						if(thread1 != null){
-							thread1.join();
-						}
-						if(thread2 != null){
-							thread2.join();
-						}
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					// 子线程执行完毕后的逻辑
 					deptName = t.getDeptName();
 					System.out.println(DateUtil.now());
 				}
 			}
 		}
+		// 等待子线程执行完毕
+		try {
+			if(thread != null){
+				thread.join();
+			}
+			if(thread1 != null){
+				thread1.join();
+			}
+			if(thread2 != null){
+				thread2.join();
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		// 子线程执行完毕后的逻辑
+
 		folder = fileServer.getPathPrefix()+FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+deptName+"-人车台账.zip";
 		ExcelUtils.deleteFile(folder);
 //		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(folder));
