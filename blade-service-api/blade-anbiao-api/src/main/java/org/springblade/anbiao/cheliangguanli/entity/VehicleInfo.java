@@ -175,4 +175,22 @@ public class VehicleInfo implements Serializable {
 	@ApiModelProperty(value = "后轮距")
 	private String frontlunju;
 
+	@ApiModelProperty(value = "终端id")
+	private String zongduanid;
+
+	@ApiModelProperty(value = "终端型号")
+	private String zongduanxinghao;
+
+	@ApiModelProperty(value = "终端协议类型")
+	private String terminalprotocoltype;
+
+	@ApiModelProperty(value = "视频通道数")
+	private String videochannelnum;
+
+	@ApiModelProperty(value = "平台连接方式  1直连 2 转发")
+	private String platformconnectiontype;
+
+	@ApiModelProperty(value = "终端厂商")
+	private String zhongduanchangshang;
+
 }
