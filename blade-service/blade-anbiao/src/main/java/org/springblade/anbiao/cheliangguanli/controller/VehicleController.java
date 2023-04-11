@@ -3061,7 +3061,7 @@ public class VehicleController {
 							map.put("a3", "-");
 						}
 						if (StringUtils.isNotBlank(t.getCreatetime()) && !t.getCreatetime().equals("null")) {
-							map.put("a4", t.getCreatetime());
+							map.put("a4", t.getCreatetime().substring(0,19));
 						} else {
 							map.put("a4", "-");
 						}
@@ -3373,7 +3373,7 @@ public class VehicleController {
 						nyr = DateUtil.today().split("-");
 						//附件存放地址(服务器生成地址)
 
-						temDir = fileServer.getPathPrefix() + FilePathConstant.ENCLOSURE_PATH + nyr[0] + "\\" + nyr[1] + "\\" + uuid + "\\" + t.getCheliangpaizhao() + "\\";
+						temDir = fileServer.getPathPrefix() + FilePathConstant.ENCLOSURE_PATH + nyr[0] + "\\" + nyr[1] + "\\" + uuid + "\\" + "车辆技术档案" + "\\";
 //					String temDir2 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+uuid+"\\"+t.getDeptName()+"\\"+"车头"+"\\";
 //					String temDir3 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+uuid+"\\"+t.getDeptName()+"\\"+"挂车"+"\\";
 
@@ -3433,7 +3433,7 @@ public class VehicleController {
 			ExcelUtils.deleteFile(folder);
 //		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(folder));
 //		ApacheZipUtils.doCompress1(urlList, bizOut);
-			PackageToZIp.toZip(fileServer.getPathPrefix() + FilePathConstant.ENCLOSURE_PATH + nyr[0] + "\\" + nyr[1] + "\\" + uuid + "\\" , folder);
+			PackageToZIp.toZip(fileServer.getPathPrefix() + FilePathConstant.ENCLOSURE_PATH + nyr[0] + "\\" + nyr[1] + "\\" + uuid + "\\" + "车辆技术档案", folder);
 			//不要忘记调用
 //		bizOut.close();
 
