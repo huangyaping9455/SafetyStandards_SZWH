@@ -36,7 +36,7 @@ public interface IVehicleBaoxianService extends BaseService<VehicleBaoxian> {
 	 * @param vehicleBaoxian
 	 * @return
 	 */
-	IPage<VehicleBaoxianVO> selectVehicleBaoxianPage(IPage<VehicleBaoxianVO> page, VehicleBaoxianVO vehicleBaoxian,String avbAvIds);
+	IPage<VehicleBaoxianVO> selectVehicleBaoxianPage(IPage<VehicleBaoxianVO> page, VehicleBaoxianVO vehicleBaoxian,String avbAvIds,String deptName,String cheliangpaizhao);
 
 	/**
 	 * 查询车辆保险详细信息

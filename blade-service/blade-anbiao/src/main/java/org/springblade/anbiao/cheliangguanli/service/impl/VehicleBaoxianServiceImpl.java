@@ -46,8 +46,8 @@ public class VehicleBaoxianServiceImpl extends ServiceImpl<VehicleBaoxianMapper,
 	private VehicleBaoxianMapper baoxianMapper;
 
 	@Override
-	public IPage<VehicleBaoxianVO> selectVehicleBaoxianPage(IPage<VehicleBaoxianVO> page, VehicleBaoxianVO vehicleBaoxian,String avbAvIds) {
-		return page.setRecords(baseMapper.selectVehicleBaoxianPage(page, vehicleBaoxian,avbAvIds));
+	public IPage<VehicleBaoxianVO> selectVehicleBaoxianPage(IPage<VehicleBaoxianVO> page, VehicleBaoxianVO vehicleBaoxian,String avbAvIds,String deptName,String cheliangpaizhao) {
+		return page.setRecords(baseMapper.selectVehicleBaoxianPage(page, vehicleBaoxian,avbAvIds,deptName,cheliangpaizhao));
 	}
 
 	@Override
