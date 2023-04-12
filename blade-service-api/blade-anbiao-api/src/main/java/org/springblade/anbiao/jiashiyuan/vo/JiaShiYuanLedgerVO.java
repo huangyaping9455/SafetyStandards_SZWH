@@ -47,6 +47,12 @@ public class JiaShiYuanLedgerVO {
 	@ApiModelProperty(value = "安责险保费金额")
 	private String anzezongbaofeijine;
 
+	@ApiModelProperty(value = "超陪险保险金额")
+	private String chaopeizongbaoxianjine;
+
+	@ApiModelProperty(value = "超陪险保费金额")
+	private String chaopeizongbaofeijine;
+
 	@ApiModelProperty(value = "其他保险金额（人员）")
 	private String qitazongbaoxianjine;
 

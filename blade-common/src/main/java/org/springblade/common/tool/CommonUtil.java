@@ -196,4 +196,60 @@ public class CommonUtil {
 		}
 	}
 
+
+	/**
+	 * 使用jacob实现excel转PDF
+	 *
+	 * @param inputFilePath 导入Excel文件路径
+	 * @param outputFilePath 导出PDF文件路径
+	 */
+	public static void jacobExcelToPDF(String inputFilePath, String outputFilePath) {
+		ActiveXComponent ax = null;
+		Dispatch excel = null;
+
+		try {
+			ComThread.InitSTA();
+			ax = new ActiveXComponent("Excel.Application");
+			ax.setProperty("Visible", new Variant(false));
+			//禁用宏
+			ax.setProperty("AutomationSecurity", new Variant(3));
+
+			Dispatch excels = ax.getProperty("Workbooks").toDispatch();
+
+			Object[] obj = {
+				inputFilePath,
+				new Variant(false),
+				new Variant(false)
+			};
+
+			excel = Dispatch.invoke(excels, "Open", Dispatch.Method, obj, new int[9]).toDispatch();
+
+			//转换格式
+			Object[] obj2 = {
+				//PDF格式等于0
+				new Variant(0),
+				outputFilePath,
+				//0=标准（生成的PDF图片不会模糊），1=最小的文件
+				new Variant(0)
+			};
+
+			Dispatch.invoke(excel, "ExportAsFixedFormat", Dispatch.Method, obj2, new int[1]);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (excel != null) {
+				Dispatch.call(excel, "Close", new Variant(false));
+			}
+			if (ax != null) {
+				ax.invoke("Quit", new Variant[]{});
+				ax = null;
+			}
+			ComThread.Release();
+		}
+
+	}
+
+
 }

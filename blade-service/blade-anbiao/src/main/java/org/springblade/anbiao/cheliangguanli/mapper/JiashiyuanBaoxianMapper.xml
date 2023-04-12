@@ -263,8 +263,9 @@
             i.qitazongbaofeijine,
             j.qitazongbaoxianjine as qitazongbaoxianjineqiye,
             j.qitazongbaofeijine as qitazongbaofeijineqiye,
-            IFNULL(d.yiwaixianzongbaoxianjine,0)+IFNULL(d.yiwaixianzongbaofeijine,0)+IFNULL(e.chexianzongbaoxianjine,0)+IFNULL( e.chexianzongbaofeijine,0)+IFNULL(f.jiaoqiangxianzongjine,0)+IFNULL(f.jiaoqiangxianzongbaofeijine,0)+IFNULL(g.huoguizongbaoxianjine,0)+IFNULL(g.huoguizongbaofeijine,0)+IFNULL(h.anzezongbaoxianjine,0)+IFNULL(h.anzezongbaofeijine,0)+IFNULL( i.qitazongbaoxianjine,0)+IFNULL(i.qitazongbaofeijine,0)+IFNULL(j.qitazongbaoxianjine,0)+IFNULL(j.qitazongbaofeijine ,0) as totalTmount
-            FROM
+            k.chaopeizongbaoxianjine as chaopeizongbaoxianjine,
+            k.chaopeizongbaofeijine as chaopeizongbaofeijine,
+            IFNULL(d.yiwaixianzongbaoxianjine,0)+IFNULL(d.yiwaixianzongbaofeijine,0)+IFNULL(e.chexianzongbaoxianjine,0)+IFNULL( e.chexianzongbaofeijine,0)+IFNULL(f.jiaoqiangxianzongjine,0)+IFNULL(f.jiaoqiangxianzongbaofeijine,0)+IFNULL(g.huoguizongbaoxianjine,0)+IFNULL(g.huoguizongbaofeijine,0)+IFNULL(h.anzezongbaoxianjine,0)+IFNULL(h.anzezongbaofeijine,0)+IFNULL( i.qitazongbaoxianjine,0)+IFNULL(i.qitazongbaofeijine,0)+IFNULL(j.qitazongbaoxianjine,0)+IFNULL(j.qitazongbaofeijine ,0)+IFNULL(k.chaopeizongbaofeijine,0) as totalTmount   FROM
             (
             <include
                 refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
@@ -356,6 +357,21 @@
             </if>
             GROUP BY avb_dept_ids
             )h on h.avb_dept_ids	=a.id
+
+            -- 超陪险
+            LEFT JOIN (
+            SELECT
+            avb_dept_ids,
+            sum(d.chaopeizongbaoxianjine) as chaopeizongbaoxianjine,
+            sum(d.chaopeizongbaofeijine ) as chaopeizongbaofeijine
+            FROM
+            anbiao_dept_baoxian
+            LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS chaopeizongbaoxianjine, sum(avbm_basic_premium) AS chaopeizongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk = "超赔险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
+            WHERE
+            avb_delete=0
+
+            GROUP BY avb_dept_ids
+            )k on k.avb_dept_ids	=a.id
 
             -- 其他（人员）
             LEFT JOIN (
@@ -417,8 +433,9 @@
             i.qitazongbaofeijine,
             j.qitazongbaoxianjine as qitazongbaoxianjineqiye,
             j.qitazongbaofeijine as qitazongbaofeijineqiye,
-            IFNULL(d.yiwaixianzongbaoxianjine,0)+IFNULL(d.yiwaixianzongbaofeijine,0)+IFNULL(e.chexianzongbaoxianjine,0)+IFNULL( e.chexianzongbaofeijine,0)+IFNULL(f.jiaoqiangxianzongjine,0)+IFNULL(f.jiaoqiangxianzongbaofeijine,0)+IFNULL(g.huoguizongbaoxianjine,0)+IFNULL(g.huoguizongbaofeijine,0)+IFNULL(h.anzezongbaoxianjine,0)+IFNULL(h.anzezongbaofeijine,0)+IFNULL( i.qitazongbaoxianjine,0)+IFNULL(i.qitazongbaofeijine,0)+IFNULL(j.qitazongbaoxianjine,0)+IFNULL(j.qitazongbaofeijine ,0) as totalTmount
-            FROM
+            k.chaopeizongbaoxianjine as chaopeizongbaoxianjine,
+            k.chaopeizongbaofeijine as chaopeizongbaofeijine,
+            IFNULL(d.yiwaixianzongbaoxianjine,0)+IFNULL(d.yiwaixianzongbaofeijine,0)+IFNULL(e.chexianzongbaoxianjine,0)+IFNULL( e.chexianzongbaofeijine,0)+IFNULL(f.jiaoqiangxianzongjine,0)+IFNULL(f.jiaoqiangxianzongbaofeijine,0)+IFNULL(g.huoguizongbaoxianjine,0)+IFNULL(g.huoguizongbaofeijine,0)+IFNULL(h.anzezongbaoxianjine,0)+IFNULL(h.anzezongbaofeijine,0)+IFNULL( i.qitazongbaoxianjine,0)+IFNULL(i.qitazongbaofeijine,0)+IFNULL(j.qitazongbaoxianjine,0)+IFNULL(j.qitazongbaofeijine ,0)+IFNULL(k.chaopeizongbaofeijine,0) as totalTmount   FROM
             (
             <include
                 refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
@@ -510,6 +527,21 @@
             </if>
             GROUP BY avb_dept_ids
             )h on h.avb_dept_ids	=a.id
+
+            -- 超陪险
+            LEFT JOIN (
+            SELECT
+            avb_dept_ids,
+            sum(d.chaopeizongbaoxianjine) as chaopeizongbaoxianjine,
+            sum(d.chaopeizongbaofeijine ) as chaopeizongbaofeijine
+            FROM
+            anbiao_dept_baoxian
+            LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS chaopeizongbaoxianjine, sum(avbm_basic_premium) AS chaopeizongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk = "超赔险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
+            WHERE
+            avb_delete=0
+
+            GROUP BY avb_dept_ids
+            )k on k.avb_dept_ids	=a.id
 
             -- 其他（人员）
             LEFT JOIN (
@@ -576,8 +608,9 @@
         i.qitazongbaofeijine,
         j.qitazongbaoxianjine as qitazongbaoxianjineqiye,
         j.qitazongbaofeijine as qitazongbaofeijineqiye,
-        IFNULL(d.yiwaixianzongbaoxianjine,0)+IFNULL(d.yiwaixianzongbaofeijine,0)+IFNULL(e.chexianzongbaoxianjine,0)+IFNULL( e.chexianzongbaofeijine,0)+IFNULL(f.jiaoqiangxianzongjine,0)+IFNULL(f.jiaoqiangxianzongbaofeijine,0)+IFNULL(g.huoguizongbaoxianjine,0)+IFNULL(g.huoguizongbaofeijine,0)+IFNULL(h.anzezongbaoxianjine,0)+IFNULL(h.anzezongbaofeijine,0)+IFNULL( i.qitazongbaoxianjine,0)+IFNULL(i.qitazongbaofeijine,0)+IFNULL(j.qitazongbaoxianjine,0)+IFNULL(j.qitazongbaofeijine ,0) as totalTmount
-        FROM
+        k.chaopeizongbaoxianjine as chaopeizongbaoxianjine,
+        k.chaopeizongbaofeijine as chaopeizongbaofeijine,
+        IFNULL(d.yiwaixianzongbaoxianjine,0)+IFNULL(d.yiwaixianzongbaofeijine,0)+IFNULL(e.chexianzongbaoxianjine,0)+IFNULL( e.chexianzongbaofeijine,0)+IFNULL(f.jiaoqiangxianzongjine,0)+IFNULL(f.jiaoqiangxianzongbaofeijine,0)+IFNULL(g.huoguizongbaoxianjine,0)+IFNULL(g.huoguizongbaofeijine,0)+IFNULL(h.anzezongbaoxianjine,0)+IFNULL(h.anzezongbaofeijine,0)+IFNULL( i.qitazongbaoxianjine,0)+IFNULL(i.qitazongbaofeijine,0)+IFNULL(j.qitazongbaoxianjine,0)+IFNULL(j.qitazongbaofeijine ,0)+IFNULL(k.chaopeizongbaofeijine,0) as totalTmount   FROM
         (
         <include
             refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
@@ -669,6 +702,21 @@
         </if>
         GROUP BY avb_dept_ids
         )h on h.avb_dept_ids	=a.id
+
+        -- 超陪险
+        LEFT JOIN (
+        SELECT
+        avb_dept_ids,
+        sum(d.chaopeizongbaoxianjine) as chaopeizongbaoxianjine,
+        sum(d.chaopeizongbaofeijine ) as chaopeizongbaofeijine
+        FROM
+        anbiao_dept_baoxian
+        LEFT JOIN ( SELECT avbm_avb_ids,sum(avbm_insurance_amount) AS chaopeizongbaoxianjine, sum(avbm_basic_premium) AS chaopeizongbaofeijine FROM anbiao_dept_baoxian_mingxi WHERE avbm_risk = "超赔险"  GROUP BY avbm_avb_ids) d ON avb_ids = d.avbm_avb_ids
+        WHERE
+        avb_delete=0
+
+        GROUP BY avb_dept_ids
+        )k on k.avb_dept_ids	=a.id
 
         -- 其他（人员）
         LEFT JOIN (

@@ -54,6 +54,7 @@ import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.common.configurationBean.FileServer;
 import org.springblade.common.constant.FilePathConstant;
 import org.springblade.common.tool.ApacheZipUtils;
+import org.springblade.common.tool.CommonUtil;
 import org.springblade.common.tool.ExcelUtils;
 import org.springblade.common.tool.PackageToZIp;
 import org.springblade.core.boot.ctrl.BladeController;
@@ -68,6 +69,7 @@ import org.springblade.system.entity.Dept;
 import org.springblade.system.feign.ISysClient;
 import org.springblade.system.user.entity.User;
 import org.springblade.upload.upload.feign.IFileUploadClient;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -707,6 +709,16 @@ public class JiashiyuanBaoxianController extends BladeController {
 					}else {
 						map.put("anzezongbaofeijine", "0");
 					}
+					if(StrUtil.isNotEmpty(t.getChaopeizongbaoxianjine())){
+						map.put("chaopeizongbaoxianjine", t.getChaopeizongbaoxianjine());
+					}else {
+						map.put("chaopeizongbaoxianjine", "0");
+					}
+					if(StrUtil.isNotEmpty(t.getChaopeizongbaofeijine())){
+						map.put("chaopeizongbaofeijine", t.getChaopeizongbaofeijine());
+					}else {
+						map.put("chaopeizongbaofeijine", "0");
+					}
 					if(StrUtil.isNotEmpty(t.getQitazongbaoxianjineqiye())){
 						map.put("qitazongbaoxianjineqiye", t.getQitazongbaoxianjineqiye());
 					}else {
@@ -731,13 +743,14 @@ public class JiashiyuanBaoxianController extends BladeController {
 //					String fileName = "D:\\ExcelTest\\"+t.getDeptName()+"-保险台账"+a+".xlsx";
 //					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+"-保险台账"+".xlsx";
 
-					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2];
+					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+"保险台账"+"/"+t.getDeptName();
 					File newFile = new File(fileName);
 					//判断目标文件所在目录是否存在
 					if(!newFile.exists()){
 						//如果目标文件所在的目录不存在，则创建父目录
 						newFile.mkdirs();
 					}
+					String fileName2= fileName+"/"+t.getDeptName()+"-"+a+"-保险台账.pdf";
 					fileName = fileName+"/"+t.getDeptName()+"-"+a+"-保险台账.xlsx";
 
 
@@ -748,6 +761,13 @@ public class JiashiyuanBaoxianController extends BladeController {
 					// 直接写入数据
 					excelWriter.fill(ListData, writeSheet);
 					excelWriter.finish();
+
+
+
+					CommonUtil.jacobExcelToPDF(fileName,fileName2);
+					System.out.println("已生成保险台账pdf"+fileName2);
+					FileSystemUtils.deleteRecursively(new File(fileName));
+
 					urlList.add(fileName);
 					a++;
 				}
@@ -755,10 +775,11 @@ public class JiashiyuanBaoxianController extends BladeController {
 		}
 		String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"保险台账.zip";
 		ExcelUtils.deleteFile(fileName);
-		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(fileName));
-		ApacheZipUtils.doCompress1(urlList, bizOut);
-		//不要忘记调用
-		bizOut.close();
+//		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(fileName));
+//		ApacheZipUtils.doCompress1(urlList, bizOut);
+//		//不要忘记调用
+//		bizOut.close();
+		PackageToZIp.toZip(fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2]+"\\"+"保险台账", fileName);
 
 		rs.setMsg("下载成功");
 		rs.setCode(200);
