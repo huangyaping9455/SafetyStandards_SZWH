@@ -16,6 +16,7 @@
 package org.springblade.anbiao.cheliangguanli.controller;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
@@ -763,7 +764,8 @@ public class JiashiyuanBaoxianController extends BladeController {
 					excelWriter.finish();
 
 
-
+					//生成文件父级目录
+					FileUtil.mkParentDirs(fileName2);
 					CommonUtil.jacobExcelToPDF(fileName,fileName2);
 					System.out.println("已生成保险台账pdf"+fileName2);
 					FileSystemUtils.deleteRecursively(new File(fileName));
