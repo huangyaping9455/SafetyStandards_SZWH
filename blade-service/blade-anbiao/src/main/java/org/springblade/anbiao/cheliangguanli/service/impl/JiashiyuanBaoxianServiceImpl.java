@@ -136,8 +136,33 @@ public class JiashiyuanBaoxianServiceImpl extends ServiceImpl<JiashiyuanBaoxianM
 	}
 
 	@Override
+	public List<JiaShiYuanLedgerVO> selectHeavyTrafficInsurance2(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
+		return baoxianMapper.selectHeavyTrafficInsurance2(jiaShiYuanLedgerVO);
+	}
+
+	@Override
 	public JiaShiYuanLedgerVO selectNotHeavyTrafficInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
 		return baoxianMapper.selectNotHeavyTrafficInsurance(jiaShiYuanLedgerVO);
+	}
+
+	@Override
+	public List<JiaShiYuanLedgerVO> selectNotHeavyTrafficInsurance2(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
+		return baoxianMapper.selectNotHeavyTrafficInsurance2(jiaShiYuanLedgerVO);
+	}
+
+	@Override
+	public List<JiaShiYuanLedgerVO> selectOtherVehicleInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
+		return baoxianMapper.selectOtherVehicleInsurance(jiaShiYuanLedgerVO);
+	}
+
+	@Override
+	public JiaShiYuanLedgerVO selectsumVehicleInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
+		return baoxianMapper.selectsumVehicleInsurance(jiaShiYuanLedgerVO);
+	}
+
+	@Override
+	public List<JiaShiYuanLedgerVO> selectOverlossInsuranceInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
+		return baoxianMapper.selectOverlossInsuranceInsurance(jiaShiYuanLedgerVO);
 	}
 
 	@Override
@@ -151,13 +176,18 @@ public class JiashiyuanBaoxianServiceImpl extends ServiceImpl<JiashiyuanBaoxianM
 	}
 
 	@Override
-	public List<JiaShiYuanLedgerVO> selectPersonInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
-		return baoxianMapper.selectPersonInsurance(jiaShiYuanLedgerVO);
+	public List<JiaShiYuanLedgerVO> selectAccidentInsurance2(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
+		return baoxianMapper.selectAccidentInsurance2(jiaShiYuanLedgerVO);
 	}
 
 	@Override
-	public JiaShiYuanLedgerVO selectNotAccidentInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
+	public List<JiaShiYuanLedgerVO> selectNotAccidentInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
 		return baoxianMapper.selectNotAccidentInsurance(jiaShiYuanLedgerVO);
+	}
+
+	@Override
+	public List<JiaShiYuanLedgerVO> selectPersonInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
+		return baoxianMapper.selectPersonInsurance(jiaShiYuanLedgerVO);
 	}
 
 	@Override

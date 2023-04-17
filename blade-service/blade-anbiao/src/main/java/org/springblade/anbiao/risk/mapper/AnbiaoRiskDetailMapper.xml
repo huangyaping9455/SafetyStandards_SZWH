@@ -313,6 +313,9 @@
         <if test="jiashiyuanxingming != null and jiashiyuanxingming != ''">
             and j.jiashiyuanxingming like '%${jiashiyuanxingming}%'
         </if>
+        <if test="id != null and id != ''">
+            and ard_association_value = #{id}
+        </if>
 
             ORDER BY CASE WHEN daoqishijian IS NULL THEN 1 ELSE 0 END, daoqishijian
             limit ${total}
@@ -349,6 +352,10 @@
             <if test="jiashiyuanxingming != null and jiashiyuanxingming != ''">
                 and j.jiashiyuanxingming like '%${jiashiyuanxingming}%'
             </if>
+            <if test="id != null and id != ''">
+                and ard_association_value = #{id}
+            </if>
+
             ORDER BY CASE WHEN daoqishijian IS NULL THEN 1 ELSE 0 END, daoqishijian
             limit ${offsetNo},${size}
         </if>
@@ -389,6 +396,10 @@
         <if test="jiashiyuanxingming != null and jiashiyuanxingming != ''">
             and j.jiashiyuanxingming like '%${jiashiyuanxingming}%'
         </if>
+        <if test="id != null and id != ''">
+            and ard_association_value = #{id}
+        </if>
+
         ORDER BY CASE WHEN daoqishijian IS NULL THEN 1 ELSE 0 END, daoqishijian
         ORDER BY daoqishijian,youxiaoqi
         )d
@@ -1051,7 +1062,7 @@
             SELECT
             a.ard_dept_ids as deptId,
             e.dept_name,
-            c.jiashiyuanid,
+            c.jiashiyuanid as id,
             d.jiashiyuanxingming,
             ard_title ,
             ard_content as ard_content2,
@@ -1099,7 +1110,7 @@
             SELECT
             a.ard_dept_ids as deptId,
             e.dept_name,
-            c.jiashiyuanid,
+            c.jiashiyuanid as id,
             d.jiashiyuanxingming,
             ard_title ,
             ard_content as ard_content2,
@@ -1151,7 +1162,7 @@
         SELECT
         a.ard_dept_ids as deptId,
         e.dept_name,
-        c.jiashiyuanid,
+        c.jiashiyuanid as id,
         d.jiashiyuanxingming,
         ard_title ,
         ard_content as ard_content2,
@@ -1186,7 +1197,7 @@
             and a.cheliangpaizhao like '%${cheliangpaizhao}%'
         </if>
         <if test="jiashiyuanid != null and jiashiyuanid != ''">
-            AND c.jiashiyuanid like #{jiashiyuanid}
+            AND c.jiashiyuanid = #{jiashiyuanid}
         </if>
         <if test="deptName != null and deptName != ''">
             and e.dept_name like '%${deptName}%'

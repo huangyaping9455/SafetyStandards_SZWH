@@ -13,6 +13,9 @@ public class JiashiyuanRiskAllPage<T> extends BasePage<T> {
 
 	private static final long serialVersionUID = 1L;
 
+	@ApiModelProperty(value = "驾驶员ID")
+	private String id;
+
 	@ApiModelProperty(value = "企业ID")
 	private String deptId;
 

@@ -123,6 +123,8 @@ public class JiaShiYuanLedgerVO {
 
 	private String anzeInsuranceDays;
 
+	private String chaopeiInsuranceDays;
+
 	private String qitaInsuranceDays;
 
 	private String chexianzongbaofei;

@@ -68,16 +68,25 @@ public interface IJiashiyuanBaoxianService extends BaseService<JiashiyuanBaoxian
 	List<JiaShiYuanLedgerVO> selectVehicleInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
 
 	JiaShiYuanLedgerVO selectHeavyTrafficInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+	List<JiaShiYuanLedgerVO> selectHeavyTrafficInsurance2(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
 
 	JiaShiYuanLedgerVO selectNotHeavyTrafficInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+	List<JiaShiYuanLedgerVO> selectNotHeavyTrafficInsurance2(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	List<JiaShiYuanLedgerVO> selectOtherVehicleInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	JiaShiYuanLedgerVO selectsumVehicleInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	List<JiaShiYuanLedgerVO> selectOverlossInsuranceInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
 
 	List<JiaShiYuanLedgerVO> selectDeptInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
 
 	JiaShiYuanLedgerVO selectAccidentInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+	List<JiaShiYuanLedgerVO> selectAccidentInsurance2(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	List<JiaShiYuanLedgerVO> selectNotAccidentInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
 
 	List<JiaShiYuanLedgerVO> selectPersonInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
-
-	JiaShiYuanLedgerVO selectNotAccidentInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
 
 	JiaShiYuanLedgerVO selectDeptTotalTmountInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
 }
