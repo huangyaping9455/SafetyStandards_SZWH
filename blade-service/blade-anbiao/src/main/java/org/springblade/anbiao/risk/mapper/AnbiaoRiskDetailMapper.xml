@@ -316,6 +316,9 @@
         <if test="id != null and id != ''">
             and ard_association_value = #{id}
         </if>
+            <if test="ardTitle != null and ardTitle != ''">
+                and ard_title like '%${ardTitle}%'
+            </if>
 
             ORDER BY CASE WHEN daoqishijian IS NULL THEN 1 ELSE 0 END, daoqishijian
             limit ${total}
@@ -354,6 +357,9 @@
             </if>
             <if test="id != null and id != ''">
                 and ard_association_value = #{id}
+            </if>
+            <if test="ardTitle != null and ardTitle != ''">
+                and ard_title like '%${ardTitle}%'
             </if>
 
             ORDER BY CASE WHEN daoqishijian IS NULL THEN 1 ELSE 0 END, daoqishijian
@@ -398,6 +404,9 @@
         </if>
         <if test="id != null and id != ''">
             and ard_association_value = #{id}
+        </if>
+        <if test="ardTitle != null and ardTitle != ''">
+            and ard_title like '%${ardTitle}%'
         </if>
 
         ORDER BY CASE WHEN daoqishijian IS NULL THEN 1 ELSE 0 END, daoqishijian

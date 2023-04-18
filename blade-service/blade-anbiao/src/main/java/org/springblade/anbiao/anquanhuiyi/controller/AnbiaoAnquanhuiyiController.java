@@ -294,7 +294,10 @@ public class AnbiaoAnquanhuiyiController {
 							anbiaoAnquanhuiyiDetail.setAadApIds(anquanhuiyiDetailList.get(j).getAadApIds());
 							anbiaoAnquanhuiyiDetail.setAadApName(anquanhuiyiDetailList.get(j).getAadApName());
 							anbiaoAnquanhuiyiDetail.setAadApType(anquanhuiyiDetailList.get(j).getAadApType());
-							anbiaoAnquanhuiyiDetail.setAddTime(anquanhuiyiDetailList.get(j).getAddTime());
+							if (StringUtils.isNotBlank(anquanhuiyiDetailList.get(j).getAddTime()) && !anquanhuiyiDetailList.get(j).getAddTime().equals("null")){
+								anbiaoAnquanhuiyiDetail.setAddTime(anquanhuiyiDetailList.get(j).getAddTime());
+							}
+
 							anbiaoAnquanhuiyiDetail.setAddApBeingJoined(anquanhuiyiDetailList.get(j).getAddApBeingJoined());
 							anbiaoAnquanhuiyiDetail.setAddApHeadPortrait(anquanhuiyiDetailList.get(j).getAddApHeadPortrait());
 							anbiaoAnquanhuiyiDetail.setAddApAutograph(anquanhuiyiDetailList.get(j).getAddApAutograph());
@@ -304,7 +307,9 @@ public class AnbiaoAnquanhuiyiController {
 							anbiaoAnquanhuiyiDetail1.setAadApIds(anquanhuiyiDetailList.get(j).getAadApIds());
 							anbiaoAnquanhuiyiDetail1.setAadApName(anquanhuiyiDetailList.get(j).getAadApName());
 							anbiaoAnquanhuiyiDetail1.setAadApType(anquanhuiyiDetailList.get(j).getAadApType());
-							anbiaoAnquanhuiyiDetail1.setAddTime(anquanhuiyiDetailList.get(j).getAddTime());
+//							if (StringUtils.isNotBlank(anquanhuiyiDetailList.get(j).getAddTime()) && !anquanhuiyiDetailList.get(j).getAddTime().equals("null")){
+//								anbiaoAnquanhuiyiDetail1.setAddTime(anquanhuiyiDetailList.get(j).getAddTime());
+//							}
 							anbiaoAnquanhuiyiDetail1.setAddApBeingJoined(anquanhuiyiDetailList.get(j).getAddApBeingJoined());
 							anbiaoAnquanhuiyiDetail1.setAddApHeadPortrait(anquanhuiyiDetailList.get(j).getAddApHeadPortrait());
 							anbiaoAnquanhuiyiDetail1.setAddApAutograph(anquanhuiyiDetailList.get(j).getAddApAutograph());

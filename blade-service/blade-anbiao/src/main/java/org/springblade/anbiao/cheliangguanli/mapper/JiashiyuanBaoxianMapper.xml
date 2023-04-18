@@ -1397,7 +1397,7 @@
         i.qitazongbaofeijine,
         j.qitazongbaoxianjine as qitazongbaoxianjineqiye,
         j.qitazongbaofeijine as qitazongbaofeijineqiye,
-        IFNULL(d.yiwaixianzongbaoxianjine,0)+IFNULL(d.yiwaixianzongbaofeijine,0)+IFNULL(e.chexianzongbaoxianjine,0)+IFNULL( e.chexianzongbaofeijine,0)+IFNULL(f.jiaoqiangxianzongjine,0)+IFNULL(f.jiaoqiangxianzongbaofeijine,0)+IFNULL(g.huoguizongbaoxianjine,0)+IFNULL(g.huoguizongbaofeijine,0)+IFNULL(h.anzezongbaoxianjine,0)+IFNULL(h.anzezongbaofeijine,0)+IFNULL( i.qitazongbaoxianjine,0)+IFNULL(i.qitazongbaofeijine,0)+IFNULL(j.qitazongbaoxianjine,0)+IFNULL(j.qitazongbaofeijine ,0) as totalTmount
+        IFNULL(d.yiwaixianzongbaofeijine,0)+IFNULL( e.chexianzongbaofeijine,0)+IFNULL(f.jiaoqiangxianzongbaofeijine,0)+IFNULL(g.huoguizongbaofeijine,0)+IFNULL(h.anzezongbaofeijine,0)+IFNULL(i.qitazongbaofeijine,0)+IFNULL(j.qitazongbaofeijine ,0) as totalTmount
         FROM
         (
         <include

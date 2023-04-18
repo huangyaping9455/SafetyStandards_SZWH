@@ -2994,7 +2994,7 @@ public class VehicleController {
 	@GetMapping("/goExport_getTechnicalArchives")
 	@ApiLog("车辆技术档案-导出")
 	@ApiOperation(value = "车辆技术档案-导出", notes = "传入VehicleId", position = 22)
-	public R goExport_HiddenDanger(HttpServletRequest request, HttpServletResponse response, String VehicleId, BladeUser user) throws Exception {
+	public R goExport_HiddenDanger(HttpServletRequest request, HttpServletResponse response, String VehicleId,String deptId, BladeUser user) throws Exception {
 		R rs = new R();
 		if (!VehicleId.equals("未绑定")) {
 

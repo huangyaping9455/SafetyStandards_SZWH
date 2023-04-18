@@ -797,10 +797,8 @@ public class JiashiyuanBaoxianController extends BladeController {
 	@ApiLog("保险明细信息-导出")
 	@ApiOperation(value = "保险明细信息-导出", notes = "传入JiaShiYuanLedgerPage", position = 22)
 	public R goExport_MingXi_Excel(HttpServletRequest request, HttpServletResponse response, String deptId , String date, BladeUser user) throws IOException {
-		int a=1;
-		int b=0;
 		R rs = new R();
-		List<String> urlList = new ArrayList<>();
+		String uuid = UUID.randomUUID().toString().replace("-", "");
 		JiaShiYuanLedgerVO jiaShiYuanLedgerVO = new JiaShiYuanLedgerVO();
 		String PDF;
 //		JiaShiYuanLedgerPage jiaShiYuanLedgerPage = new JiaShiYuanLedgerPage();
@@ -873,13 +871,13 @@ public class JiashiyuanBaoxianController extends BladeController {
 					FillConfig fillConfig = FillConfig.builder().forceNewRow(Boolean.TRUE).build();
 //					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+"/"+"车险";
 //					String fileName2 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"人险";
-					String fileName3 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"企业险";
-					String fileName4 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"车险";
-					String fileName5= fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"意外险";
-					String fileName6= fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"驾驶员其他附加险";
-					String fileName7= fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"超赔险";
-					String fileName8= fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"交强险";
-					String fileName9= fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"车辆其他险";
+					String fileName3 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"企业险";
+					String fileName4 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"车险";
+					String fileName5= fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"意外险";
+					String fileName6= fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"驾驶员其他附加险";
+					String fileName7= fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"超赔险";
+					String fileName8= fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"交强险";
+					String fileName9= fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"车辆其他险";
 
 //					File newFile = new File(fileName);
 //					File newFile2 = new File(fileName2);
@@ -1478,12 +1476,11 @@ public class JiashiyuanBaoxianController extends BladeController {
 
 
 //					urlList.add(fileName);
-					a++;
 				}
 			}
 		}
 		String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"保险明细台账.zip";
-		PackageToZIp.toZip(fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2]+"\\"+"保险明细台账", fileName);
+		PackageToZIp.toZip(fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2]+"\\"+uuid+"\\"+"保险明细台账", fileName);
 
 //		ExcelUtils.deleteFile(fileName);
 //		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(fileName));
