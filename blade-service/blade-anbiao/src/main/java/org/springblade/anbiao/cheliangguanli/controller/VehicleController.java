@@ -1463,8 +1463,19 @@ public class VehicleController {
 				vehicle.setImportUrl("icon_cha.png");
 				bb++;
 			}else{
-				vehicle.setCheliangpaizhao(cheliangpaiz);
-				vehicle.setImportUrl("icon_gou.png");
+				QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<>();
+				vehicleQueryWrapper.lambda().eq(Vehicle::getCheliangpaizhao,cheliangpaiz);
+				vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel,0);
+				Vehicle vehicle1 = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper);
+				if (vehicle1!=null){
+					errorStr+=cheliangpaiz+"车牌号已存在;";
+					vehicle.setMsg(cheliangpaiz+"车牌号已存在;");
+					vehicle.setImportUrl("icon_cha.png");
+					bb++;
+				}else {
+					vehicle.setCheliangpaizhao(cheliangpaiz);
+					vehicle.setImportUrl("icon_gou.png");
+				}
 			}
 
 			//车牌颜色

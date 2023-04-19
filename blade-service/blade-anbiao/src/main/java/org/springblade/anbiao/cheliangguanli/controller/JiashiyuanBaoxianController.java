@@ -1232,7 +1232,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 
 						CommonUtil.jacobExcelToPDF(fileName4 + "/" + t.getDeptName() + ".xlsx",fileName4 + "/" + t.getDeptName() + ".pdf");
 						System.out.println("已生成保险台账pdf"+fileName4 + "/" + t.getDeptName() + ".pdf");
-						FileSystemUtils.deleteRecursively(new File(fileName4 + "/" + t.getDeptName() + ".xlsx"));
+//						FileSystemUtils.deleteRecursively(new File(fileName4 + "/" + t.getDeptName() + ".xlsx"));
 					}
 
 					//超赔险
@@ -1279,7 +1279,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 
 						CommonUtil.jacobExcelToPDF(fileName7,PDF);
 						System.out.println("已生成保险台账pdf"+PDF);
-						FileSystemUtils.deleteRecursively(new File(fileName7));
+//						FileSystemUtils.deleteRecursively(new File(fileName7));
 
 					}
 
@@ -1327,7 +1327,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 
 						CommonUtil.jacobExcelToPDF(fileName8,PDF);
 						System.out.println("已生成保险台账pdf"+PDF);
-						FileSystemUtils.deleteRecursively(new File(fileName8));
+//						FileSystemUtils.deleteRecursively(new File(fileName8));
 					}
 
 					//车辆其他险
@@ -1377,7 +1377,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 
 						CommonUtil.jacobExcelToPDF(fileName9,PDF);
 						System.out.println("已生成保险台账pdf"+PDF);
-						FileSystemUtils.deleteRecursively(new File(fileName9));
+//						FileSystemUtils.deleteRecursively(new File(fileName9));
 					}
 
 					//意外险
@@ -1424,7 +1424,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 
 						CommonUtil.jacobExcelToPDF(fileName5,PDF);
 						System.out.println("已生成保险台账pdf"+PDF);
-						FileSystemUtils.deleteRecursively(new File(fileName5));
+//						FileSystemUtils.deleteRecursively(new File(fileName5));
 					}
 
 					//驾驶员其他险
@@ -1471,7 +1471,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 
 						CommonUtil.jacobExcelToPDF(fileName6,PDF);
 						System.out.println("已生成保险台账pdf"+PDF);
-						FileSystemUtils.deleteRecursively(new File(fileName6));
+//						FileSystemUtils.deleteRecursively(new File(fileName6));
 					}
 
 

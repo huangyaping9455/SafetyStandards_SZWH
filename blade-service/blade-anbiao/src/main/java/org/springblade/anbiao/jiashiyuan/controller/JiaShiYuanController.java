@@ -418,7 +418,7 @@ public class JiaShiYuanController {
 				if (RegexUtils.checkMobile(jiaShiYuan.getShoujihaoma())) {
 					QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper1 = new QueryWrapper<JiaShiYuan>();
 					jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getShoujihaoma,jiaShiYuan.getShoujihaoma());
-					jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getDeptId, jiaShiYuan.getDeptId());
+//					jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getDeptId, jiaShiYuan.getDeptId());
 					jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getIsdelete, 0);
 					JiaShiYuan jiaShiYuan2 = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper1);
 					if (jiaShiYuan2 !=null){
@@ -1613,6 +1613,19 @@ public class JiaShiYuanController {
 					driver.setImportUrl("icon_cha.png");
 					bb++;
 				}
+			}
+
+			//验证驾驶员是否存在
+			QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper1 = new QueryWrapper<>();
+			jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getShoujihaoma,driver.getShoujihaoma());
+			jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getJiashiyuanxingming,driver.getJiashiyuanxingming());
+			jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getIsdelete,0);
+			JiaShiYuan jiaShiYuan = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper1);
+			if (jiaShiYuan!=null){
+				driver.setMsg(jiaShiYuan.getJiashiyuanxingming() + "该驾驶员已存在;");
+				errorStr += jiaShiYuan.getJiashiyuanxingming() + "该驾驶员已存在;";
+				driver.setImportUrl("icon_cha.png");
+				bb++;
 			}
 
 			//验证驾驶车辆
