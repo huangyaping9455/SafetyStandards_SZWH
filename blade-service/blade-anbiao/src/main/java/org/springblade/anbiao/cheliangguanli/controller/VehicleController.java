@@ -4864,8 +4864,6 @@ public class VehicleController {
 								vehicleService.getBaseMapper().updateById(vehicle);
 							}
 						}
-
-
 					}
 				}).start();
 			}

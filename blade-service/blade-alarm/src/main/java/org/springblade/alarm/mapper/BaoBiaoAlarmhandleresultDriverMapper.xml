@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.alarm.mapper.BaoBiaoAlarmhandleresultDriverMapper">
+
+    <resultMap id="BaoBiaoAlarmhandleresultDriverMap" type="org.springblade.alarm.entity.BaoBiaoAlarmhandleresultDriver">
+    </resultMap>
+
+    <!--根据驾驶员ID、学习状态获取驾驶员学习待办数-->
+    <select id="getDriverLearnBacklogCount" resultMap="BaoBiaoAlarmhandleresultDriverMap" parameterType="java.lang.String">
+        select driver_id,study_driver_id,alarm_type,count(1) as shu from baobiao_alarmhandleresult_driver
+        where 1=1
+        <if test=" driverId !=null and driverId != '' ">
+            and driver_id = #{driverId}
+        </if>
+        <if test=" status !=null and status != '' ">
+            and status = #{status}
+        </if>
+            and IFNULL(study_driver_id,'') != ''
+        GROUP BY driver_id,study_driver_id,alarm_type
+    </select>
+
+    <insert id="insertSelective" parameterType="org.springblade.alarm.entity.BaoBiaoAlarmhandleresultDriver" >
+        insert into baobiao_alarmhandleresult_driver
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test=" driver_id != null and driver_id != '' ">
+                driver_id,
+            </if>
+            <if test="alarm_id != null and alarm_id != '' ">
+                alarm_id,
+            </if>
+            <if test="alarm_type != null and alarm_type != '' ">
+                alarm_type,
+            </if>
+            <if test="course_id != null and course_id != '' ">
+                course_id,
+            </if>
+            <if test="caozuorenid != null and caozuorenid != '' ">
+                caozuorenid,
+            </if>
+            <if test="caozuoshijian != null and caozuoshijian != '' ">
+                caozuoshijian,
+            </if>
+            <if test="caozuoren != null and caozuoren != '' ">
+                caozuoren,
+            </if>
+                status,
+            <if test="study_driver_id != null and study_driver_id != '' ">
+                study_driver_id,
+            </if>
+            <if test="dept_id != null and dept_id != '' ">
+                dept_id
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test=" driver_id != null and driver_id != '' ">
+                #{driver_id},
+            </if>
+            <if test="alarm_id != null and alarm_id != '' ">
+                #{alarm_id},
+            </if>
+            <if test="alarm_type != null and alarm_type != '' ">
+                #{alarm_type},
+            </if>
+            <if test="course_id != null and course_id != '' ">
+                #{course_id},
+            </if>
+            <if test="caozuorenid != null and caozuorenid != '' ">
+                #{caozuorenid},
+            </if>
+            <if test="caozuoshijian != null and caozuoshijian != '' ">
+                #{caozuoshijian},
+            </if>
+            <if test="caozuoren != null and caozuoren != '' ">
+                #{caozuoren},
+            </if>
+                0,
+            <if test="study_driver_id != null and study_driver_id != '' ">
+                #{study_driver_id},
+            </if>
+            <if test="dept_id != null and dept_id != '' ">
+                #{dept_id}
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateStatus" parameterType="org.springblade.alarm.entity.BaoBiaoAlarmhandleresultDriver" >
+        UPDATE baobiao_alarmhandleresult_driver set status = #{status}
+        where study_driver_id = #{study_driver_id}
+            and course_id = #{course_id}
+            and alarm_id = #{alarm_id}
+    </update>
+
+
+
+</mapper>

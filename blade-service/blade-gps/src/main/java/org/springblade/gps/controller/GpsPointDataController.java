@@ -796,21 +796,19 @@ public class GpsPointDataController {
 		Iterator<VehilePTData> iterator = vehilePTData.iterator();
 		while (iterator.hasNext()) {
 			VehilePTData ve = iterator.next();
-			if (ve.getVelocity() < 1) {
-				iterator.remove();
-			}
+//			if (ve.getVelocity() < 1) {
+//				iterator.remove();
+//			}
 		}
 		for(int i = 0;i<vehilePTData.size();i++){
+			vehilePTData.get(i).setPlate(cheliangpaizhao);
+			vehilePTData.get(i).setColor(chepaiyanse);
 			if(vehilePTData.get(i).getVelocity() > 0){
-				vehilePTData.get(i).setPlate(cheliangpaizhao);
-				vehilePTData.get(i).setColor(chepaiyanse);
 				double[] doubles = GpsToBaiduUtil.wgs2bd(vehilePTData.get(i).getLatitude(), vehilePTData.get(i).getLongitude());
 				vehilePTData.get(i).setLatitude(doubles[0]);
 				vehilePTData.get(i).setLongitude(doubles[1]);
 //				String LocalName= LatLotForLocation.getProvince(vehilePTData.get(i).getLatitude().toString(),vehilePTData.get(i).getLongitude().toString());
 //				vehilePTData.get(i).setRoadName(LocalName);
-			}else{
-				vehilePTData.remove(i);
 			}
 		}
 		return R.data(vehilePTData);
