@@ -52,4 +52,7 @@ public class JiaShiYuanVO extends JiaShiYuan{
 	@ApiModelProperty(value = "所属地市")
 	private String area;
 
+	@ApiModelProperty(value = "准驾车型")
+	private String ajrClass;
+
 }

@@ -7,8 +7,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
+import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanJiashizheng;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanRuzhi;
+import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanJiashizhengService;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanRuzhiService;
+import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.common.tool.DateUtils;
@@ -46,6 +50,10 @@ public class AnbiaoJiashiyuanRuzhiController {
 
 	@Autowired
 	private AnbiaoRiskDetailController riskDetailController;
+	@Autowired
+	private IJiaShiYuanService iJiaShiYuanService;
+	@Autowired
+	private IAnbiaoJiashiyuanJiashizhengService jiashizhengService;
 
 
 	/**
@@ -113,6 +121,7 @@ public class AnbiaoJiashiyuanRuzhiController {
 			ruzhi.setAjrApproverTime(DateUtil.now());
 			ruzhi.setAjrCreateTime(DateUtil.now());
 			ruzhi.setAjrDelete("0");
+
 			return R.status(ruzhiService.save(ruzhi));
 		}else{
 			if(user != null){
@@ -127,6 +136,29 @@ public class AnbiaoJiashiyuanRuzhiController {
 
 			String jiashiyuanId = ruzhi.getAjrAjIds();
 			riskDetailController.jiashiyuanRuZhiRiskinsert(jiashiyuanId,user);
+
+			QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
+			jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId,ruzhi.getAjrAjIds());
+			jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,0);
+			JiaShiYuan jiaShiYuan = iJiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+			if (jiaShiYuan != null){
+				if (StringUtils.isNotBlank(ruzhi.getAjrIdNumber()) && !ruzhi.getAjrIdNumber().equals("null")){
+					jiaShiYuan.setShenfenzhenghao(ruzhi.getAjrIdNumber());
+					iJiaShiYuanService.getBaseMapper().updateById(jiaShiYuan);
+				}
+			}
+
+			QueryWrapper<AnbiaoJiashiyuanJiashizheng> jiashizhengQueryWrapper = new QueryWrapper<>();
+			jiashizhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanJiashizheng::getAjjAjIds,ruzhi.getAjrAjIds());
+			jiashizhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanJiashizheng::getAjjDelete,"0");
+			AnbiaoJiashiyuanJiashizheng jiashizheng = jiashizhengService.getBaseMapper().selectOne(jiashizhengQueryWrapper);
+			if (jiashizheng != null){
+				if (StringUtils.isNotBlank(ruzhi.getAjrIdNumber()) && !ruzhi.getAjrIdNumber().equals("null")){
+					jiashizheng.setAjjFileNo(ruzhi.getAjrIdNumber());
+					jiashizhengService.getBaseMapper().updateById(jiashizheng);
+				}
+			}
+
 
 			return R.status(ruzhiService.updateById(ruzhi));
 		}

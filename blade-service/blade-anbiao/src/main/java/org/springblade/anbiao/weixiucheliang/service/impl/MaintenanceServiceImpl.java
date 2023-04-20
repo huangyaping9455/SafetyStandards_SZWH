@@ -150,4 +150,9 @@ public class MaintenanceServiceImpl extends ServiceImpl<MaintenanceMapper,Mainte
 		return partsMapper.selectShiGu(accidentReportsEntity);
 	}
 
+	@Override
+	public AccidentReportsEntity selectShiGuJiLu(AccidentReportsEntity accidentReportsEntity) {
+		return partsMapper.selectShiGuJiLu(accidentReportsEntity);
+	}
+
 }

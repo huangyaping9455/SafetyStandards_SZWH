@@ -58,4 +58,5 @@ public class AccidentReportsEntity {
 	private String fujian;
 	private Integer	is_deleted;
 	private Date createtime;
+	private String countJiashiyuan;
 }

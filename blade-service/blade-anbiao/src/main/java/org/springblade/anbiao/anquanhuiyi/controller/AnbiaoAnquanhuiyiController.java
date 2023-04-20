@@ -269,6 +269,7 @@ public class AnbiaoAnquanhuiyiController {
 	@ApiOperation(value = "编辑-安全会议信息",notes = "传入AnbiaoAnquanhuiyi")
 	public R update(@RequestBody AnbiaoAnquanhuiyi anquanhuiyi,BladeUser user){
 		R r = new R();
+		boolean b;
 		QueryWrapper<AnbiaoAnquanhuiyi> anquanhuiyiQueryWrapper = new QueryWrapper<>();
 		anquanhuiyiQueryWrapper.lambda().eq(AnbiaoAnquanhuiyi::getId,anquanhuiyi.getId());
 		AnbiaoAnquanhuiyi deail = anquanhuiyiService.getBaseMapper().selectOne(anquanhuiyiQueryWrapper);
@@ -278,21 +279,48 @@ public class AnbiaoAnquanhuiyiController {
 			anquanhuiyi.setCaozuoshijian(DateUtil.now());
 			int i = anquanhuiyiService.getBaseMapper().updateById(anquanhuiyi);
 			if (i>0) {
-					QueryWrapper<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailQueryWrapper = new QueryWrapper<>();
-					anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,anquanhuiyi.getId());
-					anquanhuiyiDetailService.getBaseMapper().delete(anquanhuiyiDetailQueryWrapper);
+//					QueryWrapper<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailQueryWrapper = new QueryWrapper<>();
+//					anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,anquanhuiyi.getId());
+//					anquanhuiyiDetailService.getBaseMapper().delete(anquanhuiyiDetailQueryWrapper);
 					List<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailList = anquanhuiyi.getAnquanhuiyiDetails();
 					for (int j = 0; j <= anquanhuiyiDetailList.size() - 1; j++) {
-						AnbiaoAnquanhuiyiDetail anbiaoAnquanhuiyiDetail = new AnbiaoAnquanhuiyiDetail();
+						QueryWrapper<AnbiaoAnquanhuiyiDetail> anbiaoAnquanhuiyiDetailQueryWrapper = new QueryWrapper<>();
+						anbiaoAnquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds,anquanhuiyi.getId());
+						anbiaoAnquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadApIds,anquanhuiyiDetailList.get(j).getAadApIds());
+						AnbiaoAnquanhuiyiDetail anbiaoAnquanhuiyiDetail1 = anquanhuiyiDetailService.getBaseMapper().selectOne(anbiaoAnquanhuiyiDetailQueryWrapper);
+						if (anbiaoAnquanhuiyiDetail1==null){
+							AnbiaoAnquanhuiyiDetail anbiaoAnquanhuiyiDetail = new AnbiaoAnquanhuiyiDetail();
 							anbiaoAnquanhuiyiDetail.setAadAaIds(anquanhuiyi.getId());
 							anbiaoAnquanhuiyiDetail.setAadApIds(anquanhuiyiDetailList.get(j).getAadApIds());
 							anbiaoAnquanhuiyiDetail.setAadApName(anquanhuiyiDetailList.get(j).getAadApName());
 							anbiaoAnquanhuiyiDetail.setAadApType(anquanhuiyiDetailList.get(j).getAadApType());
-							anbiaoAnquanhuiyiDetail.setAddTime(anquanhuiyiDetailList.get(j).getAddTime());
+							if (StringUtils.isNotBlank(anquanhuiyiDetailList.get(j).getAddTime()) && !anquanhuiyiDetailList.get(j).getAddTime().equals("null")){
+								anbiaoAnquanhuiyiDetail.setAddTime(anquanhuiyiDetailList.get(j).getAddTime());
+							}
+
 							anbiaoAnquanhuiyiDetail.setAddApBeingJoined(anquanhuiyiDetailList.get(j).getAddApBeingJoined());
 							anbiaoAnquanhuiyiDetail.setAddApHeadPortrait(anquanhuiyiDetailList.get(j).getAddApHeadPortrait());
 							anbiaoAnquanhuiyiDetail.setAddApAutograph(anquanhuiyiDetailList.get(j).getAddApAutograph());
-							boolean b = anquanhuiyiDetailService.save(anbiaoAnquanhuiyiDetail);
+							 b = anquanhuiyiDetailService.save(anbiaoAnquanhuiyiDetail);
+						}else {
+							anbiaoAnquanhuiyiDetail1.setAadAaIds(anquanhuiyi.getId());
+							anbiaoAnquanhuiyiDetail1.setAadApIds(anquanhuiyiDetailList.get(j).getAadApIds());
+							anbiaoAnquanhuiyiDetail1.setAadApName(anquanhuiyiDetailList.get(j).getAadApName());
+							anbiaoAnquanhuiyiDetail1.setAadApType(anquanhuiyiDetailList.get(j).getAadApType());
+//							if (StringUtils.isNotBlank(anquanhuiyiDetailList.get(j).getAddTime()) && !anquanhuiyiDetailList.get(j).getAddTime().equals("null")){
+//								anbiaoAnquanhuiyiDetail1.setAddTime(anquanhuiyiDetailList.get(j).getAddTime());
+//							}
+							anbiaoAnquanhuiyiDetail1.setAddApBeingJoined(anquanhuiyiDetailList.get(j).getAddApBeingJoined());
+							anbiaoAnquanhuiyiDetail1.setAddApHeadPortrait(anquanhuiyiDetailList.get(j).getAddApHeadPortrait());
+							anbiaoAnquanhuiyiDetail1.setAddApAutograph(anquanhuiyiDetailList.get(j).getAddApAutograph());
+							int i1 = anquanhuiyiDetailService.getBaseMapper().updateById(anbiaoAnquanhuiyiDetail1);
+							if (i1>=0){
+								 b=true;
+							}else {
+								 b=false;
+							}
+						}
+
 							if (b) {
 								r.setMsg("更新成功");
 								r.setCode(200);

@@ -79,4 +79,6 @@ public interface MaintenanceService  extends IService<MaintenanceEntity> {
 
 	List<AccidentReportsEntity> selectShiGu(AccidentReportsEntity accidentReportsEntity);
 
+	AccidentReportsEntity selectShiGuJiLu(AccidentReportsEntity accidentReportsEntity);
+
 }

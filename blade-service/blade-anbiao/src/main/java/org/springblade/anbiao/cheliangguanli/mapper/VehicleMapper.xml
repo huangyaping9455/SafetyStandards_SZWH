@@ -1710,4 +1710,32 @@
         </if>
     </select>
 
+    <select id="selectCheLiangJiaShiYuan" resultType="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO" parameterType="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO" >
+
+        SELECT
+        d.cheliangpaizhao,
+        b.jiashiyuanxingming,
+        b.shenfenzhenghao,
+        c.ajr_class as ajrClass,
+        b.jiashizhenghao,
+        b.congyezigezheng,
+        b.createtime
+
+        FROM
+        anbiao_vehicle d
+        LEFT JOIN `anbiao_cheliang_jiashiyuan_daily` a on (d.id=a.vehid or d.id=a.gvehid)
+        LEFT JOIN anbiao_jiashiyuan b ON a.jiashiyuanid = b.id AND b.isdelete =0
+        LEFT JOIN anbiao_jiashiyuan_ruzhi c on b.id=c.ajr_aj_ids and c.ajr_delete=0
+        WHERE
+        d.is_deleted=0
+        <if test=" cheliangpaizhao !=null and cheliangpaizhao != '' ">
+            and cheliangpaizhao= #{cheliangpaizhao}
+        </if>
+        ORDER BY
+        d.cheliangpaizhao
+
+    </select>
+
+
+
 </mapper>

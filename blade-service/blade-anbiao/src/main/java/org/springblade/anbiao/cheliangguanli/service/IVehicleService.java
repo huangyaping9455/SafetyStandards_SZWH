@@ -7,6 +7,7 @@ import org.springblade.anbiao.cheliangguanli.page.VehiclePage;
 import org.springblade.anbiao.cheliangguanli.vo.JiShuDangAnVO;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleListVO;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
+import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
 
 import java.util.List;
 
@@ -251,5 +252,7 @@ public interface IVehicleService extends IService<Vehicle> {
 	List<VehicleVO> selectDriverVehicle(@Param("jsyId") String jsyId);
 
 	List<JiShuDangAnVO> selectJiShuDangAn(JiShuDangAnVO jiShuDangAnVO);
+
+	List<JiaShiYuanVO> selectCheLiangJiaShiYuan(JiaShiYuanVO jiaShiYuanVO);
 
 }

@@ -83,4 +83,6 @@ public interface MaintenanceMapper extends BaseMapper<MaintenanceEntity> {
 
 	List<AccidentReportsEntity> selectShiGu(AccidentReportsEntity accidentReportsEntity);
 
+	AccidentReportsEntity selectShiGuJiLu(AccidentReportsEntity accidentReportsEntity);
+
 }
