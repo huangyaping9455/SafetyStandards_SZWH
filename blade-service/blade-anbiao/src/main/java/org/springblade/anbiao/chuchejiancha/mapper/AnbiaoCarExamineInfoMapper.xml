@@ -116,6 +116,7 @@
                 <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) d on a.dept_id = d.id
         where 1=1
+            and a.is_deleted = 0
         </if>
     </sql>
 
@@ -182,7 +183,7 @@
             inner join  (
                 <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) b on a.deptid = b.id
-            LEFT JOIN anbiao_vehicle v on v.id = a.Vehid
+            LEFT JOIN anbiao_vehicle v on v.id = a.Vehid and v.is_deleted = 0
             LEFT JOIN anbiao_jiashiyuan j on j.id = a.jsyid
         where a.isdelete = 0
         <if test="deptName != null and deptName != ''">
@@ -344,6 +345,7 @@
         ) b
             INNER JOIN anbiao_vehicle v ON v.dept_id = b.id and v.cheliangpaizhao not like '%挂'
         where 1=1
+            and v.is_deleted = 0
         <if test="vehId != null and vehId != '' and vehIdidss == null">
             and v.id = #{vehId}
         </if>
@@ -365,8 +367,10 @@
             anbiao_car_examine_info
         where 1=1
         <if test="beginTime != null and beginTime != '' and endTime != null and endTime != '' ">
-            and date >= #{beginTime}
-            and date &lt;= #{endTime}
+            <!--and date >= #{beginTime}
+            and date &lt;= #{endTime}-->
+            and year(date) = left(#{beginTime},4)
+            and month(date) = month(#{endTime})
         </if>
         <if test="vehId != null and vehId != '' ">
             and vehid = #{vehId}

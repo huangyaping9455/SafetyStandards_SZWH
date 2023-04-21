@@ -819,7 +819,7 @@ values
         select
             a.id,a.dept_id as deptId,d.dept_name as deptName,a.jiashiyuanxingming,a.shenfenzhenghao,
             a.shoujihaoma,a.openid,b.ajr_head_portrait as zhaopian,d.cheliangpaizhao,e.cheliangpaizhao as guacheliangpaizhao,
-            d.vehid,e.vehid as guacheid
+            d.vehid,e.gvehid as guacheid
         from
             anbiao_jiashiyuan a
             left join blade_dept d on d.id = a.dept_id and d.is_deleted = 0
@@ -835,7 +835,7 @@ values
                 limit 1
             ) d on d.jiashiyuanid = a.id
             left join (
-                select a.jiashiyuanid,b.cheliangpaizhao,a.vehid from anbiao_cheliang_jiashiyuan_daily a,anbiao_vehicle b
+                select a.jiashiyuanid,b.cheliangpaizhao,a.gvehid from anbiao_cheliang_jiashiyuan_daily a,anbiao_vehicle b
                 where a.jiashiyuanid = #{jsyId}
                   and a.gvehid = b.id
                   and a.gstatus = 1

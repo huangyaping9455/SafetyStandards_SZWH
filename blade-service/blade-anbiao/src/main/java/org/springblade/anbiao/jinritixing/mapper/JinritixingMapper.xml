@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.jinritixing.mapper.JinritixingMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="jinritixingResultMap" type="org.springblade.anbiao.jinritixing.entity.Jinritixing">
+    </resultMap>
+
+
+    <select id="selectJinritixingPage" resultMap="jinritixingResultMap">
+        select * from anbiao_jinritixing_jiesuan where is_deleted = 0
+    </select>
+
+    <update id="updateDel" parameterType="java.lang.String">
+        UPDATE anbiao_jinritixing_jiesuan SET isdelete = 1 where id = #{id}
+    </update>
+
+    <sql id="tableSql">
+    SELECT * from(
+        SELECT
+            distinct
+            a.yujingxiang as tixingxiangqing,
+            IFNULL(b.counts,0) as counts,
+            b.tongjiriqi,
+            b.deptId,
+            b.tixingleixing,
+            a.shuoming as shuoming,
+            a.url,
+            a.id as tixingxiangqingid
+        FROM
+            anbiao_yujingxiang a
+        LEFT JOIN(
+            SELECT
+                count(a.tixingxiangqingid) AS counts,
+                a.tongjiriqi,
+                a.dept_id AS deptId,
+                a.tixingleixing,
+                a.tixingxiangqingid
+            FROM
+                anbiao_jinritixing_jiesuan a
+                inner join blade_dept b on a.dept_id = b.id
+            WHERE 1=1 and ifnull(a.isdelete,0) = 0
+            <if test="tongjiriqi !=null and tongjiriqi != ''">
+                AND tongjiriqi = #{tongjiriqi}
+            </if>
+            <if test="tixingleixing !=null and tixingleixing != ''">
+                AND tixingleixing = #{tixingleixing}
+            </if>
+            <if test="deptId != null">
+                AND a.dept_id = #{deptId}
+            </if>
+            GROUP BY
+                deptId,
+                tongjiriqi,
+                a.tixingleixing,
+                a.tixingxiangqingid
+            ) b on a.id = b.tixingxiangqingid
+        )a
+    </sql>
+
+    <sql id="querySql">
+        <if test="deptId != null">
+            AND tixingxiangqingid in(
+                SELECT a.yujingxiangid FROM anbiao_yujingquanxian a WHERE a.dept_id = #{deptId}
+            )
+        </if>
+    </sql>
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by counts desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <select id="selectPageList" parameterType="org.springblade.anbiao.jinritixing.page.JinritixingPage" resultType="org.springblade.anbiao.jinritixing.vo.JinritixingVO">
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            <include refid="tableSql" />
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${offsetNo},${size}
+
+        </if>
+    </select>
+
+    <select id="selectTotal" parameterType="org.springblade.anbiao.jinritixing.page.JinritixingPage" resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql" />
+        )d
+        where 1 = 1
+        <include refid="querySql" />
+    </select>
+
+    <select id="selectNum" parameterType="org.springblade.anbiao.jinritixing.page.JinritixingPage" resultType="int">
+        SELECT
+            count(1)
+        FROM
+            anbiao_jinritixing_jiesuan a
+            inner join blade_dept b on a.dept_id = b.id
+        WHERE 1=1
+            AND ifnull(a.isdelete,0) = 0
+        <if test="tongjiriqi !=null and tongjiriqi != ''">
+            AND tongjiriqi = #{tongjiriqi}
+        </if>
+        <if test="tixingleixing !=null and tixingleixing != ''">
+            AND tixingleixing = #{tixingleixing}
+        </if>
+        <if test="deptId != null">
+            AND a.dept_id = #{deptId}
+            AND a.tixingxiangqingid in(
+                SELECT DISTINCT a.yujingxiangid FROM anbiao_yujingquanxian a WHERE a.dept_id = #{deptId}
+            )
+        </if>
+
+    </select>
+
+    <select id="selectByIds" parameterType="java.lang.String" resultType="org.springblade.anbiao.jinritixing.vo.JinritixingVO">
+        SELECT
+        a.*,b.dept_name deptName, c.jiashiyuanxingming as jiashiyuanxingming, d.cheliangpaizhao as cheliangpaizhao
+        FROM
+        anbiao_jinritixing_jiesuan a
+        inner join  blade_dept b
+        on a.dept_id = b.id
+        LEFT join anbiao_jiashiyuan c on a.jiashiyuanid = c.id
+        LEFT join anbiao_vehicle d on a.cheliangid = d.id
+        WHERE 1=1 and ifnull(a.isdelete ,0) = 0 and a.id=#{id}
+    </select>
+
+    <select id="selectLists" parameterType="org.springblade.anbiao.jinritixing.page.JinritixingPage" resultType="org.springblade.anbiao.jinritixing.vo.JinritixingVO">
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableSqls" />
+            )b
+            where 1=1
+            <include refid="querySqls" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableSqls" />
+            )b
+            where 1=1
+            <include refid="querySqls" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectListTotal" parameterType="org.springblade.anbiao.jinritixing.page.JinritixingPage" resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSqls" />
+        )d
+        where 1 = 1
+        <include refid="querySqls" />
+    </select>
+
+    <sql id="tableSqls">
+        SELECT a.tixingleixing,a.tixingxiangqing,d.dept_name as deptName,b.cheliangpaizhao,b.chepaiyanse,c.jiashiyuanxingming from anbiao_jinritixing_jiesuan a
+LEFT JOIN anbiao_vehicle b on a.cheliangid = b.id and ifnull(b.is_deleted,0) = 0
+LEFT JOIN anbiao_jiashiyuan c on a.jiashiyuanid = c.id and ifnull(c.isdelete,0) = 0
+LEFT JOIN blade_dept d on a.dept_id = d.id  where ifnull(a.isdelete,0) = 0
+        <if test="deptId !=null and deptId != ''">
+            AND a.dept_id  = #{deptId}
+        </if>
+        <if test="tongjiriqi !=null and tongjiriqi != ''">
+            AND a.tongjiriqi = #{tongjiriqi}
+        </if>
+
+    </sql>
+
+    <sql id="querySqls">
+        <if test="tixingleixing !=null and tixingleixing != ''">
+        AND tixingleixing  = #{tixingleixing}
+        </if>
+        <if test="tixingxiangqing !=null and tixingxiangqing != ''">
+        AND tixingxiangqing = #{tixingxiangqing}
+        </if>
+
+    </sql>
+
+	<sql id="tableFYYHSql">
+	select * from(
+		SELECT
+			distinct
+            a.id,
+			a.`name`,
+			a.type,
+            a.status,
+			IFNULL(b.counts,0) as counts,
+			a.score*counts as countscore,
+			b.tongjiriqi,
+			b.deptId,
+			b.tixingleixing,
+			b.tixingxiangqing
+		FROM
+			anbiao_yinhuanpaicha_xiang a
+			INNER JOIN(
+				SELECT
+					count(a.tixingxiangqingid) AS counts,
+					a.tongjiriqi,
+					a.dept_id AS deptId,
+					a.tixingleixing,
+					a.tixingxiangqing,
+					a.tixingxiangqingid
+				FROM
+					anbiao_jinritixing_jiesuan a
+					inner join blade_dept b on a.dept_id = b.id
+				WHERE 1=1 and ifnull(a.isdelete,0) = 0
+				  AND a.status = 0
+				  AND a.dept_id = #{deptId}
+				GROUP BY
+					deptId,
+					tongjiriqi,
+					a.tixingleixing,
+					a.tixingxiangqingid,
+					a.tixingxiangqing
+			) b on a.id = b.tixingxiangqingid
+		 )a
+	</sql>
+
+	<sql id="queryFYYHSql">
+		<if test="type != null">
+			and type = #{type}
+		</if>
+	</sql>
+	<sql id="orderFYYHSql">
+		<!-- 默认排序规则 -->
+		<if test="orderColumn == null or orderColumn == ''">
+			order by counts desc
+		</if>
+		<if test="orderColumn != null and orderColumn != ''">
+			order by ${orderColumn}
+		</if>
+		<if test="orderColumn != null and orderColumn != '' and order != 0">
+			desc
+		</if>
+	</sql>
+
+	<select id="selectFYYHPageList" parameterType="org.springblade.anbiao.jinritixing.page.JinritixingPage" resultType="org.springblade.anbiao.jinritixing.vo.FyyhTiXingVO">
+		<if test="size == 0" >
+			select * from (
+			<include refid="tableFYYHSql" />
+			)b
+			where 1=1
+			<include refid="queryFYYHSql" />
+			<include refid="orderFYYHSql" />
+			limit ${total}
+		</if>
+		<if test="current != 0" >
+			<include refid="tableFYYHSql" />
+			where 1=1
+			<include refid="queryFYYHSql" />
+			<include refid="orderFYYHSql" />
+			limit ${offsetNo},${size}
+
+		</if>
+	</select>
+
+	<select id="selectFYYHTotal" parameterType="org.springblade.anbiao.jinritixing.page.JinritixingPage" resultType="int">
+		select COUNT(1) from (
+		<include refid="tableFYYHSql" />
+		)d
+		where 1 = 1
+		<include refid="queryFYYHSql" />
+	</select>
+
+	<select id="selectCountScore" parameterType="map" resultType="org.springblade.anbiao.jinritixing.vo.FyyhTiXingVO">
+		SELECT
+            a.type,
+			SUM(a.countScore) as countscore
+		from(
+			SELECT
+				distinct
+				a.`name`,
+				a.type,
+				a.judgerules,
+				a.score,
+				a.score*counts as countScore,
+				IFNULL(b.counts,0) as counts,
+				b.tongjiriqi,
+				b.deptId,
+				b.tixingleixing,
+				b.tixingxiangqing
+			FROM
+				anbiao_yinhuanpaicha_xiang a
+				INNER JOIN(
+					SELECT
+						count(a.tixingxiangqingid) AS counts,
+						a.tongjiriqi,
+						a.dept_id AS deptId,
+						a.tixingleixing,
+						a.tixingxiangqing,
+						a.tixingxiangqingid
+					FROM
+						anbiao_jinritixing_jiesuan a
+							inner join blade_dept b on a.dept_id = b.id
+					WHERE 1=1
+					  AND ifnull(a.isdelete,0) = 0
+<!--					  AND a.status = 0-->
+					  AND a.dept_id = #{deptId}
+<!--                      AND a.tongjiriqi >= #{begdate}-->
+<!--                      AND a.tongjiriqi &lt;= #{enddate}-->
+					GROUP BY
+						deptId,
+						tongjiriqi,
+						a.tixingleixing,
+						a.tixingxiangqingid,
+						a.tixingxiangqing
+				) b on a.id = b.tixingxiangqingid
+			)a
+		GROUP BY
+            a.deptId,
+            a.type
+    </select>
+
+	<select id="selectFinshCountScore" parameterType="map" resultType="org.springblade.anbiao.jinritixing.vo.FyyhTiXingVO">
+		SELECT
+            a.type,
+			SUM(a.countScore) as finshcountscore
+		from(
+			SELECT
+				distinct
+				a.`name`,
+				a.type,
+				a.judgerules,
+				a.score,
+				a.score*counts as countScore,
+				IFNULL(b.counts,0) as counts,
+				b.tongjiriqi,
+				b.deptId,
+				b.tixingleixing,
+				b.tixingxiangqing
+			FROM
+				anbiao_yinhuanpaicha_xiang a
+				INNER JOIN(
+					SELECT
+						count(a.tixingxiangqingid) AS counts,
+						a.tongjiriqi,
+						a.dept_id AS deptId,
+						a.tixingleixing,
+						a.tixingxiangqing,
+						a.tixingxiangqingid
+					FROM
+						anbiao_jinritixing_jiesuan a
+							inner join blade_dept b on a.dept_id = b.id
+					WHERE 1=1
+					  AND ifnull(a.isdelete,0) = 0
+					  AND a.status = 1
+					  AND a.dept_id = #{deptId}
+<!--                      AND a.tongjiriqi >= #{begdate}-->
+<!--                      AND a.tongjiriqi &lt;= #{enddate}-->
+					GROUP BY
+						deptId,
+						tongjiriqi,
+						a.tixingleixing,
+						a.tixingxiangqingid,
+						a.tixingxiangqing
+					) b on a.id = b.tixingxiangqingid
+				)a
+		GROUP BY
+            a.deptId,
+            a.type
+    </select>
+
+
+    <sql id="tableYHFLSql">
+        select * from(
+             select
+                 a.*,
+                 b.cheliangpaizhao,
+                 b.chepaiyanse,
+                 b.shiyongxingzhi,
+                 j.jiashiyuanxingming,
+                 j.shoujihaoma,
+                 j.shenfenzhenghao,
+                 j.congyerenyuanleixing,
+                 jx.isdispose
+             from(
+                 SELECT
+                     distinct
+                     a.dept_id AS deptId,
+                     a.*
+                 FROM
+                     anbiao_jinritixing_jiesuan a
+                     inner join blade_dept b on a.dept_id = b.id
+                 WHERE 1=1
+                   AND ifnull(a.isdelete,0) = 0
+                   AND a.status = 0
+                   AND a.dept_id = #{deptId}
+                   AND a.tixingxiangqingid = #{tixingxiangqingid}
+                   AND a.tongjiriqi = #{tongjiriqi}
+<!--                   AND a.tongjiriqi >= #{begdate}-->
+<!--                   AND a.tongjiriqi &lt;= #{enddate}-->
+                 ) a
+             left join anbiao_vehicle b on a.cheliangid = b.id and b.is_deleted = 0
+             left join anbiao_jiashiyuan j on a.jiashiyuanid = j.id and j.isdelete = 0
+             left join anbiao_yinhuanpaicha_xiang jx on a.tixingxiangqingid = jx.id and jx.isdelete = 0
+         ) a
+    </sql>
+
+    <sql id="queryYHFLSql">
+        <if test="jiashiyuanxingming != null and jiashiyuanxingming != ''">
+            and jiashiyuanxingming like '%${jiashiyuanxingming}%'
+        </if>
+
+        <if test="cheliangpaizhao != null and cheliangpaizhao != ''">
+            and cheliangpaizhao like '%${cheliangpaizhao}%'
+        </if>
+    </sql>
+
+    <sql id="orderYHFLSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by tixingxiangqingid desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <select id="selectYHFLPageList" parameterType="org.springblade.anbiao.jinritixing.page.JinritixingPage" resultType="org.springblade.anbiao.jinritixing.vo.FyyhTiXingInfoVO">
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableYHFLSql" />
+            )b
+            where 1=1
+            <include refid="queryYHFLSql" />
+            <include refid="orderYHFLSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            <include refid="tableYHFLSql" />
+            where 1=1
+            <include refid="queryYHFLSql" />
+            <include refid="orderYHFLSql" />
+            limit ${offsetNo},${size}
+
+        </if>
+    </select>
+
+    <select id="selectYHFLTotal" parameterType="org.springblade.anbiao.jinritixing.page.JinritixingPage" resultType="int">
+        select COUNT(1) from (
+        <include refid="tableYHFLSql" />
+        )d
+        where 1 = 1
+        <include refid="queryYHFLSql" />
+    </select>
+
+    <select id="selectJinritixingByDeptId" parameterType="map" resultType="org.springblade.anbiao.jinritixing.vo.FyyhTiXingInfoVO">
+        SELECT
+            distinct
+            a.dept_id AS deptId,
+            a.*
+        FROM
+            anbiao_jinritixing_jiesuan a
+            inner join blade_dept b on a.dept_id = b.id
+        WHERE 1=1
+          AND ifnull(a.isdelete,0) = 0
+          AND a.status = 0
+          AND a.dept_id = #{deptId}
+          AND a.tixingxiangqingid = #{tixingxiangqingid}
+          AND a.tongjiriqi >= #{begdate}
+          AND a.tongjiriqi &lt;= #{enddate}
+    </select>
+
+    <select id="selectYHXDept" resultType="org.springblade.anbiao.jinritixing.entity.YinHuanVehicle">
+        select
+            deptid as deptId
+        from
+            anbiao_yinhuanpaicha_xiang_dept
+        where isdelete = 0
+        GROUP BY
+            deptid
+    </select>
+
+
+	<!--报废日期  缺项、逾期、预警-->
+	<select id="selectVehQZBFSJ" parameterType="java.lang.String" resultType="org.springblade.anbiao.jinritixing.entity.YinHuanVehicle">
+		select
+		id,dept_id as deptId,cheliangpaizhao,chepaiyanse,qiangzhibaofeishijian
+		from
+		anbiao_vehicle
+		where is_deleted = 0
+		<if test="deptId != null and deptId != ''">
+			and dept_id = #{deptId}
+		</if>
+		<!--缺项-->
+		<if test="type == '3'.toString()">
+			and ifnull(qiangzhibaofeishijian,'') = ''
+		</if>
+		<!--逾期-->
+		<if test="type == '2'.toString()">
+			and (ifnull(qiangzhibaofeishijian,'') != '' and qiangzhibaofeishijian &lt; CURDATE())
+		</if>
+		<!--预警-->
+		<if test="type == '1'.toString()">
+            and (ifnull(qiangzhibaofeishijian,'') != '' and (TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),qiangzhibaofeishijian) > 0 and TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),qiangzhibaofeishijian) &lt;= 30))
+		</if>
+	</select>
+
+	<!--下次年审日期  缺项、逾期、预警-->
+	<select id="selectVehXCNSSJ" parameterType="java.lang.String" resultType="org.springblade.anbiao.jinritixing.entity.YinHuanVehicle">
+		select
+			id,dept_id as deptId,cheliangpaizhao,chepaiyanse,xiacinianshenriqi
+		from
+			anbiao_vehicle
+		where is_deleted = 0
+		<if test="deptId != null and deptId != ''">
+			and dept_id = #{deptId}
+		</if>
+		<!--缺项-->
+		<if test="type == '3'.toString()">
+			and ifnull(xiacinianshenriqi,'') = ''
+		</if>
+		<!--逾期-->
+		<if test="type == '2'.toString()">
+			and (ifnull(xiacinianshenriqi,'') != '' and xiacinianshenriqi &lt; CURDATE())
+		</if>
+		<!--预警-->
+		<if test="type == '1'.toString()">
+            and (ifnull(xiacinianshenriqi,'') != '' and (TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),xiacinianshenriqi) > 0 and TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),xiacinianshenriqi) &lt;= 30))
+		</if>
+	</select>
+
+	<!--下次年检日期  缺项、逾期、预警-->
+	<select id="selectVehXCNJSJ" parameterType="java.lang.String" resultType="org.springblade.anbiao.jinritixing.entity.YinHuanVehicle">
+		select
+			id,dept_id as deptId,cheliangpaizhao,chepaiyanse,xiacinianjianriqi
+		from
+			anbiao_vehicle
+		where is_deleted = 0
+		<if test="deptId != null and deptId != ''">
+			and dept_id = #{deptId}
+		</if>
+		<!--缺项-->
+		<if test="type == '3'.toString()">
+			and ifnull(xiacinianjianriqi,'') = ''
+		</if>
+		<!--逾期-->
+		<if test="type == '2'.toString()">
+			and (ifnull(xiacinianjianriqi,'') != '' and xiacinianjianriqi &lt; CURDATE())
+		</if>
+		<!--预警-->
+		<if test="type == '1'.toString()">
+            and (ifnull(xiacinianjianriqi,'') != '' and (TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),xiacinianjianriqi) > 0 and TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),xiacinianjianriqi) &lt;= 30))
+		</if>
+	</select>
+
+	<!--道路运输证有效截止日期  缺项、逾期、预警-->
+	<select id="selectVehDLYSZYXQSJ" parameterType="java.lang.String" resultType="org.springblade.anbiao.jinritixing.entity.YinHuanVehicle">
+		select
+			id,dept_id as deptId,cheliangpaizhao,chepaiyanse,daoluyunshuzhengyouxiaoqi
+		from
+			anbiao_vehicle
+		where is_deleted = 0
+		<if test="deptId != null and deptId != ''">
+			and dept_id = #{deptId}
+		</if>
+		<!--缺项-->
+		<if test="type == '3'.toString()">
+			and ifnull(daoluyunshuzhengyouxiaoqi,'') = ''
+		</if>
+		<!--逾期-->
+		<if test="type == '2'.toString()">
+			and (ifnull(daoluyunshuzhengyouxiaoqi,'') != '' and daoluyunshuzhengyouxiaoqi &lt; CURDATE())
+		</if>
+		<!--预警-->
+		<if test="type == '1'.toString()">
+            and (ifnull(daoluyunshuzhengyouxiaoqi,'') != '' and (TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),daoluyunshuzhengyouxiaoqi) > 0 and TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),daoluyunshuzhengyouxiaoqi) &lt;= 30))
+		</if>
+	</select>
+
+	<!--下次技术评定日期  缺项、逾期、预警-->
+	<select id="selectVehXCJSPDQSJ" parameterType="java.lang.String" resultType="org.springblade.anbiao.jinritixing.entity.YinHuanVehicle">
+		select
+			id,dept_id as deptId,cheliangpaizhao,chepaiyanse,xiacijipingriqi
+		from
+			anbiao_vehicle
+		where is_deleted = 0
+		<if test="deptId != null and deptId != ''">
+			and dept_id = #{deptId}
+		</if>
+		<!--缺项-->
+		<if test="type == '3'.toString()">
+			and ifnull(xiacijipingriqi,'') = ''
+		</if>
+		<!--逾期-->
+		<if test="type == '2'.toString()">
+			and (ifnull(xiacijipingriqi,'') != '' and xiacijipingriqi &lt; CURDATE())
+		</if>
+		<!--预警-->
+		<if test="type == '1'.toString()">
+            and (ifnull(xiacijipingriqi,'') != '' and (TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),xiacijipingriqi) > 0 and TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),xiacijipingriqi) &lt;= 30))
+		</if>
+	</select>
+
+	<!--交强险到期日期、商业险到期日期、超赔险到期日期、雇主险到期日期  缺项、逾期、预警-->
+	<select id="selectVehBXSJ" parameterType="java.lang.String" resultType="org.springblade.anbiao.jinritixing.entity.YinHuanVehicle">
+		select
+			id,a.dept_id as deptId,cheliangpaizhao,chepaiyanse,b.toubaoleixing,b.zhongbaoshijian
+		from
+			anbiao_vehicle a
+		left join (
+			select
+				a.cheliangid,a.dept_id,MAX(b.zhongbaoshijian) as zhongbaoshijian,
+				b.toubaoleixing
+			from
+				anbiao_cheliangbaoxian a,anbiao_baoxianxinxi b
+			where a.id = b.baoxianid
+				and a.isdelete = 0
+			GROUP BY
+				a.cheliangid,a.dept_id,b.toubaoleixing
+			) b on a.id = b.cheliangid and a.dept_id = b.dept_id
+		where a.is_deleted = 0
+		<if test="deptId != null and deptId != ''">
+			and a.dept_id = #{deptId}
+		</if>
+		<!--缺项-->
+		<if test="type == '3'.toString()">
+			and ifnull(b.zhongbaoshijian,'') = ''
+		</if>
+		<!--逾期-->
+		<if test="type == '2'.toString()">
+            <if test="toubaoleixing != null and toubaoleixing != ''">
+                and b.toubaoleixing = #{toubaoleixing}
+            </if>
+			and (ifnull(b.zhongbaoshijian,'') != '' and b.zhongbaoshijian &lt; CURDATE())
+		</if>
+		<!--预警-->
+		<if test="type == '1'.toString()">
+            <if test="toubaoleixing != null and toubaoleixing != ''">
+                and b.toubaoleixing = #{toubaoleixing}
+            </if>
+            and (ifnull(b.zhongbaoshijian,'') != '' and (TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),b.zhongbaoshijian) > 0 and TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),b.zhongbaoshijian) &lt;= 30))
+        </if>
+	</select>
+
+    <!--驾驶证有效截至日期、从业资格证有效截止日期、下次诚信考核日期、体检有效截至日期、身份证有效期截至时间、从业资格证号  缺项、逾期、预警-->
+    <select id="selectDriverSJ" parameterType="java.lang.String" resultType="org.springblade.anbiao.jinritixing.entity.YinHuanDriver">
+        select
+            id as jiashiyuanid,dept_id as deptId,jiashiyuanxingming,
+            jiashizhengyouxiaoqi,congyezhengyouxiaoqi,xiacichengxinkaoheshijian,
+            tijianyouxiaoqi,shenfenzhengyouxiaoqi,congyezigezheng
+        from
+            anbiao_jiashiyuan
+        where isdelete = 0
+        <if test="deptId != null and deptId != ''">
+            and dept_id = #{deptId}
+        </if>
+        <if test="leixing == '驾驶证有效截至日期'">
+            <!--缺项-->
+            <if test="type == '3'.toString()">
+                and ifnull(jiashizhengyouxiaoqi,'') = ''
+            </if>
+            <!--逾期-->
+            <if test="type == '2'.toString()">
+                and (ifnull(jiashizhengyouxiaoqi,'') != '' and jiashizhengyouxiaoqi &lt; CURDATE())
+            </if>
+            <!--预警-->
+            <if test="type == '1'.toString()">
+                and (ifnull(jiashizhengyouxiaoqi,'') != '' and (TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),jiashizhengyouxiaoqi) > 0 and TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),jiashizhengyouxiaoqi) &lt;= 30))
+            </if>
+        </if>
+        <if test="leixing == '从业资格证有效截至日期'">
+            <!--缺项-->
+            <if test="type == '3'.toString()">
+                and ifnull(congyezhengyouxiaoqi,'') = ''
+            </if>
+            <!--逾期-->
+            <if test="type == '2'.toString()">
+                and (ifnull(congyezhengyouxiaoqi,'') != '' and congyezhengyouxiaoqi &lt; CURDATE())
+            </if>
+            <!--预警-->
+            <if test="type == '1'.toString()">
+                and (ifnull(congyezhengyouxiaoqi,'') != '' and (TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),congyezhengyouxiaoqi) > 0 and TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),congyezhengyouxiaoqi) &lt;= 30))
+            </if>
+        </if>
+        <if test="leixing == '下次诚信考核日期'">
+            <!--缺项-->
+            <if test="type == '3'.toString()">
+                and ifnull(xiacichengxinkaoheshijian,'') = ''
+            </if>
+            <!--逾期-->
+            <if test="type == '2'.toString()">
+                and (ifnull(xiacichengxinkaoheshijian,'') != '' and xiacichengxinkaoheshijian &lt; CURDATE())
+            </if>
+            <!--预警-->
+            <if test="type == '1'.toString()">
+                and (ifnull(xiacichengxinkaoheshijian,'') != '' and (TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),xiacichengxinkaoheshijian) > 0 and TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),xiacichengxinkaoheshijian) &lt;= 30))
+            </if>
+        </if>
+        <if test="leixing == '体检有效截至日期'">
+            <!--缺项-->
+            <if test="type == '3'.toString()">
+                and ifnull(tijianyouxiaoqi,'') = ''
+            </if>
+            <!--逾期-->
+            <if test="type == '2'.toString()">
+                and (ifnull(tijianyouxiaoqi,'') != '' and tijianyouxiaoqi &lt; CURDATE())
+            </if>
+            <!--预警-->
+            <if test="type == '1'.toString()">
+                and (ifnull(tijianyouxiaoqi,'') != '' and (TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),tijianyouxiaoqi) > 0 and TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),tijianyouxiaoqi) &lt;= 30))
+            </if>
+        </if>
+        <if test="leixing == '身份证有效期截至时间'">
+            <!--缺项-->
+            <if test="type == '3'.toString()">
+                and ifnull(shenfenzhengyouxiaoqi,'') = ''
+            </if>
+            <!--逾期-->
+            <if test="type == '2'.toString()">
+                and (ifnull(shenfenzhengyouxiaoqi,'') != '' and shenfenzhengyouxiaoqi &lt; CURDATE())
+            </if>
+            <!--预警-->
+            <if test="type == '1'.toString()">
+                and (ifnull(shenfenzhengyouxiaoqi,'') != '' and (TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),shenfenzhengyouxiaoqi) > 0 and TIMESTAMPDIFF(DAY,DATE_FORMAT(NOW(), '%Y-%m-%d'),shenfenzhengyouxiaoqi) &lt;= 30))
+            </if>
+        </if>
+        <if test="leixing == '从业资格证号'">
+            <!--缺项-->
+            <if test="type == '3'.toString()">
+                and ifnull(congyezigezheng,'') = ''
+            </if>
+        </if>
+    </select>
+
+    <!--企业法人身份证(fujian)、企业工商营业执照(loginPhotoApp)、企业经营许可证(homePhotoApp)、企业安全负责人(logoRizhi)、企业营业许可证(logoPhoto)、道路运输许可证(profilePhoto)  缺项  缺项-->
+    <select id="selectDeptSJ" parameterType="java.lang.String" resultType="org.springblade.anbiao.jinritixing.entity.YinHuanDept">
+        select
+            b.id as deptId,
+            a.fujian,
+            a.login_photo as loginPhotoApp,
+            a.home_photo as homePhotoApp,
+            a.logo_rizhi as logoRizhi,
+            a.logo_photo as logoPhoto,
+            a.profile_photo as profilePhoto
+        from
+            anbiao_organization a,blade_dept b
+        where a.dept_id = b.id
+            and a.isdelete = 0
+            and b.is_deleted = 0
+        <if test="deptId != null and deptId != ''">
+            and b.id = #{deptId}
+        </if>
+        -- 	-- 缺项
+        <if test="leixing == '企业法人身份证'">
+            <!--缺项-->
+            <if test="type == '3'.toString()">
+                and ifnull(a.fujian,'') = ''
+            </if>
+        </if>
+        <if test="leixing == '企业工商营业执照'">
+            <!--缺项-->
+            <if test="type == '3'.toString()">
+                and ifnull(a.login_photo,'') = ''
+            </if>
+        </if>
+        <if test="leixing == '企业经营许可证'">
+            <!--缺项-->
+            <if test="type == '3'.toString()">
+                and ifnull(a.home_photo,'') = ''
+            </if>
+        </if>
+        <if test="leixing == '企业安全负责人'">
+            <!--缺项-->
+            <if test="type == '3'.toString()">
+                and ifnull(a.logo_rizhi,'') = ''
+            </if>
+        </if>
+        <if test="leixing == '企业营业许可证'">
+            <!--缺项-->
+            <if test="type == '3'.toString()">
+                and ifnull(a.logo_photo,'') = ''
+            </if>
+        </if>
+        <if test="leixing == '道路运输许可证'">
+            <!--缺项-->
+            <if test="type == '3'.toString()">
+                and ifnull(a.profile_photo,'') = ''
+            </if>
+        </if>
+    </select>
+
+    <!--上线率 50%、轨迹完整 80%、数据合格率 80%、漂移率 80% -->
+    <select id="selectDeptRate" resultType="org.springblade.anbiao.jinritixing.entity.YinHuanRate">
+        select
+            cid as deptId,
+            (UpLineCount*1.0/vehiclecount)*100 as upLineRate,
+            IntactPositionRate,
+            DriftPositionRate,
+            QualifiedPositionRate,
+            date
+        from
+            baobiao_alarmdailyreport
+        where date = DATE_SUB(curdate(),INTERVAL 1 DAY)
+            and cid = #{deptId}
+    </select>
+
+</mapper>

@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.yinhuanpaicha.mapper.AnbiaoYinhuanpaichaXiangDeptInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="ResultMap" type="org.springblade.anbiao.yinhuanpaicha.entity.AnbiaoYinhuanpaichaXiangDeptInfo">
+    </resultMap>
+
+    <resultMap id="AnbiaoYinhuanpaichaXiangDeptInfoVOResultMap" type="org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoYinhuanpaichaXiangDeptInfoVO">
+    </resultMap>
+
+	<resultMap id="AnbiaoYinhuanpaichaXiangDeptVOResultMap" type="org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoYinhuanpaichaXiangDeptVO">
+	</resultMap>
+
+    <sql id="tableDeptYHSql">
+        select
+            a.*,
+            b.dept_name as deptname
+        from(
+            select
+                b.`name`,
+                b.type,
+                b.`status`,
+                b.source,
+                a.deptid,
+                a.id,
+                a.xiangid,
+				a.createtime
+            from
+                anbiao_yinhuanpaicha_xiang_dept a,
+                anbiao_yinhuanpaicha_xiang b
+            where a.xiangid = b.id
+                and a.isdelete = 0
+                and b.isdrawupplan = 1
+            )a
+        left join (
+            SELECT
+                DISTINCT
+                xiaji.id,
+                xiaji.dept_name
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                AND xiaji.is_deleted = 0
+                AND xiaji.extend_type='机构'
+            <if test="deptId != null">
+                AND shangji.id=#{deptId}
+            </if>
+        ) b on a.deptid = b.id
+    </sql>
+
+    <sql id="queryDeptYHSql">
+        <if test="name != null and name != '' ">
+            and name like '%${name}%'
+        </if>
+    </sql>
+
+    <sql id="orderDeptYHSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by createtime
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <select id="selectDeptYHPage" resultMap="AnbiaoYinhuanpaichaXiangDeptVOResultMap"
+            parameterType="org.springblade.anbiao.yinhuanpaicha.page.YinhuanpaichaXiangPage" >
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableDeptYHSql" />
+            )b
+            where 1=1
+            <include refid="queryDeptYHSql" />
+            <include refid="orderDeptYHSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableDeptYHSql" />
+            )b
+            where 1=1
+            <include refid="queryDeptYHSql" />
+            <include refid="orderDeptYHSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectDeptYHTotal"
+            parameterType="org.springblade.anbiao.yinhuanpaicha.page.YinhuanpaichaXiangPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableDeptYHSql" />
+        )d
+        where 1 = 1
+        <include refid="queryDeptYHSql" />
+    </select>
+
+    <sql id="tableSql">
+		select
+			a.*,
+			b.dept_name as deptname,
+			c.name
+		from
+			anbiao_yinhuanpaicha_xiang_dept_info a
+		left join (
+			SELECT
+				DISTINCT
+				xiaji.id,
+				xiaji.dept_name
+			FROM
+				blade_dept shangji,
+				blade_dept xiaji
+			WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+				AND xiaji.is_deleted = 0
+				AND xiaji.extend_type='机构'
+			<if test="deptId != null">
+				AND shangji.id=#{deptId}
+			</if>
+		) b on a.deptid = b.id
+		left join anbiao_yinhuanpaicha_xiang c on a.dataid = c.id
+		where 1=1
+		and a.isdelete = 0
+		and c.isdelete = 0
+    </sql>
+
+    <sql id="querySql">
+        <if test="name != null and name != '' ">
+            and name like '%${name}%'
+        </if>
+        <if test="dataid != null and dataid != '' ">
+            and dataid = #{dataid}
+        </if>
+    </sql>
+
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by createtime
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <select id="selectYinhuanpaichaDeptPlanPage" resultMap="AnbiaoYinhuanpaichaXiangDeptVOResultMap"
+            parameterType="org.springblade.anbiao.yinhuanpaicha.page.YinhuanpaichaXiangPage" >
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectYinhuanpaichaDeptPlanTotal"
+            parameterType="org.springblade.anbiao.yinhuanpaicha.page.YinhuanpaichaXiangPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql" />
+        )d
+        where 1 = 1
+        <include refid="querySql" />
+    </select>
+
+	<sql id="tableRemarkSql">
+        select
+            a.id,
+            a.deptname,
+            a.name,
+            a.deptid,
+            a.pcyf,
+            a.vehid,
+            a.jsyid,
+            a.pfdate,
+            a.scdate,
+            a.dataid,
+            a.cheliangpaizhao,
+            a.chepaiyanse,
+            a.shiyongxingzhi,
+            a.jiashiyuanxingming,
+            a.shenfenzhenghao,
+            a.shoujihaoma,
+            b.`status`,
+            case when a.status = 0 and IFNULL(b.`status`,'') = '' then '未填写'
+            when IFNULL(b.`status`,'') = 0 then '正常'
+            when IFNULL(b.`status`,'') = 1 then '有隐患，待审核'
+            when IFNULL(b.`status`,'') = 2 then '审核通过，待整改'
+            when IFNULL(b.`status`,'') = 3 then '审核通过，不整改'
+            when IFNULL(b.`status`,'') = 4 then '已整改，待验收'
+            else '验收归档'
+            end as statusShow,
+            b.id as shujuid
+        from(
+            select
+                b.dept_name as deptname,
+                c.name,
+                a.deptid,
+                a.pcyf,
+                r.*,
+                d.cheliangpaizhao,
+                d.chepaiyanse,
+                d.shiyongxingzhi,
+                e.jiashiyuanxingming,
+                e.shenfenzhenghao,
+                e.shoujihaoma
+            from
+                anbiao_yinhuanpaicha_xiang_dept_info a
+                LEFT JOIN anbiao_yinhuanpaicha_xiang_dept_info_remark r on r.dataid = a.id
+                LEFT join (
+                    SELECT
+                        DISTINCT
+                        xiaji.id,
+                        xiaji.dept_name
+                    FROM
+                        blade_dept shangji,
+                        blade_dept xiaji
+                    WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                        AND xiaji.is_deleted = 0
+                        AND xiaji.extend_type='机构'
+                    <if test="deptId != null">
+                        AND shangji.id=#{deptId}
+                    </if>
+                ) b on a.deptid = b.id
+                left join anbiao_yinhuanpaicha_xiang c on a.dataid = c.id
+                left join (
+                    select
+                        id,
+                        cheliangpaizhao,
+                        chepaiyanse,
+                        shiyongxingzhi
+                    from
+                        anbiao_vehicle
+                    where is_deleted = 0
+                ) d on r.vehid = d.id
+                left join (
+                    select
+                        id,
+                        jiashiyuanxingming,
+                        shenfenzhenghao,
+                        shoujihaoma
+                    from
+                        anbiao_jiashiyuan
+                    where isdelete = 0
+                ) e on r.jsyid = e.id
+            where 1=1
+                and a.isdelete = 0
+                and c.isdelete = 0
+                and r.isdelete = 0
+            )a
+        left join anbiao_car_examine_info b on a.dataid = b.dataid
+	</sql>
+
+	<sql id="queryRemarkSql">
+        <if test="dataid != null and dataid != '' ">
+            and dataid = #{dataid}
+        </if>
+		<if test="name != null and name != '' ">
+			and name like '%${name}%'
+		</if>
+		<if test="deptname != null and deptname != '' ">
+			and deptname like '%${deptname}%'
+		</if>
+		<if test="cheliangpaizhao != null and cheliangpaizhao != '' ">
+			and cheliangpaizhao like '%${cheliangpaizhao}%'
+		</if>
+		<if test="jiashiyuanxingming != null and jiashiyuanxingming != '' ">
+			and jiashiyuanxingming like '%${jiashiyuanxingming}%'
+		</if>
+	</sql>
+
+	<sql id="orderRemarkSql">
+		<!-- 默认排序规则 -->
+		<if test="orderColumn == null or orderColumn == ''">
+			order by pcyf
+		</if>
+		<if test="orderColumn != null and orderColumn != ''">
+			order by ${orderColumn}
+		</if>
+		<if test="orderColumn != null and orderColumn != '' and order != 0">
+			desc
+		</if>
+	</sql>
+
+	<select id="selectYinhuanpaichaDeptPlanRemarkPage" resultMap="AnbiaoYinhuanpaichaXiangDeptInfoVOResultMap"
+			parameterType="org.springblade.anbiao.yinhuanpaicha.page.YinhuanpaichaXiangPage" >
+		<if test="size == 0" >
+			select * from (
+			<include refid="tableRemarkSql" />
+			)b
+			where 1=1
+			<include refid="queryRemarkSql" />
+			<include refid="orderRemarkSql" />
+			limit ${total}
+		</if>
+		<if test="current != 0" >
+			select * from (
+			<include refid="tableRemarkSql" />
+			)b
+			where 1=1
+			<include refid="queryRemarkSql" />
+			<include refid="orderRemarkSql" />
+			limit ${offsetNo},${size}
+		</if>
+	</select>
+
+	<select id="selectYinhuanpaichaDeptPlanRemarkTotal"
+			parameterType="org.springblade.anbiao.yinhuanpaicha.page.YinhuanpaichaXiangPage"
+			resultType="int">
+		select COUNT(1) from (
+		<include refid="tableRemarkSql" />
+		)d
+		where 1 = 1
+		<include refid="queryRemarkSql" />
+	</select>
+
+    <select id="selectDeptDriverPlan" parameterType="java.lang.String" resultType="org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoYinhuanpaichaXiangDeptInfoVO">
+        select
+            a.id,
+            a.deptname,
+            a.name,
+            a.deptid,
+            a.pcyf,
+            a.vehid,
+            a.jsyid,
+            a.pfdate,
+            a.scdate,
+            a.dataid,
+            a.cheliangpaizhao,
+            a.chepaiyanse,
+            a.shiyongxingzhi,
+            a.jiashiyuanxingming,
+            a.shenfenzhenghao,
+            a.shoujihaoma,
+            b.`status`,
+            case when a.status = 0 and IFNULL(b.`status`,'') = '' then '未填写'
+            when IFNULL(b.`status`,'') = 0 then '正常'
+            when IFNULL(b.`status`,'') = 1 then '有隐患，待审核'
+            when IFNULL(b.`status`,'') = 2 then '审核通过，待整改'
+            when IFNULL(b.`status`,'') = 3 then '审核通过，不整改'
+            when IFNULL(b.`status`,'') = 4 then '已整改，待验收'
+            else '验收归档'
+            end as statusShow,
+            b.id as shujuid
+        from(
+            select
+                b.dept_name as deptname,
+                c.name,
+                a.deptid,
+                a.pcyf,
+                r.*,
+                d.cheliangpaizhao,
+                d.chepaiyanse,
+                d.shiyongxingzhi,
+                e.jiashiyuanxingming,
+                e.shenfenzhenghao,
+                e.shoujihaoma
+            from
+                anbiao_yinhuanpaicha_xiang_dept_info a
+                LEFT JOIN anbiao_yinhuanpaicha_xiang_dept_info_remark r on r.dataid = a.id
+                LEFT join (
+                    SELECT
+                        DISTINCT
+                        xiaji.id,
+                        xiaji.dept_name
+                    FROM
+                        blade_dept shangji,
+                        blade_dept xiaji
+                    WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                        AND xiaji.is_deleted = 0
+                        AND xiaji.extend_type='机构'
+                        AND shangji.id= #{deptId}
+                    ) b on a.deptid = b.id
+                left join anbiao_yinhuanpaicha_xiang c on a.dataid = c.id
+                left join (
+                    select
+                        id,
+                        cheliangpaizhao,
+                        chepaiyanse,
+                        shiyongxingzhi
+                    from
+                        anbiao_vehicle
+                    where is_deleted = 0
+                    ) d on r.vehid = d.id
+                left join (
+                    select
+                        id,
+                        jiashiyuanxingming,
+                        shenfenzhenghao,
+                        shoujihaoma
+                    from
+                        anbiao_jiashiyuan
+                    where isdelete = 0
+                    ) e on r.jsyid = e.id
+                where 1=1
+                    and a.isdelete = 0
+                    and c.isdelete = 0
+                    and r.isdelete = 0
+                <if test="jsyid != null and jsyid != ''">
+                    and jsyid = #{jsyid}
+                </if>
+                <if test="vehid != null and vehid != ''">
+                    and vehid = #{vehid}
+                </if>
+            )a
+        left join anbiao_car_examine_info b on a.dataid = b.dataid
+    </select>
+
+</mapper>

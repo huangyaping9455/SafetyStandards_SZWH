@@ -24,6 +24,7 @@
         <module>blade-train-api</module>
         <module>blade-gps-api</module>
         <module>blade-alarm-api</module>
+        <module>blade-doc-api</module>
     </modules>
 
     <dependencies>

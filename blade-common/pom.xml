@@ -249,6 +249,30 @@
             <version>0.0.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>cn.hyp</groupId>
+            <artifactId>aspose-cells</artifactId>
+            <version>8.5.2</version>
+        </dependency>
+
+		<!--百度云-->
+		<dependency>
+			<groupId>com.baidubce</groupId>
+			<artifactId>api-explorer-sdk</artifactId>
+			<version>1.0.3.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+
     </dependencies>
 
     <build>

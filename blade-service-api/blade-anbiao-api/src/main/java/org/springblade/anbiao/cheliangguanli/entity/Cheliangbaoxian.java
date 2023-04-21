@@ -16,6 +16,7 @@
 package org.springblade.anbiao.cheliangguanli.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -23,6 +24,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 实体类
@@ -33,88 +35,100 @@ import java.io.Serializable;
 @ApiModel(value = "Cheliangbaoxian对象", description = "Cheliangbaoxian对象")
 public class Cheliangbaoxian implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * ID
-     */
-    @ApiModelProperty(value = "ID")
+	/**
+	 * ID
+	 */
+	@ApiModelProperty(value = "ID")
 //	@TableId(value = "id", type = IdType.UUID)
-    private String id;
-    /**
-     * 单位id
-     */
-    @ApiModelProperty(value = "单位id",required = true)
-    private Integer deptId;
-    /**
-     * 操作人
-     */
-    @ApiModelProperty(value = "操作人")
-    private String caozuoren;
-    /**
-     * 操作人id
-     */
-    @ApiModelProperty(value = "操作人id")
-    private Integer caozuorenid;
-    /**
-     * 操作时间
-     */
-    @ApiModelProperty(value = "操作时间")
-    private String caozuoshijian;
-    /**
-     * 自编号
-     */
-    @ApiModelProperty(value = "自编号")
-    private String zibianhao;
-    /**
-     * 车辆id
-     */
-    @ApiModelProperty(value = "车辆id",required = true)
-    private String cheliangid;
-    /**
-     * 照片
-     */
-    @ApiModelProperty(value = "照片")
-    private String zhaopian;
-    /**
-     * 记录人
-     */
-    @ApiModelProperty(value = "记录人")
-    private String jiluren;
-    /**
-     * 登记人
-     */
-    @ApiModelProperty(value = "登记人")
-    private String dengjiren;
-    /**
-     * 被保险人
-     */
-    @ApiModelProperty(value = "被保险人")
-    private String beibaoxianren;
-    /**
-     * 登记时间
-     */
-    @ApiModelProperty(value = "登记时间")
-    private String dengjishijian;
-    /**
-     * 备注
-     */
-    @ApiModelProperty(value = "备注")
-    private String beizhu;
-    /**
-     * 附件
-     */
-    @ApiModelProperty(value = "附件")
-    private String fujian;
-    /**
-     * 是否删除
-     */
-    @ApiModelProperty(value = "是否删除")
-    private Integer isdelete;
+	private String id;
+	/**
+	 * 单位id
+	 */
+	@ApiModelProperty(value = "单位id",required = true)
+	private Integer deptId;
+	/**
+	 * 操作人
+	 */
+	@ApiModelProperty(value = "操作人")
+	private String caozuoren;
+	/**
+	 * 操作人id
+	 */
+	@ApiModelProperty(value = "操作人id")
+	private Integer caozuorenid;
+	/**
+	 * 操作时间
+	 */
+	@ApiModelProperty(value = "操作时间")
+	private String caozuoshijian;
+	/**
+	 * 自编号
+	 */
+	@ApiModelProperty(value = "自编号")
+	private String zibianhao;
+	/**
+	 * 车辆id
+	 */
+	@ApiModelProperty(value = "车辆id",required = true)
+	private String cheliangid;
+	/**
+	 * 照片
+	 */
+	@ApiModelProperty(value = "照片")
+	private String zhaopian;
+	/**
+	 * 记录人
+	 */
+	@ApiModelProperty(value = "记录人")
+	private String jiluren;
+	/**
+	 * 登记人
+	 */
+	@ApiModelProperty(value = "登记人")
+	private String dengjiren;
+	/**
+	 * 被保险人
+	 */
+	@ApiModelProperty(value = "被保险人")
+	private String beibaoxianren;
+	/**
+	 * 登记时间
+	 */
+	@ApiModelProperty(value = "登记时间")
+	private String dengjishijian;
+	/**
+	 * 备注
+	 */
+	@ApiModelProperty(value = "备注")
+	private String beizhu;
+	/**
+	 * 附件
+	 */
+	@ApiModelProperty(value = "附件")
+	private String fujian;
+	/**
+	 * 是否删除
+	 */
+	@ApiModelProperty(value = "是否删除")
+	private Integer isdelete;
 
 	/**
 	 * 创建时间
 	 */
 	@ApiModelProperty(value = "创建时间",required = true)
 	private String createtime;
+
+	@ApiModelProperty(value = "投保类型")
+	@TableField(exist = false)
+	private String toubaoleixing;
+
+	@ApiModelProperty(value = "终保时间")
+	@TableField(exist = false)
+	private String zhongbaoshijian;
+
+	@ApiModelProperty(value = "保险明细List")
+	@TableField(exist = false)
+	private List<Baoxianxinxi> baoxianxinxiList;
 }

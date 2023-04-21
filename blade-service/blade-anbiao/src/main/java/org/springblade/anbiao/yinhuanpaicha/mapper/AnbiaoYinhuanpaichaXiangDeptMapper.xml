@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.yinhuanpaicha.mapper.AnbiaoYinhuanpaichaXiangDeptMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="ResultMap" type="org.springblade.anbiao.yinhuanpaicha.entity.AnbiaoYinhuanpaichaXiangDept">
+    </resultMap>
+
+	<resultMap id="AnbiaoYinhuanpaichaXiangDeptVOResultMap" type="org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoYinhuanpaichaXiangDeptVO">
+	</resultMap>
+
+    <sql id="tableSql">
+        select
+            a.name,
+            a.score,
+            a.type,
+            a.status,
+            a.judgerules,
+            a.judgerulesremark,
+            a.source,
+            b.*,
+            c.dept_name as deptname
+        from
+            anbiao_yinhuanpaicha_xiang a,
+            anbiao_yinhuanpaicha_xiang_dept b,
+            (
+            SELECT
+                DISTINCT
+                xiaji.id,
+                xiaji.dept_name
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+            AND xiaji.is_deleted = 0
+            AND xiaji.extend_type='机构'
+            <if test="deptId != null">
+                AND shangji.id=#{deptId}
+            </if>
+            ) c
+        where a.isdelete = 0
+        and IFNULL(a.parentid,0) != -1
+        and a.id = b.xiangid
+          and b.isdelete = 0
+          and b.deptid = c.id
+    </sql>
+
+    <sql id="querySql">
+        <if test="name != null and name != '' ">
+            and name like '%${name}%'
+        </if>
+        <if test="deptname != null and deptname != '' ">
+            and deptname like '%${deptname}%'
+        </if>
+    </sql>
+
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by createtime
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <select id="selectYinhuanpaichaXiangDeptPage" resultMap="AnbiaoYinhuanpaichaXiangDeptVOResultMap"
+            parameterType="org.springblade.anbiao.yinhuanpaicha.page.YinhuanpaichaXiangPage" >
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectYinhuanpaichaXiangDeptTotal"
+            parameterType="org.springblade.anbiao.yinhuanpaicha.page.YinhuanpaichaXiangPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql" />
+        )d
+        where 1 = 1
+        <include refid="querySql" />
+    </select>
+
+</mapper>

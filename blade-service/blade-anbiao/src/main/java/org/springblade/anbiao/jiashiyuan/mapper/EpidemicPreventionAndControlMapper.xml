@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.jiashiyuan.mapper.EpidemicPreventionAndControlMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="EpidemicPreventionAndControlResultMap" type="org.springblade.anbiao.jiashiyuan.entity.EpidemicPreventionAndControl">
+    </resultMap>
+
+    <sql id="tableSql">
+        select
+            a.id as jiashiyuanid,
+            a.jiashiyuanxingming,
+            a.shenfenzhenghao,
+            a.shoujihaoma,
+            c.cheliangpaizhao,
+            c.chepaiyanse,
+            c.zhongduanleixing,
+            b.province,
+            b.city,
+            b.country,
+            b.street,
+            b.community,
+            b.after_region as afterregion,
+            b.nat_time as nattime,
+            b.nat_area as natarea,
+            b.health_code_status as healthcodestatus,
+            b.travel_itinerary_status as travelitinerarystatus,
+            b.is_risky_area as isriskyarea,
+            b.risky_area as riskyarea,
+            b.health_code_img  as healthcodeimg,
+            b.travel_itinerary_img as travelitineraryimg,
+            b.nat_img as natimg,
+            b.createtime,
+            b.isdeleted,
+            b.updatetime,
+            b.updateuser,
+            b.vehid
+        from
+            anbiao_jiashiyuan a
+        inner join  (
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) d on a.dept_id = d.id
+        left join anbiao_epidemic_prevention_and_control_info b on a.id = b.jiashiyuanid
+        left join anbiao_vehicle c on c.id = b.vehid
+        where a.isdelete = 0
+            and b.isdeleted = 0
+    </sql>
+
+    <sql id="querySql">
+        <if test="jiashiyuanxingming !=null and jiashiyuanxingming != ''">
+            AND jiashiyuanxingming LIKE '%${jiashiyuanxingming}%'
+        </if>
+
+        <if test="shenfenzhenghao !=null and shenfenzhenghao != ''">
+            AND shenfenzhenghao like '%${shenfenzhenghao}%'
+        </if>
+
+        <if test="cheliangpaizhao !=null and cheliangpaizhao != ''">
+            AND cheliangpaizhao like '%${cheliangpaizhao}%'
+        </if>
+
+    </sql>
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by jiashiyuanxingming
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <select id="selectPageList" parameterType="org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage" resultType="org.springblade.anbiao.jiashiyuan.entity.EpidemicPreventionAndControl">
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectTotal" parameterType="org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage" resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql" />
+        )d
+        where 1 = 1
+        <include refid="querySql" />
+    </select>
+
+    <select id = "selectByIds" parameterType="java.lang.String" resultType="org.springblade.anbiao.jiashiyuan.entity.EpidemicPreventionAndControl">
+        select
+            a.id as jiashiyuanid,
+            a.jiashiyuanxingming,
+            a.shenfenzhenghao,
+            a.shoujihaoma,
+            c.cheliangpaizhao,
+            c.chepaiyanse,
+            c.zhongduanleixing,
+            b.province,
+            b.city,
+            b.country,
+            b.street,
+            b.community,
+            b.after_region as afterregion,
+            b.nat_time as nattime,
+            b.nat_area as natarea,
+            b.health_code_status as healthcodestatus,
+            b.travel_itinerary_status as travelitinerarystatus,
+            b.is_risky_area as isriskyarea,
+            b.risky_area as riskyarea,
+            b.health_code_img  as healthcodeimg,
+            b.travel_itinerary_img as travelitineraryimg,
+            b.nat_img as natimg,
+            b.createtime,
+            b.isdeleted,
+            b.updatetime,
+            b.updateuser,
+            b.vehid,
+            b.id
+        from
+            anbiao_jiashiyuan a
+            left join anbiao_epidemic_prevention_and_control_info b on a.id = b.jiashiyuanid
+            left join anbiao_vehicle c on c.id = b.vehid
+        where a.isdelete = 0
+          and b.isdeleted = 0
+          and b.jiashiyuanid = #{jiashiyuanid}
+        <if test="date != null and date != '' ">
+          and left(b.nat_time,10) = left(#{date},10)
+        </if>
+        order by b.nat_time desc
+        limit 1
+    </select>
+
+    <insert id="insertSelective" parameterType="org.springblade.anbiao.jiashiyuan.entity.EpidemicPreventionAndControl" >
+        insert into anbiao_epidemic_prevention_and_control_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="jiashiyuanid != null and jiashiyuanid != '' ">
+                jiashiyuanid,
+            </if>
+
+            <if test="province != null and province != '' ">
+                province,
+            </if>
+
+            <if test="city != null and city != '' ">
+                city,
+            </if>
+
+            <if test="country != null and country != '' ">
+                country,
+            </if>
+
+            <if test="street != null and street != '' ">
+                street,
+            </if>
+
+            <if test="community != null and community != '' ">
+                community,
+            </if>
+
+            <if test="afterregion != null and afterregion != '' ">
+                after_region,
+            </if>
+
+            <if test="nattime != null and nattime != '' ">
+                nat_time,
+            </if>
+
+            <if test="natarea != null and natarea != '' ">
+                nat_area,
+            </if>
+
+            <if test="healthcodestatus != null ">
+                health_code_status,
+            </if>
+
+            <if test="travelitinerarystatus != null ">
+                travel_itinerary_status,
+            </if>
+
+            <if test="isriskyarea != null ">
+                is_risky_area,
+            </if>
+
+            <if test="riskyarea != null and riskyarea != '' ">
+                risky_area,
+            </if>
+
+            <if test="healthcodeimg != null and healthcodeimg != '' ">
+                health_code_img,
+            </if>
+
+            <if test="travelitineraryimg != null and travelitineraryimg != '' ">
+                travel_itinerary_img,
+            </if>
+
+            <if test="natimg != null and natimg != '' ">
+                nat_img,
+            </if>
+
+            <if test="createtime != null and createtime != '' ">
+                createtime,
+            </if>
+
+            <if test="isdeleted != null ">
+                isdeleted,
+            </if>
+
+            <if test="updatetime != null and updatetime != '' ">
+                updatetime,
+            </if>
+
+            <if test="updateuser != null and updateuser != '' ">
+                updateuser,
+            </if>
+
+            <if test="vehid != null and vehid != '' ">
+                vehid
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="jiashiyuanid != null and jiashiyuanid != '' ">
+                #{jiashiyuanid},
+            </if>
+
+            <if test="province != null and province != '' ">
+                #{province},
+            </if>
+
+            <if test="city != null and city != '' ">
+                #{city},
+            </if>
+
+            <if test="country != null and country != '' ">
+                #{country},
+            </if>
+
+            <if test="street != null and street != '' ">
+                #{street},
+            </if>
+
+            <if test="community != null and community != '' ">
+                #{community},
+            </if>
+
+            <if test="afterregion != null and afterregion != '' ">
+                #{afterregion},
+            </if>
+
+            <if test="nattime != null and nattime != '' ">
+                #{nattime},
+            </if>
+
+            <if test="natarea != null and natarea != '' ">
+                #{natarea},
+            </if>
+
+            <if test="healthcodestatus != null ">
+                #{healthcodestatus},
+            </if>
+
+            <if test="travelitinerarystatus != null ">
+                #{travelitinerarystatus},
+            </if>
+
+            <if test="isriskyarea != null ">
+                #{isriskyarea},
+            </if>
+
+            <if test="riskyarea != null and riskyarea != '' ">
+                #{riskyarea},
+            </if>
+
+            <if test="healthcodeimg != null and healthcodeimg != '' ">
+                #{healthcodeimg},
+            </if>
+
+            <if test="travelitineraryimg != null and travelitineraryimg != '' ">
+                #{travelitineraryimg},
+            </if>
+
+            <if test="natimg != null and natimg != '' ">
+                #{natimg},
+            </if>
+
+            <if test="createtime != null and createtime != '' ">
+                #{createtime},
+            </if>
+
+            <if test="isdeleted != null ">
+                #{isdeleted},
+            </if>
+
+            <if test="updatetime != null and updatetime != '' ">
+                #{updatetime},
+            </if>
+
+            <if test="updateuser != null and updateuser != '' ">
+                #{updateuser},
+            </if>
+
+            <if test="vehid != null and vehid != '' ">
+                #{vehid}
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateSelective" parameterType="org.springblade.anbiao.jiashiyuan.entity.EpidemicPreventionAndControl" >
+        update anbiao_epidemic_prevention_and_control_info
+        <set>
+
+            <if test="jiashiyuanid != null and jiashiyuanid != '' ">
+                jiashiyuanid = #{jiashiyuanid},
+            </if>
+
+            <if test="province != null and province != '' ">
+                province = #{province},
+            </if>
+
+            <if test="city != null and city != '' ">
+                city = #{city},
+            </if>
+
+            <if test="country != null and country != '' ">
+                country = #{country},
+            </if>
+
+            <if test="street != null and street != '' ">
+                street = #{street},
+            </if>
+
+            <if test="community != null and community != '' ">
+                community = #{community},
+            </if>
+
+            <if test="afterregion != null and afterregion != '' ">
+                after_region = #{afterregion},
+            </if>
+
+            <if test="nattime != null and nattime != '' ">
+                nat_time = #{nattime},
+            </if>
+
+            <if test="natarea != null and natarea != '' ">
+                nat_area = #{natarea},
+            </if>
+
+            <if test="healthcodestatus != null ">
+                health_code_status = #{healthcodestatus},
+            </if>
+
+            <if test="travelitinerarystatus != null ">
+                travel_itinerary_status = #{travelitinerarystatus},
+            </if>
+
+            <if test="isriskyarea != null ">
+                is_risky_area = #{isriskyarea},
+            </if>
+
+            <if test="riskyarea != null and riskyarea != '' ">
+                risky_area = #{riskyarea},
+            </if>
+
+            <if test="healthcodeimg != null and healthcodeimg != '' ">
+                health_code_img = #{healthcodeimg},
+            </if>
+
+            <if test="travelitineraryimg != null and travelitineraryimg != '' ">
+                travel_itinerary_img = #{travelitineraryimg},
+            </if>
+
+            <if test="natimg != null and natimg != '' ">
+                nat_img = #{natimg},
+            </if>
+
+            <if test="isdeleted != null ">
+                isdeleted = #{isdeleted},
+            </if>
+
+            <if test="updatetime != null and updatetime != '' ">
+                updatetime = #{updatetime},
+            </if>
+
+            <if test="updateuser != null and updateuser != '' ">
+                updateuser = #{updateuser},
+            </if>
+
+            <if test="vehid != null and vehid != '' ">
+                vehid = #{vehid}
+            </if>
+        </set>
+        where id = #{id}
+            and left(nat_time,10) = left(#{nattime},10)
+    </update>
+
+    <resultMap id="IntoAreaResultMap" type="org.springblade.anbiao.jiashiyuan.entity.IntoArea">
+    </resultMap>
+
+    <!-- 进区域报警统计（企业端） -->
+    <sql id="DeptMXIntoAreaPMSql">
+        select
+            a.id as alarmid,
+            b.points,
+            b.centerLat,
+            b.centerLng,
+            c.dept_id as qiyeid,
+            d.dept_name as qiyemingcheng,
+            b.`name` as area,
+            a.VehicleId,
+            c.cheliangpaizhao,
+            c.chepaiyanse,
+            c.shiyongxingzhi,
+            c.xinghao,
+            a.note,
+            a.time as date,
+            a.velocity,
+            a.AreaId,
+            date_format(date_sub(from_unixtime(a.times), INTERVAL 8 HOUR), '%H时%i分%s秒') as times,
+            a.guid,
+            a.longitude,
+            a.latitude,
+            a.RoadName,
+            cl.chulizhuangtai,
+            cl.chulixingshi,
+            cl.chulimiaoshu,
+            cl.chulirenid,
+            cl.chuliren,
+            cl.chulishijian,
+            cl.fujian,
+            cl.beizhu,
+            cl.remark,
+            cl.shensushenhebiaoshi,
+            cl.shensushenheren,
+            cl.shensushenheshijian,
+            cl.shensushenheyijian,
+            cl.twicechulixingshi,
+            cl.twicechulimiaoshu,
+            cl.twicefujian,
+            cl.twicechuliren,
+            cl.twicechulishijian,
+            cl.twicechulirenid,
+            cl.endresult
+        from
+            baobiao_areaalarm a
+        left join maparea b on a.AreaId = b.areaId
+        left join anbiao_vehicle c on a.VehicleId = c.id
+        left join blade_dept d on c.dept_id = d.id
+        left join baobiao_alarmhandleresult cl on a.id = cl.baojingid and a.note = cl.baojingleixing
+        where 1=1
+            and a.IsAcross = 1
+            and a.time &gt;= CONCAT(#{beginTime},' 00:00:00')
+            and a.time &lt; CONCAT(#{endTime},' 23:59:59')
+            and c.dept_id = #{deptId}
+        <if test="areaId != null and areaId != '' ">
+            and b.areaId = #{areaId}
+        </if>
+    </sql>
+
+    <sql id="orderDeptMXIntoAreaPMSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by cheliangpaizhao desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <sql id="queryDeptMXIntoAreaPMSql">
+        <if test="area != null and area != '' ">
+            and area like '%${area}%'
+        </if>
+
+        <if test="cheliangpaizhao != null and cheliangpaizhao != '' ">
+            and cheliangpaizhao like '%${cheliangpaizhao}%'
+        </if>
+
+        <if test="deptName != null and deptName != '' ">
+            and qiyemingcheng like CONCAT('%',#{deptName},'%')
+        </if>
+
+        <if test="shifouchuli != null and shifouchuli != '' ">
+            <if test="shifouchuli=='已处理'.toString()">
+                and chulizhuangtai = '1' and remark=1
+            </if>
+
+            <if test="shifouchuli=='未处理'.toString()">
+                and (
+                IFNULL(chulizhuangtai,'') = '' or
+                IFNULL(shensushenhebiaoshi,0) = 2
+                )
+                and IFNULL(twicechuliren,'') = ''
+            </if>
+
+            <if test="shifouchuli=='超期处理'.toString()">
+                and chulizhuangtai = '2' and remark=1
+            </if>
+
+            <if test="shifouchuli=='超期未处理'.toString()">
+                and (
+                IFNULL(chulizhuangtai,'') = '' or
+                IFNULL(shensushenhebiaoshi,0) = 2
+                )
+                and IFNULL(twicechuliren,'') = ''
+                and timestampdiff(day,CONCAT( left(date,10), ' 00:00:00'),CONCAT( left(now(),10), ' 00:00:00')) > 7
+            </if>
+
+            <if test="shifouchuli=='即将超期'.toString()">
+                and (
+                IFNULL(chulizhuangtai,'') = '' or
+                IFNULL(shensushenhebiaoshi,0) = 2
+                )
+                and timestampdiff(day,CONCAT( left(date,10), ' 00:00:00'),CONCAT( left(now(),10), ' 00:00:00')) > 5
+                and timestampdiff(day,CONCAT( left(date,10), ' 00:00:00'),CONCAT( left(now(),10), ' 00:00:00')) &lt; 8
+            </if>
+        </if>
+
+        <if test="shifoushenshu != null and shifoushenshu != '' ">
+            <if test="shifoushenshu=='未申诉'.toString()">
+                and (
+                IFNULL(chulizhuangtai,'') = '' or
+                remark != 0
+                )
+            </if>
+
+            <if test="shifoushenshu=='申诉审核中'.toString()">
+                and chulizhuangtai = '1' and remark=0 and shensushenhebiaoshi= 0
+            </if>
+
+            <if test="shifoushenshu=='申诉通过'.toString()">
+                and chulizhuangtai = '1' and remark=0 and shensushenhebiaoshi= 1
+            </if>
+
+            <if test="shifoushenshu=='申诉驳回'.toString()">
+                and chulizhuangtai = '1' and remark=0 and shensushenhebiaoshi= 2
+            </if>
+
+        </if>
+    </sql>
+
+    <select timeout="600" id="selectDeptMXIntoAreaPMTJ" resultMap="IntoAreaResultMap"
+            parameterType="org.springblade.anbiao.jiashiyuan.page.IntoAreaPage">
+        <if test="size == 0">
+            select * from (
+            <include refid="DeptMXIntoAreaPMSql"/>
+            )b
+            where 1=1
+            <include refid="queryDeptMXIntoAreaPMSql"/>
+            <include refid="orderDeptMXIntoAreaPMSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="DeptMXIntoAreaPMSql"/>
+            )b
+            where 1=1
+            <include refid="queryDeptMXIntoAreaPMSql"/>
+            <include refid="orderDeptMXIntoAreaPMSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectDeptMXIntoAreaPMTotal"
+            parameterType="org.springblade.anbiao.jiashiyuan.page.IntoAreaPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="DeptMXIntoAreaPMSql"/>
+        )d where 1 = 1
+        <include refid="queryDeptMXIntoAreaPMSql"/>
+    </select>
+
+    <sql id="tableDeptAreaalarmSql">
+        select
+            DISTINCT
+            b.AreaId,
+            b.`name` as area,
+            c.dept_id as qiyeid,
+            d.dept_name as qiyemingcheng,
+            a.VehicleId,
+            c.cheliangpaizhao,
+            c.chepaiyanse,
+            c.shiyongxingzhi,
+            c.xinghao,
+            COUNT(1) as baojingzongshu,
+            COUNT(cl.baojingid) as chulinum,
+            CONCAT(#{beginTime},'至',#{endTime}) as date
+        from
+            baobiao_areaalarm a
+            left join maparea b on a.AreaId = b.areaId
+            left join anbiao_vehicle c on a.VehicleId = c.id
+            left join blade_dept d on c.dept_id = d.id
+            left join baobiao_alarmhandleresult cl on a.id = cl.baojingid and a.note = cl.baojingleixing
+        where 1=1
+            and	a.IsAcross = 1
+            and a.time &gt;= CONCAT(#{beginTime},' 00:00:00')
+            and a.time &lt; CONCAT(#{endTime},' 23:59:59')
+            and c.dept_id = #{deptId}
+        GROUP BY
+            b.AreaId,
+            b.`name`,
+            c.dept_id,
+            d.dept_name,
+            a.VehicleId,
+            c.cheliangpaizhao,
+            c.chepaiyanse,
+            c.shiyongxingzhi,
+            c.xinghao
+    </sql>
+
+    <sql id="queryDeptAreaalarmSql">
+
+        <if test="cheliangpaizhao !=null and cheliangpaizhao != ''">
+            AND cheliangpaizhao like '%${cheliangpaizhao}%'
+        </if>
+
+        <if test="area !=null and area != ''">
+            AND area like '%${area}%'
+        </if>
+
+    </sql>
+    <sql id="orderDeptAreaalarmSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by baojingzongshu
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <select id="selectDeptAreaalarmPageList" parameterType="org.springblade.anbiao.jiashiyuan.page.IntoAreaPage" resultType="org.springblade.anbiao.jiashiyuan.entity.DeptVehIntoArea">
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableDeptAreaalarmSql" />
+            )b
+            where 1=1
+            <include refid="queryDeptAreaalarmSql" />
+            <include refid="orderDeptAreaalarmSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableDeptAreaalarmSql" />
+            )b
+            where 1=1
+            <include refid="queryDeptAreaalarmSql" />
+            <include refid="orderDeptAreaalarmSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectDeptAreaalarmTotal" parameterType="org.springblade.anbiao.jiashiyuan.page.IntoAreaPage" resultType="int">
+        select COUNT(1) from (
+        <include refid="tableDeptAreaalarmSql" />
+        )d
+        where 1 = 1
+        <include refid="queryDeptAreaalarmSql" />
+    </select>
+
+</mapper>

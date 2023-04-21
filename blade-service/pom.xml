@@ -24,6 +24,7 @@
         <module>blade-train</module>
         <module>blade-alarm</module>
         <module>blade-gps</module>
+        <module>blade-doc</module>
     </modules>
 
     <dependencies>

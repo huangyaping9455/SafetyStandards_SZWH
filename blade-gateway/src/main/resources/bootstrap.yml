@@ -12,6 +12,7 @@ blade:
     blade-train: blade-train
     blade-gps: blade-gps
     blade-alarm: blade-alarm
+    blade-doc: blade-doc
 
 spring:
   cloud:
@@ -52,6 +53,11 @@ spring:
         uri: lb://${blade.service.blade-train}
         predicates:
         - Path=/${blade.service.blade-train}/**
+      # doc模块
+      - id: ${blade.service.blade-doc}
+        uri: lb://${blade.service.blade-doc}
+        predicates:
+          - Path=/${blade.service.blade-doc}/**
       # 附件
       - id: ${blade.service.blade-upload}
         uri: lb://${blade.service.blade-upload}

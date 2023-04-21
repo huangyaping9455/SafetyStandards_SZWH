@@ -58,4 +58,5 @@ fileserver:
 
 alarmserver:
   templateUrl: D:\BS\static\SafetyStandards\
+  address-ak: ${fileserver.dev.ak}
 

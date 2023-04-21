@@ -1224,9 +1224,9 @@
                 COUNT(d.AlarmReportID)+COUNT(e.id) as alarmnum,
                 case when IFNULL(max(study_driver_id),'') = '' then '否' else '是' end as studystatus,
                 case
-                    when IFNULL(max(status),0) = 0  and IFNULL(max(study_driver_id),'') != ''  then '未学习'
-                    when IFNULL(max(status),0) = 1 and IFNULL(max(study_driver_id),'') != ''  then '学习中'
-                    when IFNULL(max(status),0) = 2  and IFNULL(max(study_driver_id),'') != ''  then '已学完'
+                    when IFNULL(max(c.status),0) = 0  and IFNULL(max(study_driver_id),'') != ''  then '未学习'
+                    when IFNULL(max(c.status),0) = 1 and IFNULL(max(study_driver_id),'') != ''  then '学习中'
+                    when IFNULL(max(c.status),0) = 2  and IFNULL(max(study_driver_id),'') != ''  then '已学完'
                     else ''
                 end as studyremark
             from

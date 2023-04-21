@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.doc.safetyproductionfile.mapper.AnbiaoSafetyproductionfileNumMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.doc.safetyproductionfile.entity.AnbiaoSafetyproductionfileNum">
+        <id column="id" property="id" />
+        <result column="deptId" property="deptId" />
+        <result column="uploadedNum" property="uploadedNum" />
+        <result column="finshNum" property="finshNum" />
+        <result column="finshRatio" property="finshRatio" />
+        <result column="caozuoshijian" property="caozuoshijian" />
+    </resultMap>
+
+    <sql id="DayTJSql">
+        select
+            DISTINCT
+            a.zhengfuid,
+            a.zhengfuname,
+            a.qiyemingcheng as deptName,
+            b.*,
+        from(
+            select
+                qiyeid,qiyemingcheng,yunguanmingcheng as zhengfuname,yunguanid as zhengfuid,areaname
+            from baobiao_zhengfu_qiye
+            where 1=1 and jigouleixing in ('qiye','geti')
+            <if test="province != null and province != '' ">
+                and province = #{province}
+            </if>
+            <if test="city != null and city != '' ">
+                and city = #{city}
+            </if>
+            <if test="country != null and country != '' ">
+                and country = #{country}
+            </if>
+            )a
+        INNER JOIN(
+            select
+                *
+            from
+                anbiao_safetyproductionfile_num
+            where 1=1
+        <if test="beginTime != null and beginTime != '' ">
+            and left(date,10) &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != '' ">
+            and left(date,10) &lt;= #{endTime}
+        </if>
+        )b ON a.qiyeid = b.deptId
+    </sql>
+
+    <sql id="orderDayTJSql">
+        <!--默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by finshNum desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <sql id="queryDayTJSql">
+
+        <if test="deptName != null and deptName != '' ">
+            and deptName like CONCAT('%',#{deptName},'%')
+        </if>
+
+    </sql>
+
+    <select timeout="600" id="selectTJ" resultMap="BaseResultMap"
+            parameterType="org.springblade.doc.safetyproductionfile.page.SafetyproductionfileNumPage">
+        <if test="size == 0">
+            select * from (
+            <include refid="DayTJSql"/>
+            )b
+            where 1=1
+            <include refid="queryDayTJSql"/>
+            <include refid="orderDayTJSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="DayTJSql"/>
+            )b
+            where 1=1
+            <include refid="queryDayTJSql"/>
+            <include refid="orderDayTJSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectTotal"
+            parameterType="org.springblade.doc.safetyproductionfile.page.SafetyproductionfileNumPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="DayTJSql"/>
+        )d where 1 = 1
+        <include refid="queryDayTJSql"/>
+    </select>
+
+	<select id="getDeptTree" resultType="org.springblade.doc.safetyproductionfile.entity.AnbiaoSafetyproductionfileNum">
+		SELECT
+			DISTINCT
+			xiaji.id as deptId,
+			xiaji.parent_id,
+			xiaji.dept_name as deptName
+		FROM
+			blade_dept shangji,
+			blade_dept xiaji,
+			anbiao_organization c
+		WHERE
+			xiaji.tree_code LIKE CONCAT(shangji.tree_code, '%')
+		  AND xiaji.is_deleted = 0
+		  AND xiaji.extend_type = '机构'
+		  AND xiaji.id = c.dept_id
+		  AND shangji.id = #{deptId}
+		  AND c.jigouleixing in ('qiye','geti')
+		  AND c.isdelete = 0
+	</select>
+
+
+</mapper>

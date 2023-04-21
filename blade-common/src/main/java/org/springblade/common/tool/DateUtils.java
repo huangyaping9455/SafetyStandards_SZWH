@@ -13,6 +13,7 @@ package org.springblade.common.tool;
  * @描述
  */
 
+import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
 
 import java.text.DateFormat;
@@ -561,9 +562,9 @@ public class DateUtils {
 	}
 
 	public static List<String> getDays(String startTime, String endTime) {
-		// 返回的日期集合
-		List<String> days = new ArrayList<String>();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		List<String> days = new ArrayList();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
 		try {
 			Date start = dateFormat.parse(startTime);
 			Date end = dateFormat.parse(endTime);
@@ -571,59 +572,44 @@ public class DateUtils {
 			tempStart.setTime(start);
 			Calendar tempEnd = Calendar.getInstance();
 			tempEnd.setTime(end);
-			tempEnd.add(Calendar.DATE, +1);// 日期加1(包含结束)
-			while (tempStart.before(tempEnd)) {
+			tempEnd.add(5, 1);
+
+			while(tempStart.before(tempEnd)) {
 				days.add(dateFormat.format(tempStart.getTime()));
-				tempStart.add(Calendar.DAY_OF_YEAR, 1);
+				tempStart.add(6, 1);
 			}
-		} catch (ParseException e) {
-			e.printStackTrace();
+		} catch (ParseException var8) {
+			var8.printStackTrace();
 		}
+
 		return days;
 	}
 
-	/**
-	 *
-	 * @param nowTime   当前时间
-	 * @param startTime    开始时间
-	 * @param endTime   结束时间
-	 * @return
-	 * @author sunran   判断当前时间在时间区间内
-	 */
 	public static boolean isEffectiveDate(Date nowTime, Date startTime, Date endTime) {
-		if (nowTime.getTime() == startTime.getTime()
-			|| nowTime.getTime() == endTime.getTime()) {
-			return true;
-		}
-
-		Calendar date = Calendar.getInstance();
-		date.setTime(nowTime);
-
-		Calendar begin = Calendar.getInstance();
-		begin.setTime(startTime);
-
-		Calendar end = Calendar.getInstance();
-		end.setTime(endTime);
-
-		if (date.after(begin) && date.before(end)) {
-			return true;
+		if (nowTime.getTime() != startTime.getTime() && nowTime.getTime() != endTime.getTime()) {
+			Calendar date = Calendar.getInstance();
+			date.setTime(nowTime);
+			Calendar begin = Calendar.getInstance();
+			begin.setTime(startTime);
+			Calendar end = Calendar.getInstance();
+			end.setTime(endTime);
+			return date.after(begin) && date.before(end);
 		} else {
-			return false;
+			return true;
 		}
 	}
 
 	public static String formatDateZero(String pattern) throws ParseException {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date time = simpleDateFormat.parse(pattern);
-
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(time);
-		int year = calendar.get(Calendar.YEAR);
-		int month = calendar.get(Calendar.MONTH) + 1;
-		int day = calendar.get(Calendar.DAY_OF_MONTH);
+		int year = calendar.get(1);
+		int month = calendar.get(2) + 1;
+		int day = calendar.get(5);
 		String months = month >= 10 ? String.valueOf(month) : "0" + month;
 		String days = day >= 10 ? String.valueOf(day) : "0" + day;
-		pattern =  year+"-"+months+"-"+days;
+		pattern = year + "-" + months + "-" + days;
 		return pattern;
 	}
 
@@ -639,40 +625,40 @@ public class DateUtils {
 		return (int) between;
 	}
 
+
 	public static void main(String[] args) throws Exception {
 
-		String time="2023-02-18 00:00:00";
+		String startTime = "2021-10-18 14:05:00";
+		String endTime = "2021-10-18 14:07:00";
+		System.out.println(getTime(startTime, endTime));
 
-		LocalDate daese = LocalDate.parse(time, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		System.out.println(daese);
-
-		System.out.println(DateUtils.formatDateZero("2023-12-1"));
-
-//		Date date=null;
-//		SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd");
-//		date=formatter.parse(time);
-//
-//		SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
-//		Date startTime = ft.parse("2022-04-18");
-//		Date endTime = ft.parse("2022-04-18");
-//
-//		Date nowTime = date;
-//
-//		boolean effectiveDate = isEffectiveDate(nowTime, startTime, endTime);
-//		if (effectiveDate) {
-//			System.out.println("当前时间在范围内");
-//		}else {
-//			System.out.println("当前时间在不在范围内");
-//		}
+		String s1="2010-09-30";
+       	String s2="2010-09-29";
+		int between = fun(s1, s2);
+		System.out.println("两个时间间隔天数为："+between);
 
 
+		System.out.println("获取指定日期月的第一天、最后一天");
+		System.out.println(getFirstLastDayByMonth(new Date(),"yyyy-MM-dd HH:mm:ss",true));
+		Map<String, Object> map = getFirstLastDayByMonth(new Date(),"yyyy-MM-dd",true);
+		String beginDate = map.get("first").toString();
+		System.out.println("开始时间："+beginDate);
+		System.out.println("222222222222222");
 
-//		System.out.println(getDays("2022-02-01","2022-02-14"));
+		System.out.println(getPastDate(5));
+
+		System.out.println(test(5));
+
+		String [] days = DateUtils.test(5).toArray(new String[0]);
+		System.out.println(days);
+		for (int i=0;i<days.length;i++){
+			System.out.println(days[i]);
+		}
 
 //		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //		Date parse = null;
 //		try {
-//			Date now = new Date();
+			Date now = new Date();
 //			System.out.println("当前日期：" + DATE_FORMAT.format(now));
 //			Date newDate = stepMonth(now, -13);
 //			System.out.println("当前时间前13个月的日期：" + DATE_FORMAT.format(newDate));
@@ -767,7 +753,7 @@ public class DateUtils {
 //		System.out.println(jidu[1]);
 
 //		System.out.println(getYearFullMonth("2021"));
-//		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 //		System.out.println(format.format(new Date()));
 //		Date nowDate_Date = format.parse(format.format(new Date()));
 //		Date endDate_Date = format.parse("2021-11-17");
@@ -799,9 +785,156 @@ public class DateUtils {
 //		System.out.println(oo);
 //
 //		System.out.println(format.format(str2Date("Mon Nov 22 2021 00:00:00 GMT+0800 (中国标准时间) 00:00:00")));
+//
+//
+//		String date = DateUtils.getPastDate(5);
+//		System.out.println(date);
+
+
+//		Map map = abc();
+//		System.out.println(map);
+//		System.out.println("通过value获取Key:"+getKey("3"));
+//		JSONArray jArray = new JSONArray();
+//		jArray.add(map);
+//		String str = jArray.toString();
+//		System.out.println(str);
+//		JSONArray json = JSONUtil.parseArray(str);
+//		List<Map<String,Object>> lists = (List)json;
+//		for(Map<String,Object> a:lists){
+//			System.out.println(String.valueOf(a.get("deptId")).trim());
+//		}
+
+//		for (int i = 9;i<=16;i++){
+//			System.out.println(numberToLetter(i));
+//		}
+//
+//		String a = "0-1111341-1111343";
+//		int n = a.length()-a.replaceAll("-", "").length();
+//		System.out.println("字符串中zhuan字符-有"+n+"个");
+
+
+//		System.out.println(getLatest12Month(now));
+//
+//		System.out.println(Arrays.toString(getYearFullMonth("2022")));
+//		String[] dateValue = DateUtils.getYearFullMonth("2022");
+//		for(int p=0;p<dateValue.length;p++){
+//			System.out.println(dateValue[p]);
+//		}
+//		System.out.println(dateValue.length);
+//
+//		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM");
+//		System.out.println(format1.format(new Date()));
 	}
 
 
+	public static Map abc() {
+		int  value = 1;
+		char key   = 'A' - 1;
+		char end   = 'Z';
+		Map map = Maps.newHashMap();
+		while (key < end) {
+			key++;
+			// 跳过这些 字母
+			// if (key == 'I' || key == 'Q' || key == 'O') {
+			// continue;
+			// }
+			map.put(key, value);
+			value++;
+		}
+//		System.out.println(map.toString());
+		return map;
+	}
 
+	private static ArrayList getKey(String value) {
+		ArrayList keyList = new ArrayList();
+		String key = null;
+		Map map = abc();
+		Set set = map.entrySet();// entrySet()方法就是把map中的每个键值对变成对应成Set集合中的一个对象.
+		// set对象中的内容如下:[3=c, 2=b, 1=a, 5=e, 4=c]
+		Iterator it = set.iterator();
+		while (it.hasNext()) {
+			Map.Entry entry = (Map.Entry) it.next();
+			 // entry中的内容就是set集合中的每个对象(map集合中的一个键值对)3=c....
+			 // Map.Entry就是一种类型,专值map中的一个键值对组成的对象.
+			 if (entry.getValue().equals(value)){
+				 key = (String) entry.getKey();
+				 keyList.add(key);
+				}
+			}
+		return keyList;
+	}
+
+	//数字转字母 1-26 ： A-Z
+	public static String numberToLetter(int num) {
+		if (num <= 0) {
+			return null;
+		}
+		String letter = "";
+		num--;
+		do {
+			if (letter.length() > 0) {
+				num--;
+			}
+			letter = ((char) (num % 26 + (int) 'A')) + letter;
+			num = (int) ((num - num % 26) / 26);
+////			 跳过这些 字母
+//			 if (letter.equals("I") || letter.equals("Q") || letter.equals("O")) {
+//				 num++;
+//				 letter = ((char) (num % 26 + (int) 'A')) + letter;
+//				 num = (int) ((num - num % 26) / 26);
+//			 }
+		} while (num > 0);
+
+		return letter;
+	}
+
+	//字母转数字  A-Z ：1-26
+	public static int letterToNumber(String letter) {
+		int length = letter.length();
+		int num = 0;
+		int number = 0;
+		for(int i = 0; i < length; i++) {
+			char ch = letter.charAt(length - i - 1);
+			num = (int)(ch - 'A' + 1) ;
+			num *= Math.pow(26, i);
+			number += num;
+		}
+		return number;
+	}
+
+	/**
+	 * 获取当前系统时间最近12月的年月（含当月）
+	 */
+	public static String getLatest12Month(Date date){
+		Calendar  from  =  Calendar.getInstance();
+		from.setTime(date);
+		String str1 = from.get(Calendar.YEAR)+"-"+fillZero(from.get(Calendar.MONTH)+1);
+		from.add(Calendar.MONTH, -11);//11个月前
+		String str2 = from.get(Calendar.YEAR)+"-"+fillZero(from.get(Calendar.MONTH)+1);
+		return str2+"~"+str1;
+	}
+
+
+	/**
+	 * 格式化月份
+	 */
+	public static String fillZero(int i){
+		String month = "";
+		if(i<10){
+			month = "0" + i;
+		}else{
+			month = String.valueOf(i);
+		}
+		return month;
+	}
+
+	//计算两个时间相差的秒数
+	public static long getTime(String startTime, String endTime) throws ParseException {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		long eTime = df.parse(endTime).getTime();
+		long sTime = df.parse(startTime).getTime();
+		long diff = (eTime - sTime) / 1000;
+		return diff;
+	}
 
 }
