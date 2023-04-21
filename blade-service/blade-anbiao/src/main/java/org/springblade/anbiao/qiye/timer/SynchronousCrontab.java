@@ -2715,10 +2715,10 @@ public class SynchronousCrontab {
 			XingNengBaoGaoRiskinsert();
 
 			//驾驶员保险风险
-			JiaShiYuanBaoXianRiskinsert();
+//			JiaShiYuanBaoXianRiskinsert();
 
 			//车辆保险风险
-			VehicleBaoXianRiskinsert();
+//			VehicleBaoXianRiskinsert();
 
 			System.out.println("执行完成");
 		} catch (Exception e) {

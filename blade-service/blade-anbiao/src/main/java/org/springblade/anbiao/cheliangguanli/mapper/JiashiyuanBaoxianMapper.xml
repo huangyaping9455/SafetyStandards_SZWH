@@ -1530,4 +1530,47 @@
             AND a.dept_name like '%${deptName}%'
         </if>
     </select>
+
+
+    <select id="selectMasterPolicy"
+            parameterType="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanLedgerVO"
+            resultType="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanLedgerVO">
+
+        SELECT
+            avb_ids AS avbIds,
+            avb_dept_ids AS deptId,
+            a.dept_name AS deptName,
+            e.cheliangpaizhao AS cheliangpaizhao,
+            avb_av_ids AS avbAvIds,
+            avb_insurance_company AS avbInsuranceCompany,
+            d.avbm_risk AS avbmRisk,
+            d.avbm_name AS avbmName,
+            avb_policy_no AS avbPolicyNo,
+            d.avbm_basic_premium AS avbmBasicPremium,
+            d.avbm_insurance_amount AS avbmInsuranceAmount,
+            --             avb_insure_name AS avbInsureName,
+            avb_insurance_period_start AS avbInsurancePeriodStart,
+            avb_insurance_period_end AS avbInsurancePeriodEnd
+        FROM
+            anbiao_vehicle_baoxian
+                INNER JOIN (
+        <include
+            refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) a ON a.id = avb_dept_ids
+                INNER JOIN anbiao_organization k ON a.id = k.dept_id
+                AND k.jigouleixing IN ( 'qiye', 'geti' )
+                LEFT JOIN anbiao_vehicle_baoxian_mingxi d ON avb_ids = d.avbm_avb_ids
+                LEFT JOIN anbiao_vehicle e ON e.id = avb_av_ids
+        WHERE
+             avb_delete = '0'
+             AND e.is_deleted = '0'
+             AND avbm_risk IS NOT NULL
+             and avb_insurance_period_end >= CURRENT_DATE
+
+        ORDER BY
+            e.cheliangpaizhao,
+            d.avbm_risk
+
+    </select>
+
 </mapper>

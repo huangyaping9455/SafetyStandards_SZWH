@@ -150,4 +150,10 @@ public class JiaShiYuanLedgerVO {
 	private String cheliangzongbaoxianjine;
 
 	private String cheliangzongbaofeijine;
+
+	private String avbInsuranceCompany;
+
+	private String avbPolicyNo;
+
+	private String avbInsurancePeriodStart;
 }

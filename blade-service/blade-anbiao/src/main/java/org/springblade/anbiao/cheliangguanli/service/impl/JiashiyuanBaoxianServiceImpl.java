@@ -195,5 +195,10 @@ public class JiashiyuanBaoxianServiceImpl extends ServiceImpl<JiashiyuanBaoxianM
 		return baoxianMapper.selectDeptTotalTmountInsurance(jiaShiYuanLedgerVO);
 	}
 
+	@Override
+	public List<JiaShiYuanLedgerVO> selectMasterPolicy(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
+		return baoxianMapper.selectMasterPolicy(jiaShiYuanLedgerVO);
+	}
+
 
 }

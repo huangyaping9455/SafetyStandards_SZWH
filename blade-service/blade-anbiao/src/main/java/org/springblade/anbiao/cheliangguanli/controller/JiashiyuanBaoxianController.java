@@ -1482,11 +1482,6 @@ public class JiashiyuanBaoxianController extends BladeController {
 		String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"保险明细台账.zip";
 		PackageToZIp.toZip(fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2]+"\\"+uuid+"\\"+"保险明细台账", fileName);
 
-//		ExcelUtils.deleteFile(fileName);
-//		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(fileName));
-//		ApacheZipUtils.doCompress1(urlList, bizOut);
-//		//不要忘记调用
-//		bizOut.close();
 
 		rs.setMsg("下载成功");
 		rs.setCode(200);
@@ -1495,29 +1490,268 @@ public class JiashiyuanBaoxianController extends BladeController {
 		return rs;
 	}
 
-//	@GetMapping("/goExport_MingXi2_Excel")
-//	@ApiLog("保险明细信息-导出")
-//	@ApiOperation(value = "保险信息-导出", notes = "传入JiaShiYuanLedgerPage", position = 22)
-//	public R goExport_MingXi2_Excel(@RequestBody JiaShiYuanLedgerVO jiaShiYuanLedgerVO) throws IOException {
-//		R rs = new R();
-////
-////		QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
-////		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,"0");
-////		List<JiaShiYuan> jiaShiYuans = jiaShiYuanService.getBaseMapper().selectList(jiaShiYuanQueryWrapper);
-////		for (JiaShiYuan j: jiaShiYuans) {
-////			String shoujihaoma = j.getShoujihaoma();
-////			String substring = shoujihaoma.substring(5, 11);
-//			//登录密码
-//			String encrypt = DigestUtil.encrypt("799629");
-//			System.out.println(encrypt);
-////			j.setDenglumima(encrypt);
-////			jiaShiYuanService.getBaseMapper().updateById(j);
-////		}
-//
-//		rs.setMsg("下载成功");
-//		rs.setCode(200);
-//		rs.setSuccess(true);
-//		return rs;
-//	}
+	@GetMapping("/goExport_MasterPolicy_Excel")
+	@ApiLog("总保单-导出")
+	@ApiOperation(value = "总保单-导出", notes = "传入JiaShiYuanLedgerPage", position = 22)
+	public R goExport_MasterPolicy_Excel(HttpServletRequest request, HttpServletResponse response, String deptId , String date, BladeUser user) throws IOException {
+		R rs = new R();
+		String uuid = UUID.randomUUID().toString().replace("-", "");
+		JiaShiYuanLedgerVO jiaShiYuanLedgerVO = new JiaShiYuanLedgerVO();
+		List<Map> ListData = new ArrayList<Map>();
+		Map<String, Object> map = new HashMap<>();
+		String cheliangpaizhao;
+		String PDF;
+		double zongbaofei=0.0;
+		double zongbaojin=0.0;
+//		JiaShiYuanLedgerPage jiaShiYuanLedgerPage = new JiaShiYuanLedgerPage();
+		jiaShiYuanLedgerVO.setDeptId(deptId);
+//		jiaShiYuanLedgerVO.setDate(date);
+		// TODO 渲染其他类型的数据请参考官方文档
+		DecimalFormat df = new DecimalFormat("######0.00");
+		Calendar now = Calendar.getInstance();
+
+
+		// 内容的策略
+		WriteCellStyle contentWriteCellStyle = new WriteCellStyle();
+		// 这里需要指定 FillPatternType 为FillPatternType.SOLID_FOREGROUND 不然无法显示背景颜色.头默认了 FillPatternType所以可以不指定
+		contentWriteCellStyle.setWrapped(true);
+		// 这个策略是 头是头的样式 内容是内容的样式 其他的策略可以自己实现
+		HorizontalCellStyleStrategy horizontalCellStyleStrategy =
+			new HorizontalCellStyleStrategy(null, contentWriteCellStyle);
+
+
+		//word模板地址
+		String templatePath =fileServer.getPathPrefix()+"muban\\"+"zongbaodan.xlsx";
+
+		String [] nyr= DateUtil.today().split("-");
+		String[] idsss = jiaShiYuanLedgerVO.getDeptId().split(",");
+
+		String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"总保单台账";
+		File newFile = new File(fileName);
+
+		//判断目标文件所在目录是否存在
+		if(!newFile.exists()){
+			//如果目标文件所在的目录不存在，则创建父目录
+			newFile.mkdirs();
+		}
+
+		//去除素组中重复的数组
+		List<String> listid = new ArrayList<String>();
+		for (int i=0; i<idsss.length; i++) {
+			if(!listid.contains(idsss[i])) {
+				listid.add(idsss[i]);
+			}
+		}
+		//返回一个包含所有对象的指定类型的数组
+		String[] idss= listid.toArray(new String[1]);
+		for(int j = 0;j< idss.length;j++){
+			jiaShiYuanLedgerVO.setDeptName("");
+			jiaShiYuanLedgerVO.setDeptId(idss[j]);
+			List<JiaShiYuanLedgerVO> jiaShiYuanLedgerVOS = jiashiyuanBaoxianService.selectMasterPolicy(jiaShiYuanLedgerVO);
+			//Excel中的结果集ListData
+//			List<LaborledgerVO> ListData = new ArrayList<>();
+			if(jiaShiYuanLedgerVOS.size()==0){
+
+			}else if(jiaShiYuanLedgerVOS.size()>3000){
+				rs.setMsg("数据超过30000条无法下载");
+				rs.setCode(500);
+				return rs;
+			}else{
+				for(int i = 0; i < jiaShiYuanLedgerVOS.size() ; i++) {
+
+					String templateFile = templatePath;
+					// 渲染文本
+					JiaShiYuanLedgerVO t = jiaShiYuanLedgerVOS.get(i);
+					JiaShiYuanLedgerVO jiaShiYuanLedgerVO1 = new JiaShiYuanLedgerVO();
+					jiaShiYuanLedgerVO1.setDeptId(t.getDeptId());
+
+					FillConfig fillConfig = FillConfig.builder().forceNewRow(Boolean.TRUE).build();
+
+
+					if (i==0){
+						if (StringUtils.isNotBlank(t.getDeptName()) && !t.getDeptName().equals("null")) {
+							map.put("DeptName", t.getDeptName());
+						}
+						if (StringUtils.isNotBlank(t.getCheliangpaizhao()) && !t.getCheliangpaizhao().equals("null")){
+							map.put("Cheliangpaizhao", t.getCheliangpaizhao());
+						}
+						if (StringUtils.isNotBlank(t.getAvbInsuranceCompany()) && !t.getAvbInsuranceCompany().equals("null")){
+							map.put("AvbInsuranceCompany", t.getAvbInsuranceCompany());
+						}else {
+							map.put("AvbInsuranceCompany", "/");
+						}
+						if (StringUtils.isNotBlank(t.getAvbmRisk()) && !t.getAvbmRisk().equals("null")){
+							map.put("AvbmRisk", t.getAvbmRisk());
+						}
+						if (StringUtils.isNotBlank(t.getAvbPolicyNo()) && !t.getAvbPolicyNo().equals("null")){
+							map.put("AvbPolicyNo", t.getAvbPolicyNo());
+						}else {
+							map.put("AvbPolicyNo", "/");
+						}
+						if (StringUtils.isNotBlank(t.getAvbmRisk()) && !t.getAvbmRisk().equals("null")){
+							map.put("AvbmRisk", t.getAvbmRisk());
+						}
+						if (StringUtils.isNotBlank(t.getAvbmBasicPremium()) && !t.getAvbmBasicPremium().equals("null")){
+							zongbaofei=zongbaofei+Double.parseDouble(t.getAvbmBasicPremium());
+						}
+						if (t.getAvbmRisk().equals("交强险")){
+							if (StringUtils.isNotBlank(t.getAvbmInsuranceAmount()) && !t.getAvbmInsuranceAmount().equals("null")){
+								map.put("AvbmInsuranceAmount", t.getAvbmInsuranceAmount());
+							}else {
+								map.put("AvbmInsuranceAmount", "0");
+							}
+						}else {
+							map.put("AvbmInsuranceAmount", " ");
+						}
+						if (StringUtils.isNotBlank(t.getAvbInsurancePeriodStart()) && !t.getAvbInsurancePeriodStart().equals("null")){
+							map.put("AvbInsurancePeriodStart", t.getAvbInsurancePeriodStart());
+						}else {
+							map.put("AvbInsurancePeriodStart", "/");
+						}
+						if (StringUtils.isNotBlank(t.getAvbInsurancePeriodEnd()) && !t.getAvbInsurancePeriodEnd().equals("null")){
+							map.put("AvbInsurancePeriodEnd", t.getAvbInsurancePeriodEnd());
+						}else {
+							map.put("AvbInsurancePeriodEnd", "/");
+						}
+					}
+					if (i>0){
+						if (t.getCheliangpaizhao().equals(map.get("Cheliangpaizhao"))) {
+							if (t.getAvbmRisk().equals(map.get("AvbmRisk"))) {
+								if (StringUtils.isNotBlank(t.getAvbmBasicPremium()) && !t.getAvbmBasicPremium().equals("null")) {
+									zongbaofei = zongbaofei + Double.parseDouble(t.getAvbmBasicPremium());
+								}
+							}else {
+								map.put("AvbmBasicPremium",zongbaofei);
+								ListData.add(map);
+								map = new HashMap<>();
+								zongbaofei=0.0;
+								if (StringUtils.isNotBlank(t.getDeptName()) && !t.getDeptName().equals("null")) {
+									map.put("DeptName", t.getDeptName());
+								}
+								if (StringUtils.isNotBlank(t.getCheliangpaizhao()) && !t.getCheliangpaizhao().equals("null")){
+									map.put("Cheliangpaizhao", t.getCheliangpaizhao());
+								}
+								if (StringUtils.isNotBlank(t.getAvbInsuranceCompany()) && !t.getAvbInsuranceCompany().equals("null")){
+									map.put("AvbInsuranceCompany", t.getAvbInsuranceCompany());
+								}else {
+									map.put("AvbInsuranceCompany", "/");
+								}
+								if (StringUtils.isNotBlank(t.getAvbmRisk()) && !t.getAvbmRisk().equals("null")){
+									map.put("AvbmRisk", t.getAvbmRisk());
+								}
+								if (StringUtils.isNotBlank(t.getAvbPolicyNo()) && !t.getAvbPolicyNo().equals("null")){
+									map.put("AvbPolicyNo", t.getAvbPolicyNo());
+								}else {
+									map.put("AvbPolicyNo", "/");
+								}
+								if (StringUtils.isNotBlank(t.getAvbmRisk()) && !t.getAvbmRisk().equals("null")){
+									map.put("AvbmRisk", t.getAvbmRisk());
+								}
+								if (StringUtils.isNotBlank(t.getAvbmBasicPremium()) && !t.getAvbmBasicPremium().equals("null")){
+									zongbaofei=zongbaofei+Double.parseDouble(t.getAvbmBasicPremium());
+								}
+								if (t.getAvbmRisk().equals("交强险")){
+									if (StringUtils.isNotBlank(t.getAvbmInsuranceAmount()) && !t.getAvbmInsuranceAmount().equals("null")){
+										map.put("AvbmInsuranceAmount", t.getAvbmInsuranceAmount());
+									}else {
+										map.put("AvbmInsuranceAmount", "0");
+									}
+								}else {
+									map.put("AvbmInsuranceAmount", " ");
+								}
+								if (StringUtils.isNotBlank(t.getAvbInsurancePeriodStart()) && !t.getAvbInsurancePeriodStart().equals("null")){
+									map.put("AvbInsurancePeriodStart", t.getAvbInsurancePeriodStart());
+								}else {
+									map.put("AvbInsurancePeriodStart", "/");
+								}
+								if (StringUtils.isNotBlank(t.getAvbInsurancePeriodEnd()) && !t.getAvbInsurancePeriodEnd().equals("null")){
+									map.put("AvbInsurancePeriodEnd", t.getAvbInsurancePeriodEnd());
+								}else {
+									map.put("AvbInsurancePeriodEnd", "/");
+								}
+							}
+						}else {
+							map.put("AvbmBasicPremium",zongbaofei);
+							ListData.add(map);
+							map = new HashMap<>();
+							zongbaofei=0.0;
+							if (StringUtils.isNotBlank(t.getDeptName()) && !t.getDeptName().equals("null")) {
+								map.put("DeptName", t.getDeptName());
+							}
+							if (StringUtils.isNotBlank(t.getCheliangpaizhao()) && !t.getCheliangpaizhao().equals("null")){
+								map.put("Cheliangpaizhao", t.getCheliangpaizhao());
+							}
+							if (StringUtils.isNotBlank(t.getAvbInsuranceCompany()) && !t.getAvbInsuranceCompany().equals("null")){
+								map.put("AvbInsuranceCompany", t.getAvbInsuranceCompany());
+							}else {
+								map.put("AvbInsuranceCompany", "/");
+							}
+							if (StringUtils.isNotBlank(t.getAvbmRisk()) && !t.getAvbmRisk().equals("null")){
+								map.put("AvbmRisk", t.getAvbmRisk());
+							}
+							if (StringUtils.isNotBlank(t.getAvbPolicyNo()) && !t.getAvbPolicyNo().equals("null")){
+								map.put("AvbPolicyNo", t.getAvbPolicyNo());
+							}else {
+								map.put("AvbPolicyNo", "/");
+							}
+							if (StringUtils.isNotBlank(t.getAvbmRisk()) && !t.getAvbmRisk().equals("null")){
+								map.put("AvbmRisk", t.getAvbmRisk());
+							}
+							if (StringUtils.isNotBlank(t.getAvbmBasicPremium()) && !t.getAvbmBasicPremium().equals("null")){
+								zongbaofei=zongbaofei+Double.parseDouble(t.getAvbmBasicPremium());
+							}
+							if (t.getAvbmRisk().equals("交强险")){
+								if (StringUtils.isNotBlank(t.getAvbmInsuranceAmount()) && !t.getAvbmInsuranceAmount().equals("null")){
+									map.put("AvbmInsuranceAmount", t.getAvbmInsuranceAmount());
+								}else {
+									map.put("AvbmInsuranceAmount", "0");
+								}
+							}else {
+								map.put("AvbmInsuranceAmount", " ");
+							}
+							if (StringUtils.isNotBlank(t.getAvbInsurancePeriodStart()) && !t.getAvbInsurancePeriodStart().equals("null")){
+								map.put("AvbInsurancePeriodStart", t.getAvbInsurancePeriodStart());
+							}else {
+								map.put("AvbInsurancePeriodStart", "/");
+							}
+							if (StringUtils.isNotBlank(t.getAvbInsurancePeriodEnd()) && !t.getAvbInsurancePeriodEnd().equals("null")){
+								map.put("AvbInsurancePeriodEnd", t.getAvbInsurancePeriodEnd());
+							}else {
+								map.put("AvbInsurancePeriodEnd", "/");
+							}
+						}
+
+					}
+				}
+
+				// 第一列进行单元格合并
+				int[] mergeColumeIndex = {1};
+				// 从第4行开始合并
+				int mergeRowIndex = 1;
+				OutputStream outputStream = new FileOutputStream(fileName + "/" + "总保单台账.xlsx");
+				ExcelWriter excelWriter = EasyExcelFactory.write(outputStream)
+					.withTemplate(templatePath)
+					//设置合并单元格策略
+					.registerWriteHandler(new ExcelFillCellMergeStrategy2(mergeRowIndex,mergeColumeIndex))
+					.registerWriteHandler(horizontalCellStyleStrategy)
+					.build();
+				WriteSheet chexianwriteSheet = EasyExcel.writerSheet("总保单").build();
+				excelWriter.fill(ListData, chexianwriteSheet);
+				excelWriter.finish();
+				outputStream.close();
+
+
+			}
+		}
+		String fileName2 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"总保单台账.zip";
+		PackageToZIp.toZip(fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2]+"\\"+uuid+"\\"+"总保单台账", fileName2);
+
+
+		rs.setMsg("下载成功");
+		rs.setCode(200);
+		rs.setData(fileName);
+		rs.setSuccess(true);
+		return rs;
+	}
 
 }

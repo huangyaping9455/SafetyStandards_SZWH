@@ -89,4 +89,6 @@ public interface IJiashiyuanBaoxianService extends BaseService<JiashiyuanBaoxian
 	List<JiaShiYuanLedgerVO> selectPersonInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
 
 	JiaShiYuanLedgerVO selectDeptTotalTmountInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	List<JiaShiYuanLedgerVO> selectMasterPolicy(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
 }

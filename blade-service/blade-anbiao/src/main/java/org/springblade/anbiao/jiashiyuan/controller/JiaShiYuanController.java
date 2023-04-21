@@ -1567,10 +1567,8 @@ public class JiaShiYuanController {
 						driver.setImportUrl("icon_gou.png");
 					}
 				} else {
-					driver.setMsg("驾驶员性别应为“男”或“女”;");
-					driver.setImportUrl("icon_cha.png");
-					errorStr += "驾驶员性别应为“男”或“女”;";
-					bb++;
+					driver.setXingbie("1");
+					driver.setImportUrl("icon_gou.png");
 				}
 			}
 
