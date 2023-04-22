@@ -383,7 +383,7 @@
             FROM
             (
             SELECT
-                id,dept_id,left(shigufashengshijian,10) as shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
+            id as accidentId,dept_id,left(shigufashengshijian,10) as shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
             FROM
             anbiao_shigubaogao
             where
@@ -399,8 +399,8 @@
             <if test="deptName != null and deptName != '' ">
                 and c.dept_name like '%${deptName}%'
             </if>
-            <if test="id != null and id != '' ">
-                and a.id =#{id}
+            <if test="accidentId != null and accidentId != '' ">
+                and a.accidentId =#{accidentId}
             </if>
             limit ${total}
         </if>
@@ -412,7 +412,7 @@
             FROM
             (
             SELECT
-                id,dept_id,left(shigufashengshijian,10) as shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
+            id as accidentId,dept_id,left(shigufashengshijian,10) as shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
             FROM
             anbiao_shigubaogao
             where
@@ -427,8 +427,8 @@
             <if test="deptName != null and deptName != '' ">
                 and c.dept_name like '%${deptName}%'
             </if>
-            <if test="id != null and id != '' ">
-                and a.id =#{id}
+            <if test="accidentId != null and accidentId != '' ">
+                and a.accidentId =#{accidentId}
             </if>
             limit ${offsetNo},${size}
         </if>
@@ -444,7 +444,7 @@
         FROM
             (
                 SELECT
-                    id,dept_id,left(shigufashengshijian,10) as shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
+                    id as accidentId,dept_id,left(shigufashengshijian,10) as shigufashengshijian,shigufashengdidian,shigufenlei,shiguxingzhi,shiguzeren,chepaihao,jiashiyuan,shigugaikuang,caichansunshi,jianjiejingjisunshi,shiguzhaopian1,shiguzhaopian2,shiguzhaopian3,is_deleted
                 FROM
                     anbiao_shigubaogao
                 where
@@ -459,8 +459,8 @@
             <if test="deptName != null and deptName != '' ">
                 and c.dept_name like '%${deptName}%'
             </if>
-            <if test="id != null and id != '' ">
-                and a.id =#{id}
+            <if test="accidentId != null and accidentId != '' ">
+                and a.accidentId =#{accidentId}
             </if>
             ) d
     </select>

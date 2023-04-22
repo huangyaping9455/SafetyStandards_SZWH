@@ -14,6 +14,9 @@ public class AccidentLedgerReportsVO {
 
 	private static final long serialVersionUID = 1L;
 
+	@ApiModelProperty(value = "事故ID")
+	private String accidentId;
+
 	@ApiModelProperty(value = "企业名称")
 	private String deptName;
 

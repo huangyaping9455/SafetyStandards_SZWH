@@ -121,12 +121,12 @@ public class AccidentReportsController {
 	@GetMapping("/goExport_Excel")
 	@ApiLog("事故信息-导出")
 	@ApiOperation(value = "事故信息-导出", notes = "传入AccidentLedgerReportsPage", position = 22)
-	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String id, BladeUser user) throws IOException {
+	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String id, String date, String deptId, BladeUser user) throws IOException {
 		int a=1;
 		R rs = new R();
 		List<String> urlList = new ArrayList<>();
 		AccidentLedgerReportsPage accidentLedgerReportsPage = new AccidentLedgerReportsPage();
-		accidentLedgerReportsPage.setId(id);
+		accidentLedgerReportsPage.setAccidentId(id);
 //		accidentLedgerReportsPage.setDate(date);
 		// TODO 渲染其他类型的数据请参考官方文档
 		DecimalFormat df = new DecimalFormat("######0.00");
@@ -134,7 +134,7 @@ public class AccidentReportsController {
 		//word模板地址
 		String templatePath =fileServer.getPathPrefix()+"muban\\"+"AccidentReports.xlsx";
 		String [] nyr= DateUtil.today().split("-");
-		String[] idsss = accidentLedgerReportsPage.getId().split(",");
+		String[] idsss = accidentLedgerReportsPage.getAccidentId().split(",");
 		//去除素组中重复的数组
 		List<String> listid = new ArrayList<String>();
 		for (int i=0; i<idsss.length; i++) {
@@ -148,7 +148,7 @@ public class AccidentReportsController {
 			accidentLedgerReportsPage.setDeptName("");
 			accidentLedgerReportsPage.setSize(0);
 			accidentLedgerReportsPage.setCurrent(0);
-			accidentLedgerReportsPage.setId(idss[j]);
+			accidentLedgerReportsPage.setAccidentId(idss[j]);
 			service.selectLedgerList(accidentLedgerReportsPage);
 			List<AccidentLedgerReportsVO> accidentLedgerReportsVOS = accidentLedgerReportsPage.getRecords();
 			//Excel中的结果集ListData
