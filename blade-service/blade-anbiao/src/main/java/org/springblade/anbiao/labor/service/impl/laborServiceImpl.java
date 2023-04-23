@@ -72,7 +72,7 @@ public class laborServiceImpl extends ServiceImpl<laborMapper,LaborEntity> imple
 
 	@Override
 	public LaborPage<LaborVO> selectLaborPage(LaborPage laborPage) {
-		Integer total = laborMapper.selectTotal(laborPage);
+		Integer total = laborMapper.selectLaborTotal(laborPage);
 		Integer pagetotal = 0;
 		if(laborPage.getSize()==0){
 			if(laborPage.getTotal()==0){
