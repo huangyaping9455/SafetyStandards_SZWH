@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.apache.tools.zip.ZipOutputStream;
 import org.springblade.anbiao.AccidentReports.DTO.AccidentReportsDTO;
@@ -25,7 +26,6 @@ import org.springblade.common.configurationBean.FileServer;
 import org.springblade.common.constant.FilePathConstant;
 import org.springblade.common.tool.ApacheZipUtils;
 import org.springblade.common.tool.ExcelUtils;
-import org.springblade.common.tool.StringUtils;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
@@ -126,6 +126,10 @@ public class AccidentReportsController {
 		R rs = new R();
 		List<String> urlList = new ArrayList<>();
 		AccidentLedgerReportsPage accidentLedgerReportsPage = new AccidentLedgerReportsPage();
+		if (StringUtils.isBlank(id) || !id.equals("null")){
+			id="077aa074239c46e7b48a38b20b279c94,091e76243137422497acfa4b889606e2,244b3e09a06d45b791e77154e7e34314,29f1026a1f474864b1364770d2deab37,2a5d943f2ae54d85ae372c3a83e6e36a,33c70bb381f24fc29e7c66bdf8f09c05,34dc223d98a94d2bb209ed704b007cdf,3bfbd30e9d58411f86dede8aa0d6c4db,45f67bbd2b124126aca2387dc9047518,4ade247fa27a4e19a95a95c0356512ce,512523246d0649608cdf94536dcee8d5,52c151a382df4a909a71eb8a7f2c61ba,82421ee6a154484885c054628ccbd952,8ff2f6618c904175b40f2d4daa08e8bb,9242f1f77a6c4b3a8d50605d8e196cd9,a492901fbd2b48568347043aa93868aa,b000af9ee7e84d1c9697fbc17b62ca01,b1d59a923faa4d68b1a2cc0bbbbef04c,b47303d15caf49de821f5394cfd74b90,c4983cf066a244bca7ef8924e5aa26f7,d3d9b7d27e3140eaaff94632a8a18916,d990235001204eb79ef8c4ea7e69ce6a,e1a907c1edad498a8f027c4f9a15fb27,e3aa57439ad841adb7eacb8e07a854a3,e5ba5e7f8290401e90ccdc1b2f869af4,f6e238ca73564e23a1d0dd157c187597,f79a59b9fe6d4ea9928532a1ded5ce33,fb9b783576974548a54d5e7c05002433";
+		}
+
 		accidentLedgerReportsPage.setAccidentId(id);
 //		accidentLedgerReportsPage.setDate(date);
 		// TODO 渲染其他类型的数据请参考官方文档
