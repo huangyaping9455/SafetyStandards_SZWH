@@ -6,6 +6,7 @@ import org.springblade.anbiao.chuchejiancha.page.AnBiaoCheckCarPage;
 import org.springblade.anbiao.chuchejiancha.page.AnbiaoCarExamineInfoPage;
 import org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineInfoTZVO;
 import org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineInfoVO;
+import org.springblade.anbiao.chuchejiancha.vo.SafetyCheckMingXiVO;
 
 import java.util.List;
 
@@ -36,6 +37,8 @@ public interface AnbiaoCarExamineInfoMapper extends BaseMapper<AnbiaoCarExamineI
 	List<AnbiaoCarExamineInfoTZVO> selectDeptVeh(AnBiaoCheckCarPage anbiaoCarExamineInfoPage);
 
 	List<AnbiaoCarExamineInfoTZVO>  selectDeptVehExamine(AnBiaoCheckCarPage anbiaoCarExamineInfoPage);
+
+	List<SafetyCheckMingXiVO>  selectSafetyCheckMingXi(SafetyCheckMingXiVO safetyCheckMingXiVO);
 
 
 }

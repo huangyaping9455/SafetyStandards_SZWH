@@ -15,6 +15,7 @@ import org.springblade.anbiao.chuchejiancha.page.AnbiaoCarExamineInfoPage;
 import org.springblade.anbiao.chuchejiancha.service.IAnbiaoCarExamineInfoService;
 import org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineInfoTZVO;
 import org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineInfoVO;
+import org.springblade.anbiao.chuchejiancha.vo.SafetyCheckMingXiVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -194,6 +195,11 @@ public class AnbiaoCarExamineInfoServiceImpl extends ServiceImpl<AnbiaoCarExamin
 	@Override
 	public List<AnbiaoCarExamineInfoTZVO> selectDeptVehExamine(AnBiaoCheckCarPage anbiaoCarExamineInfoPage) {
 		return mapper.selectDeptVehExamine(anbiaoCarExamineInfoPage);
+	}
+
+	@Override
+	public List<SafetyCheckMingXiVO> selectSafetyCheckMingXi(SafetyCheckMingXiVO safetyCheckMingXiVO) {
+		return mapper.selectSafetyCheckMingXi(safetyCheckMingXiVO);
 	}
 
 

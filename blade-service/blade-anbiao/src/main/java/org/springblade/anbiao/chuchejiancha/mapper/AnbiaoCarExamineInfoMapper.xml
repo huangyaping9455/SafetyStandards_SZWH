@@ -377,5 +377,46 @@
         </if>
     </select>
 
+    <select id="selectSafetyCheckMingXi" resultType="org.springblade.anbiao.chuchejiancha.vo.SafetyCheckMingXiVO"
+            parameterType="org.springblade.anbiao.chuchejiancha.vo.SafetyCheckMingXiVO">
+        SELECT
+        a.jcrsignatrue,
+        b.dept_name as deptName,
+        f.jiashiyuanxingming,
+        c.cheliangpaizhao,
+        a.id as infoId,
+        a.vehid,
+        a.deptid as deptId,
+        a.`status`,
+        a.date,
+
+        d.id as remarkId,
+        d.examid,
+        d.xiangid
+
+        FROM
+        `anbiao_car_examine_info` a
+        INNER JOIN (
+        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b on b.id = a.deptid
+        LEFT JOIN anbiao_vehicle c ON a.vehid = c.id and c.is_deleted=0
+        left join anbiao_car_examine_info_remark d on a.id = d.examid
+        LEFT JOIN anbiao_cheliang_jiashiyuan_daily e on c.id = e.vehid and e.vstatus = 1
+        left join anbiao_jiashiyuan f on e.jiashiyuanid = f.id and f.isdelete=0
+        WHERE
+        <if test="vehid != null and vehid != ''">
+             c.id=#{vehid}
+        </if>
+<!--         	and a.date >= "2023-03-27"-->
+<!--        	and a.date <= "2023-04-07"-->
+        <if test="date != null and date != ''">
+        and YEAR(a.date)=YEAR(#{date})
+        and MONTH(a.date)=MONTH(#{date})
+        </if>
+        ORDER BY a.id,a.date
+
+
+    </select>
+
 
 </mapper>
