@@ -117,6 +117,9 @@ values
         left join (SELECT * FROM anbiao_jiashiyuan_wuzezhengming WHERE ajw_delete = 0) l on a.id = l.ajw_aj_ids
         WHERE 1=1
         and ifnull(a.isdelete,0) = 0
+        <if test="id !=null and id != ''">
+            AND a.id = #{id}
+        </if>
         order BY jiashiyuanxingming
 <!--            and a.status = 0-->
     </sql>
