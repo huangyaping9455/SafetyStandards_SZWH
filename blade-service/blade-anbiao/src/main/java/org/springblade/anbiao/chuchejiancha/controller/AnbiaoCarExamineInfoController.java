@@ -1,7 +1,6 @@
 package org.springblade.anbiao.chuchejiancha.controller;
 
 
-import cn.afterturn.easypoi.word.entity.WordImageEntity;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
@@ -14,11 +13,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.tools.zip.ZipOutputStream;
-import org.springblade.anbiao.anquanhuiyi.VO.AnbiaoAnquanhuiyiDetailVO;
-import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiDetail;
-import org.springblade.anbiao.anquanhuiyi.page.AnQuanHuiYiPage;
-import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamine;
 import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamineInfo;
@@ -874,8 +869,9 @@ public class AnbiaoCarExamineInfoController {
 	@GetMapping("/goExport_ExamineInfo_Excel")
 	@ApiLog("安全检查数据-车辆安全检查台账统计表-导出")
 	@ApiOperation(value = "安全检查数据-车辆安全检查台账统计表-导出", notes = "传入deptId、vehId、beginTime、endTime", position = 22)
-	public R goExport_ExamineInfo_Excel(HttpServletRequest request, HttpServletResponse response, String deptId, String vehId ,String deptname, String beginTime , String endTime , BladeUser user) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+	public R goExport_ExamineInfo_Excel(HttpServletRequest request, HttpServletResponse response, String deptId, String vehId ,String deptname, String beginTime , String endTime , BladeUser user) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchFieldException, ParseException {
 		R rs = new R();
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 		List<String> urlList = new ArrayList<>();
 		AnBiaoCheckCarPage anBiaoCheckCarPage = new AnBiaoCheckCarPage();
 		anBiaoCheckCarPage.setDeptId(deptId);
@@ -900,6 +896,7 @@ public class AnbiaoCarExamineInfoController {
 			//Excel中的结果集ListData
 			List<CarExamineTJMX> ListData1 = new ArrayList<>();
 			Map<String, Object> map = new HashMap<>();
+
 			anBiaoCheckCarPage.setSize(0);
 			anBiaoCheckCarPage.setCurrent(0);
 			anBiaoCheckCarPage.setBeginTime(beginTime);
@@ -930,6 +927,14 @@ public class AnbiaoCarExamineInfoController {
 				for( int i = 0 ; i < examineInfoList.size() ; i++) {
 					// 渲染文本
 					AnbiaoCarExamineInfoTZVO t = examineInfoList.get(i);
+					Date parse = sf.parse(beginTime);
+					Calendar calendar = Calendar.getInstance();
+					calendar.setTime(parse);
+					String year = String.valueOf(calendar.get(Calendar.YEAR));
+					map.put("year", year);
+					String month = String.valueOf(calendar.get(Calendar.MONTH) + 1);
+					map.put("month", month);
+
 					List<AnbiaoCarExamineInfoTZVO> tt = examineInfoList.get(i).getExamineInfoTZVOList();
 					Class c1 = Class.forName("org.springblade.anbiao.chuchejiancha.entity.CarExamineTJMX");
 					CarExamineTJMX ca = (CarExamineTJMX) c1.newInstance();
@@ -951,13 +956,24 @@ public class AnbiaoCarExamineInfoController {
 									if(tt.get(ts).getStatus().equals(0)){
 										str +="a"+p+":√,";
 									}else if(tt.get(ts).getStatus().equals(6)){
-										str +="a"+p+":√,";
+										str +="a"+p+":#,";
 									}else if(tt.get(ts).getStatus().equals(1)){
-										str +="a"+p+":x,";
+										str +="a"+p+":*,";
 									}else{
-										str +="a"+p+":--,";
+										str +="a"+p+":×,";
 									}
 								}
+//								// 创建日期对象
+//								Date date = new Date();
+//								// 创建日期格式化对象，指定日期格式
+//								SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//								// 格式化日期，获取当天日期
+//								String currentDate = sdf.format(date);
+//								// 截取日期的后两位
+//								String day = currentDate.substring(currentDate.length() - 2);
+//								if(Integer.parseInt(pp) > Integer.parseInt(day)){
+//									str +="a"+p+":--,";
+//								}
 							}
 						}
 //					}
