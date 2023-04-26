@@ -166,23 +166,23 @@
             else '未超期'
         end as chaoqi
         FROM
-        baobiao_alarmsummary_cutofftime AS a
+            baobiao_alarmsummary_cutofftime AS a
 <!--        left join ( select a.id,a.dept_id from anbiao_vehicle a where ifnull(a.is_deleted,0) = 0) v on a.VehId = v.id-->
         left join ( select a.id,a.dept_id from anbiao_vehicle a) v on a.VehId = v.id
-        <if test="deptId != 1 ">
-            INNER JOIN ( SELECT DISTINCT
-            xiaji.id,
-            xiaji.parent_id,
-            xiaji.dept_name,
-            xiaji.is_deleted
+        INNER JOIN (
+            SELECT
+                DISTINCT
+                xiaji.id,
+                xiaji.parent_id,
+                xiaji.dept_name,
+                xiaji.is_deleted
             FROM
-            blade_dept shangji,
-            blade_dept xiaji
+                blade_dept shangji,
+                blade_dept xiaji
             WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
-            AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
-            and shangji.id=#{deptId}
+                AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+                AND shangji.id=#{deptId}
             ) dept on v.dept_id = dept.id
-        </if>
         left JOIN baobiao_alarmhandleresult AS b ON a.AlarmReportID = b.baojingid
             and ifnull(b.is_deleted,0) = 0
             and v.dept_id = b.qiyeid

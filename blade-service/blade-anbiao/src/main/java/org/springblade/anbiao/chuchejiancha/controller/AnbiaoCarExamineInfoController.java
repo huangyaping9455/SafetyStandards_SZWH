@@ -119,7 +119,7 @@ public class AnbiaoCarExamineInfoController {
 		AnbiaoCarExamineInfo deail = iAnbiaoCarExamineInfoService.getBaseMapper().selectOne(examineQueryWrapper);
 		if(deail == null){
 			if(anbiaoCarExamineInfo.getStatus() == 0 || anbiaoCarExamineInfo.getStatus() == 6){
-				anbiaoCarExamineInfo.setStatus(0);
+				anbiaoCarExamineInfo.setStatus(anbiaoCarExamineInfo.getStatus());
 				anbiaoCarExamineInfo.setIsdelete(0);
 
 				QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();

@@ -4875,8 +4875,8 @@ public class VehicleController {
 					vehicleVO = vehicleService.selectDeptCPYS(cheliangpaiz,chepaiyanse,vehicle.getDeptId().toString());
 					if(vehicleVO ==null){
 						vehicle.setImportUrl("icon_cha.png");
-						errorStr+=cheliangpaiz+"企业车辆不存在;";
-						vehicle.setMsg(cheliangpaiz+"企业车辆不存在;");
+						errorStr+=cheliangpaiz+"车辆的车辆牌照、车牌颜色无法匹配;";
+						vehicle.setMsg(cheliangpaiz+"车辆的车辆牌照、车牌颜色无法匹配;");
 						bb++;
 					}else{
 						vehicle.setImportUrl("icon_gou.png");

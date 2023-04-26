@@ -37,13 +37,13 @@
     </delete>
 
     <insert id="insertPost" parameterType="org.springblade.system.entity.Post">
-        insert  into  blade_post (user_id,post_id,Isdefault)
+        insert into blade_post (user_id,post_id,Isdefault)
         values (#{userId},#{postId},#{isdefault})
     </insert>
 
     <update id="updateIsdefault"  parameterType="org.springblade.system.entity.Post">
         update blade_post set Isdefault=0 where user_id=#{userId};
-        update blade_post set Isdefault=1 where user_id=#{userId} and post_id=#{postId}
+        update blade_post set Isdefault=1 where user_id=#{userId} and post_id=#{postId};
     </update>
 
 </mapper>

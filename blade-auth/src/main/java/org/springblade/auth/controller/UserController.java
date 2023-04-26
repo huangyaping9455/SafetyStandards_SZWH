@@ -275,7 +275,7 @@ public class UserController {
 					rs.setData(info);
 					return rs;
 				}else {
-					rs.setMsg(org.springframework.util.StringUtils.isEmpty(cellphone) ? "请授权手机号登录" :  "账号不存在，请前往注册或联系管理员!");
+					rs.setMsg("该账号未绑定微信，请用账号密码进行登录!");
 					rs.setCode(404);
 					rs.setSuccess(false);
 					return rs;
