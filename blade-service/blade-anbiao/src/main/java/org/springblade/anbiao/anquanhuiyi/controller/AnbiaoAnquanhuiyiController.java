@@ -314,7 +314,9 @@ public class AnbiaoAnquanhuiyiController {
 							anbiaoAnquanhuiyiDetail1.setAddApHeadPortrait(anquanhuiyiDetailList.get(j).getAddApHeadPortrait());
 							anbiaoAnquanhuiyiDetail1.setAddApAutograph(anquanhuiyiDetailList.get(j).getAddApAutograph());
 							anbiaoAnquanhuiyiDetail1.setAddApBeingJoined(anquanhuiyiDetailList.get(j).getAddApBeingJoined());
-							anbiaoAnquanhuiyiDetail1.setAddTime(anquanhuiyiDetailList.get(j).getAddTime());
+							if (StringUtils.isNotBlank(anquanhuiyiDetailList.get(j).getAddTime()) && !anquanhuiyiDetailList.get(j).getAddTime().equals("null")){
+								anbiaoAnquanhuiyiDetail1.setAddTime(anquanhuiyiDetailList.get(j).getAddTime());
+							}
 							int i1 = anquanhuiyiDetailService.getBaseMapper().updateById(anbiaoAnquanhuiyiDetail1);
 							if (i1>=0){
 								 b=true;

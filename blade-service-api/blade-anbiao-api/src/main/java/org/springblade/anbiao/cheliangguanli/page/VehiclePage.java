@@ -93,4 +93,7 @@ public class VehiclePage<T> extends BasePage<T> {
 
 	@ApiModelProperty(value = "车主")
 	private String chezhu;
+
+	@ApiModelProperty(value = "车辆id")
+	private String id;
 }

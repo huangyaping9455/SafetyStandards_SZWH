@@ -292,6 +292,9 @@
                     and shangji.id=#{deptId}
                 </if>
             )
+        <if test="id !=null and id != '' ">
+            AND a.id = #{id}
+        </if>
   </sql>
 
     <sql id="querySql">

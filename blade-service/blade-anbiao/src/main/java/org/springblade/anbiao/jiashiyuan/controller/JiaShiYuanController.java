@@ -5281,7 +5281,7 @@ public class JiaShiYuanController {
 		return rs;
 	}
 
-	@GetMapping("/goExport_getDriver")
+	@PostMapping("/goExport_getDriver")
 	@ApiLog("驾驶员信息-导出")
 	@ApiOperation(value = "驾驶员信息-导出", notes = "传入jiaShiYuanPage", position = 22)
 	public R goExport_getDriver(HttpServletRequest request, HttpServletResponse response, @RequestBody JiaShiYuanPage jiaShiYuanPage, BladeUser user) throws Exception {

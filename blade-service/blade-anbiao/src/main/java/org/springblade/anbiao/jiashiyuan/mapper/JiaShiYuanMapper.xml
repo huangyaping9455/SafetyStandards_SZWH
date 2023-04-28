@@ -1057,6 +1057,9 @@ values
         and o.avb_delete = 0
         )k on a.id=k.jiashiyuanid
         WHERE ifnull( a.isdelete, 0 ) = 0
+        <if test="jiashiyuanxingming !=null and jiashiyuanxingming != ''">
+            AND a.jiashiyuanxingming  LIKE '%${jiashiyuanxingming}%'
+        </if>
         GROUP BY a.id
 
     </sql>

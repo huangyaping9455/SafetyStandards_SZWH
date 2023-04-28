@@ -2039,7 +2039,7 @@ public class SynchronousCrontab {
 			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
 			if (riskDetail==null){
 				AnbiaoRiskDetail riskDetail1 = new AnbiaoRiskDetail();
-				riskDetail1.setArdDeptIds(laborlingqu.getAsiDeptIds());
+				riskDetail1.setArdDeptIds(laborlingqu.getDeptId());
 				riskDetail1.setArdMajorCategories("2");
 				riskDetail1.setArdSubCategory("203");
 				riskDetail1.setArdTitle("劳保用品未领取");

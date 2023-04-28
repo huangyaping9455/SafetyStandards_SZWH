@@ -10,6 +10,9 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
@@ -29,8 +32,10 @@ import org.springblade.anbiao.configure.service.IConfigureService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.feign.IOrganizationsClient;
 import org.springblade.anbiao.jiashiyuan.entity.*;
+import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.service.*;
 import org.springblade.anbiao.jiashiyuan.vo.DriverTJMingXiVO;
+import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanListVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
 import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
 import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
@@ -6164,5 +6169,370 @@ public class VehicleController {
 		}
 	}
 
+	@PostMapping("/goExport_getVehicle")
+	@ApiLog("车辆信息-导出")
+	@ApiOperation(value = "车辆信息-导出", notes = "传入vehiclePage", position = 22)
+	public R goExport_getVehicle(HttpServletRequest request, HttpServletResponse response, @RequestBody VehiclePage vehiclePage, BladeUser user) throws Exception {
+		R rs = new R();
+		String deptName="";
+		String uuid = UUID.randomUUID().toString().replace("-", "");
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+		List<VehicleListVO> ListData = new ArrayList<>();
+
+		// TODO 渲染其他类型的数据请参考官方文档
+		DecimalFormat df = new DecimalFormat("######0.00");
+		Calendar now = Calendar.getInstance();
+		//word模板地址
+		String templatePath =fileServer.getPathPrefix()+"muban\\"+"cheliangxinxi.xlsx";
+		String folder = "";
+		String [] nyr=DateUtil.today().split("-");
+		String[] idsss = vehiclePage.getId().split(",");
+		//去除素组中重复的数组
+		List<String> listid = new ArrayList<String>();
+		for (int i=0; i<idsss.length; i++) {
+			if(!listid.contains(idsss[i])) {
+				listid.add(idsss[i]);
+			}
+		}
+		//返回一个包含所有对象的指定类型的数组
+		String[] idss= listid.toArray(new String[1]);
+
+		for(int j = 0;j< idss.length;j++){
+			vehiclePage.setSize(0);
+			vehiclePage.setCurrent(0);
+			vehiclePage.setDeptId(1);
+			vehiclePage.setId(idss[j]);
+			VehiclePage<VehicleListVO> vehicleListVOVehiclePage = vehicleService.selectVehiclePage(vehiclePage);
+			List<VehicleListVO> vehicleListVOS = vehicleListVOVehiclePage.getRecords();
+			if(vehicleListVOS.size()==0){
+
+			}else if(vehicleListVOS.size()>3000){
+				rs.setMsg("数据超过30000条无法下载");
+				rs.setCode(500);
+				return rs;
+			}else{
+				for (VehicleListVO t: vehicleListVOS) {
+					VehicleListVO vehicleListVO = new VehicleListVO();
+					vehicleListVO.setDeptName(t.getDeptName());
+					vehicleListVO.setCheliangpaizhao(t.getCheliangpaizhao());
+
+					if (StringUtils.isNotBlank(t.getJiashiyuanxingming()) && !t.getJiashiyuanxingming().equals("null")){
+						vehicleListVO.setJiashiyuanxingming(t.getJiashiyuanxingming());
+					}else {
+						vehicleListVO.setJiashiyuanxingming("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getShoujihaoma()) && !t.getShoujihaoma().equals("null")){
+						vehicleListVO.setShoujihaoma(t.getShoujihaoma());
+					}else {
+						vehicleListVO.setShoujihaoma("/");
+					}
+
+
+					if (StringUtils.isNotBlank(t.getXingshizhengzhuceriqi()) && !t.getXingshizhengzhuceriqi().equals("null")){
+						vehicleListVO.setXingshizhengzhuceriqi(t.getXingshizhengzhuceriqi());
+					}else {
+						vehicleListVO.setXingshizhengzhuceriqi("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getXingshizhengfazhengriqi()) && !t.getXingshizhengfazhengriqi().equals("null")){
+						vehicleListVO.setXingshizhengfazhengriqi(t.getXingshizhengfazhengriqi());
+					}else {
+						vehicleListVO.setXingshizhengfazhengriqi("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getXingshizhengjieshuriqi()) && !t.getXingshizhengjieshuriqi().equals("null")){
+						vehicleListVO.setXingshizhengjieshuriqi(t.getXingshizhengjieshuriqi());
+					}else {
+						vehicleListVO.setXingshizhengjieshuriqi("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getXingshizhengshengyuyouxiaoqi()) && !t.getXingshizhengshengyuyouxiaoqi().equals("null")){
+						vehicleListVO.setXingshizhengshengyuyouxiaoqi(t.getXingshizhengshengyuyouxiaoqi());
+					}else {
+						vehicleListVO.setXingshizhengshengyuyouxiaoqi("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getQiangzhibaofeiriqi()) && !t.getQiangzhibaofeiriqi().equals("null")){
+						vehicleListVO.setQiangzhibaofeiriqi(t.getQiangzhibaofeiriqi());
+					}else {
+						vehicleListVO.setQiangzhibaofeiriqi("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getXinghao()) && !t.getXinghao().equals("null")){
+						vehicleListVO.setXinghao(t.getXinghao());
+					}else {
+						vehicleListVO.setXinghao("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getCheliangxinghao()) && !t.getCheliangxinghao().equals("null")){
+						vehicleListVO.setCheliangxinghao(t.getCheliangxinghao());
+					}else {
+						vehicleListVO.setCheliangxinghao("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getCheliangsuoyouren()) && !t.getCheliangsuoyouren().equals("null")){
+						vehicleListVO.setCheliangsuoyouren(t.getCheliangsuoyouren());
+					}else {
+						vehicleListVO.setCheliangsuoyouren("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getAddress()) && !t.getAddress().equals("null")){
+						vehicleListVO.setAddress(t.getAddress());
+					}else {
+						vehicleListVO.setAddress("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getShiyongxingzhi()) && !t.getShiyongxingzhi().equals("null")){
+						vehicleListVO.setShiyongxingzhi(t.getShiyongxingzhi());
+					}else {
+						vehicleListVO.setShiyongxingzhi("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getDanganbianhao()) && !t.getDanganbianhao().equals("null")){
+						vehicleListVO.setDanganbianhao(t.getDanganbianhao());
+					}else {
+						vehicleListVO.setDanganbianhao("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getPinpaixinghao()) && !t.getPinpaixinghao().equals("null")){
+						vehicleListVO.setPinpaixinghao(t.getPinpaixinghao());
+					}else {
+						vehicleListVO.setPinpaixinghao("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getCheliangshibiedaima()) && !t.getCheliangshibiedaima().equals("null")){
+						vehicleListVO.setCheliangshibiedaima(t.getCheliangshibiedaima());
+					}else {
+						vehicleListVO.setCheliangshibiedaima("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getCheshenyanse()) && !t.getCheshenyanse().equals("null")){
+						vehicleListVO.setCheshenyanse(t.getCheshenyanse());
+					}else {
+						vehicleListVO.setCheshenyanse("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getJingyingxukezhengbianma()) && !t.getJingyingxukezhengbianma().equals("null")){
+						vehicleListVO.setJingyingxukezhengbianma(t.getJingyingxukezhengbianma());
+					}else {
+						vehicleListVO.setJingyingxukezhengbianma("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getJingjileixing()) && !t.getJingjileixing().equals("null")){
+						vehicleListVO.setJingjileixing(t.getJingjileixing());
+					}else {
+						vehicleListVO.setJingjileixing("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getJingyingzuzhifangshi()) && !t.getJingyingzuzhifangshi().equals("null")){
+						vehicleListVO.setJingyingzuzhifangshi(t.getJingyingzuzhifangshi());
+					}else {
+						vehicleListVO.setJingyingzuzhifangshi("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getCheliangyunyingleixing()) && !t.getCheliangyunyingleixing().equals("null")){
+						vehicleListVO.setCheliangyunyingleixing(t.getCheliangyunyingleixing());
+					}else {
+						vehicleListVO.setCheliangyunyingleixing("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getTeamno()) && !t.getTeamno().equals("null")){
+						vehicleListVO.setTeamno(t.getTeamno());
+					}else {
+						vehicleListVO.setTeamno("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getChelianghuoqufangshi()) && !t.getChelianghuoqufangshi().equals("null")){
+						vehicleListVO.setChelianghuoqufangshi(t.getChelianghuoqufangshi());
+					}else {
+						vehicleListVO.setChelianghuoqufangshi("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getWeihuzhouqi()) && !t.getWeihuzhouqi().equals("null")){
+						vehicleListVO.setWeihuzhouqi(t.getWeihuzhouqi());
+					}else {
+						vehicleListVO.setWeihuzhouqi("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getChejiahao()) && !t.getChejiahao().equals("null")){
+						vehicleListVO.setChejiahao(t.getChejiahao());
+					}else {
+						vehicleListVO.setChejiahao("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getShifoujinkou()) && !t.getShifoujinkou().equals("null")){
+						vehicleListVO.setShifoujinkou(t.getShifoujinkou());
+					}else {
+						vehicleListVO.setShifoujinkou("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getRanliaoleibie()) && !t.getRanliaoleibie().equals("null")){
+						vehicleListVO.setRanliaoleibie(t.getRanliaoleibie());
+					}else {
+						vehicleListVO.setRanliaoleibie("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getFadongjipailianggonglv()) && !t.getFadongjipailianggonglv().equals("null")){
+						vehicleListVO.setFadongjipailianggonglv(t.getFadongjipailianggonglv());
+					}else {
+						vehicleListVO.setFadongjipailianggonglv("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getZhuanxiangfangshi()) && !t.getZhuanxiangfangshi().equals("null")){
+						vehicleListVO.setZhuanxiangfangshi(t.getZhuanxiangfangshi());
+					}else {
+						vehicleListVO.setZhuanxiangfangshi("/");
+					}
+
+					if (StringUtils.isNotBlank(t.getZhizhaochangshang()) && !t.getZhizhaochangshang().equals("null")){
+						vehicleListVO.setZhizhaochangshang(t.getZhizhaochangshang());
+					}else {
+						vehicleListVO.setZhizhaochangshang("/");
+					}
+					if (StringUtils.isNotBlank(t.getLunju()) && !t.getLunju().equals("null")){
+						vehicleListVO.setLunju(t.getLunju());
+					}else {
+						vehicleListVO.setLunju("/");
+					}
+					if (StringUtils.isNotBlank(t.getFrontlunju()) && !t.getFrontlunju().equals("null")){
+						vehicleListVO.setFrontlunju(t.getFrontlunju());
+					}else {
+						vehicleListVO.setFrontlunju("/");
+					}
+					if (StringUtils.isNotBlank(t.getLuntaishu()) && !t.getLuntaishu().equals("null")){
+						vehicleListVO.setLuntaishu(t.getLuntaishu());
+					}else {
+						vehicleListVO.setLuntaishu("/");
+					}
+					if (StringUtils.isNotBlank(t.getGangbantanhuangpianshu()) && !t.getGangbantanhuangpianshu().equals("null")){
+						vehicleListVO.setGangbantanhuangpianshu(t.getGangbantanhuangpianshu());
+					}else {
+						vehicleListVO.setGangbantanhuangpianshu("/");
+					}
+					if (StringUtils.isNotBlank(t.getZhouju()) && !t.getZhouju().equals("null")){
+						vehicleListVO.setZhouju(t.getZhouju());
+					}else {
+						vehicleListVO.setZhouju("/");
+					}
+					if (StringUtils.isNotBlank(t.getChezhoushu()) && !t.getChezhoushu().equals("null")){
+						vehicleListVO.setChezhoushu(t.getChezhoushu());
+					}else {
+						vehicleListVO.setChezhoushu("/");
+					}
+					if (StringUtils.isNotBlank(t.getHuoxiangneibuchicun()) && !t.getHuoxiangneibuchicun().equals("null")){
+						vehicleListVO.setHuoxiangneibuchicun(t.getHuoxiangneibuchicun());
+					}else {
+						vehicleListVO.setHuoxiangneibuchicun("/");
+					}
+					if (StringUtils.isNotBlank(t.getHedingzaike()) && !t.getHedingzaike().equals("null")){
+						vehicleListVO.setHedingzaike(t.getHedingzaike());
+					}else {
+						vehicleListVO.setHedingzaike("/");
+					}
+					if (StringUtils.isNotBlank(t.getJiashishizaike()) && !t.getJiashishizaike().equals("null")){
+						vehicleListVO.setJiashishizaike(t.getJiashishizaike());
+					}else {
+						vehicleListVO.setJiashishizaike("/");
+					}
+					if (StringUtils.isNotBlank(t.getZongzhiliang()) && !t.getZongzhiliang().equals("null")){
+						vehicleListVO.setZongzhiliang(t.getZongzhiliang());
+					}else {
+						vehicleListVO.setZongzhiliang("/");
+					}
+					if (StringUtils.isNotBlank(t.getHedingzaizhiliang()) && !t.getHedingzaizhiliang().equals("null")){
+						vehicleListVO.setHedingzaizhiliang(t.getHedingzaizhiliang());
+					}else {
+						vehicleListVO.setHedingzaizhiliang("/");
+					}
+					if (StringUtils.isNotBlank(t.getZhunqianyinzongzhiliang()) && !t.getZhunqianyinzongzhiliang().equals("null")){
+						vehicleListVO.setZhunqianyinzongzhiliang(t.getZhunqianyinzongzhiliang());
+					}else {
+						vehicleListVO.setZhunqianyinzongzhiliang("/");
+					}
+					if (StringUtils.isNotBlank(t.getCheliangwaikuochicun()) && !t.getCheliangwaikuochicun().equals("null")){
+						vehicleListVO.setCheliangwaikuochicun(t.getCheliangwaikuochicun());
+					}else {
+						vehicleListVO.setCheliangwaikuochicun("/");
+					}
+					if (StringUtils.isNotBlank(t.getChuchangriqi()) && !t.getChuchangriqi().equals("null")){
+						vehicleListVO.setChuchangriqi(t.getChuchangriqi());
+					}else {
+						vehicleListVO.setChuchangriqi("/");
+					}
+					if (StringUtils.isNotBlank(t.getBencijipingriqi()) && !t.getBencijipingriqi().equals("null")){
+						vehicleListVO.setBencijipingriqi(t.getBencijipingriqi());
+					}else {
+						vehicleListVO.setBencijipingriqi("/");
+					}
+					if (StringUtils.isNotBlank(t.getJishupingdingshengyuyouxiaoqi()) && !t.getJishupingdingshengyuyouxiaoqi().equals("null")){
+						vehicleListVO.setJishupingdingshengyuyouxiaoqi(t.getJishupingdingshengyuyouxiaoqi());
+					}else {
+						vehicleListVO.setJishupingdingshengyuyouxiaoqi("/");
+					}
+					if (StringUtils.isNotBlank(t.getDaoluyunshuzhenghao()) && !t.getDaoluyunshuzhenghao().equals("null")){
+						vehicleListVO.setDaoluyunshuzhenghao(t.getDaoluyunshuzhenghao());
+					}else {
+						vehicleListVO.setDaoluyunshuzhenghao("/");
+					}
+					if (StringUtils.isNotBlank(t.getDaoluyunshuzhengkaishiriqi()) && !t.getDaoluyunshuzhengkaishiriqi().equals("null")){
+						vehicleListVO.setDaoluyunshuzhengkaishiriqi(t.getDaoluyunshuzhengkaishiriqi());
+					}else {
+						vehicleListVO.setDaoluyunshuzhengkaishiriqi("/");
+					}
+					if (StringUtils.isNotBlank(t.getDaoluyunshuzhengjieshuriqi()) && !t.getDaoluyunshuzhengjieshuriqi().equals("null")){
+						vehicleListVO.setDaoluyunshuzhengjieshuriqi(t.getDaoluyunshuzhengjieshuriqi());
+					}else {
+						vehicleListVO.setDaoluyunshuzhengjieshuriqi("/");
+					}
+					if (StringUtils.isNotBlank(t.getDaoluyunshuzhengshengyuyouxiaoqi()) && !t.getDaoluyunshuzhengshengyuyouxiaoqi().equals("null")){
+						vehicleListVO.setDaoluyunshuzhengshengyuyouxiaoqi(t.getDaoluyunshuzhengshengyuyouxiaoqi());
+					}else {
+						vehicleListVO.setDaoluyunshuzhengshengyuyouxiaoqi("/");
+					}
+
+
+					ListData.add(vehicleListVO);
+				}
+			}
+			// 模板注意 用{} 来表示你要用的变量 如果本来就有"{","}" 特殊字符 用"\{","\}"代替
+			// {} 代表普通变量 {.} 代表是list的变量
+			// 这里模板 删除了list以后的数据，也就是统计的这一行
+			String templateFileName = templatePath;
+			//alarmServer.getTemplateUrl()+
+			String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"车辆信息";
+			File newFile = new File(fileName);
+			//判断目标文件所在目录是否存在
+			if(!newFile.exists()){
+				//如果目标文件所在的目录不存在，则创建父目录
+				newFile.mkdirs();
+			}
+			fileName = fileName+"/"+"车辆信息.xlsx";
+			ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
+			WriteSheet writeSheet = EasyExcel.writerSheet().build();
+//			// 写入list之前的数据
+//			excelWriter.fill(map, writeSheet);
+			// 直接写入数据
+			excelWriter.fill(ListData, writeSheet);
+			excelWriter.finish();
+		}
+
+
+		folder = fileServer.getPathPrefix()+FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+"车辆信息.zip";
+		ExcelUtils.deleteFile(folder);
+//		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(folder));
+//		ApacheZipUtils.doCompress1(urlList, bizOut);
+		System.out.println(DateUtil.now());
+		PackageToZIp.toZip(fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2]+"\\"+uuid+"\\"+"车辆信息", folder);
+		System.out.println(DateUtil.now());
+		//不要忘记调用
+//		bizOut.close();
+
+		rs.setMsg("下载成功");
+		rs.setCode(200);
+		rs.setData(folder);
+		rs.setSuccess(true);
+		return rs;
+	}
 
 }
