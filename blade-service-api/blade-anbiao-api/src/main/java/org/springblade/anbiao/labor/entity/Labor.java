@@ -20,4 +20,5 @@ public class Labor {
 	private String alrPersonAutograph;
 	private String alrReceiptDate;
 	private String alrReceiptsNumber;
+
 }

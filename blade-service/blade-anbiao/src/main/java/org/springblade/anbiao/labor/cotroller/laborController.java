@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.apache.tools.zip.ZipOutputStream;
 import org.springblade.anbiao.labor.DTO.laborDTO;
 
@@ -173,35 +174,64 @@ public class laborController {
 			laborEntity1.setAliUpdateByIds(laborEntity.getDeptId());
 			laborEntity1.setAliIssuePeopleNumber(laborEntity.getAliIssuePeopleNumber());
 			laborEntity1.setAliName(laborEntity.getAliName());
-			laborEntity1.setAliDeptIds(laborEntity.getAliDeptIds());
+//			laborEntity1.setAliDeptIds(laborEntity.getAliDeptIds());
 			laborEntity1.setAliIssueQuantity(laborEntity.getAliIssueQuantity());
 			laborEntity1.setAliIssueDate(laborEntity.getAliIssueDate());
 			laborEntity1.setAliStatus(laborEntity.getAliStatus());
-			laborEntity1.setAliDelete(laborEntity.getAliDelete());
+//			laborEntity1.setAliDelete(laborEntity.getAliDelete());
 			int i = service.getBaseMapper().updateById(laborEntity1);
 			if (i > 0) {
-				QueryWrapper<LaborlingquEntity> laborlingquEntityQueryWrapper = new QueryWrapper<>();
-				laborlingquEntityQueryWrapper.lambda().eq(LaborlingquEntity::getAlrAliIds, laborEntity.getAliIds());
-				lingquService.getBaseMapper().delete(laborlingquEntityQueryWrapper);
 				List<Labor> labor2 = laborEntity.getLabor();
 				for (Labor list : labor2) {
-					LaborlingquEntity labor1 = new LaborlingquEntity();
-					labor1.setAlrPersonName(list.getAadApName());
-					labor1.setAlrPersonIds(list.getAadApIds());
-					labor1.setAlrIds(list.getAlrIds());
-					labor1.setAlrAliIds(laborEntity.getAliIds());
-					labor1.setAliApplicationScope(list.getAadApType());
-					boolean b = lingquService.save(labor1);
-					if (b) {
-						r.setMsg("更新成功");
-						r.setCode(200);
-						r.setSuccess(false);
-					} else {
-						r.setMsg("更新失败");
-						r.setCode(500);
-						r.setSuccess(false);
+					QueryWrapper<LaborlingquEntity> laborlingquEntityQueryWrapper = new QueryWrapper<>();
+					laborlingquEntityQueryWrapper.lambda().eq(LaborlingquEntity::getAlrAliIds, laborEntity.getAliIds());
+//					lingquService.getBaseMapper().delete(laborlingquEntityQueryWrapper);
+					laborlingquEntityQueryWrapper.lambda().eq(LaborlingquEntity::getAlrDelete,"0");
+					laborlingquEntityQueryWrapper.lambda().eq(LaborlingquEntity::getAlrPersonIds,list.getAadApIds());
+					LaborlingquEntity laborlingquEntity = lingquService.getBaseMapper().selectOne(laborlingquEntityQueryWrapper);
+					if (laborlingquEntity==null){
+						LaborlingquEntity labor1 = new LaborlingquEntity();
+						labor1.setAlrPersonName(list.getAadApName());
+						labor1.setAlrPersonIds(list.getAadApIds());
+						labor1.setAlrIds(list.getAlrIds());
+						labor1.setAlrAliIds(laborEntity.getAliIds());
+						labor1.setAliApplicationScope(list.getAadApType());
+						boolean b = lingquService.save(labor1);
+						if (b) {
+							r.setMsg("更新成功");
+							r.setCode(200);
+							r.setSuccess(false);
+						} else {
+							r.setMsg("更新失败");
+							r.setCode(500);
+							r.setSuccess(false);
+						}
+					}else {
+						laborlingquEntity.setAlrPersonName(list.getAadApName());
+						laborlingquEntity.setAlrPersonIds(list.getAadApIds());
+						laborlingquEntity.setAlrIds(list.getAlrIds());
+						laborlingquEntity.setAlrAliIds(laborEntity.getAliIds());
+						laborlingquEntity.setAliApplicationScope(list.getAadApType());
+						if (StringUtils.isNotBlank(list.getAlrReceiptsNumber()) && !list.getAlrReceiptsNumber().equals("null")){
+							laborlingquEntity.setAlrReceiptsNumber(Integer.valueOf(list.getAlrReceiptsNumber()));
+						}
+						if (StringUtils.isNotBlank(list.getAlrReceiptDate()) && !list.getAlrReceiptDate().equals("null")){
+							laborlingquEntity.setAlrReceiptDate(list.getAlrReceiptDate());
+						}
+						if (StringUtils.isNotBlank(list.getAlrPersonAutograph()) && !list.getAlrPersonAutograph().equals("null")){
+							laborlingquEntity.setAlrPersonAutograph(list.getAlrPersonAutograph());
+						}
+						int i1 = lingquService.getBaseMapper().updateById(laborlingquEntity);
+						if (i1>0) {
+							r.setMsg("更新成功");
+							r.setCode(200);
+							r.setSuccess(false);
+						} else {
+							r.setMsg("更新失败");
+							r.setCode(500);
+							r.setSuccess(false);
+						}
 					}
-
 				}
 			}
 		} else {
