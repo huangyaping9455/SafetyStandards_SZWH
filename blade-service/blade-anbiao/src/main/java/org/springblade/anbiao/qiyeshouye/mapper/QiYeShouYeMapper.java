@@ -22,6 +22,7 @@ import org.springblade.anbiao.qiyeshouye.entity.*;
 import org.springblade.anbiao.qiyeshouye.page.AnBiaoDeptWechatInfoPage;
 import org.springblade.anbiao.qiyeshouye.page.AnBiaoWeeksHiddenTroublePage;
 import org.springblade.anbiao.qiyeshouye.page.QiYeShouYePage;
+import org.springblade.anbiao.zhengfu.entity.ZhengFuBaoJingTongJiLv;
 import org.springblade.system.entity.Dept;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -341,6 +342,14 @@ public interface QiYeShouYeMapper extends BaseMapper<QiYeShouYe> {
 	 */
 	List<AnBiaoWeeksHiddenTrouble> selectWeeksHiddenTroubleGetAll(AnBiaoWeeksHiddenTroublePage anBiaoWeeksHiddenTroublePage);
 	int selectWeeksHiddenTroubleGetAllTotal(AnBiaoWeeksHiddenTroublePage anBiaoWeeksHiddenTroublePage);
+
+	/**
+	 * 违规违章行为分析
+	 * @param deptId
+	 * @param date
+	 * @return
+	 */
+	ZhengFuBaoJingTongJiLv selectMonthAlarm(Integer deptId,String date);
 
 
 }

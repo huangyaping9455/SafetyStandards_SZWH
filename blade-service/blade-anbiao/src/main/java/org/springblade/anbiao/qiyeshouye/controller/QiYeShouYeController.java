@@ -23,6 +23,7 @@ import org.springblade.anbiao.qiyeshouye.entity.*;
 import org.springblade.anbiao.qiyeshouye.page.QiYeShouYePage;
 import org.springblade.anbiao.qiyeshouye.service.IQiYeShouYeService;
 import org.springblade.anbiao.zhengfu.entity.Organization;
+import org.springblade.anbiao.zhengfu.entity.ZhengFuBaoJingTongJiLv;
 import org.springblade.anbiao.zhengfu.service.IOrganizationService;
 import org.springblade.common.configurationBean.FileServer;
 import org.springblade.common.tool.InterfaceUtil;
@@ -658,6 +659,24 @@ public class QiYeShouYeController {
 		rs.setData(jsonObject);
 		rs.setMsg("获取成功");
 		return rs;
+	}
+
+	@GetMapping(value = "/selectMonthAlarm")
+	@ApiLog("企业端-首页-违规违章行为分析")
+	@ApiOperation(value = "企业端-首页-违规违章行为分析",position = 16)
+	public R selectMonthAlarm(@ApiParam(value = "企业ID", required = true) @RequestParam Integer deptId,@ApiParam(value = "统计日期(yyyy-MM-dd)", required = true) @RequestParam String date) throws IOException {
+		R r = new R();
+		ZhengFuBaoJingTongJiLv zhengFuBaoJingTongJiLv = iQiYeShouYeService.selectMonthAlarm(deptId,date);
+		if(zhengFuBaoJingTongJiLv == null){
+			r.setCode(200);
+			r.setMsg("暂无数据");
+		}else{
+			r.setData(zhengFuBaoJingTongJiLv);
+			r.setMsg("获取成功");
+			r.setSuccess(true);
+			r.setCode(200);
+		}
+		return r;
 	}
 
 }
