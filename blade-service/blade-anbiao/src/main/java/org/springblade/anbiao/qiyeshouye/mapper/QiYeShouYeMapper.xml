@@ -2203,5 +2203,73 @@
         <include refid="queryWeeksHiddenTroubleSql"/>
     </select>
 
+    <select id="selectMonthAlarm" resultType="org.springblade.anbiao.zhengfu.entity.ZhengFuBaoJingTongJiLv">
+        select
+            b.date,
+            ifnull(sum(b.baojingzongshu),0) as baojingzongshu,
+            ifnull(sum(b.chulizongshu),0) as chulizongshu,
+            ifnull(sum(b.gpschaosu),0) as gpschaosu,
+            ifnull(sum(b.gpspilao),0) as gpspilao,
+            ifnull(sum(b.gpsyejian),0) as gpsyejian,
+            ifnull(sum(b.gpsyichang),0) as gpsyichang,
+            ifnull(sum(b.gpsbaojingshu),0) as gpsbaojingshu,
+            ifnull(sum(b.dmspilao),0) as dmspilao,
+            ifnull(sum(b.dmsjiedadianhua),0) as dmsjiedadianhua,
+            ifnull(sum(b.dmschouyan),0) as dmschouyan,
+            ifnull(sum(b.dmsfenshen),0) as dmsfenshen,
+            ifnull(sum(b.shebeibaojingshu),0) shebeibaojingshu,
+            ifnull(sum(b.chaosucl),0) as chaosucl,
+            ifnull(sum(b.pilaocl),0) as pilaocl,
+            ifnull(sum(b.yejiancl),0) as yejiancl,
+            ifnull(sum(b.yichangcl),0) as yichangcl,
+            ifnull(sum(b.gpschulishu),0) as gpschulishu,
+            ifnull(sum(b.pilaoshipincl),0) as pilaoshipincl,
+            ifnull(sum(b.dadianhuacl),0) as dadianhuacl,
+            ifnull(sum(b.chouyancl),0) as chouyancl,
+            ifnull(sum(b.fenshencl),0) as fenshencl,
+            ifnull(sum(b.shebeichulishu),0) as shebeichulishu
+        from(
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            )a
+        inner join(
+            select
+                cid,
+                LEFT(#{date},7) as date,
+                ifnull(sum(baojingcishu),0) as baojingzongshu,
+                ifnull(sum(baojingclcishu),0) as chulizongshu,
+                ifnull(sum(chaosu),0) as gpschaosu,
+                ifnull(sum(pilao),0) as gpspilao,
+                ifnull(sum(yejian),0) as gpsyejian,
+                ifnull(sum(wushuju),0)+ifnull(sum(budingwei),0) as gpsyichang,
+                ifnull(sum(chaosu),0)+ifnull(sum(pilao),0)+ifnull(sum(yejian),0)+ifnull(sum(wushuju),0)+ifnull(sum(budingwei),0) as gpsbaojingshu,
+                ifnull(sum(pilaoshipin),0) as dmspilao,
+                ifnull(sum(dadianhua),0) as dmsjiedadianhua,
+                ifnull(sum(chouyan),0) as dmschouyan,
+                ifnull(sum(fenshen),0) as dmsfenshen,
+                ifnull(sum(pilaoshipin),0)+ifnull(sum(dadianhua),0)+ifnull(sum(chouyan),0)+ifnull(sum(fenshen),0)	shebeibaojingshu,
+                ifnull(sum(chaosucl),0) as chaosucl,
+                ifnull(sum(pilaocl),0) as pilaocl,
+                ifnull(sum(yejiancl),0) as yejiancl,
+                ifnull(sum(wushujucl),0)+ifnull(sum(budingweicl),0) as yichangcl,
+                ifnull(sum(chaosucl),0)+ifnull(sum(pilaocl),0)+ifnull(sum(yejiancl),0)+ifnull(sum(wushujucl),0)+ifnull(sum(budingweicl),0) as gpschulishu,
+                ifnull(sum(pilaoshipincl),0) as pilaoshipincl,
+                ifnull(sum(dadianhuacl),0) as dadianhuacl,
+                ifnull(sum(chouyancl),0) as chouyancl,
+                ifnull(sum(fenshencl),0) as fenshencl,
+                ifnull(sum(pilaoshipincl),0)+ifnull(sum(dadianhuacl),0)+ifnull(sum(chouyancl),0)+ifnull(sum(fenshencl),0) as shebeichulishu
+            from
+                baobiao_alarmdailyreport
+            where 1=1
+              and YEAR(date) >= YEAR(#{date})
+              and MONTH(date) >= MONTH(#{date})
+            GROUP BY
+                cid,
+                LEFT(#{date},7)
+            )b on a.id = b.cid
+        where IFNULL(b.date,'') != ''
+        GROUP BY
+            b.date
+    </select>
+
 
 </mapper>
