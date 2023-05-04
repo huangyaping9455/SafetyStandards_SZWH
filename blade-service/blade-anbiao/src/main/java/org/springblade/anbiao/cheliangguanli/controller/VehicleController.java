@@ -4807,25 +4807,25 @@ public class VehicleController {
 			}
 			dept = iSysClient.getDeptByName(deptname.trim());
 			if (dept != null) {
-				if("企业端".equals(type)){
-					if(dept.getId().equals(deptId)){
-						vehicle.setDeptId(Integer.valueOf(dept.getId()));
-						vehicle.setDeptName(deptname);
-						vehicle.setImportUrl("icon_gou.png");
-						vehicle.setDeptId(dept.getId());
-					}else{
-						String cph = String.valueOf(a.get("车牌号码")).trim();
-						vehicle.setMsg(deptname+"机构不存在;");
-						vehicle.setImportUrl("icon_cha.png");
-						errorStr+=cph+"----"+deptname+"机构与当前账号企业不一致;";
-						bb++;
-					}
-				}else{
+//				if("企业端".equals(type)){
+//					if(dept.getId().equals(deptId)){
+//						vehicle.setDeptId(Integer.valueOf(dept.getId()));
+//						vehicle.setDeptName(deptname);
+//						vehicle.setImportUrl("icon_gou.png");
+//						vehicle.setDeptId(dept.getId());
+//					}else{
+//						String cph = String.valueOf(a.get("车牌号码")).trim();
+//						vehicle.setMsg(deptname+"机构不存在;");
+//						vehicle.setImportUrl("icon_cha.png");
+//						errorStr+=cph+"----"+deptname+"机构与当前账号企业不一致;";
+//						bb++;
+//					}
+//				}else{
 					vehicle.setDeptId(Integer.valueOf(dept.getId()));
 					vehicle.setDeptName(deptname);
 					vehicle.setImportUrl("icon_gou.png");
 					vehicle.setDeptId(dept.getId());
-				}
+//				}
 			}else{
 				String cph = String.valueOf(a.get("车牌号码")).trim();
 				vehicle.setMsg(deptname+"机构不存在;");
