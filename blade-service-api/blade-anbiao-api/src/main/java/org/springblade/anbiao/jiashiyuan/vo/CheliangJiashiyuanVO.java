@@ -30,7 +30,7 @@ public class CheliangJiashiyuanVO {
 	@ApiModelProperty(value = "企业名称")
 	private String deptname;
 
-
-
+	@ApiModelProperty(value = "企业ID")
+	private String deptId;
 
 }

@@ -68,4 +68,9 @@ public class AnbiaoCheliangJiashiyuanServiceImpl extends ServiceImpl<AnbiaoCheli
 		}
 	}
 
+	@Override
+	public List<CheliangJiashiyuanVO> SelectByDept(int deptId) {
+		return anbiaoCheliangJiashiyuanMapper.SelectByDept(deptId);
+	}
+
 }

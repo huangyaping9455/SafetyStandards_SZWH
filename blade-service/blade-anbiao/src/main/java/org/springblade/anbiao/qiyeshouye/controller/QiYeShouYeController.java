@@ -589,7 +589,7 @@ public class QiYeShouYeController {
 	@GetMapping(value = "/getVideoUrl")
 	@ApiLog("企业端-实时视频获取")
 	@ApiOperation(value = "企业端-实时视频获取)",position = 12)
-	public R getVideoUrl(@ApiParam(value = "企业ID", required = true) @RequestParam String vehicleId,
+	public R getVideoUrl(@ApiParam(value = "车辆ID", required = true) @RequestParam String vehicleId,
 						 @ApiParam(value = "终端ID", required = true) @RequestParam String simNo,
 						 @ApiParam(value = "通道", required = true) @RequestParam int channel,
 						 @ApiParam(value = "来源", required = true) @RequestParam int stream) throws IOException {
@@ -607,7 +607,7 @@ public class QiYeShouYeController {
 	@GetMapping(value = "/getStopVideoUrl")
 	@ApiLog("企业端-实时视频停止")
 	@ApiOperation(value = "企业端-实时视频停止)",position = 13)
-	public R getStopVideoUrl(@ApiParam(value = "企业ID", required = true) @RequestParam String vehicleId,
+	public R getStopVideoUrl(@ApiParam(value = "车辆ID", required = true) @RequestParam String vehicleId,
 							 @ApiParam(value = "终端ID", required = true) @RequestParam String channelId,
 							 @ApiParam(value = "通道", required = true) @RequestParam int videoDataType,
 							 @ApiParam(value = "来源", required = true) @RequestParam int streamType) throws IOException {
@@ -625,12 +625,15 @@ public class QiYeShouYeController {
 	@GetMapping(value = "/getOldVideoUrl")
 	@ApiLog("企业端-历史实时视频获取")
 	@ApiOperation(value = "企业端-历史实时视频获取)",position = 14)
-	public R getOldVideoUrl(@ApiParam(value = "企业ID", required = true) @RequestParam String vehicleId,
-		 @ApiParam(value = "通道", required = true) @RequestParam int channel,
-		 @ApiParam(value = "开始时间", required = true) @RequestParam String startDate,
-		 @ApiParam(value = "结束时间", required = true) @RequestParam String endDate) throws IOException {
+	public R getOldVideoUrl(@ApiParam(value = "车辆ID", required = true) @RequestParam String vehicleId,
+							@ApiParam(value = "通道", required = true) @RequestParam int channel,
+							@ApiParam(value = "音视频类型", required = true) @RequestParam int videoType,
+							@ApiParam(value = "码流类型", required = true) @RequestParam int streamType,
+							@ApiParam(value = "存储类型", required = true) @RequestParam int storeType,
+							@ApiParam(value = "开始时间", required = true) @RequestParam String startDate,
+							@ApiParam(value = "结束时间", required = true) @RequestParam String endDate) throws IOException {
 		R rs = new R();
-		String url = fileServer.getVideoUrl() + "/videoResourceSearch/sendRequest.action?vehicleId=" + vehicleId + "&videoType=0&streamType=1&storeType=0&channel=" + channel + "&startDate=" + startDate + "&endDate=" + endDate;
+		String url = fileServer.getVideoUrl() + "/videoResourceSearch/sendRequest.action?vehicleId=" + vehicleId + "&videoType=" + videoType + "&streamType=" + streamType + "&storeType=" + storeType + "&channel=" + channel + "&startDate=" + startDate + "&endDate=" + endDate;
 		String jsonstr = InterfaceUtil.getUrlData(url.replace(" ", "%20"));
 //		JSONArray jsonObject = (JSONArray) JSONArray.parse(jsonstr);
 		com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(jsonstr);

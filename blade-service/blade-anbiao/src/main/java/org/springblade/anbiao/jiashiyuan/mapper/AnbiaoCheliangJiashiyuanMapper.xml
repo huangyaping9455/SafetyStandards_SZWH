@@ -149,5 +149,56 @@
         <include refid="querySql" />
     </select>
 
+    <select id="SelectByDept" resultType="org.springblade.anbiao.jiashiyuan.vo.CheliangJiashiyuanVO">
+        SELECT DISTINCT
+            a.*
+        FROM
+            (
+            SELECT DISTINCT
+                xiaji.id as deptId,
+                xiaji.dept_name as deptname
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji,
+                anbiao_organization o
+            WHERE
+                xiaji.tree_code LIKE CONCAT( shangji.tree_code, '%' )
+              AND xiaji.is_deleted = 0
+              AND xiaji.extend_type = '机构'
+              AND o.jigouleixing IN ( 'qiye', 'geti' )
+              AND xiaji.id = o.dept_id
+              AND shangji.id = #{deptId}
+        UNION
+            SELECT DISTINCT
+                shangji.id as deptId,
+                shangji.dept_name as deptname
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji,
+                anbiao_organization o
+            WHERE
+                xiaji.parent_id = shangji.id
+              AND xiaji.is_deleted = 0
+              AND xiaji.extend_type = '机构'
+              AND o.jigouleixing IN ( 'qiye', 'geti' )
+              AND shangji.id = o.dept_id
+              AND xiaji.id = #{deptId}
+              AND shangji.id != 1
+        UNION
+            SELECT
+                DISTINCT
+                a.id as deptId,
+                a.dept_name as deptname
+            FROM
+                blade_dept a,
+                anbiao_organization o
+            WHERE
+                a.is_deleted = 0
+              AND a.extend_type = '机构'
+              AND o.jigouleixing IN ( 'qiye', 'geti' )
+              AND a.id = o.dept_id
+              AND a.id = #{deptId}
+            ) a
+    </select>
 
 </mapper>

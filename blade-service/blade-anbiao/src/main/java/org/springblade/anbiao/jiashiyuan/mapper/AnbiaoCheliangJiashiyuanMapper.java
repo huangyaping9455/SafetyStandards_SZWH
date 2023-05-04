@@ -23,4 +23,11 @@ public interface AnbiaoCheliangJiashiyuanMapper extends BaseMapper<AnbiaoChelian
 	List<CheliangJiashiyuanVO> selectPageList(JiaShiYuanVehiclePage jiaShiYuanVehiclePage);
 	int selectTotal(JiaShiYuanVehiclePage jiaShiYuanVehiclePage);
 
+	/**
+	 * 根据企业ID获取集团性企业信息
+	 * @param deptId
+	 * @return
+	 */
+	List<CheliangJiashiyuanVO> SelectByDept(int deptId);
+
 }

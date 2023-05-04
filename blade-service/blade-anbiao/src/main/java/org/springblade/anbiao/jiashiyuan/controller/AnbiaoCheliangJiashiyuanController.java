@@ -86,11 +86,41 @@ public class AnbiaoCheliangJiashiyuanController {
 	 */
 	@PostMapping("/detail")
 	@ApiLog("查询-车辆-驾驶员绑定信息")
-	@ApiOperation(value = "查询-车辆驾驶员绑定信息", notes = "传入jiashiyuanid、shiyongxingzhi")
+	@ApiOperation(value = "查询-车辆驾驶员绑定信息", notes = "传入deptId、jiashiyuanid、shiyongxingzhi")
 	public R detail(@RequestBody String json,BladeUser user){
 		R r = new R();
 			//获取参数
-			JsonNode node = JSONUtils.string2JsonNode(json);
+		JsonNode node = JSONUtils.string2JsonNode(json);
+		if (node.get("deptId") != null && !node.get("deptId").isNull() && !node.get("deptId").asText().isEmpty()){
+			Integer deptId = Integer.parseInt(node.get("deptId").asText());
+//			String jiashiyuanid = node.get("jiashiyuanid").asText();
+			if (node.get("shiyongxingzhi") != null && !node.get("shiyongxingzhi").isNull() && !node.get("shiyongxingzhi").asText().isEmpty()){
+				String shiyongxingzhi = node.get("shiyongxingzhi").asText();
+				List<CheliangJiashiyuanVO> cheliangJiashiyuanVOS = cheliangJiashiyuanServiceImpl.SelectByJiashiyuanID(shiyongxingzhi,deptId);
+				if(cheliangJiashiyuanVOS.size() > 0){
+//					cheliangJiashiyuanVOS.forEach(item-> {
+//						if (item.getJiashiyuanid() != null && item.getJiashiyuanid().equals(jiashiyuanid)) {
+//							item.setStatus(-1);
+//						}
+//					});
+					r.setMsg("获取成功");
+					r.setCode(200);
+					r.setSuccess(true);
+					r.setData(cheliangJiashiyuanVOS);
+				}else{
+					r.setMsg("获取成功，暂无数据");
+					r.setCode(200);
+					r.setSuccess(true);
+					r.setData("");
+				}
+				return r;
+			}else {
+				r.setMsg("请传入使用性质");
+				r.setCode(500);
+				r.setSuccess(false);
+				return r;
+			}
+		}
 
 		if (node.get("jiashiyuanid") != null && !node.get("jiashiyuanid").isNull() && !node.get("jiashiyuanid").asText().isEmpty()){
 			String jiashiyuanid = node.get("jiashiyuanid").asText();
@@ -171,6 +201,14 @@ public class AnbiaoCheliangJiashiyuanController {
 	public R<JiaShiYuanVehiclePage<CheliangJiashiyuanVO>> list(@RequestBody JiaShiYuanVehiclePage jiaShiYuanVehiclePage) {
 		JiaShiYuanVehiclePage<CheliangJiashiyuanVO> pages = cheliangJiashiyuanService.selectPageList(jiaShiYuanVehiclePage);
 		return R.data(pages);
+	}
+
+	@GetMapping("/selectByDept")
+	@ApiLog("根据企业ID获取集团性企业信息")
+	@ApiOperation(value = "根据企业ID获取集团性企业信息", notes = "传入deptId", position = 6)
+	public R<List<CheliangJiashiyuanVO>> selectByDept(Integer deptId) {
+		List<CheliangJiashiyuanVO> dept = cheliangJiashiyuanService.SelectByDept(deptId);
+		return R.data(dept);
 	}
 
 }
