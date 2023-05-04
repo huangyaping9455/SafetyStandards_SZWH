@@ -4235,8 +4235,8 @@ public class JiaShiYuanController {
 
 					//从业资格证
 					image = new WordImageEntity();
-					image.setHeight(220);
-					image.setWidth(350);
+					image.setHeight(850);
+					image.setWidth(450);
 //					String jsonObject = t.getShenfenzhengfujian();
 					if (StringUtils.isNotBlank(t.getAjcLicence()) && !t.getAjcLicence().equals("null")) {
 						if (StrUtil.isNotEmpty(t.getAjcLicence()) && t.getAjcLicence().contains("http") == false) {
@@ -4782,8 +4782,8 @@ public class JiaShiYuanController {
 
 					//道路运输证
 					image = new WordImageEntity();
-					image.setHeight(220);
-					image.setWidth(350);
+					image.setHeight(850);
+					image.setWidth(450);
 					if (StringUtils.isNotBlank(t.getAvdEnclosure()) && !t.getAvdEnclosure().equals("null")){
 						if (StrUtil.isNotEmpty(t.getAvdEnclosure()) && t.getAvdEnclosure().contains("http") == false) {
 							url1 = fileUploadClient.getUrl(t.getAvdEnclosure());
@@ -4828,8 +4828,8 @@ public class JiaShiYuanController {
 
 					//性能检测报告
 					image = new WordImageEntity();
-					image.setHeight(220);
-					image.setWidth(350);
+					image.setHeight(850);
+					image.setWidth(450);
 					if (StringUtils.isNotBlank(t.getAvxEnclosure()) && !t.getAvxEnclosure().equals("null")){
 						if (StrUtil.isNotEmpty(t.getAvxEnclosure()) && t.getAvxEnclosure().contains("http") == false) {
 							url1 = fileUploadClient.getUrl(t.getAvxEnclosure());
@@ -4874,8 +4874,8 @@ public class JiaShiYuanController {
 
 					//登记证书
 					image = new WordImageEntity();
-					image.setHeight(220);
-					image.setWidth(350);
+					image.setHeight(850);
+					image.setWidth(450);
 					if (StringUtils.isNotBlank(t.getAvdEnclosure2()) && !t.getAvdEnclosure2().equals("null")){
 						if (StrUtil.isNotEmpty(t.getAvdEnclosure2()) && t.getAvdEnclosure2().contains("http") == false) {
 							url1 = fileUploadClient.getUrl(t.getAvdEnclosure2());

@@ -6,6 +6,8 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
+import com.alibaba.excel.write.metadata.style.WriteCellStyle;
+import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
@@ -524,6 +526,17 @@ public class AnbiaoAnquanhuiyiController {
 		String templatePath =fileServer.getPathPrefix()+"muban\\"+"Anquanhuiyi.xlsx";
 		String [] nyr= DateUtil.today().split("-");
 		String[] idsss = anQuanHuiYiPage.getDeptId().split(",");
+
+
+		// 内容的策略
+		WriteCellStyle contentWriteCellStyle = new WriteCellStyle();
+		// 这里需要指定 FillPatternType 为FillPatternType.SOLID_FOREGROUND 不然无法显示背景颜色.头默认了 FillPatternType所以可以不指定
+		contentWriteCellStyle.setWrapped(true);
+		// 这个策略是 头是头的样式 内容是内容的样式 其他的策略可以自己实现
+		HorizontalCellStyleStrategy horizontalCellStyleStrategy =
+			new HorizontalCellStyleStrategy(null, contentWriteCellStyle);
+
+
 		//去除素组中重复的数组
 		List<String> listid = new ArrayList<String>();
 		for (int i=0; i<idsss.length; i++) {
@@ -634,7 +647,7 @@ public class AnbiaoAnquanhuiyiController {
 						newFile.mkdirs();
 					}
 					fileName = fileName+"/"+t.getDeptname()+"-"+t.getHuiyimingcheng()+"-"+t.getDateShow()+"-安全会议台账.xlsx";
-					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
+					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).registerWriteHandler(horizontalCellStyleStrategy).build();
 					WriteSheet writeSheet = EasyExcel.writerSheet().build();
 					// 写入list之前的数据
 					excelWriter.fill(map, writeSheet);

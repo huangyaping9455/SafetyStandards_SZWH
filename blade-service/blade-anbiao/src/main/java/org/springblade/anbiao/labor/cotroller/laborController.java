@@ -186,14 +186,14 @@ public class laborController {
 					QueryWrapper<LaborlingquEntity> laborlingquEntityQueryWrapper = new QueryWrapper<>();
 					laborlingquEntityQueryWrapper.lambda().eq(LaborlingquEntity::getAlrAliIds, laborEntity.getAliIds());
 //					lingquService.getBaseMapper().delete(laborlingquEntityQueryWrapper);
-					laborlingquEntityQueryWrapper.lambda().eq(LaborlingquEntity::getAlrDelete,"0");
+//					laborlingquEntityQueryWrapper.lambda().eq(LaborlingquEntity::getAlrDelete,"0");
 					laborlingquEntityQueryWrapper.lambda().eq(LaborlingquEntity::getAlrPersonIds,list.getAadApIds());
 					LaborlingquEntity laborlingquEntity = lingquService.getBaseMapper().selectOne(laborlingquEntityQueryWrapper);
 					if (laborlingquEntity==null){
 						LaborlingquEntity labor1 = new LaborlingquEntity();
 						labor1.setAlrPersonName(list.getAadApName());
 						labor1.setAlrPersonIds(list.getAadApIds());
-						labor1.setAlrIds(list.getAlrIds());
+//						labor1.setAlrIds(list.getAlrIds());
 						labor1.setAlrAliIds(laborEntity.getAliIds());
 						labor1.setAliApplicationScope(list.getAadApType());
 						boolean b = lingquService.save(labor1);
@@ -209,7 +209,7 @@ public class laborController {
 					}else {
 						laborlingquEntity.setAlrPersonName(list.getAadApName());
 						laborlingquEntity.setAlrPersonIds(list.getAadApIds());
-						laborlingquEntity.setAlrIds(list.getAlrIds());
+//						laborlingquEntity.setAlrIds(list.getAlrIds());
 						laborlingquEntity.setAlrAliIds(laborEntity.getAliIds());
 						laborlingquEntity.setAliApplicationScope(list.getAadApType());
 						if (StringUtils.isNotBlank(list.getAlrReceiptsNumber()) && !list.getAlrReceiptsNumber().equals("null")){
