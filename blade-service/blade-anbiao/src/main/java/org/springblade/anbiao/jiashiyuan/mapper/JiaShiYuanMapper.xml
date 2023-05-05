@@ -805,11 +805,12 @@ values
 
     <select id="selectDriverByopenId" resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan">
         SELECT
-            openid,jiashiyuanxingming,shoujihaoma
+            openid,jiashiyuanxingming,shoujihaoma,dept_id as deptId,id
         FROM
             anbiao_jiashiyuan
         WHERE openid=#{param1}
           and isdelete = 0
+        limit 1
     </select>
 
     <select id="bindDriverOpenId" parameterType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan" >

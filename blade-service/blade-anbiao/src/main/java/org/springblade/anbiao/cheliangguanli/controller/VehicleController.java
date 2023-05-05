@@ -40,6 +40,8 @@ import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
 import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
 import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
 import org.springblade.anbiao.weixiucheliang.service.MaintenanceService;
+import org.springblade.anbiao.yunyingshang.entity.TsOperatorInfo;
+import org.springblade.anbiao.yunyingshang.service.ITsOperatorInfoService;
 import org.springblade.common.configurationBean.AlarmServer;
 import org.springblade.common.configurationBean.FileServer;
 import org.springblade.common.constant.FilePathConstant;
@@ -120,7 +122,7 @@ public class VehicleController {
 	private MaintenanceService maintenanceService;
 	private IDictClient iDictClient;
 	private IVehiclePhoneService vehiclePhoneService;
-
+	private ITsOperatorInfoService operatorInfoService;
 
 	@PostMapping("/list")
 	@ApiLog("分页-车辆资料管理")
@@ -5544,6 +5546,22 @@ public class VehicleController {
 			}else{
 				vehicle.setBeizhu(String.valueOf(a.get("备注")).trim());
 			}
+			if(StringUtils.isBlank(String.valueOf(a.get("运营商接入码"))) || String.valueOf(a.get("运营商接入码")).equals("null")){
+				vehicle.setYunyingshangjieruma("");
+			}else{
+				String opCode = String.valueOf(a.get("运营商接入码")).trim();
+				List<TsOperatorInfo> operatorInfoList = operatorInfoService.selectOperatorInfo(vehicle.getDeptId().toString(),opCode);
+				if(operatorInfoList.size() > 0 && operatorInfoService != null){
+					vehicle.setYunyingshangjieruma(operatorInfoList.get(0).getOpCode());
+					vehicle.setImportUrl("icon_gou.png");
+				}else{
+					vehicle.setMsg("运营商接入码不匹配;");
+					errorStr+=opCode+"运营商接入码不匹配;";
+					vehicle.setImportUrl("icon_cha.png");
+					bb++;
+				}
+			}
+
 			vehicles.add(vehicle);
 		}
 		if(bb>0){
@@ -5754,6 +5772,9 @@ public class VehicleController {
 			}
 			if (StringUtils.isNotBlank(String.valueOf(a.get("beizhu")).trim()) && !String.valueOf(a.get("beizhu")).equals("null")) {
 				vehicle.setBeizhu(String.valueOf(a.get("beizhu")).trim());
+			}
+			if (StringUtils.isNotBlank(String.valueOf(a.get("yunyingshangjieruma")).trim()) && !String.valueOf(a.get("yunyingshangjieruma")).equals("null")) {
+				vehicle.setYunyingshangjieruma(String.valueOf(a.get("yunyingshangjieruma")).trim());
 			}
 			if (user != null) {
 				vehicle.setCaozuoren(user.getUserName());

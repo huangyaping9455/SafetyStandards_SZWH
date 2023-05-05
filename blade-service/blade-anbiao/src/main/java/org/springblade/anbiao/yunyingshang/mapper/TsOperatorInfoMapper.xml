@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.yunyingshang.mapper.TsOperatorInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.yunyingshang.entity.TsOperatorInfo">
+        <id column="op_id" property="opId" />
+        <result column="op_name" property="opName" />
+        <result column="op_code" property="opCode" />
+        <result column="op_loginname" property="opLoginname" />
+        <result column="op_pwd" property="opPwd" />
+        <result column="op_conncode" property="opConncode" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="create_id" property="createId" />
+        <result column="create_name" property="createName" />
+        <result column="create_time" property="createTime" />
+        <result column="update_id" property="updateId" />
+        <result column="update_name" property="updateName" />
+        <result column="update_time" property="updateTime" />
+        <result column="province" property="province" />
+        <result column="city" property="city" />
+        <result column="country" property="country" />
+        <result column="yunguanid" property="yunguanid" />
+        <result column="is_encrypted" property="isEncrypted" />
+        <result column="encrypted_ia" property="encryptedIa" />
+        <result column="encrypted_m" property="encryptedM" />
+        <result column="encrypted_ic" property="encryptedIc" />
+        <result column="dept_id" property="deptId" />
+
+    </resultMap>
+
+    <resultMap id="ryxResultMap" type="org.springblade.anbiao.zhengfu.entity.ZhengFuRiYunXingTongJi">
+    </resultMap>
+
+    <resultMap id="BJResultMap" type="org.springblade.anbiao.zhengfu.entity.ZhengFuBaoJingTongJiJieSuan">
+    </resultMap>
+
+    <sql id="tableSql">
+        select
+            a.*,
+            (select dept_name from anbiao_organization where isdelete = 0 and dept_id = a.province) as provinceName,
+            (select dept_name from anbiao_organization where isdelete = 0 and dept_id = a.city) as cityName,
+            (select dept_name from anbiao_organization where isdelete = 0 and dept_id = a.country) as countryName,
+            (select dept_name from anbiao_organization where isdelete = 0 and dept_id = a.yunguanid) as yunguanName
+        from
+            ts_operator_info a
+            inner join  (
+                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) b on a.dept_id = b.id
+        where a.is_deleted = 0
+    </sql>
+
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by op_name desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order == 0">
+            asc
+        </if>
+    </sql>
+
+    <sql id="querySql">
+
+        <if test="opName != null and opName != '' ">
+            and op_name like '%${opName}%'
+        </if>
+
+        <if test="opCode != null and opCode != ''">
+            and op_code like '%${opCode}%'
+        </if>
+
+        <if test="yunguanName != null and yunguanName != '' ">
+            and yunguanName like '%${yunguanName}%'
+        </if>
+
+    </sql>
+
+    <select timeout="600" id="selectGetAll" resultMap="BaseResultMap"
+            parameterType="org.springblade.anbiao.yunyingshang.page.TsOperatorInfoPage">
+        <if test="size == 0">
+            select * from (
+            <include refid="tableSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="tableSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectGetAllTotal"
+            parameterType="org.springblade.anbiao.yunyingshang.page.TsOperatorInfoPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql"/>
+        )d where 1 = 1
+        <include refid="querySql"/>
+    </select>
+
+    <sql id="QYRYXTJSql">
+        select
+<!--            a.areaname,-->
+<!--            a.zhengfuname,-->
+<!--            a.zhengfuid,-->
+            b.op_code as deptId,
+            b.op_name as company,
+            case when IFNULL(b.date,'') = '' then #{begintime} else b.date end as date,
+            SUM(IFNULL(b.vehicleCount,0)) as vehicleCount,
+            SUM(IFNULL(b.UpLineCount,0)) as onlineCount,
+            SUM(IFNULL(b.offvehiclecount,0)) as offlineCount,
+            concat(ROUND(AVG(case when IFNULL(b.uplinerate,'') = '' then '100.00' else b.uplinerate end),2),'%') as onlineRate,
+            SUM(IFNULL(b.locateVehicleCount,0)) as locateCount,
+            concat(ROUND(AVG(case when IFNULL(b.locaterate,'') = '' then '100.00' else b.locaterate end),2),'%') as locateRate,
+            concat(ROUND(AVG(case when IFNULL(b.DriftPositionRate,'') = '' then '100.00' else b.DriftPositionRate end),2),'%') as DriftPositionRate,
+            concat(ROUND(AVG(case when IFNULL(b.IntactPositionRate,'') = '' then '100.00' else b.IntactPositionRate end),2),'%') as IntactPositionRate,
+            concat(ROUND(AVG(case when IFNULL(b.QualifiedPositionRate,'') = '' then '100.00' else b.QualifiedPositionRate end),2),'%') as QualifiedPositionRate
+        from(
+            select
+                qiyeid,qiyemingcheng,yunguanmingcheng as zhengfuname,yunguanid as zhengfuid,areaname
+            from baobiao_zhengfu_qiye
+            where 1=1 and jigouleixing in ('qiye','geti')
+            <if test=" (deptId != null and deptId != '') and ( xiaJiDeptId == null or xiaJiDeptId == '' ) ">
+                and (city = #{deptId} or province = #{deptId})
+            </if>
+            <if test="xiaJiDeptId != null and xiaJiDeptId != '' ">
+                and country = #{xiaJiDeptId}
+            </if>
+            )a
+        INNER JOIN(
+            select
+                cid,
+                op_code,
+                op_name,
+                date,
+                replace(ltrim(replace(vehiclecount,'0',' ')),' ','0') as vehiclecount,
+                UpLineCount,
+                vehiclecount-UpLineCount as offvehiclecount,
+                case when IFNULL(vehiclecount,0) = 0 or IFNULL(UpLineCount,0) = 0 then '0.00'
+                else ROUND((UpLineCount*1.0/vehiclecount)*100,2)
+                end as uplinerate,
+                IFNULL(locateVehicleCount,0) as locateVehicleCount,
+                case when IFNULL(vehiclecount,0) = 0 or IFNULL(locateVehicleCount,0) = 0 then '0.00'
+                else ROUND((locateVehicleCount*1.0/vehiclecount)*100,2)
+                end as locaterate,
+                ROUND(DriftPositionRate*100,2) as DriftPositionRate,
+                ROUND(IntactPositionRate,2) as IntactPositionRate,
+                case when ifnull(QualifiedPositionRate,'') = '' then '100.00'
+                else ROUND(QualifiedPositionRate,2)
+                end as QualifiedPositionRate
+            from
+                baobiao_alarmdailyreport_operator
+            where 1=1
+                and date >= CONCAT(#{begintime},' 00:00:00')
+                and date &lt; CONCAT(#{endtime},' 23:59:59')
+            )b on b.cid = a.qiyeid
+        where IFNULL(a.zhengfuname,'') != ''
+        GROUP BY
+<!--            a.areaname,-->
+<!--            a.zhengfuname,-->
+<!--            a.zhengfuid,-->
+            b.op_code,
+            b.op_name,
+            b.date
+    </sql>
+
+    <sql id="orderQYRYXTJSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by date desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <sql id="queryQYRYXTJSql">
+
+        <if test="deptName != null and deptName != '' ">
+            and company like '%${deptName}%'
+        </if>
+
+        <if test="vehiclecount != null ">
+            and vehiclecount >= #{vehiclecount}
+        </if>
+
+    </sql>
+
+    <select timeout="600" id="selectGetYYSRYXTJ" resultMap="ryxResultMap"
+            parameterType="org.springblade.anbiao.zhengfu.page.ZhengFuBaoJingTongJiJieSuanPage">
+        <if test="size == 0">
+            select * from (
+            <include refid="QYRYXTJSql"/>
+            )b
+            where 1=1
+            <include refid="queryQYRYXTJSql"/>
+            <include refid="orderQYRYXTJSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="QYRYXTJSql"/>
+            )b
+            where 1=1
+            <include refid="queryQYRYXTJSql"/>
+            <include refid="orderQYRYXTJSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectYYSRYXTJTotal"
+            parameterType="org.springblade.anbiao.zhengfu.page.ZhengFuBaoJingTongJiJieSuanPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="QYRYXTJSql"/>
+        )d where 1 = 1
+        <include refid="queryQYRYXTJSql"/>
+    </select>
+
+    <select id="selectGetZFYYSBaoJingPaiMing" resultType="org.springblade.anbiao.zhengfu.entity.ZhengFuBaoJingTongJi" >
+        select
+            *
+        from(
+            select
+<!--                a.areaname,-->
+<!--                a.zhengfuname,-->
+<!--                a.zhengfuid,-->
+                b.op_code as deptId,
+                b.op_name as deptName,
+                date_format(now(),'%Y-%m') as yue,
+                ifnull(sum(b.baojingcishu),0) as baojingshu,
+                ifnull(sum(b.baojingclcishu),0) as chulishu,
+                ifnull(MAX(b.alarmvehiclecount),0) as bjcheliangshu,
+                IFNULL(SUM(b.baojingcishu),0) - IFNULL(SUM(b.baojingclcishu),0) as weichulishu,
+                case
+                when IFNULL(MAX(b.alarmvehiclecount),0) = 0 or IFNULL(sum(b.baojingcishu),0) = 0 then '0.00'
+                else ROUND(IFNULL(sum(b.baojingcishu),0)*1.0/IFNULL(MAX(b.alarmvehiclecount),0),2)
+                end as danchebaojingbi,
+                case
+                when IFNULL(SUM(baojingclcishu),0) = 0 or IFNULL(SUM(baojingcishu),0) = 0 then '0.00%'
+                else concat(ROUND((SUM(baojingclcishu)*1.0/SUM(baojingcishu))*100,2),'%')
+                end as chulilv
+            from(
+            select
+            qiyeid,qiyemingcheng,yunguanmingcheng as zhengfuname,yunguanid as zhengfuid,areaname
+            from baobiao_zhengfu_qiye
+            where 1=1 and jigouleixing in ('qiye','geti')
+            <if test=" (deptId != null and deptId != '') and ( xiaJiDeptId == null or xiaJiDeptId == '' ) ">
+                and (city = #{deptId} or province = #{deptId})
+            </if>
+            <if test="xiaJiDeptId != null and xiaJiDeptId != '' ">
+                and country = #{xiaJiDeptId}
+            </if>
+            )a
+        INNER JOIN(
+            select
+                cid,
+                company,
+                op_code,
+                op_name,
+                replace(ltrim(replace(vehiclecount,'0',' ')),' ','0') as vehiclecount,
+                alarmvehiclecount,
+                chaosu,
+                pilao,
+                yejian,
+                wushuju,
+                budingwei,
+                pilaoshipin,
+                dadianhua,
+                chouyan,
+                fenshen,
+                baojingcishu,
+                chaosucl,
+                pilaocl,
+                yejiancl,
+                wushujucl,
+                budingweicl,
+                pilaoshipincl,
+                dadianhuacl,
+                chouyancl,
+                fenshencl,
+                baojingclcishu
+            from
+                baobiao_alarmdailyreport_operator
+            where date_format(date,'%Y-%m') = date_format(now(),'%Y-%m')
+            )b on b.cid = a.qiyeid
+        GROUP BY
+<!--            a.areaname,-->
+<!--            a.zhengfuname,-->
+<!--            a.zhengfuid,-->
+            b.op_code,
+            b.op_name
+        )a
+        ORDER BY danchebaojingbi desc
+        limit 30
+    </select>
+
+    <!--运营商档案信息-->
+    <sql id="tableZFCLSql">
+        SELECT
+<!--            q.zhengfuid,-->
+<!--            q.zhengfuname,-->
+            a.op_code as opCode,
+            a.op_name as opName,
+            a.op_loginname as opLoginname,
+            a.op_pwd as opPwd
+        FROM(
+            select
+                qiyeid,qiyemingcheng,yunguanmingcheng as zhengfuname,yunguanid as zhengfuid,areaname
+            from
+                baobiao_zhengfu_qiye
+            where 1=1
+            and jigouleixing in ('qiye','geti')
+            <if test="province != null and province != '' ">
+                and province = #{deptId}
+            </if>
+            <if test="city != null and city != '' ">
+                and city = #{deptId}
+            </if>
+            <if test="country != null and country != '' ">
+                and country = #{deptId}
+            </if>
+            )q
+        inner join (
+            select dept_id,b.* from anbiao_vehicle a,ts_operator_info b
+            WHERE b.is_deleted = 0
+            and a.is_deleted = 0
+            and a.yunyingshangjieruma = b.op_code
+        ) a on q.qiyeid = a.dept_id
+        WHERE 1=1
+            and IFNULL(zhengfuid,'') != ''
+        GROUP BY
+<!--            q.zhengfuid,-->
+<!--            q.zhengfuname,-->
+            a.op_code,
+            a.op_name,
+            a.op_loginname,
+            a.op_pwd
+    </sql>
+
+    <sql id="queryZFCLSql">
+
+        <if test="opName !=null and opName != ''">
+            AND opName like CONCAT('%',#{opName},'%')
+        </if>
+
+    </sql>
+    <sql id="orderZFCLSql">
+        <!-- 默认排序规则 -->
+        order by opName desc
+    </sql>
+
+    <select id="selectZFYYSPage"
+            parameterType="org.springblade.anbiao.yunyingshang.page.TsOperatorInfoPage" resultType="org.springblade.anbiao.yunyingshang.vo.TsOperatorInfoVo">
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableZFCLSql" />
+            )b
+            where 1=1
+            <include refid="queryZFCLSql" />
+            <include refid="orderZFCLSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableZFCLSql" />
+            )b
+            where 1=1
+            <include refid="queryZFCLSql" />
+            <include refid="orderZFCLSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectZFYYSTotal"
+            parameterType="org.springblade.anbiao.yunyingshang.page.TsOperatorInfoPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableZFCLSql" />
+        )d
+        where 1 = 1
+        <include refid="queryZFCLSql" />
+    </select>
+
+    <!--运营商报警排名-->
+    <sql id="tableBJSql">
+        select
+<!--            a.areaname,-->
+<!--            a.zhengfuname,-->
+<!--            a.zhengfuid,-->
+            b.op_code as deptId,
+            b.op_name as deptName,
+            CONCAT(#{begintime},'至',#{endtime}) as date,
+            ifnull(sum(b.vehiclecount),0) as cheliangshu,
+            IFNULL(SUM(c.baojingcheliangshu),0) as baojingcheliangshu,
+            ifnull(MAX(b.baojingcishu),0) as baojingzongshu,
+            ifnull(MAX(b.baojingclcishu),0) as baojingclcishu,
+            ifnull(MAX(b.chaosu),0) as gpschaosu,
+            ifnull(MAX(b.pilao),0) as gpspilao,
+            ifnull(MAX(b.yejian),0) as gpsyejian,
+            ifnull(MAX(b.wushuju),0)+ifnull(MAX(b.budingwei),0) as gpsyichang,
+            ifnull(MAX(b.chaosu),0)+ifnull(MAX(b.pilao),0)+ifnull(MAX(b.yejian),0)+ifnull(MAX(b.wushuju),0)+ifnull(MAX(b.budingwei),0) as gpsbaojingzongshu,
+            ifnull(MAX(b.pilaoshipin),0) as dmspilao,
+            ifnull(MAX(b.dadianhua),0) as dmsjiedadianhua,
+            ifnull(MAX(b.chouyan),0) as dmschouyan,
+            ifnull(MAX(b.fenshen),0) as dmsfenshen,
+            ifnull(MAX(b.pilaoshipin),0)+ifnull(MAX(b.dadianhua),0)+ifnull(MAX(b.chouyan),0)+ifnull(MAX(b.fenshen),0)	dmsbaojingzongshu,
+            ifnull(MAX(b.chaosucl),0) as chaosucl,
+            ifnull(MAX(b.pilaocl),0) as pilaocl,
+            ifnull(MAX(b.yejiancl),0) as yejiancl,
+            ifnull(MAX(b.wushujucl),0)+ifnull(MAX(b.budingweicl),0) as yichangcl,
+            ifnull(MAX(b.chaosucl),0)+ifnull(MAX(b.pilaocl),0)+ifnull(MAX(b.yejiancl),0)+ifnull(MAX(b.wushujucl),0)+ifnull(MAX(b.budingweicl),0) as gpsbaojingclzongshu,
+            ifnull(MAX(b.pilaoshipincl),0) as pilaoshipincl,
+            ifnull(MAX(b.dadianhuacl),0) as dadianhuacl,
+            ifnull(MAX(b.chouyancl),0) as chouyancl,
+            ifnull(MAX(b.fenshencl),0) as fenshencl,
+            ifnull(MAX(b.pilaoshipincl),0)+ifnull(MAX(b.dadianhuacl),0)+ifnull(MAX(b.chouyancl),0)+ifnull(MAX(b.fenshencl),0) as dmsbaojingclzongshu,
+            case
+            when IFNULL(SUM(b.alarmvehiclecount),0) = 0 or IFNULL(MAX(b.baojingcishu),0) = 0 then '0.00'
+            else ROUND(IFNULL(MAX(b.baojingcishu),0)*1.0/IFNULL(SUM(b.alarmvehiclecount),0),2)
+            end as danchebaojingbi
+        from(
+            select
+                qiyeid,qiyemingcheng,yunguanmingcheng as zhengfuname,yunguanid as zhengfuid,areaname
+            from
+                baobiao_zhengfu_qiye
+            where 1=1 and jigouleixing in ('qiye','geti')
+            <if test="province != null and province != '' ">
+                and province = #{province}
+            </if>
+            <if test="city != null and city != '' ">
+                and city = #{city}
+            </if>
+            <if test="country != null and country != '' ">
+                and country = #{country}
+            </if>
+            )a
+        INNER JOIN(
+            select
+                cid,
+                company,
+                op_code,
+                op_name,
+                max(replace(ltrim(replace(vehiclecount,'0',' ')),' ','0')) vehiclecount,
+                sum(replace(ltrim(replace(alarmvehiclecount,'0',' ')),' ','0')) alarmvehiclecount,
+                sum(chaosu) as chaosu,
+                sum(pilao) as pilao,
+                sum(yejian) as yejian,
+                sum(wushuju) as wushuju,
+                sum(budingwei) as budingwei,
+                sum(pilaoshipin) as pilaoshipin,
+                sum(dadianhua) as dadianhua,
+                sum(chouyan) as chouyan,
+                sum(fenshen) as fenshen,
+                sum(baojingcishu) as baojingcishu,
+                sum(chaosucl) as chaosucl,
+                sum(pilaocl) as pilaocl,
+                sum(yejiancl) as yejiancl,
+                sum(wushujucl) as wushujucl,
+                sum(budingweicl) as budingweicl,
+                sum(pilaoshipincl) as pilaoshipincl,
+                sum(dadianhuacl) as dadianhuacl,
+                sum(chouyancl) as chouyancl,
+                sum(fenshencl) as fenshencl,
+                sum(baojingclcishu) as baojingclcishu
+            from
+                baobiao_alarmdailyreport_operator
+            where date &gt;= CONCAT(#{begintime},' 00:00:00')
+                and date &lt;= CONCAT(#{endtime},' 23:59:59')
+            GROUP BY
+                cid,
+                company,
+                op_code,
+                op_name
+            )b on b.cid = a.qiyeid
+        LEFT JOIN(
+            select
+                cid,
+                COUNT(DISTINCT VehicleId) as baojingcheliangshu
+            from
+                statisticcensus_alarm
+            where 1=1
+                and date &gt;= CONCAT(#{begintime},' 00:00:00')
+                and date &lt; CONCAT(#{endtime},' 23:59:59')
+                and alarmcount > 0
+            GROUP BY
+                cid
+            )c on c.cid = a.qiyeid
+        where 1=1
+        GROUP BY
+<!--            a.areaname,-->
+<!--            a.zhengfuname,-->
+<!--            a.zhengfuid,-->
+            b.op_code,
+            b.op_name
+    </sql>
+
+    <sql id="queryBJSql">
+        <if test="deptName !=null and deptName != ''">
+            AND deptName like CONCAT('%',#{deptName},'%')
+        </if>
+    </sql>
+
+    <sql id="orderBJSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by danchebaojingbi desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order == 0">
+            asc
+        </if>
+    </sql>
+
+    <select timeout="600" id="selectGetBJTJ" resultMap="BJResultMap"
+            parameterType="org.springblade.anbiao.zhengfu.page.ZhengFuBaoJingTongJiJieSuanPage">
+        <if test="size == 0">
+            select * from (
+                <include refid="tableBJSql"/>
+            )b
+            where 1=1
+            <include refid="queryBJSql"/>
+            <include refid="orderBJSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+                <include refid="tableBJSql"/>
+            )b
+            where 1=1
+            <include refid="queryBJSql"/>
+            <include refid="orderBJSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectGetBJTJTotal"
+            parameterType="org.springblade.anbiao.zhengfu.page.ZhengFuBaoJingTongJiJieSuanPage"
+            resultType="int">
+        select COUNT(1) from (
+            <include refid="tableBJSql"/>
+        )d where 1 = 1
+        <include refid="queryBJSql"/>
+    </select>
+
+    <select id="selectOperatorInfo" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+            op_name,
+            op_code
+        FROM
+            ts_operator_info op
+            inner join(
+                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            )a on op.dept_id = a.id
+        where op.is_deleted = 0
+        <if test="opCode != null and opCode != ''">
+            and op.op_code = #{opCode}
+        </if>
+        GROUP BY
+            op_name,
+            op_code
+        <if test="opCode != null and opCode != ''">
+            limit 1
+        </if>
+    </select>
+
+
+</mapper>

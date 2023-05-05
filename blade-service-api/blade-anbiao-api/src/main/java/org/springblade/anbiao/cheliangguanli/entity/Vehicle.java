@@ -468,4 +468,7 @@ public class Vehicle implements Serializable {
 	@TableField(exist = false)
 	private String daoluyunshuzhenghao;
 
+	@ApiModelProperty(value = "运营商接入码")
+	private String yunyingshangjieruma;
+
 }
