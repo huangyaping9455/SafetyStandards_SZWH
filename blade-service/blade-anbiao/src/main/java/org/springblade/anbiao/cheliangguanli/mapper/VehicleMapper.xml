@@ -774,6 +774,9 @@
             <if test="zhongduanchangshang != null and zhongduanchangshang != '' ">
                 zhongduanchangshang,
             </if>
+            <if test="yunyingshangjieruma != null and yunyingshangjieruma != '' ">
+                yunyingshangjieruma,
+            </if>
             <if test="area != null and area != '' ">
                 area
             </if>
@@ -952,6 +955,9 @@
             <if test="zhongduanchangshang != null and zhongduanchangshang != '' ">
                 #{zhongduanchangshang},
             </if>
+            <if test="yunyingshangjieruma != null and yunyingshangjieruma != '' ">
+                #{yunyingshangjieruma},
+            </if>
             <if test="area != null and area != '' ">
                 #{area}
             </if>
@@ -1118,6 +1124,9 @@
             </if>
             <if test="carowneraddress != null and carowneraddress != '' ">
                 carowneraddress = #{carowneraddress},
+            </if>
+            <if test="yunyingshangjieruma != null and yunyingshangjieruma != '' ">
+                yunyingshangjieruma = #{yunyingshangjieruma},
             </if>
             <if test="area != null and area != '' ">
                 area = #{area}

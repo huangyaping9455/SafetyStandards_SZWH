@@ -227,8 +227,8 @@ public class UserController {
 //			JsonNode openJsonNode = weChatUtil.requestOpenId(WECHATURL,wechatServer.getAppId(),wechatServer.getSecret(),code);
 //			System.out.println(openJsonNode);
 			//可将返回值类型改为String，然后直接return jsonObject
-			String openid = (String) jsonObject.get("openid");
-			if(openid != null && !"".equals(openid)){
+			openId = (String) jsonObject.get("openid");
+			if(openId != null && !"".equals(openId)){
 //				if (StringUtils.isNotBlank("encryptedData") && StringUtils.isNotBlank("iv")) {
 //					String json = WeChatUtil.decrypt(jsonObject.get("session_key").toString(), iv, encryptedData);
 //					if (null == json) {
@@ -340,6 +340,7 @@ public class UserController {
 				rs.setCode(500);
 				rs.setSuccess(false);
 				errMsg = "该账户已经绑定";
+				return rs;
 			} else {
 				WeChatUtil weChatUtil = new WeChatUtil();
 				String jsonId = weChatUtil.getopenid(wechatServer.getAppId(),code,wechatServer.getSecret());
