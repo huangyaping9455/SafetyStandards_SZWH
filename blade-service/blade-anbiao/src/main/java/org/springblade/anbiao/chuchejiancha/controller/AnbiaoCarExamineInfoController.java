@@ -1139,7 +1139,7 @@ public class AnbiaoCarExamineInfoController {
 	@GetMapping("/AnQuanJianChaMiXi_goExport_Excel")
 	@ApiLog("安全检查明细-导出")
 	@ApiOperation(value = "安全检查明细-导出", notes = "传入deptId、date", position = 22)
-	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String vehid, String deptId, String date, BladeUser user) throws IOException, ParseException {
+	public R AnQuanJianChaMiXi_goExport_Excel(HttpServletRequest request, HttpServletResponse response, String vehId, String deptId, String beginTime,String endTime, BladeUser user) throws IOException, ParseException {
 
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 		String[] words = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "aa", "bb", "cc", "dd","ee"};
@@ -1181,8 +1181,8 @@ public class AnbiaoCarExamineInfoController {
 		List<String> urlList = new ArrayList<>();
 		SafetyCheckMingXiVO safetyCheckMingXiVO = new SafetyCheckMingXiVO();
 		safetyCheckMingXiVO.setDeptId("1");
-		safetyCheckMingXiVO.setDate(date);
-		safetyCheckMingXiVO.setVehid(vehid);
+		safetyCheckMingXiVO.setDate(beginTime);
+		safetyCheckMingXiVO.setVehid(vehId);
 		// TODO 渲染其他类型的数据请参考官方文档
 		DecimalFormat df = new DecimalFormat("######0.00");
 		Calendar now = Calendar.getInstance();
