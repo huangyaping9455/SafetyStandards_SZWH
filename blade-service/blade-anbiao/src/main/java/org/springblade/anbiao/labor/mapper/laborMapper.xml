@@ -99,6 +99,8 @@
 
     <select id="selectC" parameterType="org.springblade.anbiao.labor.page.LaborPage" resultType="org.springblade.anbiao.labor.entity.Labor">
         SELECT
+            alr_ids as alrIds,
+            alr_ali_ids as alrAliIds,
             alr_person_name AS aadApName,
             ali_application_scope AS aadApType,
             alr_person_ids AS aadApIds,

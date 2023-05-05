@@ -1191,7 +1191,7 @@
 
         ) a on a.id=avb_dept_ids
         INNER JOIN anbiao_organization k on a.id = k.dept_id and k.jigouleixing in('qiye','geti')
-        LEFT JOIN  anbiao_vehicle_baoxian_mingxi f ON avb_ids = f.avbm_avb_ids and f.avbm_risk != "超赔险" and f.avbm_risk != "交强险" and f.avbm_name != "超赔险" and f.avbm_name != "交强险" and f.avbm_name != "机动车损失险" and f.avbm_name != "三者责任保险" and f.avbm_name != "机动车车上人员责任保险(司机)" and f.avbm_name != "机动车车上人员责任保险（司机)" and f.avbm_name != "机动车车上人员责任保险（司机）" and f.avbm_name != "机动车车上人员责任保险(司机）" and f.avbm_name != "机动车车上人员责任保险(乘客)" and f.avbm_name != "机动车车上人员责任保险（乘客)" and f.avbm_name != "机动车车上人员责任保险（乘客）" and f.avbm_name != "机动车车上人员责任保险(乘客）"
+        LEFT JOIN  anbiao_vehicle_baoxian_mingxi f ON avb_ids = f.avbm_avb_ids and f.avbm_risk != "超赔险" and f.avbm_risk != "交强险" and f.avbm_name != "超赔险" and f.avbm_name != "交强险" and f.avbm_name != "机动车损失险" and f.avbm_name != "三者责任保险" and f.avbm_name != "机动车车上人员责任保险(司机)"  and f.avbm_name != "机动车车上人员责任保险(乘客)"
 
         LEFT JOIN anbiao_vehicle e ON e.id = avb_av_ids
         WHERE
