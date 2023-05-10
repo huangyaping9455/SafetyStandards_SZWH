@@ -196,8 +196,18 @@ public class JiashiyuanBaoxianServiceImpl extends ServiceImpl<JiashiyuanBaoxianM
 	}
 
 	@Override
-	public List<JiaShiYuanLedgerVO> selectMasterPolicy(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
-		return baoxianMapper.selectMasterPolicy(jiaShiYuanLedgerVO);
+	public List<JiaShiYuanLedgerVO> selectVehicleMasterPolicy(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
+		return baoxianMapper.selectVehicleMasterPolicy(jiaShiYuanLedgerVO);
+	}
+
+	@Override
+	public List<JiaShiYuanLedgerVO> selectDriverMasterPolicy(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
+		return baoxianMapper.selectDriverMasterPolicy(jiaShiYuanLedgerVO);
+	}
+
+	@Override
+	public List<JiaShiYuanLedgerVO> selectVehicleInsurance2(JiaShiYuanLedgerVO jiaShiYuanLedgerVO) {
+		return baoxianMapper.selectVehicleInsurance2(jiaShiYuanLedgerVO);
 	}
 
 

@@ -156,4 +156,16 @@ public class JiaShiYuanLedgerVO {
 	private String avbPolicyNo;
 
 	private String avbInsurancePeriodStart;
+
+	private String ajbInsuranceCompany;
+
+	private String ajbmName;
+
+	private String ajbPolicyNo;
+
+	private String ajbmBasicPremium;
+
+	private String ajbmCompanyAmount;
+
+	private String ajbInsurancePeriodStart;
 }

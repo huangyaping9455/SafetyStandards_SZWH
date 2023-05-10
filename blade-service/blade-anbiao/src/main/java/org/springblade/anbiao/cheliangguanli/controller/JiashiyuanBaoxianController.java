@@ -23,6 +23,7 @@ import cn.hutool.poi.excel.ExcelUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.handler.CellWriteHandler;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.fill.FillConfig;
 import com.alibaba.excel.write.metadata.style.WriteCellStyle;
@@ -869,35 +870,30 @@ public class JiashiyuanBaoxianController extends BladeController {
 //					String fileName = "D:\\ExcelTest\\"+t.getDeptName()+"-保险台账"+a+".xlsx";
 //					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+"-保险台账"+".xlsx";
 					FillConfig fillConfig = FillConfig.builder().forceNewRow(Boolean.TRUE).build();
-//					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+t.getDeptName()+"/"+"车险";
-//					String fileName2 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"人险";
-					String fileName3 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"企业险";
-					String fileName4 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"车险";
-					String fileName5= fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"意外险";
-					String fileName6= fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"驾驶员其他附加险";
-					String fileName7= fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"超赔险";
-					String fileName8= fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"交强险";
-					String fileName9= fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"车辆其他险";
+					String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"企业保险";
+					String fileName2 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"车辆保险"+ "/"+"车险";
+					String fileName3 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"车辆保险"+ "/"+"超赔险";
+					String fileName4 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"车辆保险"+ "/"+"交强险";
+					String fileName5 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"人员保险"+ "/"+"意外险";
+					String fileName6 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2]+"/"+uuid+"/"+"保险明细台账"+"/"+t.getDeptName()+"/"+"人员保险"+ "/"+"其他险种";
 
-//					File newFile = new File(fileName);
-//					File newFile2 = new File(fileName2);
+					File newFile = new File(fileName);
+					File newFile2 = new File(fileName2);
 					File newFile3 = new File(fileName3);
 					File newFile4 = new File(fileName4);
 					File newFile5 = new File(fileName5);
 					File newFile6 = new File(fileName6);
-					File newFile7 = new File(fileName7);
-					File newFile8 = new File(fileName8);
-					File newFile9 = new File(fileName9);
-//					//判断目标文件所在目录是否存在
-//					if(!newFile.exists()){
-//						//如果目标文件所在的目录不存在，则创建父目录
-//						newFile.mkdirs();
-//					}
-//					//判断目标文件所在目录是否存在
-//					if(!newFile2.exists()){
-//						//如果目标文件所在的目录不存在，则创建父目录
-//						newFile2.mkdirs();
-//					}
+
+					//判断目标文件所在目录是否存在
+					if(!newFile.exists()){
+						//如果目标文件所在的目录不存在，则创建父目录
+						newFile.mkdirs();
+					}
+					//判断目标文件所在目录是否存在
+					if(!newFile2.exists()){
+						//如果目标文件所在的目录不存在，则创建父目录
+						newFile2.mkdirs();
+					}
 					//判断目标文件所在目录是否存在
 					if(!newFile3.exists()){
 						//如果目标文件所在的目录不存在，则创建父目录
@@ -917,21 +913,6 @@ public class JiashiyuanBaoxianController extends BladeController {
 					if(!newFile6.exists()){
 						//如果目标文件所在的目录不存在，则创建父目录
 						newFile6.mkdirs();
-					}
-					//判断目标文件所在目录是否存在
-					if(!newFile7.exists()){
-						//如果目标文件所在的目录不存在，则创建父目录
-						newFile7.mkdirs();
-					}
-					//判断目标文件所在目录是否存在
-					if(!newFile8.exists()){
-						//如果目标文件所在的目录不存在，则创建父目录
-						newFile8.mkdirs();
-					}
-					//判断目标文件所在目录是否存在
-					if(!newFile9.exists()){
-						//如果目标文件所在的目录不存在，则创建父目录
-						newFile9.mkdirs();
 					}
 
 					map.put("deptName", t.getDeptName());
@@ -997,180 +978,17 @@ public class JiashiyuanBaoxianController extends BladeController {
 					map.put("cheliangzongbaofeijine",t.getCheliangzongbaofeijine());
 					map.put("renyuanzongbaoxianjine",t.getRenyuanzongbaoxianjine());
 					map.put("renyuanzongbaofeijine",t.getRenyuanzongbaofeijine());
-					map.put("fileName",fileName3+"/"+t.getDeptName()+".xlsx")  ;
+					map.put("fileName",fileName+"/"+t.getDeptName()+".xlsx")  ;
 					ExcelWriter excelWriter2 = EasyExcel.write(map.get("fileName").toString()).withTemplate(templatePath3).build();
 					WriteSheet deptInsuranceSheet = EasyExcel.writerSheet("公司保险").build();
 					// 直接写入数据
 					excelWriter2.fill(map, deptInsuranceSheet);
 					excelWriter2.finish();
 
-					CommonUtil.jacobExcelToPDF(fileName3+"/"+t.getDeptName()+".xlsx",fileName3+"/"+t.getDeptName()+".pdf");
-					System.out.println("已生成保险台账pdf"+fileName3+"/"+t.getDeptName()+".pdf");
-					FileSystemUtils.deleteRecursively(new File(fileName3+"/"+t.getDeptName()+".xlsx"));
+					CommonUtil.jacobExcelToPDF(fileName+"/"+t.getDeptName()+".xlsx",fileName+"/"+t.getDeptName()+".pdf");
+					System.out.println("已生成保险台账pdf"+fileName+"/"+t.getDeptName()+".pdf");
+					FileSystemUtils.deleteRecursively(new File(fileName+"/"+t.getDeptName()+".xlsx"));
 
-//					//车辆
-//					List<JiaShiYuanLedgerVO> jiaShiYuanLedgerVOS2 = jiashiyuanBaoxianService.selectVehicleInsurance(jiaShiYuanLedgerVO1);
-//					for (JiaShiYuanLedgerVO aa:jiaShiYuanLedgerVOS2) {
-//						HashMap<String, Object> map2 = new HashMap<>();
-//						map2.put("cheliangpaizhao",aa.getCheliangpaizhao());
-//						JiaShiYuanLedgerVO jiaShiYuanLedgerVO2 = jiashiyuanBaoxianService.selectHeavyTrafficInsurance(aa);
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO2.getJiaoqiangxianzongjine()) && !jiaShiYuanLedgerVO2.getJiaoqiangxianzongjine().equals("null")){
-//							map2.put("jiaoqiangxianzongjine",aa.getJiaoqiangxianzongjine());
-//						}else {
-//							map2.put("jiaoqiangxianzongjine","0");
-//						}
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO2.getJiaoqiangxianzongjine()) && !jiaShiYuanLedgerVO2.getJiaoqiangxianzongjine().equals("null")){
-//							map2.put("jiaoqiangxianzongbaoxianjine",aa.getJiaoqiangxianzongjine());
-//						}else {
-//							map2.put("jiaoqiangxianzongbaoxianjine","0");
-//						}
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO2.getJiaoqiangxianzongbaofeijine()) && !jiaShiYuanLedgerVO2.getJiaoqiangxianzongbaofeijine().equals("null")){
-//							map2.put("jiaoqiangxianzongbaofeijine",jiaShiYuanLedgerVO2.getJiaoqiangxianzongbaofeijine());
-//						}else {
-//							map2.put("jiaoqiangxianzongbaofeijine","0");
-//						}
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO2.getJiaoqiangxianzongbaofeijine()) && !jiaShiYuanLedgerVO2.getJiaoqiangxianzongbaofeijine().equals("null")){
-//							map2.put("jiaoqiangxianzongfeiyong",jiaShiYuanLedgerVO2.getJiaoqiangxianzongbaofeijine());
-//						}else {
-//							map2.put("jiaoqiangxianzongfeiyong","0");
-//						}
-////						if(StrUtil.isNotEmpty(aa.getJiaoqiangxianzongbaofeijine())){
-////							map2.put("jiaoqiangxianzongfeiyong",aa.getJiaoqiangxianzongbaofeijine());
-////						}
-//						JiaShiYuanLedgerVO jiaShiYuanLedgerVO3 = jiashiyuanBaoxianService.selectNotHeavyTrafficInsurance(aa);
-//
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getJidongchesunshixianjine()) && !jiaShiYuanLedgerVO3.getJidongchesunshixianjine().equals("null")){
-//							map2.put("jidongchesunshixianjine",jiaShiYuanLedgerVO3.getJidongchesunshixianjine());
-//						}else {
-//							map2.put("jidongchesunshixianjine","0");
-//						}
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getJidongchesunshixianbaofeijine()) && !jiaShiYuanLedgerVO3.getJidongchesunshixianbaofeijine().equals("null")){
-//							map2.put("jidongchesunshixianbaofeijine",jiaShiYuanLedgerVO3.getJidongchesunshixianbaofeijine());
-//						}else {
-//							map2.put("jidongchesunshixianbaofeijine","0");
-//						}
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getSanzhezerenxianjine()) && !jiaShiYuanLedgerVO3.getSanzhezerenxianjine().equals("null")){
-//							map2.put("sanzhezerenxianjine",jiaShiYuanLedgerVO3.getSanzhezerenxianjine());
-//						}else {
-//							map2.put("sanzhezerenxianjine","0");
-//						}
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getSanzhezerenxianbaofeijine()) && !jiaShiYuanLedgerVO3.getSanzhezerenxianbaofeijine().equals("null")){
-//							map2.put("sanzhezerenxianbaofeijine",jiaShiYuanLedgerVO3.getSanzhezerenxianbaofeijine());
-//						}else {
-//							map2.put("sanzhezerenxianbaofeijine","0");
-//						}
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getSijijine()) && !jiaShiYuanLedgerVO3.getSijijine().equals("null")){
-//							map2.put("sijijine",jiaShiYuanLedgerVO3.getSijijine());
-//						}else {
-//							map2.put("sijijine","0");
-//						}
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getSijibaofeijine()) && !jiaShiYuanLedgerVO3.getSijibaofeijine().equals("null")){
-//							map2.put("sijibaofeijine",jiaShiYuanLedgerVO3.getSijibaofeijine());
-//						}
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getChengkejine()) && !jiaShiYuanLedgerVO3.getChengkejine().equals("null")){
-//							map2.put("chengkejine",jiaShiYuanLedgerVO3.getChengkejine());
-//						}else {
-//							map2.put("chengkejine","0");
-//						}
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getChengkebaofeijine()) && !jiaShiYuanLedgerVO3.getChengkebaofeijine().equals("null")){
-//							map2.put("chengkebaofeijine",jiaShiYuanLedgerVO3.getChengkebaofeijine());
-//						}else {
-//							map2.put("chengkebaofeijine","0");
-//						}
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getQitajine()) && !jiaShiYuanLedgerVO3.getQitajine().equals("null")){
-//							map2.put("qitajine",jiaShiYuanLedgerVO3.getQitajine());
-//						}else {
-//							map2.put("qitajine","0");
-//						}
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getQitabaofeijine()) && !jiaShiYuanLedgerVO3.getQitabaofeijine().equals("null")){
-//							map2.put("qitabaofeijine",jiaShiYuanLedgerVO3.getQitabaofeijine());
-//						}else {
-//							map2.put("qitabaofeijine","0");
-//						}
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getChexianzongbaoxianjine()) && !jiaShiYuanLedgerVO3.getChexianzongbaoxianjine().equals("null")){
-//							map2.put("chexianzongbaoxianjine",jiaShiYuanLedgerVO3.getChexianzongbaoxianjine());
-//						}else {
-//							map2.put("chexianzongbaoxianjine","0");
-//						}
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getChexianzongbaofei()) && !jiaShiYuanLedgerVO3.getChexianzongbaofei().equals("null")){
-//							map2.put("chexianzongbaofei",jiaShiYuanLedgerVO3.getChexianzongbaofei());
-//						}else {
-//							map2.put("chexianzongbaofei","0");
-//						}
-//						map2.put("avbInsureName",aa.getAvbInsureName());
-//						map2.put("avbInsurancePeriodEnd",aa.getAvbInsurancePeriodEnd());
-//						map2.put("fileName",fileName+"/"+aa.getCheliangpaizhao()+".xlsx")  ;
-//						ExcelWriter excelWriter = EasyExcel.write(map2.get("fileName").toString()).withTemplate(templateFileName).build();
-////						WriteSheet companyInsuranceSheet = EasyExcel.writerSheet("公司保险明细台账").build();
-////						// 写入list之前的数据
-////						excelWriter.fill(map, companyInsuranceSheet);
-//						WriteSheet vehiclesInsuranceSheet = EasyExcel.writerSheet("车辆保险").build();
-//						// 直接写入数据
-//						excelWriter.fill(map2, vehiclesInsuranceSheet);
-//						excelWriter.finish();
-//
-//					}
-
-//					//人员
-//					List<JiaShiYuanLedgerVO> jiaShiYuanLedgerVOS3 = jiashiyuanBaoxianService.selectPersonInsurance(jiaShiYuanLedgerVO1);
-//					for (JiaShiYuanLedgerVO aa:jiaShiYuanLedgerVOS3) {
-//						HashMap<String, Object> map3 = new HashMap<>();
-//						map3.put("ajbInsuredName",aa.getAjbInsuredName());
-//						map3.put("ajbInsureName",aa.getAjbInsureName());
-//						map3.put("ajbInsurancePeriodEnd",aa.getAjbInsurancePeriodEnd());
-//						JiaShiYuanLedgerVO jiaShiYuanLedgerVO2 = jiashiyuanBaoxianService.selectAccidentInsurance(aa);
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO2.getYiwaixianbaoxianjine()) && !jiaShiYuanLedgerVO2.getYiwaixianbaoxianjine().equals("null")){
-//							map3.put("yiwaixianbaoxianjine",jiaShiYuanLedgerVO2.getYiwaixianbaoxianjine());
-//						}else {
-//							map3.put("yiwaixianbaoxianjine","0");
-//						}
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO2.getYiwaixianbaoxianjine()) && !jiaShiYuanLedgerVO2.getYiwaixianbaoxianjine().equals("null")){
-//							map3.put("yiwaixianzongbaoxianjine",jiaShiYuanLedgerVO2.getYiwaixianbaoxianjine());
-//						}else {
-//							map3.put("yiwaixianzongbaoxianjine","0");
-//						}
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO2.getYiwaixianbaofeijine()) && !jiaShiYuanLedgerVO2.getYiwaixianbaofeijine().equals("null")){
-//							map3.put("yiwaixianbaofeijine",jiaShiYuanLedgerVO2.getYiwaixianbaofeijine());
-//						}else {
-//							map3.put("yiwaixianbaofeijine","0");
-//						}
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO2.getYiwaixianbaofeijine()) && !jiaShiYuanLedgerVO2.getYiwaixianbaofeijine().equals("null")){
-//							map3.put("yiwaixianzongbaofeijine",jiaShiYuanLedgerVO2.getYiwaixianbaofeijine());
-//						}else {
-//							map3.put("yiwaixianzongbaofeijine","0");
-//						}
-//						JiaShiYuanLedgerVO jiaShiYuanLedgerVO3 = jiashiyuanBaoxianService.selectNotAccidentInsurance(aa);
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getRenyuanqitabaoxianjine()) && !jiaShiYuanLedgerVO3.getRenyuanqitabaoxianjine().equals("null")){
-//							map3.put("renyuanqitabaoxianjine",jiaShiYuanLedgerVO3.getRenyuanqitabaoxianjine());
-//						}else {
-//							map3.put("renyuanqitabaoxianjine","0");
-//						}
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getRenyuanqitabaoxianjine()) && !jiaShiYuanLedgerVO3.getRenyuanqitabaoxianjine().equals("null")){
-//							map3.put("renyuanqitazongbaoxianjine",jiaShiYuanLedgerVO3.getRenyuanqitabaoxianjine());
-//						}else {
-//							map3.put("renyuanqitazongbaoxianjine","0");
-//						}
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getRenyuanqitabaofeijine()) && !jiaShiYuanLedgerVO3.getRenyuanqitabaofeijine().equals("null")){
-//							map3.put("renyuanqitabaofeijine",jiaShiYuanLedgerVO3.getRenyuanqitabaofeijine());
-//						}else {
-//							map3.put("renyuanqitabaofeijine","0");
-//						}
-//						if(StringUtils.isNotBlank(jiaShiYuanLedgerVO3.getRenyuanqitabaofeijine()) && !jiaShiYuanLedgerVO3.getRenyuanqitabaofeijine().equals("null")){
-//							map3.put("renyuanqitazongbaofeijine",jiaShiYuanLedgerVO3.getRenyuanqitabaofeijine());
-//						}else {
-//							map3.put("renyuanqitazongbaofeijine","0");
-//						}
-//
-//						map3.put("fileName",fileName2+"/"+aa.getAjbInsuredName()+".xlsx")  ;
-//						ExcelWriter excelWriter = EasyExcel.write(map3.get("fileName").toString()).withTemplate(templatePath2).build();
-////						WriteSheet companyInsuranceSheet = EasyExcel.writerSheet("公司保险明细台账").build();
-////						// 写入list之前的数据
-////						excelWriter.fill(map, companyInsuranceSheet);
-//						WriteSheet jiashiyuanInsuranceSheet = EasyExcel.writerSheet("驾驶员保险").build();
-//						// 直接写入数据
-//						excelWriter.fill(map3, jiashiyuanInsuranceSheet);
-//						excelWriter.finish();
-//					}
 
 					List<Map> ListData = new ArrayList<Map>();
 					//车辆险
@@ -1215,14 +1033,15 @@ public class JiashiyuanBaoxianController extends BladeController {
 							ListData.add(hashMap);
 						}
 						// 第一列进行单元格合并
-						int[] mergeColumeIndex = {0, 4, 5, 6, 7};
+						int[] mergeColumeIndex = {0};
 						// 从第4行开始合并
-						int mergeRowIndex = 2;
-						OutputStream outputStream = new FileOutputStream(fileName4 + "/" + t.getDeptName() + ".xlsx");
+						int mergeRowIndex = 1;
+						OutputStream outputStream = new FileOutputStream(fileName2 + "/" + t.getDeptName() + ".xlsx");
 						ExcelWriter excelWriter = EasyExcelFactory.write(outputStream)
 							.withTemplate(templatePath4)
 							//设置合并单元格策略
-							.registerWriteHandler(new ExcelFillCellMergeStrategy(2, new int[]{0, 4, 5, 6, 7}, 4))
+//							.registerWriteHandler(new ExcelFillCellMergeStrategy(2, new int[]{0, 4, 5, 6, 7}, 4))
+							.registerWriteHandler(new ExcelFillCellMergeStrategy2(mergeRowIndex,mergeColumeIndex))
 							.registerWriteHandler(horizontalCellStyleStrategy)
 							.build();
 						WriteSheet chexianwriteSheet = EasyExcel.writerSheet("车辆保险").build();
@@ -1230,8 +1049,8 @@ public class JiashiyuanBaoxianController extends BladeController {
 						excelWriter.finish();
 						outputStream.close();
 
-						CommonUtil.jacobExcelToPDF(fileName4 + "/" + t.getDeptName() + ".xlsx",fileName4 + "/" + t.getDeptName() + ".pdf");
-						System.out.println("已生成保险台账pdf"+fileName4 + "/" + t.getDeptName() + ".pdf");
+						CommonUtil.jacobExcelToPDF(fileName2 + "/" + t.getDeptName() + ".xlsx",fileName2 +  "/" + t.getDeptName() + ".pdf");
+						System.out.println("已生成保险台账pdf"+fileName2 + "/" + t.getDeptName() + ".pdf");
 //						FileSystemUtils.deleteRecursively(new File(fileName4 + "/" + t.getDeptName() + ".xlsx"));
 					}
 
@@ -1267,9 +1086,9 @@ public class JiashiyuanBaoxianController extends BladeController {
 
 							ListData3.add(hashMap);
 						}
-						PDF=fileName7 + "/" + t.getDeptName() + ".pdf";
-						fileName7 = fileName7 + "/" + t.getDeptName() + ".xlsx";
-						ExcelWriter excelWriter7 = EasyExcelFactory.write(fileName7)
+						PDF=fileName3 +  "/" + t.getDeptName() + ".pdf";
+						String chaopei = fileName3 +  "/"  + t.getDeptName() + ".xlsx";
+						ExcelWriter excelWriter7 = EasyExcelFactory.write(chaopei)
 							.registerWriteHandler(horizontalCellStyleStrategy)
 							.withTemplate(templatePath6)
 							.build();
@@ -1277,7 +1096,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 						excelWriter7.fill(ListData3, chaopeixianwriteSheet);
 						excelWriter7.finish();
 
-						CommonUtil.jacobExcelToPDF(fileName7,PDF);
+						CommonUtil.jacobExcelToPDF(chaopei,PDF);
 						System.out.println("已生成保险台账pdf"+PDF);
 //						FileSystemUtils.deleteRecursively(new File(fileName7));
 
@@ -1315,9 +1134,9 @@ public class JiashiyuanBaoxianController extends BladeController {
 
 							ListData4.add(hashMap);
 						}
-						PDF=fileName8 + "/" + t.getDeptName() + ".pdf";
-						fileName8 = fileName8 + "/" + t.getDeptName() + ".xlsx";
-						ExcelWriter excelWriter8 = EasyExcelFactory.write(fileName8)
+						PDF=fileName4 + "/" + t.getDeptName() + ".pdf";
+						String jiaoqiang = fileName4 + "/"  + t.getDeptName() + ".xlsx";
+						ExcelWriter excelWriter8 = EasyExcelFactory.write(jiaoqiang)
 							.registerWriteHandler(horizontalCellStyleStrategy)
 							.withTemplate(templatePath7)
 							.build();
@@ -1325,60 +1144,11 @@ public class JiashiyuanBaoxianController extends BladeController {
 						excelWriter8.fill(ListData4, chaopeixianwriteSheet);
 						excelWriter8.finish();
 
-						CommonUtil.jacobExcelToPDF(fileName8,PDF);
+						CommonUtil.jacobExcelToPDF(jiaoqiang,PDF);
 						System.out.println("已生成保险台账pdf"+PDF);
 //						FileSystemUtils.deleteRecursively(new File(fileName8));
 					}
 
-					//车辆其他险
-					List<Map> ListData6 = new ArrayList<Map>();
-					List<JiaShiYuanLedgerVO> jiaShiYuanLedgerVOS6 = jiashiyuanBaoxianService.selectOtherVehicleInsurance(jiaShiYuanLedgerVO1);
-					if (jiaShiYuanLedgerVOS6!=null && jiaShiYuanLedgerVOS6.size()>0 && jiaShiYuanLedgerVOS6.get(0) != null) {
-						for (JiaShiYuanLedgerVO aa : jiaShiYuanLedgerVOS6) {
-							HashMap hashMap = new HashMap();
-							if (StringUtils.isNotBlank(aa.getCheliangpaizhao()) && !aa.getCheliangpaizhao().equals("null")) {
-								hashMap.put("cheliangpaizhao", aa.getCheliangpaizhao());
-							}
-							if (StringUtils.isNotBlank(aa.getAvbmName()) && !aa.getAvbmName().equals("null")) {
-								hashMap.put("avbm_name", aa.getAvbmName());
-							}
-							if (StringUtils.isNotBlank(aa.getAvbmInsuranceAmount()) && !aa.getAvbmInsuranceAmount().equals("null")) {
-								hashMap.put("avbmInsuranceAmount", aa.getAvbmInsuranceAmount());
-							} else {
-								hashMap.put("avbmInsuranceAmount", "0");
-							}
-							if (StringUtils.isNotBlank(aa.getAvbmBasicPremium()) && !aa.getAvbmBasicPremium().equals("null")) {
-								hashMap.put("avbmBasicPremium", aa.getAvbmBasicPremium());
-							} else {
-								hashMap.put("avbmBasicPremium", "0");
-							}
-							if (StringUtils.isNotBlank(aa.getAvbInsurancePeriodEnd()) && !aa.getAvbInsurancePeriodEnd().equals("null")) {
-								hashMap.put("avbInsurancePeriodEnd", aa.getAvbInsurancePeriodEnd());
-							} else {
-								hashMap.put("avbInsurancePeriodEnd", "0");
-							}
-							if (StringUtils.isNotBlank(aa.getAvbInsureName()) && !aa.getAvbInsureName().equals("null")) {
-								hashMap.put("avbInsureName", aa.getAvbInsureName());
-							}else {
-								hashMap.put("avbInsureName", "/");
-							}
-
-							ListData6.add(hashMap);
-						}
-						PDF=fileName9 + "/" + t.getDeptName() + ".pdf";
-						fileName9 = fileName9 + "/" + t.getDeptName() + ".xlsx";
-						ExcelWriter excelWriter9 = EasyExcelFactory.write(fileName9)
-							.registerWriteHandler(horizontalCellStyleStrategy)
-							.withTemplate(templatePath9)
-							.build();
-						WriteSheet chaopeixianwriteSheet = EasyExcel.writerSheet("车辆其他险").build();
-						excelWriter9.fill(ListData6, chaopeixianwriteSheet);
-						excelWriter9.finish();
-
-						CommonUtil.jacobExcelToPDF(fileName9,PDF);
-						System.out.println("已生成保险台账pdf"+PDF);
-//						FileSystemUtils.deleteRecursively(new File(fileName9));
-					}
 
 					//意外险
 					List<Map> ListData2 = new ArrayList<Map>();
@@ -1413,8 +1183,13 @@ public class JiashiyuanBaoxianController extends BladeController {
 							ListData2.add(hashMap);
 						}
 						PDF=fileName5 + "/" + t.getDeptName() + ".pdf";
-						fileName5 = fileName5 + "/" + t.getDeptName() + ".xlsx";
-						ExcelWriter excelWriter5 = EasyExcelFactory.write(fileName5)
+						String yiwai = fileName5 + "/" + t.getDeptName() + ".xlsx";
+						// 第一列进行单元格合并
+						int[] mergeColumeIndex = {0};
+						// 从第4行开始合并
+						int mergeRowIndex = 1;
+						ExcelWriter excelWriter5 = EasyExcelFactory.write(yiwai)
+							.registerWriteHandler(new ExcelFillCellMergeStrategy2(mergeRowIndex,mergeColumeIndex))
 							.registerWriteHandler(horizontalCellStyleStrategy)
 							.withTemplate(templatePath5)
 							.build();
@@ -1422,7 +1197,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 						excelWriter5.fill(ListData2, jiaoqiangxianwriteSheet);
 						excelWriter5.finish();
 
-						CommonUtil.jacobExcelToPDF(fileName5,PDF);
+						CommonUtil.jacobExcelToPDF(yiwai,PDF);
 						System.out.println("已生成保险台账pdf"+PDF);
 //						FileSystemUtils.deleteRecursively(new File(fileName5));
 					}
@@ -1460,8 +1235,13 @@ public class JiashiyuanBaoxianController extends BladeController {
 							ListData5.add(hashMap);
 						}
 						PDF=fileName6 + "/" + t.getDeptName() + ".pdf";
-						fileName6 = fileName6 + "/" + t.getDeptName() + ".xlsx";
-						ExcelWriter excelWriter6 = EasyExcelFactory.write(fileName6)
+						String qita = fileName6 + "/" + t.getDeptName() + ".xlsx";
+						// 第一列进行单元格合并
+						int[] mergeColumeIndex = {0};
+						// 从第4行开始合并
+						int mergeRowIndex = 1;
+						ExcelWriter excelWriter6 = EasyExcelFactory.write(qita)
+							.registerWriteHandler(new ExcelFillCellMergeStrategy2(mergeRowIndex,mergeColumeIndex))
 							.registerWriteHandler(horizontalCellStyleStrategy)
 							.withTemplate(templatePath8)
 							.build();
@@ -1469,11 +1249,10 @@ public class JiashiyuanBaoxianController extends BladeController {
 						excelWriter6.fill(ListData5, jiaoqiangxianwriteSheet);
 						excelWriter6.finish();
 
-						CommonUtil.jacobExcelToPDF(fileName6,PDF);
+						CommonUtil.jacobExcelToPDF(qita,PDF);
 						System.out.println("已生成保险台账pdf"+PDF);
 //						FileSystemUtils.deleteRecursively(new File(fileName6));
 					}
-
 
 //					urlList.add(fileName);
 				}
@@ -1498,6 +1277,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 		String uuid = UUID.randomUUID().toString().replace("-", "");
 		JiaShiYuanLedgerVO jiaShiYuanLedgerVO = new JiaShiYuanLedgerVO();
 		List<Map> ListData = new ArrayList<Map>();
+		List<Map> ListData2 = new ArrayList<Map>();
 		Map<String, Object> map = new HashMap<>();
 		String cheliangpaizhao;
 		String PDF;
@@ -1547,9 +1327,12 @@ public class JiashiyuanBaoxianController extends BladeController {
 		for(int j = 0;j< idss.length;j++){
 			jiaShiYuanLedgerVO.setDeptName("");
 			jiaShiYuanLedgerVO.setDeptId(idss[j]);
-			List<JiaShiYuanLedgerVO> jiaShiYuanLedgerVOS = jiashiyuanBaoxianService.selectMasterPolicy(jiaShiYuanLedgerVO);
+			List<JiaShiYuanLedgerVO> jiaShiYuanLedgerVOS = jiashiyuanBaoxianService.selectVehicleMasterPolicy(jiaShiYuanLedgerVO);
+			List<JiaShiYuanLedgerVO> jiaShiYuanLedgerVOS1 = jiashiyuanBaoxianService.selectDriverMasterPolicy(jiaShiYuanLedgerVO);
 			//Excel中的结果集ListData
 //			List<LaborledgerVO> ListData = new ArrayList<>();
+
+			//车辆保险总保单
 			if(jiaShiYuanLedgerVOS.size()==0){
 
 			}else if(jiaShiYuanLedgerVOS.size()>3000){
@@ -1724,25 +1507,111 @@ public class JiashiyuanBaoxianController extends BladeController {
 					}
 				}
 
-				// 第一列进行单元格合并
-				int[] mergeColumeIndex = {1};
-				// 从第4行开始合并
-				int mergeRowIndex = 1;
-				OutputStream outputStream = new FileOutputStream(fileName + "/" + "总保单台账.xlsx");
-				ExcelWriter excelWriter = EasyExcelFactory.write(outputStream)
-					.withTemplate(templatePath)
-					//设置合并单元格策略
-					.registerWriteHandler(new ExcelFillCellMergeStrategy2(mergeRowIndex,mergeColumeIndex))
-					.registerWriteHandler(horizontalCellStyleStrategy)
-					.build();
-				WriteSheet chexianwriteSheet = EasyExcel.writerSheet("总保单").build();
-				excelWriter.fill(ListData, chexianwriteSheet);
-				excelWriter.finish();
-				outputStream.close();
+
+
+			}
+
+			//人员保险总保单
+			if(jiaShiYuanLedgerVOS1.size()==0){
+
+			}else if(jiaShiYuanLedgerVOS1.size()>3000){
+				rs.setMsg("数据超过30000条无法下载");
+				rs.setCode(500);
+				return rs;
+			}else{
+				for(int i = 0; i < jiaShiYuanLedgerVOS1.size() ; i++) {
+
+					String templateFile = templatePath;
+					// 渲染文本
+					JiaShiYuanLedgerVO t = jiaShiYuanLedgerVOS1.get(i);
+					JiaShiYuanLedgerVO jiaShiYuanLedgerVO1 = new JiaShiYuanLedgerVO();
+					jiaShiYuanLedgerVO1.setDeptId(t.getDeptId());
+
+					FillConfig fillConfig = FillConfig.builder().forceNewRow(Boolean.TRUE).build();
+					map = new HashMap<>();
+						if (StringUtils.isNotBlank(t.getDeptName()) && !t.getDeptName().equals("null")) {
+							map.put("DeptName", t.getDeptName());
+						}
+						if (StringUtils.isNotBlank(t.getAjbInsuredName()) && !t.getAjbInsuredName().equals("null")){
+							map.put("AjbInsuredName", t.getAjbInsuredName());
+						}
+						if (StringUtils.isNotBlank(t.getAjbInsuranceCompany()) && !t.getAjbInsuranceCompany().equals("null")){
+							map.put("AjbInsuranceCompany", t.getAjbInsuranceCompany());
+						}else {
+							map.put("AjbInsuranceCompany", "/");
+						}
+						if (StringUtils.isNotBlank(t.getAjbmName()) && !t.getAjbmName().equals("null")){
+							map.put("AjbmName", t.getAjbmName());
+						}else {
+							map.put("AjbmName", "/");
+						}
+						if (StringUtils.isNotBlank(t.getAjbPolicyNo()) && !t.getAjbPolicyNo().equals("null")){
+							map.put("AjbPolicyNo", t.getAjbPolicyNo());
+						}else {
+							map.put("AjbPolicyNo", "/");
+						}
+						if (StringUtils.isNotBlank(t.getAjbmBasicPremium()) && !t.getAjbmBasicPremium().equals("null")){
+							map.put("AjbmBasicPremium", t.getAjbmBasicPremium());
+						}else {
+							map.put("AjbmBasicPremium", "0");
+						}
+						if (StringUtils.isNotBlank(t.getAjbmCompanyAmount()) && !t.getAjbmCompanyAmount().equals("null")){
+							map.put("AjbmCompanyAmount", t.getAjbmCompanyAmount());
+						}else {
+							map.put("AjbmCompanyAmount", "0");
+						}
+						if (StringUtils.isNotBlank(t.getAjbInsurancePeriodStart()) && !t.getAjbInsurancePeriodStart().equals("null")){
+							map.put("AjbInsurancePeriodStart", t.getAjbInsurancePeriodStart());
+						}else {
+							map.put("AjbInsurancePeriodStart", "/");
+						}
+						if (StringUtils.isNotBlank(t.getAjbInsurancePeriodEnd()) && !t.getAjbInsurancePeriodEnd().equals("null")){
+							map.put("AjbInsurancePeriodEnd", t.getAjbInsurancePeriodEnd());
+						}else {
+							map.put("AjbInsurancePeriodEnd", "/");
+						}
+					ListData2.add(map) ;
+
+				}
+
+//				// 第一列进行单元格合并
+//				int[] mergeColumeIndex = {1};
+//				// 从第4行开始合并
+//				int mergeRowIndex = 1;
+//				OutputStream outputStream = new FileOutputStream(fileName + "/" + "总保单台账.xlsx");
+//				ExcelWriter excelWriter = EasyExcelFactory.write(outputStream)
+//					.withTemplate(templatePath)
+//					//设置合并单元格策略
+//					.registerWriteHandler(new ExcelFillCellMergeStrategy2(mergeRowIndex,mergeColumeIndex))
+//					.registerWriteHandler(horizontalCellStyleStrategy)
+//					.build();
+//				WriteSheet chexianwriteSheet = EasyExcel.writerSheet("人员保险总保单").build();
+//				excelWriter.fill(ListData2, chexianwriteSheet);
+//				excelWriter.finish();
+//				outputStream.close();
 
 
 			}
 		}
+
+		// 第一列进行单元格合并
+		int[] mergeColumeIndex = {1};
+		// 从第4行开始合并
+		int mergeRowIndex = 1;
+		OutputStream outputStream = new FileOutputStream(fileName + "/" + "总保单台账.xlsx");
+		ExcelWriter excelWriter = EasyExcelFactory.write(outputStream)
+			.withTemplate(templatePath)
+			//设置合并单元格策略
+			.registerWriteHandler(new ExcelFillCellMergeStrategy2(mergeRowIndex,mergeColumeIndex))
+			.registerWriteHandler(horizontalCellStyleStrategy)
+			.build();
+		WriteSheet chexianwriteSheet = EasyExcel.writerSheet("车辆保险总保单").build();
+		WriteSheet renianwriteSheet = EasyExcel.writerSheet("人员保险总保单").build();
+		excelWriter.fill(ListData, chexianwriteSheet);
+		excelWriter.fill(ListData2, renianwriteSheet);
+		excelWriter.finish();
+		outputStream.close();
+
 		String fileName2 = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"总保单台账.zip";
 		PackageToZIp.toZip(fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+nyr[2]+"\\"+uuid+"\\"+"总保单台账", fileName2);
 

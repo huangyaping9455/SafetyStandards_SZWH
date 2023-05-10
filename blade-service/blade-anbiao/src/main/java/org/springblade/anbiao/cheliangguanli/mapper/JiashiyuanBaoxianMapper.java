@@ -93,5 +93,9 @@ public interface JiashiyuanBaoxianMapper extends BaseMapper<JiashiyuanBaoxian> {
 
 	JiaShiYuanLedgerVO selectDeptTotalTmountInsurance(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
 
-	List<JiaShiYuanLedgerVO> selectMasterPolicy(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+	List<JiaShiYuanLedgerVO> selectVehicleMasterPolicy(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	List<JiaShiYuanLedgerVO> selectDriverMasterPolicy(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
+
+	List<JiaShiYuanLedgerVO> selectVehicleInsurance2(JiaShiYuanLedgerVO jiaShiYuanLedgerVO);
 }
