@@ -2969,7 +2969,7 @@ public class JiaShiYuanController {
 	@PostMapping(value="/getDriverTJ")
 	public R getDriverTJ(@RequestBody JiaShiYuanPage jiaShiYuanPage) throws IOException {
 		R rs = new R();
-		jiaShiYuanService.selectAlarmTJMXPage(jiaShiYuanPage);
+		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
 		List<JiaShiYuanTJMX> JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
 		JiaShiYuanTJMXList.forEach(item-> {
 			if (item.getA1().equals("0")){
@@ -3022,57 +3022,83 @@ public class JiaShiYuanController {
 			}else {
 				item.setA10("×");
 			}
-			if (item.getB1().equals("0")){
-				item.setB1("√");
-			}else {
-				item.setB1("×");
-			}
-			if (item.getB2().equals("0")){
-				item.setB2("√");
-			}else {
-				item.setB2("×");
-			}
-			if (item.getB3().equals("0")){
-				item.setB3("√");
-			}else {
-				item.setB3("×");
-			}
-			if (item.getB4().equals("0")){
-				item.setB4("√");
-			}else {
-				item.setB4("×");
-			}
-			if (item.getB5().equals("0")){
-				item.setB5("√");
-			}else {
-				item.setB5("×");
-			}
-			if (item.getB6().equals("0")){
-				item.setB6("√");
-			}else {
-				item.setB6("×");
-			}
-			if (item.getB7().equals("0")){
-				item.setB7("√");
-			}else {
-				item.setB7("×");
-			}
-			if (item.getB8().equals("0")){
-				item.setB8("√");
-			}else {
-				item.setB8("×");
-			}
 			if (item.getC1().equals("0")){
 				item.setC1("√");
 			}else {
 				item.setC1("×");
 			}
-			if (item.getC2().equals("0")){
+
+			//车头
+			JiaShiYuanTJMX jiaShiYuanTJMX = jiaShiYuanService.selectAlarmTJMXVehicle(item);
+			if (StringUtils.isNotBlank(jiaShiYuanTJMX.getCheliangpaizhao()) && !jiaShiYuanTJMX.getCheliangpaizhao().equals("null")){
+				item.setCheliangpaizhao(jiaShiYuanTJMX.getCheliangpaizhao());
+			}else {
+				item.setCheliangpaizhao("未绑定");
+			}
+			if (StringUtils.isNotBlank(jiaShiYuanTJMX.getVehicleId()) && !jiaShiYuanTJMX.getVehicleId().equals("null")){
+				item.setVehicleId(jiaShiYuanTJMX.getVehicleId());
+			}else {
+				item.setVehicleId("未绑定");
+			}
+			if (jiaShiYuanTJMX.getB5().equals("0")){
+				item.setB5("√");
+			}else {
+				item.setB5("×");
+			}
+			if (jiaShiYuanTJMX.getB6().equals("0")){
+				item.setB6("√");
+			}else {
+				item.setB6("×");
+			}
+			if (jiaShiYuanTJMX.getB7().equals("0")){
+				item.setB7("√");
+			}else {
+				item.setB7("×");
+			}
+			if (jiaShiYuanTJMX.getB8().equals("0")){
+				item.setB8("√");
+			}else {
+				item.setB8("×");
+			}
+			if (jiaShiYuanTJMX.getC2().equals("0")){
 				item.setC2("√");
 			}else {
 				item.setC2("×");
 			}
-			if (item.getC3().equals("0")){
+
+			//挂车
+			JiaShiYuanTJMX jiaShiYuanTJMX2 = jiaShiYuanService.selectAlarmTJMXVehicle(item);
+			if (StringUtils.isNotBlank(jiaShiYuanTJMX2.getCheliangpaizhaoGUA()) && !jiaShiYuanTJMX2.getCheliangpaizhaoGUA().equals("null")){
+				item.setCheliangpaizhaoGUA(jiaShiYuanTJMX2.getCheliangpaizhaoGUA());
+			}else {
+				item.setCheliangpaizhaoGUA("未绑定");
+			}
+			if (StringUtils.isNotBlank(jiaShiYuanTJMX2.getVehicleIdGUA()) && !jiaShiYuanTJMX2.getVehicleIdGUA().equals("null")){
+				item.setVehicleIdGUA(jiaShiYuanTJMX2.getVehicleIdGUA());
+			}else {
+				item.setVehicleIdGUA("未绑定");
+			}
+			if (jiaShiYuanTJMX2.getB1().equals("0")){
+				item.setB1("√");
+			}else {
+				jiaShiYuanTJMX2.setB1("×");
+			}
+			if (jiaShiYuanTJMX2.getB2().equals("0")){
+				item.setB2("√");
+			}else {
+				item.setB2("×");
+			}
+			if (jiaShiYuanTJMX2.getB3().equals("0")){
+				item.setB3("√");
+			}else {
+				item.setB3("×");
+			}
+			if (jiaShiYuanTJMX2.getB4().equals("0")){
+				item.setB4("√");
+			}else {
+				item.setB4("×");
+			}
+			if (jiaShiYuanTJMX2.getC3().equals("0")){
 				item.setC3("√");
 			}else {
 				item.setC3("×");

@@ -143,6 +143,10 @@ public interface IJiaShiYuanService extends IService<JiaShiYuan> {
 
 	JiaShiYuanPage<JiaShiYuanTJMX> selectAlarmTJMXPage(JiaShiYuanPage jiaShiYuanPage);
 
+	JiaShiYuanPage<JiaShiYuanTJMX> selectAlarmTJMXPage2(JiaShiYuanPage jiaShiYuanPage);
+	JiaShiYuanTJMX selectAlarmTJMXVehicle(JiaShiYuanTJMX jiaShiYuanTJMX);
+	JiaShiYuanTJMX selectAlarmTJMXVehicleGUA(JiaShiYuanTJMX jiaShiYuanTJMX);
+
 	/**
 	 * 获取车辆附件
 	 * @param jsyId

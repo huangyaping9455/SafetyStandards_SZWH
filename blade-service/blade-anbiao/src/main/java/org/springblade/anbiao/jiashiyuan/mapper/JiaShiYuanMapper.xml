@@ -1029,6 +1029,289 @@ values
         <include refid="queryTJMXSql"/>
     </select>
 
+
+    <select id="selectAlarmTJMXPage2" resultMap="jiaShiYuanTJMXResultMap"
+            parameterType="org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage">
+        <if test="size == 0">
+            SELECT
+            bb.id as deptId,
+            bb.dept_name as deptName ,
+            a.id as jiashiyuanId,
+            a.jiashiyuanxingming as a,
+            ruzhi_compeleted as a1,
+            sfz_compeleted as a2,
+            jsz_compeleted as a3,
+            cyzgz_compeleted as a4,
+            tj_compeleted as a5,
+            gqpx_compeleted as a6,
+            wzzm_compeleted as a7,
+            aqzrs_compeleted as a8,
+            whgzs_compeleted as a9,
+            ldht_compeleted as a10,
+
+            case when IFNULL(jsybx.ajb_insured_ids,'') = '' then 1 else 0 end as c1
+
+            FROM
+            anbiao_jiashiyuan a
+            inner join  (
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) bb on a.dept_id = bb.id
+            LEFT JOIN anbiao_jiashiyuan_ruzhi o ON a.id = o.ajr_aj_ids AND o.ajr_delete = 0
+            LEFT JOIN anbiao_jiashiyuan_jiashizheng b ON a.id = b.ajj_aj_ids AND b.ajj_delete = 0
+            LEFT JOIN anbiao_jiashiyuan_congyezigezheng c ON a.id = c.ajc_aj_ids AND c.ajc_delete = 0
+            LEFT JOIN anbiao_jiashiyuan_tijian d ON a.id = d.ajt_aj_ids AND d.ajt_delete = 0
+            LEFT JOIN anbiao_jiashiyuan_gangqianpeixun e ON a.id = e.ajg_aj_ids AND e.ajg_delete = 0
+            LEFT JOIN anbiao_jiashiyuan_wuzezhengming f ON a.id = f.ajw_aj_ids AND f.ajw_delete = 0
+            LEFT JOIN anbiao_jiashiyuan_anquanzerenshu g ON a.id = g.aja_aj_ids AND g.aja_delete = 0
+            LEFT JOIN anbiao_jiashiyuan_weihaigaozhishu h ON a.id = h.ajw_aj_ids AND h.ajw_delete = 0
+            LEFT JOIN anbiao_jiashiyuan_laodonghetong i ON a.id = i.ajw_aj_ids AND i.ajw_delete = 0
+
+            LEFT JOIN ( SELECT DISTINCT ajb_insured_ids FROM anbiao_jiashiyuan_baoxian where ajb_delete = 0 ) jsybx ON jsybx.ajb_insured_ids = a.id
+
+            WHERE ifnull( a.isdelete, 0 ) = 0
+            <if test="jiashiyuanxingming !=null and jiashiyuanxingming != ''">
+                AND a.jiashiyuanxingming  LIKE '%${jiashiyuanxingming}%'
+            </if>
+            <if test="deptName != null and deptName != '' ">
+                and bb.dept_name like concat('%', #{deptName} ,'%')
+            </if>
+
+            order BY a.id
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            SELECT
+            bb.id as deptId,
+            bb.dept_name as deptName ,
+            a.id as jiashiyuanId,
+            a.jiashiyuanxingming as a,
+            ruzhi_compeleted as a1,
+            sfz_compeleted as a2,
+            jsz_compeleted as a3,
+            cyzgz_compeleted as a4,
+            tj_compeleted as a5,
+            gqpx_compeleted as a6,
+            wzzm_compeleted as a7,
+            aqzrs_compeleted as a8,
+            whgzs_compeleted as a9,
+            ldht_compeleted as a10,
+
+            case when IFNULL(jsybx.ajb_insured_ids,'') = '' then 1 else 0 end as c1
+
+            FROM
+            anbiao_jiashiyuan a
+            inner join  (
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) bb on a.dept_id = bb.id
+            LEFT JOIN anbiao_jiashiyuan_ruzhi o ON a.id = o.ajr_aj_ids AND o.ajr_delete = 0
+            LEFT JOIN anbiao_jiashiyuan_jiashizheng b ON a.id = b.ajj_aj_ids AND b.ajj_delete = 0
+            LEFT JOIN anbiao_jiashiyuan_congyezigezheng c ON a.id = c.ajc_aj_ids AND c.ajc_delete = 0
+            LEFT JOIN anbiao_jiashiyuan_tijian d ON a.id = d.ajt_aj_ids AND d.ajt_delete = 0
+            LEFT JOIN anbiao_jiashiyuan_gangqianpeixun e ON a.id = e.ajg_aj_ids AND e.ajg_delete = 0
+            LEFT JOIN anbiao_jiashiyuan_wuzezhengming f ON a.id = f.ajw_aj_ids AND f.ajw_delete = 0
+            LEFT JOIN anbiao_jiashiyuan_anquanzerenshu g ON a.id = g.aja_aj_ids AND g.aja_delete = 0
+            LEFT JOIN anbiao_jiashiyuan_weihaigaozhishu h ON a.id = h.ajw_aj_ids AND h.ajw_delete = 0
+            LEFT JOIN anbiao_jiashiyuan_laodonghetong i ON a.id = i.ajw_aj_ids AND i.ajw_delete = 0
+
+            LEFT JOIN ( SELECT DISTINCT ajb_insured_ids FROM anbiao_jiashiyuan_baoxian where ajb_delete = 0 ) jsybx ON jsybx.ajb_insured_ids = a.id
+
+            WHERE ifnull( a.isdelete, 0 ) = 0
+            <if test="jiashiyuanxingming !=null and jiashiyuanxingming != ''">
+                AND a.jiashiyuanxingming  LIKE '%${jiashiyuanxingming}%'
+            </if>
+            <if test="deptName != null and deptName != '' ">
+                and bb.dept_name like concat('%', #{deptName} ,'%')
+            </if>
+
+            order BY a.id
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectAlarmTJMXTotal2"
+            parameterType="org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage"
+            resultType="int">
+        select COUNT(1) from (
+        SELECT
+        bb.id as deptId,
+        bb.dept_name as deptName ,
+        a.id as jiashiyuanId,
+        a.jiashiyuanxingming as a,
+        ruzhi_compeleted as a1,
+        sfz_compeleted as a2,
+        jsz_compeleted as a3,
+        cyzgz_compeleted as a4,
+        tj_compeleted as a5,
+        gqpx_compeleted as a6,
+        wzzm_compeleted as a7,
+        aqzrs_compeleted as a8,
+        whgzs_compeleted as a9,
+        ldht_compeleted as a10,
+
+        case when IFNULL(jsybx.ajb_insured_ids,'') = '' then 1 else 0 end as c1
+
+        FROM
+        anbiao_jiashiyuan a
+        inner join  (
+        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) bb on a.dept_id = bb.id
+        LEFT JOIN anbiao_jiashiyuan_ruzhi o ON a.id = o.ajr_aj_ids AND o.ajr_delete = 0
+        LEFT JOIN anbiao_jiashiyuan_jiashizheng b ON a.id = b.ajj_aj_ids AND b.ajj_delete = 0
+        LEFT JOIN anbiao_jiashiyuan_congyezigezheng c ON a.id = c.ajc_aj_ids AND c.ajc_delete = 0
+        LEFT JOIN anbiao_jiashiyuan_tijian d ON a.id = d.ajt_aj_ids AND d.ajt_delete = 0
+        LEFT JOIN anbiao_jiashiyuan_gangqianpeixun e ON a.id = e.ajg_aj_ids AND e.ajg_delete = 0
+        LEFT JOIN anbiao_jiashiyuan_wuzezhengming f ON a.id = f.ajw_aj_ids AND f.ajw_delete = 0
+        LEFT JOIN anbiao_jiashiyuan_anquanzerenshu g ON a.id = g.aja_aj_ids AND g.aja_delete = 0
+        LEFT JOIN anbiao_jiashiyuan_weihaigaozhishu h ON a.id = h.ajw_aj_ids AND h.ajw_delete = 0
+        LEFT JOIN anbiao_jiashiyuan_laodonghetong i ON a.id = i.ajw_aj_ids AND i.ajw_delete = 0
+
+        LEFT JOIN ( SELECT DISTINCT ajb_insured_ids FROM anbiao_jiashiyuan_baoxian where ajb_delete = 0 ) jsybx ON jsybx.ajb_insured_ids = a.id
+
+        WHERE ifnull( a.isdelete, 0 ) = 0
+        <if test="jiashiyuanxingming !=null and jiashiyuanxingming != ''">
+            AND a.jiashiyuanxingming  LIKE '%${jiashiyuanxingming}%'
+        </if>
+        <if test="deptName != null and deptName != '' ">
+            and bb.dept_name like concat('%', #{deptName} ,'%')
+        </if>
+
+        order BY a.id
+        )d where 1 = 1
+
+    </select>
+
+    <select id="selectAlarmTJMXVehicleGUA"
+            parameterType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTJMX"
+            resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTJMX">
+        SELECT
+            CASE
+
+                WHEN
+                    IFNULL( xsz_compeleted, '' ) = '' THEN
+                    0 ELSE xsz_compeleted
+                END AS b1,
+            CASE
+
+                WHEN IFNULL( ysz_compeleted, '' ) = '' THEN
+                    0 ELSE ysz_compeleted
+                END AS b2,
+            CASE
+
+                WHEN IFNULL( xnbg_compeleted, '' ) = '' THEN
+                    0 ELSE xnbg_compeleted
+                END AS b3,
+            o.jiashiyuanid AS jiashiyuanid,
+            CASE
+
+                WHEN IFNULL( djzs_compeleted, '' ) = '' THEN
+                    0 ELSE djzs_compeleted
+                END AS b4,
+            IFNULL( cheliangpaizhao, "未绑定" ) AS cheliangpaizhao,
+            IFNULL( j.id, "未绑定" ) AS vehicleId,
+            CASE
+
+                WHEN IFNULL( i.avb_av_ids, '' ) = '' THEN
+                    1 ELSE 0
+                END AS c3
+        FROM
+            anbiao_vehicle j
+                LEFT JOIN anbiao_vehicle_xingshizheng k ON j.id = k.avx_av_ids
+                LEFT JOIN anbiao_vehicle_daoluyunshuzheng l ON j.id = l.avd_av_ids
+                LEFT JOIN anbiao_vehicle_xingnengbaogao m ON j.id = m.avx_av_ids
+                LEFT JOIN anbiao_vehicle_dengjizhengshu n ON j.id = n.avd_vehicle_ids
+                LEFT JOIN anbiao_cheliang_jiashiyuan_daily o ON j.id = o.gvehid
+                AND o.gstatus = 1
+                LEFT JOIN (
+                SELECT DISTINCT
+                    avb_av_ids
+                FROM
+                    anbiao_vehicle j
+                        LEFT JOIN anbiao_vehicle_baoxian o ON j.id = o.avb_av_ids
+                        AND o.avb_delete = 0
+                WHERE
+                    j.cheliangpaizhao LIKE '%挂'
+            ) i ON j.id = i.avb_av_ids
+        WHERE
+            j.cheliangpaizhao LIKE '%挂'
+          AND j.is_deleted = 0
+          AND k.avx_delete = 0
+          AND l.avd_delete = 0
+          AND m.avx_delete = 0
+          AND n.avd_delete = 0
+        <if test="jiashiyuanId !=null and jiashiyuanId != ''">
+            AND o.jiashiyuanid = #{jiashiyuanId}
+        </if>
+
+
+    </select>
+    <select id="selectAlarmTJMXVehicle"
+            parameterType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTJMX"
+            resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTJMX">
+        SELECT
+        CASE
+
+        WHEN
+        IFNULL( xsz_compeleted, '' ) = '' THEN
+        0 ELSE xsz_compeleted
+        END AS b5,
+        CASE
+
+        WHEN IFNULL( ysz_compeleted, '' ) = '' THEN
+        0 ELSE ysz_compeleted
+        END AS b6,
+        CASE
+
+        WHEN IFNULL( xnbg_compeleted, '' ) = '' THEN
+        0 ELSE xnbg_compeleted
+        END AS b7,
+        o.jiashiyuanid AS jiashiyuanid,
+        CASE
+
+        WHEN IFNULL( djzs_compeleted, '' ) = '' THEN
+        0 ELSE djzs_compeleted
+        END AS b8,
+        IFNULL( cheliangpaizhao, "未绑定" ) AS cheliangpaizhaoGUA,
+        IFNULL( j.id, "未绑定" ) AS vehicleIdGUA,
+        CASE
+
+        WHEN IFNULL( k.avb_av_ids, '' ) = '' THEN
+        1 ELSE 0
+        END AS c2
+        FROM
+        anbiao_vehicle j
+        LEFT JOIN anbiao_vehicle_xingshizheng k ON j.id = k.avx_av_ids
+        LEFT JOIN anbiao_vehicle_daoluyunshuzheng l ON j.id = l.avd_av_ids
+        LEFT JOIN anbiao_vehicle_xingnengbaogao m ON j.id = m.avx_av_ids
+        LEFT JOIN anbiao_vehicle_dengjizhengshu n ON j.id = n.avd_vehicle_ids
+        LEFT JOIN anbiao_cheliang_jiashiyuan_daily o ON j.id = o.vehid
+        AND o.vstatus = 1
+        LEFT JOIN (
+        SELECT DISTINCT
+        avb_av_ids
+        FROM
+        anbiao_vehicle j
+        LEFT JOIN anbiao_vehicle_baoxian o ON j.id = o.avb_av_ids
+        AND o.avb_delete = 0
+        WHERE
+        j.cheliangpaizhao NOT LIKE '%挂'
+        ) k ON j.id = k.avb_av_ids
+        WHERE
+        j.cheliangpaizhao NOT LIKE '%挂'
+        AND j.is_deleted = 0
+        AND k.avx_delete = 0
+        AND l.avd_delete = 0
+        AND m.avx_delete = 0
+        AND n.avd_delete = 0
+        <if test="jiashiyuanId !=null and jiashiyuanId != ''">
+            AND o.jiashiyuanid = #{jiashiyuanId}
+        </if>
+
+
+    </select>
+
+
+
+
     <!--根据企业ID获取驾驶员信息-->
     <select id="getByDriverImg" resultType="org.springblade.anbiao.jiashiyuan.entity.DriverImg" parameterType="java.lang.String">
         select

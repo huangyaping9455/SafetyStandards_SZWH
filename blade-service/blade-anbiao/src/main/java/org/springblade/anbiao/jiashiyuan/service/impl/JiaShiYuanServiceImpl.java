@@ -228,6 +228,51 @@ public class JiaShiYuanServiceImpl extends ServiceImpl<JiaShiYuanMapper, JiaShiY
 	}
 
 	@Override
+	public JiaShiYuanPage<JiaShiYuanTJMX> selectAlarmTJMXPage2(JiaShiYuanPage jiaShiYuanPage) {
+		Integer total = jiaShiYuanMapper.selectAlarmTJMXTotal2(jiaShiYuanPage);
+		if(jiaShiYuanPage.getSize()==0){
+			if(jiaShiYuanPage.getTotal()==0){
+				jiaShiYuanPage.setTotal(total);
+			}
+
+			List<JiaShiYuanTJMX> jiaShiYuanTJMXES = jiaShiYuanMapper.selectAlarmTJMXPage2(jiaShiYuanPage);
+			jiaShiYuanPage.setRecords(jiaShiYuanTJMXES);
+			return jiaShiYuanPage;
+
+		}
+		Integer pagetotal = 0;
+		if (total > 0) {
+			if(total%jiaShiYuanPage.getSize()==0){
+				pagetotal = total / jiaShiYuanPage.getSize();
+			}else {
+				pagetotal = total / jiaShiYuanPage.getSize() + 1;
+			}
+		}
+		if (pagetotal >= jiaShiYuanPage.getCurrent()) {
+			jiaShiYuanPage.setPageTotal(pagetotal);
+			Integer offsetNo = 0;
+			if (jiaShiYuanPage.getCurrent() > 1) {
+				offsetNo = jiaShiYuanPage.getSize() * (jiaShiYuanPage.getCurrent() - 1);
+			}
+			jiaShiYuanPage.setTotal(total);
+			jiaShiYuanPage.setOffsetNo(offsetNo);
+			List<JiaShiYuanTJMX> jiaShiYuanTJMXES = jiaShiYuanMapper.selectAlarmTJMXPage2(jiaShiYuanPage);
+			jiaShiYuanPage.setRecords(jiaShiYuanTJMXES);
+		}
+		return jiaShiYuanPage;
+	}
+
+	@Override
+	public JiaShiYuanTJMX selectAlarmTJMXVehicle(JiaShiYuanTJMX jiaShiYuanTJMX) {
+		return jiaShiYuanMapper.selectAlarmTJMXVehicle(jiaShiYuanTJMX);
+	}
+
+	@Override
+	public JiaShiYuanTJMX selectAlarmTJMXVehicleGUA(JiaShiYuanTJMX jiaShiYuanTJMX) {
+		return jiaShiYuanMapper.selectAlarmTJMXVehicleGUA(jiaShiYuanTJMX);
+	}
+
+	@Override
 	public DriverImg getByDriverImg(String jsyId) {
 		DriverImg driverImg = jiaShiYuanMapper.getByDriverImg(jsyId);
 		if (driverImg != null){
