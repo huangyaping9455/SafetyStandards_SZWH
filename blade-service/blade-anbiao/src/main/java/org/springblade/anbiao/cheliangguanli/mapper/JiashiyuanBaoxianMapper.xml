@@ -832,9 +832,10 @@
             refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) a ON a.id=ajb_dept_ids
                 INNER JOIN anbiao_organization k on a.id = k.dept_id and k.jigouleixing in('qiye','geti')
-                LEFT JOIN  (SELECT * FROM anbiao_jiashiyuan_baoxian_mingxi  WHERE ajbm_name = "意外险" and ajbm_risk = "意外险") d ON ajb_ids = d.ajbm_avb_ids
+                LEFT JOIN  anbiao_jiashiyuan_baoxian_mingxi d ON ajb_ids = d.ajbm_avb_ids
         WHERE
             ajb_delete=0
+            and d.ajbm_risk = "意外险"
 
         order BY ajb_insured_name
     </select>
@@ -842,6 +843,7 @@
     <select id="selectNotAccidentInsurance"
             parameterType="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanLedgerVO"
             resultType="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanLedgerVO">
+
         SELECT
         ajb_dept_ids as deptId,
         ajb_insure_name as ajbInsureName,
@@ -856,9 +858,10 @@
             refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) a ON a.id=ajb_dept_ids
         INNER JOIN anbiao_organization k on a.id = k.dept_id and k.jigouleixing in('qiye','geti')
-        LEFT JOIN  (SELECT * FROM anbiao_jiashiyuan_baoxian_mingxi  WHERE ajbm_name != "意外险" and ajbm_risk != "意外险") d ON ajb_ids = d.ajbm_avb_ids
+        LEFT JOIN anbiao_jiashiyuan_baoxian_mingxi  d ON ajb_ids = d.ajbm_avb_ids
         WHERE
         ajb_delete=0
+        and  d.ajbm_risk = "其他险种"
 
         order BY ajb_insured_name
     </select>
@@ -1113,7 +1116,12 @@
             refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) a on a.id=avb_dept_ids
                 INNER JOIN anbiao_organization k on a.id = k.dept_id and k.jigouleixing in('qiye','geti')
-                LEFT JOIN  anbiao_vehicle_baoxian_mingxi f ON avb_ids = f.avbm_avb_ids and avbm_risk = "车险" and (avbm_name = "机动车损失险" or avbm_name = "三者责任保险" or avbm_name = "机动车车上人员责任保险(司机)" or avbm_name = "机动车车上人员责任保险(乘客)" )
+                LEFT JOIN  anbiao_vehicle_baoxian_mingxi f ON avb_ids = f.avbm_avb_ids
+                AND f.avbm_risk != "超赔险"
+                AND f.avbm_risk != "交强险"
+                AND f.avbm_name != "超赔险"
+                AND f.avbm_name != "交强险"
+--                 and (avbm_name = "机动车损失险" or avbm_name = "三者责任保险" or avbm_name = "机动车车上人员责任保险(司机)" or avbm_name = "机动车车上人员责任保险(乘客)" )
 
                 LEFT JOIN anbiao_vehicle e ON e.id = avb_av_ids
         WHERE
@@ -1532,7 +1540,7 @@
     </select>
 
 
-    <select id="selectMasterPolicy"
+    <select id="selectVehicleMasterPolicy"
             parameterType="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanLedgerVO"
             resultType="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanLedgerVO">
 
@@ -1570,6 +1578,78 @@
         ORDER BY
             e.cheliangpaizhao,
             d.avbm_risk
+
+    </select>
+
+    <select id="selectDriverMasterPolicy"
+            parameterType="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanLedgerVO"
+            resultType="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanLedgerVO">
+
+        SELECT
+            a.dept_name AS deptName,
+            ajb_insured_name AS ajbInsuredName,
+            ajb_insurance_company AS ajbInsuranceCompany,
+            b.ajbm_name AS ajbmName,
+            ajb_policy_no AS ajbPolicyNo,
+            b.ajbm_basic_premium AS ajbmBasicPremium,
+            b.ajbm_company_amount AS ajbmCompanyAmount,
+            ajb_insurance_period_start AS ajbInsurancePeriodStart,
+            ajb_insurance_period_end AS ajbInsurancePeriodEnd
+        FROM
+            `anbiao_jiashiyuan_baoxian`
+                INNER JOIN (
+        <include
+            refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) a ON a.id = ajb_dept_ids
+                LEFT JOIN anbiao_jiashiyuan_baoxian_mingxi b ON ajb_ids = b.ajbm_avb_ids
+        WHERE
+            ajb_delete =0
+            and ajb_insurance_period_end >= CURRENT_DATE
+        ORDER BY
+            ajb_insured_name,
+            b.ajbm_name
+
+    </select>
+
+
+    <select id="selectVehicleInsurance2"
+            parameterType="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanLedgerVO"
+            resultType="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanLedgerVO">
+
+        SELECT
+            avb_ids AS avbIds,
+            avb_dept_ids AS deptId,
+            e.cheliangpaizhao AS cheliangpaizhao,
+            avb_av_ids AS avbAvIds,
+            f.avbm_risk,
+            f.avbm_name,
+            f.avbm_insurance_amount AS avbmInsuranceAmount,
+            f.avbm_basic_premium AS avbmBasicPremium,
+            avb_insure_name AS avbInsureName,
+            avb_insurance_period_end AS avbInsurancePeriodEnd
+        FROM
+            anbiao_vehicle_baoxian
+                INNER JOIN (
+        <include
+            refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) a ON a.id = avb_dept_ids
+                INNER JOIN anbiao_organization k ON a.id = k.dept_id
+                AND k.jigouleixing IN ( 'qiye', 'geti' )
+                LEFT JOIN anbiao_vehicle_baoxian_mingxi f ON avb_ids = f.avbm_avb_ids
+                AND f.avbm_risk != "超赔险"
+	            AND f.avbm_risk != "交强险"
+	            AND f.avbm_name != "超赔险"
+	            AND f.avbm_name != "交强险"
+
+	LEFT JOIN anbiao_vehicle e ON e.id = avb_av_ids
+        WHERE
+            avb_delete = '0'
+          AND e.is_deleted = '0'
+          AND f.avbm_risk IS NOT NULL
+          and avb_insurance_period_end >= CURDATE()
+
+        ORDER BY
+            e.cheliangpaizhao
 
     </select>
 

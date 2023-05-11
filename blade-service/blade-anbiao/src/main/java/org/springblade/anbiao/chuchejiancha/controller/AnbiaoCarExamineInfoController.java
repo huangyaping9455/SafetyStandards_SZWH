@@ -1075,6 +1075,9 @@ public class AnbiaoCarExamineInfoController {
 		List<AnbiaoCarExamineInfoVO> list= iAnbiaoCarExamineInfoService.selectAnBiaoCheckCarALLPage(carExamineInfoPage);
 		if(list != null && list.size() >0){
 			CarExamineMessageVO messageVO = new CarExamineMessageVO();
+			String[] dateList = carExamineInfoPage.getDateList();
+			carExamineInfoPage.setBeginTime(dateList[0]);
+			carExamineInfoPage.setEndTime(dateList[1]);
 			messageVO.setDateShow(carExamineInfoPage.getBeginTime()+"至"+carExamineInfoPage.getEndTime());
 			String message = "";
 			String days = "";

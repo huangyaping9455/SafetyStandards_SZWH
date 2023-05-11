@@ -35,4 +35,6 @@ public class AnBiaoCheckCarPage<T> extends BasePage<T> {
 
 	private String[] vehIdidss;
 
+	private String[] dateList;
+
 }
