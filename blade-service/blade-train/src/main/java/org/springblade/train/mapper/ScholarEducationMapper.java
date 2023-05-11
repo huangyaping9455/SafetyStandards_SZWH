@@ -7,6 +7,7 @@ import org.springblade.train.entity.ScholarEducationQueryModel;
 import org.springblade.train.entity.TrainingListModel;
 import org.springblade.train.page.ScholarEducationPage;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public interface ScholarEducationMapper extends BaseMapper<ScholarEducationModel
 
 	List<TrainingListModel> getTrainingList(Integer relUnitCourseId);
 
-	List<Map> getCourseExt(Integer courseId);
+	List<Map<String, Date>> getCourseExt(Integer courseId);
 
-	
+
 }

@@ -62,5 +62,11 @@ public class VehilePTData {
 	@ApiModelProperty(value = "限速值")
 	private Integer limited;
 
+	@ApiModelProperty(value = "百度经度")
+	private double bdlongitude;
+
+	@ApiModelProperty(value = "百度纬度")
+	private double bdlatitude;
+
 
 }

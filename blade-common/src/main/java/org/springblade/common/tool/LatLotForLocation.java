@@ -35,16 +35,25 @@ public class LatLotForLocation {
 		String[] ak_idss= ak_listid.toArray(new String[1]);
 		System.out.println(ak_idss.length);
 		System.out.println(ak_idss[0]);
+		String address = "";
+		JSONObject result = null;
 		if(ak_idss.length > 0 && ak_idss != null && !"".equals(ak_idss[0])) {
 			for (int i = 0; i < ak_idss.length; i++) {
 				add = getAdd(lat, log,ak_idss[i]);
+				JSONObject jsonObject = JSONUtil.parseObj(add);
+				result = (JSONObject)jsonObject.get("result");
+				if(result != null){
+					break;
+				}else{
+					continue;
+				}
 			}
 		}
-		JSONObject jsonObject = JSONUtil.parseObj(add);
-		JSONObject result = (JSONObject)jsonObject.get("result");
-		String address = result.get("formatted_address").toString();
-		if(!StringUtils.isBlank(result.get("sematic_description").toString())){
-			address += result.get("sematic_description").toString();
+		if(result != null){
+			address = result.get("formatted_address").toString();
+			if(!StringUtils.isBlank(result.get("sematic_description").toString())){
+				address += result.get("sematic_description").toString();
+			}
 		}
 		return address;
 	}

@@ -45,6 +45,7 @@
     </if>
 		where a.is_deleted = 0
 			and year(a.huiyikaishishijian) >= year(#{huiyikaishishijian})
+            and month(a.huiyikaishishijian) = month(#{huiyikaishishijian})
         <if test="aadApIds != null and aadApIds != '' ">
             and c.aad_ap_ids = #{aadApIds}
         </if>

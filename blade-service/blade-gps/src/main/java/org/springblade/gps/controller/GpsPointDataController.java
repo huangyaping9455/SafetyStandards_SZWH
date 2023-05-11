@@ -777,11 +777,11 @@ public class GpsPointDataController {
 	@ApiLog("获取点位数据-轨迹回放列表")
 	@ApiOperation(value = "获取点位数据-轨迹回放列表", notes = "获取点位数据", position = 31)
 	public R getPointDataDeail(@ApiParam(value = "车辆id", required = true) @RequestParam String vehid,
-							 @ApiParam(value = "开始时间", required = true) @RequestParam String beginTime,
-							 @ApiParam(value = "结束时间", required = true) @RequestParam String endTime,
-							 @ApiParam(value = "车辆牌照", required = true) @RequestParam String cheliangpaizhao,
-						     @ApiParam(value = "车牌颜色", required = true) @RequestParam String chepaiyanse
-						 ) throws IOException {
+							   @ApiParam(value = "开始时间", required = true) @RequestParam String beginTime,
+							   @ApiParam(value = "结束时间", required = true) @RequestParam String endTime,
+							   @ApiParam(value = "车辆牌照", required = true) @RequestParam String cheliangpaizhao,
+							   @ApiParam(value = "车牌颜色", required = true) @RequestParam String chepaiyanse
+	) throws IOException {
 		if(StringUtils.isBlank(beginTime) || StringUtils.isBlank(endTime)){
 			return R.data(null);
 		}
@@ -803,13 +803,13 @@ public class GpsPointDataController {
 		for(int i = 0;i<vehilePTData.size();i++){
 			vehilePTData.get(i).setPlate(cheliangpaizhao);
 			vehilePTData.get(i).setColor(chepaiyanse);
-			if(vehilePTData.get(i).getVelocity() > 0){
-				double[] doubles = GpsToBaiduUtil.wgs2bd(vehilePTData.get(i).getLatitude(), vehilePTData.get(i).getLongitude());
-				vehilePTData.get(i).setLatitude(doubles[0]);
-				vehilePTData.get(i).setLongitude(doubles[1]);
+//			if(vehilePTData.get(i).getVelocity() > 0){
+			double[] doubles = GpsToBaiduUtil.wgs2bd(vehilePTData.get(i).getLatitude(), vehilePTData.get(i).getLongitude());
+			vehilePTData.get(i).setBdlatitude(doubles[0]);
+			vehilePTData.get(i).setBdlongitude(doubles[1]);
 //				String LocalName= LatLotForLocation.getProvince(vehilePTData.get(i).getLatitude().toString(),vehilePTData.get(i).getLongitude().toString());
 //				vehilePTData.get(i).setRoadName(LocalName);
-			}
+//			}
 		}
 		return R.data(vehilePTData);
 	}

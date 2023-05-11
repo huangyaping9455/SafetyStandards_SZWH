@@ -19,6 +19,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.formula.functions.T;
+import org.springblade.common.configurationBean.AlarmServer;
 import org.springblade.common.tool.GpsGuJiUtil;
 import org.springblade.common.tool.GpsToBaiduUtil;
 import org.springblade.common.tool.LatLotForLocation;
@@ -48,6 +49,7 @@ import java.util.List;
 public class GpsPointDataServiceImpl extends ServiceImpl<GpsPointDataMapper, T> implements IGpsPointDataService {
     private GpsPointDataMapper gpsPointDataMapper;
     private Gps2PointDataMapper gps2PointDataMapper;
+	private AlarmServer alarmServer;
 
     @Override
     public List<VehilePTData> selectPointData(String beginTime, String endTime, String vehId) {
@@ -108,15 +110,15 @@ public class GpsPointDataServiceImpl extends ServiceImpl<GpsPointDataMapper, T> 
 			try {
 				vehilePTData.forEach(item->{
 //					if(item.getLatitude() != 0.0 || item.getLongitude() != 0.0 || !"2000-01-01 00:00:00".equals(item.getLastLocateTime())){
-					if(!"2000-01-01 00:00:00".equals(item.getLastLocateTime())){
-						double[] zuobiao = GpsToBaiduUtil.wgs2bd(item.getLatitude(),item.getLongitude());
-						item.setLatitude(zuobiao[0]);
-						item.setLongitude(zuobiao[1]);
-//						item.setLatitude(new BigDecimal(zuobiao[0]).setScale(6,BigDecimal.ROUND_HALF_UP).doubleValue());
-//						item.setLongitude(new BigDecimal(zuobiao[1]).setScale(6,BigDecimal.ROUND_HALF_UP).doubleValue());
-//						String LocalName= LatLotForLocation.getProvince(Double.toString(item.getLatitude()),Double.toString(item.getLongitude()));
-//						item.setLocationName(LocalName);
-					}
+//					if(!"2000-01-01 00:00:00".equals(item.getLastLocateTime())){
+					String LocalName= LatLotForLocation.getProvince(Double.toString(item.getLatitude()),Double.toString(item.getLongitude()),alarmServer.getAddressAk());
+					item.setLocationName(LocalName);
+					double[] zuobiao = GpsToBaiduUtil.wgs2bd(item.getLatitude(),item.getLongitude());
+					item.setBdlatitude(zuobiao[0]);
+					item.setBdlongitude(zuobiao[1]);
+					item.setBdlatitude(new BigDecimal(zuobiao[0]).setScale(6,BigDecimal.ROUND_HALF_UP).doubleValue());
+					item.setBdlongitude(new BigDecimal(zuobiao[1]).setScale(6,BigDecimal.ROUND_HALF_UP).doubleValue());
+//					}
 				});
 			}catch (Exception e){
 				System.out.println(e.getMessage());
@@ -165,15 +167,15 @@ public class GpsPointDataServiceImpl extends ServiceImpl<GpsPointDataMapper, T> 
 		try {
 			vehilePTData.forEach(item->{
 //					if(item.getLatitude() != 0.0 || item.getLongitude() != 0.0 || !"2000-01-01 00:00:00".equals(item.getLastLocateTime())){
-				if(!"2000-01-01 00:00:00".equals(item.getLastLocateTime())){
-					double[] zuobiao = GpsToBaiduUtil.wgs2bd(item.getLatitude(),item.getLongitude());
-					item.setLatitude(zuobiao[0]);
-					item.setLongitude(zuobiao[1]);
-//					item.setLatitude(new BigDecimal(zuobiao[0]).setScale(6,BigDecimal.ROUND_HALF_UP).doubleValue());
-//					item.setLongitude(new BigDecimal(zuobiao[1]).setScale(6,BigDecimal.ROUND_HALF_UP).doubleValue());
-//					String LocalName= LatLotForLocation.getProvince(Double.toString(item.getLatitude()),Double.toString(item.getLongitude()));
-//					item.setLocationName(LocalName);
-				}
+//				if(!"2000-01-01 00:00:00".equals(item.getLastLocateTime())){
+				String LocalName= LatLotForLocation.getProvince(Double.toString(item.getLatitude()),Double.toString(item.getLongitude()),alarmServer.getAddressAk());
+				item.setLocationName(LocalName);
+				double[] zuobiao = GpsToBaiduUtil.wgs2bd(item.getLatitude(),item.getLongitude());
+				item.setBdlatitude(zuobiao[0]);
+				item.setBdlongitude(zuobiao[1]);
+				item.setBdlatitude(new BigDecimal(zuobiao[0]).setScale(6,BigDecimal.ROUND_HALF_UP).doubleValue());
+				item.setBdlongitude(new BigDecimal(zuobiao[1]).setScale(6,BigDecimal.ROUND_HALF_UP).doubleValue());
+//				}
 			});
 		}catch (Exception e){
 			System.out.println(e.getMessage());

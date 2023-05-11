@@ -51,7 +51,8 @@
 			left join anbiao_jiashiyuan j on j.id = a.ahd_driver_ids
         where a.ahd_delete = 0
             and j.isdelete=0
-            and year(a.ahd_discovery_time) >= year(#{date})
+            and year(a.ahd_discovery_time) = year(#{date})
+            and month(a.ahd_discovery_time) = month(#{date})
     </sql>
 
     <sql id="querySql">

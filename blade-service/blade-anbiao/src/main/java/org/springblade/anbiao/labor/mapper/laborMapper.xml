@@ -331,7 +331,9 @@
             ) c ON c.id = a.ali_dept_ids
             where 1=1
             <if test="date != null and date != ''">
-                AND a.aliIssueDate >= #{date}
+                <!--AND a.aliIssueDate >= #{date}-->
+                AND year(a.aliIssueDate) = year(#{date})
+                AND month(a.aliIssueDate) = month(#{date})
             </if>
             <if test="deptName != null and deptName != ''">
                 AND c.dept_name like '%${deptName}%'
@@ -364,7 +366,9 @@
             ) c ON c.id = a.ali_dept_ids
             where 1=1
             <if test="date != null and date != ''">
-                AND a.aliIssueDate >= #{date}
+                <!--AND a.aliIssueDate >= #{date}-->
+                AND year(a.aliIssueDate) = year(#{date})
+                AND month(a.aliIssueDate) = month(#{date})
             </if>
             <if test="deptName != null and deptName != ''">
                 AND c.dept_name like '%${deptName}%'
@@ -402,7 +406,9 @@
                                      ) c ON c.id = a.ali_dept_ids
                                 where 1=1
                                 <if test="date != null and date != ''">
-                                    AND a.aliIssueDate >= #{date}
+                                    <!--AND a.aliIssueDate >= #{date}-->
+                                    AND year(a.aliIssueDate) = year(#{date})
+                                    AND month(a.aliIssueDate) = month(#{date})
                                 </if>
                                 <if test="deptName != null and deptName != ''">
                                     AND c.dept_name like '%${deptName}%'

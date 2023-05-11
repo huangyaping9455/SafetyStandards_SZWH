@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,9 +17,9 @@ import java.io.Serializable;
 @Data
 @TableName("biz_study_record")
 public class StudyRecord implements Serializable{
-	
+
 	private static final long serialVersionUID = 1L;
-	  
+
 	//id
 	@TableId(value = "id", type = IdType.AUTO)
 	private Integer id;
@@ -58,4 +59,12 @@ public class StudyRecord implements Serializable{
 	// 播放进度(秒)
 	@TableField("play_progress")
 	private Integer playProgress;
+
+	@ApiModelProperty(value = "累计完成学时")
+	@TableField(exist = false)
+	private Integer studyTimeCompletion;
+
+	@ApiModelProperty(value = "学习进度")
+	@TableField(exist = false)
+	private String studyProgress;
 }

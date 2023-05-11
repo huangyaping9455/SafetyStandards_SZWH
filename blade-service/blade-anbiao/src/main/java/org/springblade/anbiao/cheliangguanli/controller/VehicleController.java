@@ -231,6 +231,10 @@ public class VehicleController {
 		v.setTerminalprotocoltype(detail.getTerminalprotocoltype());
 		v.setZhongduanchangshang(detail.getZhongduanchangshang());
 		v.setVideochannelnum(detail.getVideochannelnum());
+		v.setZhongduanleixing(detail.getZhongduanleixing());
+		v.setYunyingshang(detail.getYunyingshang());
+		v.setSimnum(detail.getSimnum());
+		v.setYunyingshangjieruma(detail.getYunyingshangjieruma());
 
 		QueryWrapper<VehicleBiangengjilu> biangengjiluQueryWrapper = new QueryWrapper<VehicleBiangengjilu>();
 		biangengjiluQueryWrapper.lambda().eq(VehicleBiangengjilu::getAvbjVehicleId,detail.getId());
@@ -613,7 +617,9 @@ public class VehicleController {
 		}
 		vehicle.setCheliangpinpai(v.getCheliangpinpai());
 		vehicle.setFadongjipailianggonglv(v.getPailianggonglv());
-
+		vehicle.setZhongduanleixing(v.getZhongduanleixing());
+		vehicle.setYunyingshang(v.getYunyingshang());
+		vehicle.setYunyingshangjieruma(v.getYunyingshangjieruma());
 //		String str="1";
 //		//登录页
 //		if(StringUtil.isNotBlank(vehicle.getCheliangzhaopian())){

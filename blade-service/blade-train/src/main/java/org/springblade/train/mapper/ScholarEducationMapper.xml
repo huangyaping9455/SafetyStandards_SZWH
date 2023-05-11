@@ -108,13 +108,33 @@
         ) list
     </select>
 
-	<select id="getCourseExt" resultType="HashMap" parameterType="Integer">
-		SELECT
-			c.begin_time as beginTime,c.end_time as endTime
-		FROM
-			relation_unit_course a
-		INNER JOIN base_course b on b.id = a.course_id
-		INNER JOIN base_course_ext c on c.rel_unit_course_id = a.id
-		WHERE a.id = #{courseId}
-	</select>
+    <select id="getCourseExt" resultType="HashMap" parameterType="Integer">
+        SELECT
+            c.begin_time AS beginTime,
+            c.end_time AS endTime,
+            b.`name`,
+            b.keyword,
+            b.description,
+            c.score,
+            du.duration,
+            du.source_file AS sourceFile
+        FROM
+            relation_unit_course a
+                INNER JOIN base_course b on b.id = a.course_id
+                INNER JOIN base_course_ext c on c.rel_unit_course_id = a.id
+                INNER JOIN(
+                select
+                    ruc.id,bc.source_file,sum(bc.duration) as duration
+                from
+                    relation_course_courseware rc
+                        INNER JOIN base_courseware bc on bc.id = rc.courseware_id
+                        INNER JOIN relation_unit_course ruc ON rc.course_id = ruc.course_id
+                where 1=1
+                  AND bc.deleted = 0
+                  AND ruc.id = #{courseId}
+                GROUP BY
+                    ruc.id,bc.source_file
+                )du on du.id = a.id
+        WHERE a.id = #{courseId}
+    </select>
 </mapper>

@@ -419,6 +419,8 @@
             LEFT JOIN anbiao_vehicle v on v.id = a.vehicle_Id
             LEFT JOIN anbiao_jiashiyuan j on j.id = a.driver_Id
         where a.is_Deleted = 0
+            and year(a.send_Date) = year(#{date})
+            and month(a.send_Date) = month(#{date})
     </sql>
 
     <sql id="queryTZTJSql">

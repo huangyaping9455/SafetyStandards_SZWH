@@ -52,5 +52,6 @@ trainserver:
   face-platform-id: swhote
   search-score: 35
   enable: true
-
+fileserver:
+  path-prefix: ${fileserver.dev.path}
 

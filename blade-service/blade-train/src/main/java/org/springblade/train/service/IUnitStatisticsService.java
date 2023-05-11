@@ -5,9 +5,12 @@
 package org.springblade.train.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springblade.train.entity.TrainingListModel;
 import org.springblade.train.entity.UnitStatisticsListModel;
 import org.springblade.train.entity.UnitStatisticsSummaryModel;
 import org.springblade.train.page.UnitStatisticsPage;
+
+import java.util.List;
 
 public interface IUnitStatisticsService extends IService<UnitStatisticsListModel> {
 
@@ -31,5 +34,19 @@ public interface IUnitStatisticsService extends IService<UnitStatisticsListModel
      * @return
      */
     UnitStatisticsPage getUnitStatisticsDetailList(UnitStatisticsPage unitStatisticsPage);
+
+	/**
+	 * 学员学习情况统计表
+	 * @param unitStatisticsPage
+	 * @return
+	 */
+	UnitStatisticsPage getTrainingList_swh(UnitStatisticsPage unitStatisticsPage);
+
+	/**
+	 * 根据企业名称获取课程下拉列表
+	 * @param deptName
+	 * @return
+	 */
+	List<TrainingListModel> getDeptCourse(String deptName,Integer type);
 
 }

@@ -56,6 +56,10 @@ public class TpvehData {
 	private double longitude;
 	@ApiModelProperty(value = "纬度")
 	private double latitude;
+	@ApiModelProperty(value = "百度经度")
+	private double bdlongitude;
+	@ApiModelProperty(value = "百度纬度")
+	private double bdlatitude;
 	@ApiModelProperty(value = "ACC状态")
 	private String ACC;
 	@ApiModelProperty(value = "信号强度")

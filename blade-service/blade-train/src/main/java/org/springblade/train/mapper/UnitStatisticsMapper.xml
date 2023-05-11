@@ -87,9 +87,10 @@
     <resultMap id="UnitStatisticsDetailListModelMap" type="org.springblade.train.entity.UnitStatisticsDetailListModel">
     </resultMap>
 
+
     <!--根据参数查询企业统计分析详情列表-->
     <sql id="tableDetailSql">
-       select * from proc_unit_study_deail_info
+        select * from proc_unit_study_deail_info
         where 1=1
         <if test="unitId != null and unitId !=''">
             AND unit_id = #{unitId, jdbcType=INTEGER}
@@ -141,6 +142,189 @@
         )d where 1 = 1
         <include refid="queryDetailSql"/>
     </select>
+
+    <resultMap id="TrainingListModelMap" type="org.springblade.train.entity.TrainingListModel">
+    </resultMap>
+
+    <!--学员学习情况统计表-->
+    <sql id="tableTrainingListSql">
+        SELECT
+            unitName,
+            realName,
+            sex,
+            identifyNumber,
+            cellphone,
+            '驾驶员' AS station,
+            duration,
+            concat( ROUND(( duration * 1.0 / 3600 ), 2 ), '小时' ) AS stuDuration,
+            concat( ROUND(( zduration * 1.0 / 3600 ), 2 ), '小时' ) AS zduration,
+            score,
+            student_id AS studentId,
+            '达标' AS result,
+            photoUrl,
+            signatrueimg,
+            totalScores
+        FROM(
+            SELECT
+                un.full_name AS unitName,
+                d.student_id,
+                b.realname,
+                b.identify_number AS identifyNumber,
+                b.cellphone,
+                b.plate_number AS plateNumber,
+                b.full_face_photo AS facePhoto,
+                MAX( a.score ) AS score,
+                c.duration,
+                du.duration AS zduration,
+                b.sex,
+                b.address,
+                pu.photoUrl,
+                sg.signatrueimg,
+                ce.total_scores AS totalScores
+            FROM
+                ( SELECT * FROM relation_student_course WHERE rel_unit_course_id = #{relUnitCourseId} ) d
+                INNER JOIN base_student b ON d.student_id = b.id AND b.deleted = 0
+                INNER JOIN base_unit un ON un.id = b.unit_id AND un.deleted = 0
+                LEFT JOIN (
+                    SELECT
+                        ruc.id,
+                        sum( bc.duration ) AS duration
+                    FROM
+                        relation_course_courseware rc
+                        INNER JOIN base_courseware bc ON bc.id = rc.courseware_id
+                        INNER JOIN relation_unit_course ruc ON rc.course_id = ruc.course_id
+                    WHERE bc.deleted = 0
+                        AND ruc.id = #{relUnitCourseId}
+                    GROUP BY
+                        ruc.id
+                    ) du ON du.id = d.rel_unit_course_id
+                LEFT JOIN ( SELECT * FROM biz_test_record WHERE rel_unit_course_id = #{relUnitCourseId} ) a ON a.student_id = b.id
+                LEFT JOIN ( SELECT sum( duration ) AS duration, student_id FROM biz_study_record WHERE valid = 1 AND rel_unit_course_id = #{relUnitCourseId} GROUP BY student_id ) AS c ON b.id = c.student_id
+                LEFT JOIN ( SELECT student_id, rel_unit_course_id, MAX( photo_url ) AS photoUrl FROM biz_snapshot GROUP BY student_id, rel_unit_course_id ) pu ON pu.student_id = d.student_id
+                    AND pu.rel_unit_course_id = a.rel_unit_course_id
+                LEFT JOIN base_exam_signatrue sg ON sg.examid = a.id AND sg.studentid = d.student_id
+                LEFT JOIN base_course_ext ce ON ce.rel_unit_course_id = d.rel_unit_course_id
+            WHERE b.unit_id NOT IN ( 1, 2, 16 )
+            GROUP BY
+                un.full_name,
+                d.student_id,
+                b.identify_number,
+                b.cellphone,
+                b.plate_number,
+                b.full_face_photo,
+                b.realname,
+                c.duration,
+                b.sex,
+                b.address,
+                pu.photoUrl,
+                sg.signatrueimg,
+                ce.total_scores
+            ) list
+        where 1=1
+        <if test="unitName != null and unitName !=''">
+            AND unitName = #{unitName}
+        </if>
+
+        <if test="realName != null and realName !=''">
+            AND realName like '%${realName}%'
+        </if>
+    </sql>
+
+    <sql id="queryTrainingListSql">
+    </sql>
+
+    <sql id="orderTrainingListSql">
+        <if test="orderColumn == null or orderColumn == ''">
+            order by realName desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <select id="getTrainingList_swh" resultMap="TrainingListModelMap"
+            parameterType="org.springblade.train.page.UnitStatisticsPage">
+        <if test="size == 0">
+            select * from (
+            <include refid="tableTrainingListSql"/>
+            )b
+            where 1=1
+            <include refid="queryTrainingListSql"/>
+            <include refid="orderTrainingListSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="tableTrainingListSql"/>
+            )b
+            where 1=1
+            <include refid="queryTrainingListSql"/>
+            <include refid="orderTrainingListSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="getTrainingList_swhTotal"
+            parameterType="org.springblade.train.page.UnitStatisticsPage"
+            resultType="int">
+        select COUNT(1) from (
+            <include refid="tableTrainingListSql"/>
+        )d where 1 = 1
+        <include refid="queryTrainingListSql"/>
+    </select>
+
+    <select id="getDeptCourse" parameterType="String" resultType="org.springblade.train.entity.TrainingListModel">
+        <if test="type != '' and type == 1 ">
+            SELECT
+                a.id AS unitId,
+                b.id AS relUnitCourseId,
+                c.NAME AS courseName
+            FROM
+                base_unit a,
+                relation_unit_course b,
+                base_course c,
+                base_course_kind d
+            WHERE
+                a.id = b.unit_id
+                AND b.course_id = c.id
+                AND a.full_name = #{deptName}
+                AND a.deleted = 0
+                AND c.course_kind_id = d.id
+                And d.`name` = '日常培训'
+            GROUP BY
+                a.id,
+                b.id,
+                c.NAME
+        </if>
+
+        <if test="type != '' and type != 1 ">
+            SELECT
+                a.id AS unitId,
+                b.id AS relUnitCourseId,
+                c.NAME AS courseName
+            FROM
+                base_unit a,
+                relation_unit_course b,
+                base_course c,
+                base_course_kind d
+            WHERE
+                a.id = b.unit_id
+                AND b.course_id = c.id
+                AND a.full_name = #{deptName}
+                AND a.deleted = 0
+                AND c.course_kind_id = d.id
+                And d.`name` in ('理论培训','实践培训')
+            GROUP BY
+                a.id,
+                b.id,
+                c.NAME
+        </if>
+
+    </select>
+
 
 
 </mapper>

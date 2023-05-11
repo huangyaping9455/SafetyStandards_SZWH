@@ -16,6 +16,9 @@
 package org.springblade.train.controller;
 
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -26,11 +29,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.tools.zip.ZipOutputStream;
+import org.springblade.common.configurationBean.FileServer;
 import org.springblade.common.configurationBean.TrainServer;
+import org.springblade.common.constant.FilePathConstant;
+import org.springblade.common.tool.ApacheZipUtils;
 import org.springblade.common.tool.DeleteFileUtils;
 import org.springblade.common.tool.PostUtil;
 import org.springblade.common.tool.StringUtils;
 import org.springblade.core.boot.ctrl.BladeController;
+import org.springblade.core.log.annotation.ApiLog;
+import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
 import org.springblade.train.config.JSONUtils;
 import org.springblade.train.entity.*;
@@ -38,14 +47,18 @@ import org.springblade.train.page.ScholarEducationPage;
 import org.springblade.train.page.UnitStatisticsPage;
 import org.springblade.train.service.*;
 import org.springblade.train.tool.VideoConvertUtil;
+import org.springblade.train.vo.TrainingListModelVo;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @AllArgsConstructor
@@ -67,6 +80,8 @@ public class ScholarEducationController extends BladeController {
 	private TrainServer trainServer;
 
 	private IWaitCompletedService iWaitCompletedService;
+
+	private FileServer fileServer;
 
 	/**
 	 * 学习统计分析--查询学员学历分析数据
@@ -615,6 +630,171 @@ public class ScholarEducationController extends BladeController {
 				e.printStackTrace();
 			}
 		});
+		return rs;
+	}
+
+	/**
+	 * 台账管理-学员学习情况统计台账
+	 * @param unitStatisticsPage
+	 * @return
+	 */
+	@PostMapping("/getTrainingList_swh")
+	@ApiOperation(value = "台账管理-学员学习情况统计台账列表", notes = "台账管理-学员学习情况统计台账", position = 10)
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "unitStatisticsPage", value = "数据对象", required = true)
+	})
+	public R<List<TrainingListModel>> getTrainingList_swh(@RequestBody UnitStatisticsPage unitStatisticsPage) {
+		R rs = new R();
+		try {
+			UnitStatisticsPage resultList = unitStatisticsService.getTrainingList_swh(unitStatisticsPage);
+			if(resultList != null){
+				rs.setData(resultList);
+				rs.setCode(200);
+				rs.setSuccess(true);
+				rs.setMsg("学习统计分析--获取学员学习情况统计表数据成功");
+			}else{
+				rs.setData("");
+				rs.setCode(200);
+				rs.setSuccess(true);
+				rs.setMsg("学习统计分析--获取学员学习情况统计表数据成功,暂无数据");
+			}
+		}catch (Exception e){
+			rs.setData("");
+			rs.setCode(500);
+			rs.setSuccess(false);
+			rs.setMsg("学习统计分析--获取学员学习情况统计表数据失败");
+		}
+		return rs;
+	}
+
+	/**
+	 * 台账管理-学员学习情况统计台账列表--根据企业名称获取课程下拉列表
+	 * @param deptName
+	 * @return
+	 */
+	@GetMapping("/getDeptCourse")
+	@ApiOperation(value = "台账管理-学员学习情况统计台账列表--根据企业名称获取课程下拉列表", notes = "台账管理-学员学习情况统计台账列表--根据企业名称获取课程下拉列表", position = 11)
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "deptName", value = "企业名称", required = true),
+		@ApiImplicitParam(name = "type", value = "区分培训类型（1：日常培训，2：岗前培训）", required = true)
+	})
+	public R<List<TrainingListModel>> getDeptCourse(String deptName,Integer type) {
+		R rs = new R();
+		try {
+			List<TrainingListModel> list = unitStatisticsService.getDeptCourse(deptName,type);
+			if(list != null){
+				rs.setSuccess(true);
+				rs.setCode(200);
+				rs.setMsg("学习统计分析-根据企业名称获取课程下拉列表成功");
+				rs.setData(list);
+			}else{
+				rs.setSuccess(true);
+				rs.setCode(200);
+				rs.setMsg("学习统计分析-根据企业名称获取课程下拉列表成功,暂无数据");
+				rs.setData("");
+			}
+		} catch (Exception e) {
+			rs.setSuccess(true);
+			rs.setCode(500);
+			rs.setMsg("学习统计分析-根据企业名称获取课程下拉列表失败");
+			rs.setData("");
+		}
+		return rs;
+	}
+
+
+	@GetMapping("/goExport_Training_Excel")
+	@ApiLog("台账管理-学员学习情况统计台账-导出")
+	@ApiOperation(value = "台账管理-学员学习情况统计台账-导出", notes = "传入unitId、relUnitCourseId", position = 22)
+	public R goExport_Training_Excel(HttpServletRequest request, HttpServletResponse response, Integer unitId, Integer relUnitCourseId, Integer type, Integer deptId, BladeUser user) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchFieldException, ParseException {
+		R rs = new R();
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+		List<String> urlList = new ArrayList<>();
+		UnitStatisticsPage unitStatisticsPage = new UnitStatisticsPage();
+		unitStatisticsPage.setUnitId(unitId);
+		unitStatisticsPage.setRelUnitCourseId(relUnitCourseId);
+		unitStatisticsPage.setSize(0);
+		unitStatisticsPage.setCurrent(0);
+		// TODO 渲染其他类型的数据请参考官方文档
+		DecimalFormat df = new DecimalFormat("######0.00");
+		Calendar now = Calendar.getInstance();
+		//word模板地址
+		String templatePath = fileServer.getPathPrefix() + "muban\\" + "studyInfo.xlsx";
+		String[] nyr = DateUtil.today().split("-");
+		//Excel中的结果集ListData
+		List<TrainingListModelVo> ListData1 = new ArrayList<>();
+		Map<String, Object> map = new HashMap<>();
+		UnitStatisticsPage trainingListModelList = unitStatisticsService.getTrainingList_swh(unitStatisticsPage);
+		List<TrainingListModel> trainingListModels = trainingListModelList.getRecords();
+		if (trainingListModels.size() == 0) {
+			rs.setMsg("暂无数据导出");
+			rs.setCode(200);
+			return rs;
+		} else if (trainingListModels.size() > 1000) {
+			rs.setMsg("数据超过1000条无法下载");
+			rs.setCode(500);
+			return rs;
+		} else {
+			map.put("time", DateUtil.now());
+			map.put("deptName", trainingListModels.get(0).getUnitName());
+			for (int i = 0; i < trainingListModels.size(); i++) {
+				// 渲染文本
+				TrainingListModel t = trainingListModels.get(i);
+				TrainingListModelVo listModelVo = new TrainingListModelVo();
+
+				listModelVo.setRowIndex(i+1);
+				listModelVo.setRealName(t.getRealName());
+				if(StringUtils.isNotEmpty(t.getSex()) && "1".equals(t.getSex())){
+					listModelVo.setSex("男");
+				}
+				listModelVo.setStation(t.getStation());
+				listModelVo.setCellphone(t.getCellphone());
+				listModelVo.setStudyTime(t.getStudyBeginTime().substring(0,10)+"至"+t.getStudyEndTime().substring(0,10));
+				listModelVo.setZduration(t.getZduration());
+				listModelVo.setStuDuration(t.getStuDuration());
+				listModelVo.setStudyProgress(t.getStudyProgress());
+				listModelVo.setIsSignatrue(t.getIsSignatrue());
+				listModelVo.setScore(t.getScore());
+				ListData1.add(listModelVo);
+			}
+		}
+		// 模板注意 用{} 来表示你要用的变量 如果本来就有"{","}" 特殊字符 用"\{","\}"代替
+		// {} 代表普通变量 {.} 代表是list的变量
+		// 这里模板 删除了list以后的数据，也就是统计的这一行
+		String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"/"+nyr[1]+"/"+nyr[2];
+		File newFile = new File(fileName);
+		//判断目标文件所在目录是否存在
+		if(!newFile.exists()){
+			//如果目标文件所在的目录不存在，则创建父目录
+			newFile.mkdirs();
+		}
+		if(type == 1){
+			fileName = fileName+"/"+trainingListModels.get(0).getUnitName()+"-学员学习情况统计台账.xlsx";
+		}else{
+			fileName = fileName+"/"+trainingListModels.get(0).getUnitName()+"-学员岗前培训台账.xlsx";
+		}
+		ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templatePath).build();
+		WriteSheet writeSheet = EasyExcel.writerSheet().build();
+		// 写入list之前的数据
+		excelWriter.fill(map, writeSheet);
+		// 直接写入数据
+		excelWriter.fill(ListData1, writeSheet);
+		excelWriter.finish();
+		urlList.add(fileName);
+		if(type == 1){
+			fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"学员学习情况统计台账.zip";
+		}else{
+			fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"学员岗前培训台账.zip";
+		}
+		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(fileName));
+		ApacheZipUtils.doCompress1(urlList, bizOut);
+		//不要忘记调用
+		bizOut.close();
+
+		rs.setMsg("下载成功");
+		rs.setCode(200);
+		rs.setData(fileName);
+		rs.setSuccess(true);
 		return rs;
 	}
 

@@ -23,10 +23,19 @@ public class UnitStatisticsPage extends BasePage {
 	@ApiModelProperty(value = "企业名称")
 	private String unitName;
 
+	@ApiModelProperty(value = "学员名称")
+	private String realName;
+
 	@ApiModelProperty(value = "课程Id")
 	private Integer courseId;
 
+	@ApiModelProperty(value = "课程关联Id")
+	private Integer relUnitCourseId;
+
 	@ApiModelProperty(value = "权限企业Id")
 	private List<Integer> authUnitId;
+
+	@ApiModelProperty(value = "排序字段")
+	private String orderColumns;
 
 }

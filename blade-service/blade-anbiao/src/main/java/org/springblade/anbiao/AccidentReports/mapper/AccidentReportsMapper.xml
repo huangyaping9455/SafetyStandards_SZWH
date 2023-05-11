@@ -394,7 +394,9 @@
             ) c ON c.id = a.dept_id
             where 1=1
             <if test="date != null and date != ''">
-                AND a.shigufashengshijian >= #{date}
+<!--                AND a.shigufashengshijian >= #{date}-->
+                AND year(a.shigufashengshijian) = year(#{date})
+                AND month(a.shigufashengshijian) = month(#{date})
             </if>
             <if test="deptName != null and deptName != '' ">
                 and c.dept_name like '%${deptName}%'
@@ -422,7 +424,9 @@
             <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) c ON c.id = a.dept_id
             <if test="date != null and date != ''">
-                AND a.shigufashengshijian >= #{date}
+<!--                AND a.shigufashengshijian >= #{date}-->
+                AND year(a.shigufashengshijian) = year(#{date})
+                AND month(a.shigufashengshijian) = month(#{date})
             </if>
             <if test="deptName != null and deptName != '' ">
                 and c.dept_name like '%${deptName}%'
@@ -454,7 +458,9 @@
             <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) c ON c.id = a.dept_id
             <if test="date != null and date != ''">
-                AND a.shigufashengshijian >= #{date}
+<!--                AND a.shigufashengshijian >= #{date}-->
+                AND year(a.shigufashengshijian) = year(#{date})
+                AND month(a.shigufashengshijian) = month(#{date})
             </if>
             <if test="deptName != null and deptName != '' ">
                 and c.dept_name like '%${deptName}%'
