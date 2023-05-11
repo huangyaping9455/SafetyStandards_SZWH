@@ -1189,25 +1189,25 @@ values
                 WHEN
                     IFNULL( xsz_compeleted, '' ) = '' THEN
                     0 ELSE xsz_compeleted
-                END AS b1,
+                END AS b5,
             CASE
 
                 WHEN IFNULL( ysz_compeleted, '' ) = '' THEN
                     0 ELSE ysz_compeleted
-                END AS b2,
+                END AS b6,
             CASE
 
                 WHEN IFNULL( xnbg_compeleted, '' ) = '' THEN
                     0 ELSE xnbg_compeleted
-                END AS b3,
+                END AS b7,
             o.jiashiyuanid AS jiashiyuanid,
             CASE
 
                 WHEN IFNULL( djzs_compeleted, '' ) = '' THEN
                     0 ELSE djzs_compeleted
-                END AS b4,
-            IFNULL( cheliangpaizhao, "未绑定" ) AS cheliangpaizhao,
-            IFNULL( j.id, "未绑定" ) AS vehicleId,
+                END AS b8,
+            IFNULL( cheliangpaizhao, "未绑定" ) AS cheliangpaizhaoGUA,
+            IFNULL( j.id, "未绑定" ) AS vehicleIdGUA,
             CASE
 
                 WHEN IFNULL( i.avb_av_ids, '' ) = '' THEN
@@ -1253,25 +1253,25 @@ values
         WHEN
         IFNULL( xsz_compeleted, '' ) = '' THEN
         0 ELSE xsz_compeleted
-        END AS b5,
+        END AS b1,
         CASE
 
         WHEN IFNULL( ysz_compeleted, '' ) = '' THEN
         0 ELSE ysz_compeleted
-        END AS b6,
+        END AS b2,
         CASE
 
         WHEN IFNULL( xnbg_compeleted, '' ) = '' THEN
         0 ELSE xnbg_compeleted
-        END AS b7,
+        END AS b3,
         o.jiashiyuanid AS jiashiyuanid,
         CASE
 
         WHEN IFNULL( djzs_compeleted, '' ) = '' THEN
         0 ELSE djzs_compeleted
-        END AS b8,
-        IFNULL( cheliangpaizhao, "未绑定" ) AS cheliangpaizhaoGUA,
-        IFNULL( j.id, "未绑定" ) AS vehicleIdGUA,
+        END AS b4,
+        IFNULL( cheliangpaizhao, "未绑定" ) AS cheliangpaizhao,
+        IFNULL( j.id, "未绑定" ) AS vehicleId,
         CASE
 
         WHEN IFNULL( k.avb_av_ids, '' ) = '' THEN
