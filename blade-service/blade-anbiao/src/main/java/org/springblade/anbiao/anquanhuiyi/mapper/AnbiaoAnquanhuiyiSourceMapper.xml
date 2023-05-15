@@ -26,6 +26,7 @@
     <sql id="tableSql">
         select
             a.*,
+            CASE WHEN IFNULL( a.huiyijiyao, '' )= '' THEN a.zhengwen ELSE a.huiyijiyao END AS huiyineirong,
             b.dept_name as deptname
         from
             anbiao_anquanhuiyi_source a

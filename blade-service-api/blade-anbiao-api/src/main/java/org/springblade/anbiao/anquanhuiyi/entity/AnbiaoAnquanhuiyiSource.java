@@ -79,5 +79,12 @@ public class AnbiaoAnquanhuiyiSource implements Serializable {
 	@TableField(exist = false)
 	private String deptname;
 
+	@ApiModelProperty(value = "会议纪要")
+	@TableField(exist = false)
+	private String huiyijiyao;
+
+	@ApiModelProperty(value = "会议内容")
+	@TableField(exist = false)
+	private String huiyineirong;
 
 }

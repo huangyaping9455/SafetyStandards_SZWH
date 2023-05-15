@@ -51,7 +51,7 @@ public class AnbiaoAnquanhuiyiServiceImpl extends ServiceImpl<AnbiaoAnquanhuiyiM
 						anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAddApBeingJoined,"1");
 						List<AnbiaoAnquanhuiyiDetail> detail = detailMapper.selectList(anquanhuiyiDetailQueryWrapper);
 						if (detail != null && detail.size() > 0){
-							item.setShijicanhuirenshu(detail.size()+1);
+							item.setShijicanhuirenshu(detail.size());
 						}
 					});
 				}
@@ -84,7 +84,7 @@ public class AnbiaoAnquanhuiyiServiceImpl extends ServiceImpl<AnbiaoAnquanhuiyiM
 					anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAddApBeingJoined,"1");
 					List<AnbiaoAnquanhuiyiDetail> detail = detailMapper.selectList(anquanhuiyiDetailQueryWrapper);
 					if (detail != null && detail.size() > 0){
-						item.setShijicanhuirenshu(detail.size()+1);
+						item.setShijicanhuirenshu(detail.size());
 					}
 				});
 			}

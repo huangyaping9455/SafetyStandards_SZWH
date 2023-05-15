@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiSource;
 import org.springblade.anbiao.anquanhuiyi.page.AnQuanHuiYiPage;
 import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiSourceService;
@@ -49,6 +50,9 @@ public class AnbiaoAnquanhuiyiSourceController {
 		anquanhuiyiSourceQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiSource::getIsdeleted,0);
 		anquanhuiyiSourceQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiSource::getZhengwen,anquanhuiyiSource.getZhengwen());
 		anquanhuiyiSourceQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiSource::getZhuti,anquanhuiyiSource.getZhuti());
+		if (StringUtils.isNotBlank(anquanhuiyiSource.getHuiyijiyao()) && !anquanhuiyiSource.getHuiyijiyao().equals("null")){
+			anquanhuiyiSourceQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiSource::getHuiyijiyao,anquanhuiyiSource.getHuiyijiyao());
+		}
 		AnbiaoAnquanhuiyiSource deail = sourceService.getBaseMapper().selectOne(anquanhuiyiSourceQueryWrapper);
 		if (deail == null){
 			anquanhuiyiSource.setCreatename(user.getUserName());

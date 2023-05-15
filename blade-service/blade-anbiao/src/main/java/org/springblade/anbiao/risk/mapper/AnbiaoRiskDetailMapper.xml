@@ -1111,8 +1111,10 @@
             <if test="deptName != null and deptName != ''">
                 and e.dept_name like '%${deptName}%'
             </if>
-            ORDER BY
-            ard_association_value
+            <if test="ardTitle != null and ardTitle != ''">
+                and ard_title like '%${ardTitle}%'
+            </if>
+            ORDER BY CASE WHEN daoqishijian IS NULL THEN 1 ELSE 0 END, daoqishijian
             limit ${total}
         </if>
         <if test="current != 0" >
@@ -1159,8 +1161,10 @@
             <if test="deptName != null and deptName != ''">
                 and e.dept_name like '%${deptName}%'
             </if>
-            ORDER BY
-            ard_association_value
+            <if test="ardTitle != null and ardTitle != ''">
+                and ard_title like '%${ardTitle}%'
+            </if>
+            ORDER BY CASE WHEN daoqishijian IS NULL THEN 1 ELSE 0 END, daoqishijian
             limit ${offsetNo},${size}
         </if>
     </select>
@@ -1211,8 +1215,10 @@
         <if test="deptName != null and deptName != ''">
             and e.dept_name like '%${deptName}%'
         </if>
-        ORDER BY
-        ard_association_value
+        <if test="ardTitle != null and ardTitle != ''">
+            and ard_title like '%${ardTitle}%'
+        </if>
+        ORDER BY CASE WHEN daoqishijian IS NULL THEN 1 ELSE 0 END, daoqishijian
         )d
     </select>
 
