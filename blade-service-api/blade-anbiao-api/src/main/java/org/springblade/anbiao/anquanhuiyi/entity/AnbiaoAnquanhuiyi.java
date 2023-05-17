@@ -1,8 +1,12 @@
 package org.springblade.anbiao.anquanhuiyi.entity;
 
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
+
+import java.net.URL;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
@@ -164,5 +168,14 @@ public class AnbiaoAnquanhuiyi implements Serializable {
 	@ApiModelProperty(value = "会议ID")
 	@TableField(exist = false)
 	private String huiYiId;
+
+	@ApiModelProperty(value = "会议ID")
+	@TableField(exist = false)
+	private String TwoDimensionalCode;
+
+	@ColumnWidth(15)
+	@ExcelProperty("二维码")
+	@TableField(exist = false)
+	private URL TwoDimensionalCodeUrl;
 
 }

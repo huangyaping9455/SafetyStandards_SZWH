@@ -1479,21 +1479,25 @@ public class VehicleController {
 				vehicle.setMsg("车牌号码不能为空;");
 				vehicle.setImportUrl("icon_cha.png");
 				bb++;
-			}else{
-				QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<>();
-				vehicleQueryWrapper.lambda().eq(Vehicle::getCheliangpaizhao,cheliangpaiz);
-				vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel,0);
-				Vehicle vehicle1 = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper);
-				if (vehicle1!=null){
-					errorStr+=cheliangpaiz+"车牌号已存在;";
-					vehicle.setMsg(cheliangpaiz+"车牌号已存在;");
-					vehicle.setImportUrl("icon_cha.png");
-					bb++;
-				}else {
-					vehicle.setCheliangpaizhao(cheliangpaiz);
-					vehicle.setImportUrl("icon_gou.png");
-				}
+			}else {
+				vehicle.setCheliangpaizhao(cheliangpaiz);
+				vehicle.setImportUrl("icon_gou.png");
 			}
+//			else{
+//				QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<>();
+//				vehicleQueryWrapper.lambda().eq(Vehicle::getCheliangpaizhao,cheliangpaiz);
+//				vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel,0);
+//				Vehicle vehicle1 = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper);
+//				if (vehicle1!=null){
+//					errorStr+=cheliangpaiz+"车牌号已存在;";
+//					vehicle.setMsg(cheliangpaiz+"车牌号已存在;");
+//					vehicle.setImportUrl("icon_cha.png");
+//					bb++;
+//				}else {
+//					vehicle.setCheliangpaizhao(cheliangpaiz);
+//					vehicle.setImportUrl("icon_gou.png");
+//				}
+//			}
 
 			//车牌颜色
 			String chepaiyanse = String.valueOf(a.get("车牌颜色")).trim();
