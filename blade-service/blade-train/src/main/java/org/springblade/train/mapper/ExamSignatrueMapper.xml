@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.train.mapper.ExamSignatrueMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.train.entity.ExamSignatrue">
+	</resultMap>
+
+    <select id="getSignatrue" resultType="org.springblade.train.entity.ExamSignatrue">
+        select
+            DISTINCT c.*
+        from
+            base_courseware_ext a,biz_test_record b,base_exam_signatrue c
+        where a.rel_unit_course_id = b.rel_unit_course_id
+          and c.examid = a.rel_unit_course_id
+          and c.studentid = b.student_id
+          and b.student_id = #{studentId}
+          and a.courseware_id = #{coursewareId}
+        ORDER BY createtime DESC
+        limit 1
+    </select>
+</mapper>

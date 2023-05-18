@@ -58,6 +58,8 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
@@ -82,6 +84,9 @@ public class ScholarEducationController extends BladeController {
 	private IWaitCompletedService iWaitCompletedService;
 
 	private FileServer fileServer;
+
+	private IUnitService unitService;
+
 
 	/**
 	 * 学习统计分析--查询学员学历分析数据
@@ -797,6 +802,83 @@ public class ScholarEducationController extends BladeController {
 		rs.setSuccess(true);
 		return rs;
 	}
+
+	@PostMapping("/reportNew")
+	@ApiLog("台账管理-安全培训台账数据获取")
+	@ApiOperation(value = "台账管理-安全培训台账数据获取", notes = "传入unitId、relUnitCourseId", position = 23)
+	public R reportNew(@RequestBody String json) throws ParseException {
+		R rs = new R();
+		JsonNode node = JSONUtils.string2JsonNode(json);
+		Integer courseId = node.get("relUnitCourseId").asInt();
+		Integer unitId = node.get("unitId").asInt();
+		HashMap<Object, Object> result = new HashMap<>();
+		HashMap<String, Object> summary = new HashMap<>();
+		List<TrainingListModel> listStudent = scholarEducationService.getTrainingList_swh(courseId);
+		if (Objects.isNull(listStudent)) {
+			rs.setData(null);
+			rs.setSuccess(true);
+			rs.setCode(200);
+			rs.setMsg("暂无数据");
+			return rs;
+		}
+		// 企业信息
+		Unit unit = unitService.getById(unitId);
+		summary.put("unitName", unit.getFullName());
+		List<Map<String, Date>> courseExt = scholarEducationService.getCourseExt(courseId);
+		summary.put("courseName",courseExt.get(0).get("name"));
+		summary.put("coursetype","安全培训");
+		summary.put("coursePlatform","深威豪数字化安全风险管理平台");
+		summary.put("courseForm","线上培训");
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-M-d");
+		LocalDate beginDate = LocalDate.parse(courseExt.get(0).get("beginTime").toString().substring(0, 10), dtf);
+		summary.put("courseYearMonth", beginDate.format(DateTimeFormatter.ofPattern("yyyy年M月")));
+		summary.put("courseDuration", courseExt.get(0).get("duration"));
+		summary.put("score",courseExt.get(0).get("score"));
+//		summary.put("trainMonth", beginDate.getMonthValue());
+		summary.put("trainShouldAttendNum", listStudent.size());
+		int counts = 0;
+		if(listStudent.size() > 0 && listStudent != null){
+			counts = (int) listStudent.stream().filter(item -> item.getStuDuration() != null).count();
+		}
+		summary.put("trainParticipateNum", counts);
+		Double rate = (counts*1.0/listStudent.size())*100;
+		summary.put("finishingRate", String.format("%.2f",rate)+"%");
+		summary.put("videoUrl", courseExt.get(0).get("sourceFile"));
+		summary.put("courseContent", courseExt.get(0).get("description"));
+		List<TrainingListModel> questionExt = scholarEducationService.getCourseQuestion(courseId);
+		if(questionExt.size() >0 && questionExt != null){
+			summary.put("questionList",questionExt);
+		}
+		Integer score = Integer.parseInt(String.valueOf(courseExt.get(0).get("score")));
+		listStudent.forEach(item->{
+			if(item.getScore() != null){
+				if(item.getScore() < score){
+					item.setExamResult("不及格");
+				}
+				else if("60".equals(item.getScore())){
+					item.setExamResult("及格");
+				}
+				else if(item.getScore() > score && item.getScore() < item.getTotalScores()){
+					item.setExamResult("良好");
+				}
+				else{
+					item.setExamResult("优秀");
+				}
+			}
+		});
+		result.put("summary", summary);
+		// 培训列表
+		result.put("trainList", listStudent);
+//		// 试卷
+//		result.put("examList", this.getExamModel(courseId));
+
+		rs.setData(result);
+		rs.setSuccess(true);
+		rs.setCode(200);
+		rs.setMsg("获取成功");
+		return rs;
+	}
+
 
 
 }

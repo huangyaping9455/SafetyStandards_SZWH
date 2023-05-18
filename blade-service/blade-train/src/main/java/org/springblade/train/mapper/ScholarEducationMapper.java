@@ -24,5 +24,9 @@ public interface ScholarEducationMapper extends BaseMapper<ScholarEducationModel
 
 	List<Map<String, Date>> getCourseExt(Integer courseId);
 
+	List<TrainingListModel> getTrainingList_swh(Integer relUnitCourseId);
+
+	List<TrainingListModel> getCourseQuestion(Integer courseId);
+
 
 }

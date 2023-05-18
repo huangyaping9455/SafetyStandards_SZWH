@@ -15,8 +15,10 @@
  */
 package org.springblade.train.controller;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -24,14 +26,17 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.modelmapper.TypeToken;
 import org.springblade.common.configurationBean.TrainServer;
+import org.springblade.common.tool.JSONUtils;
 import org.springblade.core.tool.api.R;
 import org.springblade.core.tool.utils.StringUtil;
 import org.springblade.train.config.BaseController;
+import org.springblade.train.config.HttpResultEnum;
 import org.springblade.train.entity.*;
 import org.springblade.train.page.CourseTestRecordPage;
 import org.springblade.train.service.*;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,19 +66,23 @@ public class ExamController extends BaseController {
 
 	private TrainServer trainServer;
 
+	private IExamSignatrueService examSignatrueService;
+
 	@GetMapping("/getWaitExamList")
 	@ApiOperation(value = "教育--根据驾驶员名称、企业名称获取待考试详情", notes = "教育--根据驾驶员名称、企业名称获取待考试详情", position = 1)
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "driverName", value = "驾驶员名称", required = true),
+		@ApiImplicitParam(name = "cellphone", value = "手机号码", required = true),
 		@ApiImplicitParam(name = "deptName", value = "企业名称", required = true)
 	})
-	public R getWaitExamList(String driverName,String deptName) throws Exception{
+	public R getWaitExamList(String driverName,String deptName,String cellphone) throws Exception{
 		R rs = new R();
 		try {
 			//根据学员姓名、企业名称获取培训的学员ID
 			Unit unitDeail = trainService.getUnitByName(deptName);
 			QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<Student>();
 			studentQueryWrapper.lambda().eq(Student::getRealName, driverName);
+			studentQueryWrapper.lambda().eq(Student::getCellphone, cellphone);
 			studentQueryWrapper.lambda().eq(Student::getUnitId, unitDeail.getId());
 			studentQueryWrapper.lambda().eq(Student::getDeleted, "0");
 			Student studentDeail = studentService.getBaseMapper().selectOne(studentQueryWrapper);
@@ -423,6 +432,28 @@ public class ExamController extends BaseController {
 			rs.setMsg("获取考试记录数量统计失败");
 		}
 		return rs;
+	}
+
+	/**
+	 * 保存考试电子签名
+	 * @param json
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/saveExamSignatrue",method=RequestMethod.POST)
+	public String saveExamSignatrue(HttpServletRequest request, @RequestBody String json) {
+		JsonNode node = JSONUtils.string2JsonNode(json);
+		ExamSignatrue examSignatrue = new ExamSignatrue();
+		examSignatrue.setSignatrueimg(node.get("signatrueimg").asText());
+		examSignatrue.setExamid(node.get("examid").asInt());
+		examSignatrue.setStudentid(node.get("studentid").asInt());
+		examSignatrue.setCreatetime(DateUtil.format(new Date(),"yyyy-MM-dd HH:mm:ss"));
+		boolean ii = examSignatrueService.save(examSignatrue);
+		if(ii == true){
+			return this.returnResult(HttpResultEnum.SUCCESS, "","保存考试电子签名成功");
+		}else{
+			return this.returnErrorResult("保存考试电子签名失败");
+		}
 	}
 
 }

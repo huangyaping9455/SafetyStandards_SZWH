@@ -4,6 +4,7 @@
  */
 package org.springblade.train.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
@@ -14,8 +15,10 @@ import org.springblade.train.page.ScholarEducationPage;
 import org.springblade.train.service.IScholarEducationService;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description: 学员学历分析service
@@ -179,5 +182,61 @@ public class ScholarEducationServiceImpl extends ServiceImpl<ScholarEducationMap
         }
         return model;
     }
+
+	@Override
+	public List<Map<String, Date>> getCourseExt(Integer courseId) {
+		List<Map<String, Date>> courseExt = baseMapper.getCourseExt(courseId);
+		return courseExt;
+	}
+
+	@Override
+	public List<TrainingListModel> getTrainingList_swh(Integer relUnitCourseId) {
+		List<TrainingListModel> trainingListModelList = baseMapper.getTrainingList_swh(relUnitCourseId);
+		trainingListModelList.forEach(item->{
+			// 课件信息
+			HashMap<Integer, Courseware> coursewareMap = new HashMap<>();
+			QueryWrapper<Courseware> coursewareWrapper = new QueryWrapper<>();
+			List<Courseware> courseList = coursewareMapper.selectList(coursewareWrapper);
+			if (courseList != null && courseList.size() > 0) {
+				for (Courseware courseware : courseList) {
+					coursewareMap.put(courseware.getId(), courseware);
+				}
+			}
+			// 学习记录
+			List<StudyRecord> studyRecordList = studyRecordMapper.selectList(new LambdaQueryWrapper<StudyRecord>()
+				.eq(StudyRecord::getStudentId, item.getStudentId())
+				.in(StudyRecord::getRelUnitCourseId, relUnitCourseId));
+
+			// 课程列表数据组装
+			if (studyRecordList != null && studyRecordList.size() > 0) {
+				Long studyTimeTotal = 0L;
+				Integer studyTimeCompletion = 0;
+				StudyRecord studyRecordFirst = studyRecordList.get(0);
+				Integer courseId = studyRecordFirst.getRelUnitCourseId();
+
+				for (StudyRecord studyRecord : studyRecordList) {
+					// 组装课件名称
+					Courseware courseware = coursewareMap.get(studyRecord.getCoursewareId());
+					if (courseware != null) {
+						studyRecord.setCourseware(courseware);
+					} else {
+						log.info("结业证明-组装课件名称为空");
+					}
+					studyTimeCompletion += studyRecord.getPlayProgress();
+					studyTimeTotal += studyRecord.getDuration();
+					studyRecord.setStudyTimeCompletion(studyTimeCompletion);
+					Double rate = (studyRecord.getStudyTimeCompletion()*1.0/item.getDuration())*100;
+					studyRecord.setStudyProgress(String.format("%.2f",rate)+"%");
+				}
+			}
+			item.setStudyRecord(studyRecordList);
+		});
+		return trainingListModelList;
+	}
+
+	@Override
+	public List<TrainingListModel> getCourseQuestion(Integer courseId) {
+		return baseMapper.getCourseQuestion(courseId);
+	}
 
 }

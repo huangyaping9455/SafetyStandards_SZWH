@@ -10,6 +10,7 @@ import org.springblade.train.entity.ScholarEducationModel;
 import org.springblade.train.entity.TrainingListModel;
 import org.springblade.train.page.ScholarEducationPage;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,4 +33,10 @@ public interface IScholarEducationService extends IService<ScholarEducationModel
      * @return
      */
     CertificateModel getCertificateOfCompletiont(Integer studentId, List<Integer> courseIdList);
+
+	List<Map<String, Date>> getCourseExt(Integer courseId);
+
+	List<TrainingListModel> getTrainingList_swh(Integer relUnitCourseId);
+
+	List<TrainingListModel> getCourseQuestion(Integer courseId);
 }

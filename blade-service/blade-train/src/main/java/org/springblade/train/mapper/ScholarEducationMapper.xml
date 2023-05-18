@@ -137,4 +137,116 @@
                 )du on du.id = a.id
         WHERE a.id = #{courseId}
     </select>
+
+    <select id="getSnapshot" resultType="org.springblade.train.entity.TrainingListModel">
+        select id,photo_url as photoUrl from biz_snapshot
+        where rel_unit_course_id = #{relUnitCourseId}
+          and student_id = #{studentId}
+    </select>
+
+    <select id="getTrainingList_swh" parameterType="Integer" resultType="org.springblade.train.entity.TrainingListModel">
+        SELECT
+            student_id,
+            realName,
+            sex,
+            identifyNumber,
+            address,
+            cellphone,
+            plateNumber,
+            facePhoto,
+            '驾驶员' AS station,
+            duration,
+            concat( ROUND( (duration*1.0 / 3600),2 ),'小时') AS stuDuration,
+            concat( ROUND( (zduration*1.0 / 3600),2 ),'小时' ) AS zduration,
+            score,
+            student_id AS studentId,
+            '达标' AS result,
+            photoUrl,
+            signatrueimg,
+            totalScores
+        FROM(
+                SELECT
+                    d.student_id,
+                    b.realname,
+                    b.identify_number AS identifyNumber,
+                    b.cellphone,
+                    b.plate_number as plateNumber,
+                    b.full_face_photo as facePhoto,
+                    MAX(a.score) AS score,
+                    c.duration,
+                    du.duration as zduration,
+                    b.sex,
+                    b.address,
+                    pu.photoUrl,
+                    sg.signatrueimg,
+                    ce.total_scores AS totalScores
+                FROM(
+                        select * from relation_student_course where rel_unit_course_id = #{relUnitCourseId}
+                        ) d
+                        INNER JOIN base_student b ON d.student_id = b.id and b.deleted = 0
+                        LEFT JOIN(
+                    select
+                        ruc.id,sum(bc.duration) as duration
+                    from
+                        relation_course_courseware rc
+                            INNER JOIN base_courseware bc on bc.id = rc.courseware_id
+                            INNER JOIN relation_unit_course ruc ON rc.course_id = ruc.course_id
+                    where 1=1
+                      AND bc.deleted = 0
+                      AND ruc.id = #{relUnitCourseId}
+                    GROUP BY
+                        ruc.id
+                    )du on du.id = d.rel_unit_course_id
+                        LEFT JOIN	(
+                    select * from biz_test_record where rel_unit_course_id = #{relUnitCourseId}
+                    ) a on a.student_id = b.id
+                        LEFT JOIN ( SELECT sum( duration ) AS duration, student_id FROM biz_study_record WHERE valid = 1 AND rel_unit_course_id = #{relUnitCourseId} GROUP BY student_id ) AS c ON b.id = c.student_id
+                        LEFT JOIN(
+                    SELECT
+                        student_id,
+                        rel_unit_course_id,
+                        MAX( photo_url ) AS photoUrl
+                    FROM
+                        biz_snapshot
+                    GROUP BY
+                        student_id,
+                        rel_unit_course_id
+                    )pu on pu.student_id = d.student_id and pu.rel_unit_course_id = a.rel_unit_course_id
+                        LEFT JOIN base_exam_signatrue sg on sg.examid = a.id and sg.studentid = d.student_id
+                        LEFT JOIN base_course_ext ce on ce.rel_unit_course_id = d.rel_unit_course_id
+                WHERE 1=1
+                  AND b.unit_id NOT IN ( 1, 2, 16 )
+                GROUP BY
+                    d.student_id,
+                    b.identify_number,
+                    b.cellphone,
+                    b.plate_number,
+                    b.full_face_photo,
+                    b.realname,
+                    c.duration,
+                    b.sex,
+                    b.address,
+                    pu.photoUrl,
+                    sg.signatrueimg,
+                    ce.total_scores
+                ) list
+    </select>
+
+    <select id="getCourseQuestion" parameterType="Integer" resultType="org.springblade.train.entity.TrainingListModel">
+        SELECT
+            b.content,
+            c.content as answercontent
+        FROM
+            relation_unit_course a,
+            base_question b,
+            base_answer c
+        WHERE
+            a.id = #{courseId}
+          AND a.course_id = b.course_id
+          AND b.id = c.question_id
+          AND b.deleted = 0
+          AND c.deleted = 0
+          AND c.checked = 1
+    </select>
+
 </mapper>
