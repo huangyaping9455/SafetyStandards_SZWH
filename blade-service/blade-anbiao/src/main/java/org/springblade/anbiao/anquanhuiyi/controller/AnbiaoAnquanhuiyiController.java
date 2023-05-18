@@ -631,10 +631,20 @@ public class AnbiaoAnquanhuiyiController {
 					QueryWrapper<AnbiaoAnquanhuiyiDetail> anquanhuiyiDetailQueryWrapper = new QueryWrapper<>();
 					anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds, t.getId());
 					List<AnbiaoAnquanhuiyiDetail> details = anquanhuiyiDetailService.getBaseMapper().selectList(anquanhuiyiDetailQueryWrapper);
-					if (details.size() > 0) {
-						for (int q = 0; q <= details.size() - 1; q++) {
+					List<AnbiaoAnquanhuiyiDetail> details1 = new ArrayList<>();
+					for (AnbiaoAnquanhuiyiDetail aa:details) {
+						QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
+						jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,"0");
+						jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId,aa.getAadApIds());
+						JiaShiYuan jiaShiYuan = iJiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+						if (jiaShiYuan!=null){
+							details1.add(aa);
+						}
+					}
+					if (details1.size() > 0) {
+						for (int q = 0; q <= details1.size() - 1; q++) {
 							AnbiaoAnquanhuiyiDetailVO aa = new AnbiaoAnquanhuiyiDetailVO();
-							AnbiaoAnquanhuiyiDetail anbiaoAnquanhuiyiDetail = details.get(q);
+							AnbiaoAnquanhuiyiDetail anbiaoAnquanhuiyiDetail = details1.get(q);
 							aa.setAddTime(anbiaoAnquanhuiyiDetail.getAddTime());
 							aa.setAadApName(anbiaoAnquanhuiyiDetail.getAadApName());
 							aa.setAddApHeadPortrait(anbiaoAnquanhuiyiDetail.getAddApHeadPortrait());
