@@ -34,6 +34,16 @@ spring:
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
 
+#防止服务超时,此处设置为6秒，时长自定义
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 6000
+        timeout:
+          enabled: false
 
 trainserver:
   file-server: ${trainserver.dev.fileServer}

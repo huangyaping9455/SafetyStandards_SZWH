@@ -292,6 +292,7 @@
                 AND b.course_id = c.id
                 AND a.full_name = #{deptName}
                 AND a.deleted = 0
+                AND b.deleted = 0
                 AND c.course_kind_id = d.id
                 And d.`name` = '日常培训'
             GROUP BY
@@ -315,6 +316,7 @@
                 AND b.course_id = c.id
                 AND a.full_name = #{deptName}
                 AND a.deleted = 0
+                AND b.deleted = 0
                 AND c.course_kind_id = d.id
                 And d.`name` in ('理论培训','实践培训')
             GROUP BY
