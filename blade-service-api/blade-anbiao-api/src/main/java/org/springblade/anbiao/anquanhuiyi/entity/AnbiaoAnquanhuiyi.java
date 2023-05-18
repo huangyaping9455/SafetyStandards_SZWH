@@ -173,9 +173,9 @@ public class AnbiaoAnquanhuiyi implements Serializable {
 	@TableField(exist = false)
 	private String TwoDimensionalCode;
 
-	@ColumnWidth(15)
-	@ExcelProperty("二维码")
-	@TableField(exist = false)
-	private URL TwoDimensionalCodeUrl;
+//	@ColumnWidth(15)
+//	@ExcelProperty("二维码")
+//	@TableField(exist = false)
+//	private URL TwoDimensionalCodeUrl;
 
 }

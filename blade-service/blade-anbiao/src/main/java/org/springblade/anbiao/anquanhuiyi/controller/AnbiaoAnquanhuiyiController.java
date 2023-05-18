@@ -4,6 +4,7 @@ package org.springblade.anbiao.anquanhuiyi.controller;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.druid.sql.visitor.functions.If;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
@@ -62,6 +63,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -406,20 +408,31 @@ public class AnbiaoAnquanhuiyiController {
 				anquanhuiyiDetailQueryWrapper.lambda().like(StringUtils.isNotEmpty(jsyId), AnbiaoAnquanhuiyiDetail::getAadApIds, jsyId);
 			}
 			List<AnbiaoAnquanhuiyiDetail> details = anquanhuiyiDetailService.getBaseMapper().selectList(anquanhuiyiDetailQueryWrapper);
-			for (int i = 0; i <= details.size() - 1; i++) {
-				AnbiaoAnquanhuiyiDetail anbiaoAnquanhuiyiDetail = details.get(i);
+			List<AnbiaoAnquanhuiyiDetail> details1 = new ArrayList<>();
+			for (AnbiaoAnquanhuiyiDetail a:details) {
+				QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
+				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,"0");
+				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId,a.getAadApIds());
+				JiaShiYuan jiaShiYuan = iJiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+				if (jiaShiYuan!=null){
+					details1.add(a);
+				}
+			}
+
+			for (int i = 0; i <= details1.size() - 1; i++) {
+				AnbiaoAnquanhuiyiDetail anbiaoAnquanhuiyiDetail = details1.get(i);
 				//参会人头像附件
 				if (StrUtil.isNotEmpty(anbiaoAnquanhuiyiDetail.getAddApHeadPortrait()) && anbiaoAnquanhuiyiDetail.getAddApHeadPortrait().contains("http") == false) {
 					anbiaoAnquanhuiyiDetail.setAddApHeadPortrait(fileUploadClient.getUrl(anbiaoAnquanhuiyiDetail.getAddApHeadPortrait()));
 				}
 			}
-			anquanhuiyiInfo.setAnquanhuiyiDetails(details);
+			anquanhuiyiInfo.setAnquanhuiyiDetails(details1);
 			anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds, Id);
 			anquanhuiyiDetailQueryWrapper.groupBy("aad_ap_type");
-			details = anquanhuiyiDetailService.getBaseMapper().selectList(anquanhuiyiDetailQueryWrapper);
+			details1 = anquanhuiyiDetailService.getBaseMapper().selectList(anquanhuiyiDetailQueryWrapper);
 			String leixing = "";
-			for (int i = 0; i <= details.size() - 1; i++) {
-				leixing += details.get(i).getAadApType() + ",";
+			for (int i = 0; i <= details1.size() - 1; i++) {
+				leixing += details1.get(i).getAadApType() + ",";
 			}
 			;
 			System.out.println(leixing);
@@ -581,6 +594,7 @@ public class AnbiaoAnquanhuiyiController {
 					map.put("zhuchiren", t.getZhuchiren());
 					map.put("canhuirenshu", t.getCanhuirenshu());
 					map.put("huiyineirong", t.getHuiyineirong());
+					map.put("shijicanhuirenshu",t.getShijicanhuirenshu());
 
 					if (StringUtils.isNotBlank(t.getFujian()) && !t.getFujian().equals("null")) {
 
@@ -596,15 +610,18 @@ public class AnbiaoAnquanhuiyiController {
 						QrCodeUtils.encode(context, null, destPath, false);
 						// 输出logo.jpg文件的绝对路径
 						System.out.println(destPath);
-						destPath="file:///"+destPath;
+//						destPath="file:///"+destPath;
 
+						File file = new File(destPath);
+						AnbiaoAnquanhuiyiVO anbiaoAnquanhuiyiVO = new AnbiaoAnquanhuiyiVO();
 						//添加图片到工作表的指定位置
 						try {
-							t.setTwoDimensionalCodeUrl(new URL(destPath));
+							URL url = file.toURI().toURL();
+							anbiaoAnquanhuiyiVO.setTwoDimensionalCodeUrl(url);
 						} catch (MalformedURLException e) {
 							e.printStackTrace();
 						}
-						map.put("huiyijiyao", t.getTwoDimensionalCodeUrl());
+						map.put("huiyijiyao", anbiaoAnquanhuiyiVO.getTwoDimensionalCodeUrl());
 
 					} else {
 						map.put("huiyijiyao", "无");
