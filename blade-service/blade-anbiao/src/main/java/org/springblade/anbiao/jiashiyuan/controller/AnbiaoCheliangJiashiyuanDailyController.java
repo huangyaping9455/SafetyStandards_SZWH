@@ -68,6 +68,7 @@ public class AnbiaoCheliangJiashiyuanDailyController {
 			cheliangJiashiyuanDaily.setCreatetime(DateUtil.now());
 			if(cheliangJiashiyuanDaily.getVehid() != null && StringUtils.isNotEmpty(cheliangJiashiyuanDaily.getVehid())){
 				AnbiaoCheliangJiashiyuanDaily ss = cheliangJiashiyuanDailyService.SelectByID("车头",cheliangJiashiyuanDaily.getJiashiyuanid());
+
 				if(ss != null){
 					ss.setVstatus(0);
 					ss.setUpdatetime(DateUtil.now());

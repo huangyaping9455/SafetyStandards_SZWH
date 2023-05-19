@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.issueAbarbeitung.mapper.AnbiaoIssueAbarbeitungMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.issueAbarbeitung.entity.AnbiaoIssueAbarbeitung">
+        <id column="id" property="id" />
+        <result column="dept_id" property="deptId" />
+        <result column="dept_name" property="deptName" />
+        <result column="title" property="title" />
+        <result column="rectification_time" property="rectificationTime" />
+        <result column="is_abarbeitung" property="isAbarbeitung" />
+        <result column="existing_problem" property="existingProblem" />
+        <result column="rectification_requirement" property="rectificationRequirement" />
+        <result column="fujian" property="fujian" />
+        <result column="create_time" property="createTime" />
+        <result column="create_name" property="createName" />
+        <result column="careate_id" property="careateId" />
+        <result column="fasongdanweiid" property="fasongdanweiid" />
+    </resultMap>
+
+	<sql id="tableSql">
+		select
+			a.*
+		from
+			anbiao_issue_abarbeitung a
+<!--		inner join (-->
+<!--			select * from baobiao_zhengfu_qiye-->
+<!--			where jigouleixing in('qiye','geti')-->
+<!--			<if test="province != null and province != '' ">-->
+<!--				and province = #{province}-->
+<!--			</if>-->
+<!--			<if test="city != null and city != '' ">-->
+<!--				and city = #{city}-->
+<!--			</if>-->
+<!--			<if test="country != null and country != '' ">-->
+<!--				and country = #{country}-->
+<!--			</if>-->
+<!--		) b on a.fasongdanweiid = b.yunguanid-->
+		where 1=1
+        <if test="beginDate != null and beginDate != '' ">
+            and a.rectification_time >= CONCAT( '${beginDate}', ' 00:00:00')
+        </if>
+        <if test="endDate != null and endDate != '' ">
+            and a.rectification_time &lt;= CONCAT( '${endDate}', ' 23:59:59')
+        </if>
+        <if test="createBeginTime != null and createBeginTime != '' ">
+            and a.create_time >= CONCAT( '${createBeginTime}', ' 00:00:00')
+        </if>
+        <if test="createEndTime != null and createEndTime != '' ">
+            and a.create_time &lt;= CONCAT( '${createEndTime}', ' 23:59:59')
+        </if>
+			and a.fasongdanweiid = #{deptId}
+	</sql>
+
+	<sql id="orderSql">
+		<!-- 默认排序规则 -->
+		<if test="orderColumn == null or orderColumn == ''">
+			order by create_time desc
+		</if>
+		<if test="orderColumn != null and orderColumn != ''">
+			order by ${orderColumn}
+		</if>
+		<if test="orderColumn != null and orderColumn != '' and order != 0">
+			desc
+		</if>
+		<if test="orderColumn != null and orderColumn != '' and order == 0">
+			asc
+		</if>
+	</sql>
+
+	<sql id="querySql">
+
+		<if test="title != null and title != '' ">
+			and title like '%${title}%'
+		</if>
+
+		<if test="deptName != null and deptName != ''">
+			and dept_name like '%${deptName}%'
+		</if>
+
+	</sql>
+
+	<select timeout="600" id="selectGetAll" resultMap="BaseResultMap"
+			parameterType="org.springblade.anbiao.issueAbarbeitung.page.AnbiaoIssueAbarbeitungPage">
+		<if test="size == 0">
+			select * from (
+			<include refid="tableSql"/>
+			)b
+			where 1=1
+			<include refid="querySql"/>
+			<include refid="orderSql"/>
+			limit ${total}
+		</if>
+		<if test="current != 0">
+			select * from (
+			<include refid="tableSql"/>
+			)b
+			where 1=1
+			<include refid="querySql"/>
+			<include refid="orderSql"/>
+			limit ${offsetNo},${size}
+		</if>
+	</select>
+
+	<select timeout="90" id="selectGetAllTotal"
+			parameterType="org.springblade.anbiao.issueAbarbeitung.page.AnbiaoIssueAbarbeitungPage"
+			resultType="int">
+		select COUNT(1) from (
+		<include refid="tableSql"/>
+		)d where 1 = 1
+		<include refid="querySql"/>
+	</select>
+
+
+
+
+
+</mapper>

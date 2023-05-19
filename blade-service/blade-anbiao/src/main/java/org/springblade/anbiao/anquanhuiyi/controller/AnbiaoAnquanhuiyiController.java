@@ -600,24 +600,27 @@ public class AnbiaoAnquanhuiyiController {
 
 						// context是二维码里面的内容，如果是网址则会跳转到网址界面
 						String context = t.getFujian();
-						// 获取类路径下的logo文件
-						ClassPathResource resource = new ClassPathResource("templates/logo.jpg");
-						//获logo.jpg的绝对路径
-						String logoPath = resource.getFile().getPath();
+//						// 获取类路径下的logo文件
+//						ClassPathResource resource = new ClassPathResource("templates/logo.jpg");
+//						//获logo.jpg的绝对路径
+//						String logoPath = resource.getFile().getPath();
 						String A = uuid + ".jpg";
 						String destPath = fileServer.getPathPrefix() + FilePathConstant.ENCLOSURE_PATH + nyr[0] + "/" + nyr[1] + "/" + nyr[2] + "/" + A;
 						// String destPath = "D:\\qrCode\\csdn.jpg";
+						System.out.println("生成二维码");
+						System.out.println(destPath);
 						QrCodeUtils.encode(context, null, destPath, false);
 						// 输出logo.jpg文件的绝对路径
 						System.out.println(destPath);
-//						destPath="file:///"+destPath;
+						destPath="file:///"+destPath;
 
-						File file = new File(destPath);
+//						File file = new File(destPath);
+						String url= StrUtil.replace(fileServer.getUrlPrefix()+ destPath,"\\","/");
 						AnbiaoAnquanhuiyiVO anbiaoAnquanhuiyiVO = new AnbiaoAnquanhuiyiVO();
 						//添加图片到工作表的指定位置
 						try {
-							URL url = file.toURI().toURL();
-							anbiaoAnquanhuiyiVO.setTwoDimensionalCodeUrl(url);
+//							URL url = file.toURI().toURL();
+							anbiaoAnquanhuiyiVO.setTwoDimensionalCodeUrl(new URL(destPath));
 						} catch (MalformedURLException e) {
 							e.printStackTrace();
 						}

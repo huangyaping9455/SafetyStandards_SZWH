@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.fullrate.mapper.AnbiaoDeptFullRateMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.fullrate.entity.AnbiaoDeptFullRate">
+        <id column="id" property="id" />
+        <result column="deptId" property="deptId" />
+        <result column="vehFullRate" property="vehFullRate" />
+        <result column="jsyFullRate" property="jsyFullRate" />
+        <result column="deptFullRate" property="deptFullRate" />
+    </resultMap>
+
+    <!--政府档案信息完整率统计 -->
+    <sql id="DayTJSql">
+        select
+            DISTINCT
+            a.qiyeid AS deptId,
+            a.qiyemingcheng AS deptName,
+            b.deptFullRate,
+            b.vehFullRate,
+            b.jsyFullRate,
+            b.avgFullRate
+        from(
+            select
+                qiyeid,qiyemingcheng,yunguanmingcheng as zhengfuname,yunguanid as zhengfuid,areaname
+            from baobiao_zhengfu_qiye
+            where 1=1 and jigouleixing in ('qiye','geti')
+            <if test="province != null and province != '' ">
+                and province = #{province}
+            </if>
+            <if test="city != null and city != '' ">
+                and city = #{city}
+            </if>
+            <if test="country != null and country != '' ">
+                and country = #{country}
+            </if>
+            )a
+        INNER JOIN(
+            select
+                deptId,
+                SUM(deptFullRate) as deptFullRate,
+                SUM(vehFullRate) as vehFullRate,
+                SUM(jsyFullRate) as jsyFullRate,
+                ROUND((SUM(deptFullRate)+SUM(vehFullRate)+SUM(jsyFullRate))/3,2) as avgFullRate
+            from
+                anbiao_dept_full_rate
+            GROUP BY
+                deptId
+            )b ON a.qiyeid = b.deptId
+    </sql>
+
+    <sql id="orderDayTJSql">
+        <!--默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by avgFullRate asc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+    </sql>
+
+    <sql id="queryDayTJSql">
+
+        <if test="deptName != null and deptName != '' ">
+            and deptName like CONCAT('%',#{deptName},'%')
+        </if>
+
+    </sql>
+
+    <select timeout="600" id="selectDayTJ" resultMap="BaseResultMap"
+            parameterType="org.springblade.anbiao.fullrate.page.DeptFullRatePage">
+        <if test="size == 0">
+            select * from (
+            <include refid="DayTJSql"/>
+            )b
+            where 1=1
+            <include refid="queryDayTJSql"/>
+            <include refid="orderDayTJSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="DayTJSql"/>
+            )b
+            where 1=1
+            <include refid="queryDayTJSql"/>
+            <include refid="orderDayTJSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectDayTJotal"
+            parameterType="org.springblade.anbiao.fullrate.page.DeptFullRatePage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="DayTJSql"/>
+        )d where 1 = 1
+        <include refid="queryDayTJSql"/>
+    </select>
+
+</mapper>

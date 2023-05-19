@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.issueAbarbeitung.mapper.AnbiaoIssueAbarbeitungDeptMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.issueAbarbeitung.entity.AnbiaoIssueAbarbeitungDept">
+        <id column="id" property="id" />
+        <result column="dept_id" property="deptId" />
+        <result column="dept_name" property="deptName" />
+        <result column="status" property="status" />
+        <result column="is_read" property="isRead" />
+        <result column="response_situation" property="responseSituation" />
+        <result column="fujian" property="fujian" />
+        <result column="beizhu" property="beizhu" />
+        <result column="read_time" property="readTime" />
+        <result column="read_id" property="readId" />
+        <result column="read_name" property="readName" />
+        <result column="caozuoshijian" property="caozuoshijian" />
+        <result column="caozuoren" property="caozuoren" />
+        <result column="caozuorenid" property="caozuorenid" />
+        <result column="response_time" property="responseTime" />
+        <result column="no_pass_text" property="noPassText" />
+        <result column="issue_id" property="issueId" />
+		<result column="shenhe_time" property="shenheTime" />
+		<result column="shenhe_name" property="shenheName" />
+		<result column="shenhe_id" property="shenheId" />
+    </resultMap>
+
+    <resultMap id="AnbiaoIssueAbarbeitungDeptVoBaseResultMap" type="org.springblade.anbiao.issueAbarbeitung.VO.AnbiaoIssueAbarbeitungDeptVo">
+    </resultMap>
+
+    <sql id="tableSql">
+		<if test="issueId != null and issueId != '' ">
+			select
+				a.*,
+				c.rectification_time as rectificationTime,
+				c.title,
+				c.rectification_requirement as rectificationRequirement,
+				c.is_abarbeitung as isAbarbeitung,
+				c.create_time as createTime
+			from
+				anbiao_issue_abarbeitung_dept a
+			inner join anbiao_issue_abarbeitung c on a.issue_id = c.id
+			where c.rectification_time = #{date}
+				and c.id = #{issueId}
+		</if>
+		<if test="issueId == null || issueId == '' ">
+			select
+				a.*,
+				c.rectification_time as rectificationTime,
+				c.title,
+				c.rectification_requirement as rectificationRequirement,
+				c.is_abarbeitung as isAbarbeitung,
+				c.create_time as createTime
+			from
+				anbiao_issue_abarbeitung_dept a
+			inner join anbiao_issue_abarbeitung c on a.issue_id = c.id
+			inner join  (
+				<include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+			) b on a.dept_id = b.id
+			where 1=1
+            <if test="beginDate != null and beginDate != '' ">
+                and c.rectification_time >= CONCAT( '${beginDate}', ' 00:00:00')
+            </if>
+            <if test="endDate != null and endDate != '' ">
+                and c.rectification_time &lt;= CONCAT( '${endDate}', ' 23:59:59')
+            </if>
+            <if test="createBeginTime != null and createBeginTime != '' ">
+                and c.create_time >= CONCAT( '${createBeginTime}', ' 00:00:00')
+            </if>
+            <if test="createEndTime != null and createEndTime != '' ">
+                and c.create_time &lt;= CONCAT( '${createEndTime}', ' 23:59:59')
+            </if>
+		</if>
+    </sql>
+
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        <if test="orderColumn == null or orderColumn == ''">
+            order by createTime desc
+        </if>
+        <if test="orderColumn != null and orderColumn != ''">
+            order by ${orderColumn}
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order != 0">
+            desc
+        </if>
+        <if test="orderColumn != null and orderColumn != '' and order == 0">
+            asc
+        </if>
+    </sql>
+
+    <sql id="querySql">
+
+        <if test="title != null and title != '' ">
+            and title like '%${title}%'
+        </if>
+
+        <if test="status != null">
+            and status = #{status}
+        </if>
+
+        <if test="isRead != null">
+            and is_read = #{isRead}
+        </if>
+
+    </sql>
+
+    <select timeout="600" id="selectGetAll" resultMap="AnbiaoIssueAbarbeitungDeptVoBaseResultMap"
+            parameterType="org.springblade.anbiao.issueAbarbeitung.page.AnbiaoIssueAbarbeitungPage">
+        <if test="size == 0">
+            select * from (
+            <include refid="tableSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="tableSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="selectGetAllTotal"
+            parameterType="org.springblade.anbiao.issueAbarbeitung.page.AnbiaoIssueAbarbeitungPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql"/>
+        )d where 1 = 1
+        <include refid="querySql"/>
+    </select>
+
+</mapper>
