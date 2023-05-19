@@ -3759,12 +3759,12 @@ public class AnbiaoRiskDetailController {
 				riskDetail1.setVehicleId(xingnengbaogao.getVehicleId());
 				riskDetail1.setCheliangpaizhao(xingnengbaogao.getCheliangpaizhao());
 				A=xingnengbaogao.getCheliangpaizhao();
-				if (!xingnengbaogao.getAvxInspectionDate().equals("0")){
+				if (!xingnengbaogao.getAvxInspectionDate2().equals("0")){
 					A=A+"检测日期";
 					riskDetail1.setArdContent(A);
 					a++;
 				}
-				if (!xingnengbaogao.getAvxLastDate().equals("0")){
+				if (!xingnengbaogao.getAvxLastDate2().equals("0")){
 					A=A+"检测有效期";
 					riskDetail1.setArdContent(A);
 					a++;
@@ -3779,12 +3779,12 @@ public class AnbiaoRiskDetailController {
 				String A="";
 				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 				A=xingnengbaogao.getCheliangpaizhao();
-				if (!xingnengbaogao.getAvxInspectionDate().equals("0")){
+				if (!xingnengbaogao.getAvxInspectionDate2().equals("0")){
 					A=A+"检测日期";
 					riskDetail.setArdContent(A);
 					a++;
 				}
-				if (!xingnengbaogao.getAvxLastDate().equals("0")){
+				if (!xingnengbaogao.getAvxLastDate2().equals("0")){
 					A=A+"检测有效期";
 					riskDetail.setArdContent(A);
 					a++;

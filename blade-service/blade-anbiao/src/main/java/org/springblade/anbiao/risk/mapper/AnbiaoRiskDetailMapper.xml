@@ -999,8 +999,8 @@
         , cheliangpaizhao
         , d.jiashiyuanxingming
         , d.id as jiashiyuanid
-        , (case when (ifnull(`avx_inspection_date`,'') = '') then 1 else 0 end) as avx_inspection_date
-        , (case when (ifnull(`avx_last_date`,'') = '') then 1 else 0 end) as avx_last_date
+        , (case when (ifnull(`avx_inspection_date`,'') = '') then 1 else 0 end) as avxInspectionDate2
+        , (case when (ifnull(`avx_last_date`,'') = '') then 1 else 0 end) as avxLastDate2
         FROM
         anbiao_vehicle a
         INNER JOIN (

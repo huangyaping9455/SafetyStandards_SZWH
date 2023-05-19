@@ -123,4 +123,12 @@ public class VehicleXingnengbaogao implements Serializable {
 	@TableField(exist = false)
 	private String deptId;
 
+	@ApiModelProperty(value = "检测日期")
+	@TableField(exist = false)
+	private String avxInspectionDate2;
+
+	@ApiModelProperty(value = "检测有效期")
+	@TableField(exist = false)
+	private String avxLastDate2;
+
 }

@@ -356,6 +356,7 @@ public class JiaShiYuanController {
 			}
 		}
 
+		jiaShiYuan.setXingbie("1");
 		//验证身份证
 		if(StringUtils.isNotEmpty(jiaShiYuan.getShenfenzhenghao()) && jiaShiYuan.getShenfenzhenghao() != null){
 			if (IdCardUtil.isValidCard(jiaShiYuan.getShenfenzhenghao()) == true) {
@@ -431,7 +432,8 @@ public class JiaShiYuanController {
 				}
 				jiaShiYuanQueryWrapper2.lambda().eq(JiaShiYuan::getDeptId, jiaShiYuan.getDeptId());
 				jiaShiYuanQueryWrapper2.lambda().eq(JiaShiYuan::getIsdelete, 0);
-				jiaShiYuan = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper2);
+				JiaShiYuan jiaShiYuan2 = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper2);
+				jiaShiYuan.setId(jiaShiYuan2.getId());
 
 				//向入职登记表添加信息
 				AnbiaoJiashiyuanRuzhi ruzhi = new AnbiaoJiashiyuanRuzhi();
