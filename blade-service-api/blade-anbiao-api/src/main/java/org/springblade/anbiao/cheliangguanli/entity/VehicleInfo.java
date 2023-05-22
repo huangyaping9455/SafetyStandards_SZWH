@@ -202,6 +202,9 @@ public class VehicleInfo implements Serializable {
 	@ApiModelProperty(value = "运营商")
 	private String yunyingshang;
 
+	@ApiModelProperty(value = "运营商名称")
+	private String yunyingshangmingcheng;
+
 	@ApiModelProperty(value = "运营商接入码")
 	private String yunyingshangjieruma;
 

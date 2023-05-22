@@ -233,6 +233,7 @@ public class VehicleController {
 		v.setVideochannelnum(detail.getVideochannelnum());
 		v.setZhongduanleixing(detail.getZhongduanleixing());
 		v.setYunyingshang(detail.getYunyingshang());
+		v.setYunyingshangmingcheng(detail.getYunyingshangmingcheng());
 		v.setSimnum(detail.getSimnum());
 		v.setYunyingshangjieruma(detail.getYunyingshangjieruma());
 
@@ -619,6 +620,7 @@ public class VehicleController {
 		vehicle.setFadongjipailianggonglv(v.getPailianggonglv());
 		vehicle.setZhongduanleixing(v.getZhongduanleixing());
 		vehicle.setYunyingshang(v.getYunyingshang());
+		vehicle.setYunyingshangmingcheng(v.getYunyingshangmingcheng());
 		vehicle.setYunyingshangjieruma(v.getYunyingshangjieruma());
 //		String str="1";
 //		//登录页
