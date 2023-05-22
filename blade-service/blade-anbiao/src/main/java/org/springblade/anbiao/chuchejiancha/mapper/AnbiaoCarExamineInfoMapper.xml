@@ -275,6 +275,13 @@
         where 1=1
             and v.is_deleted = 0
             and v.cheliangpaizhao not like '%挂%'
+        <if test="cheliangpaizhao != null and cheliangpaizhao != '' ">
+            and v.cheliangpaizhao like '%${cheliangpaizhao}%'
+        </if>
+
+        <if test="deptname != null and deptname != ''">
+            and b.dept_name like '%${deptname}%'
+        </if>
         ) b
         GROUP BY
             deptId,
@@ -308,7 +315,6 @@
 			<include refid="tableDeptYHTZSql" />
 			)b
 			where 1=1
-			<include refid="queryDeptYHTZSql" />
 			<include refid="orderDeptYHTZSql" />
 			limit ${total}
 		</if>
@@ -317,7 +323,6 @@
 			<include refid="tableDeptYHTZSql" />
 			)b
 			where 1=1
-			<include refid="queryDeptYHTZSql" />
 			<include refid="orderDeptYHTZSql" />
 			limit ${offsetNo},${size}
 		</if>
@@ -330,7 +335,6 @@
 		<include refid="tableDeptYHTZSql" />
 		)d
 		where 1 = 1
-		<include refid="queryDeptYHTZSql" />
 	</select>
 
     <select timeout="600" id="selectDeptVeh" resultMap="AnbiaoCarExamineInfoTZVOResultMap"

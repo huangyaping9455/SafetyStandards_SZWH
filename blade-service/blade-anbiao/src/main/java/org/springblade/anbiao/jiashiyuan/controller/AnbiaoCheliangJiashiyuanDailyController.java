@@ -86,6 +86,19 @@ public class AnbiaoCheliangJiashiyuanDailyController {
 //						vehicleService.updateById(vehicle);
 //					}
 				}
+
+				QueryWrapper<AnbiaoCheliangJiashiyuanDaily> anbiaoCheliangJiashiyuanDailyQueryWrapper = new QueryWrapper<>();
+				anbiaoCheliangJiashiyuanDailyQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuanDaily::getVehid,cheliangJiashiyuanDaily.getVehid());
+				anbiaoCheliangJiashiyuanDailyQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuanDaily::getVstatus,"1");
+				AnbiaoCheliangJiashiyuanDaily anbiaoCheliangJiashiyuanDaily = cheliangJiashiyuanDailyService.getBaseMapper().selectOne(anbiaoCheliangJiashiyuanDailyQueryWrapper);
+
+				if (anbiaoCheliangJiashiyuanDaily!=null){
+					anbiaoCheliangJiashiyuanDaily.setVstatus(0);
+					anbiaoCheliangJiashiyuanDaily.setUpdatetime(DateUtil.now());
+					cheliangJiashiyuanDailyService.updateById(anbiaoCheliangJiashiyuanDaily);
+				}
+
+
 				cheliangJiashiyuanDaily.setVstatus(1);
 			}
 			if(cheliangJiashiyuanDaily.getGvehid() != null && StringUtils.isNotEmpty(cheliangJiashiyuanDaily.getGvehid())){
@@ -107,6 +120,19 @@ public class AnbiaoCheliangJiashiyuanDailyController {
 //						vehicleService.updateById(vehicle);
 //					}
 				}
+
+				QueryWrapper<AnbiaoCheliangJiashiyuanDaily> anbiaoCheliangJiashiyuanDailyQueryWrapper = new QueryWrapper<>();
+				anbiaoCheliangJiashiyuanDailyQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuanDaily::getGvehid,cheliangJiashiyuanDaily.getGvehid());
+				anbiaoCheliangJiashiyuanDailyQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuanDaily::getGstatus,"1");
+				AnbiaoCheliangJiashiyuanDaily anbiaoCheliangJiashiyuanDaily = cheliangJiashiyuanDailyService.getBaseMapper().selectOne(anbiaoCheliangJiashiyuanDailyQueryWrapper);
+
+				if (anbiaoCheliangJiashiyuanDaily!=null){
+					anbiaoCheliangJiashiyuanDaily.setGstatus(0);
+					anbiaoCheliangJiashiyuanDaily.setUpdatetime(DateUtil.now());
+					cheliangJiashiyuanDailyService.updateById(anbiaoCheliangJiashiyuanDaily);
+				}
+
+
 				cheliangJiashiyuanDaily.setGstatus(1);
 			}
 			cheliangJiashiyuanDailyService.save(cheliangJiashiyuanDaily);
@@ -139,6 +165,19 @@ public class AnbiaoCheliangJiashiyuanDailyController {
 //								vehicleService.updateById(vehicle);
 //							}
 						}
+
+						QueryWrapper<AnbiaoCheliangJiashiyuanDaily> anbiaoCheliangJiashiyuanDailyQueryWrapper = new QueryWrapper<>();
+						anbiaoCheliangJiashiyuanDailyQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuanDaily::getVehid,cheliangJiashiyuanDailies.get(i).getVehid());
+						anbiaoCheliangJiashiyuanDailyQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuanDaily::getVstatus,"1");
+						AnbiaoCheliangJiashiyuanDaily anbiaoCheliangJiashiyuanDaily = cheliangJiashiyuanDailyService.getBaseMapper().selectOne(anbiaoCheliangJiashiyuanDailyQueryWrapper);
+
+						if (anbiaoCheliangJiashiyuanDaily!=null){
+							anbiaoCheliangJiashiyuanDaily.setVstatus(0);
+							anbiaoCheliangJiashiyuanDaily.setUpdatetime(DateUtil.now());
+							cheliangJiashiyuanDailyService.updateById(anbiaoCheliangJiashiyuanDaily);
+						}
+
+
 						cheliangJiashiyuanDaily.setVstatus(1);
 					}
 					if(cheliangJiashiyuanDailies.get(i).getGvehid() != null && StringUtils.isNotEmpty(cheliangJiashiyuanDailies.get(i).getGvehid())){
@@ -160,6 +199,19 @@ public class AnbiaoCheliangJiashiyuanDailyController {
 //								vehicleService.updateById(vehicle);
 //							}
 						}
+
+						QueryWrapper<AnbiaoCheliangJiashiyuanDaily> anbiaoCheliangJiashiyuanDailyQueryWrapper = new QueryWrapper<>();
+						anbiaoCheliangJiashiyuanDailyQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuanDaily::getGvehid,cheliangJiashiyuanDailies.get(i).getGvehid());
+						anbiaoCheliangJiashiyuanDailyQueryWrapper.lambda().eq(AnbiaoCheliangJiashiyuanDaily::getGstatus,"1");
+						AnbiaoCheliangJiashiyuanDaily anbiaoCheliangJiashiyuanDaily = cheliangJiashiyuanDailyService.getBaseMapper().selectOne(anbiaoCheliangJiashiyuanDailyQueryWrapper);
+
+						if (anbiaoCheliangJiashiyuanDaily!=null){
+							anbiaoCheliangJiashiyuanDaily.setGstatus(0);
+							anbiaoCheliangJiashiyuanDaily.setUpdatetime(DateUtil.now());
+							cheliangJiashiyuanDailyService.updateById(anbiaoCheliangJiashiyuanDaily);
+						}
+
+
 						cheliangJiashiyuanDaily.setGstatus(1);
 					}
 					cheliangJiashiyuanDailyService.updateById(cheliangJiashiyuanDaily);

@@ -131,7 +131,9 @@
         avb.avb_delete,
         avb.ajb_insure_deptid,av.cheliangpaizhao,bd.dept_name,IFNULL(cc.ajbm_company_amount,0) as ajbmInsuranceAmount,IFNULL(ajbm_basic_premium,0) as ajbmBasicPremium,
 
-        case WHEN IFNULL(DATEDIFF(avb.avb_insurance_period_end,SYSDATE()),'')='' then 0 else DATEDIFF(avb.avb_insurance_period_end,SYSDATE()) end as avb_insurance_days
+        case WHEN IFNULL(DATEDIFF(avb.avb_insurance_period_end,SYSDATE()),'')='' then 0 else DATEDIFF(avb.avb_insurance_period_end,SYSDATE()) end as avb_insurance_days,
+        cc.avbm_risk as avbmRisk
+
         from
             anbiao_vehicle_baoxian avb
         left join anbiao_vehicle av on av.id=avb.avb_av_ids
@@ -153,7 +155,7 @@
         ) bd on avb.avb_dept_ids = bd.id
         left join (
             select
-                avbm_avb_ids,IFNULL(SUM(avbm_insurance_amount),0) as ajbm_company_amount,IFNULL(SUM(avbm_basic_premium),0) as ajbm_basic_premium
+                avbm_avb_ids,IFNULL(SUM(avbm_insurance_amount),0) as ajbm_company_amount,IFNULL(SUM(avbm_basic_premium),0) as ajbm_basic_premium,avbm_risk
             from
                 anbiao_vehicle_baoxian_mingxi
             GROUP BY

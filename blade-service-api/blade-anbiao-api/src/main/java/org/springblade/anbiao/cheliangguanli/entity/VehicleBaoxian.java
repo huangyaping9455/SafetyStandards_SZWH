@@ -390,6 +390,10 @@ public class VehicleBaoxian implements Serializable {
 	@TableField(exist = false)
 	private Integer deptId;
 
+	@ApiModelProperty(value = "险别")
+	@TableField(exist = false)
+	private String avbmRisk;
+
 
 
 }
