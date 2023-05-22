@@ -1273,44 +1273,30 @@ values
         IFNULL( cheliangpaizhao, "未绑定" ) AS cheliangpaizhao,
         IFNULL( j.id, "未绑定" ) AS vehicleId,
         CASE
-
         WHEN IFNULL( k.avb_av_ids, '' ) = '' THEN
         1 ELSE 0
         END AS c2
-        FROM
-        anbiao_vehicle j
-        LEFT JOIN anbiao_vehicle_xingshizheng k ON j.id = k.avx_av_ids
-        LEFT JOIN anbiao_vehicle_daoluyunshuzheng l ON j.id = l.avd_av_ids
-        LEFT JOIN anbiao_vehicle_xingnengbaogao m ON j.id = m.avx_av_ids
-        LEFT JOIN anbiao_vehicle_dengjizhengshu n ON j.id = n.avd_vehicle_ids
-        LEFT JOIN anbiao_cheliang_jiashiyuan_daily o ON j.id = o.vehid
-        AND o.vstatus = 1
+        FROM(
+            select * from anbiao_vehicle
+            WHERE is_deleted = 0 AND cheliangpaizhao NOT LIKE '%挂'
+        ) j
+        LEFT JOIN anbiao_vehicle_xingshizheng k ON j.id = k.avx_av_ids AND k.avx_delete = 0
+        LEFT JOIN anbiao_vehicle_daoluyunshuzheng l ON j.id = l.avd_av_ids AND l.avd_delete = 0
+        LEFT JOIN anbiao_vehicle_xingnengbaogao m ON j.id = m.avx_av_ids AND m.avx_delete = 0
+        LEFT JOIN anbiao_vehicle_dengjizhengshu n ON j.id = n.avd_vehicle_ids AND n.avd_delete = 0
+        LEFT JOIN anbiao_cheliang_jiashiyuan_daily o ON j.id = o.vehid AND o.vstatus = 1
         LEFT JOIN (
-        SELECT DISTINCT
-        avb_av_ids
-        FROM
-        anbiao_vehicle j
-        LEFT JOIN anbiao_vehicle_baoxian o ON j.id = o.avb_av_ids
-        AND o.avb_delete = 0
-        WHERE
-        j.cheliangpaizhao NOT LIKE '%挂'
+            SELECT
+                avb_av_ids
+            FROM anbiao_vehicle_baoxian
+            AND avb_delete = 0
+            group by avb_av_ids
         ) k ON j.id = k.avb_av_ids
-        WHERE
-        j.cheliangpaizhao NOT LIKE '%挂'
-        AND j.is_deleted = 0
-        AND k.avx_delete = 0
-        AND l.avd_delete = 0
-        AND m.avx_delete = 0
-        AND n.avd_delete = 0
+        WHERE 1=1
         <if test="jiashiyuanId !=null and jiashiyuanId != ''">
             AND o.jiashiyuanid = #{jiashiyuanId}
         </if>
-
-
     </select>
-
-
-
 
     <!--根据企业ID获取驾驶员信息-->
     <select id="getByDriverImg" resultType="org.springblade.anbiao.jiashiyuan.entity.DriverImg" parameterType="java.lang.String">
