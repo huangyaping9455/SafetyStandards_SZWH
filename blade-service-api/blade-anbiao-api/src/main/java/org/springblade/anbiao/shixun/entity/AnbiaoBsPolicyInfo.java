@@ -104,5 +104,16 @@ public class AnbiaoBsPolicyInfo implements Serializable {
 	@TableField(exist = false)
 	private String deptName;
 
+	/**
+	 * 说明
+	 */
+	@ApiModelProperty(value = "说明")
+	private String shuoming;
+
+	/**
+	 * 是否签字，是为1，否为0
+	 */
+	@ApiModelProperty(value = "是否签字，是为1，否为0")
+	private String issign;
 
 }

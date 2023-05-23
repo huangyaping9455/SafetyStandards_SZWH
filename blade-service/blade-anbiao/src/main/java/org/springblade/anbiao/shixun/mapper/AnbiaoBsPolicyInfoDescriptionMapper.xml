@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.shixun.mapper.AnbiaoBsPolicyInfoDescriptionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.shixun.entity.AnbiaoBsPolicyInfoDescription">
+        <id column="abpid_id" property="abpidId" />
+        <result column="abpi_id" property="abpiId" />
+        <result column="abpid_autograph" property="abpidAutograph" />
+        <result column="abpid_ids" property="abpidIds" />
+        <result column="abpid_name" property="abpidName" />
+        <result column="abpid_time" property="abpidTime" />
+    </resultMap>
+
+</mapper>
