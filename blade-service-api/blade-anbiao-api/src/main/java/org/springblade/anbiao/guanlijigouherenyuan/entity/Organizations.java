@@ -413,5 +413,11 @@ public class Organizations implements Serializable {
 	@ApiModelProperty(value = "合同期限结束时间")
 	private String htlastdate;
 
+	@ApiModelProperty(value = "经济类型")
+	private String jingjileixing;
+
+	@ApiModelProperty(value = "企业分级")
+	private String qiyefenji;
+
 
 }

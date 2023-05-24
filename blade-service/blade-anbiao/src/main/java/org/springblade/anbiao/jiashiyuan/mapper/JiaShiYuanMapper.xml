@@ -1076,6 +1076,9 @@ values
             <if test="deptName != null and deptName != '' ">
                 and bb.dept_name like concat('%', #{deptName} ,'%')
             </if>
+            <if test="type != null and type != '' ">
+                and ${type} = 0
+            </if>
 
             order BY a.id
             limit ${total}
@@ -1122,6 +1125,9 @@ values
             </if>
             <if test="deptName != null and deptName != '' ">
                 and bb.dept_name like concat('%', #{deptName} ,'%')
+            </if>
+            <if test="type != null and type != '' ">
+                and ${type} = 0
             </if>
 
             order BY a.id
@@ -1174,6 +1180,9 @@ values
         </if>
         <if test="deptName != null and deptName != '' ">
             and bb.dept_name like concat('%', #{deptName} ,'%')
+        </if>
+        <if test="type != null and type != '' ">
+            and ${type} = 0
         </if>
 
         order BY a.id

@@ -12,6 +12,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tools.zip.ZipOutputStream;
+import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.anbiao.labor.DTO.laborDTO;
 
 import org.springblade.anbiao.labor.VO.LaborVO;
@@ -70,6 +72,8 @@ public class laborController {
 	private IFileUploadClient fileUploadClient;
 
 	private IAnbiaoRiskDetailService riskDetailService;
+
+	private IJiaShiYuanService jiaShiYuanService;
 
 //	@PostMapping("list")
 //	@ApiLog("列表-劳保用品信息")
@@ -357,7 +361,19 @@ public class laborController {
 					QueryWrapper<LaborlingquEntity> laborledgerVOQueryWrapper = new QueryWrapper<>();
 					laborledgerVOQueryWrapper.lambda().eq(LaborlingquEntity::getAlrAliIds,t.getAliIds());
 //					laborledgerVOQueryWrapper.lambda().eq(LaborlingquEntity::getAlrDelete,"0");
-					List<LaborlingquEntity> list=lingquService.getBaseMapper().selectList(laborledgerVOQueryWrapper);
+					List<LaborlingquEntity> laborlingquEntities =lingquService.getBaseMapper().selectList(laborledgerVOQueryWrapper);
+					ArrayList<LaborlingquEntity> list = new ArrayList<>();
+					for (LaborlingquEntity aa:laborlingquEntities) {
+						QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
+						jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId,aa.getAlrPersonIds());
+						jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,"0");
+						JiaShiYuan jiaShiYuan = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+						if (jiaShiYuan!=null){
+							list.add(aa);
+						}
+					}
+
+
 					for (LaborlingquEntity laborlingquEntity:list) {
 						LaborledgerVO laborledgerVO = new LaborledgerVO();
 						laborledgerVO.setAlrPersonName(laborlingquEntity.getAlrPersonName());

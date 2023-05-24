@@ -1666,18 +1666,17 @@
     </select>
 
     <select id="selectJiShuDangAn" resultType="org.springblade.anbiao.cheliangguanli.vo.JiShuDangAnVO" parameterType="org.springblade.anbiao.cheliangguanli.vo.JiShuDangAnVO" >
-        SELECT
-        id,
+        a.id,
         cheliangpaizhao ,
         xinghao ,
         chejiahao ,
-        createtime ,
+        a.createtime ,
         chepaiyanse ,
         b.avx_register_date AS avxRegisterDate,
         cheliangzhaopian ,
         chezhu ,
         daoluyunshuzheng ,
-        jingjileixing ,
+        d.jingjileixing ,
         jingyingzuzhifangshi ,
         cheliangyunyingleixing ,
         c.avd_road_transport_certificate_no as avdRoadTransportCertificateNo,
@@ -1715,6 +1714,7 @@
         anbiao_vehicle a
         LEFT JOIN anbiao_vehicle_xingshizheng b ON a.id = b.avx_av_ids AND b.avx_delete =0
         LEFT JOIN anbiao_vehicle_daoluyunshuzheng c on a.id = c.avd_av_ids AND c.avd_delete =0
+        LEFT JOIN anbiao_organization d on d.dept_id = a.dept_id and d.isdelete=0
         WHERE
         is_deleted = 0
         <if test=" id !=null and id != '' ">

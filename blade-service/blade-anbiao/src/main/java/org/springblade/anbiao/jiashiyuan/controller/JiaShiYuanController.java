@@ -25,6 +25,7 @@ import org.springblade.anbiao.guanlijigouherenyuan.service.IBladeDeptService;
 import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.service.*;
+import org.springblade.anbiao.jiashiyuan.vo.DriverDataPerfectionVO;
 import org.springblade.anbiao.jiashiyuan.vo.DriverTJMingXiVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanListVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
@@ -59,6 +60,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -5636,6 +5638,143 @@ public class JiaShiYuanController {
 		rs.setCode(200);
 		rs.setData(folder);
 		rs.setSuccess(true);
+		return rs;
+	}
+
+	@ApiLog("驾驶员资料完善情况")
+	@ApiOperation(value = "驾驶员资料完善情况", notes = "传入jiaShiYuanPage", position = 8)
+	@PostMapping(value="/getDriverDataPerfection")
+	public R getDriverDataPerfection(@RequestBody JiaShiYuanPage jiaShiYuanPage) throws IOException {
+		R rs = new R();
+		DriverDataPerfectionVO driverDataPerfectionVO = new DriverDataPerfectionVO();
+		QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
+		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId,jiaShiYuanPage.getDeptId());
+		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,"0");
+		List<JiaShiYuan> jiaShiYuans = iJiaShiYuanService.getBaseMapper().selectList(jiaShiYuanQueryWrapper);
+		driverDataPerfectionVO.setGongsirenshu(jiaShiYuans.size());
+
+		//入职表
+		jiaShiYuanPage.setType("ruzhi_compeleted");
+		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
+		List<JiaShiYuanTJMX> JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
+		int sum1 = JiaShiYuanTJMXList.size();
+		int sum2 = jiaShiYuans.size();
+		double percentage = (double) sum1 / sum2;
+		NumberFormat nt = NumberFormat.getPercentInstance();
+		nt.setMinimumFractionDigits(2);
+		String format = nt.format(percentage);
+		driverDataPerfectionVO.setRuzhi(format);
+
+		//身份证
+		jiaShiYuanPage.setType("sfz_compeleted");
+		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
+		 JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
+		 sum1 = JiaShiYuanTJMXList.size();
+		 sum2 = jiaShiYuans.size();
+		 percentage = (double) sum1 / sum2;
+		 nt = NumberFormat.getPercentInstance();
+		nt.setMinimumFractionDigits(2);
+		 format = nt.format(percentage);
+		driverDataPerfectionVO.setShenfenzheng(format);
+
+		//驾驶证
+		jiaShiYuanPage.setType("jsz_compeleted");
+		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
+		JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
+		sum1 = JiaShiYuanTJMXList.size();
+		sum2 = jiaShiYuans.size();
+		percentage = (double) sum1 / sum2;
+		nt = NumberFormat.getPercentInstance();
+		nt.setMinimumFractionDigits(2);
+		format = nt.format(percentage);
+		driverDataPerfectionVO.setJiashizheng(format);
+
+		//从业资格证
+		jiaShiYuanPage.setType("cyzgz_compeleted");
+		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
+		JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
+		sum1 = JiaShiYuanTJMXList.size();
+		sum2 = jiaShiYuans.size();
+		percentage = (double) sum1 / sum2;
+		nt = NumberFormat.getPercentInstance();
+		nt.setMinimumFractionDigits(2);
+		format = nt.format(percentage);
+		driverDataPerfectionVO.setCongyezigezheng(format);
+
+		//体检表
+		jiaShiYuanPage.setType("tj_compeleted");
+		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
+		JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
+		sum1 = JiaShiYuanTJMXList.size();
+		sum2 = jiaShiYuans.size();
+		percentage = (double) sum1 / sum2;
+		nt = NumberFormat.getPercentInstance();
+		nt.setMinimumFractionDigits(2);
+		format = nt.format(percentage);
+		driverDataPerfectionVO.setTijianbiao(format);
+
+		//岗前培训
+		jiaShiYuanPage.setType("gqpx_compeleted");
+		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
+		JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
+		sum1 = JiaShiYuanTJMXList.size();
+		sum2 = jiaShiYuans.size();
+		percentage = (double) sum1 / sum2;
+		nt = NumberFormat.getPercentInstance();
+		nt.setMinimumFractionDigits(2);
+		format = nt.format(percentage);
+		driverDataPerfectionVO.setGangqianpeixun(format);
+
+		//无责证明
+		jiaShiYuanPage.setType("wzzm_compeleted");
+		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
+		JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
+		sum1 = JiaShiYuanTJMXList.size();
+		sum2 = jiaShiYuans.size();
+		percentage = (double) sum1 / sum2;
+		nt = NumberFormat.getPercentInstance();
+		nt.setMinimumFractionDigits(2);
+		format = nt.format(percentage);
+		driverDataPerfectionVO.setWuzezhengming(format);
+
+		//安全责任书
+		jiaShiYuanPage.setType("aqzrs_compeleted");
+		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
+		JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
+		sum1 = JiaShiYuanTJMXList.size();
+		sum2 = jiaShiYuans.size();
+		percentage = (double) sum1 / sum2;
+		nt = NumberFormat.getPercentInstance();
+		nt.setMinimumFractionDigits(2);
+		format = nt.format(percentage);
+		driverDataPerfectionVO.setAnquanzerenshu(format);
+
+		//危害告知书
+		jiaShiYuanPage.setType("whgzs_compeleted");
+		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
+		JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
+		sum1 = JiaShiYuanTJMXList.size();
+		sum2 = jiaShiYuans.size();
+		percentage = (double) sum1 / sum2;
+		nt = NumberFormat.getPercentInstance();
+		nt.setMinimumFractionDigits(2);
+		format = nt.format(percentage);
+		driverDataPerfectionVO.setWeihaigaozhishu(format);
+
+		//劳动合同
+		jiaShiYuanPage.setType("ldht_compeleted");
+		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
+		JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
+		sum1 = JiaShiYuanTJMXList.size();
+		sum2 = jiaShiYuans.size();
+		percentage = (double) sum1 / sum2;
+		nt = NumberFormat.getPercentInstance();
+		nt.setMinimumFractionDigits(2);
+		format = nt.format(percentage);
+		driverDataPerfectionVO.setLaodonghetong(format);
+
+
+		rs.setData(driverDataPerfectionVO);
 		return rs;
 	}
 

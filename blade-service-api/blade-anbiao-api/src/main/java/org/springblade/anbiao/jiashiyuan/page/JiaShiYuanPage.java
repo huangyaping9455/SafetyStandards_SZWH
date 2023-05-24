@@ -39,4 +39,6 @@ public class JiaShiYuanPage<T> extends BasePage<T> {
 	@ApiModelProperty(value = "驾驶员Id")
 	private String id;
 
+	private String type;
+
 }
