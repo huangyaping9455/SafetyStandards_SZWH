@@ -22,6 +22,7 @@ import org.springblade.anbiao.qiyeshouye.entity.*;
 import org.springblade.anbiao.qiyeshouye.page.AnBiaoDeptWechatInfoPage;
 import org.springblade.anbiao.qiyeshouye.page.AnBiaoWeeksHiddenTroublePage;
 import org.springblade.anbiao.qiyeshouye.page.QiYeShouYePage;
+import org.springblade.anbiao.zhengfu.entity.ThisMonthInfo;
 import org.springblade.anbiao.zhengfu.entity.ZhengFuBaoJingTongJiLv;
 import org.springblade.system.entity.Dept;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -350,6 +351,13 @@ public interface QiYeShouYeMapper extends BaseMapper<QiYeShouYe> {
 	 * @return
 	 */
 	ZhengFuBaoJingTongJiLv selectMonthAlarm(Integer deptId,String date);
+
+	/**
+	 * 首页-本月行驶里程、动态监控考核指标得分、台账完成情况
+	 * @param deptId
+	 * @return
+	 */
+	ThisMonthInfo selectThisMonthInfo(@Param("deptId") Integer deptId);
 
 
 }

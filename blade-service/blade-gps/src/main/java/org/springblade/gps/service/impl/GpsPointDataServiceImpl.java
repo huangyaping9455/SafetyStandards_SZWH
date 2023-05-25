@@ -237,5 +237,9 @@ public class GpsPointDataServiceImpl extends ServiceImpl<GpsPointDataMapper, T> 
 		return gpsPointDataMapper.selectVehTravel(date, vehId);
 	}
 
+	@Override
+	public List<TcmdImg> selectImage(String url,String alarmNumber) {
+		return gpsPointDataMapper.selectImage(url,alarmNumber);
+	}
 
 }

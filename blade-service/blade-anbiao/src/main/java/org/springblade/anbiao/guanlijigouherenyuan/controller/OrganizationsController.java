@@ -260,7 +260,52 @@ public class OrganizationsController extends BladeController {
 			organization.setDeptId(dept.getId().toString());
 			organizationService.insertOrganizationsSelective(organization);
 			if(flag==true){
-				obj=iSysClient.selectById(dept.getId().toString());
+				//添加岗位
+				String [] myArray = {"主要负责人","安全管理员","车队长","调度经理","财务主任","动态监控经理"};
+				for (String strs : myArray) {
+					System.out.println(strs);
+					Departmentpost departmentpost = new Departmentpost();
+					String type = "岗位";
+					departmentpost.setParentId(dept.getId().toString());
+					//执行机构表新增
+					treeCode = iSysClient.selectByTreeCode(departmentpost.getParentId()).getTreeCode();
+					dept.setTreeCode(treeCode);
+					dept.setId(iSysClient.selectMaxId() + 1);
+					dept.setExtendType(type);
+					dept.setDeptName(strs);
+					dept.setFullName(strs);
+					dept.setParentId(Integer.parseInt(organization.getDeptId()));
+					QueryWrapper<Dept> deptQueryWrapper = new QueryWrapper<Dept>();
+					deptQueryWrapper.lambda().eq(Dept::getDeptName, strs);
+					deptQueryWrapper.lambda().eq(Dept::getParentId, organization.getDeptId());
+					deptQueryWrapper.lambda().eq(Dept::getIsDeleted, 0);
+					Dept deail = iBladeDeptService.getBaseMapper().selectOne(deptQueryWrapper);
+					if(deail == null){
+						flag = iSysClient.insertDept(dept);
+						departmentpost.setMingcheng(strs);
+						departmentpost.setCaozuoren(user.getUserName());
+						departmentpost.setCaozuorenid(user.getUserId());
+						departmentpost.setCaozuoshijian(DateUtil.now());
+						departmentpost.setCreatetime(DateUtil.now());
+						departmentpost.setDeptId(dept.getId());
+						departmentpost.setType(departmentpost.getExtendType());
+						departmentpost.setExtendType(type);
+						departmentpost.setLeixing(type);
+						departmentpost.setType(type);
+						if (type.equals(departmentpost.getExtendType())) {
+							//新增岗位时默认给岗位赋权
+							//默认给企业端赋权
+							String menuId = "288,289,291,296,295,292,299";
+							iSysClient.ABgrant(dept.getId() + "", menuId, 1);
+						}
+						if (flag == true) {
+							departmentpostService.insertSelective(departmentpost);
+						}
+					}
+				}
+				if(flag==true){
+					obj=iSysClient.selectById(dept.getId().toString());
+				}
 			}
 			r.setMsg("操作成功");
 			r.setCode(200);

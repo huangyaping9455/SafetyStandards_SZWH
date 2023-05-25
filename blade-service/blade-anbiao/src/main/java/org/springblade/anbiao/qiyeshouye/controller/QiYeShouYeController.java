@@ -23,6 +23,7 @@ import org.springblade.anbiao.qiyeshouye.entity.*;
 import org.springblade.anbiao.qiyeshouye.page.QiYeShouYePage;
 import org.springblade.anbiao.qiyeshouye.service.IQiYeShouYeService;
 import org.springblade.anbiao.zhengfu.entity.Organization;
+import org.springblade.anbiao.zhengfu.entity.ThisMonthInfo;
 import org.springblade.anbiao.zhengfu.entity.ZhengFuBaoJingTongJiLv;
 import org.springblade.anbiao.zhengfu.service.IOrganizationService;
 import org.springblade.common.configurationBean.FileServer;
@@ -672,6 +673,24 @@ public class QiYeShouYeController {
 			r.setMsg("暂无数据");
 		}else{
 			r.setData(zhengFuBaoJingTongJiLv);
+			r.setMsg("获取成功");
+			r.setSuccess(true);
+			r.setCode(200);
+		}
+		return r;
+	}
+
+	@GetMapping(value = "/getThisMonthInfo")
+	@ApiLog("企业端-首页-本月行驶里程、动态监控考核指标得分、台账完成情况")
+	@ApiOperation(value = "企业端-首页-本月行驶里程、动态监控考核指标得分、台账完成情况", notes = "传入deptId",position = 36)
+	public R getThisMonthInfo(Integer deptId) throws IOException {
+		R r = new R();
+		ThisMonthInfo thisMonthInfo = iQiYeShouYeService.selectThisMonthInfo(deptId);
+		if(thisMonthInfo == null){
+			r.setCode(200);
+			r.setMsg("暂无数据");
+		}else{
+			r.setData(thisMonthInfo);
 			r.setMsg("获取成功");
 			r.setSuccess(true);
 			r.setCode(200);

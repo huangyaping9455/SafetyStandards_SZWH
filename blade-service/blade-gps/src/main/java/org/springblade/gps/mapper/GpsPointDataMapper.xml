@@ -744,5 +744,16 @@
           and vehicleId = #{vehId}
     </select>
 
+    <!--根据报警number获取报警附件信息-->
+    <select id="selectImage" resultType="org.springblade.gps.entity.TcmdImg" >
+        select
+            DISTINCT
+            alarmNumber,fileType,CONCAT(#{url},FilePath,FileName) as fileUrl
+        from
+            t_cmd1212
+        where AlarmNumber = #{alarmNumber}
+    </select>
+
+
 
 </mapper>

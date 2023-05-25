@@ -103,4 +103,12 @@ public interface GpsPointDataMapper extends BaseMapper<T> {
 	 */
 	List<VehTravel> selectVehTravel(@Param("date") String date,@Param("vehId") String vehId);
 
+	/**
+	 * 根据报警number获取报警附件信息
+	 * @param url
+	 * @param alarmNumber
+	 * @return
+	 */
+	List<TcmdImg> selectImage(@Param("url") String url,@Param("alarmNumber") String alarmNumber);
+
 }

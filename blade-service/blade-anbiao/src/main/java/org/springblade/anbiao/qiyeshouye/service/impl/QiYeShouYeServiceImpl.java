@@ -16,6 +16,7 @@ import org.springblade.anbiao.qiyeshouye.page.AnBiaoDeptWechatInfoPage;
 import org.springblade.anbiao.qiyeshouye.page.AnBiaoWeeksHiddenTroublePage;
 import org.springblade.anbiao.qiyeshouye.page.QiYeShouYePage;
 import org.springblade.anbiao.qiyeshouye.service.IQiYeShouYeService;
+import org.springblade.anbiao.zhengfu.entity.ThisMonthInfo;
 import org.springblade.anbiao.zhengfu.entity.ZhengFuBaoJingTongJiLv;
 import org.springblade.system.entity.Dept;
 import org.springframework.stereotype.Service;
@@ -462,6 +463,11 @@ public class QiYeShouYeServiceImpl extends ServiceImpl<QiYeShouYeMapper, QiYeSho
 	@Override
 	public ZhengFuBaoJingTongJiLv selectMonthAlarm(Integer deptId, String date) {
 		return qiYeShouYeMapper.selectMonthAlarm(deptId, date);
+	}
+
+	@Override
+	public ThisMonthInfo selectThisMonthInfo(Integer deptId) {
+		return qiYeShouYeMapper.selectThisMonthInfo(deptId);
 	}
 
 }

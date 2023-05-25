@@ -37,6 +37,7 @@ import org.springblade.gps.entity.*;
 import org.springblade.gps.page.VehiclePTPage;
 import org.springblade.gps.service.IGpsPointDataService;
 import org.springblade.gps.util.RedisOps;
+import org.springblade.gps.vo.TcmdImgVO;
 import org.springblade.system.entity.Dept;
 import org.springblade.system.feign.ISysClient;
 import org.springframework.web.bind.annotation.*;
@@ -294,6 +295,38 @@ public class GpsPointDataController {
         JSONObject jsonObject = JSONObject.parseObject(InterfaceUtil.getUrlData(url));
         return R.data(jsonObject);
     }
+
+	@GetMapping("/getImageDataNew")
+	@ApiLog("获取图片视频数据(new)")
+	@ApiOperation(value = "获取图片视频数据(new)", notes = "获取图片视频数据(new)", position = 2)
+	public R getImageDataNew(@ApiParam(value = "报警编号", required = true) @RequestParam String alarmNumber, @ApiParam(value = "报警类型", required = true) @RequestParam String alarmType) throws IOException {
+		if(StringUtils.isBlank(alarmNumber)){
+			return R.data(null);
+		}
+		String url = gpsServer.getImgurlPrefix();
+		TcmdImgVO tcmdImgs = new TcmdImgVO();
+		List<TcmdImgUrl> picImgList = new ArrayList<>();
+		List<TcmdImgUrl> videoList = new ArrayList<>();
+		List<TcmdImg> tcmdImgList = gpsPointDataService.selectImage(url,alarmNumber);
+		tcmdImgList.forEach(item->{
+			TcmdImgUrl pic = new TcmdImgUrl();
+			TcmdImgUrl video = new TcmdImgUrl();
+//			if("1".equals(item.getFileType())){
+//				pic.setFileUrl(item.getFileUrl());
+//				picImgList.add(pic);
+//			}
+			if("2".equals(item.getFileType())){
+				video.setFileUrl(item.getFileUrl());
+				videoList.add(video);
+			}else{
+				pic.setFileUrl(item.getFileUrl());
+				picImgList.add(pic);
+			}
+		});
+		tcmdImgs.setPicture(picImgList);
+		tcmdImgs.setVideo(videoList);
+		return R.data(tcmdImgs);
+	}
 
 	@GetMapping("/getVehiclePT")
 	@ApiLog("获取车辆实时点位信息")
