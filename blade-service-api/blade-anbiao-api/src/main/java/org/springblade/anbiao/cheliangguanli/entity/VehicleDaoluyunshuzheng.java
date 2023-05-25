@@ -71,22 +71,22 @@ public class VehicleDaoluyunshuzheng implements Serializable {
      * 吨（座）位
      */
     @ApiModelProperty(value = "吨（座）位")
-    private String avdTonnage;
+    private String avdTonnage = "0";
     /**
      * 车辆尺寸长（单位：毫米）
      */
     @ApiModelProperty(value = "车辆尺寸长（单位：毫米）")
-    private Integer avdVehicleLong;
+    private Integer avdVehicleLong = 0;
     /**
      * 车辆尺寸宽（单位：毫米）
      */
     @ApiModelProperty(value = "车辆尺寸宽（单位：毫米）")
-    private Integer avdVehicleWide;
+    private Integer avdVehicleWide = 0;
     /**
      * 车辆尺寸高（单位：毫米）
      */
     @ApiModelProperty(value = "车辆尺寸高（单位：毫米）")
-    private Integer avdVehicleHigh;
+    private Integer avdVehicleHigh = 0;
     /**
      * 核发机关
      */

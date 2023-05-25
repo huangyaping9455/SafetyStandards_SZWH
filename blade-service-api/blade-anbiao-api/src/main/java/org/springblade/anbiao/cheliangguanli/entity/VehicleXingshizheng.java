@@ -122,22 +122,22 @@ public class VehicleXingshizheng implements Serializable {
      * 核定载人数
      */
     @ApiModelProperty(value = "核定载人数")
-    private Integer avxAuthorizedSeatingCapacity;
+    private Integer avxAuthorizedSeatingCapacity = 0;
     /**
      * 总质量(单位kg)
      */
     @ApiModelProperty(value = "总质量(单位kg)")
-    private Integer avxTotalMass;
+    private Integer avxTotalMass = 0;
     /**
      * 整备质量(单位kg)
      */
     @ApiModelProperty(value = "整备质量(单位kg)")
-    private Integer avxCurbWeight;
+    private Integer avxCurbWeight = 0;
     /**
      * 核定载质量(单位kg)
      */
     @ApiModelProperty(value = "核定载质量(单位kg)")
-    private Integer avxApprovedLoadCapacity;
+    private Integer avxApprovedLoadCapacity = 0;
     /**
      * 外廓尺寸
      */
@@ -147,7 +147,7 @@ public class VehicleXingshizheng implements Serializable {
      * 准牵引质量
      */
     @ApiModelProperty(value = "准牵引质量")
-    private Integer avxQuasiTractiveMass;
+    private Integer avxQuasiTractiveMass = 0;
     /**
      * 备注
      */
