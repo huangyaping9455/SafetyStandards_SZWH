@@ -96,4 +96,24 @@ public class JiaShiYuanTJMX implements Serializable {
 	@ApiModelProperty(value = "车辆ID")
 	private String vehicleIdGUA;
 
+	@ApiModelProperty(value = "驾驶员姓名")
+	private String jiashiyuanxingming;
+
+	@ApiModelProperty(value = "手机号码")
+	private String shoujihaoma;
+
+	@ApiModelProperty(value = "驾驶员类型")
+	private String jiashiyuanleixing;
+
+	@ApiModelProperty(value = "身份证号")
+	private String shenfenzhenghao;
+
+	@ApiModelProperty(value = "所属地市")
+	private String areaName;
+
+	@ApiModelProperty(value = "驾驶员Id")
+	private String id;
+
+	private String type;
+
 }

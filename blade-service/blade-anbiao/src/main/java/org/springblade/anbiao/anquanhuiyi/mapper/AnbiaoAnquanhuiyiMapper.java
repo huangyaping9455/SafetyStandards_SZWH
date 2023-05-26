@@ -25,4 +25,8 @@ public interface AnbiaoAnquanhuiyiMapper extends BaseMapper<AnbiaoAnquanhuiyi> {
 
 	List<AnquanhuiyiledgerVO> selectLedgerList(IPage page, AnquanhuiyiledgerVO anquanhuiyiledgerVO);
 
+	List<AnquanhuiyiledgerVO> selectscore( AnquanhuiyiledgerVO anquanhuiyiledgerVO);
+
+	List<AnquanhuiyiledgerVO> selectAllMeetingsInMonth( AnquanhuiyiledgerVO anquanhuiyiledgerVO);
+
 }

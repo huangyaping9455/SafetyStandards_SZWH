@@ -40,5 +40,7 @@ public interface AnbiaoCarExamineInfoMapper extends BaseMapper<AnbiaoCarExamineI
 
 	List<SafetyCheckMingXiVO>  selectSafetyCheckMingXi(SafetyCheckMingXiVO safetyCheckMingXiVO);
 
+	List<SafetyCheckMingXiVO>  selectSafetyCheckScore(SafetyCheckMingXiVO safetyCheckMingXiVO);
+
 
 }

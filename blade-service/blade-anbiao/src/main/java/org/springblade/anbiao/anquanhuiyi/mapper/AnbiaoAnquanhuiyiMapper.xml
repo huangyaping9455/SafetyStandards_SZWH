@@ -153,4 +153,50 @@
 -- 		add_ap_being_joined = 1
             ) b on b.aad_aa_ids=a.id
     </select>
+
+    <select id="selectscore" resultType="org.springblade.anbiao.anquanhuiyi.VO.AnquanhuiyiledgerVO" parameterType="org.springblade.anbiao.anquanhuiyi.VO.AnbiaoAnquanhuiyiVO">
+        SELECT
+            *
+        FROM
+            anbiao_anquanhuiyi a
+                LEFT JOIN anbiao_anquanhuiyi_detail b on a.id = b.aad_aa_ids
+                LEFT JOIN anbiao_jiashiyuan c on b.aad_ap_ids = c.id
+                inner join  (
+                    <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+                ) d on a.dept_id = d.id
+        WHERE
+              a.is_deleted =0
+        <if test="id != null and id != ''">
+            and a.id=#{id}
+        </if>
+        <if test="month != null and month != ''">
+          and MONTH(a.huiyikaishishijian)=#{month}
+        </if>
+        <if test="year != null and year != ''">
+            and YEAR(huiyikaishishijian)=#{year}
+        </if>
+          and c.isdelete=0
+          and b.add_ap_being_joined=1
+    </select>
+
+    <select id="selectAllMeetingsInMonth" resultType="org.springblade.anbiao.anquanhuiyi.VO.AnquanhuiyiledgerVO" parameterType="org.springblade.anbiao.anquanhuiyi.VO.AnbiaoAnquanhuiyiVO">
+
+        SELECT
+        a.*
+        FROM
+        `anbiao_anquanhuiyi` a
+        WHERE
+        a.is_deleted =0
+        <if test="month != null and month != ''">
+            and MONTH(huiyikaishishijian)=#{month}
+        </if>
+        <if test="year != null and year != ''">
+            and YEAR(huiyikaishishijian)=#{year}
+        </if>
+        <if test="deptId != null and deptId != ''">
+            and a.dept_id=#{deptId}
+        </if>
+        GROUP BY id
+
+    </select>
 </mapper>

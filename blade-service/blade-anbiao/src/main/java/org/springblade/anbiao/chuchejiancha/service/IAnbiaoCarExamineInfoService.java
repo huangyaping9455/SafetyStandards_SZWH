@@ -37,4 +37,6 @@ public interface IAnbiaoCarExamineInfoService extends IService<AnbiaoCarExamineI
 
 	List<SafetyCheckMingXiVO>  selectSafetyCheckMingXi(SafetyCheckMingXiVO safetyCheckMingXiVO);
 
+	List<SafetyCheckMingXiVO>  selectSafetyCheckScore(SafetyCheckMingXiVO safetyCheckMingXiVO);
+
 }
