@@ -41,6 +41,7 @@ import org.springblade.doc.safetyproductionfile.entity.SafetyProductionFile;
 import org.springblade.doc.safetyproductionfile.service.IAnbiaoSafetyproductionfileNumService;
 import org.springblade.doc.safetyproductionfile.service.ISafetyProductionFileService;
 import org.springblade.doc.safetyproductionfile.vo.SafetyProductionFileVO;
+import org.springblade.system.entity.Dept;
 import org.springblade.system.feign.IDictClient;
 import org.springblade.system.feign.ISysClient;
 import org.springframework.mock.web.MockMultipartFile;
@@ -764,7 +765,7 @@ public class SafetyProductionFileController extends BladeController {
 	})
 	public R aKeyGeneration(Integer deptId,Integer isOnlyDir,String caozuoren,Integer caozuorenid,String leixingid){
 		// TODO: 2019/9/3 非线程安全，改成多例模式或者用消息队列
-		List<Integer> deptIds = iSysClient.getDetpIds(deptId);
+//		List<Integer> deptIds = iSysClient.getDetpIds(deptId);
 //		List<Integer> deptIds = new ArrayList<>();
 //		deptIds.add(5263);
 		String type = "";
@@ -776,33 +777,57 @@ public class SafetyProductionFileController extends BladeController {
 			mubanList = safetyProductionFileService.getMubanTreeWJ(null,type,leixingid);
 		}
 
-		for (Integer id : deptIds) {
-			int i = safetyProductionFileService.getCountByDetpId(id);
-			//如果改机构已有文件，则跳过
-			if(i>0){
-				return R.success("该机构已有文件");
-			}
-			String deptName = iSysClient.getDeptName(id);
+//		for (Integer id : deptIds) {
+//			int i = safetyProductionFileService.getCountByDetpId(id);
+//			//如果改机构已有文件，则跳过
+//			if(i>0){
+//				return R.success("该机构已有文件");
+//			}
+//			String deptName = iSysClient.getDeptName(id);
+////			String deptName = "宿州市双泽运输有限公司";
+//			int maxId = safetyProductionFileService.selectMaxId()+1;
+//			fileParse.setId(maxId);
+//			fileParse.setDeptName(deptName);
+//			fileParse.setDeptId(id);
+//
+////			fileParse.parseAbcdMubanList(mubanList, FilePathConstant.DEFAULT_PARENT_ID,FilePathConstant.DEFAULT_TIER);
+//            String tier = "0-"+leixingid;
+//            fileParse.parseAbcdMubanList(mubanList, Integer.parseInt(leixingid),tier,null);
+//			List<SafetyProductionFile> list = fileParse.getAbcdList();
+//			fileParse.close();
+//			list.get(i).setCaozuoren(caozuoren);
+//			list.get(i).setCaozuorenid(caozuorenid);
+//			String formatStr2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+//			list.get(i).setCaozuoshijian(formatStr2);
+//			list.get(i).setIs_muban(1);
+//			list.get(i).setIsMuban(1);
+//			safetyProductionFileService.saveBatch(list);
+//		}
+
+		int i = safetyProductionFileService.getCountByDetpId(deptId);
+		//如果改机构已有文件，则跳过
+		if(i>0){
+			return R.success("该机构已有文件");
+		}
+		String deptName = iSysClient.getDeptName(deptId);
 //			String deptName = "宿州市双泽运输有限公司";
-			int maxId = safetyProductionFileService.selectMaxId()+1;
-			fileParse.setId(maxId);
-			fileParse.setDeptName(deptName);
-			fileParse.setDeptId(id);
+		int maxId = safetyProductionFileService.selectMaxId()+1;
+		fileParse.setId(maxId);
+		fileParse.setDeptName(deptName);
+		fileParse.setDeptId(deptId);
 
 //			fileParse.parseAbcdMubanList(mubanList, FilePathConstant.DEFAULT_PARENT_ID,FilePathConstant.DEFAULT_TIER);
-            String tier = "0-"+leixingid;
-            fileParse.parseAbcdMubanList(mubanList, Integer.parseInt(leixingid),tier,null);
-			List<SafetyProductionFile> list = fileParse.getAbcdList();
-			fileParse.close();
-			list.get(i).setCaozuoren(caozuoren);
-			list.get(i).setCaozuorenid(caozuorenid);
-			String formatStr2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-			list.get(i).setCaozuoshijian(formatStr2);
-			list.get(i).setIs_muban(1);
-			list.get(i).setIsMuban(1);
-			safetyProductionFileService.saveBatch(list);
-		}
-
+		String tier = "0-"+leixingid;
+		fileParse.parseAbcdMubanList(mubanList, Integer.parseInt(leixingid),tier,null);
+		List<SafetyProductionFile> list = fileParse.getAbcdList();
+		fileParse.close();
+		list.get(i).setCaozuoren(caozuoren);
+		list.get(i).setCaozuorenid(caozuorenid);
+		String formatStr2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		list.get(i).setCaozuoshijian(formatStr2);
+		list.get(i).setIs_muban(1);
+		list.get(i).setIsMuban(1);
+		safetyProductionFileService.saveBatch(list);
 		return R.success("一键生成成功");
 	}
 
