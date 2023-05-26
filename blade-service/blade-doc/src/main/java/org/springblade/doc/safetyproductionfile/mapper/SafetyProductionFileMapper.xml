@@ -673,6 +673,9 @@
             and safeid = #{safeid}
         </if>
         GROUP BY id,parent_id,`name`
+        <if test="safeid != null and safeid != ''">
+            limit 1
+        </if>
     </select>
 
     <select id="boxTreeFolder" resultType="org.springblade.doc.safetyproductionfile.vo.SafetyProductionFileVO">
