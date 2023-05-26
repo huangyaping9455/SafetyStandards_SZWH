@@ -102,4 +102,14 @@ public class AnbiaoAnquanhuiyiServiceImpl extends ServiceImpl<AnbiaoAnquanhuiyiM
 	public IPage<AnquanhuiyiledgerVO> selectLedgerList(IPage<AnquanhuiyiledgerVO> page, AnquanhuiyiledgerVO anquanhuiyiledgerVO) {
 		return page.setRecords(mapper.selectLedgerList(page,anquanhuiyiledgerVO));
 	}
+
+	@Override
+	public List<AnquanhuiyiledgerVO> selectscore(AnquanhuiyiledgerVO anquanhuiyiledgerVO) {
+		return mapper.selectscore(anquanhuiyiledgerVO);
+	}
+
+	@Override
+	public List<AnquanhuiyiledgerVO> selectAllMeetingsInMonth(AnquanhuiyiledgerVO anquanhuiyiledgerVO) {
+		return mapper.selectAllMeetingsInMonth(anquanhuiyiledgerVO);
+	}
 }

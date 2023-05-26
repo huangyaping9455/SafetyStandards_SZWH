@@ -202,5 +202,10 @@ public class AnbiaoCarExamineInfoServiceImpl extends ServiceImpl<AnbiaoCarExamin
 		return mapper.selectSafetyCheckMingXi(safetyCheckMingXiVO);
 	}
 
+	@Override
+	public List<SafetyCheckMingXiVO> selectSafetyCheckScore(SafetyCheckMingXiVO safetyCheckMingXiVO) {
+		return mapper.selectSafetyCheckScore(safetyCheckMingXiVO);
+	}
+
 
 }

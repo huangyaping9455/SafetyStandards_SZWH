@@ -24,4 +24,8 @@ public interface IAnbiaoAnquanhuiyiService extends IService<AnbiaoAnquanhuiyi> {
 
 	IPage<AnquanhuiyiledgerVO> selectLedgerList(IPage<AnquanhuiyiledgerVO> page, AnquanhuiyiledgerVO anquanhuiyiledgerVO);
 
+	List<AnquanhuiyiledgerVO> selectscore( AnquanhuiyiledgerVO anquanhuiyiledgerVO);
+
+	List<AnquanhuiyiledgerVO> selectAllMeetingsInMonth( AnquanhuiyiledgerVO anquanhuiyiledgerVO);
+
 }

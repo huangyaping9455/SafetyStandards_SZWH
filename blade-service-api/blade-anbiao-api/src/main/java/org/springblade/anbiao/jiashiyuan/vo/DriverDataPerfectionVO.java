@@ -4,8 +4,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-@ApiModel(value = "JiaShiYuanVO对象", description = "JiaShiYuanVO对象")
+@ApiModel(value = "DriverDataPerfectionVO对象", description = "DriverDataPerfectionVO对象")
 public class DriverDataPerfectionVO {
 
 	private static final long serialVersionUID = 1L;
@@ -43,5 +45,10 @@ public class DriverDataPerfectionVO {
 	@ApiModelProperty(value = "劳动合同")
 	private String laodonghetong;
 
+	@ApiModelProperty(value = "项目")
+	private String xiangmu;
+
+	@ApiModelProperty(value = "数据")
+	private String shuju;
 
 }

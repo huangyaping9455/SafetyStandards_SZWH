@@ -692,7 +692,13 @@
                 htbegindate,
             </if>
             <if test="htlastdate != null and htlastdate != '' ">
-                htlastdate
+                htlastdate,
+            </if>
+            <if test="jingjileixing != null and jingjileixing != '' ">
+                jingjileixing,
+            </if>
+            <if test="qiyefenji != null and qiyefenji != '' ">
+                qiyefenji
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -872,7 +878,13 @@
                 #{htbegindate},
             </if>
             <if test="htlastdate != null and htlastdate != ''">
-                #{htlastdate}
+                #{htlastdate},
+            </if>
+            <if test="jingjileixing != null and jingjileixing != '' ">
+                #{jingjileixing},
+            </if>
+            <if test="qiyefenji != null and qiyefenji != '' ">
+                #{qiyefenji}
             </if>
         </trim>
     </insert>

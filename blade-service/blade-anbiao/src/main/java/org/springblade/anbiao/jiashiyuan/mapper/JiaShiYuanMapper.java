@@ -159,6 +159,8 @@ public interface JiaShiYuanMapper extends BaseMapper<JiaShiYuan> {
 	JiaShiYuanTJMX selectAlarmTJMXVehicle(JiaShiYuanTJMX jiaShiYuanTJMX);
 	JiaShiYuanTJMX selectAlarmTJMXVehicleGUA(JiaShiYuanTJMX jiaShiYuanTJMX);
 
+	List<JiaShiYuanTJMX> selectAlarmTJMXPage3(JiaShiYuanTJMX jiaShiYuanTJMX);
+
 	/**
 	 * 获取车辆附件
 	 * @param jsyId

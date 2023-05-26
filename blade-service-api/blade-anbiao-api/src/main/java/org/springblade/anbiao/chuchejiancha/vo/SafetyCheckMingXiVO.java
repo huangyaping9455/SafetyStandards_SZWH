@@ -28,5 +28,7 @@ public class SafetyCheckMingXiVO {
 	@ExcelProperty("签名")
 	@TableField(exist = false)
 	private URL image;
+	private String month;
+	private String year;
 
 }

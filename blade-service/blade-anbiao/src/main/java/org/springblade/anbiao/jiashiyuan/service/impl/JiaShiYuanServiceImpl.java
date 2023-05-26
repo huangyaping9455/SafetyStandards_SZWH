@@ -273,6 +273,11 @@ public class JiaShiYuanServiceImpl extends ServiceImpl<JiaShiYuanMapper, JiaShiY
 	}
 
 	@Override
+	public List<JiaShiYuanTJMX> selectAlarmTJMXPage3(JiaShiYuanTJMX jiaShiYuanTJMX) {
+		return jiaShiYuanMapper.selectAlarmTJMXPage3(jiaShiYuanTJMX);
+	}
+
+	@Override
 	public DriverImg getByDriverImg(String jsyId) {
 		DriverImg driverImg = jiaShiYuanMapper.getByDriverImg(jsyId);
 		if (driverImg != null){

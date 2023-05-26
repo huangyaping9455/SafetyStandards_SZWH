@@ -10,6 +10,9 @@ import lombok.Data;
 public class AnquanhuiyiledgerVO {
 	private static final long serialVersionUID = 1L;
 
+	@ApiModelProperty(value = "会议主键")
+	private String id;
+
 	@ApiModelProperty(value = "企业名称")
 	private String deptName;
 
@@ -42,4 +45,16 @@ public class AnquanhuiyiledgerVO {
 
 	@ApiModelProperty(value = "签名")
 	private String addApAutograph;
+
+	@ApiModelProperty(value = "时间")
+	private String date;
+
+	@ApiModelProperty(value = "年份")
+	private String year;
+
+	@ApiModelProperty(value = "月份")
+	private String month;
+
+	@ApiModelProperty(value = "企业Id")
+	private String deptId;
 }

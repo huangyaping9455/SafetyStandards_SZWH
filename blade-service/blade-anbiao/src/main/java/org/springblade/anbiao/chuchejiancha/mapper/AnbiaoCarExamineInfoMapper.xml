@@ -419,8 +419,27 @@
         </if>
         ORDER BY a.id,a.date
 
-
     </select>
 
+    <select id="selectSafetyCheckScore" resultType="org.springblade.anbiao.chuchejiancha.vo.SafetyCheckMingXiVO"
+            parameterType="org.springblade.anbiao.chuchejiancha.vo.SafetyCheckMingXiVO">
+
+        SELECT
+            *
+        FROM
+            `anbiao_car_examine_info`
+        where
+                isdelete=0
+        <if test="deptId != null and deptId != ''">
+                and deptid=#{deptId}
+        </if>
+        <if test="month != null and month != ''">
+                and MONTH(date)=#{month}
+        </if>
+        <if test="year != null and year != ''">
+                and YEAR(date)=#{year}
+        </if>
+
+    </select>
 
 </mapper>
