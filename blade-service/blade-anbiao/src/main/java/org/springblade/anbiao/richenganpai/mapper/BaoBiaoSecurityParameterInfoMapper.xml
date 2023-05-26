@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.richenganpai.mapper.BaoBiaoSecurityParameterInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="richenganpaiResultMap" type="org.springblade.anbiao.richenganpai.entity.BaoBiaoSecurityParameterInfo">
+        <id column="id" property="id"/>
+    </resultMap>
+
+    <resultMap id="BaoBiaoSecurityParameterInfoRemarkResultMap" type="org.springblade.anbiao.richenganpai.entity.BaoBiaoSecurityParameterInfoRemark">
+        <id column="id" property="id"/>
+    </resultMap>
+
+    <insert id="insertSelective" parameterType="org.springblade.anbiao.richenganpai.entity.BaoBiaoSecurityParameterInfo" >
+        insert into baobiao_security_parameter_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="name != null and name !='' ">
+                name,
+            </if>
+            <if test="remindtype != null and remindtype != '' ">
+                remindtype,
+            </if>
+            <if test="remindtime != null and remindtime != '' ">
+                remindtime,
+            </if>
+            <if test="updatetime != null and updatetime != '' ">
+                updatetime,
+            </if>
+            <if test="updateuser != null and updateuser != '' ">
+                updateuser,
+            </if>
+            <if test="remark != null and remark != '' ">
+                remark,
+            </if>
+                is_deleted
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="name != null and name !='' ">
+                #{name},
+            </if>
+            <if test="remindtype != null and remindtype != '' ">
+                #{remindtype},
+            </if>
+            <if test="remindtime != null and remindtime != '' ">
+                #{remindtime},
+            </if>
+            <if test="updatetime != null and updatetime != '' ">
+                #{updatetime},
+            </if>
+            <if test="updateuser != null and updateuser != '' ">
+                #{updateuser},
+            </if>
+            <if test="remark != null and remark != '' ">
+                #{remark},
+            </if>
+                0
+        </trim>
+    </insert>
+
+    <!-- 根据文件ID更新日程待办相应数据 -->
+    <update id="updateSelective" parameterType="org.springblade.anbiao.richenganpai.entity.BaoBiaoSecurityParameterInfo" >
+        update baobiao_security_parameter_info
+        <set>
+            <if test="name != null and name !='' ">
+                name = #{name},
+            </if>
+            <if test="remindtype != null and remindtype != '' ">
+                remindtype = #{remindtype},
+            </if>
+            <if test="remindtime != null and remindtime != '' ">
+                remindtime = #{remindtime},
+            </if>
+            <if test="updatetime != null and updatetime != '' ">
+                updatetime = #{updatetime},
+            </if>
+            <if test="updateuser != null and updateuser != '' ">
+                updateuser = #{updateuser},
+            </if>
+            <if test="remark != null and remark != '' ">
+                remark = #{remark},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectByIds" resultType="org.springblade.anbiao.richenganpai.entity.BaoBiaoSecurityParameterInfo">
+        select * from baobiao_security_parameter_info where is_Deleted = 0
+        <if test="Id != null and Id != ''">
+            and id = #{Id}
+            limit 1
+        </if>
+        <if test="name != null and name != ''">
+            and name = #{name}
+            limit 1
+        </if>
+    </select>
+
+    <!--删除-->
+    <delete id="deleteBind">
+        update
+            baobiao_security_parameter_info
+        set
+            is_deleted = 1,
+            updatetime = #{updateTime},
+            updateuser = #{updateUserId}
+        where id = #{Id}
+    </delete>
+
+    <sql id="tableSql">
+        select * from baobiao_security_parameter_info where is_Deleted = 0
+    </sql>
+
+    <sql id="querySql">
+        <if test="name != null and name != ''">
+            and name like '%${name}%'
+        </if>
+        <if test="leixing != null and leixing != ''">
+            and remindtype = #{leixing}
+        </if>
+    </sql>
+
+    <sql id="orderByDateSql">
+        <!-- 默认排序规则 -->
+        order by name desc
+    </sql>
+
+    <select timeout="600" id="getAll" resultType="org.springblade.anbiao.richenganpai.entity.BaoBiaoSecurityParameterInfo"
+            parameterType="org.springblade.anbiao.richenganpai.page.RiChengAnPaiPage">
+        <if test="size == 0">
+            select * from (
+            <include refid="tableSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderByDateSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="tableSql"/>
+            )b
+            where 1=1
+            <include refid="querySql"/>
+            <include refid="orderByDateSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="getAllTotal"
+            parameterType="org.springblade.anbiao.richenganpai.page.RiChengAnPaiPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql"/>
+        )d where 1 = 1
+        <include refid="querySql"/>
+    </select>
+
+    <insert id="insertRemarkSelective" parameterType="org.springblade.anbiao.richenganpai.entity.BaoBiaoSecurityParameterInfoRemark" >
+        insert into baobiao_security_parameter_info_remark
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="deptId != null and deptId !='' ">
+                deptId,
+            </if>
+            <if test="securityId != null and securityId != '' ">
+                securityId,
+            </if>
+            <if test="securityId != null and securityId != '' ">
+                safetyfileId,
+            </if>
+            <if test="time != null and time != '' ">
+                time,
+            </if>
+            <if test="status != null and status != '' ">
+                status,
+            </if>
+            is_deleted
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="deptId != null and deptId !='' ">
+                #{deptId},
+            </if>
+            <if test="securityId != null and securityId != '' ">
+                #{securityId},
+            </if>
+            <if test="securityId != null and securityId != '' ">
+                #{safetyfileId},
+            </if>
+            <if test="time != null and time != '' ">
+                #{time},
+            </if>
+            <if test="status != null and status != '' ">
+                #{status},
+            </if>
+            0
+        </trim>
+    </insert>
+
+    <update id="updateRemarkBind" parameterType="org.springblade.anbiao.richenganpai.entity.BaoBiaoSecurityParameterInfoRemark" >
+        update baobiao_security_parameter_info_remark
+        <set>
+            <if test="time != null and time != '' ">
+                time = #{time},
+            </if>
+            <if test="status != null and status != '' ">
+                status = #{status}
+            </if>
+
+        </set>
+        where securityId = #{securityId}
+    </update>
+
+    <!--删除-->
+    <delete id="deleteRemarkBind">
+        update
+            baobiao_security_parameter_info_remark
+        set
+            is_deleted = 1
+        where id = #{Id}
+    </delete>
+
+    <select id="selectBaoBiaoSecurityParameterInfoRemarkByIds" resultType="org.springblade.anbiao.richenganpai.entity.BaoBiaoSecurityParameterInfo" >
+        select
+            b.*,a.safetyfileId
+        from
+            baobiao_security_parameter_info_remark a,baobiao_security_parameter_info b
+        where a.securityId = b.id
+            and a.is_deleted = 0
+            and b.is_deleted = 0
+        <if test="deptId != null and deptId != '' and (securityId == null or securityId == '') ">
+            and a.deptId = #{deptId}
+        </if>
+        <if test="securityId != null and securityId != '' and (deptId == null or deptId == '') ">
+            and a.safetyfileId = #{securityId}
+        </if>
+        <if test="securityId != null and securityId != '' and deptId != null and deptId != ''">
+            and a.safetyfileId = #{securityId}
+            and a.deptId = #{deptId}
+            limit 1
+        </if>
+    </select>
+
+    <select id="selectSafetyProductionFileByIds" resultType="org.springblade.doc.safetyproductionfile.vo.SafetyProductionFileVO">
+        select * from anbiao_safetyproductionfile
+        where is_deleted = 0
+        <if test="deptId != null and deptId != '' and (name == null or name == '') ">
+            and dept_id = #{deptId}
+        </if>
+        <if test="name != null and name != '' and (deptId == null or deptId == '') ">
+            and name = #{name}
+        </if>
+        <if test="name != null and name != '' and deptId != null and deptId != ''">
+            and name = #{name}
+            and dept_id = #{deptId}
+            limit 1
+        </if>
+    </select>
+
+    <sql id="tableDeptSql">
+        select
+            a.id,
+            a.deptId,
+            a.time as performAsTime,
+            a.status,
+            c.dept_name as deptName,
+            b.name,
+            b.remindtype,
+            b.remindtime,
+            b.updatetime,
+            b.updateuser,
+            b.remark,
+            b.is_deleted,
+            a.safetyfileId,
+            case
+                when (IFNULL(remindtype,'') = 1 and LEFT(a.time,10) > LEFT(NOW(),10)) then '已生成待办'
+                when IFNULL(remindtype,'') != 1 and ifnull(a.time,'') != ''  then '已生成待办'
+                else '未生成'
+            end as statusShow
+        from
+            baobiao_security_parameter_info_remark a,
+            baobiao_security_parameter_info b,
+            (
+            SELECT
+                DISTINCT
+                xiaji.id,
+                xiaji.parent_id,
+                xiaji.dept_name,
+                xiaji.is_deleted
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                AND xiaji.is_deleted = 0
+                AND xiaji.extend_type='机构'
+                AND shangji.id = #{deptId}
+            )c
+        where a.securityId = b.id
+            and a.deptId = c.id
+            and a.is_deleted = 0
+            and b.is_deleted = 0
+    </sql>
+
+    <sql id="queryDeptSql">
+        <if test="deptName != null and deptName != ''">
+            and deptName like '%${deptName}%'
+        </if>
+        <if test="name != null and name != ''">
+            and name like '%${name}%'
+        </if>
+        <if test="leixing != null and leixing != ''">
+            and remindtype = #{leixing}
+        </if>
+    </sql>
+
+    <sql id="orderByDeptSql">
+        <!-- 默认排序规则 -->
+        order by name desc
+    </sql>
+
+    <select timeout="600" id="getAllByDept" resultType="org.springblade.anbiao.richenganpai.entity.BaoBiaoSecurityParameterInfo"
+            parameterType="org.springblade.anbiao.richenganpai.page.RiChengAnPaiPage">
+        <if test="size == 0">
+            select * from (
+            <include refid="tableDeptSql"/>
+            )b
+            where 1=1
+            <include refid="queryDeptSql"/>
+            <include refid="orderByDeptSql"/>
+            limit ${total}
+        </if>
+        <if test="current != 0">
+            select * from (
+            <include refid="tableDeptSql"/>
+            )b
+            where 1=1
+            <include refid="queryDeptSql"/>
+            <include refid="orderByDeptSql"/>
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select timeout="90" id="getAllByDeptTotal"
+            parameterType="org.springblade.anbiao.richenganpai.page.RiChengAnPaiPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableDeptSql"/>
+        )d where 1 = 1
+        <include refid="queryDeptSql"/>
+    </select>
+
+    <insert id="insertBaoBiaoSecurityParameterInfoTimeSelective" parameterType="org.springblade.anbiao.richenganpai.entity.BaoBiaoSecurityParameterInfoTime" >
+        insert into baobiao_security_parameter_info_time
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptId != null and deptId !='' ">
+                deptId,
+            </if>
+            <if test="type != null and type !='' ">
+                type,
+            </if>
+            <if test="time != null and time != '' ">
+                time,
+            </if>
+            <if test="safetyfileId != null and safetyfileId != '' ">
+                safetyfileId
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptId != null and deptId !='' ">
+                #{deptId},
+            </if>
+            <if test="type != null and type !='' ">
+                #{type},
+            </if>
+            <if test="time != null and time != '' ">
+                #{time},
+            </if>
+            <if test="safetyfileId != null and safetyfileId != '' ">
+                #{safetyfileId}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectBaoBiaoSecurityParameterInfoTime" resultType="org.springblade.anbiao.richenganpai.entity.BaoBiaoSecurityParameterInfoTime" >
+        select
+            DISTINCT
+            a.deptId,a.time
+        from
+            baobiao_security_parameter_info_time a
+        where 1=1
+        <if test="deptId != null and deptId != ''">
+            and deptId = #{deptId}
+        </if>
+        <if test="securityId != null and securityId != '' ">
+            and safetyfileId = #{securityId}
+        </if>
+            and a.time not in (
+                select DISTINCT uploadcycle from anbiao_safetyproductionfile
+                where 1=1
+                <if test="securityId != null and securityId != '' ">
+                    and parent_id = #{securityId}
+                </if>
+            )
+        group by a.deptId,a.time
+    </select>
+
+</mapper>
