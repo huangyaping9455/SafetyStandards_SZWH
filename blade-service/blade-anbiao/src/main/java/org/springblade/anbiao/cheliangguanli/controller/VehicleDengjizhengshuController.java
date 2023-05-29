@@ -16,6 +16,7 @@
 package org.springblade.anbiao.cheliangguanli.controller;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -23,6 +24,7 @@ import lombok.AllArgsConstructor;
 import javax.validation.Valid;
 
 import org.springblade.anbiao.cheliangguanli.entity.VehicleDaoluyunshuzheng;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleXingnengbaogao;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
 import org.springblade.common.tool.FuncUtil;
@@ -74,10 +76,14 @@ public class VehicleDengjizhengshuController extends BladeController {
 	@GetMapping("/queryByVehicle")
 	@ApiOperation(value = "根据车辆ID查询登记证书详情", notes = "根据车辆ID查询登记证书详情")
 	public R<VehicleDengjizhengshu> queryByVehicle(String vehicleId) {
-		VehicleDengjizhengshu qDjzs = new VehicleDengjizhengshu();
-		qDjzs.setAvdVehicleIds(vehicleId);
-		qDjzs.setAvdDelete("0");
-		VehicleDengjizhengshu dengjizhengshu= vehicleDengjizhengshuService.getOne(Condition.getQueryWrapper(qDjzs));
+//		VehicleDengjizhengshu qDjzs = new VehicleDengjizhengshu();
+//		qDjzs.setAvdVehicleIds(vehicleId);
+//		qDjzs.setAvdDelete("0");
+//		VehicleDengjizhengshu dengjizhengshu= vehicleDengjizhengshuService.getOne(Condition.getQueryWrapper(qDjzs));
+		QueryWrapper<VehicleDengjizhengshu> dengjizhengshuQueryWrapper = new QueryWrapper<>();
+		dengjizhengshuQueryWrapper.lambda().eq(VehicleDengjizhengshu::getAvdVehicleIds,vehicleId);
+		dengjizhengshuQueryWrapper.lambda().eq(VehicleDengjizhengshu::getAvdDelete,"0");
+		VehicleDengjizhengshu dengjizhengshu = vehicleDengjizhengshuService.getBaseMapper().selectOne(dengjizhengshuQueryWrapper);
 		if(dengjizhengshu != null){
 			if(StrUtil.isNotEmpty(dengjizhengshu.getAvdEnclosure()) && !dengjizhengshu.getAvdEnclosure().contains("http")){
 				dengjizhengshu.setAvdEnclosure(fileUploadClient.getUrl(dengjizhengshu.getAvdEnclosure()));
