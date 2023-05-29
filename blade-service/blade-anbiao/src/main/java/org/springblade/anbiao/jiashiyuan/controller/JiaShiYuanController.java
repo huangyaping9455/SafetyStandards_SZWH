@@ -5651,9 +5651,11 @@ public class JiaShiYuanController {
 		int size = jiaShiYuans.size();
 
 		//入职表
-		jiaShiYuanPage.setType("ruzhi_compeleted");
-		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
-		List<JiaShiYuanTJMX> JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
+		JiaShiYuanPage jiaShiYuanPage1 = new JiaShiYuanPage();
+		jiaShiYuanPage1.setDeptId(jiaShiYuanPage.getDeptId());
+		jiaShiYuanPage1.setType("ruzhi_compeleted");
+		JiaShiYuanPage<JiaShiYuanTJMX> jiaShiYuanTJMXJiaShiYuanPage = jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage1);
+		List<JiaShiYuanTJMX> JiaShiYuanTJMXList = jiaShiYuanTJMXJiaShiYuanPage.getRecords();
 		int sum1 = JiaShiYuanTJMXList.size();
 		int sum2 = jiaShiYuans.size();
 		double percentage = (double) sum1 / sum2;
@@ -5668,10 +5670,12 @@ public class JiaShiYuanController {
 		driverDataPerfectionValueVOS.add(driverDataPerfectionValueVO);
 
 		//身份证
-		jiaShiYuanPage.setType("sfz_compeleted");
-		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
-		JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
-		sum1 = JiaShiYuanTJMXList.size();
+		JiaShiYuanPage jiaShiYuanPage2 = new JiaShiYuanPage();
+		jiaShiYuanPage2.setDeptId(jiaShiYuanPage.getDeptId());
+		jiaShiYuanPage2.setType("sfz_compeleted");
+		JiaShiYuanPage<JiaShiYuanTJMX> jiaShiYuanTJMXJiaShiYuanPage2 = jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage2);
+		List<JiaShiYuanTJMX> JiaShiYuanTJMXList2 = jiaShiYuanTJMXJiaShiYuanPage2.getRecords();
+		sum1 = JiaShiYuanTJMXList2.size();
 		sum2 = jiaShiYuans.size();
 		percentage = (double) sum1 / sum2;
 		nt = NumberFormat.getPercentInstance();
@@ -5685,10 +5689,12 @@ public class JiaShiYuanController {
 		driverDataPerfectionValueVOS.add(driverDataPerfectionValueVO2);
 
 		//驾驶证
-		jiaShiYuanPage.setType("jsz_compeleted");
-		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
-		JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
-		sum1 = JiaShiYuanTJMXList.size();
+		JiaShiYuanPage jiaShiYuanPage3 = new JiaShiYuanPage();
+		jiaShiYuanPage3.setDeptId(jiaShiYuanPage.getDeptId());
+		jiaShiYuanPage3.setType("jsz_compeleted");
+		JiaShiYuanPage<JiaShiYuanTJMX> jiaShiYuanTJMXJiaShiYuanPage3 = jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage3);
+		List<JiaShiYuanTJMX> JiaShiYuanTJMXList3 = jiaShiYuanTJMXJiaShiYuanPage3.getRecords();
+		sum1 = JiaShiYuanTJMXList3.size();
 		sum2 = jiaShiYuans.size();
 		percentage = (double) sum1 / sum2;
 		nt = NumberFormat.getPercentInstance();
@@ -5702,10 +5708,12 @@ public class JiaShiYuanController {
 		driverDataPerfectionValueVOS.add(driverDataPerfectionValueVO3);
 
 		//从业资格证
-		jiaShiYuanPage.setType("cyzgz_compeleted");
-		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
-		JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
-		sum1 = JiaShiYuanTJMXList.size();
+		JiaShiYuanPage jiaShiYuanPage4 = new JiaShiYuanPage();
+		jiaShiYuanPage4.setDeptId(jiaShiYuanPage.getDeptId());
+		jiaShiYuanPage4.setType("cyzgz_compeleted");
+		JiaShiYuanPage<JiaShiYuanTJMX> jiaShiYuanTJMXJiaShiYuanPage4 = jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage4);
+		List<JiaShiYuanTJMX> JiaShiYuanTJMXList4 = jiaShiYuanTJMXJiaShiYuanPage4.getRecords();
+		sum1 = JiaShiYuanTJMXList4.size();
 		sum2 = jiaShiYuans.size();
 		percentage = (double) sum1 / sum2;
 		nt = NumberFormat.getPercentInstance();
@@ -5719,10 +5727,12 @@ public class JiaShiYuanController {
 		driverDataPerfectionValueVOS.add(driverDataPerfectionValueVO4);
 
 		//体检表
-		jiaShiYuanPage.setType("tj_compeleted");
-		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
-		JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
-		sum1 = JiaShiYuanTJMXList.size();
+		JiaShiYuanPage jiaShiYuanPage5 = new JiaShiYuanPage();
+		jiaShiYuanPage5.setDeptId(jiaShiYuanPage.getDeptId());
+		jiaShiYuanPage5.setType("tj_compeleted");
+		JiaShiYuanPage<JiaShiYuanTJMX> jiaShiYuanTJMXJiaShiYuanPage5 = jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage5);
+		List<JiaShiYuanTJMX> JiaShiYuanTJMXList5 = jiaShiYuanTJMXJiaShiYuanPage5.getRecords();
+		sum1 = JiaShiYuanTJMXList5.size();
 		sum2 = jiaShiYuans.size();
 		percentage = (double) sum1 / sum2;
 		nt = NumberFormat.getPercentInstance();
@@ -5736,10 +5746,12 @@ public class JiaShiYuanController {
 		driverDataPerfectionValueVOS.add(driverDataPerfectionValueVO5);
 
 		//岗前培训
-		jiaShiYuanPage.setType("gqpx_compeleted");
-		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
-		JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
-		sum1 = JiaShiYuanTJMXList.size();
+		JiaShiYuanPage jiaShiYuanPage6 = new JiaShiYuanPage();
+		jiaShiYuanPage6.setDeptId(jiaShiYuanPage.getDeptId());
+		jiaShiYuanPage6.setType("gqpx_compeleted");
+		JiaShiYuanPage<JiaShiYuanTJMX> jiaShiYuanTJMXJiaShiYuanPage6 = jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage6);
+		List<JiaShiYuanTJMX> JiaShiYuanTJMXList6 = jiaShiYuanTJMXJiaShiYuanPage6.getRecords();
+		sum1 = JiaShiYuanTJMXList6.size();
 		sum2 = jiaShiYuans.size();
 		percentage = (double) sum1 / sum2;
 		nt = NumberFormat.getPercentInstance();
@@ -5753,10 +5765,12 @@ public class JiaShiYuanController {
 		driverDataPerfectionValueVOS.add(driverDataPerfectionValueVO6);
 
 		//无责证明
-		jiaShiYuanPage.setType("wzzm_compeleted");
-		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
-		JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
-		sum1 = JiaShiYuanTJMXList.size();
+		JiaShiYuanPage jiaShiYuanPage7 = new JiaShiYuanPage();
+		jiaShiYuanPage7.setDeptId(jiaShiYuanPage.getDeptId());
+		jiaShiYuanPage7.setType("wzzm_compeleted");
+		JiaShiYuanPage<JiaShiYuanTJMX> jiaShiYuanTJMXJiaShiYuanPage7 = jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage7);
+		List<JiaShiYuanTJMX> JiaShiYuanTJMXList7 = jiaShiYuanTJMXJiaShiYuanPage7.getRecords();
+		sum1 = JiaShiYuanTJMXList7.size();
 		sum2 = jiaShiYuans.size();
 		percentage = (double) sum1 / sum2;
 		nt = NumberFormat.getPercentInstance();
@@ -5770,10 +5784,12 @@ public class JiaShiYuanController {
 		driverDataPerfectionValueVOS.add(driverDataPerfectionValueVO7);
 
 		//安全责任书
-		jiaShiYuanPage.setType("aqzrs_compeleted");
-		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
-		JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
-		sum1 = JiaShiYuanTJMXList.size();
+		JiaShiYuanPage jiaShiYuanPage8 = new JiaShiYuanPage();
+		jiaShiYuanPage8.setDeptId(jiaShiYuanPage.getDeptId());
+		jiaShiYuanPage8.setType("aqzrs_compeleted");
+		JiaShiYuanPage<JiaShiYuanTJMX> jiaShiYuanTJMXJiaShiYuanPage8 = jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage8);
+		List<JiaShiYuanTJMX> JiaShiYuanTJMXList8 = jiaShiYuanTJMXJiaShiYuanPage8.getRecords();
+		sum1 = JiaShiYuanTJMXList8.size();
 		sum2 = jiaShiYuans.size();
 		percentage = (double) sum1 / sum2;
 		nt = NumberFormat.getPercentInstance();
@@ -5787,10 +5803,12 @@ public class JiaShiYuanController {
 		driverDataPerfectionValueVOS.add(driverDataPerfectionValueVO8);
 
 		//危害告知书
-		jiaShiYuanPage.setType("whgzs_compeleted");
-		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
-		JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
-		sum1 = JiaShiYuanTJMXList.size();
+		JiaShiYuanPage jiaShiYuanPage9 = new JiaShiYuanPage();
+		jiaShiYuanPage9.setDeptId(jiaShiYuanPage.getDeptId());
+		jiaShiYuanPage9.setType("whgzs_compeleted");
+		JiaShiYuanPage<JiaShiYuanTJMX> jiaShiYuanTJMXJiaShiYuanPage9 = jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage9);
+		List<JiaShiYuanTJMX> JiaShiYuanTJMXList9 = jiaShiYuanTJMXJiaShiYuanPage9.getRecords();
+		sum1 = JiaShiYuanTJMXList9.size();
 		sum2 = jiaShiYuans.size();
 		percentage = (double) sum1 / sum2;
 		nt = NumberFormat.getPercentInstance();
@@ -5804,10 +5822,12 @@ public class JiaShiYuanController {
 		driverDataPerfectionValueVOS.add(driverDataPerfectionValueVO9);
 
 		//劳动合同
-		jiaShiYuanPage.setType("ldht_compeleted");
-		jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage);
-		JiaShiYuanTJMXList = jiaShiYuanPage.getRecords();
-		sum1 = JiaShiYuanTJMXList.size();
+		JiaShiYuanPage jiaShiYuanPage10 = new JiaShiYuanPage();
+		jiaShiYuanPage10.setDeptId(jiaShiYuanPage.getDeptId());
+		jiaShiYuanPage10.setType("ldht_compeleted");
+		JiaShiYuanPage<JiaShiYuanTJMX> jiaShiYuanTJMXJiaShiYuanPage10 = jiaShiYuanService.selectAlarmTJMXPage2(jiaShiYuanPage10);
+		List<JiaShiYuanTJMX> JiaShiYuanTJMXList10 = jiaShiYuanTJMXJiaShiYuanPage10.getRecords();
+		sum1 = JiaShiYuanTJMXList10.size();
 		sum2 = jiaShiYuans.size();
 		percentage = (double) sum1 / sum2;
 		nt = NumberFormat.getPercentInstance();

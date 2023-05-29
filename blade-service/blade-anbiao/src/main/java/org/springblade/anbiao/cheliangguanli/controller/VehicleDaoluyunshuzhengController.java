@@ -25,6 +25,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleDaoluyunshuzheng;
+import org.springblade.anbiao.cheliangguanli.entity.VehicleXingshizheng;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleDaoluyunshuzhengService;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleDaoluyunshuzhengVO;
@@ -71,10 +72,14 @@ public class VehicleDaoluyunshuzhengController extends BladeController {
 	@GetMapping("/queryByVehicle")
 	@ApiOperation(value = "根据车辆ID查询道路运输证详情", notes = "根据车辆ID查询道路运输证详情")
 	public R<VehicleDaoluyunshuzheng> queryByDept(String vehicleId) {
-		VehicleDaoluyunshuzheng qDlysz = new VehicleDaoluyunshuzheng();
-		qDlysz.setAvdAvIds(vehicleId);
-		qDlysz.setAvdDelete("0");
-		VehicleDaoluyunshuzheng daoluyunshuzheng= vehicleDaoluyunshuzhengService.getOne(Condition.getQueryWrapper(qDlysz));
+//		VehicleDaoluyunshuzheng qDlysz = new VehicleDaoluyunshuzheng();
+//		qDlysz.setAvdAvIds(vehicleId);
+//		qDlysz.setAvdDelete("0");
+//		VehicleDaoluyunshuzheng daoluyunshuzheng= vehicleDaoluyunshuzhengService.getOne(Condition.getQueryWrapper(qDlysz));
+		QueryWrapper<VehicleDaoluyunshuzheng> daoluyunshuzhengQueryWrapper = new QueryWrapper<>();
+		daoluyunshuzhengQueryWrapper.lambda().eq(VehicleDaoluyunshuzheng::getAvdAvIds,vehicleId);
+		daoluyunshuzhengQueryWrapper.lambda().eq(VehicleDaoluyunshuzheng::getAvdDelete,"0");
+		VehicleDaoluyunshuzheng daoluyunshuzheng = vehicleDaoluyunshuzhengService.getBaseMapper().selectOne(daoluyunshuzhengQueryWrapper);
 		if(daoluyunshuzheng != null){
 			if(StrUtil.isNotEmpty(daoluyunshuzheng.getAvdEnclosure()) && !daoluyunshuzheng.getAvdEnclosure().contains("http")){
 				daoluyunshuzheng.setAvdEnclosure(fileUploadClient.getUrl(daoluyunshuzheng.getAvdEnclosure()));

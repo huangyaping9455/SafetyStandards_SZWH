@@ -227,7 +227,7 @@ public class VehicleBaoxianController extends BladeController {
 				}
 
 				//被保车辆所属单位
-				if(StringUtil.isNotBlank(avbInsuredName)) {
+				if(StringUtil.isNotBlank(avbInsuredName) && avbInsuredName != "null") {
 					avbInsuredDept = iSysClient.getDeptByName(avbInsuredName);
 					if(avbInsuredDept != null) {
 						baoxian.setAvbDeptIds(new Long(avbInsuredDept.getId()));		//车辆所属企业

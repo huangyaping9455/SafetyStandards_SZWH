@@ -84,9 +84,9 @@ public class AnbiaoBsPolicyInfoDescriptionController {
 			r.setData(anbiaoBsPolicyInfoDescription1);
 			return r;
 		}else {
-			r.setCode(500);
+			r.setCode(200);
 			r.setMsg("数据不存在");
-			r.setSuccess(false);
+			r.setSuccess(true);
 			r.setData(anbiaoBsPolicyInfoDescription);
 			return r;
 		}

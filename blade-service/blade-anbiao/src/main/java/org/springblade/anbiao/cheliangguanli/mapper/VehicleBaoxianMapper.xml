@@ -159,7 +159,7 @@
             from
                 anbiao_vehicle_baoxian_mingxi
             GROUP BY
-                avbm_avb_ids
+                avbm_avb_ids,avbm_risk
         ) cc on cc.avbm_avb_ids = avb.avb_ids
         <where>
                 avb.avb_delete = 0

@@ -248,7 +248,7 @@ public class JiashiyuanBaoxianController extends BladeController {
 					errorStr += "被保险单位不能为空！";
 				}
 				//被保险人
-				if(StringUtil.isNotBlank(avbInsureContacts)) {
+				if(StringUtil.isNotBlank(avbInsureContacts) && avbInsureContacts != "null") {
 					JiaShiYuan jsy = new JiaShiYuan();
 					jsy.setJiashiyuanxingming(avbInsureContacts);
 					jsy.setIsdelete(0);

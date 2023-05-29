@@ -16,6 +16,7 @@
 package org.springblade.anbiao.cheliangguanli.controller;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -75,10 +76,14 @@ public class VehicleXingnengbaogaoController extends BladeController {
 	@GetMapping("/queryByVehicle")
 	@ApiOperation(value = "根据车辆ID查询性能报告详情", notes = "根据车辆ID查询性能报告详情")
 	public R<VehicleXingnengbaogao> queryByVehicle(String vehicleId) {
-		VehicleXingnengbaogao qXlbg = new VehicleXingnengbaogao();
-		qXlbg.setAvxAvIds(vehicleId);
-		qXlbg.setAvxDelete("0");
-		VehicleXingnengbaogao xingnengbaogao= vehicleXingnengbaogaoService.getOne(Condition.getQueryWrapper(qXlbg));
+//		VehicleXingnengbaogao qXlbg = new VehicleXingnengbaogao();
+//		qXlbg.setAvxAvIds(vehicleId);
+//		qXlbg.setAvxDelete("0");
+//		VehicleXingnengbaogao xingnengbaogao= vehicleXingnengbaogaoService.getOne(Condition.getQueryWrapper(qXlbg));
+		QueryWrapper<VehicleXingnengbaogao> xingnengbaogaoQueryWrapper = new QueryWrapper<>();
+		xingnengbaogaoQueryWrapper.lambda().eq(VehicleXingnengbaogao::getAvxAvIds,vehicleId);
+		xingnengbaogaoQueryWrapper.lambda().eq(VehicleXingnengbaogao::getAvxDelete,"0");
+		VehicleXingnengbaogao xingnengbaogao = vehicleXingnengbaogaoService.getBaseMapper().selectOne(xingnengbaogaoQueryWrapper);
 		if(xingnengbaogao != null){
 			if(StrUtil.isNotEmpty(xingnengbaogao.getAvxEnclosure()) && !xingnengbaogao.getAvxEnclosure().contains("http")){
 				xingnengbaogao.setAvxEnclosure(fileUploadClient.getUrl(xingnengbaogao.getAvxEnclosure()));

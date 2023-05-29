@@ -16,6 +16,7 @@
 package org.springblade.anbiao.cheliangguanli.controller;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -79,10 +80,14 @@ public class VehicleXingshizhengController extends BladeController {
 	@GetMapping("/queryByVehicle")
 	@ApiOperation(value = "根据车辆ID查询行驶证详情", notes = "根据车辆ID查询行驶证详情")
 	public R<VehicleXingshizheng> queryByVehicle(String vehicleId) {
-		VehicleXingshizheng qXsz = new VehicleXingshizheng();
-		qXsz.setAvxAvIds(vehicleId);
-		qXsz.setAvxDelete("0");
-		VehicleXingshizheng xingshizheng = vehicleXingshizhengService.getOne(Condition.getQueryWrapper(qXsz));
+//		VehicleXingshizheng qXsz = new VehicleXingshizheng();
+//		qXsz.setAvxAvIds(vehicleId);
+//		qXsz.setAvxDelete("0");
+//		VehicleXingshizheng xingshizheng = vehicleXingshizhengService.getOne(Condition.getQueryWrapper(qXsz));
+		QueryWrapper<VehicleXingshizheng> xingshizhengQueryWrapper = new QueryWrapper<>();
+		xingshizhengQueryWrapper.lambda().eq(VehicleXingshizheng::getAvxAvIds,vehicleId);
+		xingshizhengQueryWrapper.lambda().eq(VehicleXingshizheng::getAvxDelete,"0");
+		VehicleXingshizheng xingshizheng = vehicleXingshizhengService.getBaseMapper().selectOne(xingshizhengQueryWrapper);
 		if(xingshizheng != null){
 			if(StrUtil.isNotEmpty(xingshizheng.getAvxCopyEnclosure()) && !xingshizheng.getAvxCopyEnclosure().contains("http")){
 				xingshizheng.setAvxCopyEnclosure(fileUploadClient.getUrl(xingshizheng.getAvxCopyEnclosure()));

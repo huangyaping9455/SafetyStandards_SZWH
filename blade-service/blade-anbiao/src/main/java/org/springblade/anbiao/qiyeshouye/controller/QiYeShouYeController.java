@@ -729,7 +729,7 @@ public class QiYeShouYeController {
 		return r;
 	}
 
-	@GetMapping(value = "/selectEnterpriseSecurityActivities")
+	@PostMapping(value = "/selectEnterpriseSecurityActivities")
 	@ApiLog("企业端-首页-企业安全活动")
 	@ApiOperation(value = "企业端-首页-企业安全活动", position = 16)
 	public R selectEnterpriseSecurityActivities(@RequestBody EnterpriseSecurityActivitiesVO enterpriseSecurityActivitiesVO) throws IOException, ParseException {
