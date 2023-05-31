@@ -80,7 +80,7 @@ public class AnbiaoAnquanhuiyiSource implements Serializable {
 	private String deptname;
 
 	@ApiModelProperty(value = "会议纪要")
-	@TableField(exist = false)
+//	@TableField(exist = false)
 	private String huiyijiyao;
 
 	@ApiModelProperty(value = "会议内容")

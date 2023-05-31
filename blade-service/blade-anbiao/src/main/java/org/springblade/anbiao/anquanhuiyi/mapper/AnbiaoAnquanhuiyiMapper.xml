@@ -52,6 +52,9 @@
         <if test="Id != null and Id != '' ">
             and a.id = #{Id}
         </if>
+        <if test="huiyixingshi != null and huiyixingshi != '' ">
+            and a.huiyixingshi = #{huiyixingshi}
+        </if>
 	</sql>
 
 	<sql id="orderSql">

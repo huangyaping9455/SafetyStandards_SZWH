@@ -39,4 +39,7 @@ public class AnQuanHuiYiPage<T> extends BasePage<T> {
 	@ApiModelProperty(value = "排序字段")
 	private String orderColumns;
 
+	@ApiModelProperty(value = "会议形式")
+	private String huiyixingshi;
+
 }
