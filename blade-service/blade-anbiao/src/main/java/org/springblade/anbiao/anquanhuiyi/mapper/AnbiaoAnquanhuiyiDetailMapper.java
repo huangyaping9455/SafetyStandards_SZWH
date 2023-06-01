@@ -1,8 +1,11 @@
 package org.springblade.anbiao.anquanhuiyi.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiDetail;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -14,5 +17,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 @Mapper
 public interface AnbiaoAnquanhuiyiDetailMapper extends BaseMapper<AnbiaoAnquanhuiyiDetail> {
+
+	List<AnbiaoAnquanhuiyiDetail> selectPersonnelType (AnbiaoAnquanhuiyiDetail anquanhuiyiDetail);
 
 }

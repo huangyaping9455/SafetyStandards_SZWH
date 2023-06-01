@@ -7,6 +7,8 @@ import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiDetailServic
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 安全会议参会记录 服务实现类
@@ -19,4 +21,10 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class AnbiaoAnquanhuiyiDetailServiceImpl extends ServiceImpl<AnbiaoAnquanhuiyiDetailMapper, AnbiaoAnquanhuiyiDetail> implements IAnbiaoAnquanhuiyiDetailService {
 
+	AnbiaoAnquanhuiyiDetailMapper detailMapper;
+
+	@Override
+	public List<AnbiaoAnquanhuiyiDetail> selectPersonnelType(AnbiaoAnquanhuiyiDetail anquanhuiyiDetail) {
+		return detailMapper.selectPersonnelType(anquanhuiyiDetail);
+	}
 }

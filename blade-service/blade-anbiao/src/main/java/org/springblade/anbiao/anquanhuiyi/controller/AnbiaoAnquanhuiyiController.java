@@ -427,9 +427,11 @@ public class AnbiaoAnquanhuiyiController {
 				}
 			}
 			anquanhuiyiInfo.setAnquanhuiyiDetails(details1);
-			anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds, Id);
-			anquanhuiyiDetailQueryWrapper.groupBy("aad_ap_type");
-			details1 = anquanhuiyiDetailService.getBaseMapper().selectList(anquanhuiyiDetailQueryWrapper);
+			AnbiaoAnquanhuiyiDetail anbiaoAnquanhuiyiDetail = new AnbiaoAnquanhuiyiDetail();
+			anbiaoAnquanhuiyiDetail.setAadAaIds(Id);
+//			anquanhuiyiDetailQueryWrapper.lambda().eq(AnbiaoAnquanhuiyiDetail::getAadAaIds, Id);
+//			anquanhuiyiDetailQueryWrapper.groupBy("aad_ap_type");
+			details1 = anquanhuiyiDetailService.selectPersonnelType(anbiaoAnquanhuiyiDetail);
 			String leixing = "";
 			for (int i = 0; i <= details1.size() - 1; i++) {
 				leixing += details1.get(i).getAadApType() + ",";

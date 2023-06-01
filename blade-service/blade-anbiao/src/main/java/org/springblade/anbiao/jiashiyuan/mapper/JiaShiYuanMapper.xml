@@ -85,7 +85,10 @@ values
         case when IFNULL(k.ajt_physical_examination_date,'') = '' then '0天'
         when year(k.ajt_physical_examination_date) > YEAR(NOW()) then '365天'
         else CONCAT(TIMESTAMPDIFF(DAY,NOW(),DATE_ADD(k.ajt_physical_examination_date, INTERVAL 1 YEAR)),'天') end as tijianbaogaoshengyuyouxiaoqi,
-        l.ajw_start_date as wuzhongdazerenshiguqishiriqi
+        l.ajw_date as wuzhongdazerenshiguqishiriqi,
+        case when IFNULL(l.ajw_date,'') = '' then '0天'
+        when year(l.ajw_date) > YEAR(NOW()) then '365天'
+        else CONCAT(TIMESTAMPDIFF(DAY,NOW(),DATE_ADD(l.ajw_date, INTERVAL 1 YEAR)),'天') end as wuzhongdazerenshigujieshuriqi
         FROM
         anbiao_jiashiyuan a
         inner join  (

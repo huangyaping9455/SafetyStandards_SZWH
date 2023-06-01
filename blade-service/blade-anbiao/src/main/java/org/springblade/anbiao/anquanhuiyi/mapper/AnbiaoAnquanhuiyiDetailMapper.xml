@@ -15,4 +15,29 @@
         <result column="add_time" property="addTime" />
     </resultMap>
 
+    <select id="selectPersonnelType" resultType="org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiDetail" parameterType="org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiDetail">
+
+        SELECT
+-- 	aad_ids,
+-- 	aad_aa_ids,
+-- 	aad_ap_ids,
+-- 	aad_ap_name,
+    aad_ap_type
+-- 	,
+-- 	add_ap_head_portrait,
+-- 	add_ap_autograph,
+-- 	add_ap_being_joined,
+-- 	add_time
+        FROM
+            anbiao_anquanhuiyi_detail
+        WHERE
+              1=1
+        <if test="aadAaIds != null and aadAaIds != ''">
+            and aad_aa_ids = #{aadAaIds}
+        </if>
+        GROUP BY
+            aad_ap_type
+
+    </select>
+
 </mapper>
