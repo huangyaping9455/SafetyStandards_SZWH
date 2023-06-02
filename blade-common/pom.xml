@@ -283,6 +283,14 @@
             <version>3.4.1</version>
         </dependency>
 
+        <!--人脸对比-->
+        <dependency>
+            <groupId>com.baidu.aip</groupId>
+            <artifactId>java-sdk</artifactId>
+            <version>4.10.0</version>
+        </dependency>
+
+
 
     </dependencies>
 

@@ -20,7 +20,6 @@ import org.springblade.anbiao.labor.entity.LaborlingquEntity;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoHiddenDangerVO;
-import org.springblade.core.tool.api.R;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 

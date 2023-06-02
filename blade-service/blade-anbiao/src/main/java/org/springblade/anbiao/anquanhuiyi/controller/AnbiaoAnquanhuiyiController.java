@@ -2,9 +2,7 @@ package org.springblade.anbiao.anquanhuiyi.controller;
 
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.druid.sql.visitor.functions.If;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
@@ -12,7 +10,7 @@ import com.alibaba.excel.write.metadata.style.WriteCellStyle;
 import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.google.zxing.WriterException;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -20,6 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tools.zip.ZipOutputStream;
+import org.json.JSONObject;
 import org.springblade.anbiao.anquanhuiyi.VO.AnbiaoAnquanhuiyiDetailVO;
 import org.springblade.anbiao.anquanhuiyi.VO.AnbiaoAnquanhuiyiVO;
 import org.springblade.anbiao.anquanhuiyi.VO.AnquanhuiyiledgerVO;
@@ -37,8 +36,10 @@ import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.common.configurationBean.FileServer;
+import org.springblade.common.configurationBean.TrainServer;
 import org.springblade.common.constant.FilePathConstant;
 import org.springblade.common.tool.*;
+import org.springblade.common.tool.face.util.FaceUtil;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
@@ -51,19 +52,14 @@ import org.springblade.system.user.feign.IUserClient;
 import org.springblade.system.user.page.UserPage;
 import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -104,6 +100,8 @@ public class AnbiaoAnquanhuiyiController {
 
 	@Autowired
 	private IAnbiaoRiskDetailService riskDetailService;
+
+	private TrainServer trainServer;
 
 
 	/**
@@ -1000,6 +998,63 @@ public class AnbiaoAnquanhuiyiController {
 //			}
 		}
 		return r;
+	}
+
+	@GetMapping("/searchUser")
+	@ApiOperation(value = "安全会议--人脸对比", notes = "安全会议--人脸对比", position = 7)
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "faceUrl", value = "原人脸图片URL）", required = true),
+		@ApiImplicitParam(name = "seachUrl", value = "需对比的人脸图片URL）", required = true)
+	})
+	public R searchUser(String faceUrl,String seachUrl) throws Exception{
+		R rs = new R();
+		//查询过滤条件
+		if(StringUtils.isEmpty(faceUrl) || StringUtils.isEmpty(seachUrl)){
+			rs.setCode(500);
+			rs.setMsg("参数不能为空");
+			rs.setSuccess(false);
+			rs.setData(null);
+			return rs;
+		}
+		JSONObject res = FaceUtil.SeachUserUrl(faceUrl,seachUrl);
+		if(Integer.parseInt(res.get("error_code").toString()) == 222001){
+			rs.setCode(500);
+			rs.setMsg("认证失败");
+			rs.setSuccess(false);
+			rs.setData(0);
+			return rs;
+		}
+		res = res.getJSONObject("result");
+		try {
+			if(res != null){
+				double score = Double.parseDouble(res.get("score").toString());
+				if(score>Integer.parseInt(trainServer.getSearchScore())){
+					rs.setCode(200);
+					rs.setMsg("认证成功");
+					rs.setSuccess(true);
+					rs.setData(score);
+					return rs;
+				}else{
+					rs.setCode(500);
+					rs.setMsg("认证失败");
+					rs.setSuccess(false);
+					rs.setData(0);
+					return rs;
+				}
+			}else{
+				rs.setCode(500);
+				rs.setMsg("认证失败，请联系管理员");
+				rs.setSuccess(false);
+				rs.setData(0);
+				return rs;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rs.setCode(500);
+			rs.setMsg("认证失败");
+			rs.setSuccess(true);
+			return rs;
+		}
 	}
 
 }

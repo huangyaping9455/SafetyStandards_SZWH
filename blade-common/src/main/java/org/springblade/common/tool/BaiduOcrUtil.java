@@ -117,7 +117,7 @@ public class BaiduOcrUtil {
         options.put("templateSign", "");
 
         // 参数为本地图片二进制数组
-        JSONObject custom = aipOcr.custom(file, options);
+        JSONObject custom = aipOcr.custom(file,null, options);
     }
 
     public static Double face(byte[] bytes, String url) {

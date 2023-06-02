@@ -61,3 +61,6 @@ alarmserver:
   templateUrl: D:\BS\static\SafetyStandards\
   address-ak: ${fileserver.dev.ak}
 
+trainserver:
+  search-score: 60
+
