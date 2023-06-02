@@ -482,5 +482,15 @@ public class AnbiaoRiskDetailServiceImpl extends ServiceImpl<AnbiaoRiskDetailMap
 		return mapper.selectVehicleBaoXianRisk(vehicleId);
 	}
 
+	@Override
+	public AnbiaoRiskDetailVO selectDriverNums(String deptId, String jiashiyuanId) {
+		return mapper.selectDriverNums(deptId, jiashiyuanId);
+	}
+
+	@Override
+	public List<AnbiaoRiskDetailVO> selectDriverOpenid() {
+		return mapper.selectDriverOpenid();
+	}
+
 
 }

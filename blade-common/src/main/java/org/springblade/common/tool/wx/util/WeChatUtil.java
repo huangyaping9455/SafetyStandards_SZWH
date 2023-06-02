@@ -131,9 +131,9 @@ public class WeChatUtil {
 		wxMssVo.setTemplate_id(templateId);//模版id
 		Map<String, TemplateDataVo> m = new HashMap<>();
 		if (type.equals("3")) {
-			m.put("thing1", new TemplateDataVo(keywords[0]));
-			m.put("time2", new TemplateDataVo(keywords[1]));
-			m.put("thing3", new TemplateDataVo(keywords[2]));
+			m.put("car_number1", new TemplateDataVo(keywords[0]));
+			m.put("thing2", new TemplateDataVo(keywords[1]));
+//			m.put("thing3", new TemplateDataVo(keywords[2]));
 			wxMssVo.setData(m);
 		} else if (type.equals("1")) {
 			/* [发起人,发布时间,任务名称,任务描述,结束时间]*/
@@ -181,7 +181,7 @@ public class WeChatUtil {
 //		WXServiceImpl wxService = new WXServiceImpl();
 		String values[] = {"zzh7878","2023年05月22日 14:29","ceshi"};
 		WeChatUtil.pushOneUser(WeChatUtil.getAccess_token()
-			, "oQmk75ZKnPWKt6gMsUSckJ7cpqvo", "3", "AGUg7QbVBV4MQtQu5QyNY050YzguidIDgZkXcV_jqj8"
+			, "oQmk75ZKnPWKt6gMsUSckJ7cpqvo", "3", "YO_hXB-fBMobGu-5_-in_TifEjCqprenSbrI6GBkQhY"
 			, values);
 	}
 

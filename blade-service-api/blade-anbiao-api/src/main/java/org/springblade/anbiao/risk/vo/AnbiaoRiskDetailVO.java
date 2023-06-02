@@ -78,6 +78,13 @@ public class AnbiaoRiskDetailVO implements Serializable {
 	@ApiModelProperty(value = "预警数")
 	private int num = 0;
 
+	@ApiModelProperty(value = "openId")
+	private String openid;
 
+	@ApiModelProperty(value = "企业ID")
+	private String deptId;
+
+	@ApiModelProperty(value = "Id")
+	private String id;
 
 }

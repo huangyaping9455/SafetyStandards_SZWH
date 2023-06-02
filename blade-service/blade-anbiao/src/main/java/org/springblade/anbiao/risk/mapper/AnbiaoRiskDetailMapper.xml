@@ -1258,5 +1258,64 @@
 
     </select>
 
+    <select id="selectDriverNums"  resultMap="AnbiaoRiskDetailVOResultMap">
+        select
+            SUM(a.num) as num,
+            MAX(cheliangpaizhao) as cheliangpaizhao
+        from(
+            select COUNT(1) as num,'' as cheliangpaizhao from anbiao_risk_detail
+            WHERE ard_is_rectification = 0
+                and ard_association_table = "anbiao_jiashiyuan"
+                and ard_association_field = "id"
+                and ard_dept_ids = #{deptId}
+                and ard_association_value = #{jiashiyuanId}
+            GROUP BY
+                ard_association_value
+        UNION
+            SELECT
+                COUNT(1) as num,b.cheliangpaizhao
+            FROM
+                `anbiao_risk_detail` a
+            LEFT JOIN anbiao_vehicle b on b.id=a.ard_association_value
+            LEFT JOIN anbiao_cheliang_jiashiyuan_daily c on (c.vehid=a.ard_association_value or c.gvehid=a.ard_association_value)
+            LEFT JOIN anbiao_jiashiyuan d on c.jiashiyuanid=d.id
+            WHERE ard_association_table = "anbiao_vehicle"
+                and ard_is_rectification=0
+                and b.is_deleted=0
+                and ard_dept_ids = #{deptId}
+                and (c.vstatus=1 or c.gstatus=1)
+                and d.isdelete=0
+                and c.jiashiyuanid = #{jiashiyuanId}
+            GROUP BY
+                b.cheliangpaizhao
+        UNION
+            SELECT
+                COUNT(1) as num,'' as cheliangpaizhao
+            FROM
+                `anbiao_risk_detail` a
+                LEFT JOIN anbiao_vehicle b on b.id=a.ard_association_value and b.cheliangpaizhao like '%挂%'
+                LEFT JOIN anbiao_cheliang_jiashiyuan_daily c on (c.vehid=a.ard_association_value or c.gvehid=a.ard_association_value)
+                LEFT JOIN anbiao_jiashiyuan d on c.jiashiyuanid=d.id
+            WHERE ard_association_table = "anbiao_vehicle"
+              and ard_is_rectification=0
+              and ard_dept_ids = #{deptId}
+              and b.is_deleted=0
+              and (c.vstatus=1 or c.gstatus=1)
+              and d.isdelete=0
+              and c.jiashiyuanid = #{jiashiyuanId}
+            )a
+    </select>
+
+    <select id="selectDriverOpenid"  resultMap="AnbiaoRiskDetailVOResultMap">
+        select
+            id,openid,dept_id as deptId
+        from
+            anbiao_jiashiyuan
+        where isdelete = 0
+          and IFNULL(openid,'')  = 'oQmk75ZKnPWKt6gMsUSckJ7cpqvo'
+        GROUP BY
+            id,openid,dept_id
+    </select>
+
 
 </mapper>

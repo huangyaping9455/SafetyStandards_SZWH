@@ -1019,7 +1019,7 @@ public class AnbiaoAnquanhuiyiController {
 		JSONObject res = FaceUtil.SeachUserUrl(faceUrl,seachUrl);
 		if(Integer.parseInt(res.get("error_code").toString()) == 222001){
 			rs.setCode(500);
-			rs.setMsg("认证失败");
+			rs.setMsg("认证失败，请联系管理员");
 			rs.setSuccess(false);
 			rs.setData(0);
 			return rs;
@@ -1035,7 +1035,7 @@ public class AnbiaoAnquanhuiyiController {
 					rs.setData(score);
 					return rs;
 				}else{
-					rs.setCode(500);
+					rs.setCode(200);
 					rs.setMsg("认证失败");
 					rs.setSuccess(false);
 					rs.setData(0);
@@ -1050,9 +1050,10 @@ public class AnbiaoAnquanhuiyiController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			rs.setCode(500);
+			rs.setCode(200);
 			rs.setMsg("认证失败");
 			rs.setSuccess(true);
+			rs.setData(0);
 			return rs;
 		}
 	}

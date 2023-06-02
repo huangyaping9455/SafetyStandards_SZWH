@@ -109,4 +109,19 @@ public interface IAnbiaoRiskDetailService extends IService<AnbiaoRiskDetail> {
 	List<Vehicle> selectVehicleBaoXianRisk();
 	List<Vehicle> selectVehicleBaoXianRisk(String vehicleId);
 
+	/**
+	 * 获取风险数
+	 * @param deptId
+	 * @param jiashiyuanId
+	 * @return
+	 */
+	AnbiaoRiskDetailVO selectDriverNums(@Param("deptId") String deptId,@Param("jiashiyuanId") String jiashiyuanId);
+
+	/**
+	 * 获取已绑定微信的驾驶员
+	 * @return
+	 */
+	List<AnbiaoRiskDetailVO> selectDriverOpenid();
+
+
 }
