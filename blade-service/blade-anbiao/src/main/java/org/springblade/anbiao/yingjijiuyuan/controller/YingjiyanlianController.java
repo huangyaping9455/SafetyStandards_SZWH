@@ -16,6 +16,7 @@
 package org.springblade.anbiao.yingjijiuyuan.controller;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -32,6 +33,7 @@ import org.springblade.anbiao.yingjijiuyuan.vo.YingjiyanlianVO;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
+import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -51,6 +53,7 @@ public class YingjiyanlianController {
 
     private IYingjiyanlianService yingjiyanlianService;
     private IConfigureService mapService;
+	private IFileUploadClient fileUploadClient;
 
     @PostMapping("/list")
 	@ApiLog("分页-应急演练")
@@ -78,6 +81,14 @@ public class YingjiyanlianController {
 			return rs;
 		}
         YingjiyanlianVO detail = yingjiyanlianService.selectByKey(id);
+		//附件
+		if (StrUtil.isNotEmpty(detail.getFujian()) && detail.getFujian().contains("http") == false) {
+			detail.setFujian(fileUploadClient.getUrl(detail.getFujian()));
+		}
+		//演练照片
+		if (StrUtil.isNotEmpty(detail.getYanlianzhaopian()) && detail.getYanlianzhaopian().contains("http") == false) {
+			detail.setYanlianzhaopian(fileUploadClient.getUrl(detail.getYanlianzhaopian()));
+		}
         return R.data(detail);
     }
 
