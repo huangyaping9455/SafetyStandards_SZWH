@@ -38,7 +38,17 @@
 
     <sql id="tableSql">
         SELECT
-            a.*,
+            a.id,
+            a.jihua,
+            a.zhihuiren,
+            a.yanliandidian,
+            a.yanlianleixing,
+            left(a.yanlianriqi,10) as yanlianriqi,
+            a.yanlianmiaoshu,
+            a.yanlianguocheng,
+            a.xiaoguopinggu,
+            a.wenticuoshi,
+            a.deptId,
             b.dept_name as deptName
         FROM
             anbiao_yingjiyanlian a
@@ -46,7 +56,9 @@
             <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) b
         on a.dept_id = b.id
-        WHERE 1=1 and ifnull(a.is_deleted,0) = 0
+        WHERE ifnull(a.is_deleted,0) = 0
+            AND MONTH(yanlianriqi) = MONTH(#{yanlianriqi})
+            AND YEAR(yanlianriqi) = YEAR(#{yanlianriqi})
     </sql>
 
     <sql id="querySql">

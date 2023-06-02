@@ -49,7 +49,10 @@ public class Yingjiyanlian implements Serializable {
     @ApiModelProperty(value = "企业id")
     @TableField("dept_id")
     private Integer deptId;
-    @ApiModelProperty(value = "企业 名称")
+	/**
+	 * 企业名称
+	 */
+    @ApiModelProperty(value = "企业名称")
     @TableField(exist = false)
     private String deptName;
     /**

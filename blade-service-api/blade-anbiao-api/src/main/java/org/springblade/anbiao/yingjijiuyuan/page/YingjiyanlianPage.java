@@ -24,4 +24,6 @@ public class YingjiyanlianPage<T> extends BasePage<T> {
     private String deptName;
 	@ApiModelProperty(value = "应急演练计划")
 	private String jihua;
+	@ApiModelProperty(value = "演练日期")
+	private String yanlianriqi;
 }
