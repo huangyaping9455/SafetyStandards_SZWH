@@ -49,7 +49,8 @@
             a.xiaoguopinggu,
             a.wenticuoshi,
             a.dept_id as deptId,
-            b.dept_name as deptName
+            b.dept_name as deptName,
+            a.caozuoshijian
         FROM
             anbiao_yingjiyanlian a
         inner join  (
