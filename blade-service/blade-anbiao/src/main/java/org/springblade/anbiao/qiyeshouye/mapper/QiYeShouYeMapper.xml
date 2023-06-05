@@ -2307,6 +2307,7 @@
                     lwlk_dept_day
                 where YEAR(date) = YEAR(NOW())
                     and MONTH(date) = MONTH(NOW())
+                    and dept_id = #{deptId}
                 GROUP BY
                     dept_id
             )d ON a.id = d.dept_id
