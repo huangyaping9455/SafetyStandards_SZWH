@@ -2300,13 +2300,15 @@
             LEFT JOIN(
                 select
                     dept_id,
-                    case when (join_score+online_score+drifting_score+continuation_score+qualify_score+overspeed_score+fatigue_score+check_score) >= 100 then 100
-                        else (join_score+online_score+drifting_score+continuation_score+qualify_score+overspeed_score+fatigue_score+check_score)
+                    case when ROUND(AVG((join_score+online_score+drifting_score+continuation_score+qualify_score+overspeed_score+fatigue_score+check_score)),2) >= 100 then 100
+                        else ROUND(AVG((join_score+online_score+drifting_score+continuation_score+qualify_score+overspeed_score+fatigue_score+check_score)),2)
                     end as total_score
                 from
-                    lwlk_dept_month
+                    lwlk_dept_day
                 where YEAR(date) = YEAR(NOW())
                     and MONTH(date) = MONTH(NOW())
+                GROUP BY
+                    dept_id
             )d ON a.id = d.dept_id
         WHERE 1=1
           AND a.id = #{deptId}
