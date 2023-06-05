@@ -1016,6 +1016,30 @@ public class AnbiaoAnquanhuiyiController {
 			rs.setData(null);
 			return rs;
 		}
+		//截取/之前字符串
+		//获取第一个/索引
+		int index = faceUrl.indexOf("/");
+		//获取第二个/索引
+		index = faceUrl.indexOf("/", index + 2);
+		String str1 = faceUrl.substring(0, index);
+		System.out.println("截取第二个/之前字符串：" + str1);
+		//截取第二个_之后字符串
+		String str2 = faceUrl.substring(str1.length() + 1, faceUrl.length());
+		System.out.println("截取第二个/之后字符串：" + str2);
+		faceUrl = fileServer.getPathPrefix()+str2;
+
+		//截取_之前字符串
+		//获取第一个/索引
+		index = seachUrl.indexOf("/");
+		//获取第二个/索引
+		index = seachUrl.indexOf("/", index + 2);
+		str1 = seachUrl.substring(0, index);
+		System.out.println("截取第二个/之前字符串：" + str1);
+		//截取第二个_之后字符串
+		str2 = seachUrl.substring(str1.length() + 1, seachUrl.length());
+		System.out.println("截取第二个/之后字符串：" + str2);
+		seachUrl = fileServer.getPathPrefix()+str2;
+
 		JSONObject res = FaceUtil.SeachUserUrl(faceUrl,seachUrl);
 		if(Integer.parseInt(res.get("error_code").toString()) == 222001){
 			rs.setCode(500);
