@@ -1375,16 +1375,20 @@ public class JiaShiYuanController {
 	@ApiLog("根据驾驶员ID获取个人详细信息（司机小程序个人中心）")
 	@ApiOperation(value = "根据驾驶员ID获取个人详细信息（司机小程序个人中心）", notes = "传入id", position = 1)
 	public R getDriverInfo(String jsyId) {
+		DriverInfoVO driverInfoVO = iJiaShiYuanService.selectDriverInfo(jsyId);
+		if(driverInfoVO != null){
+			if (StrUtil.isNotEmpty(driverInfoVO.getZhaopian()) && driverInfoVO.getZhaopian().contains("http") == false) {
+				driverInfoVO.setZhaopian(fileUploadClient.getUrl(driverInfoVO.getZhaopian()));
+			}
+		}
 		return R.data(iJiaShiYuanService.selectDriverInfo(jsyId));
 	}
-
 
 	@GetMapping(value = "/getJSYByVehicle")
 	@ApiLog("企业-查询驾驶员绑定车辆")
 	@ApiOperation(value = "企业-查询驾驶员绑定车辆", notes = "传入jiashiyuanid", position = 13)
 	public R<Vehicle> getJSYByVehicle(String jiashiyuanid) {
 		R rs = new R();
-
 		List<Vehicle> vehicleList = iJiaShiYuanService.selectByCar(jiashiyuanid);
 		if (vehicleList != null) {
 			rs.setCode(200);
