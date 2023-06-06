@@ -1381,7 +1381,7 @@ public class JiaShiYuanController {
 				driverInfoVO.setZhaopian(fileUploadClient.getUrl(driverInfoVO.getZhaopian()));
 			}
 		}
-		return R.data(iJiaShiYuanService.selectDriverInfo(jsyId));
+		return R.data(driverInfoVO);
 	}
 
 	@GetMapping(value = "/getJSYByVehicle")
