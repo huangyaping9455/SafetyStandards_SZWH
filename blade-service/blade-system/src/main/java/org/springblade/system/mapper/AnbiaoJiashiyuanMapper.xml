@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.system.mapper.AnbiaoJiashiyuanMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.system.entity.AnbiaoJiashiyuan">
+        <id column="id" property="id" />
+        <result column="jiashiyuanxingming" property="jiashiyuanxingming" />
+        <result column="zhaopian" property="zhaopian" />
+        <result column="xingbie" property="xingbie" />
+        <result column="shenfenzhenghao" property="shenfenzhenghao" />
+        <result column="chushengshijian" property="chushengshijian" />
+        <result column="nianling" property="nianling" />
+        <result column="shoujihaoma" property="shoujihaoma" />
+        <result column="congyerenyuanleixing" property="congyerenyuanleixing" />
+        <result column="shenfenzhengchulingriqi" property="shenfenzhengchulingriqi" />
+        <result column="shenfenzhengyouxiaoqi" property="shenfenzhengyouxiaoqi" />
+        <result column="wenhuachengdu" property="wenhuachengdu" />
+        <result column="pingyongriqi" property="pingyongriqi" />
+        <result column="jidongjiashiyuan" property="jidongjiashiyuan" />
+        <result column="jiashiyuanleixing" property="jiashiyuanleixing" />
+        <result column="dept_id" property="deptId" />
+        <result column="shenfenzhengfujian" property="shenfenzhengfujian" />
+        <result column="shenfenzhengfanmianfujian" property="shenfenzhengfanmianfujian" />
+        <result column="congyezhengfujian" property="congyezhengfujian" />
+        <result column="jiashizhengfujian" property="jiashizhengfujian" />
+        <result column="jiatingzhuzhi" property="jiatingzhuzhi" />
+        <result column="danganbianhao" property="danganbianhao" />
+        <result column="jiashizhenghao" property="jiashizhenghao" />
+        <result column="zhunjiachexing" property="zhunjiachexing" />
+        <result column="jialing" property="jialing" />
+        <result column="weifajifen" property="weifajifen" />
+        <result column="jiashizhengchulingriqi" property="jiashizhengchulingriqi" />
+        <result column="jiashizhengyouxiaoqi" property="jiashizhengyouxiaoqi" />
+        <result column="tijianyouxiaoqi" property="tijianyouxiaoqi" />
+        <result column="congyezigezheng" property="congyezigezheng" />
+        <result column="congyeleibie" property="congyeleibie" />
+        <result column="congyezhengyouxiaoqi" property="congyezhengyouxiaoqi" />
+        <result column="congyezhengchulingri" property="congyezhengchulingri" />
+        <result column="zhengjianhefajiguan" property="zhengjianhefajiguan" />
+        <result column="fazhengjiguan" property="fazhengjiguan" />
+        <result column="chengxinkaoheshijian" property="chengxinkaoheshijian" />
+        <result column="xiacichengxinkaoheshijian" property="xiacichengxinkaoheshijian" />
+        <result column="jixujiaoyushijian" property="jixujiaoyushijian" />
+        <result column="xiacijixujiaoyushijian" property="xiacijixujiaoyushijian" />
+        <result column="congyezigeleibie" property="congyezigeleibie" />
+        <result column="zhengjianzhuangtai" property="zhengjianzhuangtai" />
+        <result column="huzhaohaoma" property="huzhaohaoma" />
+        <result column="huzhaoleibie" property="huzhaoleibie" />
+        <result column="guojiama" property="guojiama" />
+        <result column="huzhaoyouxiaoqi" property="huzhaoyouxiaoqi" />
+        <result column="zhunjiazhenghao" property="zhunjiazhenghao" />
+        <result column="zhunjialeixing" property="zhunjialeixing" />
+        <result column="zhunyunxian" property="zhunyunxian" />
+        <result column="zhunjiazhengyouxiaoqi" property="zhunjiazhengyouxiaoqi" />
+        <result column="jiaonabiaozhun" property="jiaonabiaozhun" />
+        <result column="jiaonajine" property="jiaonajine" />
+        <result column="shifoujiaona" property="shifoujiaona" />
+        <result column="chaosuweifajilu" property="chaosuweifajilu" />
+        <result column="jiaotongweifajilu" property="jiaotongweifajilu" />
+        <result column="zhirensiwangzeren" property="zhirensiwangzeren" />
+        <result column="weiguileixing" property="weiguileixing" />
+        <result column="jiachejingli" property="jiachejingli" />
+        <result column="beizhu" property="beizhu" />
+        <result column="fuyinjian" property="fuyinjian" />
+        <result column="caozuorenid" property="caozuorenid" />
+        <result column="caozuoshijian" property="caozuoshijian" />
+        <result column="caozuoren" property="caozuoren" />
+        <result column="bumen" property="bumen" />
+        <result column="lizhishijian" property="lizhishijian" />
+        <result column="denglumima" property="denglumima" />
+        <result column="isdelete" property="isdelete" />
+        <result column="createtime" property="createtime" />
+        <result column="tijianriqi" property="tijianriqi" />
+        <result column="openid" property="openid" />
+        <result column="status" property="status" />
+        <result column="sfz_compeleted" property="sfzCompeleted" />
+    </resultMap>
+
+</mapper>

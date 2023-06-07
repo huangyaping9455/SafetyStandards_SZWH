@@ -25,6 +25,7 @@ import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Personnel;
 import org.springblade.anbiao.guanlijigouherenyuan.feign.IOrganizationsClient;
 import org.springblade.anbiao.guanlijigouherenyuan.feign.IPersonnelClient;
+import org.springblade.system.entity.*;
 import org.springblade.common.configurationBean.AlarmServer;
 import org.springblade.common.configurationBean.FileServer;
 import org.springblade.core.boot.ctrl.BladeController;
@@ -35,13 +36,7 @@ import org.springblade.core.tool.api.R;
 import org.springblade.core.tool.constant.BladeConstant;
 import org.springblade.core.tool.node.INode;
 import org.springblade.core.tool.utils.Func;
-import org.springblade.system.entity.Dept;
-import org.springblade.system.entity.Post;
-import org.springblade.system.entity.PostMenu;
-import org.springblade.system.service.IDeptService;
-import org.springblade.system.service.IMenuService;
-import org.springblade.system.service.IPostMenuService;
-import org.springblade.system.service.IPostService;
+import org.springblade.system.service.*;
 import org.springblade.system.user.entity.User;
 import org.springblade.system.user.feign.IUserFiegn;
 import org.springblade.system.vo.DeptSubVO;
@@ -74,7 +69,7 @@ public class DeptController extends BladeController {
 
 	private IUserFiegn userClient;
 
-	private IPersonnelClient  personnelClient;
+	private IPersonnelClient personnelClient;
 
 	private IOrganizationsClient orrganizationsClient;
 
@@ -83,6 +78,10 @@ public class DeptController extends BladeController {
 	private FileServer fileServer;
 
 	private AlarmServer alarmServer;
+
+	private IAnbiaoJiashiyuanService iJiaShiYuanService;
+
+	private IAnbiaoVehicleService vehicleService;
 
 	/**
 	 * 列表
@@ -96,8 +95,8 @@ public class DeptController extends BladeController {
 	public R<List<INode>> list(@ApiIgnore @RequestParam Map<String, Object> dept, BladeUser bladeUser) {
 		Iterator<String> iterator = dept.keySet().iterator();
 		System.out.println(iterator);
-		while (iterator.hasNext()){
-			if(iterator.next().equals("deptId")){
+		while (iterator.hasNext()) {
+			if (iterator.next().equals("deptId")) {
 				iterator.remove();
 			}
 		}
@@ -112,37 +111,39 @@ public class DeptController extends BladeController {
 	 */
 	@GetMapping("/viewInfo")
 	@ApiOperation(value = "组织机构-详情", notes = "传入id", position = 2)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "id", value = "组织机构id", required = true) })
-	public R<Dept> viewInfo(Integer id)  {
-		Dept dept=deptService.selectByDeptId(id);
+	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "组织机构id", required = true)})
+	public R<Dept> viewInfo(Integer id) {
+		Dept dept = deptService.selectByDeptId(id);
 		return R.data(dept);
 	}
+
 	/**
 	 * 组织机构-新增
 	 */
 	@PostMapping("/insert")
 	@ApiOperation(value = "组织机构-新增", notes = "传入dept", position = 3)
-	public R insert(@Valid @RequestBody Dept dept,BladeUser user) {
-		String treeCode=deptService.selectByTreeCode(dept.getParentId()).getTreeCode();
+	public R insert(@Valid @RequestBody Dept dept, BladeUser user) {
+		String treeCode = deptService.selectByTreeCode(dept.getParentId()).getTreeCode();
 		dept.setTreeCode(treeCode);
-		dept.setId(deptService.selectMaxId()+1);
+		dept.setId(deptService.selectMaxId() + 1);
 		dept.setDeptName(dept.getDeptName().trim());
-		int i=deptService.selectByName(dept.getFullName().trim());
-		int code=201;
-		Object obj=new Object();
+		int i = deptService.selectByName(dept.getFullName().trim());
+		int code = 201;
+		Object obj = new Object();
 		String msg;
-		if(i>0){
-			msg="系统已存在相同名称";
-		}else{
+		if (i > 0) {
+			msg = "系统已存在相同名称";
+		} else {
 			//新增组织基本信息
-			boolean flag=deptService.insertDept(dept);
-			code=R.status(flag).getCode();
-			obj=R.status(flag).getData();
-			msg="操作成功";
+			boolean flag = deptService.insertDept(dept);
+			code = R.status(flag).getCode();
+			obj = R.status(flag).getData();
+			msg = "操作成功";
 		}
-		return R.data(code,obj,msg);
+		return R.data(code, obj, msg);
 
 	}
+
 	/**
 	 * 组织机构-编辑
 	 */
@@ -154,11 +155,11 @@ public class DeptController extends BladeController {
 		}
 		//返回组织机构数据 进行拼接
 		dept.setFullName(dept.getDeptName());
-		boolean flag=deptService.saveOrUpdate(dept);
-		int code=R.status(flag).getCode();
-		Object obj=R.status(flag).getData();
-		String msg="操作成功";
-		return R.data(code,obj,msg);
+		boolean flag = deptService.saveOrUpdate(dept);
+		int code = R.status(flag).getCode();
+		Object obj = R.status(flag).getData();
+		String msg = "操作成功";
+		return R.data(code, obj, msg);
 	}
 
 	/**
@@ -166,21 +167,21 @@ public class DeptController extends BladeController {
 	 */
 	@GetMapping("/remove")
 	@ApiOperation(value = "删除组织机构", notes = "传入id", position = 5)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "id", value = "组织机构id", required = true) })
+	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "组织机构id", required = true)})
 	public R remove(Integer id) {
-		int i=deptService.selectCountByparentId(id);
-		int code=201;
-		Object obj=new Object();
+		int i = deptService.selectCountByparentId(id);
+		int code = 201;
+		Object obj = new Object();
 		String msg;
-		if(i>0){
-			msg="该组织下还存在下级，不能删除";
-		}else{
-			boolean flag=deptService.removeById(id);
-			code=R.status(flag).getCode();
-			obj=R.status(flag).getData();
-			msg="删除成功";
+		if (i > 0) {
+			msg = "该组织下还存在下级，不能删除";
+		} else {
+			boolean flag = deptService.removeById(id);
+			code = R.status(flag).getCode();
+			obj = R.status(flag).getData();
+			msg = "删除成功";
 		}
-		return R.data(code,obj,msg);
+		return R.data(code, obj, msg);
 	}
 
 	/**
@@ -190,19 +191,19 @@ public class DeptController extends BladeController {
 	 */
 	@GetMapping("/tree")
 	@ApiOperation(value = "组织机构-tree", notes = "组织机构-tree", position = 6)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "postId", value = "岗位id", required = false),
+	@ApiImplicitParams({@ApiImplicitParam(name = "postId", value = "岗位id", required = false),
 		@ApiImplicitParam(name = "deptId", value = "单位id", required = false)
 	})
-	public R<List<DeptVO>> tree(String postId,String deptId) {
+	public R<List<DeptVO>> tree(String postId, String deptId) {
 		Dept dept;
 		List<DeptVO> tree;
 		//默认加载
-		if(StrUtil.isNotEmpty(postId)){
-			dept=deptService.selectByJGBM("机构",postId);
-			tree = deptService.tree(dept.getId().toString(),"1");
-		}else{
+		if (StrUtil.isNotEmpty(postId)) {
+			dept = deptService.selectByJGBM("机构", postId);
+			tree = deptService.tree(dept.getId().toString(), "1");
+		} else {
 			//根据所选择树形加载下级数据
-			tree = deptService.tree(deptId,"2");
+			tree = deptService.tree(deptId, "2");
 		}
 		return R.data(tree);
 	}
@@ -214,12 +215,13 @@ public class DeptController extends BladeController {
 	 */
 	@GetMapping("/treeDG")
 	@ApiOperation(value = "组织机构-多岗tree", notes = "组织机构-多岗tree", position = 7)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "postId", value = "岗位id", required = true)})
+	@ApiImplicitParams({@ApiImplicitParam(name = "postId", value = "岗位id", required = true)})
 	public R<List<DeptVO>> treeDG(String postId) {
-		Dept dept=deptService.selectByJGBM("机构",postId);
-		List<DeptVO>tree = deptService.treeDG(dept.getId().toString());
+		Dept dept = deptService.selectByJGBM("机构", postId);
+		List<DeptVO> tree = deptService.treeDG(dept.getId().toString());
 		return R.data(tree);
 	}
+
 	/**
 	 * 组织机构-机构异动tree
 	 *
@@ -227,61 +229,62 @@ public class DeptController extends BladeController {
 	 */
 	@GetMapping("/YDtree")
 	@ApiOperation(value = "组织机构-机构异动tree", notes = "组织机构-机构异动", position = 7)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "postId", value = "岗位id", required = true)})
+	@ApiImplicitParams({@ApiImplicitParam(name = "postId", value = "岗位id", required = true)})
 	public R<List<DeptVO>> YDtree(String postId) {
-		Dept dept=deptService.selectByJGBM("机构",postId);
-		List<DeptVO>tree = deptService.YDtree(dept.getId().toString());
+		Dept dept = deptService.selectByJGBM("机构", postId);
+		List<DeptVO> tree = deptService.YDtree(dept.getId().toString());
 		return R.data(tree);
 	}
 	//****************************机构异动***********************
+
 	/**
 	 * 组织机构-机构异动-save
 	 */
 	@PostMapping("/YDsave")
 	@ApiOperation(value = "组织机构-企业异动-save", notes = "传入需要移动机构id与移动位置机构id", position = 8)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "newdeptId", value = "移动位置机构id", required = true),
+	@ApiImplicitParams({@ApiImplicitParam(name = "newdeptId", value = "移动位置机构id", required = true),
 		@ApiImplicitParam(name = "deptId", value = "移动机构id", required = true)
 	})
-	public R YDsave(String deptId,String newdeptId) {
+	public R YDsave(String deptId, String newdeptId) {
 		R rs = new R();
-		int code=201;
-		Object obj=new Object();
+		int code = 201;
+		Object obj = new Object();
 		String msg = null;
 		//获取移动位置机构id treecode
-		Dept deptd=deptService.selectByDeptId(Integer.parseInt(newdeptId));
+		Dept deptd = deptService.selectByDeptId(Integer.parseInt(newdeptId));
 		//默认移动机构treecode 移动后机构treecode为移动位置treecode+移动单位id 部门岗位则为移动后岗位treecode+自身id
-		String treecode=deptd.getTreeCode();
+		String treecode = deptd.getTreeCode();
 		//获取当前企业下级 包括企业、部门、岗位
-		List<DeptVO> depts=deptService.treeList(deptId);
-		for (int i = 0; i <depts.size() ; i++) {
+		List<DeptVO> depts = deptService.treeList(deptId);
+		for (int i = 0; i < depts.size(); i++) {
 			//根据id查询信息并重新赋值
-			Dept dept=deptService.selectByDeptId(depts.get(i).getId());
-			String id=dept.getId()+"";
-			if(id.length()==1){
-				id= "00000"+dept.getId();
-			}else if(id.length()==2){
-				id= "0000"+dept.getId();
-			}else if(id.length()==3){
-				id= "000"+dept.getId();
-			}else if(id.length()==4){
-				id= "00"+dept.getId();
-			}else if(id.length()==5){
-				id= "0"+dept.getId();
+			Dept dept = deptService.selectByDeptId(depts.get(i).getId());
+			String id = dept.getId() + "";
+			if (id.length() == 1) {
+				id = "00000" + dept.getId();
+			} else if (id.length() == 2) {
+				id = "0000" + dept.getId();
+			} else if (id.length() == 3) {
+				id = "000" + dept.getId();
+			} else if (id.length() == 4) {
+				id = "00" + dept.getId();
+			} else if (id.length() == 5) {
+				id = "0" + dept.getId();
 			}
 			//为机构时设置上级id 根据排序规则 第一个必是机构 也只需要更改第一个数据的upperid
-			if(i == 0){
+			if (i == 0) {
 				dept.setParentId(Integer.parseInt(newdeptId));
-			}else{
+			} else {
 				//为部门岗位时进入此方法 根据自身上级id获取上级的treecode信息
-				Dept dept1=deptService.selectByDeptId(dept.getParentId());
+				Dept dept1 = deptService.selectByDeptId(dept.getParentId());
 				//进行赋值
-				treecode=dept1.getTreeCode();
+				treecode = dept1.getTreeCode();
 			}
-			dept.setTreeCode(treecode+id);
-			boolean flag=deptService.saveOrUpdate(dept);
-			code=R.status(flag).getCode();
-			obj=R.status(flag).getData();
-			msg="操作成功";
+			dept.setTreeCode(treecode + id);
+			boolean flag = deptService.saveOrUpdate(dept);
+			code = R.status(flag).getCode();
+			obj = R.status(flag).getData();
+			msg = "操作成功";
 		}
 		rs.setCode(code);
 		rs.setData(obj);
@@ -290,9 +293,8 @@ public class DeptController extends BladeController {
 	}
 
 
-
-
 	//**************************权限 start************************
+
 	/**
 	 * 权限-运维-save
 	 *
@@ -302,11 +304,11 @@ public class DeptController extends BladeController {
 	 */
 	@GetMapping("/grant")
 	@ApiOperation(value = "权限-运维-save", notes = "传入postId以及menuId集合", position = 8)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "postIds", value = "岗位id", required = true),
+	@ApiImplicitParams({@ApiImplicitParam(name = "postIds", value = "岗位id", required = true),
 		@ApiImplicitParam(name = "menuIds", value = "menuIds集合", required = true)
 	})
-	public R grant( String postIds, String menuIds) {
-		boolean temp = postService.grant(StrUtil.split(postIds,','), StrUtil.split(menuIds,','));
+	public R grant(String postIds, String menuIds) {
+		boolean temp = postService.grant(StrUtil.split(postIds, ','), StrUtil.split(menuIds, ','));
 		return R.status(temp);
 	}
 
@@ -319,12 +321,12 @@ public class DeptController extends BladeController {
 	 */
 	@GetMapping("/grantAdd")
 	@ApiOperation(value = "权限-追加", notes = "传入deptId以及menuId集合", position = 8)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "deptId", value = "机构id", required = true),
+	@ApiImplicitParams({@ApiImplicitParam(name = "deptId", value = "机构id", required = true),
 		@ApiImplicitParam(name = "menuIds", value = "menuIds集合", required = true),
 		@ApiImplicitParam(name = "type", value = "权限类型（0代表运维 1代表安标 2代表安标16项 3代表展板 4代表app）", required = true)
 	})
-	public R grantAdd( String deptId, String menuIds,Integer type) {
-		boolean temp = postService.grantAdd(deptId, StrUtil.split(menuIds,','),type);
+	public R grantAdd(String deptId, String menuIds, Integer type) {
+		boolean temp = postService.grantAdd(deptId, StrUtil.split(menuIds, ','), type);
 		return R.status(temp);
 	}
 
@@ -338,14 +340,15 @@ public class DeptController extends BladeController {
 	 */
 	@GetMapping("/grantSyn")
 	@ApiOperation(value = "权限-同步", notes = "传入deptId以及menuId集合", position = 8)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "deptId", value = "机构id", required = true),
+	@ApiImplicitParams({@ApiImplicitParam(name = "deptId", value = "机构id", required = true),
 		@ApiImplicitParam(name = "menuIds", value = "menuIds集合", required = true),
 		@ApiImplicitParam(name = "type", value = "权限类型（0代表运维 1代表安标 2代表安标16项 3代表展板 4代表app）", required = true)
 	})
-	public R grantSyn( String deptId, String menuIds,Integer type) {
-		boolean temp = postService.grantSyn(deptId, StrUtil.split(menuIds,','),type);
+	public R grantSyn(String deptId, String menuIds, Integer type) {
+		boolean temp = postService.grantSyn(deptId, StrUtil.split(menuIds, ','), type);
 		return R.status(temp);
 	}
+
 	/**
 	 * 权限-安标-save
 	 *
@@ -355,16 +358,17 @@ public class DeptController extends BladeController {
 	 */
 	@GetMapping("/ABgrant")
 	@ApiOperation(value = "权限-安标-save", notes = "传入postId以及menuId集合", position = 9)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "postIds", value = "岗位id", required = true),
+	@ApiImplicitParams({@ApiImplicitParam(name = "postIds", value = "岗位id", required = true),
 		@ApiImplicitParam(name = "menuIds", value = "menuIds集合", required = true)
 	})
-	public R ABgrant( String postIds, String menuIds,Integer type) {
-		if(type == null){
+	public R ABgrant(String postIds, String menuIds, Integer type) {
+		if (type == null) {
 			type = 1;
 		}
-		boolean temp = postService.ABgrant(StrUtil.split(postIds,','), StrUtil.split(menuIds,','),type);
+		boolean temp = postService.ABgrant(StrUtil.split(postIds, ','), StrUtil.split(menuIds, ','), type);
 		return R.status(temp);
 	}
+
 	/**
 	 * 权限-功能-save
 	 *
@@ -374,13 +378,14 @@ public class DeptController extends BladeController {
 	 */
 	@GetMapping("/Businessgrant")
 	@ApiOperation(value = "权限-功能-save", notes = "传入postId以及menuId集合", position = 10)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "postIds", value = "岗位id", required = true),
+	@ApiImplicitParams({@ApiImplicitParam(name = "postIds", value = "岗位id", required = true),
 		@ApiImplicitParam(name = "menuIds", value = "menuIds集合", required = true)
 	})
-	public R Businessgrant( String postIds, String menuIds) {
+	public R Businessgrant(String postIds, String menuIds) {
 		boolean temp = postService.Businessgrant(Func.toIntList(postIds), Func.toIntList(menuIds));
 		return R.status(temp);
 	}
+
 	/**
 	 * 权限-安标16项-save
 	 *
@@ -390,13 +395,14 @@ public class DeptController extends BladeController {
 	 */
 	@GetMapping("/Jurgrant")
 	@ApiOperation(value = "权限-安标16项-save", notes = "传入postId以及menuId集合", position = 11)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "postIds", value = "岗位id", required = true),
+	@ApiImplicitParams({@ApiImplicitParam(name = "postIds", value = "岗位id", required = true),
 		@ApiImplicitParam(name = "menuIds", value = "menuIds集合", required = true)
 	})
-	public R Jurgrant( String postIds, String menuIds) {
-		boolean temp = postService.ABJurisdiction(StrUtil.split(postIds,','), StrUtil.split(menuIds,','));
+	public R Jurgrant(String postIds, String menuIds) {
+		boolean temp = postService.ABJurisdiction(StrUtil.split(postIds, ','), StrUtil.split(menuIds, ','));
 		return R.status(temp);
 	}
+
 	/**
 	 * 权限-app-save
 	 *
@@ -406,15 +412,16 @@ public class DeptController extends BladeController {
 	 */
 	@GetMapping("/Appgrant")
 	@ApiOperation(value = "权限-app-save", notes = "传入postId以及menuId集合", position = 12)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "postIds", value = "岗位id", required = true),
+	@ApiImplicitParams({@ApiImplicitParam(name = "postIds", value = "岗位id", required = true),
 		@ApiImplicitParam(name = "menuIds", value = "menuIds集合", required = true)
 	})
-	public R Appgrant( String postIds, String menuIds) {
-		boolean temp = postService.Appgrant(StrUtil.split(postIds,','), StrUtil.split(menuIds,','));
+	public R Appgrant(String postIds, String menuIds) {
+		boolean temp = postService.Appgrant(StrUtil.split(postIds, ','), StrUtil.split(menuIds, ','));
 		return R.status(temp);
 	}
 
 	//*******************************************运维****************************************
+
 	/**
 	 * 权限-运维-tree
 	 */
@@ -433,16 +440,17 @@ public class DeptController extends BladeController {
 		return R.data(menuService.postTreeKeys(postId));
 	}
 	//*******************************************安标**************************************
+
 	/**
 	 * 权限-安标-tree
 	 */
 	@GetMapping("/ABgrant-tree")
 	@ApiOperation(value = "权限-安标-tree", notes = "权限-安标-tree", position = 15)
-	public R<List<MenuVO>> ABgrantTree(BladeUser user,Integer type) {
-		if(type == null){
+	public R<List<MenuVO>> ABgrantTree(BladeUser user, Integer type) {
+		if (type == null) {
 			type = 1;
 		}
-		return R.data(menuService.ABgrantTree(user,type));
+		return R.data(menuService.ABgrantTree(user, type));
 	}
 
 	/**
@@ -450,13 +458,14 @@ public class DeptController extends BladeController {
 	 */
 	@GetMapping("/ABpostTreeKeys")
 	@ApiOperation(value = "权限-安标-菜单", notes = "传入postId", position = 16)
-	public R<List<String>> ABpostTreeKeys(String postId,Integer type) {
-		if(type == null){
+	public R<List<String>> ABpostTreeKeys(String postId, Integer type) {
+		if (type == null) {
 			type = 1;
 		}
-		return R.data(menuService.ABpostTreeKeys(postId,type));
+		return R.data(menuService.ABpostTreeKeys(postId, type));
 	}
 	//**************************app*************************
+
 	/**
 	 * 权限-app-tree
 	 */
@@ -465,6 +474,7 @@ public class DeptController extends BladeController {
 	public R<List<MenuVO>> Apptree(BladeUser user) {
 		return R.data(menuService.Apptree(user));
 	}
+
 	/**
 	 * 权限-app-菜单
 	 */
@@ -477,6 +487,7 @@ public class DeptController extends BladeController {
 	//********************************************安标16项***************************************
 
 	//********************************************业务权限**************************************
+
 	/**
 	 * 权限-功能-tree
 	 */
@@ -500,15 +511,15 @@ public class DeptController extends BladeController {
 	 */
 	@GetMapping("/permission")
 	@ApiOperation(value = "业务权限", notes = "传入postId", position = 21)
-	public R<Map<String,Boolean>> permission(String postId) {
-		Map<String,Boolean> map = new HashMap<String,Boolean>();
-		List<PostMenu> list=postMenuService.selectListByPostIdBusiness(Integer.parseInt(postId),3);
-		for (int i = 0; i <list.size() ; i++) {
+	public R<Map<String, Boolean>> permission(String postId) {
+		Map<String, Boolean> map = new HashMap<String, Boolean>();
+		List<PostMenu> list = postMenuService.selectListByPostIdBusiness(Integer.parseInt(postId), 3);
+		for (int i = 0; i < list.size(); i++) {
 			//代表展板
-			if(list.get(i).getMenuId()==1&&list.get(i).getType()==3){
-				map.put("enterprise_panel",true);
-			}else{
-				map.put("enterprise_panel",false);
+			if (list.get(i).getMenuId() == 1 && list.get(i).getType() == 3) {
+				map.put("enterprise_panel", true);
+			} else {
+				map.put("enterprise_panel", false);
 			}
 		}
 		return R.data(map);
@@ -522,19 +533,21 @@ public class DeptController extends BladeController {
 
 	/**
 	 * 组织机构-人员-根据岗位id获取人员
+	 *
 	 * @param postId
 	 * @return
 	 */
 	@GetMapping("/selectByPostId")
 	@ApiOperation(value = "组织机构-人员-根据岗位id获取人员", notes = "传入postId", position = 22)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "postId", value = "岗位id", required = true) })
+	@ApiImplicitParams({@ApiImplicitParam(name = "postId", value = "岗位id", required = true)})
 	public R<List<User>> selectByPostId(String postId) {
-		List<User> user=userClient.selectByPostId(postId);
+		List<User> user = userClient.selectByPostId(postId);
 		return R.data(user);
 	}
 
 	/**
 	 * 组织机构-人员-初始化密码
+	 *
 	 * @param userId
 	 * @return
 	 */
@@ -550,72 +563,72 @@ public class DeptController extends BladeController {
 	 */
 	@PostMapping("/saveMultiple")
 	@ApiOperation(value = "组织机构-人员-多岗设置", notes = "传入岗位id集合与人员id", position = 24)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "postIds", value = "岗位id集合", required = true),
+	@ApiImplicitParams({@ApiImplicitParam(name = "postIds", value = "岗位id集合", required = true),
 		@ApiImplicitParam(name = "userId", value = "人员id", required = true)
 	})
-	public R saveMultiple(String postIds,Integer userId,BladeUser user) {
+	public R saveMultiple(String postIds, Integer userId, BladeUser user) {
 		R rs = new R();
-		int code=201;
-		Object obj=new Object();
+		int code = 201;
+		Object obj = new Object();
 		String msg = null;
-		List<String> postId=StrUtil.split(postIds,',');
+		List<String> postId = StrUtil.split(postIds, ',');
 
-		if(postId.size()>0){
-			Post post1=postService.selectByUserIdAndIsdefault(userId);
-			boolean status=postIds.contains(post1.getPostId().toString());
-			if(status){
-				msg="包含默认岗位";
-			}else{
-				String deptName=deptService.selectByDeptId(post1.getPostId()).getDeptName();
-				Dept dept=deptService.selectByJGBM("机构",post1.getPostId().toString());
-				msg="请勾选"+dept.getDeptName()+"企业下默认岗位"+deptName;
+		if (postId.size() > 0) {
+			Post post1 = postService.selectByUserIdAndIsdefault(userId);
+			boolean status = postIds.contains(post1.getPostId().toString());
+			if (status) {
+				msg = "包含默认岗位";
+			} else {
+				String deptName = deptService.selectByDeptId(post1.getPostId()).getDeptName();
+				Dept dept = deptService.selectByJGBM("机构", post1.getPostId().toString());
+				msg = "请勾选" + dept.getDeptName() + "企业下默认岗位" + deptName;
 			}
 			String strSub = StrUtil.sub(msg, 0, 3);
-			if(!strSub.equals("请勾选")){
+			if (!strSub.equals("请勾选")) {
 				//清理人员相关岗位
 				postService.deleteByUserId(userId);
-				Personnel personnel=new Personnel();
-				for (int i = 0; i < postId.size() ; i++) {
+				Personnel personnel = new Personnel();
+				for (int i = 0; i < postId.size(); i++) {
 					//根据用户ID、岗位ID获取人员相关详细信息
-					Post post=new Post();
+					Post post = new Post();
 					post.setUserId(userId);
 					post.setPostId(Integer.parseInt(postId.get(i)));
-					boolean flag=postService.saveOrUpdate(post);
-					if(i == 0){
+					boolean flag = postService.saveOrUpdate(post);
+					if (i == 0) {
 						//设置当前切换岗位为默认岗位
 						postService.updateIsdefault(post);
 					}
 					//判断多岗设置时人员基础信息是否存在
-					Dept dept=deptService.selectByJGBM("机构",postId.get(i));
+					Dept dept = deptService.selectByJGBM("机构", postId.get(i));
 					//根据人员id单位id查询人员基础信息是否存在
-					Personnel per=personnelClient.selectByUserIdAdnByDeptId(userId.toString(),dept.getId().toString());
+					Personnel per = personnelClient.selectByUserIdAdnByDeptId(userId.toString(), dept.getId().toString());
 					//人员信息不为空的时候进行赋值
-					if(per!=null){
-						personnel=per;
+					if (per != null) {
+						personnel = per;
 					}
-					code=R.status(flag).getCode();
-					obj=R.status(flag).getData();
+					code = R.status(flag).getCode();
+					obj = R.status(flag).getData();
 				}
 				//有且只有一个岗位信息时设置为默认岗位
-				if(postId.size()==1){
+				if (postId.size() == 1) {
 					//设置当前切换岗位为默认岗位
-					Post post=new Post();
+					Post post = new Post();
 					post.setUserId(userId);
 					post.setPostId(Integer.parseInt(postId.get(0)));
 					postService.updateIsdefault(post);
 				}
 				//清理人员数据
 				personnelClient.updateDelByUserId(userId.toString());
-				for (int i = 0; i < postId.size() ; i++) {
+				for (int i = 0; i < postId.size(); i++) {
 					//判断多岗设置时人员基础信息是否存在
-					Dept dept=deptService.selectByJGBM("机构",postId.get(i));
+					Dept dept = deptService.selectByJGBM("机构", postId.get(i));
 					//执行新增
 					personnel.setDeptId(dept.getId());
 					personnel.setUserid(userId);
-					if(user == null){
+					if (user == null) {
 						personnel.setCaozuoren("admin");
 						personnel.setCaozuorenid(1);
-					}else{
+					} else {
 						personnel.setCaozuoren(user.getUserName());
 						personnel.setCaozuorenid(user.getUserId());
 					}
@@ -625,27 +638,27 @@ public class DeptController extends BladeController {
 					personnel.setPostId(postId.get(i));
 					personnel.setIsDeleted(0);
 					//根据人员id单位id查询人员基础信息是否存在
-					Personnel per=personnelClient.selectByUserIdAdnByDeptId(userId.toString(),dept.getId().toString());
+					Personnel per = personnelClient.selectByUserIdAdnByDeptId(userId.toString(), dept.getId().toString());
 					//人员信息为空时进行新增
-					if(per==null){
+					if (per == null) {
 						personnel.setId(null);
 						System.out.println("personnel");
 						System.out.println(personnel);
 						boolean ss = personnelClient.insertPersonnelSelective(personnel);
-						if(ss == true){
-							msg="保存成功";
+						if (ss == true) {
+							msg = "保存成功";
 							rs.setCode(200);
 							rs.setMsg(msg);
-						}else{
-							msg="保存失败";
+						} else {
+							msg = "保存失败";
 							rs.setCode(500);
 							rs.setMsg(msg);
 						}
 					}
 				}
 			}
-		}else{
-			msg="请选择一个岗位";
+		} else {
+			msg = "请选择一个岗位";
 			rs.setCode(500);
 			rs.setMsg(msg);
 		}
@@ -654,19 +667,20 @@ public class DeptController extends BladeController {
 	//***************************************人员信息 end**********************************************
 
 	//**********************************岗位切换*********************************
+
 	/**
-	 *  复选拥有岗位
+	 * 复选拥有岗位
 	 */
 	@GetMapping("/checkHavePost")
 	@ApiOperation(value = "复选拥有岗位", notes = "复选拥有岗位", position = 25)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "userId", value = "人员id", required = true)})
+	@ApiImplicitParams({@ApiImplicitParam(name = "userId", value = "人员id", required = true)})
 	public R<List<String>> checkHavePost(Integer userId) {
 		List<String> list = new ArrayList<String>();
 		//根据用户id查询所拥有岗位id
-		List<Post> lists=postService.selectByUserId(userId);
-		Map<Integer,String> map = new HashMap<Integer,String>();
+		List<Post> lists = postService.selectByUserId(userId);
+		Map<Integer, String> map = new HashMap<Integer, String>();
 		for (int i = 0; i < lists.size(); i++) {
-			String postId=lists.get(i).getPostId().toString();
+			String postId = lists.get(i).getPostId().toString();
 			list.add(postId);
 		}
 		return R.data(list);
@@ -677,40 +691,40 @@ public class DeptController extends BladeController {
 	 */
 	@GetMapping("/checkPost")
 	@ApiOperation(value = "人员所拥有岗位", notes = "人员所拥有岗位", position = 26)
-	public R<List<Map<String, String>>> checkPost(BladeUser user,String type) {
+	public R<List<Map<String, String>>> checkPost(BladeUser user, String type) {
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-		if("运维端".equals(type)){
+		if ("运维端".equals(type)) {
 			//根据用户id查询所拥有岗位id
-			List<Post> lists=postService.selectByUserId(user.getUserId());
+			List<Post> lists = postService.selectByUserId(user.getUserId());
 			for (int i = 0; i < lists.size(); i++) {
-				Map<String,String> map = new HashMap<String,String>();
-				String postId=lists.get(i).getPostId().toString();
+				Map<String, String> map = new HashMap<String, String>();
+				String postId = lists.get(i).getPostId().toString();
 				//直属上级id
-				Dept dept=deptService.selectByJGBM("机构",postId);
-				String postName=deptService.selectByDeptId(Integer.parseInt(postId)).getDeptName();
-				map.put("postName",dept.getDeptName()+"|"+postName);
-				map.put("postId",postId);
-				map.put("deptId",dept.getId().toString());
+				Dept dept = deptService.selectByJGBM("机构", postId);
+				String postName = deptService.selectByDeptId(Integer.parseInt(postId)).getDeptName();
+				map.put("postName", dept.getDeptName() + "|" + postName);
+				map.put("postId", postId);
+				map.put("deptId", dept.getId().toString());
 				list.add(map);
 			}
-		}else{
+		} else {
 			//根据用户id查询所拥有岗位id
-			List<Post> lists=postService.selectByUserId(user.getUserId());
+			List<Post> lists = postService.selectByUserId(user.getUserId());
 			for (int i = 0; i < lists.size(); i++) {
-				Map<String,String> map = new HashMap<String,String>();
-				String postId=lists.get(i).getPostId().toString();
+				Map<String, String> map = new HashMap<String, String>();
+				String postId = lists.get(i).getPostId().toString();
 				//直属上级id
-				Dept dept=deptService.selectByJGBM("机构",postId);
+				Dept dept = deptService.selectByJGBM("机构", postId);
 				Organizations organizations = orrganizationsClient.selectByDeptId(dept.getId().toString());
-				if(organizations != null){
-					if(organizations.getJigouleixing().equals("qiye") || organizations.getJigouleixing().equals("geti") || organizations.getDeptId().equals("1")){
+				if (organizations != null) {
+					if (organizations.getJigouleixing().equals("qiye") || organizations.getJigouleixing().equals("geti") || organizations.getDeptId().equals("1")) {
 						System.out.println(postId);
 						System.out.println(i);
-						String postName=deptService.selectByDeptId(Integer.parseInt(postId)).getDeptName();
+						String postName = deptService.selectByDeptId(Integer.parseInt(postId)).getDeptName();
 						System.out.println(postName);
-						map.put("postName",dept.getDeptName()+"|"+postName);
-						map.put("postId",postId);
-						map.put("deptId",dept.getId().toString());
+						map.put("postName", dept.getDeptName() + "|" + postName);
+						map.put("postId", postId);
+						map.put("deptId", dept.getId().toString());
 						list.add(map);
 					}
 				}
@@ -718,13 +732,14 @@ public class DeptController extends BladeController {
 		}
 		return R.data(list);
 	}
+
 	/**
 	 * 岗位切换
 	 */
 	@GetMapping("/getUserInfo")
 	@ApiOperation(value = "获取人员信息-岗位切换", notes = "获取人员信息-岗位切换", position = 27)
-	@ApiImplicitParams({ @ApiImplicitParam(name = "postId", value = "岗位id", required = true)})
-	public R<AuthInfoConfig>  getUserInfo(BladeUser user, String postId) {
+	@ApiImplicitParams({@ApiImplicitParam(name = "postId", value = "岗位id", required = true)})
+	public R<AuthInfoConfig> getUserInfo(BladeUser user, String postId) {
 		//设置jwt参数
 		Map<String, String> param = new HashMap<>(16);
 		param.put(SecureUtil.USER_ID, Func.toStr(user.getUserId()));
@@ -736,7 +751,7 @@ public class DeptController extends BladeController {
 		//拼装accessToken
 		String accessToken = SecureUtil.createJWT(param, "audience", "issuser", true);
 		//返回accessToken
-		AuthInfoConfig info=new AuthInfoConfig();
+		AuthInfoConfig info = new AuthInfoConfig();
 		info.setUrlPrefix(fileServer.getUrlPrefix());
 		info.setAccount(user.getAccount());
 		info.setUserName(user.getUserName());
@@ -744,22 +759,22 @@ public class DeptController extends BladeController {
 		info.setAccessToken(accessToken);
 		info.setTokenType(SecureUtil.BEARER);
 		info.setPostId(postId);
-		Dept dept=deptService.selectByJGBM("机构",postId);
+		Dept dept = deptService.selectByJGBM("机构", postId);
 		info.setDeptId(dept.getId().toString());
 		info.setDeptName(dept.getDeptName());
 		info.setUserId(user.getUserId().toString());
 		info.setPostName(deptService.getById(postId).getDeptName());
 		//设置当前切换岗位为默认岗位
-		Post post=new Post();
+		Post post = new Post();
 		post.setUserId(user.getUserId());
 		post.setPostId(Integer.parseInt(postId));
 		postService.updateIsdefault(post);
 		//根据单位id获取企业基本信息
-		Organizations organization=orrganizationsClient.selectByDeptId(dept.getId().toString());
-		if(organization!=null){
+		Organizations organization = orrganizationsClient.selectByDeptId(dept.getId().toString());
+		if (organization != null) {
 			//根据企业ID获取上级组织信息
 			Organizations organizationsVO = orrganizationsClient.selectParentDeptById(dept.getId().toString());
-			if(organizationsVO != null) {
+			if (organizationsVO != null) {
 				//获取配置logo
 				if (StringUtils.isNotBlank(organization.getLogoPhoto())) {
 					info.setLogoPhoto(fileUploadClient.getUrlUrl(organization.getLogoPhoto()));
@@ -774,18 +789,18 @@ public class DeptController extends BladeController {
 						}
 					}
 				}
-			}else{
-				if (!StringUtils.isBlank(alarmServer.getAddressPath())){
-					info.setLogoPhoto(fileServer.getUrlPrefix()+fileServer.getPhotoLogo()+"/index_"+alarmServer.getAddressPath()+".png");
-				}else{
-					info.setLogoPhoto(fileServer.getUrlPrefix()+fileServer.getPhotoLogo()+"/index.png");
+			} else {
+				if (!StringUtils.isBlank(alarmServer.getAddressPath())) {
+					info.setLogoPhoto(fileServer.getUrlPrefix() + fileServer.getPhotoLogo() + "/index_" + alarmServer.getAddressPath() + ".png");
+				} else {
+					info.setLogoPhoto(fileServer.getUrlPrefix() + fileServer.getPhotoLogo() + "/index.png");
 				}
 			}
-		}else{
-			if (!StringUtils.isBlank(alarmServer.getAddressPath())){
-				info.setLogoPhoto(fileServer.getUrlPrefix()+fileServer.getPhotoLogo()+"/index_"+alarmServer.getAddressPath()+".png");
-			}else{
-				info.setLogoPhoto(fileServer.getUrlPrefix()+fileServer.getPhotoLogo()+"/index.png");
+		} else {
+			if (!StringUtils.isBlank(alarmServer.getAddressPath())) {
+				info.setLogoPhoto(fileServer.getUrlPrefix() + fileServer.getPhotoLogo() + "/index_" + alarmServer.getAddressPath() + ".png");
+			} else {
+				info.setLogoPhoto(fileServer.getUrlPrefix() + fileServer.getPhotoLogo() + "/index.png");
 			}
 		}
 		//设置token过期时间
@@ -798,22 +813,22 @@ public class DeptController extends BladeController {
 	 */
 	@GetMapping("/IsDefault")
 	@ApiOperation(value = "默认岗位设置", notes = "默认岗位设置", position = 28)
-	public R IsDefault(Integer userId,Integer postId) {
-		Post post=new Post();
+	public R IsDefault(Integer userId, Integer postId) {
+		Post post = new Post();
 		post.setUserId(userId);
 		post.setPostId(postId);
-		boolean flag=postService.updateIsdefault(post);
-		int code=201;
-		Object obj=new Object();
+		boolean flag = postService.updateIsdefault(post);
+		int code = 201;
+		Object obj = new Object();
 		String msg;
-		code=R.status(flag).getCode();
-		obj=R.status(flag).getData();
-		if(flag==true){
-			msg="设置成功";
-		}else{
-			msg="设置失败";
+		code = R.status(flag).getCode();
+		obj = R.status(flag).getData();
+		if (flag == true) {
+			msg = "设置成功";
+		} else {
+			msg = "设置失败";
 		}
-		return R.data(code,obj,msg);
+		return R.data(code, obj, msg);
 	}
 
 	@GetMapping("/getDeptSubTree")
@@ -825,9 +840,9 @@ public class DeptController extends BladeController {
 
 	@GetMapping("/getDeptById")
 	@ApiOperation(value = "获取省市县运管", notes = "传deptId", position = 24)
-	public R<List<DeptSubVO>> getDeptById(@ApiParam(value = "deptId(市/县父级id)") @RequestParam Integer deptId,@ApiParam(value = "type(0省1市2县)", required = true) @RequestParam Integer type,
+	public R<List<DeptSubVO>> getDeptById(@ApiParam(value = "deptId(市/县父级id)") @RequestParam Integer deptId, @ApiParam(value = "type(0省1市2县)", required = true) @RequestParam Integer type,
 										  @ApiParam(value = "remark(0省市县1运管，默认0)") @RequestParam Integer remark) {
-		List<DeptSubVO> list = deptService.getDeptById(deptId,type,remark);
+		List<DeptSubVO> list = deptService.getDeptById(deptId, type, remark);
 		return R.data(list);
 	}
 
@@ -836,6 +851,219 @@ public class DeptController extends BladeController {
 	public R<List<Dept>> getByIdDeptList(@ApiParam(value = "deptId") @RequestParam Integer deptId) {
 		List<Dept> list = deptService.QiYeList(deptId);
 		return R.data(list);
+	}
+
+
+	/**
+	 * 影像-tree
+	 *
+	 * @return
+	 */
+	@GetMapping("/imageTree")
+	@ApiOperation(value = "影像-tree", notes = "影像-tree", position = 6)
+	@ApiImplicitParams({@ApiImplicitParam(name = "postId", value = "岗位id", required = false),
+		@ApiImplicitParam(name = "deptId", value = "单位id", required = false)
+	})
+	public R imageTree(String postId, String deptId, String deptName) {
+		Dept dept;
+		List<DeptVO> tree;
+		//默认加载
+		if (StrUtil.isNotEmpty(postId)) {
+			dept = deptService.selectByJGBM("机构", postId);
+			tree = deptService.tree(dept.getId().toString(), "1");
+		} else {
+			//根据所选择树形加载下级数据
+			tree = deptService.tree(deptId, "2");
+			QueryWrapper<Dept> deptVOQueryWrapper = new QueryWrapper<>();
+			deptVOQueryWrapper.lambda().eq(Dept::getIsDeleted, 0);
+			deptVOQueryWrapper.lambda().eq(Dept::getId, deptId);
+			Dept dept1 = deptService.getBaseMapper().selectOne(deptVOQueryWrapper);
+			if (dept1.getExtendType().equals("机构")) {
+				if (deptName.equals("驾驶员")) {
+					QueryWrapper<AnbiaoJiashiyuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
+					jiaShiYuanQueryWrapper.lambda().eq(AnbiaoJiashiyuan::getIsdelete, "0");
+					jiaShiYuanQueryWrapper.lambda().eq(AnbiaoJiashiyuan::getDeptId, deptId);
+					List<AnbiaoJiashiyuan> jiaShiYuans = iJiaShiYuanService.getBaseMapper().selectList(jiaShiYuanQueryWrapper);
+					for (AnbiaoJiashiyuan a:jiaShiYuans) {
+						a.setDeptName(a.getJiashiyuanxingming());
+					}
+					return R.data(jiaShiYuans);
+				}
+				if (deptName.equals("车辆")) {
+					QueryWrapper<AnbiaoVehicle> vehicleQueryWrapper = new QueryWrapper<>();
+					vehicleQueryWrapper.lambda().eq(AnbiaoVehicle::getIsDeleted, "0");
+					vehicleQueryWrapper.lambda().eq(AnbiaoVehicle::getDeptId, deptId);
+					List<AnbiaoVehicle> anbiaoVehicles = vehicleService.getBaseMapper().selectList(vehicleQueryWrapper);
+					for (AnbiaoVehicle a:anbiaoVehicles) {
+						a.setDeptName(a.getCheliangpaizhao());
+					}
+					return R.data(anbiaoVehicles);
+				}else {
+					QueryWrapper<AnbiaoJiashiyuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
+					jiaShiYuanQueryWrapper.lambda().eq(AnbiaoJiashiyuan::getIsdelete, "0");
+					jiaShiYuanQueryWrapper.lambda().eq(AnbiaoJiashiyuan::getDeptId, deptId);
+					jiaShiYuanQueryWrapper.lambda().eq(AnbiaoJiashiyuan::getJiashiyuanxingming,deptName);
+					AnbiaoJiashiyuan anbiaoJiashiyuan = iJiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+					if (anbiaoJiashiyuan!=null){
+//						List<AnbiaoJiashiyuan> jiaShiYuanImage ;
+						ArrayList<AnbiaoJiashiyuan> jiaShiYuanImage = new ArrayList<>();
+						AnbiaoJiashiyuan ruzhi = new AnbiaoJiashiyuan();
+						ruzhi.setJiashiyuanxingming(anbiaoJiashiyuan.getJiashiyuanxingming());
+						ruzhi.setDeptId(anbiaoJiashiyuan.getDeptId());
+						ruzhi.setDeptName("入职登记表");
+						ruzhi.setId(anbiaoJiashiyuan.getId());
+						jiaShiYuanImage.add(ruzhi);
+
+						AnbiaoJiashiyuan shenfenzheng = new AnbiaoJiashiyuan();
+						shenfenzheng.setJiashiyuanxingming(anbiaoJiashiyuan.getJiashiyuanxingming());
+						shenfenzheng.setDeptId(anbiaoJiashiyuan.getDeptId());
+						shenfenzheng.setDeptName("身份证");
+						shenfenzheng.setId(anbiaoJiashiyuan.getId());
+						jiaShiYuanImage.add(shenfenzheng);
+
+						AnbiaoJiashiyuan jiashizheng = new AnbiaoJiashiyuan();
+						jiashizheng.setJiashiyuanxingming(anbiaoJiashiyuan.getJiashiyuanxingming());
+						jiashizheng.setDeptId(anbiaoJiashiyuan.getDeptId());
+						jiashizheng.setDeptName("驾驶证");
+						jiashizheng.setId(anbiaoJiashiyuan.getId());
+						jiaShiYuanImage.add(jiashizheng);
+
+						AnbiaoJiashiyuan congyezigezheng = new AnbiaoJiashiyuan();
+						congyezigezheng.setJiashiyuanxingming(anbiaoJiashiyuan.getJiashiyuanxingming());
+						congyezigezheng.setDeptId(anbiaoJiashiyuan.getDeptId());
+						congyezigezheng.setDeptName("从业资格证");
+						congyezigezheng.setId(anbiaoJiashiyuan.getId());
+						jiaShiYuanImage.add(congyezigezheng);
+
+						AnbiaoJiashiyuan tijian = new AnbiaoJiashiyuan();
+						tijian.setJiashiyuanxingming(anbiaoJiashiyuan.getJiashiyuanxingming());
+						tijian.setDeptId(anbiaoJiashiyuan.getDeptId());
+						tijian.setDeptName("体检表");
+						tijian.setId(anbiaoJiashiyuan.getId());
+						jiaShiYuanImage.add(tijian);
+
+						AnbiaoJiashiyuan gangqianpeixun = new AnbiaoJiashiyuan();
+						gangqianpeixun.setJiashiyuanxingming(anbiaoJiashiyuan.getJiashiyuanxingming());
+						gangqianpeixun.setDeptId(anbiaoJiashiyuan.getDeptId());
+						gangqianpeixun.setDeptName("岗前培训");
+						gangqianpeixun.setId(anbiaoJiashiyuan.getId());
+						jiaShiYuanImage.add(gangqianpeixun);
+
+						AnbiaoJiashiyuan wuzezhengming = new AnbiaoJiashiyuan();
+						wuzezhengming.setJiashiyuanxingming(anbiaoJiashiyuan.getJiashiyuanxingming());
+						wuzezhengming.setDeptId(anbiaoJiashiyuan.getDeptId());
+						wuzezhengming.setDeptName("三年无重大责任证明");
+						wuzezhengming.setId(anbiaoJiashiyuan.getId());
+						jiaShiYuanImage.add(wuzezhengming);
+
+						AnbiaoJiashiyuan qita = new AnbiaoJiashiyuan();
+						qita.setJiashiyuanxingming(anbiaoJiashiyuan.getJiashiyuanxingming());
+						qita.setDeptId(anbiaoJiashiyuan.getDeptId());
+						qita.setDeptName("其他");
+						qita.setId(anbiaoJiashiyuan.getId());
+						jiaShiYuanImage.add(qita);
+
+
+						return R.data(jiaShiYuanImage);
+					}
+
+					QueryWrapper<AnbiaoVehicle> vehicleQueryWrapper = new QueryWrapper<>();
+					vehicleQueryWrapper.lambda().eq(AnbiaoVehicle::getIsDeleted, "0");
+					vehicleQueryWrapper.lambda().eq(AnbiaoVehicle::getDeptId, deptId);
+					vehicleQueryWrapper.lambda().eq(AnbiaoVehicle::getCheliangpaizhao,deptName);
+					AnbiaoVehicle anbiaoVehicle = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper);
+					if (anbiaoVehicle!=null){
+//						List<AnbiaoVehicle> vehicleImage = null;
+						ArrayList<AnbiaoVehicle> vehicleImage = new ArrayList<>();
+						AnbiaoVehicle xingshizheng = new AnbiaoVehicle();
+						xingshizheng.setCheliangpaizhao(anbiaoVehicle.getCheliangpaizhao());
+						xingshizheng.setDeptId(anbiaoVehicle.getDeptId());
+						xingshizheng.setDeptName("行驶证");
+						xingshizheng.setId(anbiaoVehicle.getId());
+						vehicleImage.add(xingshizheng);
+
+						AnbiaoVehicle daoluyunshuzheng = new AnbiaoVehicle();
+						daoluyunshuzheng.setCheliangpaizhao(anbiaoVehicle.getCheliangpaizhao());
+						daoluyunshuzheng.setDeptId(anbiaoVehicle.getDeptId());
+						daoluyunshuzheng.setDeptName("道路运输证");
+						daoluyunshuzheng.setId(anbiaoVehicle.getId());
+						vehicleImage.add(daoluyunshuzheng);
+
+						AnbiaoVehicle zonghexingnengbaogao = new AnbiaoVehicle();
+						zonghexingnengbaogao.setCheliangpaizhao(anbiaoVehicle.getCheliangpaizhao());
+						zonghexingnengbaogao.setDeptId(anbiaoVehicle.getDeptId());
+						zonghexingnengbaogao.setDeptName("车辆综合性能检测报告");
+						zonghexingnengbaogao.setId(anbiaoVehicle.getId());
+						vehicleImage.add(zonghexingnengbaogao);
+
+						AnbiaoVehicle cheliangdengjizhengshu = new AnbiaoVehicle();
+						cheliangdengjizhengshu.setCheliangpaizhao(anbiaoVehicle.getCheliangpaizhao());
+						cheliangdengjizhengshu.setDeptId(anbiaoVehicle.getDeptId());
+						cheliangdengjizhengshu.setDeptName("车辆登记证书");
+						cheliangdengjizhengshu.setId(anbiaoVehicle.getId());
+						vehicleImage.add(cheliangdengjizhengshu);
+
+						return R.data(vehicleImage);
+					}
+
+				}
+				DeptVO jiashiyuan = new DeptVO();
+				jiashiyuan.setDeptName("驾驶员");
+				jiashiyuan.setId(Integer.valueOf(deptId));
+				jiashiyuan.setParentId(Integer.valueOf(deptId));
+				tree.add(jiashiyuan);
+
+				DeptVO vehicle = new DeptVO();
+				vehicle.setDeptName("车辆");
+				vehicle.setId(Integer.valueOf(deptId));
+				vehicle.setParentId(Integer.valueOf(deptId));
+				tree.add(vehicle);
+
+				DeptVO jingyingxukezheng = new DeptVO();
+				jingyingxukezheng.setDeptName("经营许可证");
+				jingyingxukezheng.setId(Integer.valueOf(deptId));
+				jingyingxukezheng.setParentId(Integer.valueOf(deptId));
+				tree.add(jingyingxukezheng);
+
+				DeptVO yingyezhizhao = new DeptVO();
+				yingyezhizhao.setDeptName("企业营业执照");
+				yingyezhizhao.setId(Integer.valueOf(deptId));
+				yingyezhizhao.setParentId(Integer.valueOf(deptId));
+				tree.add(yingyezhizhao);
+
+				DeptVO daoluyunshuzheng = new DeptVO();
+				daoluyunshuzheng.setDeptName("企业道路运输许可证");
+				daoluyunshuzheng.setId(Integer.valueOf(deptId));
+				daoluyunshuzheng.setParentId(Integer.valueOf(deptId));
+				tree.add(daoluyunshuzheng);
+
+			}else if (dept1.getExtendType().equals("岗位")){
+				DeptVO shenfenzhengz = new DeptVO();
+				shenfenzhengz.setDeptName("身份证正面");
+				shenfenzhengz.setId(Integer.valueOf(deptId));
+				shenfenzhengz.setParentId(Integer.valueOf(deptId));
+				tree.add(shenfenzhengz);
+
+				DeptVO shenfenzhengf = new DeptVO();
+				shenfenzhengf.setDeptName("身份证反面");
+				shenfenzhengf.setId(Integer.valueOf(deptId));
+				shenfenzhengf.setParentId(Integer.valueOf(deptId));
+				tree.add(shenfenzhengf);
+
+				DeptVO qitaz = new DeptVO();
+				qitaz.setDeptName("其他正面");
+				qitaz.setId(Integer.valueOf(deptId));
+				qitaz.setParentId(Integer.valueOf(deptId));
+				tree.add(qitaz);
+
+				DeptVO qitaf = new DeptVO();
+				qitaf.setDeptName("其他反面");
+				qitaf.setId(Integer.valueOf(deptId));
+				qitaf.setParentId(Integer.valueOf(deptId));
+				tree.add(qitaf);
+			}
+		}
+		return R.data(tree);
 	}
 
 }
