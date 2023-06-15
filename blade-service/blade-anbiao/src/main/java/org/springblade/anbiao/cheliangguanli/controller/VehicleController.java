@@ -800,7 +800,7 @@ public class VehicleController {
     		xsz.setAvxDelete("0");
 			xsz.setAvxPlateNo(vehicleVO.getCheliangpaizhao());
 			xsz.setAvxVehicleType(vehicleVO.getShiyongxingzhi());
-			xsz.setAvxOwner(vehicleVO.getChezhu());
+//			xsz.setAvxOwner(vehicleVO.getChezhu());
 
 			VehicleXingshizheng vxsz = new VehicleXingshizheng();
 			vxsz.setAvxAvIds(vd.getVehicleId());

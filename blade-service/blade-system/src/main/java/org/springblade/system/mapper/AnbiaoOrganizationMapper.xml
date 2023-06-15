@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.system.mapper.AnbiaoOrganizationMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.system.entity.AnbiaoOrganization">
+        <id column="id" property="id" />
+        <result column="dept_id" property="deptId" />
+        <result column="dept_name" property="deptName" />
+        <result column="jigoufuzeren" property="jigoufuzeren" />
+        <result column="jigoubianma" property="jigoubianma" />
+        <result column="jigouleixing" property="jigouleixing" />
+        <result column="jigouzizhi" property="jigouzizhi" />
+        <result column="farendaibiao" property="farendaibiao" />
+        <result column="farendianhua" property="farendianhua" />
+        <result column="farenshenfenzheng" property="farenshenfenzheng" />
+        <result column="lianxidianhua" property="lianxidianhua" />
+        <result column="zhuceziben" property="zhuceziben" />
+        <result column="touzizonge" property="touzizonge" />
+        <result column="cheliangguimo" property="cheliangguimo" />
+        <result column="congyerenshuliang" property="congyerenshuliang" />
+        <result column="chenglishijian" property="chenglishijian" />
+        <result column="tingchechangmianji" property="tingchechangmianji" />
+        <result column="tingchechangweizhi" property="tingchechangweizhi" />
+        <result column="jiashiyuanshuliang" property="jiashiyuanshuliang" />
+        <result column="yayunyuanshuliang" property="yayunyuanshuliang" />
+        <result column="zhuangxieyuanshuliang" property="zhuangxieyuanshuliang" />
+        <result column="xuhao" property="xuhao" />
+        <result column="xingzhengqudaima" property="xingzhengqudaima" />
+        <result column="jingyingxukezhengbianma" property="jingyingxukezhengbianma" />
+        <result column="jingyingxukezhengchulingriqi" property="jingyingxukezhengchulingriqi" />
+        <result column="jingyingxukezhengyouxiaoqi" property="jingyingxukezhengyouxiaoqi" />
+        <result column="fujian" property="fujian" />
+        <result column="anquanguanlitu" property="anquanguanlitu" />
+        <result column="zuzhijigoutu" property="zuzhijigoutu" />
+        <result column="jingyingfanwei" property="jingyingfanwei" />
+        <result column="jingyingdizhi" property="jingyingdizhi" />
+        <result column="xiangxidizhi" property="xiangxidizhi" />
+        <result column="jigoumiaoshu" property="jigoumiaoshu" />
+        <result column="login_photo" property="loginPhoto" />
+        <result column="home_photo" property="homePhoto" />
+        <result column="profile_photo" property="profilePhoto" />
+        <result column="logo_photo" property="logoPhoto" />
+        <result column="logo_rizhi" property="logoRizhi" />
+        <result column="caozuoren" property="caozuoren" />
+        <result column="caozuorenid" property="caozuorenid" />
+        <result column="caozuoshijian" property="caozuoshijian" />
+        <result column="createtime" property="createtime" />
+        <result column="login_photo_app" property="loginPhotoApp" />
+        <result column="home_photo_app" property="homePhotoApp" />
+        <result column="profile_photo_app" property="profilePhotoApp" />
+        <result column="isdelete" property="isdelete" />
+        <result column="yunyingleixing" property="yunyingleixing" />
+        <result column="province" property="province" />
+        <result column="city" property="city" />
+        <result column="country" property="country" />
+        <result column="area" property="area" />
+        <result column="securityofficertelephone" property="securityofficertelephone" />
+        <result column="platformname" property="platformname" />
+        <result column="copyrighter" property="copyrighter" />
+        <result column="technicalsupport" property="technicalsupport" />
+        <result column="daoluxukezhenghao" property="daoluxukezhenghao" />
+        <result column="daoluyunshuzhengfujian" property="daoluyunshuzhengfujian" />
+        <result column="daoluyunshuzhengkaishiriqi" property="daoluyunshuzhengkaishiriqi" />
+        <result column="daoluyunshuzhengjieshuriqi" property="daoluyunshuzhengjieshuriqi" />
+        <result column="jingyingxukezhengfujian" property="jingyingxukezhengfujian" />
+        <result column="yingyezhizhaofujian" property="yingyezhizhaofujian" />
+        <result column="yyzzksdate" property="yyzzksdate" />
+        <result column="yyzzjzdate" property="yyzzjzdate" />
+        <result column="htbegindate" property="htbegindate" />
+        <result column="htlastdate" property="htlastdate" />
+        <result column="jingjileixing" property="jingjileixing" />
+        <result column="qiyefenji" property="qiyefenji" />
+    </resultMap>
+
+    <select id="selectByDeptImg" resultType="org.springblade.system.entity.AnbiaoOrganizationsFuJian">
+        select
+            id,dept_id as deptId,dept_name as deptName,daoluyunshuzhengfujian,jingyingxukezhengfujian,yingyezhizhaofujian
+        from
+            anbiao_organization
+        where isdelete = 0
+          and dept_id = #{deptId}
+            limit 1
+    </select>
+
+    <select id="selectByDeptPost" resultType="org.springblade.system.entity.AnbiaoOrganizationsFuJian">
+        select id as postId,dept_name as postName from blade_dept
+        where parent_id = #{deptId}
+          and is_deleted = 0
+          and extend_type = '岗位'
+    </select>
+
+    <select id="selectByPersonnelImg" resultType="org.springblade.system.entity.AnbiaoOrganizationsFuJian">
+        select
+        DISTINCT
+        a.id as personId,a.post_id as postId,xingming personName,a.dept_id as deptId,
+        qitazhengmianfujian,shenfenzhengfanmianfujian,shenfenzhengfujian,qitafanmianfujian
+        from
+        anbiao_personnel a
+        INNER JOIN blade_post b ON a.userid=b.user_id
+        <!--&#45;&#45; 	INNER JOIN blade_user renyuan ON a.userid=renyuan.id AND renyuan.is_deleted=0-->
+        where a.is_deleted = 0
+        and a.dept_id = #{deptId}
+        and b.post_id = #{postId}
+    </select>
+
+</mapper>

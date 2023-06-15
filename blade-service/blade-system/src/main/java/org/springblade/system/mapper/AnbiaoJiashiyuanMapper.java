@@ -1,5 +1,7 @@
 package org.springblade.system.mapper;
 
+import org.apache.ibatis.annotations.Param;
+import org.springblade.system.entity.AnbiaoDriverImg;
 import org.springblade.system.entity.AnbiaoJiashiyuan;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -12,5 +14,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2023-06-06
  */
 public interface AnbiaoJiashiyuanMapper extends BaseMapper<AnbiaoJiashiyuan> {
+
+
+	AnbiaoDriverImg getByDriverImg(@Param("jsyId") String jsyId);
 
 }

@@ -388,30 +388,32 @@ public class JiaShiYuanController {
 		JiaShiYuan jiaShiYuan1 = jiaShiYuan;
 		//新增
 		if (deail == null) {
-			//验证手机号码
-			if (StringUtils.isBlank(jiaShiYuan.getShoujihaoma())) {
-				r.setMsg("手机号码不能为空;");
-				r.setCode(500);
-				r.setSuccess(false);
-				return r;
-			} else {
-				if (RegexUtils.checkMobile(jiaShiYuan.getShoujihaoma())) {
-					QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper1 = new QueryWrapper<JiaShiYuan>();
-					jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getShoujihaoma, jiaShiYuan.getShoujihaoma());
+			if((!jiaShiYuan.getType().equals("2"))) {
+				//验证手机号码
+				if (StringUtils.isBlank(jiaShiYuan.getShoujihaoma())) {
+					r.setMsg("手机号码不能为空;");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				} else {
+					if (RegexUtils.checkMobile(jiaShiYuan.getShoujihaoma())) {
+						QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper1 = new QueryWrapper<JiaShiYuan>();
+						jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getShoujihaoma, jiaShiYuan.getShoujihaoma());
 //					jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getDeptId, jiaShiYuan.getDeptId());
-					jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getIsdelete, 0);
-					JiaShiYuan jiaShiYuan2 = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper1);
-					if (jiaShiYuan2 != null) {
-						r.setMsg("该手机号码已存在;");
+						jiaShiYuanQueryWrapper1.lambda().eq(JiaShiYuan::getIsdelete, 0);
+						JiaShiYuan jiaShiYuan2 = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper1);
+						if (jiaShiYuan2 != null) {
+							r.setMsg("该手机号码已存在;");
+							r.setCode(500);
+							r.setSuccess(false);
+							return r;
+						}
+					} else {
+						r.setMsg("该手机号码不合法;");
 						r.setCode(500);
 						r.setSuccess(false);
 						return r;
 					}
-				} else {
-					r.setMsg("该手机号码不合法;");
-					r.setCode(500);
-					r.setSuccess(false);
-					return r;
 				}
 			}
 

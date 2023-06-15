@@ -530,4 +530,9 @@ public class JiaShiYuan implements Serializable {
 	@ApiModelProperty(value = "挂车号码")
 	@TableField(exist = false)
 	private String trailerNumber;
+
+	@ApiModelProperty(value = "type")
+	@TableField(exist = false)
+	private String type;
+
 }

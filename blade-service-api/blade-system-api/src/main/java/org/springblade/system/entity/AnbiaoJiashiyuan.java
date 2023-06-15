@@ -75,7 +75,7 @@ public class AnbiaoJiashiyuan implements Serializable {
     private String jiashiyuanleixing;
 
     @ApiModelProperty(value = "企业ID")
-    private Integer deptId;
+    private String deptId;
 
     @ApiModelProperty(value = "身份证附件正面")
     private String shenfenzhengfujian;
@@ -242,5 +242,137 @@ public class AnbiaoJiashiyuan implements Serializable {
 	@TableField(exist = false)
 	private String deptName;
 
+
+	@ApiModelProperty(value = "count")
+	@TableField(exist = false)
+	private Integer count = 0;
+
+	@ApiModelProperty(value = "入职ID")
+	@TableField(exist = false)
+	private String ruzhiid;
+
+	@ApiModelProperty(value = "入职头像附件")
+	@TableField(exist = false)
+	private String ruzhiimg;
+
+	@ApiModelProperty(value = "身份证正面附件")
+	@TableField(exist = false)
+	private String sfzzmimg;
+
+	@ApiModelProperty(value = "身份证反面附件")
+	@TableField(exist = false)
+	private String sfzfmimg;
+
+	@ApiModelProperty(value = "驾驶证ID")
+	@TableField(exist = false)
+	private String jszid;
+
+	@ApiModelProperty(value = "驾驶证正面附件")
+	@TableField(exist = false)
+	private String jszzmimg;
+
+	@ApiModelProperty(value = "驾驶证反面附件")
+	@TableField(exist = false)
+	private String jszfmimg;
+
+	@ApiModelProperty(value = "从业资格证ID")
+	@TableField(exist = false)
+	private String cyzid;
+
+	@ApiModelProperty(value = "从业资格证附件")
+	@TableField(exist = false)
+	private String cyzimg;
+
+	@ApiModelProperty(value = "体检表ID")
+	@TableField(exist = false)
+	private String tjid;
+
+	@ApiModelProperty(value = "体检表附件")
+	@TableField(exist = false)
+	private String tjimg;
+
+	@ApiModelProperty(value = "岗前培训ID")
+	@TableField(exist = false)
+	private String gqid;
+
+	@ApiModelProperty(value = "岗前培训附件")
+	@TableField(exist = false)
+	private String gqimg;
+
+	@ApiModelProperty(value = "无责证明ID")
+	@TableField(exist = false)
+	private String wzzmid;
+
+	@ApiModelProperty(value = "无责证明附件")
+	@TableField(exist = false)
+	private String wzzmimg;
+
+	@ApiModelProperty(value = "其他ID")
+	@TableField(exist = false)
+	private String qtid;
+
+	@ApiModelProperty(value = "其他附件")
+	@TableField(exist = false)
+	private String qtimg;
+
+	@ApiModelProperty(value = "入职影像附件数")
+	@TableField(exist = false)
+	private Integer ruzhiimgzcount = 0;
+
+	@ApiModelProperty(value = "身份证影像附件数")
+	@TableField(exist = false)
+	private Integer sfzimgzcount = 0;
+
+	@ApiModelProperty(value = "驾驶证影像附件数")
+	@TableField(exist = false)
+	private Integer jszimgcount = 0;
+
+	@ApiModelProperty(value = "从业资格证影像附件数")
+	@TableField(exist = false)
+	private Integer cyzcount = 0;
+
+	@ApiModelProperty(value = "车辆登记证书影像附件数")
+	@TableField(exist = false)
+	private Integer djzimgcount = 0;
+
+	@ApiModelProperty(value = "体检表影像附件数")
+	@TableField(exist = false)
+	private Integer tjcount = 0;
+
+	@ApiModelProperty(value = "岗前培训影像附件数")
+	@TableField(exist = false)
+	private Integer gqimgcount = 0;
+
+	@ApiModelProperty(value = "无责证明影像附件数")
+	@TableField(exist = false)
+	private Integer wzzmimgcount = 0;
+
+	@ApiModelProperty(value = "其他影像附件数")
+	@TableField(exist = false)
+	private Integer qtimgcount = 0;
+
+	@ApiModelProperty(value = "驾驶员id")
+	@TableField(exist = false)
+	private String jiashiyuanId;
+
+	@ApiModelProperty(value = "表id")
+	@TableField(exist = false)
+	private String tableId;
+
+	@ApiModelProperty(value = "附件")
+	@TableField(exist = false)
+	private String attachments;
+
+	@ApiModelProperty(value = "是否统计")
+	@TableField(exist = false)
+	private Integer isCount=0;
+
+	@ApiModelProperty(value = "是否分配")
+	@TableField(exist = false)
+	private Integer isDistribution=0;
+
+	@ApiModelProperty(value = "showBotton")
+	@TableField(exist = false)
+	private String showBotton;
 
 }

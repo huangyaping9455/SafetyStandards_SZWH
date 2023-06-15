@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -151,6 +152,76 @@ public class FileUploadController {
 		fileObj.setSavename(filename);
 		fileObj.setUrl(url);
 		rs.setData(fileObj);
+		rs.setSuccess(true);
+		rs.setCode(200);
+		return rs;
+	}
+
+
+	@PostMapping("/uploads")
+	@ApiOperation(value = "上传", notes = "传入file,table", position = 1)
+	public R uploads(List<MultipartFile> files, String table, String fileId, BladeUser bladeUser) throws Exception {
+		R rs = new R();
+		if(StringUtils.isBlank(table)){
+			table = "qita";
+		}
+		List<FileObj> fileObjs = new ArrayList<>();
+		for (MultipartFile file : files) {
+			Map<String,String> map = new HashMap<String,String>();
+			FileObj fileObj=new FileObj();
+			String [] nyr=DateUtil.today().split("-");
+			long size=file.getSize();
+			String name=file.getOriginalFilename();
+			String[] a=name.split("\\.");
+			String filename = System.currentTimeMillis()+"."+a[a.length-1];
+			//附件存放地址(服务器生成地址)
+			String path=fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+table+"\\"; // 修改了此处
+			//附件存储物理路径
+			String paths=nyr[0]+"\\"+nyr[1]+"\\"+table+"\\"+filename; // 修改了此处
+			//时间
+			String[] data=DateUtil.now().split("-");
+			//附件url地址
+			String url=fileServer.getUrlPrefix()+ FilePathConstant.EnclosureUrl+data[0]+"/"+data[1]+"/"+table+"/"+filename;
+			File dir = new File(path);
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+			File targetFile = new File(path+"\\"+filename);
+			//执行上传
+			file.transferTo(targetFile);
+			//存放数据
+			FileUpload fileUpload = new FileUpload();
+			fileUpload.setId(IdUtil.simpleUUID());
+			fileUpload.setFileSaveName(filename);
+			fileUpload.setFileSize(size);
+			fileUpload.setFileName(name);
+			boolean status = fileId.contains(".");
+			if(status){
+				fileId = fileId.substring(0, fileId.indexOf("."));
+			}
+			fileUpload.setAttachcode(fileId);
+			fileUpload.setPath(paths);
+			fileUpload.setFloder(table);
+			if(bladeUser!=null){
+				fileUpload.setUserName(bladeUser.getUserName());
+				fileUpload.setUserid(bladeUser.getUserId());
+				fileUpload.setUploadTime(DateUtil.now());
+				fileUploadService.insertAttachfile(fileUpload);
+				fileObj.setUrl(url);
+			}else{
+				fileUpload.setUserName("外部调用");
+				fileUpload.setUserid(999);
+				fileUpload.setUploadTime(DateUtil.now());
+				fileUploadService.insertAttachfile(fileUpload);
+				fileObj.setUrl(url);
+			}
+			fileObj.setId(fileUpload.getId());
+			fileObj.setName(name);
+			fileObj.setSavename(filename);
+			fileObj.setUrl(url);
+			fileObjs.add(fileObj);
+		}
+		rs.setData(fileObjs);
 		rs.setSuccess(true);
 		rs.setCode(200);
 		return rs;

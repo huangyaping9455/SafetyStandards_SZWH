@@ -34,7 +34,7 @@ public class AnbiaoVehicle implements Serializable {
     private String id;
 
     @ApiModelProperty(value = "挂靠单位id")
-    private Integer deptId;
+    private String deptId;
 
     @ApiModelProperty(value = "车辆牌照")
     private String cheliangpaizhao;
@@ -441,4 +441,85 @@ public class AnbiaoVehicle implements Serializable {
 	@ApiModelProperty(value = "deptName")
 	@TableField(exist = false)
 	private String deptName;
+
+	@ApiModelProperty(value = "count")
+	@TableField(exist = false)
+	private Integer count;
+
+	@ApiModelProperty(value = "行驶证ID")
+	@TableField(exist = false)
+	private String xszid;
+
+	@ApiModelProperty(value = "行驶证正面附件")
+	@TableField(exist = false)
+	private String xszzmimg;
+
+	@ApiModelProperty(value = "行驶证反面附件")
+	@TableField(exist = false)
+	private String xszfmimg;
+
+	@ApiModelProperty(value = "道路运输证ID")
+	@TableField(exist = false)
+	private String yszid;
+
+	@ApiModelProperty(value = "道路运输证附件")
+	@TableField(exist = false)
+	private String yszimg;
+
+	@ApiModelProperty(value = "性能检测报告ID")
+	@TableField(exist = false)
+	private String xnbgid;
+
+	@ApiModelProperty(value = "性能检测报告附件")
+	@TableField(exist = false)
+	private String xnbgimg;
+
+	@ApiModelProperty(value = "车辆登记证书ID")
+	@TableField(exist = false)
+	private String djzid;
+
+	@ApiModelProperty(value = "车辆登记证书附件")
+	@TableField(exist = false)
+	private String djzimg;
+
+	@ApiModelProperty(value = "行驶证影像附件数")
+	@TableField(exist = false)
+	private Integer xszcount = 0;
+
+	@ApiModelProperty(value = "道路运输证影像附件数")
+	@TableField(exist = false)
+	private Integer yszimgcount = 0;
+
+	@ApiModelProperty(value = "性能检测报告影像附件数")
+	@TableField(exist = false)
+	private Integer xnbgimgcount = 0;
+
+	@ApiModelProperty(value = "车辆登记证书影像附件数")
+	@TableField(exist = false)
+	private Integer djzimgcount = 0;
+
+	@ApiModelProperty(value = "车辆id")
+	@TableField(exist = false)
+	private String vehicleId ;
+
+	@ApiModelProperty(value = "表id")
+	@TableField(exist = false)
+	private String tableId;
+
+	@ApiModelProperty(value = "附件")
+	@TableField(exist = false)
+	private String attachments;
+
+	@ApiModelProperty(value = "是否统计")
+	@TableField(exist = false)
+	private Integer isCount=0;
+
+	@ApiModelProperty(value = "是否分配")
+	@TableField(exist = false)
+	private Integer isDistribution=0;
+
+	@ApiModelProperty(value = "showBotton")
+	@TableField(exist = false)
+	private String showBotton;
+
 }

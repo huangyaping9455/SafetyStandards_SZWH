@@ -92,5 +92,7 @@ public class PersonnelVO extends Personnel {
 	@ApiModelProperty(value = "机构类型")
 	private String jigouleixing;
 
+	@ApiModelProperty(value = "机构名")
+	private String deptName;
 
 }

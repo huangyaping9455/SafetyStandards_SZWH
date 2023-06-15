@@ -1,5 +1,7 @@
 package org.springblade.system.service;
 
+import org.apache.ibatis.annotations.Param;
+import org.springblade.system.entity.AnbiaoDriverImg;
 import org.springblade.system.entity.AnbiaoJiashiyuan;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -12,5 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2023-06-06
  */
 public interface IAnbiaoJiashiyuanService extends IService<AnbiaoJiashiyuan> {
+
+	AnbiaoDriverImg getByDriverImg(@Param("jsyId") String jsyId);
 
 }

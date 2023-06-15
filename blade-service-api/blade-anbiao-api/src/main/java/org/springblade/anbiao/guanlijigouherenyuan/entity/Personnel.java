@@ -54,7 +54,7 @@ public class Personnel implements Serializable {
 	 * 单位id
 	 */
 	@ApiModelProperty(value = "单位id",required = true)
-	private Integer deptId;
+	private String deptId;
     /**
      * 操作人
      */

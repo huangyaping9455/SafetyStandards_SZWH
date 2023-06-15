@@ -143,4 +143,26 @@
         <result column="yunyingshangjieruma" property="yunyingshangjieruma" />
     </resultMap>
 
+    <select id="getByVehImg" resultType="org.springblade.system.entity.AnbiaoVehicleImg" parameterType="java.lang.String">
+        select
+            a.id,
+            b.avx_ids as xszid,
+            b.avx_original_enclosure as xszzmimg,
+            b.avx_copy_enclosure as xszfmimg,
+            c.avd_ids as yszid,
+            c.avd_enclosure as yszimg,
+            d.avx_ids as xnbgid,
+            d.avx_enclosure as xnbgimg,
+            e.avd_ids as djzid,
+            e.avd_enclosure as djzimg
+        from
+            anbiao_vehicle a
+                left join anbiao_vehicle_xingshizheng b on a.id = b.avx_av_ids and b.avx_delete = 0
+                left join anbiao_vehicle_daoluyunshuzheng c on a.id = c.avd_av_ids and c.avd_delete = 0
+                left join anbiao_vehicle_xingnengbaogao d on a.id = d.avx_av_ids and d.avx_delete = 0
+                left join anbiao_vehicle_dengjizhengshu e on a.id = e.avd_vehicle_ids and e.avd_delete = 0
+        where a.is_deleted = 0
+          and a.id = #{vehId}
+    </select>
+
 </mapper>

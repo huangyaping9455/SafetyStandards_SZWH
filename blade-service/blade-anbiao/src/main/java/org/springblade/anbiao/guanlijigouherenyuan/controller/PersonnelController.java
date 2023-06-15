@@ -237,7 +237,7 @@ public class PersonnelController extends BladeController {
 		for (int i = 0; i < list.size(); i++) {
 			Dept dept = iSysClient.selectByJGBM("机构",list.get(i).getPostId());
 			Personnel personnel=personnelService.selectpostId(list.get(i).getPostId(),list.get(i).getUserid().toString());
-			personnel.setDeptId(dept.getId());
+			personnel.setDeptId(dept.getId().toString());
 			personnelService.saveOrUpdate(personnel);
 		}
 
@@ -314,7 +314,7 @@ public class PersonnelController extends BladeController {
 
 			personnel.setCaozuoshijian(DateUtil.now());
 			personnel.setCreatetime(DateUtil.now());
-			personnel.setDeptId(dept.getId());
+			personnel.setDeptId(dept.getId().toString());
 			personnel.setPostId(personnel.getPostId());
 			personnel.setIsDeleted(0);
 			if(StringUtil.isNotBlank(personnel.getFujian())){

@@ -123,5 +123,26 @@ public class DeptVO extends Dept implements INode {
 	@TableField(exist = false)
 	private String profilePhotoApp;
 
+	private Integer count;
+
+	@ApiModelProperty(value = "表id")
+	@TableField(exist = false)
+	private String tableId;
+
+	@ApiModelProperty(value = "附件")
+	@TableField(exist = false)
+	private String attachments;
+
+	@ApiModelProperty(value = "是否统计")
+	@TableField(exist = false)
+	private Integer isCount=0;
+
+	@ApiModelProperty(value = "是否分配")
+	@TableField(exist = false)
+	private Integer isDistribution=0;
+
+	@ApiModelProperty(value = "showBotton")
+	@TableField(exist = false)
+	private String showBotton;
 
 }
