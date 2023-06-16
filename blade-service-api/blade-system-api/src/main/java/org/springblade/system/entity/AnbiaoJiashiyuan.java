@@ -373,6 +373,11 @@ public class AnbiaoJiashiyuan implements Serializable {
 
 	@ApiModelProperty(value = "showBotton")
 	@TableField(exist = false)
-	private String showBotton;
+	private Boolean showBotton;
+
+	@ApiModelProperty(value = "节点id")
+	@TableField(exist = false)
+	private String nodeId;
+
 
 }

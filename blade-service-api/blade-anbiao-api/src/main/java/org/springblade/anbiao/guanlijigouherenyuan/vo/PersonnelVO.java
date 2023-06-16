@@ -15,6 +15,7 @@
  */
 package org.springblade.anbiao.guanlijigouherenyuan.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -94,5 +95,9 @@ public class PersonnelVO extends Personnel {
 
 	@ApiModelProperty(value = "机构名")
 	private String deptName;
+
+	@ApiModelProperty(value = "节点id")
+	@TableField(exist = false)
+	private String nodeId;
 
 }

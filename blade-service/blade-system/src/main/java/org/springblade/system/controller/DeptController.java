@@ -876,13 +876,17 @@ public class DeptController extends BladeController {
 	@ApiImplicitParams({@ApiImplicitParam(name = "postId", value = "岗位id", required = false),
 		@ApiImplicitParam(name = "deptId", value = "单位id", required = false)
 	})
-	public R imageTree(String postId, String deptId, String deptName) {
+	public R imageTree(String postId, String deptId, String deptName, String nodeId) {
 		Dept dept;
 		List<DeptVO> tree;
 		//默认加载
 		if (StrUtil.isNotEmpty(postId)) {
 			dept = deptService.selectByJGBM("机构", postId);
 			tree = deptService.tree(dept.getId().toString(), "1");
+			for (DeptVO a:tree) {
+				UUID uuid = UUID.randomUUID();
+				a.setNodeId(uuid.toString());
+			}
 		} else {
 			//根据所选择树形加载下级数据
 			tree = deptService.tree(deptId, "2");
@@ -903,7 +907,8 @@ public class DeptController extends BladeController {
 						}
 					}
 				}
-//				a.setParentId(Integer.valueOf(deptId));
+				UUID uuid = UUID.randomUUID();
+				a.setNodeId(uuid.toString());
 			}
 			QueryWrapper<Dept> deptVOQueryWrapper = new QueryWrapper<>();
 			deptVOQueryWrapper.lambda().eq(Dept::getIsDeleted, 0);
@@ -933,6 +938,8 @@ public class DeptController extends BladeController {
 							a.setIsCount(1);
 							AnbiaoDriverImg byDriverImg = iJiaShiYuanService.getByDriverImg(a.getTableId());
 							a.setCount(byDriverImg.getCount());
+							UUID uuid = UUID.randomUUID();
+							a.setNodeId(uuid.toString());
 						}
 						return R.data(jiaShiYuans);
 					}
@@ -949,6 +956,8 @@ public class DeptController extends BladeController {
 							a.setIsCount(1);
 							AnbiaoVehicleImg byVehImg = vehicleService.getByVehImg(a.getTableId());
 							a.setCount(byVehImg.getCount());
+							UUID uuid = UUID.randomUUID();
+							a.setNodeId(uuid.toString());
 						}
 						return R.data(anbiaoVehicles);
 					} else {
@@ -972,7 +981,9 @@ public class DeptController extends BladeController {
 							ruzhi.setId(anbiaoJiashiyuan.getDeptId());
 							ruzhi.setIsCount(1);
 							ruzhi.setIsDistribution(1);
-							ruzhi.setShowBotton("true");
+							ruzhi.setShowBotton(true);
+							UUID ruzhiuuid = UUID.randomUUID();
+							ruzhi.setNodeId(ruzhiuuid.toString());
 							jiaShiYuanImage.add(ruzhi);
 
 							AnbiaoJiashiyuan shenfenzhengZM = new AnbiaoJiashiyuan();
@@ -987,7 +998,9 @@ public class DeptController extends BladeController {
 							shenfenzhengZM.setTableId(anbiaoJiashiyuan.getId());
 							shenfenzhengZM.setIsCount(1);
 							shenfenzhengZM.setIsDistribution(1);
-							shenfenzhengZM.setShowBotton("true");
+							shenfenzhengZM.setShowBotton(true);
+							UUID shenfenzhengZMuuid = UUID.randomUUID();
+							shenfenzhengZM.setNodeId(shenfenzhengZMuuid.toString());
 							jiaShiYuanImage.add(shenfenzhengZM);
 
 							AnbiaoJiashiyuan shenfenzhengFM = new AnbiaoJiashiyuan();
@@ -1002,7 +1015,9 @@ public class DeptController extends BladeController {
 							shenfenzhengFM.setId(anbiaoJiashiyuan.getDeptId());
 							shenfenzhengFM.setIsCount(1);
 							shenfenzhengFM.setIsDistribution(1);
-							shenfenzhengFM.setShowBotton("true");
+							shenfenzhengFM.setShowBotton(true);
+							UUID shenfenzhengFMuuid = UUID.randomUUID();
+							shenfenzhengFM.setNodeId(shenfenzhengFMuuid.toString());
 							jiaShiYuanImage.add(shenfenzhengFM);
 
 							AnbiaoJiashiyuan jiashizhengZM = new AnbiaoJiashiyuan();
@@ -1018,7 +1033,9 @@ public class DeptController extends BladeController {
 							jiashizhengZM.setJiashiyuanId(anbiaoJiashiyuan.getId());
 							jiashizhengZM.setIsCount(1);
 							jiashizhengZM.setIsDistribution(1);
-							jiashizhengZM.setShowBotton("true");
+							jiashizhengZM.setShowBotton(true);
+							UUID jiashizhengZMuuid = UUID.randomUUID();
+							jiashizhengZM.setNodeId(jiashizhengZMuuid.toString());
 							jiaShiYuanImage.add(jiashizhengZM);
 
 							AnbiaoJiashiyuan jiashizhengFM = new AnbiaoJiashiyuan();
@@ -1034,7 +1051,9 @@ public class DeptController extends BladeController {
 							jiashizhengFM.setJiashiyuanId(anbiaoJiashiyuan.getId());
 							jiashizhengFM.setIsCount(1);
 							jiashizhengFM.setIsDistribution(1);
-							jiashizhengFM.setShowBotton("true");
+							jiashizhengFM.setShowBotton(true);
+							UUID jiashizhengFMuuid = UUID.randomUUID();
+							jiashizhengFM.setNodeId(jiashizhengFMuuid.toString());
 							jiaShiYuanImage.add(jiashizhengFM);
 
 							AnbiaoJiashiyuan congyezigezheng = new AnbiaoJiashiyuan();
@@ -1050,7 +1069,9 @@ public class DeptController extends BladeController {
 							congyezigezheng.setJiashiyuanId(anbiaoJiashiyuan.getId());
 							congyezigezheng.setIsCount(1);
 							congyezigezheng.setIsDistribution(1);
-							congyezigezheng.setShowBotton("true");
+							congyezigezheng.setShowBotton(true);
+							UUID congyezigezhenguuid = UUID.randomUUID();
+							congyezigezheng.setNodeId(congyezigezhenguuid.toString());
 							jiaShiYuanImage.add(congyezigezheng);
 
 							AnbiaoJiashiyuan tijian = new AnbiaoJiashiyuan();
@@ -1066,7 +1087,9 @@ public class DeptController extends BladeController {
 							tijian.setJiashiyuanId(anbiaoJiashiyuan.getId());
 							tijian.setIsCount(1);
 							tijian.setIsDistribution(1);
-							tijian.setShowBotton("true");
+							tijian.setShowBotton(true);
+							UUID tijianuuid = UUID.randomUUID();
+							tijian.setNodeId(tijianuuid.toString());
 							jiaShiYuanImage.add(tijian);
 
 							AnbiaoJiashiyuan gangqianpeixun = new AnbiaoJiashiyuan();
@@ -1081,7 +1104,9 @@ public class DeptController extends BladeController {
 							gangqianpeixun.setId(anbiaoJiashiyuan.getDeptId());
 							gangqianpeixun.setIsCount(1);
 							gangqianpeixun.setIsDistribution(1);
-							gangqianpeixun.setShowBotton("true");
+							gangqianpeixun.setShowBotton(true);
+							UUID gangqianpeixunuuid = UUID.randomUUID();
+							gangqianpeixun.setNodeId(gangqianpeixunuuid.toString());
 							jiaShiYuanImage.add(gangqianpeixun);
 
 							AnbiaoJiashiyuan wuzezhengming = new AnbiaoJiashiyuan();
@@ -1096,7 +1121,9 @@ public class DeptController extends BladeController {
 							wuzezhengming.setId(anbiaoJiashiyuan.getDeptId());
 							wuzezhengming.setIsCount(1);
 							wuzezhengming.setIsDistribution(1);
-							wuzezhengming.setShowBotton("true");
+							wuzezhengming.setShowBotton(true);
+							UUID wuzezhengminguuid = UUID.randomUUID();
+							wuzezhengming.setNodeId(wuzezhengminguuid.toString());
 							jiaShiYuanImage.add(wuzezhengming);
 
 							AnbiaoJiashiyuan qita = new AnbiaoJiashiyuan();
@@ -1111,7 +1138,9 @@ public class DeptController extends BladeController {
 							qita.setId(anbiaoJiashiyuan.getDeptId());
 							qita.setIsCount(1);
 							qita.setIsDistribution(1);
-							qita.setShowBotton("true");
+							qita.setShowBotton(true);
+							UUID qitauuid = UUID.randomUUID();
+							qita.setNodeId(qitauuid.toString());
 							jiaShiYuanImage.add(qita);
 
 
@@ -1138,7 +1167,9 @@ public class DeptController extends BladeController {
 							xingshizhengZM.setId(anbiaoVehicle.getDeptId());
 							xingshizhengZM.setIsCount(1);
 							xingshizhengZM.setIsDistribution(1);
-							xingshizhengZM.setShowBotton("true");
+							xingshizhengZM.setShowBotton(true);
+							UUID xingshizhengZMuuid = UUID.randomUUID();
+							xingshizhengZM.setNodeId(xingshizhengZMuuid.toString());
 							vehicleImage.add(xingshizhengZM);
 
 							AnbiaoVehicle xingshizhengFM = new AnbiaoVehicle();
@@ -1153,7 +1184,9 @@ public class DeptController extends BladeController {
 							xingshizhengFM.setId(anbiaoVehicle.getDeptId());
 							xingshizhengFM.setIsCount(1);
 							xingshizhengFM.setIsDistribution(1);
-							xingshizhengFM.setShowBotton("true");
+							xingshizhengFM.setShowBotton(true);
+							UUID xingshizhengFMuuid = UUID.randomUUID();
+							xingshizhengFM.setNodeId(xingshizhengFMuuid.toString());
 							vehicleImage.add(xingshizhengFM);
 
 							AnbiaoVehicle daoluyunshuzheng = new AnbiaoVehicle();
@@ -1168,7 +1201,9 @@ public class DeptController extends BladeController {
 							daoluyunshuzheng.setId(anbiaoVehicle.getDeptId());
 							daoluyunshuzheng.setIsCount(1);
 							daoluyunshuzheng.setIsDistribution(1);
-							daoluyunshuzheng.setShowBotton("true");
+							daoluyunshuzheng.setShowBotton(true);
+							UUID daoluyunshuzhenguuid = UUID.randomUUID();
+							daoluyunshuzheng.setNodeId(daoluyunshuzhenguuid.toString());
 							vehicleImage.add(daoluyunshuzheng);
 
 							AnbiaoVehicle zonghexingnengbaogao = new AnbiaoVehicle();
@@ -1183,7 +1218,9 @@ public class DeptController extends BladeController {
 							zonghexingnengbaogao.setId(anbiaoVehicle.getDeptId());
 							zonghexingnengbaogao.setIsCount(1);
 							zonghexingnengbaogao.setIsDistribution(1);
-							zonghexingnengbaogao.setShowBotton("true");
+							zonghexingnengbaogao.setShowBotton(true);
+							UUID zonghexingnengbaogaouuid = UUID.randomUUID();
+							zonghexingnengbaogao.setNodeId(zonghexingnengbaogaouuid.toString());
 							vehicleImage.add(zonghexingnengbaogao);
 
 							AnbiaoVehicle cheliangdengjizhengshu = new AnbiaoVehicle();
@@ -1198,7 +1235,9 @@ public class DeptController extends BladeController {
 							cheliangdengjizhengshu.setId(anbiaoVehicle.getDeptId());
 							cheliangdengjizhengshu.setIsCount(1);
 							cheliangdengjizhengshu.setIsDistribution(1);
-							cheliangdengjizhengshu.setShowBotton("true");
+							cheliangdengjizhengshu.setShowBotton(true);
+							UUID cheliangdengjizhengshuuuid = UUID.randomUUID();
+							cheliangdengjizhengshu.setNodeId(cheliangdengjizhengshuuuid.toString());
 							vehicleImage.add(cheliangdengjizhengshu);
 
 							return R.data(vehicleImage);
@@ -1209,12 +1248,16 @@ public class DeptController extends BladeController {
 					jiashiyuan.setDeptName("驾驶员");
 					jiashiyuan.setId(Integer.valueOf(deptId));
 					jiashiyuan.setParentId(Integer.valueOf(deptId));
+					UUID jiashiyuanuuid = UUID.randomUUID();
+					jiashiyuan.setNodeId(jiashiyuanuuid.toString());
 					tree.add(jiashiyuan);
 
 					DeptVO vehicle = new DeptVO();
 					vehicle.setDeptName("车辆");
 					vehicle.setId(Integer.valueOf(deptId));
 					vehicle.setParentId(Integer.valueOf(deptId));
+					UUID vehicleuuid = UUID.randomUUID();
+					vehicle.setNodeId(vehicleuuid.toString());
 					tree.add(vehicle);
 
 					DeptVO jingyingxukezheng = new DeptVO();
@@ -1228,7 +1271,9 @@ public class DeptController extends BladeController {
 					}
 					jingyingxukezheng.setIsCount(1);
 					jingyingxukezheng.setIsDistribution(1);
-					jingyingxukezheng.setShowBotton("true");
+					jingyingxukezheng.setShowBotton(true);
+					UUID jingyingxukezhenguuid = UUID.randomUUID();
+					jingyingxukezheng.setNodeId(jingyingxukezhenguuid.toString());
 					tree.add(jingyingxukezheng);
 
 					DeptVO yingyezhizhao = new DeptVO();
@@ -1242,7 +1287,9 @@ public class DeptController extends BladeController {
 					}
 					yingyezhizhao.setIsCount(1);
 					yingyezhizhao.setIsDistribution(1);
-					yingyezhizhao.setShowBotton("true");
+					yingyezhizhao.setShowBotton(true);
+					UUID yingyezhizhaouuid = UUID.randomUUID();
+					yingyezhizhao.setNodeId(yingyezhizhaouuid.toString());
 					tree.add(yingyezhizhao);
 
 					DeptVO daoluyunshuzheng = new DeptVO();
@@ -1256,7 +1303,9 @@ public class DeptController extends BladeController {
 					}
 					daoluyunshuzheng.setIsCount(1);
 					daoluyunshuzheng.setIsDistribution(1);
-					daoluyunshuzheng.setShowBotton("true");
+					daoluyunshuzheng.setShowBotton(true);
+					UUID daoluyunshuzhenguuid = UUID.randomUUID();
+					daoluyunshuzheng.setNodeId(daoluyunshuzhenguuid.toString());
 					tree.add(daoluyunshuzheng);
 
 				} else if (dept1.getExtendType().equals("岗位")) {
@@ -1273,6 +1322,8 @@ public class DeptController extends BladeController {
 						a.setDeptName(a.getXingming());
 						a.setDeptId(a.getId());
 						a.setId(deptId);
+						UUID uuid = UUID.randomUUID();
+						a.setNodeId(uuid.toString());
 						if (a.getXingming().equals(deptName)) {
 							flag = true;
 							personnelVO = a;
@@ -1291,7 +1342,9 @@ public class DeptController extends BladeController {
 							shenfenzhengz.setAttachments(personnelVO.getShenfenzheng());
 						}
 						shenfenzhengz.setIsDistribution(1);
-						shenfenzhengz.setShowBotton("true");
+						shenfenzhengz.setShowBotton(true);
+						UUID shenfenzhengzuuid = UUID.randomUUID();
+						shenfenzhengz.setNodeId(shenfenzhengzuuid.toString());
 						tree.add(shenfenzhengz);
 
 						DeptVO shenfenzhengf = new DeptVO();
@@ -1303,7 +1356,9 @@ public class DeptController extends BladeController {
 							shenfenzhengf.setAttachments(personnelVO.getShenfenzhengfanmianfujian());
 						}
 						shenfenzhengf.setIsDistribution(1);
-						shenfenzhengf.setShowBotton("true");
+						shenfenzhengf.setShowBotton(true);
+						UUID shenfenzhengfuuid = UUID.randomUUID();
+						shenfenzhengf.setNodeId(shenfenzhengfuuid.toString());
 						tree.add(shenfenzhengf);
 
 						DeptVO qitaz = new DeptVO();
@@ -1315,7 +1370,9 @@ public class DeptController extends BladeController {
 							qitaz.setAttachments(personnelVO.getQitazhengmianfujian());
 						}
 						qitaz.setIsDistribution(1);
-						qitaz.setShowBotton("true");
+						qitaz.setShowBotton(true);
+						UUID qitazuuid = UUID.randomUUID();
+						qitaz.setNodeId(qitazuuid.toString());
 						tree.add(qitaz);
 
 						DeptVO qitaf = new DeptVO();
@@ -1327,7 +1384,9 @@ public class DeptController extends BladeController {
 							qitaf.setAttachments(personnelVO.getQitafanmianfujian());
 						}
 						qitaf.setIsDistribution(1);
-						qitaf.setShowBotton("true");
+						qitaf.setShowBotton(true);
+						UUID qitafuuid = UUID.randomUUID();
+						qitaf.setNodeId(qitafuuid.toString());
 						tree.add(qitaf);
 					}
 				}
