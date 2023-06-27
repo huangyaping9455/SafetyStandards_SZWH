@@ -1505,6 +1505,8 @@ public class VehicleController {
 			String chepaiyanse = String.valueOf(a.get("车牌颜色")).trim();
 			if(StringUtils.isNotBlank(chepaiyanse) && !chepaiyanse.equals("null")){
 				vehicle.setChepaiyanse(chepaiyanse);
+			}else {
+				vehicle.setChepaiyanse("黄色");
 			}
 
 			//验证电话

@@ -105,6 +105,8 @@ public class JiaShiYuanController {
 	private IVehicleDaoluyunshuzhengService daoluyunshuzhengService;
 	@Autowired
 	private AnbiaoRiskDetailController riskDetailController;
+	@Autowired
+	private AnbiaoCheliangJiashiyuanDailyController jiashiyuanDailyController;
 
 
 	@PostMapping("/insert")
@@ -2617,6 +2619,14 @@ public class JiaShiYuanController {
 					vehicle.setChezhudianhua(driver.getShoujihaoma());
 					vehicle.setCaozuoshijian(LocalDateTime.now());
 					vehicleService.getBaseMapper().updateById(vehicle);
+
+					//绑定车辆驾驶员
+					AnbiaoCheliangJiashiyuanDaily anbiaoCheliangJiashiyuanDaily = new AnbiaoCheliangJiashiyuanDaily();
+					anbiaoCheliangJiashiyuanDaily.setVehid(vehicle.getId());
+					anbiaoCheliangJiashiyuanDaily.setJiashiyuanid(jiaShiYuan.getId());
+					anbiaoCheliangJiashiyuanDaily.setCheliangpaizhao(vehicle.getCheliangpaizhao());
+					jiashiyuanDailyController.Insert(anbiaoCheliangJiashiyuanDaily,user);
+
 				} else {
 					vehicle = new Vehicle();
 					System.out.println(driver);
@@ -2640,6 +2650,13 @@ public class JiaShiYuanController {
 					vehicleQueryWrapper1.lambda().eq(Vehicle::getIsdel, "0");
 					vehicleQueryWrapper1.lambda().eq(Vehicle::getDeptId, vehicle.getDeptId());
 					Vehicle vehicle1 = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper1);
+
+					//绑定车辆驾驶员
+					AnbiaoCheliangJiashiyuanDaily anbiaoCheliangJiashiyuanDaily = new AnbiaoCheliangJiashiyuanDaily();
+					anbiaoCheliangJiashiyuanDaily.setVehid(vehicle1.getId());
+					anbiaoCheliangJiashiyuanDaily.setJiashiyuanid(jiaShiYuan.getId());
+					anbiaoCheliangJiashiyuanDaily.setCheliangpaizhao(vehicle1.getCheliangpaizhao());
+					jiashiyuanDailyController.Insert(anbiaoCheliangJiashiyuanDaily,user);
 
 					VehicleJishupingding jishupingding = new VehicleJishupingding();        //技术评定
 					jishupingding.setAvjVehicleIds(vehicle1.getId());
@@ -2712,6 +2729,14 @@ public class JiaShiYuanController {
 					vehicle2.setChezhudianhua(driver.getShoujihaoma());
 					vehicle2.setCaozuoshijian(LocalDateTime.now());
 					vehicleService.getBaseMapper().updateById(vehicle2);
+
+					//绑定车辆驾驶员
+					AnbiaoCheliangJiashiyuanDaily anbiaoCheliangJiashiyuanDaily = new AnbiaoCheliangJiashiyuanDaily();
+					anbiaoCheliangJiashiyuanDaily.setGvehid(vehicle2.getId());
+					anbiaoCheliangJiashiyuanDaily.setJiashiyuanid(jiaShiYuan.getId());
+					anbiaoCheliangJiashiyuanDaily.setGcheliangpaizhao(vehicle2.getCheliangpaizhao());
+					jiashiyuanDailyController.Insert(anbiaoCheliangJiashiyuanDaily,user);
+
 				} else {
 					vehicle2 = new Vehicle();
 					vehicle2.setDeptId(driver.getDeptId());
@@ -2733,6 +2758,13 @@ public class JiaShiYuanController {
 					vehicleQueryWrapper3.lambda().eq(Vehicle::getIsdel, "0");
 					vehicleQueryWrapper3.lambda().eq(Vehicle::getDeptId, vehicle2.getDeptId());
 					Vehicle vehicle3 = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper3);
+
+					//绑定车辆驾驶员
+					AnbiaoCheliangJiashiyuanDaily anbiaoCheliangJiashiyuanDaily = new AnbiaoCheliangJiashiyuanDaily();
+					anbiaoCheliangJiashiyuanDaily.setGvehid(vehicle3.getId());
+					anbiaoCheliangJiashiyuanDaily.setJiashiyuanid(jiaShiYuan.getId());
+					anbiaoCheliangJiashiyuanDaily.setGcheliangpaizhao(vehicle3.getCheliangpaizhao());
+					jiashiyuanDailyController.Insert(anbiaoCheliangJiashiyuanDaily,user);
 
 					VehicleJishupingding jishupingding = new VehicleJishupingding();        //技术评定
 					jishupingding.setAvjVehicleIds(vehicle3.getId());
