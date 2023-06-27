@@ -94,12 +94,15 @@ public class MenuController extends BladeController {
 	@GetMapping("/routes")
 	@ApiOperation(value = "前端菜单数据", notes = "前端菜单数据", position = 3)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "postId", value = "岗位id") })
-	public R<List<MenuVO>> routes(BladeUser user,String postId) {
+	public R<List<MenuVO>> routes(BladeUser user,String postId,String type) {
 		List<MenuVO> list;
+		if(StringUtils.isEmpty(type)){
+			type = "0";
+		}
 		if(postId!=null){
-			list = menuService.routes(postId);
+			list = menuService.routes(postId,type);
 		}else{
-			list = menuService.routes(user.getRoleName());
+			list = menuService.routes(user.getRoleName(),type);
 		}
 		return R.data(list);
 	}
@@ -135,8 +138,11 @@ public class MenuController extends BladeController {
 	 */
 	@GetMapping("/grant-tree")
 	@ApiOperation(value = "权限分配树形结构", notes = "权限分配树形结构", position = 6)
-	public R<List<MenuVO>> grantTree(BladeUser user) {
-		return R.data(menuService.grantTree(user));
+	public R<List<MenuVO>> grantTree(BladeUser user,String type) {
+		if(StringUtils.isEmpty(type)) {
+			type = "0";
+		}
+		return R.data(menuService.grantTree(user,type));
 	}
 
 	/**
@@ -144,8 +150,11 @@ public class MenuController extends BladeController {
 	 */
 	@GetMapping("/role-tree-keys")
 	@ApiOperation(value = "角色所分配的树", notes = "角色所分配的树", position = 7)
-	public R<List<String>> roleTreeKeys(String postId) {
-		return R.data(menuService.postTreeKeys(postId));
+	public R<List<String>> roleTreeKeys(String postId,String type) {
+		if(StringUtils.isEmpty(type)) {
+			type = "0";
+		}
+		return R.data(menuService.postTreeKeys(postId,type));
 	}
 
 	/**
@@ -173,8 +182,11 @@ public class MenuController extends BladeController {
 	 */
 	@GetMapping("auth-routes")
 	@ApiOperation(value = "菜单的角色权限", position = 8)
-	public R<List<Kv>> authRoutes(BladeUser user) {
-		return R.data(menuService.authRoutes(user));
+	public R<List<Kv>> authRoutes(BladeUser user,String type) {
+		if(StringUtils.isEmpty(type)) {
+			type = "0";
+		}
+		return R.data(menuService.authRoutes(user,type));
 	}
 
 

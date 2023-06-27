@@ -320,8 +320,11 @@ public class DeptController extends BladeController {
 	@ApiImplicitParams({@ApiImplicitParam(name = "postIds", value = "岗位id", required = true),
 		@ApiImplicitParam(name = "menuIds", value = "menuIds集合", required = true)
 	})
-	public R grant(String postIds, String menuIds) {
-		boolean temp = postService.grant(StrUtil.split(postIds, ','), StrUtil.split(menuIds, ','));
+	public R grant(String postIds, String menuIds,String type) {
+		if(StringUtils.isEmpty(type)) {
+			type = "0";
+		}
+		boolean temp = postService.grant(StrUtil.split(postIds, ','), StrUtil.split(menuIds, ','),type);
 		return R.status(temp);
 	}
 
@@ -440,8 +443,11 @@ public class DeptController extends BladeController {
 	 */
 	@GetMapping("/grant-tree")
 	@ApiOperation(value = "权限-运维-tree", notes = "权限-运维-tree", position = 13)
-	public R<List<MenuVO>> grantTree(BladeUser user) {
-		return R.data(menuService.grantTree(user));
+	public R<List<MenuVO>> grantTree(BladeUser user,String type) {
+		if(StringUtils.isEmpty(type)) {
+			type = "0";
+		}
+		return R.data(menuService.grantTree(user,type));
 	}
 
 	/**
@@ -449,8 +455,11 @@ public class DeptController extends BladeController {
 	 */
 	@GetMapping("/post-tree-keys")
 	@ApiOperation(value = "权限-运维-菜单", notes = "传入postId", position = 14)
-	public R<List<String>> postTreeKeys(String postId) {
-		return R.data(menuService.postTreeKeys(postId));
+	public R<List<String>> postTreeKeys(String postId,String type) {
+		if(StringUtils.isEmpty(type)) {
+			type = "0";
+		}
+		return R.data(menuService.postTreeKeys(postId,type));
 	}
 	//*******************************************安标**************************************
 
@@ -704,40 +713,43 @@ public class DeptController extends BladeController {
 	 */
 	@GetMapping("/checkPost")
 	@ApiOperation(value = "人员所拥有岗位", notes = "人员所拥有岗位", position = 26)
-	public R<List<Map<String, String>>> checkPost(BladeUser user, String type) {
+	public R<List<Map<String, String>>> checkPost(BladeUser user,String type) {
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-		if ("运维端".equals(type)) {
+		if("运维端".equals(type)){
 			//根据用户id查询所拥有岗位id
-			List<Post> lists = postService.selectByUserId(user.getUserId());
+			List<Post> lists=postService.selectByUserId(user.getUserId());
 			for (int i = 0; i < lists.size(); i++) {
-				Map<String, String> map = new HashMap<String, String>();
-				String postId = lists.get(i).getPostId().toString();
+				Map<String,String> map = new HashMap<String,String>();
+				String postId=lists.get(i).getPostId().toString();
 				//直属上级id
-				Dept dept = deptService.selectByJGBM("机构", postId);
-				String postName = deptService.selectByDeptId(Integer.parseInt(postId)).getDeptName();
-				map.put("postName", dept.getDeptName() + "|" + postName);
-				map.put("postId", postId);
-				map.put("deptId", dept.getId().toString());
-				list.add(map);
+				Dept dept=deptService.selectByJGBM("机构",postId);
+				Organizations organizations = orrganizationsClient.selectByDeptIdInfo(dept.getId().toString());
+				if(organizations != null){
+					String postName=deptService.selectByDeptId(Integer.parseInt(postId)).getDeptName();
+					map.put("postName",dept.getDeptName()+"|"+postName);
+					map.put("postId",postId);
+					map.put("deptId",dept.getId().toString());
+					list.add(map);
+				}
 			}
-		} else {
+		}else{
 			//根据用户id查询所拥有岗位id
-			List<Post> lists = postService.selectByUserId(user.getUserId());
+			List<Post> lists=postService.selectByUserId(user.getUserId());
 			for (int i = 0; i < lists.size(); i++) {
-				Map<String, String> map = new HashMap<String, String>();
-				String postId = lists.get(i).getPostId().toString();
+				Map<String,String> map = new HashMap<String,String>();
+				String postId=lists.get(i).getPostId().toString();
 				//直属上级id
-				Dept dept = deptService.selectByJGBM("机构", postId);
-				Organizations organizations = orrganizationsClient.selectByDeptId(dept.getId().toString());
-				if (organizations != null) {
-					if (organizations.getJigouleixing().equals("qiye") || organizations.getJigouleixing().equals("geti") || organizations.getDeptId().equals("1")) {
+				Dept dept=deptService.selectByJGBM("机构",postId);
+				Organizations organizations = orrganizationsClient.selectByDeptIdInfo(dept.getId().toString());
+				if(organizations != null){
+					if(organizations.getJigouleixing().equals("qiye") || organizations.getJigouleixing().equals("geti") || organizations.getDeptId().equals("1")){
 						System.out.println(postId);
 						System.out.println(i);
-						String postName = deptService.selectByDeptId(Integer.parseInt(postId)).getDeptName();
+						String postName=deptService.selectByDeptId(Integer.parseInt(postId)).getDeptName();
 						System.out.println(postName);
-						map.put("postName", dept.getDeptName() + "|" + postName);
-						map.put("postId", postId);
-						map.put("deptId", dept.getId().toString());
+						map.put("postName",dept.getDeptName()+"|"+postName);
+						map.put("postId",postId);
+						map.put("deptId",dept.getId().toString());
 						list.add(map);
 					}
 				}

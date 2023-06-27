@@ -67,9 +67,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 	}
 
 	@Override
-	public List<MenuVO> routes(String roleId) {
-		List<Menu> allMenus = baseMapper.allMenu();
-		List<Menu> roleMenus = baseMapper.roleMenu(Func.toIntList(roleId));
+	public List<MenuVO> routes(String roleId,String type) {
+		List<Menu> allMenus = baseMapper.allMenu(type);
+		List<Menu> roleMenus = baseMapper.roleMenu(type,Func.toIntList(roleId));
 		List<Menu> routes = new LinkedList<>(roleMenus);
 		roleMenus.forEach(roleMenu -> recursion(allMenus, routes, roleMenu));
 		routes.sort(Comparator.comparing(Menu::getSort));
@@ -99,23 +99,23 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 	}
 
 	@Override
-	public List<MenuVO> grantTree(BladeUser user) {
+	public List<MenuVO> grantTree(BladeUser user,String type) {
 		String postId=user.getRoleName();
-		return ForestNodeMerger.merge(user.getTenantCode().equals(BladeConstant.ADMIN_TENANT_CODE) ? baseMapper.grantTree() : baseMapper.grantTreeByPost(Func.toIntList(postId)));
+		return ForestNodeMerger.merge(user.getTenantCode().equals(BladeConstant.ADMIN_TENANT_CODE) ? baseMapper.grantTree(type) : baseMapper.grantTreeByPost(Func.toIntList(postId)));
 	}
 
 	@Override
-	public List<String> postTreeKeys(String postId) {
-		List<PostMenu> postMenus = postMenuService.selectListByPostId(Integer.parseInt(postId),0);
+	public List<String> postTreeKeys(String postId,String type) {
+		List<PostMenu> postMenus = postMenuService.selectListByPostId(Integer.parseInt(postId),Integer.parseInt(type));
 		return postMenus.stream().map(postMenu -> Func.toStr(postMenu.getMenuId())).collect(Collectors.toList());
 	}
 
 	@Override
-	public List<Kv> authRoutes(BladeUser user) {
+	public List<Kv> authRoutes(BladeUser user,String type) {
 		if (Func.isEmpty(user)) {
 			return null;
 		}
-		List<MenuDTO> routes = baseMapper.authRoutes(Func.toIntList(user.getRoleId()));
+		List<MenuDTO> routes = baseMapper.authRoutes(Func.toIntList(user.getRoleId()),type);
 		List<Kv> list = new ArrayList<>();
 		routes.forEach(route -> list.add(Kv.init().set(route.getPath(), Kv.init().set("authority", Func.toStrArray(route.getAlias())))));
 		return list;

@@ -66,9 +66,9 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements IP
 	}
 
 	@Override
-	public boolean grant(@NotEmpty  List<String> postIds, @NotEmpty List<String> menuIds) {
+	public boolean grant(@NotEmpty  List<String> postIds, @NotEmpty List<String> menuIds,String type) {
 		// 删除岗位配置的菜单集合
-		postMenuService.deleteByPostId(Integer.parseInt(postIds.get(0)),0);
+		postMenuService.deleteByPostId(Integer.parseInt(postIds.get(0)),Integer.parseInt(type));
 		// 组装配置
 		List<PostMenu> postMenus = new ArrayList<>();
 		postIds.forEach(postId -> menuIds.forEach(menuId -> {

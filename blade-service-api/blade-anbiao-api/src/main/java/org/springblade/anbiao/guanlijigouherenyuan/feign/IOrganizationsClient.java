@@ -38,6 +38,9 @@ public interface IOrganizationsClient {
     @PostMapping(API_PREFIX + "/selectByDeptId")
     Organizations selectByDeptId(@RequestParam("deptId") String deptId);
 
+	@PostMapping(API_PREFIX + "/selectByDeptIdInfo")
+	Organizations selectByDeptIdInfo(@RequestParam("deptId") String deptId);
+
     @PostMapping(API_PREFIX + "/selectParentDeptById")
     Organizations selectParentDeptById(@RequestParam("deptId") String deptId);
 

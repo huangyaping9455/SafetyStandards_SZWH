@@ -55,7 +55,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
 	 *
 	 * @return
 	 */
-	List<MenuVO> grantTree();
+	List<MenuVO> grantTree(String type);
 
 	/**
 	 * 授权树形结构
@@ -69,7 +69,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
 	 *
 	 * @return
 	 */
-	List<Menu> allMenu();
+	List<Menu> allMenu(String type);
 
 	/**
 	 * 权限配置菜单
@@ -77,7 +77,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
 	 * @param roleId
 	 * @return
 	 */
-	List<Menu> roleMenu(List<Integer> roleId);
+	List<Menu> roleMenu(@Param("type") String type,@Param("list") List<Integer> list);
 
 	/**
 	 * 菜单树形结构
@@ -100,7 +100,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
 	 * @param roleIds
 	 * @return
 	 */
-	List<MenuDTO> authRoutes(List<Integer> roleIds);
+	List<MenuDTO> authRoutes(List<Integer> roleIds,String type);
 
 
 	//***************************安标*********************************//

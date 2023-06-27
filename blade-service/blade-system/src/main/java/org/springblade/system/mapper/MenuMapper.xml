@@ -60,11 +60,13 @@
     </select>
 
     <select id="allMenu" resultMap="menuResultMap">
-        select * from blade_menu where is_deleted = 0 and category = 1 and type=0
+        select * from blade_menu where is_deleted = 0 and category = 1 and type=#{type}
     </select>
 
     <select id="roleMenu" resultMap="menuResultMap">
-        select * from blade_menu where is_deleted = 0 and type=0 AND id IN ( SELECT menu_id FROM blade_post_menu WHERE type=0 and  post_id IN
+        select * from blade_menu
+        where is_deleted = 0 and type=#{type}
+           AND id IN ( SELECT menu_id FROM blade_post_menu WHERE type=0 and  post_id IN
         <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach> )
@@ -129,7 +131,7 @@
     </select>
 
     <select id="grantTree" resultMap="treeNodeResultMap">
-        select id, parent_id, name as title, id as 'value', id as 'key' from blade_menu where is_deleted = 0 and type=0
+        select id, parent_id, name as title, id as 'value', id as 'key' from blade_menu where is_deleted = 0 and type=#{type}
     </select>
 
     <select id="grantTreeByPost" resultMap="treeNodeResultMap">
@@ -160,7 +162,7 @@
             <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
                 #{item}
             </foreach>
-            AND m.path IS NOT NULL and rm.type=0 and m.type=0
+            AND m.path IS NOT NULL and rm.type=0 and m.type=#{type}
         GROUP BY m.path
     </select>
 

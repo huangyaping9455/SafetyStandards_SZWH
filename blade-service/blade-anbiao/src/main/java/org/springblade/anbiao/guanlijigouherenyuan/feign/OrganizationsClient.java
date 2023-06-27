@@ -58,6 +58,12 @@ public class OrganizationsClient implements IOrganizationsClient {
     }
 
 	@Override
+	@ApiOperation(value = "根据单位id获取信息(feign使用)", notes = "传入deptId", position = 4)
+	public Organizations selectByDeptIdInfo(String deptId) {
+		return orrganizationsService.selectByDeptIdInfo(deptId);
+	}
+
+	@Override
 	@ApiOperation(value = "根据企业ID获取上级组织信息(feign使用)", notes = "", position = 8)
 	public Organizations selectParentDeptById(String deptId) {
 		return orrganizationsService.selectParentDeptById(deptId);

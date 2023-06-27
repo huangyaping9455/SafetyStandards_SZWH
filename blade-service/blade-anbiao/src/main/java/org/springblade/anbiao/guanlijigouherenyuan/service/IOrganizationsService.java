@@ -70,6 +70,8 @@ public interface IOrganizationsService extends IService<Organizations> {
 	* @Param: [deptId]
 	*/
 	OrganizationsVO selectByDeptId(String deptId);
+
+	OrganizationsVO selectByDeptIdInfo(String deptId);
 	/**
 	* @Description:
 	*/

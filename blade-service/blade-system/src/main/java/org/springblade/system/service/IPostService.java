@@ -71,7 +71,7 @@ public interface IPostService extends IService<Post> {
 	 * @param menuIds 菜单id集合
 	 * @return 是否成功
 	 */
-	boolean grant(@NotEmpty List<String> postId, @NotEmpty List<String> menuIds);
+	boolean grant(@NotEmpty List<String> postId, @NotEmpty List<String> menuIds,String type);
 
 	/**
 	 * 权限配置(安标)

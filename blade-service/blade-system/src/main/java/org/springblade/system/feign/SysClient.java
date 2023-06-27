@@ -88,9 +88,10 @@ public class SysClient implements ISysClient {
 	@Override
 	@PostMapping(API_PREFIX + "/grant")
 	public Boolean grant( String postId,  String menuIds) {
+		String type = "0";
 		List<String> list1=StrUtil.split(postId,',');
 		List<String> list2=StrUtil.split(menuIds,',');
-		return postService.grant(list1,list2);
+		return postService.grant(list1,list2,type);
 	}
 
 	@Override

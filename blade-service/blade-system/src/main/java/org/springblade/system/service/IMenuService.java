@@ -53,7 +53,7 @@ public interface IMenuService extends IService<Menu> {
 	 * @param roleId
 	 * @return
 	 */
-	List<MenuVO> routes(String roleId);
+	List<MenuVO> routes(String roleId,String type);
 
 	/**
 	 * 按钮树形结构
@@ -76,7 +76,7 @@ public interface IMenuService extends IService<Menu> {
 	 * @param user
 	 * @return
 	 */
-	List<MenuVO> grantTree(BladeUser user);
+	List<MenuVO> grantTree(BladeUser user,String type);
 
 	/**
 	 * 默认选中节点
@@ -84,14 +84,14 @@ public interface IMenuService extends IService<Menu> {
 	 * @param postId
 	 * @return
 	 */
-	List<String> postTreeKeys(String postId);
+	List<String> postTreeKeys(String postId,String type);
 	/**
 	 * 获取配置的角色权限
 	 *
 	 * @param user
 	 * @return
 	 */
-	List<Kv> authRoutes(BladeUser user);
+	List<Kv> authRoutes(BladeUser user,String type);
 
 
 

@@ -19,6 +19,11 @@ public class IOrganizationsClientBack implements IOrganizationsClient {
 	}
 
 	@Override
+	public Organizations selectByDeptIdInfo(String deptId) {
+		return null;
+	}
+
+	@Override
 	public Boolean delByDeptId(String deptId) {
 		return null;
 	}

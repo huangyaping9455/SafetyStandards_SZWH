@@ -124,6 +124,11 @@ public class OrganizationsServiceImpl extends ServiceImpl<OrganizationsMapper, O
 	}
 
 	@Override
+	public OrganizationsVO selectByDeptIdInfo(String deptId) {
+		return mapper.selectByDeptId(deptId);
+	}
+
+	@Override
 	public boolean delByDeptId(String deptId) {
 		return mapper.delByDeptId(deptId);
 	}
