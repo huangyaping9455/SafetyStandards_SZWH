@@ -74,11 +74,15 @@ public class MenuController extends BladeController {
 		@ApiImplicitParam(name = "name", value = "菜单名称", paramType = "query", dataType = "string")
 	})
 	@ApiOperation(value = "列表", notes = "传入menu", position = 2)
-	public R<List<MenuVO>> list(String code,String name) {
+	public R<List<MenuVO>> list(String code,String name,String type) {
 		Menu menu=new Menu();
 		menu.setCode(code);
 		menu.setName(name);
-		menu.setType("0");
+		if(StringUtils.isEmpty(type)){
+			menu.setType("0");
+		}else {
+			menu.setType(type);
+		}
 		List<Menu> list = menuService.selectAllList(menu);
 		MenuWrapper menuWrapper = new MenuWrapper(menuService, dictClient);
 		return R.data(menuWrapper.listNodeVO(list));

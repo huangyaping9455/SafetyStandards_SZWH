@@ -22,6 +22,8 @@ public interface IAnbiaoCarExamineInfoService extends IService<AnbiaoCarExamineI
 
 	AnbiaoCarExamineInfoPage<AnbiaoCarExamineInfoVO> selectCarExamineInfoPage(AnbiaoCarExamineInfoPage anbiaoCarExamineInfoPage);
 
+	AnbiaoCarExamineInfoPage<AnbiaoCarExamineInfoVO> selectCarExamineInfoPageTubingend(AnbiaoCarExamineInfoPage anbiaoCarExamineInfoPage);
+
 	List<AnbiaoCarExamineInfoVO> selectAnBiaoCheckCarALLPage(AnBiaoCheckCarPage anbiaoCarExamineInfoPage);
 
 	/**

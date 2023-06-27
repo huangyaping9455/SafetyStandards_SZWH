@@ -478,6 +478,20 @@ public class AnbiaoCarExamineInfoController {
 		return R.data(list);
 	}
 
+	@PostMapping("/getCarExamineInfoListDept")
+	@ApiLog("企管端安全检查数据-分页列表")
+	@ApiOperation(value = "企管端安全检查数据-分页列表", notes = "传入AnbiaoCarExamineInfoPage", position = 6)
+	public R<AnbiaoCarExamineInfoPage<AnbiaoCarExamineInfoVO>> getCarExamineInfoListDept(@RequestBody AnbiaoCarExamineInfoPage carExamineInfoPage, BladeUser user) {
+		R rs = new R();
+		if(user == null){
+			rs.setMsg("未授权");
+			rs.setCode(401);
+			return rs;
+		}
+		AnbiaoCarExamineInfoPage<AnbiaoCarExamineInfoVO> list= iAnbiaoCarExamineInfoService.selectCarExamineInfoPageTubingend(carExamineInfoPage);
+		return R.data(list);
+	}
+
 	@PostMapping("/saveCarExamineInfoDept")
 	@ApiLog("安全检查数据-一键打卡（企管端）")
 	@ApiOperation(value = "安全检查数据-一键打卡（企管端）", notes = "传入anbiaoCarExamineInfo", position = 7)

@@ -161,6 +161,114 @@
         </if>
     </select>
 
+    <select id="selectCarExamineInfoPageTubingend" resultMap="AnbiaoCarExamineInfoVOResultMap"
+            parameterType="org.springblade.anbiao.chuchejiancha.page.AnbiaoCarExamineInfoPage" >
+        <if test="size == 0" >
+            select
+            a.id as vehid,
+            a.cheliangpaizhao,
+            a.chepaiyanse,
+            c.jiashiyuanxingming,
+            c.shoujihaoma,
+            d.dept_name as deptname,
+            b.id,
+            b.jsyid,
+            b.`status`,
+            b.type,
+            b.date,
+            b.vehimg,
+            b.remark,
+            b.fujianremark,
+            b.jcrsignatrue,
+            b.address,
+            case when IFNULL(b.id,'') = '' then '未完成' else '已完成' end as statusshow
+            from
+            anbiao_vehicle a
+            left join (
+            select * from anbiao_car_examine_info
+            where date = #{date}
+            ) b on b.vehid = a.id
+            left join anbiao_jiashiyuan c on b.jsyid = c.id and c.isdelete = 0
+            inner join  (
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) d on a.dept_id = d.id
+            where 1=1
+            and a.is_deleted = 0
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select
+            a.id as vehid,
+            a.cheliangpaizhao,
+            a.chepaiyanse,
+            c.jiashiyuanxingming,
+            c.shoujihaoma,
+            d.dept_name as deptname,
+            b.id,
+            b.jsyid,
+            b.`status`,
+            b.type,
+            b.date,
+            b.vehimg,
+            b.remark,
+            b.fujianremark,
+            b.jcrsignatrue,
+            b.address,
+            case when IFNULL(b.id,'') = '' then '未完成' else '已完成' end as statusshow
+            from
+            anbiao_vehicle a
+            left join (
+            select * from anbiao_car_examine_info
+            where date = #{date}
+            ) b on b.vehid = a.id
+            left join anbiao_jiashiyuan c on b.jsyid = c.id and c.isdelete = 0
+            inner join  (
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) d on a.dept_id = d.id
+            where 1=1
+            and a.is_deleted = 0
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectCarExamineInfoTubingendTotal"
+            parameterType="org.springblade.anbiao.chuchejiancha.page.AnbiaoCarExamineInfoPage"
+            resultType="int">
+        select COUNT(1) from (
+        select
+        a.id as vehid,
+        a.cheliangpaizhao,
+        a.chepaiyanse,
+        c.jiashiyuanxingming,
+        c.shoujihaoma,
+        d.dept_name as deptname,
+        b.id,
+        b.jsyid,
+        b.`status`,
+        b.type,
+        b.date,
+        b.vehimg,
+        b.remark,
+        b.fujianremark,
+        b.jcrsignatrue,
+        b.address,
+        case when IFNULL(b.id,'') = '' then '未完成' else '已完成' end as statusshow
+        from
+        anbiao_vehicle a
+        left join (
+        select * from anbiao_car_examine_info
+        where date = #{date}
+        ) b on b.vehid = a.id
+        left join anbiao_jiashiyuan c on b.jsyid = c.id and c.isdelete = 0
+        inner join  (
+        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) d on a.dept_id = d.id
+        where 1=1
+        and a.is_deleted = 0
+        )d
+        where 1 = 1
+    </select>
+
     <select id="selectCarExamineInfoTotal"
             parameterType="org.springblade.anbiao.chuchejiancha.page.AnbiaoCarExamineInfoPage"
             resultType="int">

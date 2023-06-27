@@ -23,6 +23,8 @@ public interface AnbiaoCarExamineInfoMapper extends BaseMapper<AnbiaoCarExamineI
 	List<AnbiaoCarExamineInfoVO> selectCarExamineInfoPage(AnbiaoCarExamineInfoPage anbiaoCarExamineInfoPage);
 	int selectCarExamineInfoTotal(AnbiaoCarExamineInfoPage anbiaoCarExamineInfoPage);
 
+	List<AnbiaoCarExamineInfoVO> selectCarExamineInfoPageTubingend(AnbiaoCarExamineInfoPage anbiaoCarExamineInfoPage);
+	int selectCarExamineInfoTubingendTotal(AnbiaoCarExamineInfoPage anbiaoCarExamineInfoPage);
 
 	List<AnbiaoCarExamineInfoVO> selectAnBiaoCheckCarALLPage(AnBiaoCheckCarPage anbiaoCarExamineInfoPage);
 

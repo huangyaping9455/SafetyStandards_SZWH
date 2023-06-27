@@ -61,6 +61,44 @@
 
     </select>
 
+    <select id="treeDeptImage" resultType="org.springblade.system.vo.DeptVO">
+        SELECT DISTINCT
+        xiaji.id,
+        xiaji.parent_id,
+        xiaji.dept_name,
+        xiaji.tree_code,
+        xiaji.extend_type,
+        case when (select COUNT(*) from blade_dept as t1 where t1.parent_id=xiaji.id  AND t1.is_deleted = 0)>0 then 1 else 0 end existChild,
+        org.jigouleixing as jigouleixing,
+        org.daoluyunshuzhengfujian as daoluyunshuzhengfujian,
+        org.jingyingxukezhengfujian as jingyingxukezhengfujian,
+        org.yingyezhizhaofujian as yingyezhizhaofujian,
+        (CASE WHEN IFNULL( org.daoluyunshuzhengfujian, '' ) != '' THEN 1 ELSE 0 end + CASE WHEN IFNULL( org.jingyingxukezhengfujian, '' ) != '' THEN 1 ELSE 0 end + CASE WHEN IFNULL( org.yingyezhizhaofujian, '' ) != '' THEN 1 ELSE 0 end ) as deptImageCount
+        FROM
+        blade_dept shangji
+        JOIN blade_dept xiaji ON xiaji.tree_code LIKE CONCAT(shangji.tree_code, '%')
+        LEFT JOIN anbiao_organization org ON org.dept_id = xiaji.id
+        WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+        AND xiaji.is_deleted = 0
+        <choose>
+            <when test="type==1 ">
+                AND xiaji.id=#{param1}
+            </when>
+            <when test="deptName=='资质' ">
+                AND xiaji.id=#{param1}
+            </when>
+            <when test="deptName=='岗位' ">
+                AND xiaji.parent_id=#{param1}
+                and xiaji.extend_type="岗位"
+            </when>
+            <otherwise>
+                and xiaji.parent_id=#{param1}
+--                 and org.jigouleixing="qiye"
+            </otherwise>
+        </choose>
+
+    </select>
+
     <select id="treeDG" resultMap="treeNodeResultMap">
         SELECT DISTINCT
         xiaji.id,

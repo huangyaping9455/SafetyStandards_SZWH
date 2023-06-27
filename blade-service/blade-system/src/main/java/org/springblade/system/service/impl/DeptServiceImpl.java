@@ -46,6 +46,11 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
 	}
 
 	@Override
+	public List<DeptVO> treeDeptImage(String id,String type,String deptName) {
+		return ForestNodeMerger.merge(baseMapper.treeDeptImage(id,type,deptName));
+	}
+
+	@Override
 	public List<DeptVO> tree(String id,String type) {
 		return ForestNodeMerger.merge(baseMapper.tree(id,type));
 	}

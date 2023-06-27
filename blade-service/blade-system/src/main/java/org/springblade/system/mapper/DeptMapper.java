@@ -49,6 +49,8 @@ public interface DeptMapper extends BaseMapper<Dept> {
 	 */
 	List<DeptVO> tree(String id,String type);
 
+	List<DeptVO> treeDeptImage(String id,String type,String deptName);
+
 	/**
 	 * 多岗设置树形
 	 * @param id

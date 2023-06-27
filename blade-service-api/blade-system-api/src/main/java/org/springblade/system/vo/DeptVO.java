@@ -149,4 +149,28 @@ public class DeptVO extends Dept implements INode {
 	@TableField(exist = false)
 	private String nodeId;
 
+	@TableField(exist = false)
+	private String jigouleixing;
+
+	@TableField(exist = false)
+	private String daoluyunshuzhengfujian;
+
+	@TableField(exist = false)
+	private Integer daoluyunshuzhengfujianCount;
+
+	@TableField(exist = false)
+	private String jingyingxukezhengfujian;
+
+	@TableField(exist = false)
+	private Integer jingyingxukezhengfujianCount;
+
+	@TableField(exist = false)
+	private String yingyezhizhaofujian;
+
+	@TableField(exist = false)
+	private Integer yingyezhizhaofujianCount;
+
+	@TableField(exist = false)
+	private String deptImageCount;
+
 }

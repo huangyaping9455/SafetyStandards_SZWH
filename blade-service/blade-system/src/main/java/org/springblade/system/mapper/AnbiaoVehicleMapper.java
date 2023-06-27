@@ -2,9 +2,12 @@ package org.springblade.system.mapper;
 
 import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.cheliangguanli.entity.VehicleImg;
+import org.springblade.system.entity.AnbiaoDriverImg;
 import org.springblade.system.entity.AnbiaoVehicle;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springblade.system.entity.AnbiaoVehicleImg;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,5 +20,7 @@ import org.springblade.system.entity.AnbiaoVehicleImg;
 public interface AnbiaoVehicleMapper extends BaseMapper<AnbiaoVehicle> {
 
 	AnbiaoVehicleImg getByVehImg(@Param("vehId") String vehId);
+
+	List<AnbiaoVehicleImg> getByVehImgAll(String cheliangpaizhao, String deptId);
 
 }

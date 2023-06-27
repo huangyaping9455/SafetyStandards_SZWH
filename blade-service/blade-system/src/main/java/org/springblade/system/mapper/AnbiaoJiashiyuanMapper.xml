@@ -110,4 +110,50 @@
           and a.id = #{jsyId}
     </select>
 
+    <select id="getByDriverImgAll" resultType="org.springblade.system.entity.AnbiaoDriverImg" parameterType="java.lang.String">
+        SELECT
+            a.id,
+            a.dept_id as deptId,
+            a.jiashiyuanxingming,
+            a.shenfenzhengfujian as sfzzmimg,
+            a.shenfenzhengfanmianfujian as sfzfmimg,
+            CASE WHEN IFNULL( a.shenfenzhengfujian, '' ) != '' THEN 1 ELSE 0 end as sfzzmimgzcount,
+            CASE WHEN IFNULL( a.shenfenzhengfanmianfujian, '' ) != '' THEN 1 ELSE 0 end as sfzfmimgzcount,
+            (CASE WHEN IFNULL( a.shenfenzhengfujian, '' ) != '' THEN 1 ELSE 0 end + CASE WHEN IFNULL( a.shenfenzhengfanmianfujian, '' ) != '' THEN 1 ELSE 0 end ) as SFZcount,
+            b.ajr_head_portrait as ruzhiimg,
+            CASE WHEN IFNULL( b.ajr_head_portrait, '' ) != '' THEN 1 ELSE 0 end AS RZcount,
+            c.ajj_front_photo_address as jszzmimg,
+            c.ajj_attached_photos as jszfmimg,
+            CASE WHEN IFNULL( c.ajj_front_photo_address, '' ) != '' THEN 1 ELSE 0 end as jszzmimgcount,
+            CASE WHEN IFNULL( c.ajj_attached_photos, '' ) != '' THEN 1 ELSE 0 end as jszfmimgcount,
+            (CASE WHEN IFNULL( c.ajj_front_photo_address, '' ) != '' THEN 1 ELSE 0 end + CASE WHEN IFNULL( c.ajj_attached_photos, '' ) != '' THEN 1 ELSE 0 end ) as JSZcount,
+            d.ajc_licence as cyzimg,
+            CASE WHEN IFNULL( d.ajc_licence, '' ) != '' THEN 1 ELSE 0 end AS CYZcount,
+            e.ajt_enclosure as tjimg,
+            CASE WHEN IFNULL( e.ajt_enclosure, '' ) != '' THEN 1 ELSE 0 end AS TJcount,
+            f.ajg_training_enclosure as gqimg,
+            CASE WHEN IFNULL( f.ajg_training_enclosure, '' ) != '' THEN 1 ELSE 0 end AS GQPXcount,
+            g.ajw_enclosure as wzzmimg,
+            CASE WHEN IFNULL( g.ajw_enclosure, '' ) != '' THEN 1 ELSE 0 end AS WZZMcount,
+            h.ajt_enclosure as qtimg,
+            CASE WHEN IFNULL( h.ajt_enclosure, '' ) != '' THEN 1 ELSE 0 end AS QTcount
+        FROM
+            `anbiao_jiashiyuan` a
+                LEFT JOIN anbiao_jiashiyuan_ruzhi b on b.ajr_aj_ids = a.id and b.ajr_delete=0
+                LEFT JOIN anbiao_jiashiyuan_jiashizheng c on c.ajj_aj_ids = a.id and c.ajj_delete=0
+                LEFT JOIN anbiao_jiashiyuan_congyezigezheng d on d.ajc_aj_ids = a.id and d.ajc_delete=0
+                LEFT JOIN anbiao_jiashiyuan_tijian e on e.ajt_aj_ids = a.id and e.ajt_delete=0
+                LEFT JOIN anbiao_jiashiyuan_gangqianpeixun f on f.ajg_aj_ids = a.id and f.ajg_delete=0
+                LEFT JOIN anbiao_jiashiyuan_wuzezhengming g on g.ajw_aj_ids = a.id and g.ajw_delete=0
+                LEFT JOIN anbiao_jiashiyuan_qita h on h.ajt_aj_ids =a.id and h.ajt_delete=0
+        where
+            a.isdelete=0
+        <if test="deptId !=null and deptId != ''">
+            and a.dept_id=#{deptId}
+        </if>
+        <if test="jiashiyuanxingming !=null and jiashiyuanxingming != ''">
+            and a.jiashiyuanxingming=#{jiashiyuanxingming}
+        </if>
+    </select>
+
 </mapper>

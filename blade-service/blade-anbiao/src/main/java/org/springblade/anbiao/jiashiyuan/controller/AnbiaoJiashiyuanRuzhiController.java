@@ -112,12 +112,14 @@ public class AnbiaoJiashiyuanRuzhiController {
 				ruzhi.setAjrCreateByName(ruzhi.getAjrCreateByName());
 				ruzhi.setAjrCreateByIds(ruzhi.getAjrCreateByIds());
 			}
-			//通过身份证获取年龄
-			Integer age = IdCardUtil.getAgeByCard(ruzhi.getAjrIdNumber());
-			ruzhi.setAjrAge(age);
-			//通过身份证获取生日日期
-			Date chushengshijian = IdCardUtil.getBirthDate(ruzhi.getAjrIdNumber());
-			ruzhi.setAjrBirth(dateFormat2.format(chushengshijian));
+			if (StringUtils.isNotBlank(ruzhi.getAjrIdNumber()) && !ruzhi.getAjrIdNumber().equals("null")) {
+				//通过身份证获取年龄
+				Integer age = IdCardUtil.getAgeByCard(ruzhi.getAjrIdNumber());
+				ruzhi.setAjrAge(age);
+				//通过身份证获取生日日期
+				Date chushengshijian = IdCardUtil.getBirthDate(ruzhi.getAjrIdNumber());
+				ruzhi.setAjrBirth(dateFormat2.format(chushengshijian));
+			}
 			ruzhi.setAjrApproverTime(DateUtil.now());
 			ruzhi.setAjrCreateTime(DateUtil.now());
 			ruzhi.setAjrDelete("0");
@@ -131,6 +133,16 @@ public class AnbiaoJiashiyuanRuzhiController {
 				ruzhi.setAjrUpdateByName(ruzhi.getAjrUpdateByName());
 				ruzhi.setAjrUpdateByIds(ruzhi.getAjrUpdateByIds());
 			}
+
+			if (StringUtils.isNotBlank(ruzhi.getAjrIdNumber()) && !ruzhi.getAjrIdNumber().equals("null")) {
+				//通过身份证获取年龄
+				Integer age = IdCardUtil.getAgeByCard(ruzhi.getAjrIdNumber());
+				ruzhi.setAjrAge(age);
+				//通过身份证获取生日日期
+				Date chushengshijian = IdCardUtil.getBirthDate(ruzhi.getAjrIdNumber());
+				ruzhi.setAjrBirth(dateFormat2.format(chushengshijian));
+			}
+
 			ruzhi.setAjrUpdateTime(DateUtil.now());
 			ruzhiService.updateById(ruzhi);
 

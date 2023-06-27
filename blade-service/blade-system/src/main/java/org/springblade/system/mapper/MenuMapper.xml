@@ -41,7 +41,7 @@
     </sql>
 
     <select id="selectAllList"  resultMap="menuResultMap">
-        select * from blade_menu where is_deleted = 0 and  type=#{type}
+        select * from blade_menu where is_deleted = 0 and type=#{type}
         <if test="code != null and code!=''"  >
             and code like #{code}
         </if>

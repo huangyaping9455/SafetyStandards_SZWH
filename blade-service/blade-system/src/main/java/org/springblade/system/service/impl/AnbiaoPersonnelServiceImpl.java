@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springblade.anbiao.guanlijigouherenyuan.page.PersonnelPage;
 import org.springblade.anbiao.guanlijigouherenyuan.vo.PersonnelVO;
 import org.springblade.system.entity.AnbiaoPersonnel;
+import org.springblade.system.entity.AnbiaoVehicleImg;
 import org.springblade.system.mapper.AnbiaoPersonnelMapper;
 import org.springblade.system.service.IAnbiaoPersonnelService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -49,6 +50,11 @@ public class AnbiaoPersonnelServiceImpl extends ServiceImpl<AnbiaoPersonnelMappe
 			List<PersonnelVO> vehlist = mapper.selectPageList(Page);
 			return (PersonnelPage<PersonnelVO>) Page.setRecords(vehlist);
 		}
+	}
+
+	@Override
+	public List<AnbiaoPersonnel> getByPostImgAll(String postId, String xingming) {
+		return mapper.getByPostImgAll(postId,xingming);
 	}
 
 }

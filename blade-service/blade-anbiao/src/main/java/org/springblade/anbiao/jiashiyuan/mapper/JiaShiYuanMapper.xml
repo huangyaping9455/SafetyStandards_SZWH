@@ -53,7 +53,7 @@ values
         b.cheliangpaizhao as cheliangpaizhao,
 --         case when IFNULL(b.cheliangpaizhao,'') = '' then (SELECT v.cheliangpaizhao from anbiao_vehicle as v where v.is_deleted = 0 and v.jiashiyuanid = a.id and cheliangpaizhao not like '%挂%' limit 1) else b.cheliangpaizhao end as cheliangpaizhao,
 --         case when IFNULL(c.cheliangpaizhao,'') = '' then (SELECT v.cheliangpaizhao from anbiao_vehicle as v where v.is_deleted = 0 and v.jiashiyuanid = a.id and cheliangpaizhao like '%挂%' limit 1) else c.cheliangpaizhao end as cheliangpaizhaoguache,
-        d.ajr_create_time as sijiruzhiriqi,
+        case when IFNULL(a.pingyongriqi,'') = '' then a.createtime end  as sijiruzhiriqi,
         e.ajw_start_date as laodonghetongkaishiriqi,
         e.ajw_end_date as laodonghetongjieshuriqi,
         case when IFNULL(e.ajw_end_date,'') = '' then '0天'
@@ -937,6 +937,9 @@ values
         LEFT JOIN anbiao_jiashiyuan_laodonghetong i ON a.id = i.ajw_aj_ids AND i.ajw_delete = 0
         LEFT JOIN (
         SELECT xsz_compeleted,ysz_compeleted,xnbg_compeleted,o.jiashiyuanid as jiashiyuanid,djzs_compeleted,cheliangpaizhao,j.id as id FROM anbiao_vehicle j
+        inner join  (
+        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) bb on j.dept_id = bb.id
         LEFT JOIN anbiao_vehicle_xingshizheng k on j.id = k.avx_av_ids
         LEFT JOIN anbiao_vehicle_daoluyunshuzheng l on j.id = l.avd_av_ids
         LEFT JOIN anbiao_vehicle_xingnengbaogao m on j.id = m.avx_av_ids
@@ -951,6 +954,9 @@ values
         ) j on a.id = j.jiashiyuanid
         LEFT JOIN (
         SELECT xsz_compeleted,ysz_compeleted,xnbg_compeleted,o.jiashiyuanid as jiashiyuanid,djzs_compeleted,cheliangpaizhao,j.id as id FROM anbiao_vehicle j
+        inner join  (
+        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) bb on j.dept_id = bb.id
         LEFT JOIN anbiao_vehicle_xingshizheng k on j.id = k.avx_av_ids
         LEFT JOIN anbiao_vehicle_daoluyunshuzheng l on j.id = l.avd_av_ids
         LEFT JOIN anbiao_vehicle_xingnengbaogao m on j.id = m.avx_av_ids
@@ -1402,15 +1408,15 @@ values
         IFNULL( k.avd_enclosure2, '' ) AS avdEnclosure2GUA
         FROM
         `anbiao_jiashiyuan` a
+        INNER JOIN (
+        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) h ON h.id = a.dept_id
         LEFT JOIN anbiao_jiashiyuan_ruzhi b ON b.ajr_aj_ids = a.id and b.ajr_delete=0
         LEFT JOIN anbiao_jiashiyuan_jiashizheng c ON c.ajj_aj_ids = a.id and c.ajj_delete=0
         LEFT JOIN anbiao_jiashiyuan_congyezigezheng d ON d.ajc_aj_ids = a.id and d.ajc_delete=0
         LEFT JOIN anbiao_jiashiyuan_tijian e ON e.ajt_aj_ids = a.id and e.ajt_delete=0
         LEFT JOIN anbiao_jiashiyuan_gangqianpeixun f ON f.ajg_aj_ids = a.id and f.ajg_delete=0
         LEFT JOIN anbiao_jiashiyuan_wuzezhengming g ON g.ajw_aj_ids = a.id and g.ajw_delete=0
-        INNER JOIN (
-        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
-        ) h ON h.id = a.dept_id
         LEFT JOIN anbiao_jiashiyuan_anquanzerenshu i ON i.aja_aj_ids = a.id and i.aja_delete=0
         LEFT JOIN anbiao_jiashiyuan_weihaigaozhishu j ON j.ajw_aj_ids = a.id and j.ajw_delete=0
         LEFT JOIN (

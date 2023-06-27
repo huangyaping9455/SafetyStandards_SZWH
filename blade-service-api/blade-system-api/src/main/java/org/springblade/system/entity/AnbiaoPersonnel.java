@@ -1,5 +1,6 @@
 package org.springblade.system.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.time.LocalDateTime;
@@ -13,7 +14,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author lmh
@@ -67,9 +68,9 @@ public class AnbiaoPersonnel implements Serializable {
 
     private LocalDateTime createtime;
 
-    private Integer deptId;
+    private String deptId;
 
-    private Integer postId;
+    private String postId;
 
     @ApiModelProperty(value = "身份证附件正面")
     private String shenfenzhengfujian;
@@ -83,5 +84,55 @@ public class AnbiaoPersonnel implements Serializable {
     @ApiModelProperty(value = "其他附件反面")
     private String qitafanmianfujian;
 
+	@ApiModelProperty(value = "身份证正面附件count")
+	@TableField(exist = false)
+	private Integer SFZZMcount=0;
+
+	@ApiModelProperty(value = "身份证反面附件count")
+	@TableField(exist = false)
+	private Integer SFZFMcount=0;
+
+	@ApiModelProperty(value = "其他正面附件count")
+	@TableField(exist = false)
+	private Integer QTZMcount=0;
+
+	@ApiModelProperty(value = "其他反面附件count")
+	@TableField(exist = false)
+	private Integer QTFMcount=0;
+
+	@ApiModelProperty(value = "是否统计")
+	@TableField(exist = false)
+	private Integer isCount=0;
+
+	@ApiModelProperty(value = "节点id")
+	@TableField(exist = false)
+	private String nodeId;
+
+	@ApiModelProperty(value = "count")
+	@TableField(exist = false)
+	private Integer count;
+
+	@TableField(exist = false)
+	private String jigouleixing;
+
+	@ApiModelProperty(value = "deptName")
+	@TableField(exist = false)
+	private String deptName;
+
+	@ApiModelProperty(value = "附件")
+	@TableField(exist = false)
+	private String attachments;
+
+	@ApiModelProperty(value = "表id")
+	@TableField(exist = false)
+	private String tableId;
+
+	@ApiModelProperty(value = "是否分配")
+	@TableField(exist = false)
+	private Integer isDistribution=0;
+
+	@ApiModelProperty(value = "showBotton")
+	@TableField(exist = false)
+	private Boolean showBotton;
 
 }

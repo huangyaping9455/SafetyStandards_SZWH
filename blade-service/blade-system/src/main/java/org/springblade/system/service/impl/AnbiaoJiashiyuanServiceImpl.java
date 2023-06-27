@@ -10,6 +10,8 @@ import org.springblade.system.service.IAnbiaoJiashiyuanService;
 import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 驾驶员信息表 服务实现类
@@ -96,7 +98,7 @@ public class AnbiaoJiashiyuanServiceImpl extends ServiceImpl<AnbiaoJiashiyuanMap
 					driverImg.setCyzimg(driverImg.getCyzimg());
 				}
 				count += 1;
-				driverImg.setCyzcount(1);
+//				driverImg.setCyzcount(1);
 			}
 			if (StringUtils.isNotEmpty(driverImg.getTjimg()) && driverImg.getTjimg() != null) {
 				if (!driverImg.getTjimg().contains("http")) {
@@ -105,7 +107,7 @@ public class AnbiaoJiashiyuanServiceImpl extends ServiceImpl<AnbiaoJiashiyuanMap
 					driverImg.setTjimg(driverImg.getTjimg());
 				}
 				count += 1;
-				driverImg.setTjcount(1);
+//				driverImg.setTjcount(1);
 			}
 			if (StringUtils.isNotEmpty(driverImg.getGqimg()) && driverImg.getGqimg() != null) {
 				if (!driverImg.getGqimg().contains("http")) {
@@ -137,6 +139,11 @@ public class AnbiaoJiashiyuanServiceImpl extends ServiceImpl<AnbiaoJiashiyuanMap
 			driverImg.setCount(count);
 		}
 		return driverImg;
+	}
+
+	@Override
+	public List<AnbiaoDriverImg> getByDriverImgAll(String jiashiyuanxingming,String deptId) {
+		return baseMapper.getByDriverImgAll(jiashiyuanxingming,deptId);
 	}
 
 }

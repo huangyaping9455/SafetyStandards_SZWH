@@ -105,4 +105,31 @@
         </if>
     </sql>
 
+    <select id="getByPostImgAll" resultType="org.springblade.system.entity.AnbiaoPersonnel" parameterType="java.lang.String">
+        SELECT
+        id,
+        dept_id,
+        xingming,
+        post_id,
+        shenfenzhengfujian,
+        CASE WHEN IFNULL( shenfenzhengfujian, '' ) != '' THEN 1 ELSE 0 end AS SFZZMcount,
+        shenfenzhengfanmianfujian,
+        CASE WHEN IFNULL( shenfenzhengfanmianfujian, '' ) != '' THEN 1 ELSE 0 end AS SFZFMcount,
+        qitazhengmianfujian,
+        CASE WHEN IFNULL( qitazhengmianfujian, '' ) != '' THEN 1 ELSE 0 end AS QTZMcount,
+        qitafanmianfujian,
+        CASE WHEN IFNULL( qitazhengmianfujian, '' ) != '' THEN 1 ELSE 0 end AS QTFMcount
+
+        FROM
+        anbiao_personnel
+        WHERE
+        is_deleted = 0
+        <if test="postId !=null and postId != ''">
+            and post_id=#{postId}
+        </if>
+        <if test="xingming !=null and xingming != ''">
+            and xingming=#{xingming}
+        </if>
+    </select>
+
 </mapper>

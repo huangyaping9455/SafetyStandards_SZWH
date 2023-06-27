@@ -379,5 +379,38 @@ public class AnbiaoJiashiyuan implements Serializable {
 	@TableField(exist = false)
 	private String nodeId;
 
+	@ApiModelProperty(value = "身份证数量")
+	@TableField(exist = false)
+	private String SFZcount;
+
+	@ApiModelProperty(value = "入职表数量")
+	@TableField(exist = false)
+	private String RZcount;
+
+	@ApiModelProperty(value = "驾驶证数量")
+	@TableField(exist = false)
+	private String JSZcount;
+
+	@ApiModelProperty(value = "从业证数量")
+	@TableField(exist = false)
+	private String CYZcount;
+
+	@ApiModelProperty(value = "体检数量")
+	@TableField(exist = false)
+	private String TJcount;
+
+	@ApiModelProperty(value = "岗前培训数量")
+	@TableField(exist = false)
+	private String GQPXcount;
+
+	@ApiModelProperty(value = "无责证明数量")
+	@TableField(exist = false)
+	private String WZZMcount;
+
+	@ApiModelProperty(value = "其他数量")
+	@TableField(exist = false)
+	private String QTcount;
+
+
 
 }

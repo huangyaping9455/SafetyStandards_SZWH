@@ -388,7 +388,8 @@ public class JiaShiYuanController {
 		JiaShiYuan jiaShiYuan1 = jiaShiYuan;
 		//新增
 		if (deail == null) {
-			if((!jiaShiYuan.getType().equals("2"))) {
+//			if((!jiaShiYuan.getType().equals("2")))
+				if((jiaShiYuan.getType()==null)){
 				//验证手机号码
 				if (StringUtils.isBlank(jiaShiYuan.getShoujihaoma())) {
 					r.setMsg("手机号码不能为空;");
@@ -450,7 +451,7 @@ public class JiaShiYuanController {
 					}
 					ruzhi.setAjrCreateByName(jiaShiYuan.getCaozuoren());
 					ruzhi.setAjrCreateByIds(jiaShiYuan.getCaozuorenid().toString());
-					ruzhi.setAjrCreateTime(jiaShiYuan.getCaozuoshijian());
+					ruzhi.setAjrCreateTime(jiaShiYuan.getCreatetime());
 					ruzhi.setAjrDelete("0");
 					ruzhi.setAjrAjIds(jiaShiYuan.getId());
 					ruzhi.setAjrName(jiaShiYuan.getJiashiyuanxingming());
@@ -626,6 +627,33 @@ public class JiaShiYuanController {
 			}
 		} else {
 			jiaShiYuan.setId(deail.getId());
+
+			//入职表身份证
+			QueryWrapper<AnbiaoJiashiyuanRuzhi> ruzhiQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanRuzhi>();
+			ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrAjIds, jiaShiYuan.getId());
+			ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrDelete, "0");
+			AnbiaoJiashiyuanRuzhi ruzhideail = ruzhiService.getBaseMapper().selectOne(ruzhiQueryWrapper);
+			if (StringUtils.isNotBlank(jiaShiYuan.getShenfenzhenghao()) && !jiaShiYuan.getShenfenzhenghao().equals("null")){
+				ruzhideail.setAjrIdNumber(jiaShiYuan.getShenfenzhenghao());
+				//通过身份证获取年龄
+				Integer age = IdCardUtil.getAgeByCard(jiaShiYuan.getShenfenzhenghao());
+				ruzhideail.setAjrAge(age);
+				//通过身份证获取生日日期
+				Date chushengshijian = IdCardUtil.getBirthDate(jiaShiYuan.getShenfenzhenghao());
+				ruzhideail.setAjrBirth(dateFormat2.format(chushengshijian));
+				ruzhiService.updateById(ruzhideail);
+			}
+
+			//驾驶证号
+			QueryWrapper<AnbiaoJiashiyuanJiashizheng> jiashizhengQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanJiashizheng>();
+			jiashizhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanJiashizheng::getAjjAjIds, jiaShiYuan.getId());
+			jiashizhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanJiashizheng::getAjjDelete, "0");
+			AnbiaoJiashiyuanJiashizheng jszdeail = jiashizhengService.getBaseMapper().selectOne(jiashizhengQueryWrapper);
+			if (StringUtils.isNotBlank(jiaShiYuan.getShenfenzhenghao()) && !jiaShiYuan.getShenfenzhenghao().equals("null")){
+				jszdeail.setAjjFileNo(jiaShiYuan.getShenfenzhenghao());
+				jiashizhengService.updateById(jszdeail);
+			}
+
 
 			//身份证有效期风险
 			AnbiaoRiskDetailInfo anbiaoRiskDetailInfo = new AnbiaoRiskDetailInfo();
@@ -1666,6 +1694,7 @@ public class JiaShiYuanController {
 						} else {
 							driver.setMsg(laodonghetongkaishiriqi + ",该劳动合同开始日期,不是时间格式;");
 							errorStr += laodonghetongkaishiriqi + ",该劳动合同开始日期,不是时间格式;";
+							laodonghetongkaishiriqi="";
 							driver.setImportUrl("icon_cha.png");
 							bb++;
 						}
@@ -1673,6 +1702,7 @@ public class JiaShiYuanController {
 				} else {
 					driver.setMsg(laodonghetongkaishiriqi + ",该劳动合同开始日期,不是时间格式;");
 					errorStr += laodonghetongkaishiriqi + ",该劳动合同开始日期,不是时间格式;";
+					laodonghetongkaishiriqi="";
 					driver.setImportUrl("icon_cha.png");
 					bb++;
 				}
@@ -1690,6 +1720,7 @@ public class JiaShiYuanController {
 						} else {
 							driver.setMsg(laodonghetongjieshuriqi + ",该劳动合同结束日期,不是时间格式;");
 							errorStr += laodonghetongjieshuriqi + ",该劳动合同结束日期,不是时间格式;";
+							laodonghetongjieshuriqi="";
 							driver.setImportUrl("icon_cha.png");
 							bb++;
 						}
@@ -1697,6 +1728,7 @@ public class JiaShiYuanController {
 				} else {
 					driver.setMsg(laodonghetongjieshuriqi + ",该劳动合同结束日期,不是时间格式;");
 					errorStr += laodonghetongjieshuriqi + ",该劳动合同结束日期,不是时间格式;";
+					laodonghetongjieshuriqi="";
 					driver.setImportUrl("icon_cha.png");
 					bb++;
 				}
@@ -1779,6 +1811,7 @@ public class JiaShiYuanController {
 						} else {
 							driver.setMsg(shenfenzhengchulingriqi + ",该身份证初领日期,不是时间格式;");
 							errorStr += shenfenzhengchulingriqi + ",该身份证初领日期,不是时间格式;";
+							shenfenzhengchulingriqi="";
 							driver.setImportUrl("icon_cha.png");
 							bb++;
 						}
@@ -1786,6 +1819,7 @@ public class JiaShiYuanController {
 				} else {
 					driver.setMsg(shenfenzhengchulingriqi + ",该身份证初领日期,不是时间格式;");
 					errorStr += shenfenzhengchulingriqi + ",该身份证初领日期,不是时间格式;";
+					shenfenzhengchulingriqi="";
 					driver.setImportUrl("icon_cha.png");
 					bb++;
 				}
@@ -1804,6 +1838,7 @@ public class JiaShiYuanController {
 							} else {
 								driver.setMsg(shenfenzhengyouxiaoqi + ",该身份证有效期,不是时间格式;");
 								errorStr += shenfenzhengyouxiaoqi + ",该身份证有效期,不是时间格式;";
+								shenfenzhengyouxiaoqi="";
 								driver.setImportUrl("icon_cha.png");
 								bb++;
 							}
@@ -1815,6 +1850,7 @@ public class JiaShiYuanController {
 				} else {
 					driver.setMsg(shenfenzhengyouxiaoqi + ",该身份证有效期,不是时间格式;");
 					errorStr += shenfenzhengyouxiaoqi + ",该身份证有效期,不是时间格式;";
+					shenfenzhengyouxiaoqi="";
 					driver.setImportUrl("icon_cha.png");
 					bb++;
 				}
@@ -1890,6 +1926,7 @@ public class JiaShiYuanController {
 						} else {
 							driver.setMsg(jiashizhengchulingriqi + ",该驾驶证开始日期,不是时间格式;");
 							errorStr += jiashizhengchulingriqi + ",该驾驶证开始日期,不是时间格式;";
+							jiashizhengchulingriqi="";
 							driver.setImportUrl("icon_cha.png");
 							bb++;
 						}
@@ -1897,6 +1934,7 @@ public class JiaShiYuanController {
 				} else {
 					driver.setMsg(jiashizhengchulingriqi + ",该驾驶证开始日期,不是时间格式;");
 					errorStr += jiashizhengchulingriqi + ",该驾驶证开始日期,不是时间格式;";
+					jiashizhengchulingriqi="";
 					driver.setImportUrl("icon_cha.png");
 					bb++;
 				}
@@ -1915,6 +1953,7 @@ public class JiaShiYuanController {
 							} else {
 								driver.setMsg(jiashizhengyouxiaoqi + ",该驾驶证结束日期,不是时间格式;");
 								errorStr += jiashizhengyouxiaoqi + ",该驾驶证结束日期,不是时间格式;";
+								jiashizhengyouxiaoqi="";
 								driver.setImportUrl("icon_cha.png");
 								bb++;
 							}
@@ -1926,6 +1965,7 @@ public class JiaShiYuanController {
 				} else {
 					driver.setMsg(jiashizhengyouxiaoqi + ",该驾驶证结束日期,不是时间格式;");
 					errorStr += jiashizhengyouxiaoqi + ",该驾驶证结束日期,不是时间格式;";
+					jiashizhengyouxiaoqi="";
 					driver.setImportUrl("icon_cha.png");
 					bb++;
 				}
@@ -1985,6 +2025,7 @@ public class JiaShiYuanController {
 						} else {
 							driver.setMsg(congyezhengchulingri + ",该从业资格证：开始日期,不是时间格式;");
 							errorStr += congyezhengchulingri + ",该从业资格证：开始日期,不是时间格式;";
+							congyezhengchulingri="";
 							driver.setImportUrl("icon_cha.png");
 							bb++;
 						}
@@ -1992,6 +2033,7 @@ public class JiaShiYuanController {
 				} else {
 					driver.setMsg(congyezhengchulingri + ",该从业资格证：开始日期,不是时间格式;");
 					errorStr += congyezhengchulingri + ",该从业资格证：开始日期,不是时间格式;";
+					congyezhengchulingri="";
 					driver.setImportUrl("icon_cha.png");
 					bb++;
 				}
@@ -2009,6 +2051,7 @@ public class JiaShiYuanController {
 						} else {
 							driver.setMsg(congyezhengyouxiaoqi + ",该从业资格证：结束日期,不是时间格式;");
 							errorStr += congyezhengyouxiaoqi + ",该从业资格证：结束日期,不是时间格式;";
+							congyezhengyouxiaoqi="";
 							driver.setImportUrl("icon_cha.png");
 							bb++;
 						}
@@ -2016,6 +2059,7 @@ public class JiaShiYuanController {
 				} else {
 					driver.setMsg(congyezhengyouxiaoqi + ",该从业资格证：结束日期,不是时间格式;");
 					errorStr += congyezhengyouxiaoqi + ",该从业资格证：结束日期,不是时间格式;";
+					congyezhengyouxiaoqi="";
 					driver.setImportUrl("icon_cha.png");
 					bb++;
 				}
@@ -2267,6 +2311,8 @@ public class JiaShiYuanController {
 			}
 			if (StringUtils.isNotBlank(String.valueOf(a.get("pingyongriqi")).trim()) && !String.valueOf(a.get("pingyongriqi")).equals("null")) {
 				driver.setPingyongriqi(String.valueOf(a.get("pingyongriqi")).trim());
+			}else {
+				driver.setPingyongriqi(DateUtil.now());
 			}
 			if (StringUtils.isNotBlank(String.valueOf(a.get("laodonghetongkaishiriqi")).trim()) && !String.valueOf(a.get("laodonghetongkaishiriqi")).equals("null")) {
 				driver.setLaodonghetongkaishiriqi(String.valueOf(a.get("laodonghetongkaishiriqi")).trim());
@@ -2821,6 +2867,7 @@ public class JiaShiYuanController {
 			for (int i = 0; i < JiaShiYuanTJMXList.size(); i++) {
 				JiaShiYuanTJMX t = JiaShiYuanTJMXList.get(i);
 				JiaShiYuanTJMX JiaShiYuanTJMX = new JiaShiYuanTJMX();
+				JiaShiYuanTJMX.setJiashiyuanId(t.getJiashiyuanId());
 				JiaShiYuanTJMX.setXuhao(index);
 				JiaShiYuanTJMX.setDeptName(t.getDeptName());
 				JiaShiYuanTJMX.setA(t.getA());
@@ -5668,13 +5715,13 @@ public class JiaShiYuanController {
 		int sum1 = JiaShiYuanTJMXList.size();
 		int sum2 = jiaShiYuans.size();
 		double percentage = (double) sum1 / sum2;
-		if (percentage==NaN){
+//		if (percentage==NaN){
 			NumberFormat nt = NumberFormat.getPercentInstance();
 			nt.setMinimumFractionDigits(2);
 			format = nt.format(percentage);
-		}else {
-			format="0.00%";
-		}
+//		}else {
+//			format="0.00%";
+//		}
 		driverDataPerfectionVO.setRuzhi(format);
 		DriverDataPerfectionValueVO driverDataPerfectionValueVO = new DriverDataPerfectionValueVO();
 		driverDataPerfectionValueVO.setXiangmu("入职表");
@@ -5691,13 +5738,13 @@ public class JiaShiYuanController {
 		sum1 = JiaShiYuanTJMXList2.size();
 		sum2 = jiaShiYuans.size();
 		percentage = (double) sum1 / sum2;
-		if (percentage==NaN){
-			NumberFormat nt = NumberFormat.getPercentInstance();
-			nt.setMinimumFractionDigits(2);
-			format = nt.format(percentage);
-		}else {
-			format="0.00%";
-		}
+//		if (percentage==NaN){
+			NumberFormat nt2 = NumberFormat.getPercentInstance();
+			nt2.setMinimumFractionDigits(2);
+			format = nt2.format(percentage);
+//		}else {
+//			format="0.00%";
+//		}
 //		nt = NumberFormat.getPercentInstance();
 //		nt.setMinimumFractionDigits(2);
 //		format = nt.format(percentage);
@@ -5722,13 +5769,13 @@ public class JiaShiYuanController {
 		sum1 = JiaShiYuanTJMXList3.size();
 		sum2 = jiaShiYuans.size();
 		percentage = (double) sum1 / sum2;
-		if (percentage==NaN){
-			NumberFormat nt = NumberFormat.getPercentInstance();
-			nt.setMinimumFractionDigits(2);
-			format = nt.format(percentage);
-		}else {
-			format="0.00%";
-		}
+//		if (percentage==NaN){
+			NumberFormat nt3 = NumberFormat.getPercentInstance();
+			nt3.setMinimumFractionDigits(2);
+			format = nt3.format(percentage);
+//		}else {
+//			format="0.00%";
+//		}
 //		fant = NumberFormat.getPercentInstance();
 //		nt.setMinimumFractionDigits(2);
 //		format = nt.format(percentage);
@@ -5751,13 +5798,13 @@ public class JiaShiYuanController {
 		sum1 = JiaShiYuanTJMXList4.size();
 		sum2 = jiaShiYuans.size();
 		percentage = (double) sum1 / sum2;
-		if (percentage==NaN){
-			NumberFormat nt = NumberFormat.getPercentInstance();
-			nt.setMinimumFractionDigits(2);
-			format = nt.format(percentage);
-		}else {
-			format="0.00%";
-		}
+//		if (percentage==NaN){
+			NumberFormat nt4 = NumberFormat.getPercentInstance();
+			nt4.setMinimumFractionDigits(2);
+			format = nt4.format(percentage);
+//		}else {
+//			format="0.00%";
+//		}
 //		nt = NumberFormat.getPercentInstance();
 //		nt.setMinimumFractionDigits(2);
 //		format = nt.format(percentage);
@@ -5780,13 +5827,13 @@ public class JiaShiYuanController {
 		sum1 = JiaShiYuanTJMXList5.size();
 		sum2 = jiaShiYuans.size();
 		percentage = (double) sum1 / sum2;
-		if (percentage==NaN){
-			NumberFormat nt = NumberFormat.getPercentInstance();
-			nt.setMinimumFractionDigits(2);
-			format = nt.format(percentage);
-		}else {
-			format="0.00%";
-		}
+//		if (percentage==NaN){
+			NumberFormat nt5 = NumberFormat.getPercentInstance();
+			nt5.setMinimumFractionDigits(2);
+			format = nt5.format(percentage);
+//		}else {
+//			format="0.00%";
+//		}
 //		nt = NumberFormat.getPercentInstance();
 //		nt.setMinimumFractionDigits(2);
 //		format = nt.format(percentage);
@@ -5809,13 +5856,13 @@ public class JiaShiYuanController {
 		sum1 = JiaShiYuanTJMXList6.size();
 		sum2 = jiaShiYuans.size();
 		percentage = (double) sum1 / sum2;
-		if (percentage==NaN){
-			NumberFormat nt = NumberFormat.getPercentInstance();
-			nt.setMinimumFractionDigits(2);
-			format = nt.format(percentage);
-		}else {
-			format="0.00%";
-		}
+//		if (percentage==NaN){
+			NumberFormat nt6 = NumberFormat.getPercentInstance();
+			nt6.setMinimumFractionDigits(2);
+			format = nt6.format(percentage);
+//		}else {
+//			format="0.00%";
+//		}
 //		nt = NumberFormat.getPercentInstance();
 //		nt.setMinimumFractionDigits(2);
 //		format = nt.format(percentage);
@@ -5838,13 +5885,13 @@ public class JiaShiYuanController {
 		sum1 = JiaShiYuanTJMXList7.size();
 		sum2 = jiaShiYuans.size();
 		percentage = (double) sum1 / sum2;
-		if (percentage==NaN){
-			NumberFormat nt = NumberFormat.getPercentInstance();
-			nt.setMinimumFractionDigits(2);
-			format = nt.format(percentage);
-		}else {
-			format="0.00%";
-		}
+//		if (percentage==NaN){
+			NumberFormat nt7 = NumberFormat.getPercentInstance();
+			nt7.setMinimumFractionDigits(2);
+			format = nt7.format(percentage);
+//		}else {
+//			format="0.00%";
+//		}
 //		nt = NumberFormat.getPercentInstance();
 //		nt.setMinimumFractionDigits(2);
 //		format = nt.format(percentage);
@@ -5867,13 +5914,13 @@ public class JiaShiYuanController {
 		sum1 = JiaShiYuanTJMXList8.size();
 		sum2 = jiaShiYuans.size();
 		percentage = (double) sum1 / sum2;
-		if (percentage==NaN){
-			NumberFormat nt = NumberFormat.getPercentInstance();
-			nt.setMinimumFractionDigits(2);
-			format = nt.format(percentage);
-		}else {
-			format="0.00%";
-		}
+//		if (percentage==NaN){
+			NumberFormat nt8 = NumberFormat.getPercentInstance();
+			nt8.setMinimumFractionDigits(2);
+			format = nt8.format(percentage);
+//		}else {
+//			format="0.00%";
+//		}
 //		nt = NumberFormat.getPercentInstance();
 //		nt.setMinimumFractionDigits(2);
 //		format = nt.format(percentage);
@@ -5896,13 +5943,13 @@ public class JiaShiYuanController {
 		sum1 = JiaShiYuanTJMXList9.size();
 		sum2 = jiaShiYuans.size();
 		percentage = (double) sum1 / sum2;
-		if (percentage==NaN){
-			NumberFormat nt = NumberFormat.getPercentInstance();
-			nt.setMinimumFractionDigits(2);
-			format = nt.format(percentage);
-		}else {
-			format="0.00%";
-		}
+//		if (percentage==NaN){
+			NumberFormat nt9 = NumberFormat.getPercentInstance();
+			nt9.setMinimumFractionDigits(2);
+			format = nt9.format(percentage);
+//		}else {
+//			format="0.00%";
+//		}
 //		nt = NumberFormat.getPercentInstance();
 //		nt.setMinimumFractionDigits(2);
 //		format = nt.format(percentage);
@@ -5925,13 +5972,13 @@ public class JiaShiYuanController {
 		sum1 = JiaShiYuanTJMXList10.size();
 		sum2 = jiaShiYuans.size();
 		percentage = (double) sum1 / sum2;
-		if (percentage==NaN){
-			NumberFormat nt = NumberFormat.getPercentInstance();
-			nt.setMinimumFractionDigits(2);
-			format = nt.format(percentage);
-		}else {
-			format="0.00%";
-		}
+//		if (percentage==NaN){
+			NumberFormat nt10 = NumberFormat.getPercentInstance();
+			nt10.setMinimumFractionDigits(2);
+			format = nt10.format(percentage);
+//		}else {
+//			format="0.00%";
+//		}
 //		nt = NumberFormat.getPercentInstance();
 //		nt.setMinimumFractionDigits(2);
 //		format = nt.format(percentage);

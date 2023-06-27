@@ -133,6 +133,100 @@ public class AnbiaoCarExamineInfoServiceImpl extends ServiceImpl<AnbiaoCarExamin
 	}
 
 	@Override
+	public AnbiaoCarExamineInfoPage<AnbiaoCarExamineInfoVO> selectCarExamineInfoPageTubingend(AnbiaoCarExamineInfoPage anbiaoCarExamineInfoPage) {
+		Integer total = mapper.selectCarExamineInfoTubingendTotal(anbiaoCarExamineInfoPage);
+		if(anbiaoCarExamineInfoPage.getSize()==0){
+			if(anbiaoCarExamineInfoPage.getTotal()==0){
+				anbiaoCarExamineInfoPage.setTotal(total);
+			}
+			List<AnbiaoCarExamineInfoVO> infoList = mapper.selectCarExamineInfoPageTubingend(anbiaoCarExamineInfoPage);
+			if(anbiaoCarExamineInfoPage.getJsyId() != null){
+				infoList.forEach(item-> {
+					if(item.getCheliangpaizhao() == null || item.getChepaiyanse() == null){
+						QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<Vehicle>();
+						vehicleQueryWrapper.lambda().eq(Vehicle::getId, item.getVehid());
+						vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel, 0);
+						Vehicle deail = vehicleMapper.selectOne(vehicleQueryWrapper);
+						if(deail != null){
+							item.setCheliangpaizhao(deail.getCheliangpaizhao());
+							item.setChepaiyanse(deail.getChepaiyanse());
+						}
+					}
+
+					if(item.getGcheliangpaizhao() == null){
+						QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<Vehicle>();
+						vehicleQueryWrapper.lambda().eq(Vehicle::getId, item.getGvehid());
+						vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel, 0);
+						Vehicle deail = vehicleMapper.selectOne(vehicleQueryWrapper);
+						if(deail != null){
+							item.setGcheliangpaizhao(deail.getCheliangpaizhao());
+						}
+					}
+					if(item.getStatusshow() == null){
+						item.setStatusshow("未完成");
+					}
+					if(item.getStatus() == 6){
+						item.setStatusshow("已完成");
+					}
+				});
+			}
+			anbiaoCarExamineInfoPage.setRecords(infoList);
+			return anbiaoCarExamineInfoPage;
+		}
+		Integer pagetotal = 0;
+		if (total > 0) {
+			if(total%anbiaoCarExamineInfoPage.getSize()==0){
+				pagetotal = total / anbiaoCarExamineInfoPage.getSize();
+			}else {
+				pagetotal = total / anbiaoCarExamineInfoPage.getSize() + 1;
+			}
+		}
+		if (pagetotal >= anbiaoCarExamineInfoPage.getCurrent()) {
+			anbiaoCarExamineInfoPage.setPageTotal(pagetotal);
+			Integer offsetNo = 0;
+			if (anbiaoCarExamineInfoPage.getCurrent() > 1) {
+				offsetNo = anbiaoCarExamineInfoPage.getSize() * (anbiaoCarExamineInfoPage.getCurrent() - 1);
+			}
+			anbiaoCarExamineInfoPage.setTotal(total);
+			anbiaoCarExamineInfoPage.setOffsetNo(offsetNo);
+			List<AnbiaoCarExamineInfoVO> infoList = mapper.selectCarExamineInfoPageTubingend(anbiaoCarExamineInfoPage);
+			if(anbiaoCarExamineInfoPage.getJsyId() != null){
+				infoList.forEach(item-> {
+					if(item.getCheliangpaizhao() == null || item.getChepaiyanse() == null){
+						QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<Vehicle>();
+						vehicleQueryWrapper.lambda().eq(Vehicle::getId, item.getVehid());
+						vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel, 0);
+						Vehicle deail = vehicleMapper.selectOne(vehicleQueryWrapper);
+						if(deail != null){
+							item.setCheliangpaizhao(deail.getCheliangpaizhao());
+							item.setChepaiyanse(deail.getChepaiyanse());
+						}
+					}
+
+					if(item.getGcheliangpaizhao() == null){
+						QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<Vehicle>();
+						vehicleQueryWrapper.lambda().eq(Vehicle::getId, item.getGvehid());
+						vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel, 0);
+						Vehicle deail = vehicleMapper.selectOne(vehicleQueryWrapper);
+						if(deail != null){
+							item.setGcheliangpaizhao(deail.getCheliangpaizhao());
+						}
+					}
+
+					if(item.getStatusshow() == null){
+						item.setStatusshow("未完成");
+					}
+					if(item.getStatus() != null && item.getStatus() == 6){
+						item.setStatusshow("已完成");
+					}
+				});
+			}
+			anbiaoCarExamineInfoPage.setRecords(infoList);
+		}
+		return anbiaoCarExamineInfoPage;
+	}
+
+	@Override
 	public List<AnbiaoCarExamineInfoVO> selectAnBiaoCheckCarALLPage(AnBiaoCheckCarPage anbiaoCarExamineInfoPage) {
 		List<AnbiaoCarExamineInfoVO> infoList = mapper.selectAnBiaoCheckCarALLPage(anbiaoCarExamineInfoPage);
 		if(infoList.size()>0){

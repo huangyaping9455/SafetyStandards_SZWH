@@ -4,6 +4,7 @@ import org.springblade.anbiao.guanlijigouherenyuan.page.PersonnelPage;
 import org.springblade.anbiao.guanlijigouherenyuan.vo.PersonnelVO;
 import org.springblade.system.entity.AnbiaoPersonnel;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.springblade.system.entity.AnbiaoVehicleImg;
 
 import java.util.List;
 
@@ -20,5 +21,7 @@ public interface AnbiaoPersonnelMapper extends BaseMapper<AnbiaoPersonnel> {
 	List<PersonnelVO> selectPageList(PersonnelPage Page);
 
 	int selectTotal(PersonnelPage Page);
+
+	List<AnbiaoPersonnel> getByPostImgAll(String postId, String xingming);
 
 }

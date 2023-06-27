@@ -14,6 +14,12 @@ public class AnbiaoVehicleImg implements Serializable {
 	@ApiModelProperty(value = "主键")
 	private String id;
 
+	@ApiModelProperty(value = "企业主键")
+	private String deptId;
+
+	@ApiModelProperty(value = "车辆牌照")
+	private String cheliangpaizhao;
+
 	@ApiModelProperty(value = "行驶证ID")
 	private String xszid;
 
@@ -61,6 +67,21 @@ public class AnbiaoVehicleImg implements Serializable {
 
 	@ApiModelProperty(value = "车辆登记证书影像附件数")
 	private Integer djzimgcount = 0;
+
+	@ApiModelProperty(value = "deptName")
+	private String deptName;
+
+	@ApiModelProperty(value = "表id")
+	private String tableId;
+
+	@ApiModelProperty(value = "是否统计")
+	private Integer isCount=0;
+
+	@ApiModelProperty(value = "节点id")
+	private String nodeId;
+
+	@ApiModelProperty(value = "jigouleixing")
+	private String jigouleixing;
 
 }
 

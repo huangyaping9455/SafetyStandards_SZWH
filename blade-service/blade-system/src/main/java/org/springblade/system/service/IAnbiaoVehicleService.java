@@ -5,6 +5,8 @@ import org.springblade.system.entity.AnbiaoVehicle;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springblade.system.entity.AnbiaoVehicleImg;
 
+import java.util.List;
+
 /**
  * <p>
  * 车辆信息表 服务类
@@ -16,5 +18,7 @@ import org.springblade.system.entity.AnbiaoVehicleImg;
 public interface IAnbiaoVehicleService extends IService<AnbiaoVehicle> {
 
 	AnbiaoVehicleImg getByVehImg(@Param("vehId") String vehId);
+
+	List<AnbiaoVehicleImg> getByVehImgAll(String cheliangpaizhao, String deptId);
 
 }

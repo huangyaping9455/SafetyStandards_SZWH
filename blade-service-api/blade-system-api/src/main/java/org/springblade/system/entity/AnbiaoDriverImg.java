@@ -1,5 +1,6 @@
 package org.springblade.system.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -89,14 +90,14 @@ public class AnbiaoDriverImg implements Serializable {
 	@ApiModelProperty(value = "驾驶证反面影像附件数")
 	private Integer jszfmimgcount = 0;
 
-	@ApiModelProperty(value = "从业资格证影像附件数")
-	private Integer cyzcount = 0;
+//	@ApiModelProperty(value = "从业资格证影像附件数")
+//	private Integer cyzcount = 0;
 
 	@ApiModelProperty(value = "车辆登记证书影像附件数")
 	private Integer djzimgcount = 0;
 
-	@ApiModelProperty(value = "体检表影像附件数")
-	private Integer tjcount = 0;
+//	@ApiModelProperty(value = "体检表影像附件数")
+//	private Integer tjcount = 0;
 
 	@ApiModelProperty(value = "岗前培训影像附件数")
 	private Integer gqimgcount = 0;
@@ -106,6 +107,51 @@ public class AnbiaoDriverImg implements Serializable {
 
 	@ApiModelProperty(value = "其他影像附件数")
 	private Integer qtimgcount = 0;
+
+	@ApiModelProperty(value = "deptName")
+	private String deptName;
+
+	@ApiModelProperty(value = "企业ID")
+	private String deptId;
+
+	@ApiModelProperty(value = "表id")
+	private String tableId;
+
+	@ApiModelProperty(value = "是否统计")
+	private Integer isCount=0;
+
+	@ApiModelProperty(value = "节点id")
+	private String nodeId;
+
+	@ApiModelProperty(value = "驾驶员姓名")
+	private String jiashiyuanxingming;
+
+	@ApiModelProperty(value = "身份证数量")
+	private Integer SFZcount=0;
+
+	@ApiModelProperty(value = "入职表数量")
+	private Integer RZcount=0;
+
+	@ApiModelProperty(value = "驾驶证数量")
+	private Integer JSZcount=0;
+
+	@ApiModelProperty(value = "从业证数量")
+	private Integer CYZcount=0;
+
+	@ApiModelProperty(value = "体检数量")
+	private Integer TJcount=0;
+
+	@ApiModelProperty(value = "岗前培训数量")
+	private Integer GQPXcount=0;
+
+	@ApiModelProperty(value = "无责证明数量")
+	private Integer WZZMcount=0;
+
+	@ApiModelProperty(value = "其他数量")
+	private Integer QTcount=0;
+
+	@ApiModelProperty(value = "jigouleixing")
+	private String jigouleixing;
 
 }
 

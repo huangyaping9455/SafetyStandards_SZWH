@@ -165,4 +165,35 @@
           and a.id = #{vehId}
     </select>
 
+    <select id="getByVehImgAll" resultType="org.springblade.system.entity.AnbiaoVehicleImg" parameterType="java.lang.String">
+        SELECT
+            a.id,
+            a.dept_id as deptId,
+            a.cheliangpaizhao,
+            b.avx_original_enclosure as xszzmimg,
+            CASE WHEN IFNULL( b.avx_original_enclosure, '' ) != '' THEN 1 ELSE 0 end as xszzmcount,
+            b.avx_copy_enclosure as xszfmimg,
+            CASE WHEN IFNULL( b.avx_copy_enclosure, '' ) != '' THEN 1 ELSE 0 end as xszfmcount,
+            c.avd_enclosure as yszimg,
+            CASE WHEN IFNULL( c.avd_enclosure, '' ) != '' THEN 1 ELSE 0 end as yszimgcount,
+            d.avx_enclosure as xnbgimg,
+            CASE WHEN IFNULL( d.avx_enclosure, '' ) != '' THEN 1 ELSE 0 end as xnbgimgcount,
+            e.avd_enclosure as djzimg,
+            CASE WHEN IFNULL( e.avd_enclosure, '' ) != '' THEN 1 ELSE 0 end as djzimgcount
+        FROM
+            anbiao_vehicle a
+                left join anbiao_vehicle_xingshizheng b on a.id = b.avx_av_ids and b.avx_delete = 0
+                left join anbiao_vehicle_daoluyunshuzheng c on a.id = c.avd_av_ids and c.avd_delete = 0
+                left join anbiao_vehicle_xingnengbaogao d on a.id = d.avx_av_ids and d.avx_delete = 0
+                left join anbiao_vehicle_dengjizhengshu e on a.id = e.avd_vehicle_ids and e.avd_delete = 0
+        WHERE
+            a.is_deleted = 0
+        <if test="deptId !=null and deptId != ''">
+            and a.dept_id=#{deptId}
+        </if>
+        <if test="cheliangpaizhao !=null and cheliangpaizhao != ''">
+            and a.cheliangpaizhao=#{cheliangpaizhao}
+        </if>
+    </select>
+
 </mapper>

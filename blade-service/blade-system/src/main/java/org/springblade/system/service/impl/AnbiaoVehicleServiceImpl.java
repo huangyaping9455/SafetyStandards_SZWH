@@ -11,6 +11,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 车辆信息表 服务实现类
@@ -85,5 +87,10 @@ public class AnbiaoVehicleServiceImpl extends ServiceImpl<AnbiaoVehicleMapper, A
 			vehImg.setCount(count);
 		}
 		return vehImg;
+	}
+
+	@Override
+	public List<AnbiaoVehicleImg> getByVehImgAll(String cheliangpaizhao, String deptId) {
+		return vehicleMapper.getByVehImgAll(cheliangpaizhao,deptId);
 	}
 }
