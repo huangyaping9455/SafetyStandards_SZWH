@@ -93,7 +93,7 @@
             anbiao_organization a
             INNER JOIN(
                 <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
-            ) b ON a.dept_id = b.id and a.isdelete = 0 and  b.is_deleted = 0
+            ) b ON a.dept_id = b.id and a.isdelete = 0
         where a.jigouleixing in ('qiye','geti')
     </sql>
 
