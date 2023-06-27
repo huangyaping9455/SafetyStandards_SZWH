@@ -3553,8 +3553,8 @@ public class JiaShiYuanController {
 		gangqianpeixun.setAjgUpdateByName(user.getUserName());
 		gangqianpeixun.setAjgUpdateByIds(user.getUserId().toString());
 		gangqianpeixun.setAjgIds(driverImg.getGqid());
-		if (StringUtils.isNotEmpty(driverImg.getQtimg()) && driverImg.getQtimg() != "null") {
-			gangqianpeixun.setAjgTrainingEnclosure(driverImg.getQtimg());
+		if (StringUtils.isNotEmpty(driverImg.getGqimg()) && driverImg.getGqimg() != "null") {
+			gangqianpeixun.setAjgTrainingEnclosure(driverImg.getGqimg());
 		}
 		AnbiaoJiashiyuanWuzezhengming wuzezhengming = new AnbiaoJiashiyuanWuzezhengming();
 		wuzezhengming.setAjwUpdateTime(DateUtil.now());
