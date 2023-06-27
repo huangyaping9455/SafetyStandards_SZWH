@@ -28,7 +28,7 @@ public interface IVehicleService extends IService<Vehicle> {
      * *@param id
      * @return
      */
-    VehicleVO  selectByKey(String id);
+    VehicleVO selectByKey(String id);
     /**
     * @Description: 根据车辆牌照和车牌颜色获取数据
     * @Param: [cheliangpaizhao, chepaiyanse]

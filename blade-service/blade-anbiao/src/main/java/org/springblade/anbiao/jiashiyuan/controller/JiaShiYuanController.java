@@ -1108,7 +1108,7 @@ public class JiaShiYuanController {
 					r.setMsg("获取成功");
 					return r;
 				} else {
-					r.setCode(500);
+					r.setCode(200);
 					r.setMsg("暂无数据");
 					return r;
 				}
@@ -1137,7 +1137,7 @@ public class JiaShiYuanController {
 					r.setMsg("获取成功");
 					return r;
 				} else {
-					r.setCode(500);
+					r.setCode(200);
 					r.setMsg("暂无数据");
 					return r;
 				}
@@ -1163,7 +1163,7 @@ public class JiaShiYuanController {
 					r.setMsg("获取成功");
 					return r;
 				} else {
-					r.setCode(500);
+					r.setCode(200);
 					r.setMsg("暂无数据");
 					return r;
 				}
@@ -1186,7 +1186,7 @@ public class JiaShiYuanController {
 					r.setMsg("获取成功");
 					return r;
 				} else {
-					r.setCode(500);
+					r.setCode(200);
 					r.setMsg("暂无数据");
 					return r;
 				}
@@ -1209,7 +1209,7 @@ public class JiaShiYuanController {
 					r.setMsg("获取成功");
 					return r;
 				} else {
-					r.setCode(500);
+					r.setCode(200);
 					r.setMsg("暂无数据");
 					return r;
 				}
@@ -1232,7 +1232,7 @@ public class JiaShiYuanController {
 					r.setMsg("获取成功");
 					return r;
 				} else {
-					r.setCode(500);
+					r.setCode(200);
 					r.setMsg("暂无数据");
 					return r;
 				}
@@ -1255,7 +1255,7 @@ public class JiaShiYuanController {
 					r.setMsg("获取成功");
 					return r;
 				} else {
-					r.setCode(500);
+					r.setCode(200);
 					r.setMsg("暂无数据");
 					return r;
 				}
@@ -1284,7 +1284,7 @@ public class JiaShiYuanController {
 					r.setMsg("获取成功");
 					return r;
 				} else {
-					r.setCode(500);
+					r.setCode(200);
 					r.setMsg("暂无数据");
 					return r;
 				}
@@ -1312,7 +1312,7 @@ public class JiaShiYuanController {
 					r.setMsg("获取成功");
 					return r;
 				} else {
-					r.setCode(500);
+					r.setCode(200);
 					r.setMsg("暂无数据");
 					return r;
 				}
@@ -1351,7 +1351,7 @@ public class JiaShiYuanController {
 					r.setMsg("获取成功");
 					return r;
 				} else {
-					r.setCode(500);
+					r.setCode(200);
 					r.setMsg("暂无数据");
 					return r;
 				}
@@ -1375,7 +1375,7 @@ public class JiaShiYuanController {
 					r.setMsg("获取成功");
 					return r;
 				} else {
-					r.setCode(500);
+					r.setCode(200);
 					r.setMsg("暂无数据");
 					return r;
 				}
@@ -1383,7 +1383,7 @@ public class JiaShiYuanController {
 
 		} else {
 			r.setMsg("暂无数据");
-			r.setCode(500);
+			r.setCode(200);
 			return r;
 		}
 		return r;

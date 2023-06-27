@@ -178,10 +178,10 @@ public class VehicleController {
 		v.setJingyingxukezhenghao(detail.getDaoluyunshuzheng());
 		DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		if(StringUtils.isNotBlank(detail.getDaoluyunshuzhengchulingriqi()) && !detail.getDaoluyunshuzhengchulingriqi().equals("null")){
-			v.setJyxkzyouxiaoqiStart(LocalDate.parse(detail.getDaoluyunshuzhengchulingriqi(), fmt));
+			v.setJyxkzyouxiaoqiStart(LocalDate.parse(detail.getDaoluyunshuzhengchulingriqi().substring(0,10), fmt));
 		}
 		if(StringUtils.isNotBlank(detail.getDaoluyunshuzhengyouxiaoqi()) && !detail.getDaoluyunshuzhengyouxiaoqi().equals("null")){
-			v.setJyxkzyouxiaoqiEnd(LocalDate.parse(detail.getDaoluyunshuzhengyouxiaoqi(), fmt));
+			v.setJyxkzyouxiaoqiEnd(LocalDate.parse(detail.getDaoluyunshuzhengyouxiaoqi().substring(0,10), fmt));
 		}
 		v.setJingjileixing(detail.getJingjileixing());
 		v.setJingyingzuzhifangshi(detail.getJingyingzuzhifangshi());

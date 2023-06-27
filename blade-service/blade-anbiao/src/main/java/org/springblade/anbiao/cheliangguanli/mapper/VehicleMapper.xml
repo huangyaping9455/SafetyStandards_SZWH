@@ -114,7 +114,7 @@
 
 
     <select id="selectByKey" resultMap="vehicleVOResultMap" parameterType="java.lang.String">
-        select  a.*, b.dept_name as deptName from  anbiao_vehicle a
+        select a.*, b.dept_name as deptName from anbiao_vehicle a
             inner join blade_dept b
                 on a.dept_id = b.id
             where a.id=#{id}
