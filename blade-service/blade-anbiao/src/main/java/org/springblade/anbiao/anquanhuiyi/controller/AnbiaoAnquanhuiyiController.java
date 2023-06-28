@@ -758,6 +758,7 @@ public class AnbiaoAnquanhuiyiController {
 				for (AnbiaoAnquanhuiyiDetail detail : details) {
 					QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
 					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getJiashiyuanxingming,detail.getAadApName());
+					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId,detail.getAadApIds());
 					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,"0");
 					JiaShiYuan jiaShiYuan = iJiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
 					if (jiaShiYuan!=null){

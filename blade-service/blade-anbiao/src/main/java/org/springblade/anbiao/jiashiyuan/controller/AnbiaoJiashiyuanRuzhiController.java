@@ -104,6 +104,23 @@ public class AnbiaoJiashiyuanRuzhiController {
 			}
 		}
 
+		//验证入职日期
+		if (ruzhi.getAjrEntryTime() != null) {
+			if (ruzhi.getAjrEntryTime().length() >= 10) {
+				String s1 = ruzhi.getAjrEntryTime().substring(0, 10);
+				if (StringUtils.isNotBlank(s1) && !s1.equals("null")) {
+					if (DateUtils.isDateString(s1, null) == true) {
+						ruzhi.setAjrEntryTime(s1);
+					} else {
+						r.setMsg(ruzhi.getAjrEntryTime() + ",该入职日期，不是时间格式；");
+						r.setCode(500);
+						r.setSuccess(false);
+						return r;
+					}
+				}
+			}
+		}
+
 		if(deail == null){
 			if(user != null){
 				ruzhi.setAjrCreateByName(user.getUserName());
@@ -156,8 +173,11 @@ public class AnbiaoJiashiyuanRuzhiController {
 			if (jiaShiYuan != null){
 				if (StringUtils.isNotBlank(ruzhi.getAjrIdNumber()) && !ruzhi.getAjrIdNumber().equals("null")){
 					jiaShiYuan.setShenfenzhenghao(ruzhi.getAjrIdNumber());
-					iJiaShiYuanService.getBaseMapper().updateById(jiaShiYuan);
 				}
+				if (StringUtils.isNotBlank(ruzhi.getAjrEntryTime()) && !ruzhi.getAjrEntryTime().equals("null")){
+					jiaShiYuan.setPingyongriqi(ruzhi.getAjrEntryTime());
+				}
+				iJiaShiYuanService.getBaseMapper().updateById(jiaShiYuan);
 			}
 
 			QueryWrapper<AnbiaoJiashiyuanJiashizheng> jiashizhengQueryWrapper = new QueryWrapper<>();

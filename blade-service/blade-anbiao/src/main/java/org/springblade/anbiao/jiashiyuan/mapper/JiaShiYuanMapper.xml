@@ -53,7 +53,7 @@ values
         b.cheliangpaizhao as cheliangpaizhao,
 --         case when IFNULL(b.cheliangpaizhao,'') = '' then (SELECT v.cheliangpaizhao from anbiao_vehicle as v where v.is_deleted = 0 and v.jiashiyuanid = a.id and cheliangpaizhao not like '%挂%' limit 1) else b.cheliangpaizhao end as cheliangpaizhao,
 --         case when IFNULL(c.cheliangpaizhao,'') = '' then (SELECT v.cheliangpaizhao from anbiao_vehicle as v where v.is_deleted = 0 and v.jiashiyuanid = a.id and cheliangpaizhao like '%挂%' limit 1) else c.cheliangpaizhao end as cheliangpaizhaoguache,
-        case when IFNULL(a.pingyongriqi,'') = '' then a.createtime end  as sijiruzhiriqi,
+        case when IFNULL(a.pingyongriqi,'') = '' then LEFT(a.createtime,10) else a.pingyongriqi end as sijiruzhiriqi,
         e.ajw_start_date as laodonghetongkaishiriqi,
         e.ajw_end_date as laodonghetongjieshuriqi,
         case when IFNULL(e.ajw_end_date,'') = '' then '0天'
@@ -507,7 +507,10 @@ values
             </if>
 
             <if test="caozuorenid != null and caozuorenid != '' ">
-                caozuorenid
+                caozuorenid,
+            </if>
+            <if test="pingyongriqi != null and pingyongriqi != '' ">
+                pingyongriqi
             </if>
 
         </trim>
@@ -634,7 +637,10 @@ values
             </if>
 
             <if test="caozuorenid != null and caozuorenid != '' ">
-                #{caozuorenid}
+                #{caozuorenid},
+            </if>
+            <if test="pingyongriqi != null and pingyongriqi != '' ">
+                #{pingyongriqi}
             </if>
 
         </trim>
