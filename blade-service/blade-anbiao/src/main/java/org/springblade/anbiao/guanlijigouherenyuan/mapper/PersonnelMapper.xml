@@ -67,7 +67,7 @@
             renyuan.phone,
             renyuan.birthday,
             renyuan.sex,
-            (select jigouleixing from anbiao_organization where dept_id = a.dept_id and isdelete = 0) as jigouleixing
+            (select jigouleixing from anbiao_organization where dept_id = a.dept_id and isdelete = 0 limit 1) as jigouleixing
         FROM
             anbiao_personnel a
             INNER JOIN blade_post b ON a.userid=b.user_id
