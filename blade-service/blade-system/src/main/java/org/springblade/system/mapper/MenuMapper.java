@@ -62,7 +62,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
 	 * @param roleId
 	 * @return
 	 */
-	List<MenuVO> grantTreeByPost(List<Integer> roleId);
+	List<MenuVO> grantTreeByPost(@Param("type") String type,@Param("list") List<Integer> roleId);
 
 	/**
 	 * 所有菜单

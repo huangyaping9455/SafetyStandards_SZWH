@@ -101,7 +101,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 	@Override
 	public List<MenuVO> grantTree(BladeUser user,String type) {
 		String postId=user.getRoleName();
-		return ForestNodeMerger.merge(user.getTenantCode().equals(BladeConstant.ADMIN_TENANT_CODE) ? baseMapper.grantTree(type) : baseMapper.grantTreeByPost(Func.toIntList(postId)));
+		return ForestNodeMerger.merge(user.getTenantCode().equals(BladeConstant.ADMIN_TENANT_CODE) ? baseMapper.grantTree(type) : baseMapper.grantTreeByPost(type,Func.toIntList(postId)));
 	}
 
 	@Override
