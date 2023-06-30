@@ -2633,7 +2633,7 @@ public class SynchronousCrontab {
 	//每6小时执行一次
 	@Scheduled(cron = "0 0 */6 * * ?")
 	//每天凌晨5点执行一次
-//	@Scheduled(cron = "0 35 11 * * ?")
+//	@Scheduled(cron = "0 36 15 * * ?")
 	public void configureTasks_static_data() {
 		synchronized (KEY) {
 			if (SynchronousCrontab.taskFlag) {

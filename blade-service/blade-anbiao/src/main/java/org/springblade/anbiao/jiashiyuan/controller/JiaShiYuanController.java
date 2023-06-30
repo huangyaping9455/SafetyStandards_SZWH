@@ -2317,7 +2317,7 @@ public class JiaShiYuanController {
 			if (StringUtils.isNotBlank(String.valueOf(a.get("pingyongriqi")).trim()) && !String.valueOf(a.get("pingyongriqi")).equals("null")) {
 				driver.setPingyongriqi(String.valueOf(a.get("pingyongriqi")).trim());
 			}else {
-				driver.setPingyongriqi(DateUtil.now());
+				driver.setPingyongriqi(DateUtil.now().substring(0,10));
 			}
 			if (StringUtils.isNotBlank(String.valueOf(a.get("laodonghetongkaishiriqi")).trim()) && !String.valueOf(a.get("laodonghetongkaishiriqi")).equals("null")) {
 				driver.setLaodonghetongkaishiriqi(String.valueOf(a.get("laodonghetongkaishiriqi")).trim());
