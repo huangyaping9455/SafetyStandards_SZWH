@@ -75,7 +75,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements IP
 			PostMenu postMenu = new PostMenu();
 			postMenu.setPostId(Integer.parseInt(postId));
 			postMenu.setMenuId(Integer.parseInt(menuId));
-			postMenu.setType(0);
+			postMenu.setType(Integer.parseInt(type));
 			postMenus.add(postMenu);
 		}));
 		// 新增配置

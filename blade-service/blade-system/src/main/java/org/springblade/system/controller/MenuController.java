@@ -128,8 +128,11 @@ public class MenuController extends BladeController {
 	 */
 	@GetMapping("/tree")
 	@ApiOperation(value = "树形结构", notes = "树形结构", position = 5)
-	public R<List<MenuVO>> tree() {
-		List<MenuVO> tree = menuService.tree();
+	public R<List<MenuVO>> tree(String type) {
+		if(StringUtils.isEmpty(type)) {
+			type = "0";
+		}
+		List<MenuVO> tree = menuService.tree(type);
 		return R.data(tree);
 	}
 

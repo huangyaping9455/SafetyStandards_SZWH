@@ -48,7 +48,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
 	 *
 	 * @return
 	 */
-	List<MenuVO> tree();
+	List<MenuVO> tree(String type);
 
 	/**
 	 * 授权树形结构
