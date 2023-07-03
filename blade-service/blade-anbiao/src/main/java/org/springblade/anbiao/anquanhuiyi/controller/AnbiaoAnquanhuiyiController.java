@@ -1049,6 +1049,13 @@ public class AnbiaoAnquanhuiyiController {
 			rs.setData(0);
 			return rs;
 		}
+		if(Integer.parseInt(res.get("error_code").toString()) == 222202){
+			rs.setCode(500);
+			rs.setMsg("请上传正确的头像与参会照片（需包含人脸）");
+			rs.setSuccess(false);
+			rs.setData(0);
+			return rs;
+		}
 		res = res.getJSONObject("result");
 		try {
 			if(res != null){
