@@ -188,7 +188,7 @@ public class AnbiaoJiashiyuanJiashizhengController {
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper2 = new QueryWrapper<>();
 			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue, jiashizheng.getAjjAjIds());
 			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdIsRectification, "0");
-			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdTitle, "驾驶证有效截止日期");
+			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdTitle, "驾驶证有效期");
 			List<AnbiaoRiskDetail> anbiaoRiskDetails = riskDetailService.getBaseMapper().selectList(riskDetailQueryWrapper2);
 			for (AnbiaoRiskDetail riskDetail2 :
 				anbiaoRiskDetails) {
@@ -197,7 +197,7 @@ public class AnbiaoJiashiyuanJiashizhengController {
 					riskDetail2.setArdRectificationByIds(user.getUserId().toString());
 					riskDetail2.setArdRectificationByName(user.getUserName());
 					riskDetail2.setArdRectificationDate(DateUtil.now());
-					riskDetail2.setArdModularName("驾驶证有效截止日期");
+					riskDetail2.setArdModularName("驾驶证有效期");
 					riskDetail2.setArdRectificationField("jiashizhengyouxiaoqi");
 					riskDetail2.setArdRectificationValue(jiashizheng.getAjjValidPeriodEnd());
 					riskDetail2.setArdRectificationFieldType("String");

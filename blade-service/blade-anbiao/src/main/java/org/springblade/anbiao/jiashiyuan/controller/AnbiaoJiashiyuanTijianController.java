@@ -177,7 +177,7 @@ public class AnbiaoJiashiyuanTijianController {
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper4 = new QueryWrapper<>();
 			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,tijian.getAjtAjIds());
 			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
-			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdTitle,"体检有效截止日期");
+			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdTitle,"体检有效期");
 			List<AnbiaoRiskDetail> anbiaoRiskDetails = riskDetailService.getBaseMapper().selectList(riskDetailQueryWrapper4);
 			for (AnbiaoRiskDetail riskDetail4 : anbiaoRiskDetails) {
 				if (riskDetail4 != null && StringUtils.isNotBlank(tijian.getAjtTermValidity()) && !tijian.getAjtTermValidity().equals("null")) {
@@ -185,7 +185,7 @@ public class AnbiaoJiashiyuanTijianController {
 					riskDetail4.setArdRectificationByIds(user.getUserId().toString());
 					riskDetail4.setArdRectificationByName(user.getUserName());
 					riskDetail4.setArdRectificationDate(DateUtil.now());
-					riskDetail4.setArdModularName("体检有效截止日期");
+					riskDetail4.setArdModularName("体检有效期");
 					riskDetail4.setArdRectificationField("tijianriqi");
 					riskDetail4.setArdRectificationValue(tijian.getAjtPhysicalExaminationDate());
 					riskDetail4.setArdRectificationFieldType("String");

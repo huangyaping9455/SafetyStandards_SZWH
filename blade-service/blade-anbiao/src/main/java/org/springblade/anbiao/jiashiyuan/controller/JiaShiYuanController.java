@@ -632,6 +632,8 @@ public class JiaShiYuanController {
 
 			Boolean i=true;
 
+			i = iJiaShiYuanService.updateById(jiaShiYuan);
+
 			QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper2 = new QueryWrapper<JiaShiYuan>();
 			jiaShiYuanQueryWrapper2.lambda().eq(JiaShiYuan::getId,jiaShiYuan.getId());
 			jiaShiYuanQueryWrapper2.lambda().eq(JiaShiYuan::getIsdelete, 0);
@@ -645,8 +647,8 @@ public class JiaShiYuanController {
 			ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrDelete, "0");
 			AnbiaoJiashiyuanRuzhi rzdeail = ruzhiService.getBaseMapper().selectOne(ruzhiQueryWrapper);
 			if (rzdeail == null) {
-				if (StringUtils.isNotBlank(jiaShiYuan.getJialing()) && !jiaShiYuan.getJialing().equals("null")) {
-					ruzhi.setAjrDrivingExperience(Integer.parseInt(jiaShiYuan.getJialing()));
+				if (StringUtils.isNotBlank(deail.getJialing()) && !deail.getJialing().equals("null")) {
+					ruzhi.setAjrDrivingExperience(Integer.parseInt(deail.getJialing()));
 				}
 				ruzhi.setAjrCreateByName(jiaShiYuan.getCaozuoren());
 				ruzhi.setAjrCreateByIds(jiaShiYuan.getCaozuorenid().toString());
@@ -845,7 +847,7 @@ public class JiaShiYuanController {
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds, jiaShiYuan.getDeptId());
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue, jiaShiYuan.getId());
 			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification, "0");
-			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle, "身份证有效截止日期");
+			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle, "身份证有效期");
 			List<AnbiaoRiskDetail> anbiaoRiskDetails = riskDetailService.getBaseMapper().selectList(riskDetailQueryWrapper);
 			for (AnbiaoRiskDetail riskDetail :
 				anbiaoRiskDetails) {
@@ -854,7 +856,7 @@ public class JiaShiYuanController {
 					riskDetail.setArdRectificationByIds(user.getUserId().toString());
 					riskDetail.setArdRectificationByName(user.getUserName());
 					riskDetail.setArdRectificationDate(DateUtil.now());
-					riskDetail.setArdModularName("身份证有效截止日期");
+					riskDetail.setArdModularName("身份证有效期");
 					riskDetail.setArdRectificationField("shenfenzhengyouxiaoqi");
 					riskDetail.setArdRectificationValue(jiaShiYuan1.getShenfenzhengyouxiaoqi());
 					riskDetail.setArdRectificationFieldType("String");
@@ -880,7 +882,7 @@ public class JiaShiYuanController {
 			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdDeptIds, jiaShiYuan.getDeptId());
 			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue, jiaShiYuan.getId());
 			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdIsRectification, "0");
-			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdTitle, "驾驶证有效截止日期");
+			riskDetailQueryWrapper2.lambda().eq(AnbiaoRiskDetail::getArdTitle, "驾驶证有效期");
 			List<AnbiaoRiskDetail> anbiaoRiskDetails2 = riskDetailService.getBaseMapper().selectList(riskDetailQueryWrapper2);
 			for (AnbiaoRiskDetail riskDetail2 : anbiaoRiskDetails2) {
 				if (riskDetail2 != null && StringUtils.isNotBlank(jiaShiYuan1.getJiashizhengyouxiaoqi()) && !jiaShiYuan1.getJiashizhengyouxiaoqi().equals("null")) {
@@ -888,7 +890,7 @@ public class JiaShiYuanController {
 					riskDetail2.setArdRectificationByIds(user.getUserId().toString());
 					riskDetail2.setArdRectificationByName(user.getUserName());
 					riskDetail2.setArdRectificationDate(DateUtil.now());
-					riskDetail2.setArdModularName("驾驶证有效截止日期");
+					riskDetail2.setArdModularName("驾驶证有效期");
 					riskDetail2.setArdRectificationField("jiashizhengyouxiaoqi");
 					riskDetail2.setArdRectificationValue(jiaShiYuan1.getJiashizhengyouxiaoqi());
 					riskDetail2.setArdRectificationFieldType("String");
@@ -914,7 +916,7 @@ public class JiaShiYuanController {
 			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdDeptIds, jiaShiYuan.getDeptId());
 			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue, jiaShiYuan.getId());
 			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdIsRectification, "0");
-			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdTitle, "从业资格证有效截止日期");
+			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdTitle, "从业资格证有效期");
 			List<AnbiaoRiskDetail> anbiaoRiskDetails3 = riskDetailService.getBaseMapper().selectList(riskDetailQueryWrapper3);
 			for (AnbiaoRiskDetail riskDetail3 :
 				anbiaoRiskDetails3) {
@@ -923,7 +925,7 @@ public class JiaShiYuanController {
 					riskDetail3.setArdRectificationByIds(user.getUserId().toString());
 					riskDetail3.setArdRectificationByName(user.getUserName());
 					riskDetail3.setArdRectificationDate(DateUtil.now());
-					riskDetail3.setArdModularName("从业资格证有效截止日期");
+					riskDetail3.setArdModularName("从业资格证有效期");
 					riskDetail3.setArdRectificationField("congyezhengyouxiaoqi");
 					riskDetail3.setArdRectificationValue(jiaShiYuan1.getCongyezhengyouxiaoqi());
 					riskDetail3.setArdRectificationFieldType("String");
@@ -949,7 +951,7 @@ public class JiaShiYuanController {
 			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdDeptIds, jiaShiYuan.getDeptId());
 			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue, jiaShiYuan.getId());
 			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdIsRectification, "0");
-			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdTitle, "体检有效截止日期");
+			riskDetailQueryWrapper4.lambda().eq(AnbiaoRiskDetail::getArdTitle, "体检有效期");
 			List<AnbiaoRiskDetail> anbiaoRiskDetails4 = riskDetailService.getBaseMapper().selectList(riskDetailQueryWrapper4);
 			for (AnbiaoRiskDetail riskDetail4 : anbiaoRiskDetails4) {
 				if (riskDetail4 != null && StringUtils.isNotBlank(jiaShiYuan1.getTijianyouxiaoqi()) && !jiaShiYuan1.getTijianyouxiaoqi().equals("null")) {
@@ -957,7 +959,7 @@ public class JiaShiYuanController {
 					riskDetail4.setArdRectificationByIds(user.getUserId().toString());
 					riskDetail4.setArdRectificationByName(user.getUserName());
 					riskDetail4.setArdRectificationDate(DateUtil.now());
-					riskDetail4.setArdModularName("体检有效截止日期");
+					riskDetail4.setArdModularName("体检有效期");
 					riskDetail4.setArdRectificationField("tijianyouxiaoqi");
 					riskDetail4.setArdRectificationValue(jiaShiYuan1.getTijianyouxiaoqi());
 					riskDetail4.setArdRectificationFieldType("String");
@@ -976,28 +978,28 @@ public class JiaShiYuanController {
 				}
 			}
 
-			//验证身份证
-			if (StringUtils.isNotEmpty(jiaShiYuan.getShenfenzhenghao()) && jiaShiYuan.getShenfenzhenghao() != null) {
-				if (IdCardUtil.isValidCard(jiaShiYuan.getShenfenzhenghao()) == true) {
-					jiaShiYuan.setShenfenzhenghao(jiaShiYuan.getShenfenzhenghao());
-					jiaShiYuan.setShenfenzhenghao(jiaShiYuan.getShenfenzhenghao());
-					//通过身份证获取年龄
-					Integer age = IdCardUtil.getAgeByCard(jiaShiYuan.getShenfenzhenghao());
-					jiaShiYuan.setNianling(age.toString());
-					//通过身份证获取生日日期
-					Date chushengshijian = IdCardUtil.getBirthDate(jiaShiYuan.getShenfenzhenghao());
-					jiaShiYuan.setChushengshijian(dateFormat2.format(chushengshijian));
-					jiaShiYuan.setXingbie(Integer.toString(IdCardUtil.getGender(jiaShiYuan.getShenfenzhenghao())));
-				} else {
-					r.setMsg(jiaShiYuan.getShenfenzhenghao() + "该驾驶员身份证号不合法");
-					r.setCode(500);
-					r.setSuccess(false);
-					return r;
-				}
-			}
+//			//验证身份证
+//			if (StringUtils.isNotEmpty(jiaShiYuan.getShenfenzhenghao()) && jiaShiYuan.getShenfenzhenghao() != null) {
+//				if (IdCardUtil.isValidCard(jiaShiYuan.getShenfenzhenghao()) == true) {
+//					jiaShiYuan.setShenfenzhenghao(jiaShiYuan.getShenfenzhenghao());
+//					jiaShiYuan.setShenfenzhenghao(jiaShiYuan.getShenfenzhenghao());
+//					//通过身份证获取年龄
+//					Integer age = IdCardUtil.getAgeByCard(jiaShiYuan.getShenfenzhenghao());
+//					jiaShiYuan.setNianling(age.toString());
+//					//通过身份证获取生日日期
+//					Date chushengshijian = IdCardUtil.getBirthDate(jiaShiYuan.getShenfenzhenghao());
+//					jiaShiYuan.setChushengshijian(dateFormat2.format(chushengshijian));
+//					jiaShiYuan.setXingbie(Integer.toString(IdCardUtil.getGender(jiaShiYuan.getShenfenzhenghao())));
+//				} else {
+//					r.setMsg(jiaShiYuan.getShenfenzhenghao() + "该驾驶员身份证号不合法");
+//					r.setCode(500);
+//					r.setSuccess(false);
+//					return r;
+//				}
+//			}
 
 
-			 i = iJiaShiYuanService.updateById(jiaShiYuan);
+//			 i = iJiaShiYuanService.updateById(jiaShiYuan);
 
 			String jiashiyuanId = jiaShiYuan.getId();
 			riskDetailController.jiashiyuanShenFenZhengRiskinsert(jiashiyuanId, user);

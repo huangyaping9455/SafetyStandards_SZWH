@@ -183,7 +183,7 @@ public class AnbiaoJiashiyuanCongyezigezhengController {
 			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper3 = new QueryWrapper<>();
 			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,congyezigezheng.getAjcAjIds());
 			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
-			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdTitle,"从业资格证有效截止日期");
+			riskDetailQueryWrapper3.lambda().eq(AnbiaoRiskDetail::getArdTitle,"从业资格证有效期");
 			List<AnbiaoRiskDetail> anbiaoRiskDetails = riskDetailService.getBaseMapper().selectList(riskDetailQueryWrapper3);
 			for (AnbiaoRiskDetail riskDetail3 : anbiaoRiskDetails) {
 				if (riskDetail3 != null && StringUtils.isNotBlank(congyezigezheng.getAjcValidUntil()) && !congyezigezheng.getAjcValidUntil().equals("null")) {
@@ -191,7 +191,7 @@ public class AnbiaoJiashiyuanCongyezigezhengController {
 					riskDetail3.setArdRectificationByIds(user.getUserId().toString());
 					riskDetail3.setArdRectificationByName(user.getUserName());
 					riskDetail3.setArdRectificationDate(DateUtil.now());
-					riskDetail3.setArdModularName("从业资格证有效截止日期");
+					riskDetail3.setArdModularName("从业资格证有效期");
 					riskDetail3.setArdRectificationField("congyezhengyouxiaoqi");
 					riskDetail3.setArdRectificationValue(congyezigezheng.getAjcValidUntil());
 					riskDetail3.setArdRectificationFieldType("String");
