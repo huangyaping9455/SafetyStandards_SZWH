@@ -59,7 +59,12 @@ public class VehicleDengjizhengshu implements Serializable {
      * 登记日期
      */
     @ApiModelProperty(value = "登记日期")
-    private LocalDate avdTechnicalDate;
+    private String avdTechnicalDate;
+	/**
+	 * 登记日期
+	 */
+	@ApiModelProperty(value = "到期时间")
+	private String avdUntilDate;
     /**
      * 登记证书附件
      */
