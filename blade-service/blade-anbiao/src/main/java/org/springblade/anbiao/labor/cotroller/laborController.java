@@ -307,12 +307,18 @@ public class laborController {
 	@GetMapping("/goExport_Excel")
 	@ApiLog("劳保信息-导出")
 	@ApiOperation(value = "劳保信息-导出", notes = "传入laborledgerPage", position = 22)
-	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String Id, BladeUser user,String deptId) throws IOException {
+	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String Id, BladeUser user,String deptId, String date) throws IOException {
 		int a=1;
 		R rs = new R();
 		List<String> urlList = new ArrayList<>();
 		laborledgerPage laborledgerPage = new laborledgerPage();
-		laborledgerPage.setAliIds(Id);
+		if (StringUtils.isNotBlank(Id) && !Id.equals("null")) {
+			laborledgerPage.setAliIds(Id);
+		}
+		if (StringUtils.isNotBlank(date) && !date.equals("null") && StringUtils.isNotBlank(deptId) && !deptId.equals("null")) {
+			laborledgerPage.setDate(date);
+			laborledgerPage.setDeptId(deptId);
+		}
 //		laborledgerPage.setDeptId(deptId);
 //		laborledgerPage.setDate(date);
 		// TODO 渲染其他类型的数据请参考官方文档
@@ -321,7 +327,12 @@ public class laborController {
 		//word模板地址
 		String templatePath =fileServer.getPathPrefix()+"muban\\"+"Labor.xlsx";
 		String [] nyr= DateUtil.today().split("-");
-		String[] idsss = laborledgerPage.getAliIds().split(",");
+		String[] idsss={};
+		if (StringUtils.isNotBlank(Id) && !Id.equals("null")) {
+			idsss = laborledgerPage.getAliIds().split(",");
+		}else if (StringUtils.isNotBlank(date) && !date.equals("null") && StringUtils.isNotBlank(deptId) && !deptId.equals("null")){
+			idsss = laborledgerPage.getDeptId().split(",");
+		}
 		//去除素组中重复的数组
 		List<String> listid = new ArrayList<String>();
 		for (int i=0; i<idsss.length; i++) {
@@ -335,7 +346,11 @@ public class laborController {
 			laborledgerPage.setDeptName("");
 			laborledgerPage.setSize(0);
 			laborledgerPage.setCurrent(0);
-			laborledgerPage.setAliIds(idss[j]);
+			if (StringUtils.isNotBlank(Id) && !Id.equals("null")) {
+				laborledgerPage.setAliIds(idss[j]);
+			}else if (StringUtils.isNotBlank(date) && !date.equals("null") && StringUtils.isNotBlank(deptId) && !deptId.equals("null")){
+				laborledgerPage.setDeptId(idss[j]);
+			}
 			service.selectLedgerList(laborledgerPage);
 			List<LaborledgerVO> LaborledgerVOS = laborledgerPage.getRecords();
 			//Excel中的结果集ListData

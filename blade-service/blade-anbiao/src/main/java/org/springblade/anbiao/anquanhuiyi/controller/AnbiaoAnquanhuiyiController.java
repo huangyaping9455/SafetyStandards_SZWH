@@ -566,7 +566,7 @@ public class AnbiaoAnquanhuiyiController {
 			anQuanHuiYiPage.setSize(0);
 			anQuanHuiYiPage.setCurrent(0);
 			anQuanHuiYiPage.setDeptId(idss[j]);
-			anQuanHuiYiPage.setId(Id);
+//			anQuanHuiYiPage.setId(Id);
 			anquanhuiyiService.selectGetAll(anQuanHuiYiPage);
 			List<AnbiaoAnquanhuiyi> anbiaoAnquanhuiyiList = anQuanHuiYiPage.getRecords();
 			//Excel中的结果集ListData

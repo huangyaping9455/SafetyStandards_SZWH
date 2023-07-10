@@ -18,19 +18,24 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.util.TextUtils;
 import org.apache.tools.zip.ZipOutputStream;
+import org.springblade.anbiao.AccidentReports.controller.AccidentReportsController;
+import org.springblade.anbiao.anquanhuiyi.controller.AnbiaoAnquanhuiyiController;
 import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.service.*;
+import org.springblade.anbiao.chuchejiancha.controller.AnbiaoCarExamineInfoController;
 import org.springblade.anbiao.configure.service.IConfigureService;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IBladeDeptService;
 import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.service.*;
 import org.springblade.anbiao.jiashiyuan.vo.*;
+import org.springblade.anbiao.labor.cotroller.laborController;
 import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetailInfo;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailInfoService;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
+import org.springblade.anbiao.weixiucheliang.controller.MaintenanceController;
 import org.springblade.common.configurationBean.AlarmServer;
 import org.springblade.common.configurationBean.FileServer;
 import org.springblade.common.constant.CommonConstant;
@@ -107,7 +112,11 @@ public class JiaShiYuanController {
 	private AnbiaoRiskDetailController riskDetailController;
 	@Autowired
 	private AnbiaoCheliangJiashiyuanDailyController jiashiyuanDailyController;
-
+	private MaintenanceController maintenanceController;
+	private AccidentReportsController accidentReportsController;
+	private laborController laborController;
+	private AnbiaoAnquanhuiyiController anbiaoAnquanhuiyiController;
+	private AnbiaoCarExamineInfoController anbiaoCarExamineInfoController;
 
 	@PostMapping("/insert")
 	@ApiLog("新增-驾驶员资料管理")
@@ -6354,5 +6363,20 @@ public class JiaShiYuanController {
 		rs.setData(JiaShiYuanTJMXList);
 		return JiaShiYuanTJMXList;
 	}
+
+
+	@GetMapping("/goExport_one_click")
+	@ApiOperation(value = "一键导出台账", notes = "一键导出台账", position = 28)
+	public R goExport_one_click(String deptId , String date) throws Exception {
+		R r = new R();
+		maintenanceController.goExport_HiddenDanger_Excel(null,null,deptId,date,null);
+		accidentReportsController.goExport_HiddenDanger_Excel(null,null,null,deptId,date,null);
+		laborController.goExport_HiddenDanger_Excel(null,null,null,null,deptId,date);
+		anbiaoAnquanhuiyiController.goExport_HiddenDanger_Excel(null,null,null,deptId,date,null);
+		anbiaoCarExamineInfoController.goExport_ExamineInfo_Excel(null,null,deptId,null,null,date,date,null);
+
+		return r;
+	}
+
 
 }
