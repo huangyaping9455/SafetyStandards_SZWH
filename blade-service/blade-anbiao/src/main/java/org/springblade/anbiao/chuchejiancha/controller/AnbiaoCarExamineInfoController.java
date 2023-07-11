@@ -948,6 +948,7 @@ public class AnbiaoCarExamineInfoController {
 					map.put("year", year);
 					String month = String.valueOf(calendar.get(Calendar.MONTH) + 1);
 					map.put("month", month);
+					map.put("deptName",t.getDeptName());
 
 					List<AnbiaoCarExamineInfoTZVO> tt = examineInfoList.get(i).getExamineInfoTZVOList();
 					Class c1 = Class.forName("org.springblade.anbiao.chuchejiancha.entity.CarExamineTJMX");
