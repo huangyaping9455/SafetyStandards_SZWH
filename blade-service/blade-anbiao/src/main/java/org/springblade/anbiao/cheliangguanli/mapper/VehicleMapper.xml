@@ -210,6 +210,7 @@
     <sql id="tableSql">
 	 SELECT
         a.id,
+        a.dept_id as deptId,
         cc.dept_name deptName,
         cheliangpaizhao ,
         chepaiyanse ,

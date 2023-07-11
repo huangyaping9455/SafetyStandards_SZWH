@@ -111,4 +111,7 @@ public class AnbiaoHiddenDanger implements Serializable {
     @ApiModelProperty(value = "审核时间")
     private String ahdAuditTime;
 
+	@ApiModelProperty(value = "排查地点")
+	private String ahdPlace;
+
 }

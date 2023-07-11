@@ -12,6 +12,9 @@ public class VehicleListVO {
 	@ApiModelProperty(value = "车辆id")
 	private String id;
 
+	@ApiModelProperty(value = "企业ID")
+	private String deptId;
+
 	@ApiModelProperty(value = "企业名称")
 	private String deptName;
 

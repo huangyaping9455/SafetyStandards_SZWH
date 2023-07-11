@@ -1719,7 +1719,7 @@ public class OrganizationsController extends BladeController {
 					dengjizhengshuQueryWrapper.lambda().eq(VehicleDengjizhengshu::getAvdVehicleIds, imageFuJian.getTableId());
 					dengjizhengshuQueryWrapper.lambda().eq(VehicleDengjizhengshu::getAvdDelete, "0");
 					VehicleDengjizhengshu vdjz = dengjizhengshuService.getBaseMapper().selectOne(dengjizhengshuQueryWrapper);
-					vdjz.setAvdUpdateTime(LocalDateTime.now());
+					vdjz.setAvdUpdateTime(DateUtil.now());
 					vdjz.setAvdUpdateByName(user.getUserName());
 					vdjz.setAvdUpdateByIds(user.getUserId().toString());
 					vdjz.setAvdEnclosure(imageFuJian.getAttachments());

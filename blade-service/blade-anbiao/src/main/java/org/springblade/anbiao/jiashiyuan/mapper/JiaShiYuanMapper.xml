@@ -46,6 +46,7 @@ values
         SELECT
         DISTINCT
         a.id,
+        a.dept_id as deptId,
         bb.dept_name deptName ,
         jiashiyuanxingming ,
         case when xingbie = 1 then '男' else '女' end as xingbie,

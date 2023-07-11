@@ -15,6 +15,7 @@
  */
 package org.springblade.anbiao.cheliangguanli.controller;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
@@ -154,7 +155,7 @@ public class VehicleDengjizhengshuController extends BladeController {
 			VehicleDengjizhengshu baoxian = new VehicleDengjizhengshu();
 			baoxian.setAvdIds(id);
 			baoxian.setAvdDelete("1");
-			baoxian.setAvdUpdateTime(LocalDateTime.now());
+			baoxian.setAvdUpdateTime(DateUtil.now());
 			deptBaoxians.add(baoxian);
 		}
 		return R.status(vehicleDengjizhengshuService.updateBatchById(deptBaoxians));

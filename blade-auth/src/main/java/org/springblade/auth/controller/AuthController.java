@@ -225,7 +225,7 @@ public class AuthController {
 				info.setUserId(user.getId().toString());
 				info.setPostName(sysClient.getDept(Integer.parseInt(user.getPostId())).getDeptName());
 				//根据单位id获取企业基本信息
-				Organizations organization=orrganizationsClient.selectByDeptId(dept.getId().toString());
+				Organizations organization=orrganizationsClient.selectByDeptIdInfo(dept.getId().toString());
 				if(organization!=null){
 					//获取配置logo
 					if(StrUtil.isNotEmpty(organization.getLogoPhoto())){

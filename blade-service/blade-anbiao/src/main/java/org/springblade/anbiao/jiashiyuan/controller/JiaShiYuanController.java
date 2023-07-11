@@ -2870,7 +2870,7 @@ public class JiaShiYuanController {
 					dengjizhengshu.setAvdDelete("0");
 					dengjizhengshu.setAvdCreateByName(user.getUserName());
 					dengjizhengshu.setAvdCreateByIds(user.getUserId().toString());
-					dengjizhengshu.setAvdCreateTime(LocalDateTime.now());
+					dengjizhengshu.setAvdCreateTime(DateUtil.now());
 					dengjizhengshuService.save(dengjizhengshu);
 
 					VehicleJingyingxukezheng jingyingxukezheng = new VehicleJingyingxukezheng();        //经营许可证
@@ -2978,7 +2978,7 @@ public class JiaShiYuanController {
 					dengjizhengshu.setAvdDelete("0");
 					dengjizhengshu.setAvdCreateByName(user.getUserName());
 					dengjizhengshu.setAvdCreateByIds(user.getUserId().toString());
-					dengjizhengshu.setAvdCreateTime(LocalDateTime.now());
+					dengjizhengshu.setAvdCreateTime(DateUtil.now());
 					dengjizhengshuService.save(dengjizhengshu);
 
 					VehicleJingyingxukezheng jingyingxukezheng = new VehicleJingyingxukezheng();        //经营许可证

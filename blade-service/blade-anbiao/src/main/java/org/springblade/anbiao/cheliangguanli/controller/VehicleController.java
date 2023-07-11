@@ -430,7 +430,7 @@ public class VehicleController {
 					dengjizhengshu.setAvdDelete("0");
 					dengjizhengshu.setAvdCreateByName(user.getUserName());
 					dengjizhengshu.setAvdCreateByIds(user.getUserId().toString());
-					dengjizhengshu.setAvdCreateTime(LocalDateTime.now());
+					dengjizhengshu.setAvdCreateTime(DateUtil.now());
 					dengjizhengshuService.save(dengjizhengshu);
 
 					VehicleJingyingxukezheng jingyingxukezheng = new VehicleJingyingxukezheng();		//经营许可证
@@ -848,6 +848,7 @@ public class VehicleController {
 				dlysz.setAvdCreateByName(user.getUserName());
 				dlysz.setAvdCreateByIds(user.getUserId().toString());
 				dlysz.setAvdCreateTime(DateUtil.now());
+				dlysz.setAvdUpdateTime(DateUtil.now());
 			}
 
 			if(daoluyunshuzhengService.saveOrUpdate(dlysz)) {
@@ -929,11 +930,11 @@ public class VehicleController {
 				djzs.setAvdIds(dengjizhengshu.getAvdIds());
 				djzs.setAvdUpdateByName(user.getUserName());
 				djzs.setAvdUpdateByIds(user.getUserId().toString());
-				djzs.setAvdUpdateTime(LocalDateTime.now());
+				djzs.setAvdUpdateTime(DateUtil.now());
 			} else {
 				djzs.setAvdCreateByName(user.getUserName());
 				djzs.setAvdCreateByIds(user.getUserId().toString());
-				djzs.setAvdCreateTime(LocalDateTime.now());
+				djzs.setAvdCreateTime(DateUtil.now());
 			}
 			if(dengjizhengshuService.saveOrUpdate(djzs)) {
 				stringBuilder.append("更新登记证书成功！"+"\r\n");
@@ -2322,7 +2323,7 @@ public class VehicleController {
 						dengjizhengshu.setAvdDelete("0");
 						dengjizhengshu.setAvdCreateByName(user.getUserName());
 						dengjizhengshu.setAvdCreateByIds(user.getUserId().toString());
-						dengjizhengshu.setAvdCreateTime(LocalDateTime.now());
+						dengjizhengshu.setAvdCreateTime(DateUtil.now());
 						QueryWrapper<VehicleDengjizhengshu> dengjizhengshuQueryWrapper = new QueryWrapper<>();
 						dengjizhengshuQueryWrapper.lambda().eq(VehicleDengjizhengshu::getAvdVehicleIds,dengjizhengshu.getAvdVehicleIds());
 						dengjizhengshuQueryWrapper.lambda().eq(VehicleDengjizhengshu::getAvdDelete,0);
@@ -3601,7 +3602,7 @@ public class VehicleController {
 						dengjizhengshu.setAvdDelete("0");
 						dengjizhengshu.setAvdCreateByName(user.getUserName());
 						dengjizhengshu.setAvdCreateByIds(user.getUserId().toString());
-						dengjizhengshu.setAvdCreateTime(LocalDateTime.now());
+						dengjizhengshu.setAvdCreateTime(DateUtil.now());
 						QueryWrapper<VehicleDengjizhengshu> dengjizhengshuQueryWrapper = new QueryWrapper<>();
 						dengjizhengshuQueryWrapper.lambda().eq(VehicleDengjizhengshu::getAvdVehicleIds,dengjizhengshu.getAvdVehicleIds());
 						dengjizhengshuQueryWrapper.lambda().eq(VehicleDengjizhengshu::getAvdDelete,0);
@@ -4020,7 +4021,7 @@ public class VehicleController {
 			vxnbg.setAvxEnclosure(vehicleImg.getXnbgimg());
 		}
 		VehicleDengjizhengshu vdjz = new VehicleDengjizhengshu();
-		vdjz.setAvdUpdateTime(LocalDateTime.now());
+		vdjz.setAvdUpdateTime(DateUtil.now());
 		vdjz.setAvdUpdateByName(user.getUserName());
 		vdjz.setAvdUpdateByIds(user.getUserId().toString());
 		vdjz.setAvdIds(vehicleImg.getDjzid());
@@ -5847,7 +5848,7 @@ public class VehicleController {
 						dengjizhengshu.setAvdDelete("0");
 						dengjizhengshu.setAvdCreateByName(user.getUserName());
 						dengjizhengshu.setAvdCreateByIds(user.getUserId().toString());
-						dengjizhengshu.setAvdCreateTime(LocalDateTime.now());
+						dengjizhengshu.setAvdCreateTime(DateUtil.now());
 						QueryWrapper<VehicleDengjizhengshu> dengjizhengshuQueryWrapper = new QueryWrapper<>();
 						dengjizhengshuQueryWrapper.lambda().eq(VehicleDengjizhengshu::getAvdVehicleIds,dengjizhengshu.getAvdVehicleIds());
 						dengjizhengshuQueryWrapper.lambda().eq(VehicleDengjizhengshu::getAvdDelete,0);

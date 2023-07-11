@@ -16,6 +16,10 @@ public class JiaShiYuanListVO {
 	@ApiModelProperty(value = "驾驶员id")
 	private String id;
 
+
+	@ApiModelProperty(value = "企业ID")
+	private String deptId;
+
 	/**
 	 * 企业名称
 	 */

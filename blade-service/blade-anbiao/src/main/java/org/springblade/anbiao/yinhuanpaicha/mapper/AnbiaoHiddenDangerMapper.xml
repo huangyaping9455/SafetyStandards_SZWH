@@ -31,6 +31,7 @@
 		<result column="ahd_audit_id" property="ahdAuditId" />
 		<result column="ahd_audit_name" property="ahdAuditName" />
 		<result column="ahd_audit_time" property="ahdAuditTime" />
+        <result column="ahd_place" property="ahdPlace" />
 	</resultMap>
 
     <resultMap id="AnbiaoHiddenDangerVOBaseResultMap" type="org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoHiddenDangerVO">

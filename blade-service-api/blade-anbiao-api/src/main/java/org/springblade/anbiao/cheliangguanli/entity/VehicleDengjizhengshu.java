@@ -79,7 +79,7 @@ public class VehicleDengjizhengshu implements Serializable {
      * 创建时间
      */
     @ApiModelProperty(value = "创建时间")
-    private LocalDateTime avdCreateTime;
+    private String avdCreateTime;
     /**
      * 创建人主键
      */
@@ -94,7 +94,7 @@ public class VehicleDengjizhengshu implements Serializable {
      * 更新时间
      */
     @ApiModelProperty(value = "更新时间")
-    private LocalDateTime avdUpdateTime;
+    private String avdUpdateTime;
     /**
      * 更新人主键
      */

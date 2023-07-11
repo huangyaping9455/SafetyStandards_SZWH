@@ -3937,8 +3937,42 @@ public class AnbiaoRiskDetailController {
 		return r;
 	}
 
-
+	@PostMapping("/riskCount")
+	@ApiLog("风险统计信息-数量获取（驾驶员）")
+	@ApiOperation(value = "风险统计信息-数量获取（驾驶员）", notes = "传入jiaShiYuan", position = 1)
+	public R riskCount(@RequestBody JiaShiYuan jiaShiYuan2, BladeUser user) {
+		R r = new R();
+		int riskCount = 0;
+		QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
+		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId, jiaShiYuan2.getId());
+		JiaShiYuan jiaShiYuan = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+		String jiashiyuanxingming = jiaShiYuan.getJiashiyuanxingming();
+		QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue, jiaShiYuan2.getId());
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds, jiaShiYuan2.getDeptId());
+		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification, 0);
+		List<AnbiaoRiskDetail> anbiaoRiskDetails = riskDetailService.getBaseMapper().selectList(riskDetailQueryWrapper);
+		if (anbiaoRiskDetails.size() > 0) {
+			riskCount += anbiaoRiskDetails.size();
+		}
+		VehicleRiskAllPage vehicleRiskAllPage = new VehicleRiskAllPage<>();
+		vehicleRiskAllPage.setJiashiyuanid(jiaShiYuan2.getId());
+		vehicleRiskAllPage.setDeptId(jiaShiYuan2.getDeptId().toString());
+		vehicleRiskAllPage.setSize(0);
+		vehicleRiskAllPage.setCurrent(0);
+		VehicleRiskAllPage<VehicleRiskAllVO> pages = riskDetailService.selectVehicleRiskAll(vehicleRiskAllPage);
+		if (pages.getRecords().size() > 0) {
+			riskCount += pages.getRecords().size();
+		}
+		r.setMsg("查询成功");
+		r.setCode(200);
+		r.setSuccess(true);
+		r.setData(riskCount);
+		return r;
 	}
+
+
+}
 
 
 
