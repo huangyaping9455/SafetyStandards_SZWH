@@ -336,53 +336,111 @@
     </select>
 
 	<sql id="tableDeptYHTZSql">
+<!--        SELECT-->
+<!--            DISTINCT-->
+<!--            deptId,-->
+<!--            deptName,-->
+<!--            cheliangpaizhao,-->
+<!--            vehId,-->
+<!--            jiashiyuanxingming,-->
+<!--            COUNT(date) as count,-->
+<!--            CONCAT(#{beginTime},'至',#{endTime}) as date-->
+<!--        FROM(-->
+<!--            select-->
+<!--                DISTINCT-->
+<!--                b.id as deptId,-->
+<!--                b.dept_name as deptName,-->
+<!--                v.cheliangpaizhao,-->
+<!--                v.id as vehId,-->
+<!--                a.jiashiyuanxingming,-->
+<!--                a.date,-->
+<!--                a.`status`,-->
+<!--                a.statusshow,-->
+<!--                a.jcrsignatrueshow-->
+<!--            from-->
+<!--                anbiao_vehicle v-->
+<!--            LEFT JOIN(-->
+<!--                select-->
+<!--                    a.Vehid,-->
+<!--                    case when ifnull(j.jiashiyuanxingming,'') = '' then u.name else j.jiashiyuanxingming end as jiashiyuanxingming,-->
+<!--                    a.date,-->
+<!--                    a.`status`,-->
+<!--                    case when IFNULL(a.id,'') != '' then '1' else '0' end as statusshow,-->
+<!--                    case when IFNULL(a.jcrsignatrue,'') != '' then '1' else '0' end as jcrsignatrueshow-->
+<!--                from-->
+<!--                    anbiao_car_examine_info a-->
+<!--                    LEFT JOIN anbiao_jiashiyuan j on j.id = a.jsyid-->
+<!--                    LEFT JOIN blade_user u ON u.id = a.jsyid-->
+<!--                where a.isdelete = 0-->
+<!--                <if test="beginTime != null and beginTime != '' and endTime != null and endTime != '' ">-->
+<!--                    and a.date >= #{beginTime}-->
+<!--                    and a.date &lt;= #{endTime}-->
+<!--                </if>-->
+<!--                ) a on v.id = a.Vehid-->
+<!--            inner join  (-->
+<!--                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>-->
+<!--            ) b on v.dept_id = b.id-->
+<!--        where 1=1-->
+<!--            and v.is_deleted = 0-->
+<!--            and v.cheliangpaizhao not like '%挂%'-->
+<!--        <if test="cheliangpaizhao != null and cheliangpaizhao != '' ">-->
+<!--            and v.cheliangpaizhao like '%${cheliangpaizhao}%'-->
+<!--        </if>-->
+
+<!--        <if test="deptname != null and deptname != ''">-->
+<!--            and b.dept_name like '%${deptname}%'-->
+<!--        </if>-->
+<!--        ) b-->
+<!--        GROUP BY-->
+<!--            deptId,-->
+<!--            deptName,-->
+<!--            cheliangpaizhao,-->
+<!--            vehId,-->
+<!--            jiashiyuanxingming-->
+
+
+
         SELECT
-            DISTINCT
-            deptId,
-            deptName,
-            cheliangpaizhao,
-            vehId,
-            jiashiyuanxingming,
-            COUNT(date) as count,
-            CONCAT(#{beginTime},'至',#{endTime}) as date
-        FROM(
-            select
-                DISTINCT
-                b.id as deptId,
-                b.dept_name as deptName,
-                v.cheliangpaizhao,
-                v.id as vehId,
-                a.jiashiyuanxingming,
-                a.date,
-                a.`status`,
-                a.statusshow,
-                a.jcrsignatrueshow
-            from
-                anbiao_vehicle v
-            LEFT JOIN(
-                select
-                    a.Vehid,
-                    case when ifnull(j.jiashiyuanxingming,'') = '' then u.name else j.jiashiyuanxingming end as jiashiyuanxingming,
-                    a.date,
-                    a.`status`,
-                    case when IFNULL(a.id,'') != '' then '1' else '0' end as statusshow,
-                    case when IFNULL(a.jcrsignatrue,'') != '' then '1' else '0' end as jcrsignatrueshow
-                from
-                    anbiao_car_examine_info a
-                    LEFT JOIN anbiao_jiashiyuan j on j.id = a.jsyid
-                    LEFT JOIN blade_user u ON u.id = a.jsyid
-                where a.isdelete = 0
-                <if test="beginTime != null and beginTime != '' and endTime != null and endTime != '' ">
-                    and a.date >= #{beginTime}
-                    and a.date &lt;= #{endTime}
-                </if>
-                ) a on v.id = a.Vehid
-            inner join  (
-                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
-            ) b on v.dept_id = b.id
-        where 1=1
-            and v.is_deleted = 0
-            and v.cheliangpaizhao not like '%挂%'
+        deptId,
+        deptName,
+        cheliangpaizhao,
+        vehId,
+        jiashiyuanxingming,
+        COUNT(date) as count,
+        CONCAT(#{beginTime},'至',#{endTime}) AS date
+        FROM
+        (
+        SELECT DISTINCT
+        b.id as deptId,
+        b.dept_name as deptName,
+        v.cheliangpaizhao,
+        v.id as vehId,
+        COALESCE(j.jiashiyuanxingming, u.name) as jiashiyuanxingming,
+        a.date
+        FROM
+        anbiao_vehicle v
+        LEFT JOIN (
+        SELECT
+        a.Vehid,
+        a.jsyid,
+        a.date
+        FROM
+        anbiao_car_examine_info a
+        WHERE
+        a.isdelete = 0
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != '' ">
+            and a.date >= #{beginTime}
+            and a.date &lt;= #{endTime}
+        </if>
+        ) a ON v.id = a.Vehid
+        LEFT JOIN anbiao_jiashiyuan j ON j.id = a.jsyid
+        LEFT JOIN blade_user u ON u.id = a.jsyid
+        INNER JOIN (
+        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b ON v.dept_id = b.id
+        WHERE
+        v.is_deleted = 0
+        AND v.cheliangpaizhao NOT LIKE '%挂%'
         <if test="cheliangpaizhao != null and cheliangpaizhao != '' ">
             and v.cheliangpaizhao like '%${cheliangpaizhao}%'
         </if>
@@ -392,11 +450,15 @@
         </if>
         ) b
         GROUP BY
-            deptId,
-            deptName,
-            cheliangpaizhao,
-            vehId,
-            jiashiyuanxingming
+        deptId,
+        deptName,
+        cheliangpaizhao,
+        vehId,
+        jiashiyuanxingming
+        ORDER BY
+        date DESC
+        LIMIT 0, 20
+
 	</sql>
 
 	<sql id="queryDeptYHTZSql">
