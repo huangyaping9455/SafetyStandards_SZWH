@@ -6371,35 +6371,52 @@ public class JiaShiYuanController {
 		R r = new R();
 		String msg="";
 		String date = DateUtil.now().substring(0, 10);
-		R r1 = maintenanceController.goExport_HiddenDanger_Excel(null, null, deptId, date, null);
-		R r2 = accidentReportsController.goExport_HiddenDanger_Excel(null, null, null, deptId, date, null);
-		R r3 = laborController.goExport_HiddenDanger_Excel(null, null, null, null, deptId, date);
-		R r4 = anbiaoAnquanhuiyiController.goExport_HiddenDanger_Excel(null, null, null, deptId, date, null);
-		R r5 = anbiaoCarExamineInfoController.goExport_ExamineInfo_Excel(null, null, deptId, null, null, date, date, null);
+		String[] idsss = deptId.split(",");
+		//去除素组中重复的数组
+		List<String> listid = new ArrayList<String>();
+		for (int i=0; i<idsss.length; i++) {
+			if(!listid.contains(idsss[i])) {
+				listid.add(idsss[i]);
+			}
+		}
+		//返回一个包含所有对象的指定类型的数组
+		String[] idss= listid.toArray(new String[1]);
+		for(int j = 0;j< idss.length;j++) {
+			QueryWrapper<Dept> deptQueryWrapper = new QueryWrapper<>();
+			deptQueryWrapper.lambda().eq(Dept::getId, idss[j]);
+			deptQueryWrapper.lambda().eq(Dept::getIsDeleted, 0);
+			Dept dept = deptService.getBaseMapper().selectOne(deptQueryWrapper);
+			R r1 = maintenanceController.goExport_HiddenDanger_Excel(null, null, deptId, date, null);
+			R r2 = accidentReportsController.goExport_HiddenDanger_Excel(null, null, null, deptId, date, null);
+			R r3 = laborController.goExport_HiddenDanger_Excel(null, null, null, null, deptId, date);
+			R r4 = anbiaoAnquanhuiyiController.goExport_HiddenDanger_Excel(null, null, null, deptId, date, null);
+			R r5 = anbiaoCarExamineInfoController.goExport_ExamineInfo_Excel(null, null, deptId, null, null, date, date, null);
 
-		if (r1.getCode()==200 && r2.getCode()==200 && r3.getCode()==200 && r4.getCode()==200 && r5.getCode()==200){
-			r.setMsg("导出成功");
-			r.setSuccess(true);
-			r.setCode(200);
-		}else {
-			if (r1.getCode()==500){
-				msg=msg+"维修隐患整改台账导出失败";
+			if (r1.getCode() == 200 && r2.getCode() == 200 && r3.getCode() == 200 && r4.getCode() == 200 && r5.getCode() == 200) {
+				msg = msg + dept.getDeptName() +"导出成功,";
+				r.setMsg(msg);
+				r.setSuccess(true);
+				r.setCode(200);
+			} else {
+				if (r1.getCode() == 500) {
+					msg = msg + dept.getDeptName() + "维修隐患整改台账导出失败";
+				}
+				if (r2.getCode() == 500) {
+					msg = msg + dept.getDeptName() + "事故报告台账导出失败";
+				}
+				if (r3.getCode() == 500) {
+					msg = msg + dept.getDeptName() + "劳保台账导出失败";
+				}
+				if (r4.getCode() == 500) {
+					msg = msg + dept.getDeptName() + "安全会议台账导出失败";
+				}
+				if (r5.getCode() == 500) {
+					msg = msg + dept.getDeptName() + "车辆安全检查台账导出失败";
+				}
+				r.setMsg(msg);
+				r.setSuccess(true);
+				r.setCode(200);
 			}
-			if (r2.getCode()==500){
-				msg=msg+"事故报告台账导出失败";
-			}
-			if (r3.getCode()==500){
-				msg=msg+"劳保台账导出失败";
-			}
-			if (r4.getCode()==500){
-				msg=msg+"安全会议台账导出失败";
-			}
-			if (r5.getCode()==500){
-				msg=msg+"车辆安全检查台账导出失败";
-			}
-			r.setMsg(msg);
-			r.setSuccess(true);
-			r.setCode(200);
 		}
 		return r;
 	}
