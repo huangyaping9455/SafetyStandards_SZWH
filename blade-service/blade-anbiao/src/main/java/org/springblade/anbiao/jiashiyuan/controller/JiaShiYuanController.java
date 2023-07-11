@@ -6367,14 +6367,40 @@ public class JiaShiYuanController {
 
 	@GetMapping("/goExport_one_click")
 	@ApiOperation(value = "一键导出台账", notes = "一键导出台账", position = 28)
-	public R goExport_one_click(String deptId , String date) throws Exception {
+	public R goExport_one_click( String deptId ) throws Exception {
 		R r = new R();
-		maintenanceController.goExport_HiddenDanger_Excel(null,null,deptId,date,null);
-		accidentReportsController.goExport_HiddenDanger_Excel(null,null,null,deptId,date,null);
-		laborController.goExport_HiddenDanger_Excel(null,null,null,null,deptId,date);
-		anbiaoAnquanhuiyiController.goExport_HiddenDanger_Excel(null,null,null,deptId,date,null);
-		anbiaoCarExamineInfoController.goExport_ExamineInfo_Excel(null,null,deptId,null,null,date,date,null);
+		String msg="";
+		String date = DateUtil.now().substring(0, 10);
+		R r1 = maintenanceController.goExport_HiddenDanger_Excel(null, null, deptId, date, null);
+		R r2 = accidentReportsController.goExport_HiddenDanger_Excel(null, null, null, deptId, date, null);
+		R r3 = laborController.goExport_HiddenDanger_Excel(null, null, null, null, deptId, date);
+		R r4 = anbiaoAnquanhuiyiController.goExport_HiddenDanger_Excel(null, null, null, deptId, date, null);
+		R r5 = anbiaoCarExamineInfoController.goExport_ExamineInfo_Excel(null, null, deptId, null, null, date, date, null);
 
+		if (r1.getCode()==200 && r2.getCode()==200 && r3.getCode()==200 && r4.getCode()==200 && r5.getCode()==200){
+			r.setMsg("导出成功");
+			r.setSuccess(true);
+			r.setCode(200);
+		}else {
+			if (r1.getCode()==500){
+				msg=msg+"维修隐患整改台账导出失败";
+			}
+			if (r2.getCode()==500){
+				msg=msg+"事故报告台账导出失败";
+			}
+			if (r3.getCode()==500){
+				msg=msg+"劳保台账导出失败";
+			}
+			if (r4.getCode()==500){
+				msg=msg+"安全会议台账导出失败";
+			}
+			if (r5.getCode()==500){
+				msg=msg+"车辆安全检查台账导出失败";
+			}
+			r.setMsg(msg);
+			r.setSuccess(true);
+			r.setCode(200);
+		}
 		return r;
 	}
 
