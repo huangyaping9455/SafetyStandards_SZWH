@@ -213,6 +213,7 @@ public class AnbiaoCarExamineInfoController {
 										danger.setAhdHiddendangerEnclosure(remark.getFlgimg());
 										danger.setAhdCreateTime(DateUtil.now());
 										danger.setAhdCreateByIds(finalDeail.getJsyid());
+										danger.setAhdPlace(finalDeail.getAddress());
 										if(StringUtils.isEmpty(remark.getFlgremark())){
 											danger.setAhdDescribe("未填写");
 										}else{
