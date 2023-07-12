@@ -464,9 +464,6 @@
         cheliangpaizhao,
         vehId,
         jiashiyuanxingming
-        ORDER BY
-        date DESC
-        LIMIT 0, 20
 
 	</sql>
 
