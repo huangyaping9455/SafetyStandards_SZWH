@@ -6370,7 +6370,9 @@ public class JiaShiYuanController {
 	public R goExport_one_click( String deptId ) throws Exception {
 		R r = new R();
 		String msg="";
+		List<String> urlList = new ArrayList<>();
 		String date = DateUtil.now().substring(0, 10);
+		String [] nyr= DateUtil.today().split("-");
 		String[] idsss = deptId.split(",");
 		//去除素组中重复的数组
 		List<String> listid = new ArrayList<String>();
@@ -6392,8 +6394,21 @@ public class JiaShiYuanController {
 			R r4 = anbiaoAnquanhuiyiController.goExport_HiddenDanger_Excel(null, null, null, deptId, date, null);
 			R r5 = anbiaoCarExamineInfoController.goExport_ExamineInfo_Excel(null, null, deptId, null, null, date, date, null);
 
+			urlList.add(r1.getData().toString());
+			urlList.add(r2.getData().toString());
+			urlList.add(r3.getData().toString());
+			urlList.add(r4.getData().toString());
+			urlList.add(r5.getData().toString());
+			String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"总台账.zip";
+			ExcelUtils.deleteFile(fileName);
+			ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(fileName));
+			ApacheZipUtils.doCompress1(urlList, bizOut);
+			//不要忘记调用
+			bizOut.close();
+
 			if (r1.getCode() == 200 && r2.getCode() == 200 && r3.getCode() == 200 && r4.getCode() == 200 && r5.getCode() == 200) {
 				msg = msg + dept.getDeptName() +"导出成功,";
+				r.setData(fileName);
 				r.setMsg(msg);
 				r.setSuccess(true);
 				r.setCode(200);
