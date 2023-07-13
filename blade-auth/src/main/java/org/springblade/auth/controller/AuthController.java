@@ -84,12 +84,20 @@ public class AuthController {
 		type = AesTwo.aesDecrypt(type,fileServer.getKey());
 
 		//去掉多余的双引号
-		name = name.replaceAll("\\\"", "");
-		password = password.replaceAll("\\\"", "");
-		clientVerifyCode = clientVerifyCode.replaceAll("\\\"", "");
-		type = type.replaceAll("\\\"", "");
-
+		if(StringUtils.isNotEmpty(name)){
+			name = name.replaceAll("\\\"", "");
+		}
+		if(StringUtils.isNotEmpty(password)) {
+			password = password.replaceAll("\\\"", "");
+		}
+		if(StringUtils.isNotEmpty(clientVerifyCode)) {
+			clientVerifyCode = clientVerifyCode.replaceAll("\\\"", "");
+		}
+		if(StringUtils.isNotEmpty(type)) {
+			type = type.replaceAll("\\\"", "");
+		}
 		name = name.trim();
+		password = password.trim();
 		if("true".equals(fileServer.getFalg())){
 			if("1".equals(type)){
 				if (Func.hasEmpty(name, password)) {
@@ -179,6 +187,10 @@ public class AuthController {
 				if(user == null || StringUtils.isBlank(user.getPostId())){
 					Post post = new Post();
 					List<Post> postList = sysClient.selectByUserId(user.getId());
+					if(postList.size() < 1){
+						errMsg = "该账号岗位机构不存在";
+						return R.fail(errMsg);
+					}
 					post.setPostId(postList.get(0).getPostId());
 					post.setUserId(user.getId());
 					sysClient.updateIsdefault(post);
