@@ -193,8 +193,8 @@ public class JiashiyuanBaoxianController extends BladeController {
 			Dept avbInsureDept = new Dept();
 			Dept avbInsuredDept = new Dept();
 
-			String avbInsureName = String.valueOf(mmap.get("投保单位")).trim();		//投保单位
-			String avbInsuredName = String.valueOf(mmap.get("保险单位")).trim();
+			String avbInsureName = String.valueOf(mmap.get("投保企业")).trim();		//投保单位
+			String avbInsuredName = String.valueOf(mmap.get("被保险单位")).trim();
 			String avbInsuranceCompany = String.valueOf(mmap.get("保险公司")).trim();
 			String avbInsuredContacts = String.valueOf(mmap.get("被保险人")).trim();
 			String avbPolicyNo = String.valueOf(mmap.get("保险单号")).trim();
@@ -248,9 +248,9 @@ public class JiashiyuanBaoxianController extends BladeController {
 					errorStr += "被保险单位不能为空！";
 				}
 				//被保险人
-				if(StringUtil.isNotBlank(avbInsureContacts) && avbInsureContacts != "null") {
+				if(StringUtil.isNotBlank(avbInsuredContacts) && avbInsuredContacts != "null") {
 					JiaShiYuan jsy = new JiaShiYuan();
-					jsy.setJiashiyuanxingming(avbInsureContacts);
+					jsy.setJiashiyuanxingming(avbInsuredContacts);
 					jsy.setIsdelete(0);
 					JiaShiYuan driver = jiaShiYuanService.getOne(Condition.getQueryWrapper(jsy));
 					if(driver != null) {
