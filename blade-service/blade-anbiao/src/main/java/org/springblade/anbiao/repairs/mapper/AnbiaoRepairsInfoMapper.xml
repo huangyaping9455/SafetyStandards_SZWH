@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.repairs.mapper.AnbiaoRepairsInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.repairs.entity.AnbiaoRepairsInfo">
+        <id column="rp_id" property="rpId" />
+        <result column="rp_dept_id" property="rpDeptId" />
+        <result column="rp_yw_person" property="rpYwPerson" />
+        <result column="rp_yh_person" property="rpYhPerson" />
+        <result column="rp_vehid" property="rpVehid" />
+        <result column="rp_veh_drving_license" property="rpVehDrvingLicense" />
+        <result column="rp_veh_type" property="rpVehType" />
+        <result column="rp_remark" property="rpRemark" />
+        <result column="rp_equipment" property="rpEquipment" />
+        <result column="rp_explain" property="rpExplain" />
+        <result column="rp_createtime" property="rpCreatetime" />
+        <result column="rp_createid" property="rpCreateid" />
+        <result column="rp_createname" property="rpCreatename" />
+        <result column="rp_updatetime" property="rpUpdatetime" />
+        <result column="rp_updateid" property="rpUpdateid" />
+        <result column="rp_updatename" property="rpUpdatename" />
+        <result column="rp_date" property="rpDate" />
+        <result column="rp_no" property="rpNo" />
+        <result column="rp_source" property="rpSource" />
+        <result column="rp_status" property="rpStatus" />
+        <result column="rp_type" property="rpType" />
+        <result column="rp_trouble_type" property="rpTroubleType" />
+        <result column="rp_img" property="rpImg" />
+        <result column="rp_video" property="rpVideo" />
+        <result column="rp_isfree" property="rpIsfree" />
+        <result column="rp_relation_person" property="rpRelationPerson" />
+        <result column="rp_relation_phone" property="rpRelationPhone" />
+        <result column="rp_address" property="rpAddress" />
+        <result column="rp_detail_address" property="rpDetailAddress" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        rp_id, rp_dept_id, rp_yw_person, rp_yh_person, rp_vehid, rp_veh_drving_license, rp_veh_type, rp_remark, rp_equipment, rp_explain, rp_createtime, rp_createid, rp_createname, rp_updatetime, rp_updateid, rp_updatename, rp_date, rp_no, rp_source, rp_status, rp_type, rp_trouble_type, rp_img, rp_video, rp_isfree
+    </sql>
+
+	<sql id="tableSql">
+		select
+			a.*,
+			b.dept_name as rpDeptName,
+			c.cheliangpaizhao,
+			c.chepaiyanse
+		from
+			anbiao_repairs_info a
+		inner join  (
+			<include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+		) b on a.rp_dept_id = b.id
+		left join anbiao_vehicle c on c.id = a.rp_vehid
+		where 1=1
+			and left(a.rp_date,10) >= left(#{date},10)
+	</sql>
+
+	<sql id="querySql">
+		<if test="deptName != null and deptName != '' ">
+			and rpDeptName like '%${deptName}%'
+		</if>
+
+		<if test="cheliangpaizhao != null and cheliangpaizhao != '' ">
+			and cheliangpaizhao like '%${cheliangpaizhao}%'
+		</if>
+	</sql>
+
+	<sql id="orderSql">
+		<!-- 默认排序规则 -->
+		ORDER BY rpDate desc
+	</sql>
+
+	<select id="selectPage" resultMap="BaseResultMap"
+			parameterType="org.springblade.anbiao.repairs.page.AnbiaoRepairsDeptPage" >
+		<if test="size == 0" >
+			select * from (
+			<include refid="tableSql" />
+			)b
+			where 1=1
+			<include refid="querySql" />
+			<include refid="orderSql" />
+			limit ${total}
+		</if>
+		<if test="current != 0" >
+			select * from (
+			<include refid="tableSql" />
+			)b
+			where 1=1
+			<include refid="querySql" />
+			<include refid="orderSql" />
+			limit ${offsetNo},${size}
+		</if>
+	</select>
+
+	<select id="selectTotal"
+			parameterType="org.springblade.anbiao.repairs.page.AnbiaoRepairsDeptPage"
+			resultType="int">
+		select COUNT(1) from (
+		<include refid="tableSql" />
+		)d
+		where 1 = 1
+		<include refid="querySql" />
+	</select>
+
+    <select id="selectMaxXuhao" resultType="org.springblade.anbiao.repairs.entity.AnbiaoRepairsInfo">
+        select
+            MAX(rp_no) as rp_no
+        from
+            anbiao_repairs_info
+        where left(rp_createtime,10) = left(now(),10)
+          and rp_dept_id = #{deptId}
+    </select>
+
+    <sql id="tableDriverSql">
+        select
+            b.*,
+            c.cheliangpaizhao,
+            c.chepaiyanse
+        from
+            anbiao_repairs_person a
+            inner join (
+                select a.* from anbiao_repairs_info a,anbiao_repairs_remark b
+                where a.rp_id = b.rpdt_rp_id
+                  and b.rpdt_person_id = #{driverId}
+            )b on a.rp_id = b.rpdt_person_id
+            left join anbiao_vehicle c on c.id = b.rp_vehid
+        where 1=1
+        <if test="date != null and date != ''">
+            and left(b.rp_date,10) >= left(#{date},10)
+        </if>
+        <if test="rpType != null and rpType != ''">
+            and rp_type = #{rpType}
+        </if>
+    </sql>
+
+    <sql id="queryDriverSql">
+
+        <if test="cheliangpaizhao != null and cheliangpaizhao != '' ">
+            and cheliangpaizhao like '%${cheliangpaizhao}%'
+        </if>
+
+        <if test="rpStatus != null ">
+            and rpStatus = #{rpStatus}
+        </if>
+    </sql>
+
+    <sql id="orderDriverSql">
+        <!-- 默认排序规则 -->
+        ORDER BY rpStatus desc
+    </sql>
+
+    <select id="selectDriverPage" resultMap="BaseResultMap"
+            parameterType="org.springblade.anbiao.repairs.page.AnbiaoRepairsDeptPage" >
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableDriverSql" />
+            )b
+            where 1=1
+            <include refid="queryDriverSql" />
+            <include refid="orderDriverSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableDriverSql" />
+            )b
+            where 1=1
+            <include refid="queryDriverSql" />
+            <include refid="orderDriverSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectDriverTotal"
+            parameterType="org.springblade.anbiao.repairs.page.AnbiaoRepairsDeptPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableDriverSql" />
+        )d
+        where 1 = 1
+        <include refid="queryDriverSql" />
+    </select>
+
+</mapper>

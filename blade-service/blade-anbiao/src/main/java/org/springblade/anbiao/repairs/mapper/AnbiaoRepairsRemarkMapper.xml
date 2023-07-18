@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.repairs.mapper.AnbiaoRepairsRemarkMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.repairs.entity.AnbiaoRepairsRemark">
+        <id column="rpdt_id" property="rpdtId" />
+        <result column="rpdt_type" property="rpdtType" />
+        <result column="rpdt_date" property="rpdtDate" />
+        <result column="rpdt_person_id" property="rpdtPersonId" />
+        <result column="rpdt_createtime" property="rpdtCreatetime" />
+        <result column="rpdt_createid" property="rpdtCreateid" />
+        <result column="rpdt_createname" property="rpdtCreatename" />
+        <result column="rpdt_updatetime" property="rpdtUpdatetime" />
+        <result column="rpdt_updateid" property="rpdtUpdateid" />
+        <result column="rpdt_updatename" property="rpdtUpdatename" />
+        <result column="rpdt_yw_address" property="rpdtYwAddress" />
+        <result column="rpdt_remark" property="rpdtRemark" />
+        <result column="rpdt_rp_id" property="rpdtRpId" />
+        <result column="rpdt_dispose_remark" property="rpdtDisposeRemark" />
+        <result column="rpdt_dispose_img" property="rpdtDisposeImg" />
+        <result column="rpdt_dispose_parts" property="rpdtDisposeParts" />
+        <result column="rpdt_dispose_sign" property="rpdtDisposeSign" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        rpdt_id, rpdt_type, rpdt_date, rpdt_person_id, rpdt_createtime, rpdt_createid, rpdt_createname, rpdt_updatetime, rpdt_updateid, rpdt_updatename, rpdt_yw_address, rpdt_remark, rpdt_rp_id
+    </sql>
+
+</mapper>

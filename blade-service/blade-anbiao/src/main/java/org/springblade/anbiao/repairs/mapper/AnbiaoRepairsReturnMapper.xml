@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.repairs.mapper.AnbiaoRepairsReturnMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.repairs.entity.AnbiaoRepairsReturn">
+        <id column="ret_id" property="retId" />
+        <result column="ret_rp_id" property="retRpId" />
+        <result column="ret_is_dispose" property="retIsDispose" />
+        <result column="ret_charging_situation" property="retChargingSituation" />
+        <result column="ret_satisfaction_degree" property="retSatisfactionDegree" />
+        <result column="ret_remark" property="retRemark" />
+        <result column="ret_suggest" property="retSuggest" />
+        <result column="ret_createtime" property="retCreatetime" />
+        <result column="ret_createid" property="retCreateid" />
+        <result column="ret_createname" property="retCreatename" />
+        <result column="ret_date" property="retDate" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ret_id, ret_rp_id, ret_is_dispose, ret_charging_situation, ret_satisfaction_degree, ret_remark, ret_suggest, ret_createtime, ret_createid, ret_createname, ret_date
+    </sql>
+
+</mapper>

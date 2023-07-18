@@ -168,7 +168,7 @@ public class AesTwo {
      * 测试
      */
     public static void main(String[] args) throws Exception {
-        String content = "1";
+        String content = "lihua";
         System.out.println("加密前：" + content);
         System.out.println("加密密钥和解密密钥：" + KEY);
         String encrypt = aesEncrypt(content, KEY);
