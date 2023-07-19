@@ -2,6 +2,7 @@ package org.springblade.anbiao.guanlijigouherenyuan.feign;
 
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Personnel;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.repairs.entity.AnbiaoRepairsPerson;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,5 +48,9 @@ public interface 				IPersonnelClient {
 	 */
 	@GetMapping(API_PREFIX+"/bindDriverOpenId")
 	void bindDriverOpenId(@RequestParam("account") String account,@RequestParam("openid") String openid);
+
+	@GetMapping(API_PREFIX + "/getPerson")
+	AnbiaoRepairsPerson getPerson(@RequestParam("account") String account, @RequestParam("password") String password);
+
 
 }

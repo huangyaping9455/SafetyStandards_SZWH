@@ -6,6 +6,8 @@ import org.springblade.anbiao.guanlijigouherenyuan.entity.Personnel;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IPersonnelService;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
+import org.springblade.anbiao.repairs.entity.AnbiaoRepairsPerson;
+import org.springblade.anbiao.repairs.service.IAnbiaoRepairsPersonService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +26,8 @@ public class PersonnelClient implements IPersonnelClient{
 	private IPersonnelService personnelService;
 
 	private IJiaShiYuanService service;
+
+	private IAnbiaoRepairsPersonService repairsPersonService;
 
 	@Override
 	@PostMapping(API_PREFIX + "/saveOrUpdate")
@@ -67,6 +71,12 @@ public class PersonnelClient implements IPersonnelClient{
 	@GetMapping(API_PREFIX + "/bindDriverOpenId")
 	public void bindDriverOpenId(String account,String openid){
 		service.bindDriverOpenId(account,openid);
+	}
+
+	@Override
+	@GetMapping(API_PREFIX + "/getPerson")
+	public AnbiaoRepairsPerson getPerson(String account, String password) {
+		return repairsPersonService.getPerson(account, password);
 	}
 
 }

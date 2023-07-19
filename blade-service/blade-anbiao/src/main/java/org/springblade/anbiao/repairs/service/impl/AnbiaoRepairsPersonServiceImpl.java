@@ -66,4 +66,14 @@ public class AnbiaoRepairsPersonServiceImpl extends ServiceImpl<AnbiaoRepairsPer
 	public List<AnbiaoRepairsPerson> selectPersonByDeptId(String deptId) {
 		return repairsPersonMapper.selectPersonByDeptId(deptId);
 	}
+
+	@Override
+	public boolean updatePassWord(String password, String id) {
+		return repairsPersonMapper.updatePassWord(password, id);
+	}
+
+	@Override
+	public AnbiaoRepairsPerson getPerson(String account, String password) {
+		return repairsPersonMapper.getPerson(account, password);
+	}
 }

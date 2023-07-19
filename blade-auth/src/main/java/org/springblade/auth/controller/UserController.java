@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.guanlijigouherenyuan.feign.IPersonnelClient;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.repairs.entity.AnbiaoRepairsPerson;
 import org.springblade.common.configurationBean.WechatServer;
 import org.springblade.common.tool.WeChatUtil;
 import org.springblade.core.log.annotation.ApiLog;
@@ -431,6 +432,133 @@ public class UserController {
 			e.printStackTrace();
 		}
 		rs.setMsg(errMsg);
+		return rs;
+	}
+
+	@PostMapping("/repairsPersonLogin")
+	@ApiLog("小程序--登录（报修系统）")
+	@ApiOperation(value = "小程序--登录（报修系统）", notes = "传入code，账号", position = 1)
+	public R repairsPersonLogin(@ApiParam(value = "账号", required = false) @RequestParam String name,
+						 @ApiParam(value = "密码", required = false) @RequestParam String password,
+						 @ApiParam(value = "微信code", required = false) @RequestParam String code,
+						 @ApiParam(value = "encryptedData", required = false) @RequestParam String encryptedData,
+						 @ApiParam(value = "iv", required = false) @RequestParam String iv){
+		R rs = new R();
+		//返回accessToken
+		AuthInfoConfig info=new AuthInfoConfig();
+		String cellphone = "";
+		String openId = "";
+
+		if(StringUtils.isBlank(name) && StringUtils.isBlank(password) && StringUtils.isBlank(code)){
+			rs.setMsg("参数不能为空!");
+			rs.setCode(500);
+			rs.setSuccess(false);
+			return rs;
+		}else if(StringUtils.isNotBlank(code)){
+			WeChatUtil weChatUtil = new WeChatUtil();
+			String jsonId = weChatUtil.getopenid(wechatServer.getAppId(),code,wechatServer.getSecret());
+			JSONObject jsonObject = JSONObject.parseObject(jsonId);
+//			JsonNode openJsonNode = weChatUtil.requestOpenId(WECHATURL,wechatServer.getAppId(),wechatServer.getSecret(),code);
+//			System.out.println(openJsonNode);
+			//可将返回值类型改为String，然后直接return jsonObject
+			openId = (String) jsonObject.get("openid");
+			if(openId != null && !"".equals(openId)){
+//				if (StringUtils.isNotBlank("encryptedData") && StringUtils.isNotBlank("iv")) {
+//					String json = WeChatUtil.decrypt(jsonObject.get("session_key").toString(), iv, encryptedData);
+//					if (null == json) {
+//						rs.setMsg("授权微信手机号码登录失败，请重新登录!");
+//						rs.setCode(500);
+//						rs.setSuccess(false);
+//						return rs;
+//					}
+//					JsonNode infoJsonNode = JSONUtils.string2JsonNode(json);
+//					if (infoJsonNode.hasNonNull("purePhoneNumber")) {
+//						cellphone = infoJsonNode.get("purePhoneNumber").asText();
+////						userService.updateOpenId(cellphone, openId);
+//					}
+//				}
+				JiaShiYuan us = null;
+				if (null != (us = personnelClient.getDriverOpenId(openId))) {
+					//设置jwt参数
+					Map<String, String> param = new HashMap<>(16);
+					param.put(SecureUtil.USER_ID, Func.toStr(us.getId()));
+					param.put(SecureUtil.ACCOUNT, us.getJiashiyuanxingming());
+					param.put(SecureUtil.USER_NAME, us.getShoujihaoma());
+					//拼装accessToken
+					String accessToken = SecureUtil.createJWT(param, "audience", "issuser", true);
+					info.setAccount(us.getShoujihaoma());
+					info.setUserName(us.getJiashiyuanxingming());
+					info.setAuthority("administrator");
+					info.setAccessToken(accessToken);
+					info.setTokenType(SecureUtil.BEARER);
+					Dept dept=sysClient.selectByJGBM("机构",us.getDeptId().toString());
+					if(dept == null){
+						rs.setMsg("该账号岗位机构不存在!");
+						rs.setCode(500);
+						rs.setSuccess(false);
+					}
+					info.setDeptId(dept.getId().toString());
+					info.setDeptName(dept.getDeptName());
+					info.setUserId(us.getId().toString());
+					//设置token过期时间
+					info.setExpiresIn(SecureUtil.getExpire());
+
+					rs.setMsg("登录成功!");
+					rs.setCode(200);
+					rs.setSuccess(true);
+					rs.setData(info);
+					return rs;
+				}else {
+					rs.setMsg("该账号未绑定微信，请用账号密码进行登录!");
+					rs.setCode(404);
+					rs.setSuccess(false);
+					return rs;
+				}
+			}else{
+				rs.setMsg("微信登录失败，请重新登录!");
+				rs.setCode(500);
+				rs.setSuccess(false);
+				return rs;
+			}
+		}else {
+			password = DigestUtil.encrypt(password);
+			AnbiaoRepairsPerson us = personnelClient.getPerson(name,password);
+			if(us != null){
+				//设置jwt参数
+				Map<String, String> param = new HashMap<>(16);
+				param.put(SecureUtil.USER_ID, Func.toStr(us.getRpId()));
+				param.put(SecureUtil.ACCOUNT, us.getRpPhone());
+				param.put(SecureUtil.USER_NAME, us.getRpName());
+				//拼装accessToken
+				String accessToken = SecureUtil.createJWT(param, "audience", "issuser", true);
+
+				info.setAccount(us.getRpPhone());
+				info.setUserName(us.getRpName());
+				info.setAuthority("administrator");
+				info.setAccessToken(accessToken);
+				info.setTokenType(SecureUtil.BEARER);
+				Dept dept=sysClient.selectByJGBM("机构",us.getRpDeptid().toString());
+				if(dept == null){
+					rs.setMsg("该账号岗位机构不存在!");
+					rs.setCode(500);
+					rs.setSuccess(false);
+				}
+				info.setDeptId(dept.getId().toString());
+				info.setDeptName(dept.getDeptName());
+				info.setUserId(us.getRpId().toString());
+				//设置token过期时间
+				info.setExpiresIn(SecureUtil.getExpire());
+
+				rs.setMsg("登录成功!");
+				rs.setCode(200);
+				rs.setData(info);
+				rs.setSuccess(true);
+			}else{
+				rs.setMsg("账号、密码错误!");
+				rs.setCode(500);
+				rs.setSuccess(false);
+			}
+		}
 		return rs;
 	}
 

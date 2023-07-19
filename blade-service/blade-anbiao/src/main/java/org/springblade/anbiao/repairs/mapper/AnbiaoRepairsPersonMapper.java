@@ -1,6 +1,7 @@
 package org.springblade.anbiao.repairs.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.repairs.entity.AnbiaoRepairsPerson;
 import org.springblade.anbiao.repairs.page.AnbiaoRepairsDeptPage;
 
@@ -20,5 +21,9 @@ public interface AnbiaoRepairsPersonMapper extends BaseMapper<AnbiaoRepairsPerso
 	int selectTotal(AnbiaoRepairsDeptPage anbiaoRepairsDeptPage);
 
 	List<AnbiaoRepairsPerson> selectPersonByDeptId(String deptId);
+
+	boolean updatePassWord(String password,String id);
+
+	AnbiaoRepairsPerson getPerson(@Param("account") String account, @Param("password")  String password);
 
 }

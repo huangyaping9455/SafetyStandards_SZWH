@@ -95,4 +95,18 @@
         where a.rp_delete = 0
     </select>
 
+    <update id="updatePassWord" parameterType="java.lang.String">
+        UPDATE anbiao_repairs_person SET rp_password = #{password} where rp_id = #{id}
+    </update>
+
+    <select id="getPerson" resultType="org.springblade.anbiao.repairs.entity.AnbiaoRepairsPerson">
+        select * from anbiao_repairs_person
+        where rp_delete = 0
+        and rp_account = #{account}
+        <if test="password != null and password != '' ">
+            and rp_password = #{password}
+        </if>
+        LIMIT 1
+    </select>
+
 </mapper>

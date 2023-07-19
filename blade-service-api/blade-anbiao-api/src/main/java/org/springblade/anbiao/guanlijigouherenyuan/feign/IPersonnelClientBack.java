@@ -2,6 +2,7 @@ package org.springblade.anbiao.guanlijigouherenyuan.feign;
 
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Personnel;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.repairs.entity.AnbiaoRepairsPerson;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -45,6 +46,11 @@ public class IPersonnelClientBack implements IPersonnelClient {
 	@Override
 	public void bindDriverOpenId(String account, String openid) {
 
+	}
+
+	@Override
+	public AnbiaoRepairsPerson getPerson(String account, String password) {
+		return null;
 	}
 
 }
