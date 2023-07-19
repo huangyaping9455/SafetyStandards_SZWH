@@ -492,5 +492,10 @@ public class AnbiaoRiskDetailServiceImpl extends ServiceImpl<AnbiaoRiskDetailMap
 		return mapper.selectDriverOpenid();
 	}
 
+	@Override
+	public List<DeptRiskAllVO> selectDeptRiskAll(String deptId) {
+		return mapper.selectDeptRiskAll(deptId);
+	}
+
 
 }

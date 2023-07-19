@@ -32,6 +32,11 @@
 		<result column="ahd_audit_name" property="ahdAuditName" />
 		<result column="ahd_audit_time" property="ahdAuditTime" />
         <result column="ahd_place" property="ahdPlace" />
+        <result column="ahd_rectification_persion_sign" property="ahdRectificationPersionSign" />
+        <result column="ahd_audit_sign" property="ahdAuditSign" />
+        <result column="ahd_audit_status" property="ahdAuditStatus" />
+        <result column="ahd_audit_remark" property="ahdAuditRemark" />
+        <result column="ahd_audit_enclosure" property="ahdAuditEnclosure" />
 	</resultMap>
 
     <resultMap id="AnbiaoHiddenDangerVOBaseResultMap" type="org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoHiddenDangerVO">

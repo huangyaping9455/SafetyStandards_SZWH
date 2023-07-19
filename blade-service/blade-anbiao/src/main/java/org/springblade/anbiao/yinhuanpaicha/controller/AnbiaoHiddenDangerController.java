@@ -126,7 +126,7 @@ public class AnbiaoHiddenDangerController {
 	 */
 	@PostMapping("/update")
 	@ApiLog("隐患排查信息-编辑")
-	@ApiOperation(value = "隐患排查信息-编辑", notes = "传入AnbiaoHiddenDanger", position = 1)
+	@ApiOperation(value = "隐患排查信息-编辑", notes = "传入AnbiaoHiddenDanger", position = 2)
 	public R update(@RequestBody AnbiaoHiddenDanger danger, BladeUser user) {
 		R r = new R();
 		if(user != null){
@@ -177,15 +177,18 @@ public class AnbiaoHiddenDangerController {
 	}
 
 	/**
-	 * 编辑
+	 * 审核
 	 */
 	@GetMapping("/audit")
 	@ApiLog("隐患排查信息-审核")
-	@ApiOperation(value = "隐患排查信息-审核", notes = "传入数据Id、是否整改((0.否,1.是))", position = 1)
+	@ApiOperation(value = "隐患排查信息-审核", notes = "传入数据Id、审核结果，0：审核通过，1：审核驳回、审核意见、审核附件、审核人签名附件", position = 3)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "Id", value = "数据Id", required = true),
-		@ApiImplicitParam(name = "status", value = "是否整改((0.否,1.是)", required = true)
+		@ApiImplicitParam(name = "status", value = "审核结果，0：审核通过，1：审核驳回", required = true),
+		@ApiImplicitParam(name = "ahdAuditRemark", value = "审核意见", required = false),
+		@ApiImplicitParam(name = "ahdAuditEnclosure", value = "审核附件", required = false),
+		@ApiImplicitParam(name = "ahdAuditSign", value = "审核人签名附件", required = true)
 	})
-	public R audit( String Id,Integer status, BladeUser user) {
+	public R audit( String Id,Integer status,String ahdAuditSign,String ahdAuditRemark,String ahdAuditEnclosure, BladeUser user) {
 		R r = new R();
 		AnbiaoHiddenDanger danger = new AnbiaoHiddenDanger();
 		if(user != null){
@@ -193,7 +196,10 @@ public class AnbiaoHiddenDangerController {
 			danger.setAhdAuditId(user.getUserId());
 		}
 		danger.setAhdAuditTime(DateUtil.now());
-		danger.setAhdRectificationSituation(status.toString());
+		danger.setAhdAuditStatus(status);
+		danger.setAhdAuditSign(ahdAuditSign);
+		danger.setAhdAuditEnclosure(ahdAuditEnclosure);
+		danger.setAhdAuditRemark(ahdAuditRemark);
 		danger.setAhdIds(Id);
 		boolean i = service.updateById(danger);
 		if(i){
@@ -211,7 +217,7 @@ public class AnbiaoHiddenDangerController {
 
 	@PostMapping("/getHiddenDangerPage")
 	@ApiLog("隐患排查信息-分页列表")
-	@ApiOperation(value = "隐患排查信息-分页列表", notes = "传入AnbiaoHiddenDangerPage", position = 2)
+	@ApiOperation(value = "隐患排查信息-分页列表", notes = "传入AnbiaoHiddenDangerPage", position = 4)
 	public R<AnbiaoHiddenDangerPage<AnbiaoHiddenDangerVO>> getHiddenDangerPage(@RequestBody AnbiaoHiddenDangerPage anbiaoHiddenDangerPage, BladeUser user) {
 		R rs = new R();
 		AnbiaoHiddenDangerPage<AnbiaoHiddenDangerVO> list= service.selectPage(anbiaoHiddenDangerPage);
@@ -219,7 +225,7 @@ public class AnbiaoHiddenDangerController {
 	}
 
 	@GetMapping("/remove")
-	@ApiOperation(value = "隐患排查信息-删除", notes = "传入Id", position = 3)
+	@ApiOperation(value = "隐患排查信息-删除", notes = "传入Id", position = 5)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "Id", value = "数据Id", required = true),
 	})
 	public R remove(String Id,BladeUser user) {
@@ -247,7 +253,7 @@ public class AnbiaoHiddenDangerController {
 	}
 
 	@GetMapping("/getById")
-	@ApiOperation(value = "隐患排查信息-根据ID获取详情", notes = "传入Id", position = 4)
+	@ApiOperation(value = "隐患排查信息-根据ID获取详情", notes = "传入Id", position = 6)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "Id", value = "数据Id", required = true)})
 	public R getById(String Id) {
 		AnbiaoHiddenDanger deail = service.getById(Id);
@@ -260,13 +266,25 @@ public class AnbiaoHiddenDangerController {
 			if (StrUtil.isNotEmpty(deail.getAhdRectificationEnclosure()) && deail.getAhdRectificationEnclosure().contains("http") == false) {
 				deail.setAhdRectificationEnclosure(fileUploadClient.getUrl(deail.getAhdRectificationEnclosure()));
 			}
+			//整改人签名附件
+			if (StrUtil.isNotEmpty(deail.getAhdRectificationPersionSign()) && deail.getAhdRectificationPersionSign().contains("http") == false) {
+				deail.setAhdRectificationPersionSign(fileUploadClient.getUrl(deail.getAhdRectificationPersionSign()));
+			}
+			//审核人签名附件
+			if (StrUtil.isNotEmpty(deail.getAhdAuditSign()) && deail.getAhdAuditSign().contains("http") == false) {
+				deail.setAhdAuditSign(fileUploadClient.getUrl(deail.getAhdAuditSign()));
+			}
+			//审核附件
+			if (StrUtil.isNotEmpty(deail.getAhdAuditEnclosure()) && deail.getAhdAuditEnclosure().contains("http") == false) {
+				deail.setAhdAuditEnclosure(fileUploadClient.getUrl(deail.getAhdAuditEnclosure()));
+			}
 		}
 		return R.data(deail);
 	}
 
 	@GetMapping("/goExport_HiddenDanger_Excel")
 	@ApiLog("隐患排查信息-导出")
-	@ApiOperation(value = "隐患排查信息-导出", notes = "传入AnbiaoHiddenDangerPage", position = 22)
+	@ApiOperation(value = "隐患排查信息-导出", notes = "传入AnbiaoHiddenDangerPage", position = 7)
 	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String deptId , String date, BladeUser user) throws IOException {
 		R rs = new R();
 		List<String> urlList = new ArrayList<>();
@@ -396,7 +414,7 @@ public class AnbiaoHiddenDangerController {
 
 	@GetMapping("/goExport_HiddenDanger")
 	@ApiLog("隐患排查信息-导出")
-	@ApiOperation(value = "隐患排查信息-导出", notes = "传入AnbiaoHiddenDangerPage", position = 22)
+	@ApiOperation(value = "隐患排查信息-导出", notes = "传入AnbiaoHiddenDangerPage", position = 8)
 	public R goExport_HiddenDanger(HttpServletRequest request, HttpServletResponse response, String deptId , String date, BladeUser user) throws IOException {
 		R rs = new R();
 		List<String> urlList = new ArrayList<>();

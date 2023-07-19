@@ -480,7 +480,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/detail")
 	@ApiLog("详情-风险统计信息")
-	@ApiOperation(value = "详情-风险统计信息", notes = "传入jiaShiYuan", position = 1)
+	@ApiOperation(value = "详情-风险统计信息", notes = "传入jiaShiYuan", position = 2)
 	public R detail(@RequestBody JiaShiYuan jiaShiYuan2, BladeUser user) {
 		R r = new R();
 		QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
@@ -512,7 +512,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/update")
 	@ApiLog("处理-风险统计信息")
-	@ApiOperation(value = "处理-风险统计信息", notes = "传入ardIds", position = 1)
+	@ApiOperation(value = "处理-风险统计信息", notes = "传入ardIds", position = 3)
 	public R deal(@RequestBody String json, BladeUser user) {
 		R r = new R();
 		int aa = 0;
@@ -755,7 +755,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/organizationInsert")
 	@ApiLog("新增-企业风险统计信息")
-	@ApiOperation(value = "新增-企业风险统计信息", position = 1)
+	@ApiOperation(value = "新增-企业风险统计信息", position = 4)
 	public R organizationInsert(BladeUser user) throws ParseException {
 		R r = new R();
 		QueryWrapper<Organizations> organizationsQueryWrapper = new QueryWrapper<Organizations>();
@@ -1182,7 +1182,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/organizationDetail")
 	@ApiLog("详情-企业风险统计信息")
-	@ApiOperation(value = "详情-企业风险统计信息", notes = "传入Organizations", position = 1)
+	@ApiOperation(value = "详情-企业风险统计信息", notes = "传入Organizations", position = 5)
 	public R organizationDetail(String id, String deptId, BladeUser user) {
 		R r = new R();
 		QueryWrapper<Organizations> organizationsQueryWrapper = new QueryWrapper<>();
@@ -1214,7 +1214,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/organizationUpdate")
 	@ApiLog("处理-企业风险统计信息")
-	@ApiOperation(value = "处理-企业风险统计信息", notes = "传入ardIds", position = 1)
+	@ApiOperation(value = "处理-企业风险统计信息", notes = "传入ardIds", position = 6)
 	public R organizationDeal(@RequestBody String json, BladeUser user) {
 		R r = new R();
 		int aa = 0;
@@ -1532,7 +1532,7 @@ public class AnbiaoRiskDetailController {
 
 	@GetMapping("/getByCount")
 	@ApiLog("风险--首页数据统计")
-	@ApiOperation(value = "风险--首页数据统计", notes = "传入企业ID,日期", position = 4)
+	@ApiOperation(value = "风险--首页数据统计", notes = "传入企业ID,日期", position = 7)
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "deptId", value = "企业ID", required = true),
 		@ApiImplicitParam(name = "date", value = "日期(yyyy-MM)", required = true)
@@ -1561,7 +1561,7 @@ public class AnbiaoRiskDetailController {
 
 	@GetMapping("/getByDateCount")
 	@ApiLog("风险--一级穿透--折线图")
-	@ApiOperation(value = "风险--一级穿透--折线图", notes = "传入企业ID,日期", position = 5)
+	@ApiOperation(value = "风险--一级穿透--折线图", notes = "传入企业ID,日期", position = 8)
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "deptId", value = "企业ID", required = true),
 		@ApiImplicitParam(name = "date", value = "日期(yyyy-MM)", required = true)
@@ -1590,7 +1590,7 @@ public class AnbiaoRiskDetailController {
 
 	@GetMapping("/getByCategoryCount")
 	@ApiLog("风险--一级穿透--隐患列表")
-	@ApiOperation(value = "风险--一级穿透--隐患列表", notes = "传入企业ID,日期,隐患类别", position = 6)
+	@ApiOperation(value = "风险--一级穿透--隐患列表", notes = "传入企业ID,日期,隐患类别", position = 9)
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "deptId", value = "企业ID", required = true),
 		@ApiImplicitParam(name = "date", value = "日期(yyyy-MM)", required = true),
@@ -1620,7 +1620,7 @@ public class AnbiaoRiskDetailController {
 
 	@GetMapping("/selectByCategoryMXList")
 	@ApiLog("风险--二级穿透--隐患明细列表")
-	@ApiOperation(value = "风险--二级穿透--隐患明细列表", notes = "传入企业ID,日期,隐患类别", position = 7)
+	@ApiOperation(value = "风险--二级穿透--隐患明细列表", notes = "传入企业ID,日期,隐患类别", position = 10)
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "deptId", value = "企业ID", required = true),
 		@ApiImplicitParam(name = "date", value = "日期(yyyy-MM)", required = true),
@@ -1651,7 +1651,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/getByCategoryMXList")
 	@ApiLog("风险--二级穿透--隐患明细列表")
-	@ApiOperation(value = "风险--二级穿透--隐患明细列表", notes = "传入RiskPage", position = 8)
+	@ApiOperation(value = "风险--二级穿透--隐患明细列表", notes = "传入RiskPage", position = 11)
 	public R<RiskPage<AnbiaoRiskDetailVO>> getByCategoryMXList(@RequestBody RiskPage riskPage) {
 		RiskPage<AnbiaoRiskDetailVO> pages = riskDetailService.selectByCategoryMXCountPage(riskPage);
 		return R.data(pages);
@@ -1660,7 +1660,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/systemInsert")
 	@ApiLog("新增-制度风险统计信息")
-	@ApiOperation(value = "新增-制度风险统计信息", position = 1)
+	@ApiOperation(value = "新增-制度风险统计信息", position = 12)
 	public R systemInsert(BladeUser user) throws ParseException {
 		R r = new R();
 		int aa = 0;
@@ -1820,7 +1820,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/ledgerInsert")
 	@ApiLog("新增-台账风险统计信息")
-	@ApiOperation(value = "新增-台账风险统计信息", position = 1)
+	@ApiOperation(value = "新增-台账风险统计信息", position = 13)
 	public R ledgerInsert(BladeUser user) throws ParseException {
 		R r = new R();
 		int aa = 0;
@@ -2163,7 +2163,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/ledgerDetail")
 	@ApiLog("详情-台账风险统计信息")
-	@ApiOperation(value = "详情-台账风险统计信息", position = 1)
+	@ApiOperation(value = "详情-台账风险统计信息", position = 14)
 	public R ledgerDetail( BladeUser user) throws ParseException{
 		R r = new R();
 		String deptId = "1";
@@ -2173,7 +2173,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/jiashiyuanRiskAll")
 	@ApiLog("详情-驾驶员风险统计信息")
-	@ApiOperation(value = "详情-驾驶员风险统计信息", position = 1)
+	@ApiOperation(value = "详情-驾驶员风险统计信息", position = 15)
 	public R<JiashiyuanRiskAllPage<JiashiyuanRiskAllVO>> jiashiyuanRiskAll(@RequestBody JiashiyuanRiskAllPage jiashiyuanRiskAllPage) {
 		JiashiyuanRiskAllPage<JiashiyuanRiskAllVO> pages = riskDetailService.selectJiashiyuanRiskAll(jiashiyuanRiskAllPage);
 		return R.data(pages);
@@ -2181,7 +2181,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/vehicleRiskAll")
 	@ApiLog("详情-车辆风险统计信息")
-	@ApiOperation(value = "详情-车辆风险统计信息", position = 1)
+	@ApiOperation(value = "详情-车辆风险统计信息", position = 16)
 	public R<VehicleRiskAllPage<VehicleRiskAllVO>> vehicleRiskAll(@RequestBody VehicleRiskAllPage vehicleRiskAllPage) {
 		VehicleRiskAllPage<VehicleRiskAllVO> pages = riskDetailService.selectVehicleRiskAll(vehicleRiskAllPage);
 		return R.data(pages);
@@ -2189,7 +2189,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/jiashiyuanRuZhiRiskinsert")
 	@ApiLog("新增-驾驶员入职表风险统计信息")
-	@ApiOperation(value = "新增-驾驶员入职表风险统计信息", position = 1)
+	@ApiOperation(value = "新增-驾驶员入职表风险统计信息", position = 17)
 	public R jiashiyuanRuZhiRiskinsert(String jiashiyuanId, BladeUser user) throws ParseException{
 		R r = new R();
 		List<AnbiaoJiashiyuanRuzhi> anbiaoJiashiyuanRuzhis = riskDetailService.selectRuZhiRisk(jiashiyuanId);
@@ -2450,7 +2450,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/jiashiyuanShenFenZhengRiskinsert")
 	@ApiLog("新增-驾驶员身份证风险统计信息")
-	@ApiOperation(value = "新增-驾驶员身份证风险统计信息", position = 1)
+	@ApiOperation(value = "新增-驾驶员身份证风险统计信息", position = 18)
 	public R jiashiyuanShenFenZhengRiskinsert(String jiashiyuanId,BladeUser user) throws ParseException{
 		R r = new R();
 		List<JiaShiYuan> jiaShiYuans = riskDetailService.selectShenFenZhengRisk(jiashiyuanId);
@@ -2550,7 +2550,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/jiashiyuanJiaShiZhengRiskinsert")
 	@ApiLog("新增-驾驶员驾驶证风险统计信息")
-	@ApiOperation(value = "新增-驾驶员驾驶证风险统计信息", position = 1)
+	@ApiOperation(value = "新增-驾驶员驾驶证风险统计信息", position = 19)
 	public R jiashiyuanJiaShiZhengRiskinsert(String jiashiyuanId,BladeUser user) throws ParseException{
 		R r = new R();
 		List<AnbiaoJiashiyuanJiashizheng> jiashiyuanJiashizhengs = riskDetailService.selectJiaShiZhengRisk(jiashiyuanId);
@@ -2651,7 +2651,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/jiashiyuanCongYeZhengRiskinsert")
 	@ApiLog("新增-驾驶员从业资格证风险统计信息")
-	@ApiOperation(value = "新增-驾驶员从业资格证风险统计信息", position = 1)
+	@ApiOperation(value = "新增-驾驶员从业资格证风险统计信息", position = 20)
 	public R jiashiyuanCongYeZhengRiskinsert(String jiashiyuanId,BladeUser user) throws ParseException{
 		R r = new R();
 		List<AnbiaoJiashiyuanCongyezigezheng> jiashiyuanCongyezigezhengs = riskDetailService.selectCongYeZhengRisk(jiashiyuanId);
@@ -2742,7 +2742,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/jiashiyuanTiJianRiskinsert")
 	@ApiLog("新增-驾驶员体检表风险统计信息")
-	@ApiOperation(value = "新增-驾驶员体检表风险统计信息", position = 1)
+	@ApiOperation(value = "新增-驾驶员体检表风险统计信息", position = 21)
 	public R jiashiyuanTiJianRiskinsert(String jiashiyuanId,BladeUser user) throws ParseException{
 		R r = new R();
 		List<AnbiaoJiashiyuanTijian> tijians = riskDetailService.selectTiJianRisk(jiashiyuanId);
@@ -2813,7 +2813,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/jiashiyuanGangQianPeiXunRiskinsert")
 	@ApiLog("新增-驾驶员岗前培训风险统计信息")
-	@ApiOperation(value = "新增-驾驶员岗前培训风险统计信息", position = 1)
+	@ApiOperation(value = "新增-驾驶员岗前培训风险统计信息", position = 22)
 	public R jiashiyuanGangQianPeiXunRiskinsert(String jiashiyuanId,BladeUser user) throws ParseException{
 		R r = new R();
 		List<AnbiaoJiashiyuanGangqianpeixun> gangqianpeixuns = riskDetailService.selectGangQianPeiXunRisk(jiashiyuanId);
@@ -2873,7 +2873,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/jiashiyuanWuZeZhengMingRiskinsert")
 	@ApiLog("新增-驾驶员无责证明风险统计信息")
-	@ApiOperation(value = "新增-驾驶员无责证明风险统计信息", position = 1)
+	@ApiOperation(value = "新增-驾驶员无责证明风险统计信息", position = 23)
 	public R jiashiyuanWuZeZhengMingRiskinsert(String jiashiyuanId,BladeUser user) throws ParseException{
 		R r = new R();
 		List<AnbiaoJiashiyuanWuzezhengming> wuzezhengmings = riskDetailService.selectWuZeZhengMingRisk(jiashiyuanId);
@@ -2943,7 +2943,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/jiashiyuanAnQuanZeRenShuRiskinsert")
 	@ApiLog("新增-驾驶员安全责任书风险统计信息")
-	@ApiOperation(value = "新增-驾驶员安全责任书风险统计信息", position = 1)
+	@ApiOperation(value = "新增-驾驶员安全责任书风险统计信息", position = 24)
 	public R jiashiyuanAnQuanZeRenShuRiskinsert(String jiashiyuanId,BladeUser user) throws ParseException{
 		R r = new R();
 		List<AnbiaoJiashiyuanAnquanzerenshu> anquanzerenshus = riskDetailService.selectAnQuanZeRenShuRisk(jiashiyuanId);
@@ -3014,7 +3014,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/jiashiyuanWeiHaiGaoZhiShuRiskinsert")
 	@ApiLog("新增-驾驶员危害告知书风险统计信息")
-	@ApiOperation(value = "新增-驾驶员危害告知书风险统计信息", position = 1)
+	@ApiOperation(value = "新增-驾驶员危害告知书风险统计信息", position = 25)
 	public R jiashiyuanWeiHaiGaoZhiShuRiskinsert(String jiashiyuanId,BladeUser user) throws ParseException{
 		R r = new R();
 		List<AnbiaoJiashiyuanWeihaigaozhishu> weihaigaozhishus = riskDetailService.selectWeiHaiGaoZhiShuRisk(jiashiyuanId);
@@ -3084,7 +3084,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/jiashiyuanLaoDongHeTongRiskinsert")
 	@ApiLog("新增-驾驶员劳动合同风险统计信息")
-	@ApiOperation(value = "新增-驾驶员劳动合同风险统计信息", position = 1)
+	@ApiOperation(value = "新增-驾驶员劳动合同风险统计信息", position = 26)
 	public R jiashiyuanLaoDongHeTongRiskinsert(String jiashiyuanId,BladeUser user) throws ParseException{
 		R r = new R();
 		List<AnbiaoJiashiyuanLaodonghetong> laodonghetongs = riskDetailService.selectLaoDongHeTongRisk(jiashiyuanId);
@@ -3155,7 +3155,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/jiashiyuanAnQuanHuiYiRiskinsert")
 	@ApiLog("新增-驾驶员安全会议风险统计信息")
-	@ApiOperation(value = "新增-驾驶员安全会议风险统计信息", position = 1)
+	@ApiOperation(value = "新增-驾驶员安全会议风险统计信息", position = 27)
 	public R jiashiyuanAnQuanHuiYiRiskinsert(BladeUser user) throws ParseException{
 		R r = new R();
 		List<AnbiaoAnquanhuiyi> anbiaoAnquanhuiyis = riskDetailService.selectAnQuanHuiYiRisk();
@@ -3188,7 +3188,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/jiashiyuanAnQuanPeiXunRiskinsert")
 	@ApiLog("新增-驾驶员安全培训风险统计信息")
-	@ApiOperation(value = "新增-驾驶员安全培训风险统计信息", position = 1)
+	@ApiOperation(value = "新增-驾驶员安全培训风险统计信息", position = 28)
 	public R jiashiyuanAnQuanPeiXunRiskinsert(BladeUser user) throws ParseException{
 		R r = new R();
 		List<AnbiaoSafetyTraining> safetyTrainings = riskDetailService.selectAnQuanPeiXunRisk();
@@ -3222,7 +3222,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/jiashiyuanYinHuanPaiChaRiskinsert")
 	@ApiLog("新增-驾驶员隐患排查风险统计信息")
-	@ApiOperation(value = "新增-驾驶员隐患排查风险统计信息", position = 1)
+	@ApiOperation(value = "新增-驾驶员隐患排查风险统计信息", position = 29)
 	public R jiashiyuanYinHuanPaiChaRiskinsert(BladeUser user) throws ParseException{
 		R r = new R();
 		List<AnbiaoHiddenDangerVO> yinHuanPaiChas = riskDetailService.selectYinHuanPaiChaRisk();
@@ -3259,7 +3259,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/jiashiyuanWeiXiuDengJiRiskinsert")
 	@ApiLog("新增-驾驶员维修登记风险统计信息")
-	@ApiOperation(value = "新增-驾驶员维修登记风险统计信息", position = 1)
+	@ApiOperation(value = "新增-驾驶员维修登记风险统计信息", position = 30)
 	public R jiashiyuanWeiXiuDengJiRiskinsert(BladeUser user) throws ParseException{
 		R r = new R();
 		List<BaoYangWeiXiuVO> baoYangWeiXius = riskDetailService.selectWeiXiuDengJiRisk();
@@ -3296,7 +3296,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/jiashiyuanLaBorRiskinsert")
 	@ApiLog("新增-驾驶员劳保用品风险统计信息")
-	@ApiOperation(value = "新增-驾驶员劳保用品风险统计信息", position = 1)
+	@ApiOperation(value = "新增-驾驶员劳保用品风险统计信息", position = 31)
 	public R jiashiyuanLaBorRiskinsert(BladeUser user) throws ParseException{
 		R r = new R();
 		List<LaborlingquEntity> laborlingquEntities = riskDetailService.selectLaBorRisk();
@@ -3329,7 +3329,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/jiashiyuanAnQuanJianChaRiskinsert")
 	@ApiLog("新增-驾驶员安全检查风险统计信息")
-	@ApiOperation(value = "新增-驾驶员安全检查风险统计信息", position = 1)
+	@ApiOperation(value = "新增-驾驶员安全检查风险统计信息", position = 32)
 	public R jiashiyuanAnQuanJianChaRiskinsert(BladeUser user) throws ParseException{
 		R r = new R();
 		String today = DateUtil.now().substring(0, 10);
@@ -3410,7 +3410,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/vehicleXingShiZhengRiskinsert")
 	@ApiLog("新增-行驶证风险统计信息")
-	@ApiOperation(value = "新增-车头行驶证风险统计信息", position = 1)
+	@ApiOperation(value = "新增-车头行驶证风险统计信息", position = 33)
 	public R vehicleXingShiZhengRiskinsert(String vehicleId,BladeUser user) throws ParseException{
 		R r = new R();
 		List<VehicleXingshizheng> vehicleXingshizhengs = riskDetailService.selectXingShiZhengRisk(vehicleId);
@@ -3637,7 +3637,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/vehicleDaoLuYunShuZhengRiskinsert")
 	@ApiLog("新增-道路运输证风险统计信息")
-	@ApiOperation(value = "新增-道路运输证风险统计信息", position = 1)
+	@ApiOperation(value = "新增-道路运输证风险统计信息", position = 34)
 	public R vehicleDaoLuYunShuZhengRiskinsert(String vehicleId,BladeUser user) throws ParseException{
 		R r = new R();
 		List<VehicleDaoluyunshuzheng> vehicleDaoluyunshuzhengs = riskDetailService.selectDaoLuYunShuZhengRisk(vehicleId);
@@ -3732,7 +3732,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/vehicleXingNengBaoGaoRiskinsert")
 	@ApiLog("新增-性能报告风险统计信息")
-	@ApiOperation(value = "新增-性能报告风险统计信息", position = 1)
+	@ApiOperation(value = "新增-性能报告风险统计信息", position = 35)
 	public R vehicleXingNengBaoGaoRiskinsert(String vehicleId,BladeUser user) throws ParseException{
 		R r = new R();
 		List<VehicleXingnengbaogao> xingnengbaogaos = riskDetailService.selectXingNengBaoGaoRisk(vehicleId);
@@ -3807,7 +3807,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/vehicleDengJiZhengShuRiskinsert")
 	@ApiLog("新增-登记证书风险统计信息")
-	@ApiOperation(value = "新增-登记证书风险统计信息", position = 1)
+	@ApiOperation(value = "新增-登记证书风险统计信息", position = 36)
 	public R vehicleDengJiZhengShuRiskinsert(String vehicleId,BladeUser user) throws ParseException{
 		R r = new R();
 		List<VehicleDengjizhengshu> dengjizhengshus = riskDetailService.selectDengJiZhengShuRisk(vehicleId);
@@ -3872,7 +3872,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/JiaShiYuanBaoXianRiskinsert")
 	@ApiLog("新增-驾驶员保险风险统计信息")
-	@ApiOperation(value = "新增-驾驶员保险风险统计信息", position = 1)
+	@ApiOperation(value = "新增-驾驶员保险风险统计信息", position = 37)
 	public R JiaShiYuanBaoXianRiskinsert(String jiashiyuanId,BladeUser user) throws ParseException{
 		R r = new R();
 		List<JiaShiYuan> jiaShiYuanBaoXianRisks = riskDetailService.selectJiaShiYuanBaoXianRisk(jiashiyuanId);
@@ -3905,7 +3905,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/VehicleBaoXianRiskinsert")
 	@ApiLog("新增-车辆保险风险统计信息")
-	@ApiOperation(value = "新增-车辆保险风险统计信息", position = 1)
+	@ApiOperation(value = "新增-车辆保险风险统计信息", position = 38)
 	public R VehicleBaoXianRiskinsert(String vehicleId,BladeUser user) throws ParseException{
 		R r = new R();
 		List<Vehicle> vehicleBaoXianRisks = riskDetailService.selectVehicleBaoXianRisk(vehicleId);
@@ -3939,7 +3939,7 @@ public class AnbiaoRiskDetailController {
 
 	@PostMapping("/riskCount")
 	@ApiLog("风险统计信息-数量获取（驾驶员）")
-	@ApiOperation(value = "风险统计信息-数量获取（驾驶员）", notes = "传入jiaShiYuan", position = 1)
+	@ApiOperation(value = "风险统计信息-数量获取（驾驶员）", notes = "传入jiaShiYuan", position = 39)
 	public R riskCount(@RequestBody JiaShiYuan jiaShiYuan2, BladeUser user) {
 		R r = new R();
 		int riskCount = 0;
@@ -3969,6 +3969,14 @@ public class AnbiaoRiskDetailController {
 		r.setSuccess(true);
 		r.setData(riskCount);
 		return r;
+	}
+
+	@GetMapping("/getDeptRiskAll")
+	@ApiLog("风险-获取企业各类型风险数")
+	@ApiOperation(value = "风险-获取企业各类型风险数", position = 40)
+	public R<List<DeptRiskAllVO>> getDeptRiskAll(String deptId) {
+		List<DeptRiskAllVO> pages = riskDetailService.selectDeptRiskAll(deptId);
+		return R.data(pages);
 	}
 
 

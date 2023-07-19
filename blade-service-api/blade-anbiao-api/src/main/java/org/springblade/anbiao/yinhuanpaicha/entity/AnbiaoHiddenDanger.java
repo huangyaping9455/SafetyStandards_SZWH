@@ -114,4 +114,22 @@ public class AnbiaoHiddenDanger implements Serializable {
 	@ApiModelProperty(value = "排查地点")
 	private String ahdPlace;
 
+	@ApiModelProperty(value = "隐患等级(0=一般隐患,1=严重隐患)")
+	private String ahdLevel;
+
+	@ApiModelProperty(value = "整改人签名附件")
+	private String ahdRectificationPersionSign;
+
+	@ApiModelProperty(value = "审核人签名附件")
+	private String ahdAuditSign;
+
+	@ApiModelProperty(value = "审核结果，0：审核通过，1：审核驳回")
+	private Integer ahdAuditStatus;
+
+	@ApiModelProperty(value = "审核描述")
+	private String ahdAuditRemark;
+
+	@ApiModelProperty(value = "审核附件")
+	private String ahdAuditEnclosure;
+
 }

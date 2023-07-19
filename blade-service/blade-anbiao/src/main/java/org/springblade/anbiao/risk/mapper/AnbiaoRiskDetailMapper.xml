@@ -1317,6 +1317,78 @@
             id,openid,dept_id
     </select>
 
+    <select id="selectDeptRiskAll" resultType="org.springblade.anbiao.risk.vo.DeptRiskAllVO">
+        select
+            a.id as deptId,
+            a.dept_name as deptName,
+            SUM(b.jsyrisknum) as jsyrisknum,
+            SUM(c.clrisknum) as clrisknum
+        from(
+            SELECT
+                DISTINCT
+                xiaji.id,
+                xiaji.parent_id,
+                xiaji.dept_name,
+                xiaji.is_deleted
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji,
+                anbiao_organization c
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+                AND c.dept_id = xiaji.id
+                AND c.jigouleixing in ('qiye','geti')
+                AND shangji.id= #{deptId}
+            )a
+        left join(
+            SELECT
+                ard_dept_ids as deptId,
+                a.dept_name,
+                COUNT(1) as jsyrisknum
+            FROM
+                anbiao_risk_detail rd
+            INNER JOIN(
+                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) a on a.id=rd.ard_dept_ids
+            INNER JOIN anbiao_organization k on a.id = k.dept_id and k.jigouleixing in('qiye','geti')
+            LEFT JOIN anbiao_jiashiyuan j on j.id=rd.ard_association_value
+            LEFT JOIN (SELECT ard_ids,CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi from 	`anbiao_risk_detail` )l on l.ard_ids=rd.ard_ids
+            WHERE ard_is_rectification = 0
+                and ard_association_table = "anbiao_jiashiyuan"
+                and ard_association_field = "id"
+                and j.isdelete=0
+            GROUP BY
+                ard_dept_ids,
+                a.dept_name
+        )b on a.id = b.deptId
+        left join(
+            SELECT
+                a.ard_dept_ids as deptId,
+                e.dept_name,
+                COUNT(1) as clrisknum
+            FROM
+                `anbiao_risk_detail` a
+            LEFT JOIN anbiao_vehicle b on b.id=a.ard_association_value
+            LEFT JOIN anbiao_cheliang_jiashiyuan_daily c on (c.vehid=a.ard_association_value or c.gvehid=a.ard_association_value)
+            LEFT JOIN anbiao_jiashiyuan d on c.jiashiyuanid=d.id
+            INNER JOIN(
+                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) e on e.id=a.ard_dept_ids
+            left join (SELECT ard_ids,CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi from 	`anbiao_risk_detail` )l on l.ard_ids=a.ard_ids
+            WHERE ard_association_table = "anbiao_vehicle"
+                and ard_is_rectification=0
+                and b.is_deleted=0
+                and (c.vstatus=1 or c.gstatus=1)
+                and d.isdelete=0
+                and e.is_deleted=0
+            GROUP BY
+                ard_dept_ids,
+                e.dept_name
+            )c on a.id = c.deptId
+        GROUP BY
+            a.id,
+            a.dept_name
+    </select>
 
 
 

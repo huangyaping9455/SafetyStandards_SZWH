@@ -123,5 +123,7 @@ public interface IAnbiaoRiskDetailService extends IService<AnbiaoRiskDetail> {
 	 */
 	List<AnbiaoRiskDetailVO> selectDriverOpenid();
 
+	List<DeptRiskAllVO> selectDeptRiskAll(@Param("deptId") String deptId);
+
 
 }

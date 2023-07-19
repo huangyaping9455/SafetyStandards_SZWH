@@ -124,4 +124,6 @@ public interface AnbiaoRiskDetailMapper extends BaseMapper<AnbiaoRiskDetail> {
 	 */
 	List<AnbiaoRiskDetailVO> selectDriverOpenid();
 
+	List<DeptRiskAllVO> selectDeptRiskAll(@Param("deptId") String deptId);
+
 }
