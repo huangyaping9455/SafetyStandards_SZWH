@@ -411,14 +411,14 @@ public class QiyewenjianController extends BladeController {
 	public R uploadfile(MultipartFile file, String table) throws IOException {
 		Map<String,String> map = new HashMap<String,String>();
 		String [] nyr= DateUtil.today().split("-");
-		String path= fileServer.getPathPrefix()+FilePathConstant.ENCLOSURE_PATH;
-		String pathPdf = fileServer.getPathPrefix()+FilePathConstant.ENCLOSURE_PATH;
-		String pathPic = fileServer.getPathPrefix()+FilePathConstant.ENCLOSURE_PATH;
+		String path= fileServer.getPathPrefix()+FilePathConstant.ENCLOSURE_PATH+table+"\\";
+		String pathPdf = fileServer.getPathPrefix()+FilePathConstant.ENCLOSURE_PATH+table+"\\";
+		String pathPic = fileServer.getPathPrefix()+FilePathConstant.ENCLOSURE_PATH+table+"\\";
 		String name=file.getOriginalFilename();
 		String[] a=name.split("\\.");
-		String filename = nyr[0]+"\\"+nyr[1]+"\\"+table+"\\"+System.currentTimeMillis()+"."+a[a.length-1];
-		String filenamepdf = nyr[0]+"\\"+nyr[1]+"\\"+table+"\\"+System.currentTimeMillis()+".pdf";
-		String filenamepic = pathPic+nyr[0]+"\\"+nyr[1]+"\\"+table;
+		String filename = System.currentTimeMillis()+"."+a[a.length-1];
+		String filenamepdf = System.currentTimeMillis()+".pdf";
+		String filenamepic = pathPic+"\\";
 		File dir = new File(path);
 		if (!dir.exists()) {
 			dir.mkdirs();
@@ -431,7 +431,7 @@ public class QiyewenjianController extends BladeController {
 		if(!dirp.exists()){
 			dirp.mkdirs();
 		}
-		File targetFile = new File(path+"\\"+filename);
+		File targetFile = new File(path+filename);
 		//执行上传
 		file.transferTo(targetFile);
 		//判断是否上传成功
@@ -439,8 +439,10 @@ public class QiyewenjianController extends BladeController {
 			//存放数据
 			long ab=System.currentTimeMillis();
 			System.out.println("正在转换中 请等待-------");
-			CommonUtil.world2pdf(path+"\\"+filename
-				, pathPdf+"\\"+filenamepdf);
+			if(!name.contains("pdf")){
+				CommonUtil.world2pdf(path+"\\"+filename
+					, pathPdf+"\\"+filenamepdf);
+			}
 			long b=System.currentTimeMillis();
 //			String urlpath = CommonUtil.pdf2Image(pathPdf+filenamepdf,pathPic+filenamepic,300,0);
 //			System.out.println(urlpath);
@@ -452,7 +454,6 @@ public class QiyewenjianController extends BladeController {
 //			}
 //			System.out.println(urlpath);
 			System.out.println("转换完成用时："+(b-ab)/1000+"秒");
-
 			map.put("fileName",name);
 			map.put("worldurl",FilePathConstant.ENCLOSURE_PATH+filename);
 			map.put("pdfurl",FilePathConstant.ENCLOSURE_PATH+filenamepdf);
