@@ -44,9 +44,11 @@
             blade_menu xiaji
         WHERE
             xiaji.parent_id = shangji.id
-        AND shangji.type = #{type}
+          AND xiaji.is_deleted = 0
+          AND shangji.type = #{type}
             )
         AND type=#{type}
+        AND is_deleted = 0
         ) b ON a.menu_id=b.id
       and post_id = #{postId}
       AND a.type  = #{type}

@@ -220,6 +220,7 @@ public class AnbiaoCarExamineInfoController {
 											danger.setAhdDescribe(remark.getFlgremark());
 										}
 										danger.setAhdAddress("车辆设备");
+										danger.setAhdLevel("0");
 										hiddenDangerService.save(danger);
 									}
 								}).start();
