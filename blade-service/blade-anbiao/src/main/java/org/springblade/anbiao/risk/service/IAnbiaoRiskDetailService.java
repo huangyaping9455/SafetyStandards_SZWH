@@ -103,6 +103,8 @@ public interface IAnbiaoRiskDetailService extends IService<AnbiaoRiskDetail> {
 
 	VehicleRiskAllPage<VehicleRiskAllVO> selectVehicleRiskAll(VehicleRiskAllPage vehicleRiskAllPage);
 
+	VehicleRiskAllPage<VehicleRiskAllVO> selectVehicleRiskAllweb(VehicleRiskAllPage vehicleRiskAllPage);
+
 	List<JiaShiYuan> selectJiaShiYuanBaoXianRisk();
 	List<JiaShiYuan> selectJiaShiYuanBaoXianRisk(String jiashiyuanId);
 

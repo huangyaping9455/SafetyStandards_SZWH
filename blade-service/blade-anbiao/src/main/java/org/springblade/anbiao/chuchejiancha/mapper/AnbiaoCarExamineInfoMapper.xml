@@ -407,10 +407,11 @@
         vehId,
         jiashiyuanxingming,
         COUNT(date) as count,
-        CONCAT(#{beginTime},'至',#{endTime}) AS date,
-        b.`status` ,
-        b.statusshow ,
-        b.jcrsignatrueshow
+        CONCAT(#{beginTime},'至',#{endTime}) AS date
+--                ,
+--         b.`status` ,
+--         b.statusshow ,
+--         b.jcrsignatrueshow
         FROM
         (
         SELECT DISTINCT

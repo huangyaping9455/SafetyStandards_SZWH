@@ -1222,6 +1222,162 @@
         )d
     </select>
 
+    <select id="selectVehicleRiskAllweb" parameterType="org.springblade.anbiao.risk.page.VehicleRiskAllPage" resultType="org.springblade.anbiao.risk.vo.VehicleRiskAllVO">
+        <if test="size == 0" >
+            SELECT
+            a.ard_dept_ids as deptId,
+            e.dept_name,
+            c.jiashiyuanid as id,
+            d.jiashiyuanxingming,
+            ard_title ,
+            ard_content as ard_content2,
+            ard_type,
+            ard_discovery_date,
+            ard_association_value,
+            a.vehicleId,
+            a.cheliangpaizhao,
+            CASE WHEN IFNULL( daoqishijian, '' )= '' THEN '' ELSE daoqishijian END AS daoqishijian ,
+            CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi,
+            CASE WHEN IFNULL( daoqishijian, '' )= '' THEN ard_content ELSE CONCAT(IFNULL(ard_content, ''), "(到期时间：",IFNULL(daoqishijian, ''),"  剩余天数：", IFNULL(l.youxiaoqi, ''),")") end AS ard_content
+            FROM
+            `anbiao_risk_detail` a
+            LEFT JOIN anbiao_vehicle b on b.id=a.ard_association_value
+            LEFT JOIN anbiao_cheliang_jiashiyuan_daily c on (c.vehid=a.ard_association_value or c.gvehid=a.ard_association_value)
+            LEFT JOIN anbiao_jiashiyuan d on c.jiashiyuanid=d.id
+            INNER JOIN(
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) e on e.id=a.ard_dept_ids
+            left join (SELECT ard_ids,CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi from 	`anbiao_risk_detail` )l on l.ard_ids=a.ard_ids
+            WHERE
+            ard_association_table = "anbiao_vehicle"
+            and ard_is_rectification=0
+            and b.is_deleted=0
+--             and (c.vstatus=1 or c.gstatus=1)
+--             and d.isdelete=0
+            and e.is_deleted=0
+            <if test="jiashiyuanxingming != null and jiashiyuanxingming != ''">
+                and d.jiashiyuanxingming like '%${jiashiyuanxingming}%'
+            </if>
+            <if test="cheliangpaizhao != null and cheliangpaizhao != ''">
+                and a.cheliangpaizhao like '%${cheliangpaizhao}%'
+            </if>
+            <if test="jiashiyuanid != null and jiashiyuanid != ''">
+                AND c.jiashiyuanid = #{jiashiyuanid}
+            </if>
+            <if test="deptName != null and deptName != ''">
+                and e.dept_name like '%${deptName}%'
+            </if>
+            <if test="ardTitle != null and ardTitle != ''">
+                and ard_title like '%${ardTitle}%'
+            </if>
+            ORDER BY CASE WHEN daoqishijian IS NULL THEN 1 ELSE 0 END, daoqishijian
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            SELECT
+            a.ard_dept_ids as deptId,
+            e.dept_name,
+            c.jiashiyuanid as id,
+            d.jiashiyuanxingming,
+            ard_title ,
+            ard_content as ard_content2,
+            ard_type,
+            ard_discovery_date,
+            ard_association_value,
+            a.vehicleId,
+            a.cheliangpaizhao,
+            CASE WHEN IFNULL( daoqishijian, '' )= '' THEN '' ELSE daoqishijian END AS daoqishijian ,
+            CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi,
+            CASE WHEN IFNULL( daoqishijian, '' )= '' THEN ard_content ELSE CONCAT(IFNULL(ard_content, ''), "(到期时间：",IFNULL(daoqishijian, ''),"  剩余天数：", IFNULL(l.youxiaoqi, ''),")") end AS ard_content
+            FROM
+            `anbiao_risk_detail` a
+            LEFT JOIN anbiao_vehicle b on b.id=a.ard_association_value
+            LEFT JOIN anbiao_cheliang_jiashiyuan_daily c on (c.vehid=a.ard_association_value or c.gvehid=a.ard_association_value)
+            LEFT JOIN anbiao_jiashiyuan d on c.jiashiyuanid=d.id
+            INNER JOIN(
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) e on e.id=a.ard_dept_ids
+            left join (SELECT ard_ids,CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi from 	`anbiao_risk_detail` )l on l.ard_ids=a.ard_ids
+            WHERE
+            ard_association_table = "anbiao_vehicle"
+            and ard_is_rectification=0
+            and b.is_deleted=0
+--             and (c.vstatus=1 or c.gstatus=1)
+--             and d.isdelete=0
+            and e.is_deleted=0
+            <if test="jiashiyuanxingming != null and jiashiyuanxingming != ''">
+                and d.jiashiyuanxingming like '%${jiashiyuanxingming}%'
+            </if>
+            <if test="cheliangpaizhao != null and cheliangpaizhao != ''">
+                and a.cheliangpaizhao like '%${cheliangpaizhao}%'
+            </if>
+            <if test="jiashiyuanid != null and jiashiyuanid != ''">
+                AND c.jiashiyuanid = #{jiashiyuanid}
+            </if>
+            <if test="deptName != null and deptName != ''">
+                and e.dept_name like '%${deptName}%'
+            </if>
+            <if test="ardTitle != null and ardTitle != ''">
+                and ard_title like '%${ardTitle}%'
+            </if>
+            ORDER BY CASE WHEN daoqishijian IS NULL THEN 1 ELSE 0 END, daoqishijian
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectVehicleRiskTotalweb" parameterType="org.springblade.anbiao.risk.page.VehicleRiskAllPage" resultType="int">
+        select COUNT(1) from
+        (
+        SELECT
+        a.ard_dept_ids as deptId,
+        e.dept_name,
+        c.jiashiyuanid as id,
+        d.jiashiyuanxingming,
+        ard_title ,
+        ard_content as ard_content2,
+        ard_type,
+        ard_discovery_date,
+        ard_association_value,
+        a.vehicleId,
+        a.cheliangpaizhao,
+        CASE WHEN IFNULL( daoqishijian, '' )= '' THEN '' ELSE daoqishijian END AS daoqishijian ,
+        CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi,
+        CASE WHEN IFNULL( daoqishijian, '' )= '' THEN ard_content ELSE CONCAT(IFNULL(ard_content, ''), "(到期时间：",IFNULL(daoqishijian, ''),"  剩余天数：", IFNULL(l.youxiaoqi, ''),")") end AS ard_content
+        FROM
+        `anbiao_risk_detail` a
+        LEFT JOIN anbiao_vehicle b on b.id=a.ard_association_value
+        LEFT JOIN anbiao_cheliang_jiashiyuan_daily c on (c.vehid=a.ard_association_value or c.gvehid=a.ard_association_value)
+        LEFT JOIN anbiao_jiashiyuan d on c.jiashiyuanid=d.id
+        INNER JOIN(
+        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) e on e.id=a.ard_dept_ids
+        left join (SELECT ard_ids,CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi from 	`anbiao_risk_detail` )l on l.ard_ids=a.ard_ids
+        WHERE
+        ard_association_table = "anbiao_vehicle"
+        and ard_is_rectification=0
+        and b.is_deleted=0
+--         and (c.vstatus=1 or c.gstatus=1)
+--         and d.isdelete=0
+        and e.is_deleted=0
+        <if test="jiashiyuanxingming != null and jiashiyuanxingming != ''">
+            and d.jiashiyuanxingming like '%${jiashiyuanxingming}%'
+        </if>
+        <if test="cheliangpaizhao != null and cheliangpaizhao != ''">
+            and a.cheliangpaizhao like '%${cheliangpaizhao}%'
+        </if>
+        <if test="jiashiyuanid != null and jiashiyuanid != ''">
+            AND c.jiashiyuanid = #{jiashiyuanid}
+        </if>
+        <if test="deptName != null and deptName != ''">
+            and e.dept_name like '%${deptName}%'
+        </if>
+        <if test="ardTitle != null and ardTitle != ''">
+            and ard_title like '%${ardTitle}%'
+        </if>
+        ORDER BY CASE WHEN daoqishijian IS NULL THEN 1 ELSE 0 END, daoqishijian
+        )d
+    </select>
+
     <select id="selectJiaShiYuanBaoXianRisk"  resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan" parameterType="java.lang.String">
         SELECT
             a.id ,
