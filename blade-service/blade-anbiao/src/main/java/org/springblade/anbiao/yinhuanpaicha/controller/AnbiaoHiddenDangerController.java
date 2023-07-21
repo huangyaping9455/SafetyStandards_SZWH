@@ -220,17 +220,19 @@ public class AnbiaoHiddenDangerController {
 	@ApiOperation(value = "隐患排查信息-分页列表", notes = "传入AnbiaoHiddenDangerPage", position = 4)
 	public R<AnbiaoHiddenDangerPage<AnbiaoHiddenDangerVO>> getHiddenDangerPage(@RequestBody AnbiaoHiddenDangerPage anbiaoHiddenDangerPage, BladeUser user) {
 		R rs = new R();
-		if(anbiaoHiddenDangerPage.getAhdType().equals("人的不安全行为")){
-			anbiaoHiddenDangerPage.setAhdType("0");
-		}
-		if(anbiaoHiddenDangerPage.getAhdType().equals("物的不安全行为")){
-			anbiaoHiddenDangerPage.setAhdType("1");
-		}
-		if(anbiaoHiddenDangerPage.getAhdType().equals("管理因素")){
-			anbiaoHiddenDangerPage.setAhdType("2");
-		}
-		if(anbiaoHiddenDangerPage.getAhdType().equals("环境因素")){
-			anbiaoHiddenDangerPage.setAhdType("3");
+		if(StringUtils.isNotEmpty(anbiaoHiddenDangerPage.getAhdType())){
+			if(anbiaoHiddenDangerPage.getAhdType().equals("人的不安全行为")){
+				anbiaoHiddenDangerPage.setAhdType("0");
+			}
+			if(anbiaoHiddenDangerPage.getAhdType().equals("物的不安全行为")){
+				anbiaoHiddenDangerPage.setAhdType("1");
+			}
+			if(anbiaoHiddenDangerPage.getAhdType().equals("管理因素")){
+				anbiaoHiddenDangerPage.setAhdType("2");
+			}
+			if(anbiaoHiddenDangerPage.getAhdType().equals("环境因素")){
+				anbiaoHiddenDangerPage.setAhdType("3");
+			}
 		}
 		AnbiaoHiddenDangerPage<AnbiaoHiddenDangerVO> list= service.selectPage(anbiaoHiddenDangerPage);
 		return R.data(list);
