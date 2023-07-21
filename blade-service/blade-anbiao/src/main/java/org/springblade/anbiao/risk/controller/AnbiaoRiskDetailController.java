@@ -2187,6 +2187,14 @@ public class AnbiaoRiskDetailController {
 		return R.data(pages);
 	}
 
+	@PostMapping("/vehicleRiskAllweb")
+	@ApiLog("详情-车辆风险统计信息web")
+	@ApiOperation(value = "详情-车辆风险统计信息web", position = 16)
+	public R<VehicleRiskAllPage<VehicleRiskAllVO>> vehicleRiskAllweb(@RequestBody VehicleRiskAllPage vehicleRiskAllPage) {
+		VehicleRiskAllPage<VehicleRiskAllVO> pages = riskDetailService.selectVehicleRiskAllweb(vehicleRiskAllPage);
+		return R.data(pages);
+	}
+
 	@PostMapping("/jiashiyuanRuZhiRiskinsert")
 	@ApiLog("新增-驾驶员入职表风险统计信息")
 	@ApiOperation(value = "新增-驾驶员入职表风险统计信息", position = 17)

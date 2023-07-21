@@ -177,6 +177,9 @@ public class AnbiaoJiashiyuanRuzhiController {
 				if (StringUtils.isNotBlank(ruzhi.getAjrEntryTime()) && !ruzhi.getAjrEntryTime().equals("null")){
 					jiaShiYuan.setPingyongriqi(ruzhi.getAjrEntryTime());
 				}
+				if (StringUtils.isNotBlank(ruzhi.getAjrSex()) && !ruzhi.getAjrSex().equals("null")){
+					jiaShiYuan.setXingbie(ruzhi.getAjrSex());
+				}
 				iJiaShiYuanService.getBaseMapper().updateById(jiaShiYuan);
 			}
 
