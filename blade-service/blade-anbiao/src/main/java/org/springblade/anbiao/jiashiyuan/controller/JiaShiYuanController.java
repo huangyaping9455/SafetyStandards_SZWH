@@ -5935,7 +5935,9 @@ public class JiaShiYuanController {
 		DriverDataPerfectionVO driverDataPerfectionVO = new DriverDataPerfectionVO();
 		ArrayList<DriverDataPerfectionValueVO> driverDataPerfectionValueVOS = new ArrayList<>();
 		QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
-		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId, jiaShiYuanPage.getDeptId());
+		if (!jiaShiYuanPage.getDeptId().equals("1")) {
+			jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId, jiaShiYuanPage.getDeptId());
+		}
 		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete, "0");
 		List<JiaShiYuan> jiaShiYuans = iJiaShiYuanService.getBaseMapper().selectList(jiaShiYuanQueryWrapper);
 		int size = jiaShiYuans.size();
