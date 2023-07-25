@@ -1133,7 +1133,6 @@ public class SynchronousCrontab {
 			}else {
 				int a=0;
 				String A="";
-				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 				if (!ruzhi.getAjrName().equals("0")){
 					A=A+"姓名、";
 					riskDetail.setArdContent(A);
@@ -1245,6 +1244,7 @@ public class SynchronousCrontab {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 				}
 			}
@@ -1307,7 +1307,6 @@ public class SynchronousCrontab {
 			}else {
 				int a=0;
 				String A="";
-				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 				if (!jiaShiYuan.getShenfenzhenghao().equals("0")){
 					A=A+"身份证号、";
 					riskDetail.setArdContent(A);
@@ -1339,6 +1338,7 @@ public class SynchronousCrontab {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 				}
 			}
@@ -1401,7 +1401,6 @@ public class SynchronousCrontab {
 			}else {
 				int a=0;
 				String A="";
-				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 				if (!jiashizheng.getAjjFileNo().equals("0")){
 					A=A+"档案编号、";
 					riskDetail.setArdContent(A);
@@ -1433,6 +1432,7 @@ public class SynchronousCrontab {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 
 				}
@@ -1491,7 +1491,6 @@ public class SynchronousCrontab {
 			}else {
 				int a=0;
 				String A="";
-				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 				if (!congyezigezheng.getAjcCertificateNo().equals("0")){
 					A=A+"从业资格证件号、";
 					riskDetail.setArdContent(A);
@@ -1518,6 +1517,7 @@ public class SynchronousCrontab {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 
 				}
@@ -1566,7 +1566,6 @@ public class SynchronousCrontab {
 			}else {
 				int a=0;
 				String A="";
-				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 				if (!tijian.getAjtPhysicalExaminationDate().equals("0")){
 					A=A+"体检日期、";
 					riskDetail.setArdContent(A);
@@ -1583,6 +1582,7 @@ public class SynchronousCrontab {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 
 				}
@@ -1626,7 +1626,6 @@ public class SynchronousCrontab {
 			}else {
 				int a=0;
 				String A="";
-				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 				if (!gangqianpeixun.getAjgTrainingEnclosure().equals("0")){
 					A=A+"培训附件";
 					riskDetail.setArdContent(A);
@@ -1638,6 +1637,7 @@ public class SynchronousCrontab {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 
 				}
@@ -1686,7 +1686,6 @@ public class SynchronousCrontab {
 			}else {
 				int a=0;
 				String A="";
-				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 				if (!wuzezhengming.getAjwDate().equals("0")){
 					A=A+"报告日期、";
 					riskDetail.setArdContent(A);
@@ -1703,6 +1702,7 @@ public class SynchronousCrontab {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 
 				}
@@ -1751,7 +1751,6 @@ public class SynchronousCrontab {
 			}else {
 				int a=0;
 				String A="";
-				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 				if (!anquanzerenshu.getAjaAutographTime().equals("0")){
 					A=A+"签字时间、";
 					riskDetail.setArdContent(A);
@@ -1768,6 +1767,7 @@ public class SynchronousCrontab {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 
 				}
@@ -1816,7 +1816,6 @@ public class SynchronousCrontab {
 			}else {
 				int a=0;
 				String A="";
-				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 				if (!anquanzerenshu.getAjaAutographTime().equals("0")){
 					A=A+"签字时间、";
 					riskDetail.setArdContent(A);
@@ -1833,6 +1832,7 @@ public class SynchronousCrontab {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 
 				}
@@ -1881,7 +1881,6 @@ public class SynchronousCrontab {
 			}else {
 				int a=0;
 				String A="";
-				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 				if (!laodonghetong.getAjwAutographTime().equals("0")){
 					A=A+"签字时间、";
 					riskDetail.setArdContent(A);
@@ -1898,6 +1897,7 @@ public class SynchronousCrontab {
 					riskDetailService.updateById(riskDetail);
 				}else if (a==0){
 					riskDetail.setArdIsRectification("1");
+					riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 					riskDetailService.updateById(riskDetail);
 
 				}
@@ -2250,7 +2250,6 @@ public class SynchronousCrontab {
 			}else {
 				int a=0;
 				String A="";
-				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 				if (!vehicleXingshizheng.getAvxPlateNo().equals("0")){
 					A=A+"车辆牌照、";
 					riskDetail.setArdContent(A);
@@ -2406,7 +2405,6 @@ public class SynchronousCrontab {
 			}else {
 				int a=0;
 				String A="";
-				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 				A=vehicleDaoluyunshuzheng.getCheliangpaizhao();
 				if (!vehicleDaoluyunshuzheng.getAvdRoadTransportCertificateNo().equals("0")){
 					A=A+"道路运输证号、";
@@ -2486,7 +2484,6 @@ public class SynchronousCrontab {
 			}else {
 				int a=0;
 				String A="";
-				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 				A=xingnengbaogao.getCheliangpaizhao();
 				if (!xingnengbaogao.getAvxInspectionDate2().equals("0")){
 					A=A+"检测日期";
@@ -2551,7 +2548,6 @@ public class SynchronousCrontab {
 			}else {
 				int a=0;
 				String A="";
-				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
 				A=dengjizhengshu.getCheliangpaizhao();
 				if (!dengjizhengshu.getAvdEnclosure().equals("0")){
 					A=A+"登记证书附件";
