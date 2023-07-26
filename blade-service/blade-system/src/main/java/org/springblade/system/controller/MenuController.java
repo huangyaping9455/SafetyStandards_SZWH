@@ -166,7 +166,6 @@ public class MenuController extends BladeController {
 	@PostMapping("/submit")
 	@ApiOperation(value = "新增或修改", notes = "传入menu", position = 8)
 	public R submit(@Valid @RequestBody Menu menu) {
-		menu.setType("0");
 		return R.status(menuService.saveOrUpdate(menu));
 	}
 

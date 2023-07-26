@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.deptrisk.mapper.DeptRiskMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.deptrisk.entity.DeptRisk">
+        <result column="jsyNum" property="jsyNum" />
+        <result column="clNum" property="clNum" />
+        <result column="qyNum" property="qyNum" />
+        <result column="deptId" property="deptId" />
+        <result column="deptName" property="deptName" />
+        <result column="ruzhiAvg" property="ruzhiAvg" />
+        <result column="sfzAvg" property="sfzAvg" />
+        <result column="jszAvg" property="jszAvg" />
+        <result column="cyzgzAvg" property="cyzgzAvg" />
+        <result column="tjAvg" property="tjAvg" />
+        <result column="gqpxAvg" property="gqpxAvg" />
+        <result column="wzzmAvg" property="wzzmAvg" />
+        <result column="aqzrsAvg" property="aqzrsAvg" />
+        <result column="whgzsAvg" property="whgzsAvg" />
+        <result column="ldhtAvg" property="ldhtAvg" />
+        <result column="jsyRiskNum" property="jsyRiskNum" />
+        <result column="clRiskNum" property="clRiskNum" />
+        <result column="day" property="day" />
+        <result column="riskNum" property="riskNum" />
+    </resultMap>
+
+    <select id="selectDeptNum" resultMap="BaseResultMap">
+        select
+            SUM(b.num) as jsyNum,
+            SUM(c.num) as clNum,
+            (
+                SELECT
+                    COUNT(1) as num
+                FROM
+                    blade_dept shangji,
+                    blade_dept xiaji,
+                    anbiao_organization qiye
+                WHERE
+                    xiaji.tree_code LIKE CONCAT( shangji.tree_code, '%' )
+                  AND xiaji.is_deleted = 0
+                  AND xiaji.extend_type = '机构'
+                  AND shangji.id = #{deptId}
+                  AND qiye.dept_id = xiaji.id
+                  AND qiye.isdelete = 0
+                  AND qiye.jigouleixing in ('qiye','geti')
+            ) as qyNum
+        from (
+             SELECT
+                 DISTINCT
+                 xiaji.id,
+                 xiaji.parent_id,
+                 xiaji.dept_name,
+                 xiaji.is_deleted
+             FROM
+                 blade_dept shangji,
+                 blade_dept xiaji
+             WHERE
+                 xiaji.tree_code LIKE CONCAT( shangji.tree_code, '%' )
+               AND xiaji.is_deleted = 0
+               AND xiaji.extend_type = '机构'
+               AND shangji.id = #{deptId}
+             )a
+         INNER JOIN (
+            select dept_id,COUNT(1) as num from anbiao_jiashiyuan where isdelete = 0 GROUP BY dept_id
+        )b on a.id = b.dept_id
+                 INNER JOIN (
+            select dept_id,COUNT(1) as num from anbiao_vehicle where is_deleted = 0 GROUP BY dept_id
+        )c on a.id = c.dept_id
+    </select>
+
+    <select id="selectDeptRiskNum" resultMap="BaseResultMap">
+        select
+            SUM(b.clrisknum)+SUM(jsyrisknum) as riskNum
+        from(
+                SELECT DISTINCT
+                    xiaji.id,
+                    xiaji.parent_id,
+                    xiaji.dept_name,
+                    xiaji.is_deleted
+                FROM
+                    blade_dept shangji,
+                    blade_dept xiaji
+                WHERE
+                    xiaji.tree_code LIKE CONCAT( shangji.tree_code, '%' )
+                  AND xiaji.is_deleted = 0
+                  AND xiaji.extend_type = '机构'
+                  AND shangji.id = #{deptId}
+            )a
+                LEFT JOIN(
+            select
+                a.deptId,
+                a.dept_name,
+                COUNT(1) as clrisknum
+            from (
+                     SELECT
+                         a.ard_dept_ids as deptId,
+                         e.dept_name,
+                         ard_title ,
+                         ard_content as ard_content2,
+                         ard_type,
+                         ard_discovery_date,
+                         ard_association_value,
+                         a.vehicleId,
+                         a.cheliangpaizhao,
+                         CASE WHEN IFNULL( daoqishijian, '' )= '' THEN '' ELSE daoqishijian END AS daoqishijian ,
+                         CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi,
+                         CASE WHEN IFNULL( daoqishijian, '' )= '' THEN ard_content ELSE CONCAT(IFNULL(ard_content, ''), "(到期时间：",IFNULL(daoqishijian, ''),"  剩余天数：", IFNULL(l.youxiaoqi, ''),")") end AS ard_content
+                     FROM
+                         `anbiao_risk_detail` a
+                             LEFT JOIN anbiao_vehicle b on b.id=a.ard_association_value
+                             INNER JOIN(
+                             SELECT DISTINCT
+                                 xiaji.id,
+                                 xiaji.parent_id,
+                                 xiaji.dept_name,
+                                 xiaji.is_deleted
+                             FROM
+                                 blade_dept shangji,
+                                 blade_dept xiaji
+                             WHERE
+                                 xiaji.tree_code LIKE CONCAT( shangji.tree_code, '%' )
+                               AND xiaji.is_deleted = 0
+                               AND xiaji.extend_type = '机构'
+                               AND shangji.id = #{deptId}
+                         ) e on e.id=a.ard_dept_ids
+                             left join (SELECT ard_ids,CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi from 	`anbiao_risk_detail` 					)l on l.ard_ids=a.ard_ids
+                     WHERE
+                         ard_association_table = "anbiao_vehicle"
+                       and ard_is_rectification=0
+                       and b.is_deleted=0
+                       and e.is_deleted=0
+                 )a
+            GROUP BY
+                a.deptId,
+                a.dept_name
+            )b on b.deptId = a.id
+            LEFT JOIN(
+                select
+                    a.deptId,
+                    a.dept_name,
+                    COUNT(1) as jsyrisknum
+                from (
+                     SELECT
+                         ard_dept_ids AS deptId,
+                         a.dept_name,
+                         ard_title,
+                         CASE
+                             WHEN IFNULL( daoqishijian, '' )= '' THEN
+                                 ard_content ELSE CONCAT( IFNULL( ard_content, '' ), "(到期时间：", IFNULL( daoqishijian, '' ), "  剩余天数：", IFNULL( l.youxiaoqi, '' ), ")" )
+                             END AS ard_content2,
+                         ard_discovery_date,
+                         ard_association_value,
+                         j.jiashiyuanxingming,
+                         CASE
+                             WHEN IFNULL( daoqishijian, '' )= '' THEN '' ELSE daoqishijian
+                             END AS daoqishijian,
+                         CASE
+                             WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF( daoqishijian, SYSDATE())
+                             END AS youxiaoqi,
+                         CASE
+                             WHEN IFNULL( daoqishijian, '' )= '' THEN
+                                 ard_content ELSE CONCAT( IFNULL( ard_content, '' ), "(到期时间：", IFNULL( daoqishijian, '' ), "  剩余天数：", IFNULL( l.youxiaoqi, '' ), ")" )
+                             END AS ard_content
+                     FROM (
+                          SELECT DISTINCT
+                              xiaji.id,
+                              xiaji.parent_id,
+                              xiaji.dept_name,
+                              xiaji.is_deleted
+                          FROM
+                              blade_dept shangji,
+                              blade_dept xiaji
+                          WHERE
+                              xiaji.tree_code LIKE CONCAT( shangji.tree_code, '%' )
+                            AND xiaji.is_deleted = 0
+                            AND xiaji.extend_type = '机构'
+                            AND shangji.id = #{deptId}
+                          ) a
+                          INNER JOIN anbiao_risk_detail rd ON a.id = rd.ard_dept_ids
+                          INNER JOIN anbiao_jiashiyuan j ON j.id = rd.ard_association_value and j.isdelete = 0
+                          INNER JOIN (
+                             SELECT
+                                 ard_ids,
+                                 CASE
+                                     WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF( daoqishijian, SYSDATE())
+                                 END AS youxiaoqi
+                                FROM
+                                    `anbiao_risk_detail`
+                                ) l ON l.ard_ids = rd.ard_ids
+                            WHERE
+                                 ard_is_rectification = 0
+                               AND ard_association_table = "anbiao_jiashiyuan"
+                               AND ard_association_field = "id"
+                             )a
+                    GROUP BY
+                        a.deptId,
+                        a.dept_name
+                    )c on c.deptId = a.id
+
+    </select>
+
+    <select id="selectDeptListRiskNum" resultMap="BaseResultMap">
+        select
+            a.id as deptId,
+            a.dept_name as deptName,
+            SUM(b.clrisknum)+SUM(jsyrisknum) as riskNum
+        from(
+            SELECT DISTINCT
+                xiaji.id,
+                xiaji.parent_id,
+                xiaji.dept_name,
+                xiaji.is_deleted
+            FROM
+                blade_dept shangji,
+                blade_dept xiaji,
+                anbiao_organization qiye
+            WHERE
+                xiaji.tree_code LIKE CONCAT( shangji.tree_code, '%' )
+              AND xiaji.is_deleted = 0
+              AND xiaji.extend_type = '机构'
+              AND shangji.id = #{deptId}
+              AND qiye.dept_id = xiaji.id
+              AND qiye.isdelete = 0
+              AND qiye.jigouleixing in ('qiye','geti')
+            )a
+        LEFT JOIN(
+            select
+                a.deptId,
+                a.dept_name,
+                COUNT(1) as clrisknum
+            from (
+                 SELECT
+                     a.ard_dept_ids as deptId,
+                     e.dept_name,
+                     ard_title ,
+                     ard_content as ard_content2,
+                     ard_type,
+                     ard_discovery_date,
+                     ard_association_value,
+                     a.vehicleId,
+                     a.cheliangpaizhao,
+                     CASE WHEN IFNULL( daoqishijian, '' )= '' THEN '' ELSE daoqishijian END AS daoqishijian ,
+                     CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi,
+                     CASE WHEN IFNULL( daoqishijian, '' )= '' THEN ard_content ELSE CONCAT(IFNULL(ard_content, ''), "(到期时间：",IFNULL(daoqishijian, ''),"  剩余天数：", IFNULL(l.youxiaoqi, ''),")") end AS ard_content
+                 FROM
+                     `anbiao_risk_detail` a
+                         LEFT JOIN anbiao_vehicle b on b.id=a.ard_association_value
+                         INNER JOIN(
+                         SELECT DISTINCT
+                             xiaji.id,
+                             xiaji.parent_id,
+                             xiaji.dept_name,
+                             xiaji.is_deleted
+                         FROM
+                             blade_dept shangji,
+                             blade_dept xiaji
+                         WHERE
+                             xiaji.tree_code LIKE CONCAT( shangji.tree_code, '%' )
+                           AND xiaji.is_deleted = 0
+                           AND xiaji.extend_type = '机构'
+                           AND shangji.id = #{deptId}
+                     ) e on e.id=a.ard_dept_ids
+                         left join (SELECT ard_ids,CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi from 	`anbiao_risk_detail` 					)l on l.ard_ids=a.ard_ids
+                 WHERE
+                     ard_association_table = "anbiao_vehicle"
+                   and ard_is_rectification=0
+                   and b.is_deleted=0
+                   and e.is_deleted=0
+                 )a
+            GROUP BY
+                a.deptId,
+                a.dept_name
+            )b on b.deptId = a.id
+            LEFT JOIN(
+                select
+                    a.deptId,
+                    a.dept_name,
+                    COUNT(1) as jsyrisknum
+                from (
+                     SELECT
+                         ard_dept_ids AS deptId,
+                         a.dept_name,
+                         ard_title,
+                         CASE
+                             WHEN IFNULL( daoqishijian, '' )= '' THEN
+                                 ard_content ELSE CONCAT( IFNULL( ard_content, '' ), "(到期时间：", IFNULL( daoqishijian, '' ), "  剩余天数：", IFNULL( l.youxiaoqi, '' ), ")" )
+                         END AS ard_content2,
+                         ard_discovery_date,
+                         ard_association_value,
+                         j.jiashiyuanxingming,
+                         CASE
+                             WHEN IFNULL( daoqishijian, '' )= '' THEN '' ELSE daoqishijian
+                             END AS daoqishijian,
+                         CASE
+                             WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF( daoqishijian, SYSDATE())
+                             END AS youxiaoqi,
+                         CASE
+                             WHEN IFNULL( daoqishijian, '' )= '' THEN
+                                 ard_content ELSE CONCAT( IFNULL( ard_content, '' ), "(到期时间：", IFNULL( daoqishijian, '' ), "  剩余天数：", IFNULL( l.youxiaoqi, '' ), ")" )
+                             END AS ard_content
+                     FROM (
+                          SELECT DISTINCT
+                              xiaji.id,
+                              xiaji.parent_id,
+                              xiaji.dept_name,
+                              xiaji.is_deleted
+                          FROM
+                              blade_dept shangji,
+                              blade_dept xiaji
+                          WHERE
+                              xiaji.tree_code LIKE CONCAT( shangji.tree_code, '%' )
+                            AND xiaji.is_deleted = 0
+                            AND xiaji.extend_type = '机构'
+                            AND shangji.id = #{deptId}
+                          ) a
+                      INNER JOIN anbiao_risk_detail rd ON a.id = rd.ard_dept_ids
+                      INNER JOIN anbiao_jiashiyuan j ON j.id = rd.ard_association_value and j.isdelete = 0
+                      INNER JOIN (
+                         SELECT
+                             ard_ids,
+                             CASE
+                                 WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF( daoqishijian, SYSDATE())
+                                 END AS youxiaoqi
+                         FROM
+                             `anbiao_risk_detail`
+                     ) l ON l.ard_ids = rd.ard_ids
+                     WHERE
+                         ard_is_rectification = 0
+                       AND ard_association_table = "anbiao_jiashiyuan"
+                       AND ard_association_field = "id"
+                 )a
+            GROUP BY
+                a.deptId,
+                a.dept_name
+            )c on c.deptId = a.id
+        GROUP BY
+            a.id,
+            a.dept_name
+        order by riskNum desc
+    </select>
+
+    <select id="selectDeptAvg" resultMap="BaseResultMap">
+        select
+            a.deptId,
+            a.deptName,
+            CONCAT(ROUND(AVG(a.a1_avg),2),'%') as ruzhiAvg,
+            CONCAT(ROUND(AVG(a.a2_avg),2),'%') as sfzAvg,
+            CONCAT(ROUND(AVG(a.a3_avg),2),'%') as jszAvg,
+            CONCAT(ROUND(AVG(a.a4_avg),2),'%') as cyzgzAvg,
+            CONCAT(ROUND(AVG(a.a5_avg),2),'%') as tjAvg,
+            CONCAT(ROUND(AVG(a.a6_avg),2),'%') as gqpxAvg,
+            CONCAT(ROUND(AVG(a.a7_avg),2),'%') as wzzmAvg,
+            CONCAT(ROUND(AVG(a.a8_avg),2),'%') as aqzrsAvg,
+            CONCAT(ROUND(AVG(a.a9_avg),2),'%') as whgzsAvg,
+            CONCAT(ROUND(AVG(a.a10_avg),2),'%') as ldhtAvg
+        from(
+            SELECT
+                bb.id AS deptId,
+                bb.dept_name AS deptName,
+                a.id AS jiashiyuanId,
+                a.jiashiyuanxingming AS a,
+                ruzhi_compeleted AS a1,
+                ruzhi_compeleted_all AS a1_all,
+                ROUND(((ruzhi_compeleted_all-ruzhi_compeleted)*1.0/ruzhi_compeleted_all)*100,2) as a1_avg,
+                sfz_compeleted AS a2,
+                sfz_compeleted_all AS a2_all,
+                ROUND(((sfz_compeleted_all-sfz_compeleted)*1.0/sfz_compeleted_all)*100,2) as a2_avg,
+                jsz_compeleted AS a3,
+                jsz_compeleted_all AS a3_all,
+                ROUND(((jsz_compeleted_all-jsz_compeleted)*1.0/jsz_compeleted_all)*100,2) as a3_avg,
+                cyzgz_compeleted AS a4,
+                cyzgz_compeleted_all AS a4_all,
+                ROUND(((cyzgz_compeleted_all-cyzgz_compeleted)*1.0/cyzgz_compeleted_all)*100,2) as a4_avg,
+                tj_compeleted AS a5,
+                tj_compeleted_all AS a5_all,
+                ROUND(((tj_compeleted_all-tj_compeleted)*1.0/tj_compeleted_all)*100,2) as a5_avg,
+                gqpx_compeleted AS a6,
+                gqpx_compeleted_all AS a6_all,
+                ROUND(((gqpx_compeleted_all-gqpx_compeleted)*1.0/gqpx_compeleted_all)*100,2) as a6_avg,
+                wzzm_compeleted AS a7,
+                wzzm_compeleted_all AS a7_all,
+                ROUND(((wzzm_compeleted_all-wzzm_compeleted)*1.0/wzzm_compeleted_all)*100,2) as a7_avg,
+                aqzrs_compeleted AS a8,
+                aqzrs_compeleted_all AS a8_all,
+                ROUND(((aqzrs_compeleted_all-aqzrs_compeleted)*1.0/aqzrs_compeleted_all)*100,2) as a8_avg,
+                whgzs_compeleted AS a9,
+                whgzs_compeleted_all AS a9_all,
+                ROUND(((whgzs_compeleted_all-whgzs_compeleted)*1.0/whgzs_compeleted_all)*100,2) as a9_avg,
+                ldht_compeleted AS a10,
+                ldht_compeleted_all AS a10_all,
+                ROUND(((ldht_compeleted_all-ldht_compeleted)*1.0/ldht_compeleted_all)*100,2) as a10_avg,
+                CASE WHEN IFNULL( jsybx.ajb_insured_ids, '' ) = '' THEN 1 ELSE 0 END AS c1
+            FROM
+                anbiao_jiashiyuan a
+                INNER JOIN (
+                    SELECT
+                        DISTINCT
+                        xiaji.id,
+                        xiaji.parent_id,
+                        xiaji.dept_name,
+                        xiaji.is_deleted
+                    FROM
+                        blade_dept shangji,
+                        blade_dept xiaji
+                    WHERE
+                        xiaji.tree_code LIKE CONCAT( shangji.tree_code, '%' )
+                      AND xiaji.is_deleted = 0
+                      AND xiaji.extend_type = '机构'
+                      AND shangji.id = #{deptId}
+                ) bb ON a.dept_id = bb.id
+                LEFT JOIN anbiao_jiashiyuan_ruzhi o ON a.id = o.ajr_aj_ids
+                    AND o.ajr_delete = 0
+                LEFT JOIN anbiao_jiashiyuan_jiashizheng b ON a.id = b.ajj_aj_ids
+                    AND b.ajj_delete = 0
+                LEFT JOIN anbiao_jiashiyuan_congyezigezheng c ON a.id = c.ajc_aj_ids
+                    AND c.ajc_delete = 0
+                LEFT JOIN anbiao_jiashiyuan_tijian d ON a.id = d.ajt_aj_ids
+                    AND d.ajt_delete = 0
+                LEFT JOIN anbiao_jiashiyuan_gangqianpeixun e ON a.id = e.ajg_aj_ids
+                    AND e.ajg_delete = 0
+                LEFT JOIN anbiao_jiashiyuan_wuzezhengming f ON a.id = f.ajw_aj_ids
+                    AND f.ajw_delete = 0
+                LEFT JOIN anbiao_jiashiyuan_anquanzerenshu g ON a.id = g.aja_aj_ids
+                    AND g.aja_delete = 0
+                LEFT JOIN anbiao_jiashiyuan_weihaigaozhishu h ON a.id = h.ajw_aj_ids
+                    AND h.ajw_delete = 0
+                LEFT JOIN anbiao_jiashiyuan_laodonghetong i ON a.id = i.ajw_aj_ids
+                    AND i.ajw_delete = 0
+                LEFT JOIN ( SELECT DISTINCT ajb_insured_ids FROM anbiao_jiashiyuan_baoxian WHERE ajb_delete = 0 ) jsybx ON jsybx.ajb_insured_ids = a.id
+            WHERE
+                ifnull( a.isdelete, 0 ) = 0
+            )a
+        GROUP BY
+            a.deptId,
+            a.deptName
+    </select>
+
+    <select id="selectJsyRiskCount" resultMap="BaseResultMap">
+        select
+            a.deptId,
+            a.dept_name as deptName,
+            COUNT(1) as jsyRiskNum
+        from (
+             SELECT
+                 ard_dept_ids AS deptId,
+                 a.dept_name,
+                 ard_title,
+                 CASE
+                     WHEN IFNULL( daoqishijian, '' )= '' THEN
+                     ard_content ELSE CONCAT( IFNULL( ard_content, '' ), "(到期时间：", IFNULL( daoqishijian, '' ), "  剩余天数：", IFNULL( l.youxiaoqi, '' ), ")" )
+                 END AS ard_content2,
+                 ard_discovery_date,
+                 ard_association_value,
+                 j.jiashiyuanxingming,
+                 CASE
+                     WHEN IFNULL( daoqishijian, '' )= '' THEN '' ELSE daoqishijian
+                 END AS daoqishijian,
+                 CASE
+                     WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF( daoqishijian, SYSDATE())
+                 END AS youxiaoqi,
+                 CASE
+                     WHEN IFNULL( daoqishijian, '' )= '' THEN
+                     ard_content ELSE CONCAT( IFNULL( ard_content, '' ), "(到期时间：", IFNULL( daoqishijian, '' ), "  剩余天数：", IFNULL( l.youxiaoqi, '' ), ")" )
+                 END AS ard_content
+             FROM (
+                  SELECT DISTINCT
+                      xiaji.id,
+                      xiaji.parent_id,
+                      xiaji.dept_name,
+                      xiaji.is_deleted
+                  FROM
+                      blade_dept shangji,
+                      blade_dept xiaji
+                  WHERE
+                      xiaji.tree_code LIKE CONCAT( shangji.tree_code, '%' )
+                    AND xiaji.is_deleted = 0
+                    AND xiaji.extend_type = '机构'
+                    AND shangji.id = #{deptId}
+                  ) a
+                  INNER JOIN anbiao_risk_detail rd ON a.id = rd.ard_dept_ids
+                  INNER JOIN anbiao_jiashiyuan j ON j.id = rd.ard_association_value and j.isdelete = 0
+                  INNER JOIN (
+                     SELECT
+                         ard_ids,
+                         CASE
+                            WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF( daoqishijian, SYSDATE())
+                         END AS youxiaoqi
+                     FROM
+                         `anbiao_risk_detail`
+                     ) l ON l.ard_ids = rd.ard_ids
+                 WHERE
+                     ard_is_rectification = 0
+                   AND ard_association_table = "anbiao_jiashiyuan"
+                   AND ard_association_field = "id"
+                )a
+            GROUP BY
+                a.deptId,
+                a.dept_name
+    </select>
+
+    <select id="selectClRiskCount" resultMap="BaseResultMap">
+        select
+            a.deptId,
+            a.dept_name as deptName,
+            COUNT(1) as clRiskNum
+        from (
+             SELECT
+                 a.ard_dept_ids as deptId,
+                 e.dept_name,
+                 ard_title ,
+                 ard_content as ard_content2,
+                 ard_type,
+                 ard_discovery_date,
+                 ard_association_value,
+                 a.vehicleId,
+                 a.cheliangpaizhao,
+                 CASE WHEN IFNULL( daoqishijian, '' )= '' THEN '' ELSE daoqishijian END AS daoqishijian ,
+                 CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi,
+                 CASE WHEN IFNULL( daoqishijian, '' )= '' THEN ard_content ELSE CONCAT(IFNULL(ard_content, ''), "(到期时间：",IFNULL(daoqishijian, ''),"  剩余天数：", IFNULL(l.youxiaoqi, ''),")") end AS ard_content
+             FROM
+                 `anbiao_risk_detail` a
+                 LEFT JOIN anbiao_vehicle b on b.id=a.ard_association_value
+                 INNER JOIN(
+                     SELECT DISTINCT
+                         xiaji.id,
+                         xiaji.parent_id,
+                         xiaji.dept_name,
+                         xiaji.is_deleted
+                     FROM
+                         blade_dept shangji,
+                         blade_dept xiaji
+                     WHERE
+                         xiaji.tree_code LIKE CONCAT( shangji.tree_code, '%' )
+                       AND xiaji.is_deleted = 0
+                       AND xiaji.extend_type = '机构'
+                       AND shangji.id = #{deptId}
+                 ) e on e.id=a.ard_dept_ids
+                 left join (SELECT ard_ids,CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi from 	`anbiao_risk_detail` )l on l.ard_ids=a.ard_ids
+             WHERE
+                 ard_association_table = "anbiao_vehicle"
+               and ard_is_rectification=0
+               and b.is_deleted=0
+               and e.is_deleted=0
+             )a
+        GROUP BY
+            a.deptId,
+            a.dept_name
+    </select>
+
+    <select id="selectRiskTendency" resultMap="BaseResultMap">
+        select
+            a.day,
+            IFNULL(b.clrisknum,0) as clRiskNum,
+            IFNULL(c.jsyrisknum,0) as jsyRiskNum
+        from(
+            select * from help_topic_time
+            where `day` >= #{beginTime}
+                and `day` &lt;= #{endTime}
+            )a
+        LEFT JOIN(
+            SELECT
+                a.ard_dept_ids as deptId,
+                e.dept_name,
+                ard_discovery_date,
+                COUNT(1) as clrisknum
+            FROM
+                `anbiao_risk_detail` a
+                LEFT JOIN anbiao_vehicle b on b.id=a.ard_association_value
+                INNER JOIN(
+                    SELECT DISTINCT
+                        xiaji.id,
+                        xiaji.parent_id,
+                        xiaji.dept_name,
+                        xiaji.is_deleted
+                    FROM
+                        blade_dept shangji,
+                        blade_dept xiaji
+                    WHERE
+                        xiaji.tree_code LIKE CONCAT( shangji.tree_code, '%' )
+                        AND xiaji.is_deleted = 0
+                        AND xiaji.extend_type = '机构'
+                        AND shangji.id = #{deptId}
+                    ) e on e.id=a.ard_dept_ids
+                WHERE
+                    ard_association_table = "anbiao_vehicle"
+                    and ard_is_rectification=0
+                    and b.is_deleted=0
+                    and e.is_deleted=0
+                GROUP BY
+                    a.ard_dept_ids,
+                    e.dept_name,
+                    ard_discovery_date
+                )b on a.day = b.ard_discovery_date
+            LEFT JOIN(
+                SELECT
+                    ard_dept_ids AS deptId,
+                    a.dept_name,
+                    ard_discovery_date,
+                    COUNT(1) as jsyrisknum
+                FROM (
+                    SELECT DISTINCT
+                        xiaji.id,
+                        xiaji.parent_id,
+                        xiaji.dept_name,
+                        xiaji.is_deleted
+                    FROM
+                        blade_dept shangji,
+                        blade_dept xiaji
+                    WHERE
+                        xiaji.tree_code LIKE CONCAT( shangji.tree_code, '%' )
+                        AND xiaji.is_deleted = 0
+                        AND xiaji.extend_type = '机构'
+                        AND shangji.id = #{deptId}
+                    ) a
+                    INNER JOIN anbiao_risk_detail rd ON a.id = rd.ard_dept_ids
+                    INNER JOIN anbiao_jiashiyuan j ON j.id = rd.ard_association_value and j.isdelete = 0
+                WHERE
+                    ard_is_rectification = 0
+                    AND ard_association_table = "anbiao_jiashiyuan"
+                    AND ard_association_field = "id"
+                GROUP BY
+                    ard_dept_ids,
+                    dept_name,
+                    ard_discovery_date
+                )c on a.day = c.ard_discovery_date
+            ORDER BY a.day
+    </select>
+
+</mapper>
