@@ -68,4 +68,7 @@ public class StudentInfo implements Serializable {
 	@ApiModelProperty(value = "课程ID")
 	private Integer courseId;
 
+	@ApiModelProperty(value = "企业名称")
+	private String unitName;
+
 }

@@ -432,7 +432,7 @@
             bc.name,
             bs.plate_number as plateNumber,
             bu.id as unitId,
-            bu.simple_name,
+            bu.simple_name as unitName,
             (select id from base_unit where id = (
             select server_id from base_unit where id = ruc.unit_id)) as serviceId,
             (select simple_name from base_unit where id = (

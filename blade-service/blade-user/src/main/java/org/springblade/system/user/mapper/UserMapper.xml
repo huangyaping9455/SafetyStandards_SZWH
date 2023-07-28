@@ -113,12 +113,12 @@
             u.password
         from
             blade_user u
-                INNER JOIN anbiao_personnel ux on ux.userid = u.id and ux.is_deleted = 0
-                INNER JOIN blade_post p ON u.id=p.user_id
-                INNER JOIN blade_dept gangwei ON p.post_id=gangwei.id and gangwei.is_deleted = 0
-                LEFT JOIN blade_dept bumen ON gangwei.parent_id = bumen.id and bumen.extend_type='部门'
-                INNER JOIN blade_dept jigou ON (gangwei.parent_id=jigou.id or bumen.parent_id=jigou.id) and jigou.extend_type='机构' and jigou.is_deleted = 0
-                INNER JOIN blade_dept shangji ON locate(shangji.tree_code,jigou.tree_code)>0 and shangji.id= #{deptId}
+            INNER JOIN blade_post p ON u.id=p.user_id
+            INNER JOIN anbiao_personnel ux on ux.userid = u.id and ux.is_deleted = 0 and ux.post_id = p.post_id
+            INNER JOIN blade_dept gangwei ON p.post_id=gangwei.id and gangwei.is_deleted = 0
+            LEFT JOIN blade_dept bumen ON gangwei.parent_id = bumen.id and bumen.extend_type='部门'
+            INNER JOIN blade_dept jigou ON (gangwei.parent_id=jigou.id or bumen.parent_id=jigou.id) and jigou.extend_type='机构' and jigou.is_deleted = 0
+            INNER JOIN blade_dept shangji ON locate(shangji.tree_code,jigou.tree_code)>0 and shangji.id= #{deptId}
         where u.is_deleted != 1
             and IFNULL(account,'') != ''
             and u.is_deleted = 0
