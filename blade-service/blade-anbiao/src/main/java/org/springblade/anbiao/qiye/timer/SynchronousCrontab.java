@@ -858,8 +858,8 @@ public class SynchronousCrontab {
 				//有效期
 				if(xingshizheng.getAvxValidUntil() != null) {
 					riskDetail.setDaoqishijian(xingshizheng.getAvxValidUntil().toString());
-					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.CHINA);
-					int timeDifference = differentDays(DateUtil.now(),formatter.format(xingshizheng.getAvxValidUntil()));
+//					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.CHINA);
+					int timeDifference = differentDays(DateUtil.now(),xingshizheng.getAvxValidUntil());
 					riskDetail.setArdTitle("行驶证有效期");
 					riskDetail.setArdRectificationField("avx_valid_until");		//整改字段
 					riskDetail.setArdRectificationFieldType("date");
@@ -923,7 +923,8 @@ public class SynchronousCrontab {
 				if(daoluyunshuzheng.getAvdValidUntil() != null) {
 					riskDetail.setDaoqishijian(daoluyunshuzheng.getAvdValidUntil().toString());
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.CHINA);
-					int timeDifference = differentDays(DateUtil.now(),formatter.format(daoluyunshuzheng.getAvdValidUntil()));
+					//formatter.format()
+					int timeDifference = differentDays(DateUtil.now(),daoluyunshuzheng.getAvdValidUntil());
 					riskDetail.setArdTitle("道路运输证有效期");
 					riskDetail.setArdRectificationField("avd_valid_until");		//整改字段
 					riskDetail.setArdRectificationFieldType("date");

@@ -200,6 +200,9 @@ public class AnbiaoRepairsInfoController {
 					AnbiaoRepairsRemark repairsRemark = repairsRemarkService.getBaseMapper().selectOne(repairsRemarkQueryWrapper);
 					if(repairsRemark == null) {
 						AnbiaoRepairsRemark remark = repairsInfo.getRemark();
+						if(remark == null){
+							remark = new AnbiaoRepairsRemark();
+						}
 						remark.setRpdtType(repairsInfo.getRpStatus());
 						if (user != null) {
 							remark.setRpdtCreatename(user.getUserName());
@@ -207,6 +210,7 @@ public class AnbiaoRepairsInfoController {
 						}
 						remark.setRpdtCreatetime(DateUtil.now());
 						remark.setRpdtDate(DateUtil.now());
+						remark.setRpdtRpId(repairsInfo.getRpId());
 						ii = repairsRemarkService.save(remark);
 						if (ii) {
 							r.setMsg("新增成功");

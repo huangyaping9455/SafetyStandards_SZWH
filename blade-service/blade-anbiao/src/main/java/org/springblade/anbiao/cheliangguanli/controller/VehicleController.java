@@ -31,6 +31,7 @@ import org.springblade.anbiao.configure.entity.Configure;
 import org.springblade.anbiao.configure.service.IConfigureService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.feign.IOrganizationsClient;
+import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
 import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.service.*;
@@ -95,6 +96,7 @@ public class VehicleController {
 	private ISysClient iSysClient;
 	private IVehicleBiangengjiluService vehicleBiangengjiluService;
 	private IOrganizationsClient orrganizationsClient;
+	private IOrganizationsService organizationsService;
 	private IVehicleDaoluyunshuzhengService daoluyunshuzhengService;
 	private IVehicleXingshizhengService xingshizhengService;
 	private IVehicleXingnengbaogaoService xingnengbaogaoService;
@@ -178,10 +180,10 @@ public class VehicleController {
 		v.setJingyingxukezhenghao(detail.getDaoluyunshuzheng());
 		DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		if(StringUtils.isNotBlank(detail.getDaoluyunshuzhengchulingriqi()) && !detail.getDaoluyunshuzhengchulingriqi().equals("null")){
-			v.setJyxkzyouxiaoqiStart(LocalDate.parse(detail.getDaoluyunshuzhengchulingriqi().substring(0,10), fmt));
+			v.setJyxkzyouxiaoqiStart(detail.getDaoluyunshuzhengchulingriqi());
 		}
 		if(StringUtils.isNotBlank(detail.getDaoluyunshuzhengyouxiaoqi()) && !detail.getDaoluyunshuzhengyouxiaoqi().equals("null")){
-			v.setJyxkzyouxiaoqiEnd(LocalDate.parse(detail.getDaoluyunshuzhengyouxiaoqi().substring(0,10), fmt));
+			v.setJyxkzyouxiaoqiEnd(detail.getDaoluyunshuzhengyouxiaoqi());
 		}
 		v.setJingjileixing(detail.getJingjileixing());
 		v.setJingyingzuzhifangshi(detail.getJingyingzuzhifangshi());
@@ -466,6 +468,7 @@ public class VehicleController {
 					xingshizheng.setAvxVin(v.getChejiahao());
 					xingshizheng.setAvxEngineNo(v.getFadongjihao());
 					xingshizheng.setAvxRegisterDate(v.getZhuceriqi());
+					xingshizheng.setAvxBaofeiTime(v.getQiangzhibaofeishijian());
 					xingshizheng.setAvxIssueDate(v.getZhuceriqi());
 					if(v.getHedingzaikeshu() != null){
 						xingshizheng.setAvxAuthorizedSeatingCapacity(Integer.parseInt(v.getHedingzaikeshu()));
@@ -1549,7 +1552,7 @@ public class VehicleController {
 				String s = DateUtils.formatDateZero(avxRegisterDate);
 				if (DateUtils.isDateString(s, null) == true){
 					LocalDate parse = LocalDate.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-					vehicle.setAvxRegisterDate(parse);
+					vehicle.setAvxRegisterDate(parse.toString());
 				}else {
 					errorStr+=avxRegisterDate+"该行驶证注册日期不是时间格式;";
 					vehicle.setMsg(avxRegisterDate+"该行驶证注册日期不是时间格式;");
@@ -1564,7 +1567,7 @@ public class VehicleController {
 				String s = DateUtils.formatDateZero(avxIssueDate);
 				if (DateUtils.isDateString(s, null) == true){
 					LocalDate parse = LocalDate.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-					vehicle.setAvxIssueDate(parse);
+					vehicle.setAvxIssueDate(parse.toString());
 				}else {
 					errorStr+=avxIssueDate+"该行驶证发证日期不是时间格式;";
 					vehicle.setMsg(avxIssueDate+"该行驶证发证日期不是时间格式;");
@@ -2191,10 +2194,10 @@ public class VehicleController {
 				vehicle.setXingshizhengdaoqishijian(String.valueOf(a.get("xingshizhengdaoqishijian")).trim());
 			}
 			if (StringUtils.isNotBlank(String.valueOf(a.get("avxRegisterDate")).trim())  && !String.valueOf(a.get("avxRegisterDate")).equals("null")) {
-				vehicle.setAvxRegisterDate(LocalDate.parse(String.valueOf(a.get("avxRegisterDate")).trim()));
+				vehicle.setAvxRegisterDate(String.valueOf(a.get("avxRegisterDate")).trim());
 			}
 			if (StringUtils.isNotBlank(String.valueOf(a.get("avxIssueDate")).trim())  && !String.valueOf(a.get("avxIssueDate")).equals("null")) {
-				vehicle.setAvxIssueDate(LocalDate.parse(String.valueOf(a.get("avxIssueDate")).trim()));
+				vehicle.setAvxIssueDate(String.valueOf(a.get("avxIssueDate")).trim());
 			}
 			if (StringUtils.isNotBlank(String.valueOf(a.get("carowneraddress")).trim())  && !String.valueOf(a.get("carowneraddress")).equals("null")) {
 				vehicle.setCarowneraddress(String.valueOf(a.get("carowneraddress")).trim());
@@ -2396,7 +2399,7 @@ public class VehicleController {
 							xingshizheng.setAvxIssueDate(vehicle.getAvxIssueDate());
 						}
 						if (StringUtils.isNotBlank(vehicle.getXingshizhengdaoqishijian())  && !vehicle.getXingshizhengdaoqishijian().equals("null")){
-							xingshizheng.setAvxValidUntil(LocalDate.parse(vehicle.getXingshizhengdaoqishijian(),DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+							xingshizheng.setAvxValidUntil(vehicle.getXingshizhengdaoqishijian());
 						}
 						if (StringUtils.isNotBlank(vehicle.getZongzhiliang())  && !vehicle.getZongzhiliang().equals("null")){
 							xingshizheng.setAvxTotalMass(Integer.parseInt(vehicle.getZongzhiliang()));
@@ -2441,10 +2444,10 @@ public class VehicleController {
 						daoluyunshuzheng.setAvdCreateByIds(user.getUserId().toString());
 						daoluyunshuzheng.setAvdCreateTime(DateUtil.now());
 						if (StringUtils.isNotBlank(vehicle.getDaoluyunshuzhengchulingriqi())  && !vehicle.getDaoluyunshuzhengchulingriqi().equals("null")){
-							daoluyunshuzheng.setAvdIssueDate(LocalDate.parse(vehicle.getDaoluyunshuzhengchulingriqi() , DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+							daoluyunshuzheng.setAvdIssueDate(vehicle.getDaoluyunshuzhengchulingriqi());
 						}
 						if (StringUtils.isNotBlank(vehicle.getDaoluyunshuzhengyouxiaoqi())  && !vehicle.getDaoluyunshuzhengyouxiaoqi().equals("null")){
-							daoluyunshuzheng.setAvdValidUntil(LocalDate.parse(vehicle.getDaoluyunshuzhengyouxiaoqi() , DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+							daoluyunshuzheng.setAvdValidUntil(vehicle.getDaoluyunshuzhengyouxiaoqi());
 						}
 						QueryWrapper<VehicleDaoluyunshuzheng> daoluyunshuzhengQueryWrapper = new QueryWrapper<>();
 						daoluyunshuzhengQueryWrapper.lambda().eq(VehicleDaoluyunshuzheng::getAvdAvIds,daoluyunshuzheng.getAvdAvIds());
@@ -2828,7 +2831,7 @@ public class VehicleController {
 				String s = DateUtils.formatDateZero(avxRegisterDate);
 				if (DateUtils.isDateString(s, null) == true){
 					LocalDate parse = LocalDate.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-					vehicle.setAvxRegisterDate(parse);
+					vehicle.setAvxRegisterDate(parse.toString());
 				}else {
 					errorStr+=avxRegisterDate+"该行驶证注册日期不是时间格式;";
 					vehicle.setMsg(avxRegisterDate+"该行驶证注册日期不是时间格式;");
@@ -2843,7 +2846,7 @@ public class VehicleController {
 				String s = DateUtils.formatDateZero(avxIssueDate);
 				if (DateUtils.isDateString(s, null) == true){
 					LocalDate parse = LocalDate.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-					vehicle.setAvxIssueDate(parse);
+					vehicle.setAvxIssueDate(parse.toString());
 				}else {
 					errorStr+=avxIssueDate+"该行驶证发证日期不是时间格式;";
 					vehicle.setMsg(avxIssueDate+"该行驶证发证日期不是时间格式;");
@@ -3470,10 +3473,10 @@ public class VehicleController {
 				vehicle.setXingshizhengdaoqishijian(String.valueOf(a.get("xingshizhengdaoqishijian")).trim());
 			}
 			if (StringUtils.isNotBlank(String.valueOf(a.get("avxRegisterDate")).trim())  && !String.valueOf(a.get("avxRegisterDate")).equals("null")) {
-				vehicle.setAvxRegisterDate(LocalDate.parse(String.valueOf(a.get("avxRegisterDate")).trim()));
+				vehicle.setAvxRegisterDate(String.valueOf(a.get("avxRegisterDate")).trim());
 			}
 			if (StringUtils.isNotBlank(String.valueOf(a.get("avxIssueDate")).trim())  && !String.valueOf(a.get("avxIssueDate")).equals("null")) {
-				vehicle.setAvxIssueDate(LocalDate.parse(String.valueOf(a.get("avxIssueDate")).trim()));
+				vehicle.setAvxIssueDate(String.valueOf(a.get("avxIssueDate")).trim());
 			}
 			if (StringUtils.isNotBlank(String.valueOf(a.get("carowneraddress")).trim())  && !String.valueOf(a.get("carowneraddress")).equals("null")) {
 				vehicle.setCarowneraddress(String.valueOf(a.get("carowneraddress")).trim());
@@ -3675,7 +3678,7 @@ public class VehicleController {
 							xingshizheng.setAvxIssueDate(vehicle.getAvxIssueDate());
 						}
 						if (StringUtils.isNotBlank(vehicle.getXingshizhengdaoqishijian())  && !vehicle.getXingshizhengdaoqishijian().equals("null")){
-							xingshizheng.setAvxValidUntil(LocalDate.parse(vehicle.getXingshizhengdaoqishijian(),DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+							xingshizheng.setAvxValidUntil(vehicle.getXingshizhengdaoqishijian());
 						}
 						if (StringUtils.isNotBlank(vehicle.getZongzhiliang())  && !vehicle.getZongzhiliang().equals("null")){
 							xingshizheng.setAvxTotalMass(Integer.parseInt(vehicle.getZongzhiliang()));
@@ -3720,10 +3723,10 @@ public class VehicleController {
 						daoluyunshuzheng.setAvdCreateByIds(user.getUserId().toString());
 						daoluyunshuzheng.setAvdCreateTime(DateUtil.now());
 						if (StringUtils.isNotBlank(vehicle.getDaoluyunshuzhengchulingriqi())  && !vehicle.getDaoluyunshuzhengchulingriqi().equals("null")){
-							daoluyunshuzheng.setAvdIssueDate(LocalDate.parse(vehicle.getDaoluyunshuzhengchulingriqi() , DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+							daoluyunshuzheng.setAvdIssueDate(vehicle.getDaoluyunshuzhengchulingriqi());
 						}
 						if (StringUtils.isNotBlank(vehicle.getDaoluyunshuzhengyouxiaoqi())  && !vehicle.getDaoluyunshuzhengyouxiaoqi().equals("null")){
-							daoluyunshuzheng.setAvdValidUntil(LocalDate.parse(vehicle.getDaoluyunshuzhengyouxiaoqi() , DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+							daoluyunshuzheng.setAvdValidUntil(vehicle.getDaoluyunshuzhengyouxiaoqi());
 						}
 						QueryWrapper<VehicleDaoluyunshuzheng> daoluyunshuzhengQueryWrapper = new QueryWrapper<>();
 						daoluyunshuzhengQueryWrapper.lambda().eq(VehicleDaoluyunshuzheng::getAvdAvIds,daoluyunshuzheng.getAvdAvIds());
@@ -5825,7 +5828,7 @@ public class VehicleController {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						Organizations dept = orrganizationsClient.selectByDeptId(vehicle.getDeptId().toString());
+						Organizations dept = organizationsService.selectByDeptId(vehicle.getDeptId().toString());
 						VehicleJishupingding jishupingding = new VehicleJishupingding();		//技术评定
 						jishupingding.setAvjVehicleIds(vehicle.getId());
 						jishupingding.setAvjDelete("0");
@@ -5899,6 +5902,7 @@ public class VehicleController {
 
 						VehicleXingshizheng xingshizheng = new VehicleXingshizheng();		//行驶证
 						xingshizheng.setAvxAvIds(vehicle.getId());
+						xingshizheng.setAvxEngineNo(vehicle.getFadongjihao());
 						xingshizheng.setAvxPlateNo(vehicle.getCheliangpaizhao());
 						xingshizheng.setAvxVehicleType(vehicle.getCheliangleixing());
 						xingshizheng.setAvxOwner(dept.getDeptName());
@@ -5921,7 +5925,7 @@ public class VehicleController {
 							xingshizheng.setAvxIssueDate(vehicle.getAvxIssueDate());
 						}
 						if (StringUtils.isNotBlank(vehicle.getXingshizhengdaoqishijian())  && !vehicle.getXingshizhengdaoqishijian().equals("null")){
-							xingshizheng.setAvxValidUntil(LocalDate.parse(vehicle.getXingshizhengdaoqishijian(),DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+							xingshizheng.setAvxValidUntil(vehicle.getXingshizhengdaoqishijian());
 						}
 						if (StringUtils.isNotBlank(vehicle.getZongzhiliang())  && !vehicle.getZongzhiliang().equals("null")){
 							xingshizheng.setAvxTotalMass(Integer.parseInt(vehicle.getZongzhiliang()));
@@ -5960,16 +5964,16 @@ public class VehicleController {
 						daoluyunshuzheng.setAvdPlateNo(vehicle.getCheliangpaizhao());
 						daoluyunshuzheng.setAvdVehicleType(vehicle.getXinghao());
 						daoluyunshuzheng.setAvdPlateColor(vehicle.getChepaiyanse());
-						daoluyunshuzheng.setAvdRoadTransportCertificateNo(vehicle.getDaoluyunshuzhenghao());
+						daoluyunshuzheng.setAvdRoadTransportCertificateNo(vehicle.getDaoluyunshuzheng());
 						daoluyunshuzheng.setAvdDelete("0");
 						daoluyunshuzheng.setAvdCreateByName(user.getUserName());
 						daoluyunshuzheng.setAvdCreateByIds(user.getUserId().toString());
 						daoluyunshuzheng.setAvdCreateTime(DateUtil.now());
 						if (StringUtils.isNotBlank(vehicle.getDaoluyunshuzhengchulingriqi())  && !vehicle.getDaoluyunshuzhengchulingriqi().equals("null")){
-							daoluyunshuzheng.setAvdIssueDate(LocalDate.parse(vehicle.getDaoluyunshuzhengchulingriqi() , DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+							daoluyunshuzheng.setAvdIssueDate(vehicle.getDaoluyunshuzhengchulingriqi());
 						}
 						if (StringUtils.isNotBlank(vehicle.getDaoluyunshuzhengyouxiaoqi())  && !vehicle.getDaoluyunshuzhengyouxiaoqi().equals("null")){
-							daoluyunshuzheng.setAvdValidUntil(LocalDate.parse(vehicle.getDaoluyunshuzhengyouxiaoqi() , DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+							daoluyunshuzheng.setAvdValidUntil(vehicle.getDaoluyunshuzhengyouxiaoqi());
 						}
 						QueryWrapper<VehicleDaoluyunshuzheng> daoluyunshuzhengQueryWrapper = new QueryWrapper<>();
 						daoluyunshuzhengQueryWrapper.lambda().eq(VehicleDaoluyunshuzheng::getAvdAvIds,daoluyunshuzheng.getAvdAvIds());

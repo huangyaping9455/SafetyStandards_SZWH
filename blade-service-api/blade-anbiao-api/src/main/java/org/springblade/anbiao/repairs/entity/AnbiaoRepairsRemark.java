@@ -27,7 +27,7 @@ public class AnbiaoRepairsRemark implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "rpdt_id", type = IdType.AUTO)
+    @TableId(value = "rpdt_id", type = IdType.UUID)
     private String rpdtId;
 
     @ApiModelProperty(value = "0:待受理，1:待指派，2:已派单，3:转交工单，4:已接单，5:待预约，6:已预约，7:进行中，8:待审核，9:已驳回，10:已完成，11:已取消")

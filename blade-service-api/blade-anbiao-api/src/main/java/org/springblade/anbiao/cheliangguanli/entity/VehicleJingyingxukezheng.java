@@ -68,7 +68,7 @@ public class VehicleJingyingxukezheng implements Serializable {
      * 经营截至日期
      */
     @ApiModelProperty(value = "经营截至日期")
-    private LocalDate avjOperationDeadline;
+    private String avjOperationDeadline;
 
     @ApiModelProperty(value = "经营许可线路名称")
 	private String avjOperatingLineName;

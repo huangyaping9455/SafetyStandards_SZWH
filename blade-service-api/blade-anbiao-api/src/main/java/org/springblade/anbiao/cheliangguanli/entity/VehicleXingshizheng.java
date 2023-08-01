@@ -96,7 +96,7 @@ public class VehicleXingshizheng implements Serializable {
      * 注册日期
      */
     @ApiModelProperty(value = "注册日期")
-    private LocalDate avxRegisterDate;
+    private String avxRegisterDate;
 	@ApiModelProperty(value = "注册日期")
 	@TableField(exist = false)
 	private String avxRegisterDate2;
@@ -104,7 +104,7 @@ public class VehicleXingshizheng implements Serializable {
      * 发证日期
      */
     @ApiModelProperty(value = "发证日期")
-    private LocalDate avxIssueDate;
+    private String avxIssueDate;
 	@ApiModelProperty(value = "发证日期2")
 	@TableField(exist = false)
 	private String avxIssueDate2;
@@ -162,7 +162,8 @@ public class VehicleXingshizheng implements Serializable {
      * 有效期至
      */
     @ApiModelProperty(value = "有效期至")
-    private LocalDate avxValidUntil;
+    private String avxValidUntil;
+
 	@ApiModelProperty(value = "有效期至")
 	@TableField(exist = false)
 	private String avxValidUntil2;

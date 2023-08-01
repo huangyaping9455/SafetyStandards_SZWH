@@ -46,6 +46,7 @@ import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
 import org.springblade.core.tool.utils.DigestUtil;
 import org.springblade.system.entity.Dept;
+import org.springblade.system.entity.Dict;
 import org.springblade.system.feign.IDictClient;
 import org.springblade.system.feign.ISysClient;
 import org.springblade.upload.upload.feign.IFileUploadClient;
@@ -78,7 +79,7 @@ import static java.lang.Float.NaN;
 @RequestMapping("/anbiao/jiashiyuan")
 @AllArgsConstructor
 @Api(value = "驾驶员资料管理", tags = "驾驶员资料管理")
-public class JiaShiYuanController {
+public class JiaShiYuanController extends BladeUser{
 
 	private IJiaShiYuanService iJiaShiYuanService;
 	private IConfigureService mapService;
@@ -2394,6 +2395,64 @@ public class JiaShiYuanController {
 				}
 			}
 
+			//验证从业资格证类别是否满足规则
+			String congyeleibie = String.valueOf(a.get("从业资格证类别")).trim();
+			if (StringUtils.isBlank(congyeleibie) && !congyeleibie.equals("null")) {
+				driver.setMsg("从业资格证类别不能为空;");
+				driver.setImportUrl("icon_cha.png");
+				errorStr += "从业资格证类别不能为空;";
+				bb++;
+			} else {
+				boolean ss = false;
+				List<Dict> dictVOList = iDictClient.getDictByCode("congyezigezhengleibie", null);
+				for (int i = 0; i < dictVOList.size(); i++) {
+					ss = dictVOList.get(i).getDictValue().equals(congyeleibie);
+					if (ss == true) {
+						break;
+					}
+				}
+				if (ss == true) {
+					dictVOList = iDictClient.getDictByCode("congyezigezhengleibie", congyeleibie);
+					driver.setImportUrl("icon_gou.png");
+					driver.setCongyeleibie(dictVOList.get(0).getDictKey());
+					driver.setCongyeleibieshow(dictVOList.get(0).getDictValue());
+				} else {
+					driver.setImportUrl("icon_cha.png");
+					errorStr += congyeleibie + ",该从业资格证类别异常,请校验”;";
+					driver.setMsg(congyeleibie + ",该从业资格证类别异常,请校验;");
+					bb++;
+				}
+			}
+			//验证从业人员类型
+			String congyerenyuanleixing = String.valueOf(a.get("从业人员类型")).trim();
+			if (StringUtils.isNotBlank(congyerenyuanleixing) && !congyerenyuanleixing.equals("null")) {
+				boolean ss = false;
+				List<Dict> dictVOList = iDictClient.getDictByCode("congyerenyuanleixing", null);
+				for (int i = 0; i < dictVOList.size(); i++) {
+					ss = dictVOList.get(i).getDictValue().equals(congyerenyuanleixing);
+					if (ss == true) {
+						break;
+					}
+				}
+				if (ss == true) {
+					dictVOList = iDictClient.getDictByCode("congyerenyuanleixing", congyerenyuanleixing);
+					driver.setImportUrl("icon_gou.png");
+					driver.setJiashiyuanleixing(dictVOList.get(0).getDictKey());
+					driver.setCongyerenyuanleixing(dictVOList.get(0).getDictKey());
+				} else {
+					driver.setImportUrl("icon_cha.png");
+					errorStr += congyerenyuanleixing + ",该从业人员类型异常,请校验”;";
+					driver.setMsg(congyerenyuanleixing + ",该从业人员类型异常,请校验;");
+					bb++;
+				}
+			} else {
+				driver.setMsg("从业人员类型不能为空;");
+				driver.setImportUrl("icon_cha.png");
+				errorStr += "从业人员类型不能为空;";
+				bb++;
+			}
+
+
 			//验证Excel导入时，是否存在重复数据
 			for (JiaShiYuan item : drivers) {
 				if (item.getJiashiyuanxingming().equals(driverName) && item.getShoujihaoma().equals(shoujihaoma) && item.getDeptName().equals(deptname)) {
@@ -2524,7 +2583,7 @@ public class JiaShiYuanController {
 			if (StringUtils.isNotBlank(String.valueOf(a.get("gangweigaozhishuqishiriqi")).trim()) && !String.valueOf(a.get("gangweigaozhishuqishiriqi")).equals("null")) {
 				driver.setGangweigaozhishuqishiriqi(String.valueOf(a.get("gangweigaozhishuqishiriqi")).trim());
 			}
-			driver.setJiashiyuanleixing("驾驶员");
+			driver.setJiashiyuanleixing(String.valueOf(a.get("congyerenyuanleixing")).trim());
 			String shoujihaoma = String.valueOf(a.get("shoujihaoma")).trim();
 			driver.setShoujihaoma(shoujihaoma);
 			if (StringUtils.isNotBlank(String.valueOf(a.get("congyerenyuanleixing")).trim()) && !String.valueOf(a.get("congyerenyuanleixing")).equals("null")) {
@@ -2572,7 +2631,7 @@ public class JiaShiYuanController {
 			if (StringUtils.isNotBlank(String.valueOf(a.get("tijianriqi")).trim()) && !String.valueOf(a.get("tijianriqi")).equals("null")) {
 				driver.setTijianriqi(String.valueOf(a.get("tijianriqi")).trim());
 			}
-			driver.setCongyerenyuanleixing("驾驶员");
+			driver.setCongyerenyuanleixing(String.valueOf(a.get("congyeleibie")).trim());
 			driver.setIsdelete(0);
 			driver.setCreatetime(DateUtil.now());
 			driver.setCaozuoshijian(DateUtil.now());

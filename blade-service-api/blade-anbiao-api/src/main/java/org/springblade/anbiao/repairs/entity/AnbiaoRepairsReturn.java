@@ -27,7 +27,7 @@ public class AnbiaoRepairsReturn implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "ret_id", type = IdType.AUTO)
+    @TableId(value = "ret_id", type = IdType.UUID)
     private String retId;
 
     @ApiModelProperty(value = "报修单ID")

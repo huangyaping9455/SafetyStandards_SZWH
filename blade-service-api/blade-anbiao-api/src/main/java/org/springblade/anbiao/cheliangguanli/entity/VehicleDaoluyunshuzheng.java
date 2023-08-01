@@ -101,7 +101,7 @@ public class VehicleDaoluyunshuzheng implements Serializable {
      * 发证日期
      */
     @ApiModelProperty(value = "发证日期")
-    private LocalDate avdIssueDate;
+    private String avdIssueDate;
 	@ApiModelProperty(value = "发证日期")
 	@TableField(exist = false)
 	private String avdIssueDate2;
@@ -135,7 +135,7 @@ public class VehicleDaoluyunshuzheng implements Serializable {
      * 有效期至
      */
     @ApiModelProperty(value = "有效期至")
-    private LocalDate avdValidUntil;
+    private String avdValidUntil;
 	@ApiModelProperty(value = "有效期至")
 	@TableField(exist = false)
 	private String avdValidUntil2;

@@ -382,14 +382,14 @@ public class Vehicle implements Serializable {
 	 */
 	@ApiModelProperty(value = "行驶证注册日期")
 	@TableField(exist = false)
-	private LocalDate avxRegisterDate;
+	private String avxRegisterDate;
 
 	/**
 	 * 行驶证发证日期
 	 */
 	@ApiModelProperty(value = "行驶证发证日期")
 	@TableField(exist = false)
-	private LocalDate avxIssueDate;
+	private String avxIssueDate;
 
 	@ApiModelProperty(value = "车主居住地址")
 	private String carowneraddress;

@@ -28,7 +28,7 @@ public class AnbiaoRepairsPerson implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "rp_id", type = IdType.AUTO)
+    @TableId(value = "rp_id", type = IdType.UUID)
     private String rpId;
 
     @ApiModelProperty(value = "登录账号")

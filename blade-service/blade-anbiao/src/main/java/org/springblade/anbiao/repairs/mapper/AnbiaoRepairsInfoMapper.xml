@@ -33,6 +33,7 @@
         <result column="rp_relation_phone" property="rpRelationPhone" />
         <result column="rp_address" property="rpAddress" />
         <result column="rp_detail_address" property="rpDetailAddress" />
+        <result column="rp_emergency_degree" property="rpEmergencyDegree" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -120,18 +121,18 @@
         from
             anbiao_repairs_person a
             inner join (
-                select a.* from anbiao_repairs_info a,anbiao_repairs_remark b
+                select a.*,b.rpdt_person_id from anbiao_repairs_info a,anbiao_repairs_remark b
                 where a.rp_id = b.rpdt_rp_id
                   and b.rpdt_person_id = #{driverId}
+                <if test="rpType != null and rpType != ''">
+                    and a.rp_type = #{rpType}
+                </if>
+                <if test="date != null and date != ''">
+                    and left(a.rp_date,10) >= left(#{date},10)
+                </if>
             )b on a.rp_id = b.rpdt_person_id
             left join anbiao_vehicle c on c.id = b.rp_vehid
         where 1=1
-        <if test="date != null and date != ''">
-            and left(b.rp_date,10) >= left(#{date},10)
-        </if>
-        <if test="rpType != null and rpType != ''">
-            and rp_type = #{rpType}
-        </if>
     </sql>
 
     <sql id="queryDriverSql">

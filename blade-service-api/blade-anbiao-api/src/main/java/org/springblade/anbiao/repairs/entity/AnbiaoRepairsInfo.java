@@ -28,7 +28,7 @@ public class AnbiaoRepairsInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "rp_id", type = IdType.AUTO)
+    @TableId(value = "rp_id", type = IdType.UUID)
     private String rpId;
 
     @ApiModelProperty(value = "企业客户ID")
@@ -114,6 +114,9 @@ public class AnbiaoRepairsInfo implements Serializable {
 
 	@ApiModelProperty(value = "详细地址")
 	private String rpDetailAddress;
+
+	@ApiModelProperty(value = "紧急程度")
+	private String rpEmergencyDegree;
 
 	@ApiModelProperty(value = "报修流程")
 	@TableField(exist = false)
