@@ -199,4 +199,12 @@ public class JiaShiYuanListVO {
 	 */
 	@ApiModelProperty(value = "无重大责任事故：结束日期")
 	private String wuzhongdazerenshigujieshuriqi;
+
+	@ApiModelProperty(value = "从业人员类型")
+	private String congyerenyuanleixing;
+
+	@ApiModelProperty(value = "驾驶员类型")
+	private String jiashiyuanleixing;
+
+
 }

@@ -39,13 +39,15 @@ values
     </insert>
 
     <update id="updateDel" parameterType="java.lang.String">
-        UPDATE anbiao_jiashiyuan SET isdelete = 1 where id = #{id}
+        UPDATE anbiao_jiashiyuan SET isdelete = 1, caozuoshijian = now() where id = #{id}
     </update>
 
     <sql id="tableSql">
         SELECT
         DISTINCT
         a.id,
+        case when ifnull(g.ajc_category,'') = '' then a.congyerenyuanleixing else g.ajc_category end as congyerenyuanleixing,
+        a.jiashiyuanleixing,
         a.dept_id as deptId,
         bb.dept_name deptName ,
         jiashiyuanxingming ,
@@ -144,6 +146,14 @@ values
 
         <if test="shoujihaoma !=null and shoujihaoma != ''">
             AND shoujihaoma LIKE '%${shoujihaoma}%'
+        </if>
+
+        <if test="congyerenyuanleixing !=null and congyerenyuanleixing != ''">
+            AND congyerenyuanleixing = #{congyerenyuanleixing}
+        </if>
+
+        <if test="jiashiyuanleixing !=null and jiashiyuanleixing != ''">
+            AND jiashiyuanleixing = #{jiashiyuanleixing}
         </if>
 
     </sql>

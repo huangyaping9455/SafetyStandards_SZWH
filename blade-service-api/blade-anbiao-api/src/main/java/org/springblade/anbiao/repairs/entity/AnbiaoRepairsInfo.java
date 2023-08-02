@@ -138,4 +138,12 @@ public class AnbiaoRepairsInfo implements Serializable {
 	@TableField(exist = false)
 	private Integer count = 0;
 
+	@ApiModelProperty(value = "企业ID")
+	@TableField(exist = false)
+	private String deptId;
+
+	@ApiModelProperty(value = "企业名称")
+	@TableField(exist = false)
+	private String deptName;
+
 }

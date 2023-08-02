@@ -12,10 +12,7 @@ import org.springblade.anbiao.repairs.service.IAnbiaoRepairsDeptService;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -185,6 +182,12 @@ public class AnbiaoRepairsDeptController {
 		return R.data(pages);
 	}
 
-
+	@GetMapping("/getRepairsDept")
+	@ApiLog("获取所有报修单位")
+	@ApiOperation(value = "获取所有报修单位", notes = "传入deptId", position = 4)
+	public R<List<AnbiaoRepairsDept>> getRepairsDept(String deptId) {
+		List<AnbiaoRepairsDept> pages = deptService.selectBXDept(deptId);
+		return R.data(pages);
+	}
 
 }

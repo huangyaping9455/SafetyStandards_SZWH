@@ -33,10 +33,7 @@ import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.feign.IOrganizationsClient;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
 import org.springblade.anbiao.jiashiyuan.entity.*;
-import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.service.*;
-import org.springblade.anbiao.jiashiyuan.vo.DriverTJMingXiVO;
-import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanListVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
 import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
 import org.springblade.anbiao.weixiu.entity.MaintenanceEntity;
@@ -238,6 +235,7 @@ public class VehicleController {
 		v.setYunyingshangmingcheng(detail.getYunyingshangmingcheng());
 		v.setSimnum(detail.getSimnum());
 		v.setYunyingshangjieruma(detail.getYunyingshangjieruma());
+		v.setChangpai(detail.getChangpai());
 
 		QueryWrapper<VehicleBiangengjilu> biangengjiluQueryWrapper = new QueryWrapper<VehicleBiangengjilu>();
 		biangengjiluQueryWrapper.lambda().eq(VehicleBiangengjilu::getAvbjVehicleId,detail.getId());
@@ -5912,7 +5910,7 @@ public class VehicleController {
 //						xingshizheng.setAvxOwner(vehicle.getOwner());
 						xingshizheng.setAvxFileNo(vehicle.getFileNo());
 						xingshizheng.setAvxModel(vehicle.getBrandModel());
-						xingshizheng.setAvxVin(vehicle.getCheliangshibiedaima());
+						xingshizheng.setAvxVin(vehicle.getChejiahao());
 						xingshizheng.setAvxCurbWeight(0);		//整备质量
 						xingshizheng.setAvxDelete("0");
 						xingshizheng.setAvxCreateByName(user.getUserName());

@@ -108,4 +108,8 @@ public class AnbiaoJiashiyuanCongyezigezheng implements Serializable {
 	@ApiModelProperty(value = "企业id")
 	@TableField(exist = false)
 	private String deptId;
+
+	@ApiModelProperty(value = "从业人员类型")
+	@TableField(exist = false)
+	private String congyerenyuanleixing;
 }

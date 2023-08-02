@@ -46,7 +46,7 @@
 
 	<sql id="orderSql">
 		<!-- 默认排序规则 -->
-		ORDER BY rpAccount desc
+		ORDER BY rp_account desc
 	</sql>
 
 	<select id="selectPage" resultMap="BaseResultMap"

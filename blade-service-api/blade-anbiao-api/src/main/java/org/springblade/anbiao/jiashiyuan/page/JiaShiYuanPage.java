@@ -27,8 +27,11 @@ public class JiaShiYuanPage<T> extends BasePage<T> {
 	@ApiModelProperty(value = "手机号码")
 	private String shoujihaoma;
 
-	@ApiModelProperty(value = "驾驶员类型",required = true)
+	@ApiModelProperty(value = "驾驶员类型")
 	private String jiashiyuanleixing;
+
+	@ApiModelProperty(value = "从业人员类型")
+	private String congyerenyuanleixing;
 
 	@ApiModelProperty(value = "身份证号")
 	private String shenfenzhenghao;

@@ -61,4 +61,9 @@ public class AnbiaoRepairsDeptServiceImpl extends ServiceImpl<AnbiaoRepairsDeptM
 		}
 		return anbiaoRepairsDeptPage;
 	}
+
+	@Override
+	public List<AnbiaoRepairsDept> selectBXDept(String deptId) {
+		return anbiaoRepairsDeptMapper.selectBXDept(deptId);
+	}
 }

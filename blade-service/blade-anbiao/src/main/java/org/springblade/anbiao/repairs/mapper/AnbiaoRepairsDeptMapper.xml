@@ -78,6 +78,21 @@
         <include refid="querySql" />
     </select>
 
+    <select id="selectBXDept" resultType="org.springblade.anbiao.repairs.entity.AnbiaoRepairsDept">
+        SELECT
+            DISTINCT
+            xiaji.id as deptId,
+            xiaji.dept_name as deptName
+        FROM
+            blade_dept shangji,
+            blade_dept xiaji,
+            anbiao_organization b
+        WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+            AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+            AND xiaji.id = b.dept_id
+            AND b.jigouleixing = 'baoxiu'
+            AND shangji.id=#{deptId}
+    </select>
 
 
 </mapper>

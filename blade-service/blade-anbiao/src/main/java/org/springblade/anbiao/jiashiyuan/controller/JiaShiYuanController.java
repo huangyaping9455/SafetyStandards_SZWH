@@ -1592,7 +1592,6 @@ public class JiaShiYuanController extends BladeUser{
 	@ApiLog("分页-驾驶员资料管理")
 	@ApiOperation(value = "分页-驾驶员资料管理", notes = "传入JiaShiYuanPage", position = 5)
 	public R<JiaShiYuanPage<JiaShiYuanListVO>> list(@RequestBody JiaShiYuanPage jiaShiYuanPage) {
-		jiaShiYuanPage.setJiashiyuanleixing("驾驶员");
 		JiaShiYuanPage<JiaShiYuanListVO> pages = iJiaShiYuanService.selectPageList(jiaShiYuanPage);
 		return R.data(pages);
 	}

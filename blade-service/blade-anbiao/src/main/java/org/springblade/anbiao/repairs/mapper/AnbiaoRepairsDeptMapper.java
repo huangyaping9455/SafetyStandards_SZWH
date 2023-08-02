@@ -19,5 +19,7 @@ public interface AnbiaoRepairsDeptMapper extends BaseMapper<AnbiaoRepairsDept> {
 	List<AnbiaoRepairsDept> selectPage(AnbiaoRepairsDeptPage anbiaoRepairsDeptPage);
 	int selectTotal(AnbiaoRepairsDeptPage anbiaoRepairsDeptPage);
 
+	List<AnbiaoRepairsDept> selectBXDept(String deptId);
+
 
 }

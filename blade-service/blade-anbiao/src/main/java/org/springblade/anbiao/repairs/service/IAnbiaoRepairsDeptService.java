@@ -18,4 +18,6 @@ public interface IAnbiaoRepairsDeptService extends IService<AnbiaoRepairsDept> {
 
 	AnbiaoRepairsDeptPage<AnbiaoRepairsDept> selectPage(AnbiaoRepairsDeptPage anbiaoRepairsDeptPage);
 
+	List<AnbiaoRepairsDept> selectBXDept(String deptId);
+
 }
