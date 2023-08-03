@@ -52,7 +52,7 @@ public class AnbiaoRepairsDeptController {
 		String[] deptIds_idss= deptIds_listid.toArray(new String[1]);
 		if(deptIds_idss.length > 0) {
 			for (int i = 0; i < deptIds_idss.length; i++) {
-				repairsDept.setRpRepDeptId(Integer.parseInt(deptIds_idss[i]));
+				repairsDept.setRpDeptId(Integer.parseInt(deptIds_idss[i]));
 				QueryWrapper<AnbiaoRepairsDept> dangerQueryWrapper = new QueryWrapper<AnbiaoRepairsDept>();
 				dangerQueryWrapper.lambda().eq(AnbiaoRepairsDept::getRpDeptId, repairsDept.getRpDeptId());
 				dangerQueryWrapper.lambda().eq(AnbiaoRepairsDept::getRpRepDeptId, repairsDept.getRpRepDeptId());

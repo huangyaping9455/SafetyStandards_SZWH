@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.repairs.mapper.AnbiaoRepairsPersonMenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.repairs.entity.AnbiaoRepairsPersonMenu">
+        <id column="id" property="id" />
+        <result column="rp_person_id" property="rpPersonId" />
+        <result column="rp_menu_name" property="rpMenuName" />
+        <result column="rp_createtime" property="rpCreatetime" />
+        <result column="rp_createid" property="rpCreateid" />
+        <result column="rp_createname" property="rpCreatename" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, rp_person_id, rp_menu_name, rp_createtime, rp_createid, rp_createname
+    </sql>
+
+    <select id="selectRepairsPersonMenu" resultType="org.springblade.anbiao.repairs.entity.AnbiaoRepairsPersonMenu">
+        select
+            *
+        from
+            anbiao_repairs_person_menu
+        where rp_person_id = #{driverId}
+    </select>
+
+</mapper>

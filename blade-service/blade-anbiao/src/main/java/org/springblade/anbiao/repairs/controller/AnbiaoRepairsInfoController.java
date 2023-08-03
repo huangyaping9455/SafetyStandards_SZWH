@@ -64,6 +64,7 @@ public class AnbiaoRepairsInfoController {
 				AnbiaoRepairsRemark repairsRemark = repairsRemarkService.getBaseMapper().selectOne(repairsRemarkQueryWrapper);
 				if(repairsRemark == null) {
 					AnbiaoRepairsRemark remark = repairsInfo.getRemark();
+					remark.setRpdtRpId(repairsInfo.getRpId());
 					remark.setRpdtType(repairsInfo.getRpStatus());
 					if (user != null) {
 						remark.setRpdtCreatename(user.getUserName());
@@ -73,73 +74,73 @@ public class AnbiaoRepairsInfoController {
 					remark.setRpdtDate(DateUtil.now());
 					ii = repairsRemarkService.save(remark);
 					if (ii) {
-						if("2".equals(repairsInfo.getRpStatus())){
+						if(2 == repairsInfo.getRpStatus()){
 							r.setMsg("派单成功");
 							r.setCode(200);
 							r.setSuccess(true);
 						}
-						if("3".equals(repairsInfo.getRpStatus())){
+						if(3 == repairsInfo.getRpStatus()){
 							r.setMsg("转单成功");
 							r.setCode(200);
 							r.setSuccess(true);
 						}
-						if("4".equals(repairsInfo.getRpStatus())){
+						if(4 == repairsInfo.getRpStatus()){
 							r.setMsg("接单成功");
 							r.setCode(200);
 							r.setSuccess(true);
 						}
-						if("6".equals(repairsInfo.getRpStatus())){
+						if(6 == repairsInfo.getRpStatus()){
 							r.setMsg("预约成功");
 							r.setCode(200);
 							r.setSuccess(true);
 						}
-						if("8".equals(repairsInfo.getRpStatus())){
+						if(8 == repairsInfo.getRpStatus()){
 							r.setMsg("维修成功");
 							r.setCode(200);
 							r.setSuccess(true);
 						}
-						if("9".equals(repairsInfo.getRpStatus()) || "10".equals(repairsInfo.getRpStatus())){
+						if(9 == repairsInfo.getRpStatus() || 10 == repairsInfo.getRpStatus()){
 							r.setMsg("审核成功");
 							r.setCode(200);
 							r.setSuccess(true);
 						}
-						if("11".equals(repairsInfo.getRpStatus())){
+						if(11 == repairsInfo.getRpStatus()){
 							r.setMsg("取消成功");
 							r.setCode(200);
 							r.setSuccess(true);
 						}
 					}else {
-						if("2".equals(repairsInfo.getRpStatus())){
+						if(2 == repairsInfo.getRpStatus()){
 							r.setMsg("派单失败");
 							r.setCode(500);
 							r.setSuccess(false);
 						}
-						if("3".equals(repairsInfo.getRpStatus())){
+						if(3 == repairsInfo.getRpStatus()){
 							r.setMsg("转单失败");
 							r.setCode(500);
 							r.setSuccess(false);
 						}
-						if("4".equals(repairsInfo.getRpStatus())){
+						if(4 == repairsInfo.getRpStatus()){
 							r.setMsg("接单失败");
 							r.setCode(500);
 							r.setSuccess(false);
 						}
-						if("6".equals(repairsInfo.getRpStatus())){
+						if(6 == repairsInfo.getRpStatus()){
 							r.setMsg("预约失败");
 							r.setCode(500);
 							r.setSuccess(false);
 						}
-						if("8".equals(repairsInfo.getRpStatus())){
+						if(8 == repairsInfo.getRpStatus()){
 							r.setMsg("维修失败");
 							r.setCode(500);
 							r.setSuccess(false);
 						}
-						if("9".equals(repairsInfo.getRpStatus()) || "10".equals(repairsInfo.getRpStatus())){
+						if(9 == repairsInfo.getRpStatus() || 10 == repairsInfo.getRpStatus()){
 							r.setMsg("审核失败");
 							r.setCode(500);
 							r.setSuccess(false);
 						}
-						if("11".equals(repairsInfo.getRpStatus())){
+						if(11 == repairsInfo.getRpStatus()){
 							r.setMsg("取消失败");
 							r.setCode(500);
 							r.setSuccess(false);
@@ -265,6 +266,33 @@ public class AnbiaoRepairsInfoController {
 		return r;
 	}
 
+	@GetMapping("/vewInfo")
+	@ApiLog("报修单管理-获取运单详情")
+	@ApiOperation(value = "报修单管理-获取运单详情", notes = "传入数据ID", position = 2)
+	public R vewInfo(String Id, BladeUser user) {
+		R r = new R();
+		AnbiaoRepairsInfo deail = repairsInfoService.getBaseMapper().selectById(Id);
+		if(deail != null) {
+			QueryWrapper<AnbiaoRepairsRemark> remarkQueryWrapper = new QueryWrapper<AnbiaoRepairsRemark>();
+			remarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtRpId, deail.getRpId());
+			remarkQueryWrapper.lambda().orderByAsc(AnbiaoRepairsRemark::getRpdtDate);
+			List<AnbiaoRepairsRemark> remark = repairsRemarkService.getBaseMapper().selectList(remarkQueryWrapper);
+			if(remark != null){
+				deail.setRepairsRemarkList(remark);
+			}
+			r.setMsg("获取成功");
+			r.setData(deail);
+			r.setCode(200);
+			r.setSuccess(true);
+		}else {
+			r.setMsg("暂无数据");
+			r.setData(null);
+			r.setCode(200);
+			r.setSuccess(false);
+		}
+		return r;
+	}
+
 	/**
 	 * 分页
 	 */
@@ -288,7 +316,7 @@ public class AnbiaoRepairsInfoController {
 	@ApiLog("维修人员管理-根据维修人员ID获取维修工单数")
 	@ApiOperation(value = "维修人员管理-根据维修人员ID获取维修工单数", notes = "维修人员ID、工单类型", position = 5)
 	@ApiImplicitParams({
-		@ApiImplicitParam(name = "driverId", value = "驾驶员ID", required = true),
+		@ApiImplicitParam(name = "driverId", value = "维修人员ID", required = true),
 		@ApiImplicitParam(name = "rpType", value = "工单类型，1：新装工单，2：维修工单", required = true)
 	})
 	public R<AnbiaoRepairsInfo> getDriverRepairsCount(String driverId,Integer rpType) {

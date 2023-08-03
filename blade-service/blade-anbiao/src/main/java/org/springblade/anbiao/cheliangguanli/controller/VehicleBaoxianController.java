@@ -219,7 +219,7 @@ public class VehicleBaoxianController extends BladeController {
 						}
 					}else{
 						isFail=true;
-						errorStr += "投保企业不存在！";
+						errorStr += avbInsureName+"投保企业不存在！";
 					}
 				} else {
 					isFail=true;
@@ -232,11 +232,11 @@ public class VehicleBaoxianController extends BladeController {
 					if(avbInsuredDept != null) {
 						baoxian.setAvbDeptIds(new Long(avbInsuredDept.getId()));		//车辆所属企业
 					} else {
-						errorStr += "没有查询到被保险单位！";
+						errorStr += avbInsureName+"没有查询到被保险单位！";
 					}
 				} else {
 					isFail=true;
-					errorStr += "被保车辆不能为空！";
+					errorStr += "被保险单位不能为空！";
 				}
 
 				if(StringUtil.isNotBlank(avbInsureContacts) && avbInsureContacts != "null" ) {
@@ -263,7 +263,7 @@ public class VehicleBaoxianController extends BladeController {
 							errorStr += "没有查询到"+avbInsuredVehicle.getCheliangpaizhao()+"的车主信息！";
 						}
 					} else {
-						errorStr += "没有查询到被保车辆，请查证后重新导入！";
+						errorStr += "没有查询到被保车辆："+avbInsureContacts+"，请查证后重新导入！";
 					}
 				}
 				if(StringUtil.isNotBlank(avbInsuranceCompany)&& avbInsuranceCompany != "null") {

@@ -9,7 +9,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
-import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.repairs.entity.AnbiaoRepairsPerson;
 import org.springblade.anbiao.repairs.page.AnbiaoRepairsDeptPage;
 import org.springblade.anbiao.repairs.service.IAnbiaoRepairsPersonService;
@@ -39,7 +38,7 @@ public class AnbiaoRepairsPersonController {
 
 	@PostMapping("/insert")
 	@ApiLog("维修人员管理-新增、编辑")
-	@ApiOperation(value = "维修人员管理-新增、编辑", notes = "传入AnbiaoRepairsDept", position = 1)
+	@ApiOperation(value = "维修人员管理-新增、编辑", notes = "传入AnbiaoRepairsPerson", position = 1)
 	public R insert(@RequestBody AnbiaoRepairsPerson repairsPerson, BladeUser user) {
 		R r = new R();
 		boolean ii = false;

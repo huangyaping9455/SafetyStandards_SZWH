@@ -65,11 +65,15 @@
 		<if test="cheliangpaizhao != null and cheliangpaizhao != '' ">
 			and cheliangpaizhao like '%${cheliangpaizhao}%'
 		</if>
+
+        <if test="rpStatus != null ">
+            and rp_status = #{rpStatus}
+        </if>
 	</sql>
 
 	<sql id="orderSql">
 		<!-- 默认排序规则 -->
-		ORDER BY rpDate desc
+		ORDER BY rp_date desc
 	</sql>
 
 	<select id="selectPage" resultMap="BaseResultMap"
@@ -121,8 +125,9 @@
         from
             anbiao_repairs_person a
             inner join (
-                select a.*,b.rpdt_person_id from anbiao_repairs_info a,anbiao_repairs_remark b
+                select a.*,b.rpdt_person_id,d.dept_name as rpDeptName from anbiao_repairs_info a,anbiao_repairs_remark b,blade_dept d
                 where a.rp_id = b.rpdt_rp_id
+                  and d.id = a.rp_dept_id
                   and b.rpdt_person_id = #{driverId}
                 <if test="rpType != null and rpType != ''">
                     and a.rp_type = #{rpType}
@@ -141,14 +146,18 @@
             and cheliangpaizhao like '%${cheliangpaizhao}%'
         </if>
 
-        <if test="rpStatus != null ">
-            and rpStatus = #{rpStatus}
+        <if test="rpStatus == 10 ">
+            and rp_status = #{rpStatus}
+        </if>
+
+        <if test="rpStatus != 10 ">
+            and rp_status != 10
         </if>
     </sql>
 
     <sql id="orderDriverSql">
         <!-- 默认排序规则 -->
-        ORDER BY rpStatus desc
+        ORDER BY rp_status desc
     </sql>
 
     <select id="selectDriverPage" resultMap="BaseResultMap"

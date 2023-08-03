@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.util.List;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -145,5 +147,9 @@ public class AnbiaoRepairsInfo implements Serializable {
 	@ApiModelProperty(value = "企业名称")
 	@TableField(exist = false)
 	private String deptName;
+
+	@ApiModelProperty(value = "报修流程详情")
+	@TableField(exist = false)
+	private List<AnbiaoRepairsRemark> repairsRemarkList;
 
 }

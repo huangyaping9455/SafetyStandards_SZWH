@@ -47,6 +47,22 @@ public class AnbiaoBsPolicyInfoController {
 		return R.data(pages);
 	}
 
+	@PostMapping(value = "/getBsPolicyInfoByUser")
+	@ApiLog("最新时讯列表（小程序）")
+	@ApiOperation(value = "最新时讯列表（小程序）", notes = "传入BsPolicyInfoPage",position = 1)
+	public R<BsPolicyInfoPage<AnbiaoBsPolicyInfo>> getBsPolicyInfoByUser(@RequestBody BsPolicyInfoPage BsPolicyInfoPage) {
+		//排序条件
+		////默认操作时间降序
+		if(BsPolicyInfoPage.getOrderColumns()==null){
+			BsPolicyInfoPage.setOrderColumn("caozuoshijian");
+		}else{
+			BsPolicyInfoPage.setOrderColumn(BsPolicyInfoPage.getOrderColumns());
+		}
+		BsPolicyInfoPage.setBiaoqian("通知");
+		BsPolicyInfoPage<AnbiaoBsPolicyInfo> pages = BsPolicyInfoService.selectGetAll(BsPolicyInfoPage);
+		return R.data(pages);
+	}
+
 	/**
 	 * 新增
 	 */
