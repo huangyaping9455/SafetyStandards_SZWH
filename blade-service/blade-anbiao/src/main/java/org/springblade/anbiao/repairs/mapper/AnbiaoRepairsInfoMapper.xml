@@ -34,6 +34,8 @@
         <result column="rp_address" property="rpAddress" />
         <result column="rp_detail_address" property="rpDetailAddress" />
         <result column="rp_emergency_degree" property="rpEmergencyDegree" />
+        <result column="rp_yy_date" property="rpYyDate" />
+        <result column="rp_yy_address" property="rpYyAddress" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -46,13 +48,15 @@
 			a.*,
 			b.dept_name as rpDeptName,
 			c.cheliangpaizhao,
-			c.chepaiyanse
+			c.chepaiyanse,
+            case when IFNULL(r.ret_id,'') != '' then '已回访' else '未回访' end as hfstatus
 		from
 			anbiao_repairs_info a
 		inner join  (
 			<include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
 		) b on a.rp_dept_id = b.id
 		left join anbiao_vehicle c on c.id = a.rp_vehid
+        left join anbiao_repairs_return r on r.ret_rp_id = a.rp_id
 		where 1=1
 			and left(a.rp_date,10) >= left(#{date},10)
 	</sql>
@@ -68,6 +72,10 @@
 
         <if test="rpStatus != null ">
             and rp_status = #{rpStatus}
+        </if>
+
+        <if test="hfstatus != null and hfstatus != '' ">
+            and hfstatus = #{hfstatus}
         </if>
 	</sql>
 
@@ -146,13 +154,18 @@
             and cheliangpaizhao like '%${cheliangpaizhao}%'
         </if>
 
-        <if test="rpStatus == 10 ">
-            and rp_status = #{rpStatus}
+        <if test="rpStatus != null ">
+
+            <if test="rpStatus == 10 ">
+                and rp_status = #{rpStatus}
+            </if>
+
+            <if test="rpStatus != 10 ">
+                and rp_status != 10
+            </if>
+
         </if>
 
-        <if test="rpStatus != 10 ">
-            and rp_status != 10
-        </if>
     </sql>
 
     <sql id="orderDriverSql">

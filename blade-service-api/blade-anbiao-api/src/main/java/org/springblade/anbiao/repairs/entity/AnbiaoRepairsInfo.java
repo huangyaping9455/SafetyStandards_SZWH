@@ -120,6 +120,12 @@ public class AnbiaoRepairsInfo implements Serializable {
 	@ApiModelProperty(value = "紧急程度")
 	private String rpEmergencyDegree;
 
+	@ApiModelProperty(value = "预约时间")
+	private String rpYyDate;
+
+	@ApiModelProperty(value = "预约地点")
+	private String rpYyAddress;
+
 	@ApiModelProperty(value = "报修流程")
 	@TableField(exist = false)
 	private AnbiaoRepairsRemark remark;
@@ -151,5 +157,9 @@ public class AnbiaoRepairsInfo implements Serializable {
 	@ApiModelProperty(value = "报修流程详情")
 	@TableField(exist = false)
 	private List<AnbiaoRepairsRemark> repairsRemarkList;
+
+	@ApiModelProperty(value = "回访状态（已回访、未回访）")
+	@TableField(exist = false)
+	private String hfstatus;
 
 }

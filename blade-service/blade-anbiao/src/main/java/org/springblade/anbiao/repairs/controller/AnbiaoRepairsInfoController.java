@@ -9,12 +9,17 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
+import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
+import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
+import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
+import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
 import org.springblade.anbiao.repairs.entity.*;
 import org.springblade.anbiao.repairs.entity.AnbiaoRepairsInfo;
 import org.springblade.anbiao.repairs.page.AnbiaoRepairsDeptPage;
 import org.springblade.anbiao.repairs.service.IAnbiaoRepairsInfoService;
 import org.springblade.anbiao.repairs.service.IAnbiaoRepairsRemarkService;
 import org.springblade.anbiao.repairs.service.IAnbiaoRepairsReturnService;
+import org.springblade.anbiao.zhengfu.entity.Organization;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
@@ -43,6 +48,10 @@ public class AnbiaoRepairsInfoController {
 	private IAnbiaoRepairsRemarkService repairsRemarkService;
 
 	private IAnbiaoRepairsReturnService repairsReturnService;
+
+	private IOrganizationsService organizationService;
+
+	private IVehicleService vehicleService;
 
 	@PostMapping("/insert")
 	@ApiLog("报修单管理-新增、编辑、派单、接单、预约、维修、审核、取消")
@@ -147,6 +156,36 @@ public class AnbiaoRepairsInfoController {
 						}
 						return r;
 					}
+				}else{
+					if(repairsInfo.getRpStatus() == 8){
+						AnbiaoRepairsRemark remark = repairsInfo.getRemark();
+						repairsRemarkQueryWrapper = new QueryWrapper<AnbiaoRepairsRemark>();
+						repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtRpId, repairsInfo.getRpId());
+						repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtType, repairsInfo.getRpStatus());
+						repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtDate, remark.getRpdtDate());
+						repairsRemark = repairsRemarkService.getBaseMapper().selectOne(repairsRemarkQueryWrapper);
+						if(repairsRemark == null) {
+							remark.setRpdtRpId(repairsInfo.getRpId());
+							remark.setRpdtType(repairsInfo.getRpStatus());
+							if (user != null) {
+								remark.setRpdtCreatename(user.getUserName());
+								remark.setRpdtCreateid(user.getUserId());
+							}
+							remark.setRpdtCreatetime(DateUtil.now());
+							remark.setRpdtDate(DateUtil.now());
+							ii = repairsRemarkService.save(remark);
+							if (ii) {
+								r.setMsg("维修成功");
+								r.setCode(200);
+								r.setSuccess(true);
+							}else {
+								r.setMsg("维修失败");
+								r.setCode(500);
+								r.setSuccess(false);
+								return r;
+							}
+						}
+					}
 				}
 			} else {
 				r.setMsg("编辑失败");
@@ -173,14 +212,22 @@ public class AnbiaoRepairsInfoController {
 					xuhao = xh.toString();
 					if(xuhao.length() < 2){
 						xuhao = "000"+xuhao;
+						SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+						xuhao = format.format(new Date())+"-"+repairsInfo.getRpDeptId()+"-"+xuhao;
 						repairsInfo.setRpNo(xuhao);
 					}else if(xuhao.length() >=2 && xuhao.length() < 3){
 						xuhao = "00"+xuhao;
+						SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+						xuhao = format.format(new Date())+"-"+repairsInfo.getRpDeptId()+"-"+xuhao;
 						repairsInfo.setRpNo(xuhao);
 					}else if(xuhao.length() >=3 && xuhao.length() < 4){
 						xuhao = "0"+xuhao;
+						SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+						xuhao = format.format(new Date())+"-"+repairsInfo.getRpDeptId()+"-"+xuhao;
 						repairsInfo.setRpNo(xuhao);
 					}else{
+						SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+						xuhao = format.format(new Date())+"-"+repairsInfo.getRpDeptId()+"-"+xuhao;
 						repairsInfo.setRpNo(xuhao);
 					}
 				}else{
@@ -266,6 +313,29 @@ public class AnbiaoRepairsInfoController {
 		return r;
 	}
 
+	@GetMapping("/returnRemark")
+	@ApiLog("报修单管理-回访详情")
+	@ApiOperation(value = "报修单管理-回访详情", notes = "传入运单Id", position = 2)
+	public R returnRemark(String Id, BladeUser user) {
+		R r = new R();
+		boolean ii = false;
+		QueryWrapper<AnbiaoRepairsReturn> dangerQueryWrapper = new QueryWrapper<AnbiaoRepairsReturn>();
+		dangerQueryWrapper.lambda().eq(AnbiaoRepairsReturn::getRetRpId, Id);
+		AnbiaoRepairsReturn deail = repairsReturnService.getBaseMapper().selectOne(dangerQueryWrapper);
+		if(deail != null) {
+			r.setMsg("获取成功");
+			r.setCode(200);
+			r.setData(deail);
+			r.setSuccess(true);
+		} else {
+			r.setMsg("获取成功，暂无数据");
+			r.setCode(200);
+			r.setData(null);
+			r.setSuccess(true);
+		}
+		return r;
+	}
+
 	@GetMapping("/vewInfo")
 	@ApiLog("报修单管理-获取运单详情")
 	@ApiOperation(value = "报修单管理-获取运单详情", notes = "传入数据ID", position = 2)
@@ -273,9 +343,26 @@ public class AnbiaoRepairsInfoController {
 		R r = new R();
 		AnbiaoRepairsInfo deail = repairsInfoService.getBaseMapper().selectById(Id);
 		if(deail != null) {
+			QueryWrapper<Organizations> organizationQueryWrapper = new QueryWrapper<Organizations>();
+			organizationQueryWrapper.lambda().eq(Organizations::getDeptId, deail.getRpDeptId());
+			organizationQueryWrapper.lambda().eq(Organizations::getIsdelete,0);
+			Organizations organizations = organizationService.getBaseMapper().selectOne(organizationQueryWrapper);
+			if(organizations != null){
+				deail.setDeptName(organizations.getDeptName());
+			}
+
+			QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<Vehicle>();
+			vehicleQueryWrapper.lambda().eq(Vehicle::getId, deail.getRpVehid());
+			vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel,0);
+			Vehicle vehicle = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper);
+			if(vehicle != null){
+				deail.setCheliangpaizhao(vehicle.getCheliangpaizhao());
+				deail.setChepaiyanse(vehicle.getChepaiyanse());
+			}
+
 			QueryWrapper<AnbiaoRepairsRemark> remarkQueryWrapper = new QueryWrapper<AnbiaoRepairsRemark>();
 			remarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtRpId, deail.getRpId());
-			remarkQueryWrapper.lambda().orderByAsc(AnbiaoRepairsRemark::getRpdtDate);
+			remarkQueryWrapper.lambda().orderByDesc(AnbiaoRepairsRemark::getRpdtDate);
 			List<AnbiaoRepairsRemark> remark = repairsRemarkService.getBaseMapper().selectList(remarkQueryWrapper);
 			if(remark != null){
 				deail.setRepairsRemarkList(remark);

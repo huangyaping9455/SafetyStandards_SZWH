@@ -41,6 +41,9 @@ public class AnbiaoRepairsDeptPage<T> extends BasePage<T> {
 	@ApiModelProperty(value = "工单类型，1：新装工单，2：维修工单")
 	private Integer rpType;
 
+	@ApiModelProperty(value = "回访状态（已回访、未回访）")
+	private String hfstatus;
+
 }
 
 

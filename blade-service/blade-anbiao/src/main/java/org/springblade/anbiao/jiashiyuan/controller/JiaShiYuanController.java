@@ -2585,9 +2585,9 @@ public class JiaShiYuanController extends BladeUser{
 			driver.setJiashiyuanleixing(String.valueOf(a.get("congyerenyuanleixing")).trim());
 			String shoujihaoma = String.valueOf(a.get("shoujihaoma")).trim();
 			driver.setShoujihaoma(shoujihaoma);
-			if (StringUtils.isNotBlank(String.valueOf(a.get("congyerenyuanleixing")).trim()) && !String.valueOf(a.get("congyerenyuanleixing")).equals("null")) {
-				driver.setCongyerenyuanleixing(String.valueOf(a.get("congyerenyuanleixing")).trim());
-			}
+//			if (StringUtils.isNotBlank(String.valueOf(a.get("congyerenyuanleixing")).trim()) && !String.valueOf(a.get("congyerenyuanleixing")).equals("null")) {
+//				driver.setCongyerenyuanleixing(String.valueOf(a.get("congyerenyuanleixing")).trim());
+//			}
 			if (StringUtils.isNotBlank(String.valueOf(a.get("jiashizhenghao")).trim()) && !String.valueOf(a.get("jiashizhenghao")).equals("null")) {
 				driver.setJiashizhenghao(String.valueOf(a.get("jiashizhenghao")).trim());
 			}
@@ -2731,6 +2731,7 @@ public class JiaShiYuanController extends BladeUser{
 				if (StringUtils.isNotBlank(jiaShiYuan.getCongyezhengyouxiaoqi()) && !jiaShiYuan.getCongyezhengyouxiaoqi().equals("null")) {
 					congyezigezheng.setAjcValidUntil(jiaShiYuan.getCongyezhengyouxiaoqi());
 				}
+				congyezigezheng.setAjcCategory(jiaShiYuan.getCongyerenyuanleixing());
 				congyezigezheng.setAjcStatus("0");
 				congyezigezheng.setAjcCreateTime(DateUtil.now());
 				congyezigezheng.setAjcDelete("0");
