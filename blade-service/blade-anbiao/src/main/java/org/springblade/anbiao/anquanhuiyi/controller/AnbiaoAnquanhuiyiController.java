@@ -906,7 +906,7 @@ public class AnbiaoAnquanhuiyiController {
 			UserPage<User> userPage = userClient.selectUserByDeptPage(anquanhuiyi.getDeptId(), 0);
 			List<User> userList = userPage.getRecords();
 			count += userList.size();
-			List<JiaShiYuan> jiaShiYuanList = iJiaShiYuanService.jiaShiYuanList(anquanhuiyi.getDeptId().toString());
+			List<JiaShiYuan> jiaShiYuanList = iJiaShiYuanService.jiaShiYuanList(anquanhuiyi.getDeptId().toString(),null);
 			count += jiaShiYuanList.size();
 			if (deail == null) {
 				String uuid1 = UUID.randomUUID().toString().replace("-", "");

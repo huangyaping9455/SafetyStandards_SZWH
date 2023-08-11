@@ -89,9 +89,31 @@ public class AnbiaoRepairsInfoController {
 							r.setSuccess(true);
 						}
 						if(3 == repairsInfo.getRpStatus()){
-							r.setMsg("转单成功");
-							r.setCode(200);
-							r.setSuccess(true);
+							remark = repairsInfo.getRemark();
+							remark.setRpdtRpId(repairsInfo.getRpId());
+							remark.setRpdtType(2);
+							if (user != null) {
+								remark.setRpdtCreatename(user.getUserName());
+								remark.setRpdtCreateid(user.getUserId());
+							}
+							remark.setRpdtCreatetime(DateUtil.now());
+							remark.setRpdtDate(DateUtil.now());
+							ii = repairsRemarkService.save(remark);
+							if (user != null) {
+								repairsInfo.setRpUpdatename(user.getUserName());
+								repairsInfo.setRpUpdateid(user.getUserId());
+							}
+							repairsInfo.setRpUpdatetime(DateUtil.now());
+							ii = repairsInfoService.updateById(repairsInfo);
+							if (ii) {
+								r.setMsg("转单成功");
+								r.setCode(200);
+								r.setSuccess(true);
+							}else{
+								r.setMsg("转单失败");
+								r.setCode(500);
+								r.setSuccess(false);
+							}
 						}
 						if(4 == repairsInfo.getRpStatus()){
 							r.setMsg("接单成功");
@@ -99,9 +121,18 @@ public class AnbiaoRepairsInfoController {
 							r.setSuccess(true);
 						}
 						if(6 == repairsInfo.getRpStatus()){
-							r.setMsg("预约成功");
-							r.setCode(200);
-							r.setSuccess(true);
+							repairsInfo.setRpYyDate(remark.getRpdtDate());
+							repairsInfo.setRpYyAddress(remark.getRpdtYwAddress());
+							ii = repairsInfoService.updateById(repairsInfo);
+							if (ii) {
+								r.setMsg("预约成功");
+								r.setCode(200);
+								r.setSuccess(true);
+							}else{
+								r.setMsg("预约失败");
+								r.setCode(500);
+								r.setSuccess(false);
+							}
 						}
 						if(8 == repairsInfo.getRpStatus()){
 							r.setMsg("维修成功");
@@ -157,7 +188,7 @@ public class AnbiaoRepairsInfoController {
 						return r;
 					}
 				}else{
-					if(repairsInfo.getRpStatus() == 8){
+					if(repairsInfo.getRpStatus() == 6 || repairsInfo.getRpStatus() == 8){
 						AnbiaoRepairsRemark remark = repairsInfo.getRemark();
 						repairsRemarkQueryWrapper = new QueryWrapper<AnbiaoRepairsRemark>();
 						repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtRpId, repairsInfo.getRpId());
@@ -175,14 +206,29 @@ public class AnbiaoRepairsInfoController {
 							remark.setRpdtDate(DateUtil.now());
 							ii = repairsRemarkService.save(remark);
 							if (ii) {
-								r.setMsg("维修成功");
-								r.setCode(200);
-								r.setSuccess(true);
+								if(6 == repairsInfo.getRpStatus()) {
+									r.setMsg("预约成功");
+									r.setCode(200);
+									r.setSuccess(true);
+								}
+								if(8 == repairsInfo.getRpStatus()) {
+									r.setMsg("维修成功");
+									r.setCode(200);
+									r.setSuccess(true);
+								}
 							}else {
-								r.setMsg("维修失败");
-								r.setCode(500);
-								r.setSuccess(false);
-								return r;
+								if(6 == repairsInfo.getRpStatus()) {
+									r.setMsg("预约失败");
+									r.setCode(500);
+									r.setSuccess(false);
+									return r;
+								}
+								if(8 == repairsInfo.getRpStatus()) {
+									r.setMsg("维修失败");
+									r.setCode(500);
+									r.setSuccess(false);
+									return r;
+								}
 							}
 						}
 					}

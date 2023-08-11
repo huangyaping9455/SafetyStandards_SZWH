@@ -75,7 +75,7 @@ public interface JiaShiYuanMapper extends BaseMapper<JiaShiYuan> {
 	 * @param deptId
 	 * @return
 	 */
-	List<JiaShiYuan> jiaShiYuanList(String deptId);
+	List<JiaShiYuan> jiaShiYuanList(@Param("deptId") String deptId,@Param("jiashiyuanleixing") String jiashiyuanleixing);
 
 	/**
 	 * 导入驾驶员档案信息

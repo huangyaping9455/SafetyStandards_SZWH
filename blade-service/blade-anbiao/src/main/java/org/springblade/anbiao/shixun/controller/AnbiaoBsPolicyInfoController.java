@@ -43,6 +43,9 @@ public class AnbiaoBsPolicyInfoController {
 		}else{
 			BsPolicyInfoPage.setOrderColumn(BsPolicyInfoPage.getOrderColumns());
 		}
+		if(StringUtils.isEmpty(BsPolicyInfoPage.getBiaoqian())){
+			BsPolicyInfoPage.setBiaoqian("时讯");
+		}
 		BsPolicyInfoPage<AnbiaoBsPolicyInfo> pages = BsPolicyInfoService.selectGetAll(BsPolicyInfoPage);
 		return R.data(pages);
 	}

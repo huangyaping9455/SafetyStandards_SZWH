@@ -133,7 +133,7 @@
         from
             anbiao_repairs_person a
             inner join (
-                select a.*,b.rpdt_person_id,d.dept_name as rpDeptName from anbiao_repairs_info a,anbiao_repairs_remark b,blade_dept d
+                select distinct a.*,b.rpdt_person_id,d.dept_name as rpDeptName from anbiao_repairs_info a,anbiao_repairs_remark b,blade_dept d
                 where a.rp_id = b.rpdt_rp_id
                   and d.id = a.rp_dept_id
                   and b.rpdt_person_id = #{driverId}
@@ -143,6 +143,7 @@
                 <if test="date != null and date != ''">
                     and left(a.rp_date,10) >= left(#{date},10)
                 </if>
+                ORDER BY rp_date desc LIMIT 1
             )b on a.rp_id = b.rpdt_person_id
             left join anbiao_vehicle c on c.id = b.rp_vehid
         where 1=1

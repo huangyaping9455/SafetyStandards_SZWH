@@ -133,8 +133,8 @@ public class JiaShiYuanServiceImpl extends ServiceImpl<JiaShiYuanMapper, JiaShiY
 	}
 
 	@Override
-	public List<JiaShiYuan> jiaShiYuanList(String deptId) {
-		return jiaShiYuanMapper.jiaShiYuanList(deptId);
+	public List<JiaShiYuan> jiaShiYuanList(String deptId,String jiashiyuanleixing) {
+		return jiaShiYuanMapper.jiaShiYuanList(deptId,jiashiyuanleixing);
 	}
 
 	@Override

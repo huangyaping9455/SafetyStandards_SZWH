@@ -391,6 +391,9 @@ values
             anbiao_jiashiyuan
         where isdelete = 0
             AND dept_id= #{deptId}
+        <if test="jiashiyuanleixing !=null and jiashiyuanleixing != ''">
+            AND jiashiyuanleixing = #{jiashiyuanleixing}
+        </if>
     </select>
 
     <insert id="insertSelective" parameterType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan" >

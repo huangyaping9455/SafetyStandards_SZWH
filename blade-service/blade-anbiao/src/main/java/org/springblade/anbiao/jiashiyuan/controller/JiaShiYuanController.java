@@ -1659,8 +1659,8 @@ public class JiaShiYuanController extends BladeUser{
 	@GetMapping("/getByIdJiaShiYuanList")
 	@ApiLog("根据企业ID获取相应驾驶员信息")
 	@ApiOperation(value = "根据企业ID获取相应驾驶员信息", notes = "传入deptId", position = 17)
-	public R<List<JiaShiYuan>> getByIdJiaShiYuanList(String deptId) {
-		List<JiaShiYuan> detail = iJiaShiYuanService.jiaShiYuanList(deptId);
+	public R<List<JiaShiYuan>> getByIdJiaShiYuanList(String deptId,String jiashiyuanleixing) {
+		List<JiaShiYuan> detail = iJiaShiYuanService.jiaShiYuanList(deptId,jiashiyuanleixing);
 		return R.data(detail);
 	}
 
@@ -6495,6 +6495,961 @@ public class JiaShiYuanController extends BladeUser{
 			}
 		}
 		return r;
+	}
+
+	@GetMapping("/uploadDriverExport")
+	@ApiLog("驾驶员统计信息明细-导出")
+	@ApiOperation(value = "驾驶员统计信息明细-导出", notes = "传入deptId，jiashiyuanId", position = 22)
+	public R uploadDriverExport(HttpServletRequest request, HttpServletResponse response, String deptId, String jiashiyuanId, BladeUser user) throws Exception {
+		R rs = new R();
+		String deptName = "";
+		String uuid = UUID.randomUUID().toString().replace("-", "");
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+		List<String> urlList = new ArrayList<>();
+		DriverTJMingXiVO driverTJMingXiVO = new DriverTJMingXiVO();
+		driverTJMingXiVO.setDeptId(deptId);
+		driverTJMingXiVO.setJiashiyuanId(jiashiyuanId);
+		// TODO 渲染其他类型的数据请参考官方文档
+		DecimalFormat df = new DecimalFormat("######0.00");
+		Calendar now = Calendar.getInstance();
+		//word模板地址
+		String templatePath = fileServer.getPathPrefix() + "muban\\" + "jiashiyuanvehicle.docx";
+		String folder = "";
+		String[] nyr = DateUtil.today().split("-");
+		String[] idsss = driverTJMingXiVO.getJiashiyuanId().split(",");
+		//去除素组中重复的数组
+		List<String> listid = new ArrayList<String>();
+		for (int i = 0; i < idsss.length; i++) {
+			if (!listid.contains(idsss[i])) {
+				listid.add(idsss[i]);
+			}
+		}
+		//返回一个包含所有对象的指定类型的数组
+		String[] idss = listid.toArray(new String[1]);
+
+		Thread thread = null;
+		for (int j = 0; j < idss.length; j++) {
+			driverTJMingXiVO.setDeptName("");
+//			driverTJMingXiVO.setDeptId(idss[j]);
+			driverTJMingXiVO.setJiashiyuanId(idss[j]);
+			List<DriverTJMingXiVO> driverTJMingXiVOS = jiaShiYuanService.selectDriverTJMingXi(driverTJMingXiVO);
+			if (driverTJMingXiVOS.size() == 0) {
+			} else if (driverTJMingXiVOS.size() > 3000) {
+				rs.setMsg("数据超过30000条无法下载");
+				rs.setCode(500);
+				return rs;
+			} else {
+				for (int i = 0; i < driverTJMingXiVOS.size(); i++) {
+					Map<String, Object> map = new HashMap<>();
+					String temDir = "";
+					String fileName = "";
+					String url = "";
+					// 渲染文本
+					DriverTJMingXiVO t = driverTJMingXiVOS.get(i);
+					DriverTJMingXiVO driverTJMingXiVO1 = new DriverTJMingXiVO();
+					if (StringUtils.isNotBlank(t.getJiashiyuanxingming()) && !t.getJiashiyuanxingming().equals("null")) {
+						map.put("a1", t.getJiashiyuanxingming());
+					} else {
+						map.put("a1", "-");
+					}
+					driverTJMingXiVO1.setJiashiyuanxingming(t.getJiashiyuanxingming());
+					if (t.getXingbie().equals("1")) {
+						t.setXingbie("男");
+					} else {
+						t.setXingbie("女");
+					}
+					if (StringUtils.isNotBlank(t.getXingbie()) && !t.getXingbie().equals("null")) {
+						map.put("a2", t.getXingbie());
+					} else {
+						map.put("a2", "-");
+					}
+
+//					map.put("a3", t.getAjrHeadPortrait());
+					if (StringUtils.isNotBlank(t.getNation()) && !t.getNation().equals("null")) {
+						map.put("a4", t.getNation());
+					} else {
+						map.put("a4", "-");
+					}
+					if (StringUtils.isNotBlank(t.getNativePlace()) && !t.getNativePlace().equals("null")) {
+						map.put("a5", t.getNativePlace());
+					} else {
+						map.put("a5", "-");
+					}
+					if (StringUtils.isNotBlank(t.getBirth()) && !t.getBirth().equals("null")) {
+						map.put("a6", t.getBirth());
+					} else {
+						map.put("a6", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAge()) && !t.getAge().equals("null")) {
+						map.put("a7", t.getAge());
+					} else {
+						map.put("a7", "-");
+					}
+					if (StringUtils.isNotBlank(t.getPoliticalOutlook()) && !t.getPoliticalOutlook().equals("null")) {
+						map.put("a8", t.getPoliticalOutlook());
+					} else {
+						map.put("a8", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrEducation()) && !t.getAjrEducation().equals("null")) {
+						map.put("a9", t.getAjrEducation());
+					} else {
+						map.put("a9", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrGraduationSchool()) && !t.getAjrGraduationSchool().equals("null")) {
+						map.put("a10", t.getAjrGraduationSchool());
+					} else {
+						map.put("a10", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrGraduationDate()) && !t.getAjrGraduationDate().equals("null")) {
+						map.put("a11", t.getAjrGraduationDate());
+					} else {
+						map.put("a11", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrIdNumber()) && !t.getAjrIdNumber().equals("null")) {
+						map.put("a12", t.getAjrIdNumber());
+					} else {
+						map.put("a12", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrAddress()) && !t.getAjrAddress().equals("null")) {
+						map.put("a13", t.getAjrAddress());
+					} else {
+						map.put("a13", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrReceiveDrivingLicense()) && !t.getAjrReceiveDrivingLicense().equals("null")) {
+						map.put("a14", t.getAjrReceiveDrivingLicense());
+					} else {
+						map.put("a14", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrClass()) && !t.getAjrClass().equals("null")) {
+						map.put("a15", t.getAjrClass());
+					} else {
+						map.put("a15", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrDrivingExperience()) && !t.getAjrDrivingExperience().equals("null")) {
+						map.put("a16", t.getAjrDrivingExperience());
+					} else {
+						map.put("a16", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrHealthStatus()) && !t.getAjrHealthStatus().equals("null")) {
+						map.put("a17", t.getAjrHealthStatus());
+					} else {
+						map.put("a17", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrWorkExperience()) && !t.getAjrWorkExperience().equals("null")) {
+						map.put("a18", t.getAjrWorkExperience());
+					} else {
+						map.put("a18", "-");
+					}
+					if (t.getAjrSafeDrivingRecord1().equals("1")) {
+						t.setAjrSafeDrivingRecord1("是");
+					} else if (t.getAjrSafeDrivingRecord1().equals("2")) {
+						t.setAjrSafeDrivingRecord1("否");
+					} else {
+						t.setAjrSafeDrivingRecord1(t.getAjrSafeDrivingRecord1());
+					}
+					if (StringUtils.isNotBlank(t.getAjrSafeDrivingRecord1()) && !t.getAjrSafeDrivingRecord1().equals("null")) {
+						map.put("a19", t.getAjrSafeDrivingRecord1());
+					} else {
+						map.put("a19", "-");
+					}
+					if (t.getAjrSafeDrivingRecord2().equals("1")) {
+						t.setAjrSafeDrivingRecord2("是");
+					} else if (t.getAjrSafeDrivingRecord2().equals("2")) {
+						t.setAjrSafeDrivingRecord2("否");
+					} else {
+						t.setAjrSafeDrivingRecord2(t.getAjrSafeDrivingRecord2());
+					}
+					if (StringUtils.isNotBlank(t.getAjrSafeDrivingRecord2()) && !t.getAjrSafeDrivingRecord2().equals("null")) {
+						map.put("a20", t.getAjrSafeDrivingRecord2());
+					} else {
+						map.put("a20", "-");
+					}
+					if (t.getAjrSafeDrivingRecord3().equals("1")) {
+						t.setAjrSafeDrivingRecord3("是");
+					} else if (t.getAjrSafeDrivingRecord3().equals("2")) {
+						t.setAjrSafeDrivingRecord3("否");
+					} else {
+						t.setAjrSafeDrivingRecord3(t.getAjrSafeDrivingRecord3());
+					}
+					if (StringUtils.isNotBlank(t.getAjrSafeDrivingRecord3()) && !t.getAjrSafeDrivingRecord3().equals("null")) {
+						map.put("a21", t.getAjrSafeDrivingRecord3());
+					} else {
+						map.put("a21", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrPhysicalExaminationResults()) && !t.getAjrPhysicalExaminationResults().equals("null")) {
+						map.put("a22", t.getAjrPhysicalExaminationResults());
+					} else {
+						map.put("a22", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjrIntegrityAssessmentResults()) && !t.getAjrIntegrityAssessmentResults().equals("null")) {
+						map.put("a23", t.getAjrIntegrityAssessmentResults());
+					} else {
+						map.put("a23", "-");
+					}
+
+					String url1;
+
+					// 本人照片
+					WordImageEntity image = new WordImageEntity();
+					image.setHeight(220);
+					image.setWidth(180);
+//					String jsonObject = t.getAjrHeadPortrait();
+					if (StringUtils.isNotBlank(t.getAjrHeadPortrait()) && !t.getAjrHeadPortrait().equals("null")) {
+						if (StrUtil.isNotEmpty(t.getAjrHeadPortrait()) && t.getAjrHeadPortrait().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getAjrHeadPortrait());
+							t.setAjrHeadPortrait(url1);
+							//添加图片到工作表的指定位置
+
+							String url2 = new URL(t.getAjrHeadPortrait()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("a3", image);
+						} else if (StrUtil.isNotEmpty(t.getAjrHeadPortrait())) {
+							String url2 = t.getAjrHeadPortrait();
+
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+//						String subString = url2.substring(url2.indexOf("/", 3) + 1);  // 从第二个正斜杠位置往后截取整个路径
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("a3", image);
+						}
+					} else {
+						map.put("a3", "-");
+					}
+
+					//身份证正面
+					image = new WordImageEntity();
+					image.setHeight(220);
+					image.setWidth(350);
+					if (StringUtils.isNotBlank(t.getShenfenzhengfujian()) && !t.getShenfenzhengfujian().equals("null")) {
+						if (StrUtil.isNotEmpty(t.getShenfenzhengfujian()) && t.getShenfenzhengfujian().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getShenfenzhengfujian());
+							t.setShenfenzhengfujian(url1);
+							//添加图片到工作表的指定位置
+
+							String url2 = new URL(t.getShenfenzhengfujian()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("b1", image);
+						} else if (StrUtil.isNotEmpty(t.getShenfenzhengfujian())) {
+							String url2 = t.getShenfenzhengfujian();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("b1", image);
+						}
+					} else {
+						map.put("b1", "-");
+					}
+
+					//身份证反面
+					image = new WordImageEntity();
+					image.setHeight(220);
+					image.setWidth(350);
+//					String jsonObject = t.getShenfenzhengfujian();
+					if (StringUtils.isNotBlank(t.getShenfenzhengfanmianfujian()) && !t.getShenfenzhengfanmianfujian().equals("null")) {
+						if (StrUtil.isNotEmpty(t.getShenfenzhengfanmianfujian()) && t.getShenfenzhengfanmianfujian().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getShenfenzhengfanmianfujian());
+							t.setShenfenzhengfanmianfujian(url1);
+							//添加图片到工作表的指定位置
+
+//							String s = new URL(t.getAjcLicence()).toString();
+							String url2 = new URL(t.getShenfenzhengfanmianfujian()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("b2", image);
+						} else if (StrUtil.isNotEmpty(t.getShenfenzhengfanmianfujian())) {
+							String url2 = t.getShenfenzhengfanmianfujian();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("b2", image);
+						}
+					} else {
+						map.put("b2", "-");
+					}
+
+					//驾驶证正面
+					image = new WordImageEntity();
+					image.setHeight(220);
+					image.setWidth(350);
+//					String jsonObject = t.getShenfenzhengfujian();
+					if (StringUtils.isNotBlank(t.getAjjFrontPhotoAddress()) && !t.getAjjFrontPhotoAddress().equals("null")) {
+						if (StrUtil.isNotEmpty(t.getAjjFrontPhotoAddress()) && t.getAjjFrontPhotoAddress().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getAjjFrontPhotoAddress());
+							t.setAjjFrontPhotoAddress(url1);
+							//添加图片到工作表的指定位置
+
+//							String s = new URL(t.getAjcLicence()).toString();
+							String url2 = new URL(t.getAjjFrontPhotoAddress()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("b3", image);
+						} else if (StrUtil.isNotEmpty(t.getAjjFrontPhotoAddress())) {
+							String url2 = t.getAjjFrontPhotoAddress();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("b3", image);
+						}
+					} else {
+						map.put("b3", "-");
+					}
+
+					//驾驶证反面
+					image = new WordImageEntity();
+					image.setHeight(220);
+					image.setWidth(350);
+//					String jsonObject = t.getShenfenzhengfujian();
+
+					if (StringUtils.isNotBlank(t.getAjjAttachedPhotos()) && !t.getAjjAttachedPhotos().equals("null")) {
+						if (StrUtil.isNotEmpty(t.getAjjAttachedPhotos()) && t.getAjjAttachedPhotos().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getAjjAttachedPhotos());
+							t.setAjjAttachedPhotos(url1);
+							//添加图片到工作表的指定位置
+
+//							String s = new URL(t.getAjcLicence()).toString();
+							String url2 = new URL(t.getAjjAttachedPhotos()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("b4", image);
+						} else if (StrUtil.isNotEmpty(t.getAjjAttachedPhotos())) {
+							String url2 = t.getAjjAttachedPhotos();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("b4", image);
+						}
+					} else {
+						map.put("b4", "-");
+					}
+
+					//从业资格证
+					image = new WordImageEntity();
+					image.setHeight(850);
+					image.setWidth(450);
+//					String jsonObject = t.getShenfenzhengfujian();
+					if (StringUtils.isNotBlank(t.getAjcLicence()) && !t.getAjcLicence().equals("null")) {
+						if (StrUtil.isNotEmpty(t.getAjcLicence()) && t.getAjcLicence().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getAjcLicence());
+							t.setAjcLicence(url1);
+							//添加图片到工作表的指定位置
+
+//							String s = new URL(t.getAjcLicence()).toString();
+							String url2 = new URL(t.getAjcLicence()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("b5", image);
+						} else if (StrUtil.isNotEmpty(t.getAjcLicence())) {
+							String url2 = t.getAjcLicence();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("b5", image);
+						}
+					} else {
+						map.put("b5", "-");
+					}
+
+					//体检表
+					image = new WordImageEntity();
+					image.setHeight(850);
+					image.setWidth(450);
+					if (StringUtils.isNotBlank(t.getAjtEnclosure()) && !t.getAjtEnclosure().equals("null")) {
+						if (StrUtil.isNotEmpty(t.getAjtEnclosure()) && t.getAjtEnclosure().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getAjtEnclosure());
+							t.setAjtEnclosure(url1);
+							//添加图片到工作表的指定位置
+
+							String url2 = new URL(t.getAjtEnclosure()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("c1", image);
+						} else if (StrUtil.isNotEmpty(t.getAjtEnclosure())) {
+							String url2 = t.getAjtEnclosure();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("c1", image);
+						}
+					} else {
+						map.put("c1", "-");
+					}
+
+					//岗前培训
+					image = new WordImageEntity();
+					image.setHeight(850);
+					image.setWidth(450);
+					if (StringUtils.isNotBlank(t.getAjgTrainingEnclosure()) && !t.getAjgTrainingEnclosure().equals("null")) {
+						if (StrUtil.isNotEmpty(t.getAjgTrainingEnclosure()) && t.getAjgTrainingEnclosure().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getAjgTrainingEnclosure());
+							t.setAjgTrainingEnclosure(url1);
+							//添加图片到工作表的指定位置
+
+							String url2 = new URL(t.getAjgTrainingEnclosure()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("d1", image);
+						} else if (StrUtil.isNotEmpty(t.getAjgTrainingEnclosure())) {
+							String url2 = t.getAjgTrainingEnclosure();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("d1", image);
+						}
+					} else {
+						map.put("d1", "-");
+					}
+
+					//三年无责
+					image = new WordImageEntity();
+					image.setHeight(270);
+					image.setWidth(550);
+					if (StringUtils.isNotBlank(t.getAjwEnclosure()) && !t.getAjwEnclosure().equals("null")) {
+						if (StrUtil.isNotEmpty(t.getAjwEnclosure()) && t.getAjwEnclosure().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getAjwEnclosure());
+							t.setAjwEnclosure(url1);
+							//添加图片到工作表的指定位置
+
+							String url2 = new URL(t.getAjwEnclosure()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("e1", image);
+						} else if (StrUtil.isNotEmpty(t.getAjwEnclosure())) {
+							String url2 = t.getAjwEnclosure();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("e1", image);
+						}
+					} else {
+						map.put("e1", "-");
+					}
+
+					String year;
+					String year2;
+					String month;
+					String day;
+
+					//安全责任书
+					map.put("f1", t.getDeptName());
+					if (StringUtils.isNotBlank(t.getAjaAutographTime()) && !t.getAjaAutographTime().equals("null")) {
+						Date date = sf.parse(t.getAjaAutographTime());
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(date);
+						year = String.valueOf(calendar.get(Calendar.YEAR));
+						year2 = String.valueOf(calendar.get(Calendar.YEAR) + 1);
+						month = String.valueOf(calendar.get(Calendar.MONTH) + 1);
+						day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+
+						map.put("f2", year);
+						map.put("f3", month);
+						map.put("f4", day);
+						map.put("f5", year2);
+
+					} else {
+						map.put("f2", "-");
+						map.put("f3", "-");
+						map.put("f4", "-");
+						map.put("f5", "-");
+					}
+
+					image = new WordImageEntity();
+					image.setHeight(55);
+					image.setWidth(80);
+					if (StringUtils.isNotBlank(t.getAjaAutographEnclosure()) && !t.getAjaAutographEnclosure().equals("null")) {
+						if (StrUtil.isNotEmpty(t.getAjaAutographEnclosure()) && t.getAjaAutographEnclosure().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getAjaAutographEnclosure());
+							t.setAjaAutographEnclosure(url1);
+							//添加图片到工作表的指定位置
+
+							String url2 = new URL(t.getAjaAutographEnclosure()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("f6", image);
+						} else if (StrUtil.isNotEmpty(t.getAjaAutographEnclosure())) {
+							String url2 = t.getAjaAutographEnclosure();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("f6", image);
+						}
+					} else {
+						map.put("f6", "-");
+					}
+
+					//危险告知书
+					map.put("g1", t.getJiashiyuanxingming());
+					image = new WordImageEntity();
+					image.setHeight(55);
+					image.setWidth(80);
+					if (StringUtils.isNotBlank(t.getAjwAutographEnclosure()) && !t.getAjwAutographEnclosure().equals("null")) {
+						if (StrUtil.isNotEmpty(t.getAjwAutographEnclosure()) && t.getAjwAutographEnclosure().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getAjwAutographEnclosure());
+							t.setAjwAutographEnclosure(url1);
+							//添加图片到工作表的指定位置
+
+							String url2 = new URL(t.getAjwAutographEnclosure()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("g2", image);
+						} else if (StrUtil.isNotEmpty(t.getAjwAutographEnclosure())) {
+							String url2 = t.getAjwAutographEnclosure();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("g2", image);
+						}
+					} else {
+						map.put("g2", "-");
+					}
+					if (StringUtils.isNotBlank(t.getAjwAutographTime()) && !t.getAjwAutographTime().equals("null")) {
+						Date date = sf.parse(t.getAjwAutographTime());
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(date);
+						year = String.valueOf(calendar.get(Calendar.YEAR));
+						month = String.valueOf(calendar.get(Calendar.MONTH) + 1);
+						day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+
+						map.put("g3", year);
+						map.put("g4", month);
+						map.put("g5", day);
+
+
+					} else {
+						map.put("g3", "-");
+						map.put("g4", "-");
+						map.put("g5", "-");
+					}
+
+
+					//劳动合同
+					if (StringUtils.isNotBlank(t.getDeptName()) && !t.getDeptName().equals("null")) {
+						map.put("h1", t.getDeptName());
+					} else {
+						map.put("h1", "-");
+					}
+					if (StringUtils.isNotBlank(t.getJiashiyuanxingming()) && !t.getJiashiyuanxingming().equals("null")) {
+						map.put("h2", t.getJiashiyuanxingming());
+					} else {
+						map.put("h2", "-");
+					}
+					if (StringUtils.isNotBlank(t.getShenfenzhenghao()) && !t.getShenfenzhenghao().equals("null")) {
+						map.put("h3", t.getShenfenzhenghao());
+					} else {
+						map.put("h3", "-");
+					}
+					if (StringUtils.isNotBlank(t.getJiatingzhuzhi()) && !t.getJiatingzhuzhi().equals("null")) {
+						map.put("h4", t.getJiatingzhuzhi());
+					} else {
+						map.put("h4", "-");
+					}
+					if (StringUtils.isNotBlank(t.getShoujihaoma()) && !t.getShoujihaoma().equals("null")) {
+						map.put("h5", t.getShoujihaoma());
+					} else {
+						map.put("h5", "-");
+					}
+
+					if (StringUtils.isNotBlank(t.getAjwStartDate()) && !t.getAjwStartDate().equals("null")) {
+						Date date = sf.parse(t.getAjwStartDate());
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(date);
+						year = String.valueOf(calendar.get(Calendar.YEAR));
+						month = String.valueOf(calendar.get(Calendar.MONTH) + 1);
+						day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+
+						map.put("h6", year);
+						map.put("h7", month);
+						map.put("h8", day);
+
+
+					} else {
+						map.put("h6", "-");
+						map.put("h7", "-");
+						map.put("h8", "-");
+					}
+
+					if (StringUtils.isNotBlank(t.getAjwEndDate()) && !t.getAjwEndDate().equals("null")) {
+						Date date = sf.parse(t.getAjwEndDate());
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(date);
+						year = String.valueOf(calendar.get(Calendar.YEAR));
+						month = String.valueOf(calendar.get(Calendar.MONTH) + 1);
+						day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+
+						map.put("h9", year);
+						map.put("h10", month);
+						map.put("h11", day);
+
+
+					} else {
+						map.put("h9", "-");
+						map.put("h10", "-");
+						map.put("h11", "-");
+					}
+
+					image = new WordImageEntity();
+					image.setHeight(55);
+					image.setWidth(80);
+					if (StringUtils.isNotBlank(t.getAjwAutographEnclosure2()) && !t.getAjwAutographEnclosure2().equals("null")) {
+						if (StrUtil.isNotEmpty(t.getAjwAutographEnclosure2()) && t.getAjwAutographEnclosure2().contains("http") == false) {
+							url1 = fileUploadClient.getUrl(t.getAjwAutographEnclosure2());
+							t.setAjwAutographEnclosure2(url1);
+							//添加图片到工作表的指定位置
+
+							String url2 = new URL(t.getAjwAutographEnclosure2()).toString();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("h12", image);
+						} else if (StrUtil.isNotEmpty(t.getAjwAutographEnclosure2())) {
+							String url2 = t.getAjwAutographEnclosure2();
+							//获得第一个点的位置
+							int index = url2.indexOf("/");
+							System.out.println(index);
+							//根据第一个点的位置 获得第二个点的位置
+							index = url2.indexOf("/", index + 2);
+							//根据第三个点的位置，截取 字符串。得到结果 result
+							String result = url2.substring(index);
+							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+
+							url2 = fileServer.getPathPrefix() + result;
+							System.out.println(url2);
+							image.setUrl(url2);
+							image.setType(WordImageEntity.URL);
+							map.put("h12", image);
+						}
+					} else {
+						map.put("h12", "-");
+					}
+
+					if (StringUtils.isNotBlank(t.getAjwAutographTime2()) && !t.getAjwAutographTime2().equals("null")) {
+						Date date = sf.parse(t.getAjwAutographTime2());
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(date);
+						year = String.valueOf(calendar.get(Calendar.YEAR));
+						month = String.valueOf(calendar.get(Calendar.MONTH) + 1);
+						day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+
+						map.put("h13", year);
+						map.put("h14", month);
+						map.put("h15", day);
+
+
+					} else {
+						map.put("h13", "-");
+						map.put("h14", "-");
+						map.put("h15", "-");
+					}
+
+					// TODO 渲染其他类型的数据请参考官方文档
+					//=================生成文件保存在本地D盘某目录下=================
+					//			temDir = "D:/mimi/file/word/"; ;//生成临时文件存放地址
+					nyr = DateUtil.today().split("-");
+					//附件存放地址(服务器生成地址)
+					temDir = fileServer.getPathPrefix() + FilePathConstant.ENCLOSURE_PATH + nyr[0] + "\\" + nyr[1] + "\\" + uuid + "\\" + t.getDeptName() + "\\" + "驾驶员";
+
+					//生成文件名
+					// 生成的word格式
+					String formatSuffix = ".docx";
+					String wjName = t.getJiashiyuanxingming();
+					// 拼接后的文件名
+					fileName = wjName + formatSuffix;//文件名  带后缀
+					//导出word
+					if (StringUtils.isNotEmpty(wjName) && wjName != "null") {
+						WordUtil2.exportDataWord3(templatePath, temDir, fileName, map, request, response);
+					}
+					urlList.add(temDir);
+
+					//替换路径前缀,获得pdf文件路径
+					String pdfPath = temDir + "\\" + wjName + ".pdf";
+					//生成文件父级目录
+					FileUtil.mkParentDirs(pdfPath);
+					//生成pdf到pdf文件路径
+					temDir = temDir + "\\" + wjName + formatSuffix;
+					String finalTemDir = temDir;
+
+					thread = new Thread(new Runnable() {
+						@Override
+						public void run() {
+							// 线程执行的逻辑
+							CommonUtil.world2pdf(finalTemDir, pdfPath);
+							FileSystemUtils.deleteRecursively(new File(finalTemDir));
+						}
+					});
+					thread.start();
+					System.out.println("已生成驾驶员pdf" + pdfPath);
+					deptName = t.getDeptName();
+					System.out.println(DateUtil.now());
+				}
+			}
+		}
+		// 等待子线程执行完毕
+		try {
+			if (thread != null) {
+				thread.join();
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		// 子线程执行完毕后的逻辑
+
+		folder = fileServer.getPathPrefix() + FilePathConstant.ENCLOSURE_PATH + nyr[0] + "/" + nyr[1] + "/" + deptName + "-人车台账.zip";
+		ExcelUtils.deleteFile(folder);
+//		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(folder));
+//		ApacheZipUtils.doCompress1(urlList, bizOut);
+		System.out.println(DateUtil.now());
+		PackageToZIp.toZip(fileServer.getPathPrefix() + FilePathConstant.ENCLOSURE_PATH + nyr[0] + "\\" + nyr[1] + "\\" + uuid + "\\" + deptName, folder);
+		System.out.println(DateUtil.now());
+		//不要忘记调用
+//		bizOut.close();
+
+		rs.setMsg("下载成功");
+		rs.setCode(200);
+		rs.setData(folder);
+		rs.setSuccess(true);
+		return rs;
 	}
 
 
