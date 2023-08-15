@@ -116,4 +116,8 @@ public class AnbiaoBsPolicyInfo implements Serializable {
 	@ApiModelProperty(value = "是否签字，是为1，否为0")
 	private String issign;
 
+	@ApiModelProperty(value = "企业ID，多个以英文逗号隔开")
+	@TableField(exist = false)
+	private String deptIds;
+
 }

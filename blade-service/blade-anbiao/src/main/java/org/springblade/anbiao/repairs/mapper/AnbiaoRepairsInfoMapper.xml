@@ -36,6 +36,7 @@
         <result column="rp_emergency_degree" property="rpEmergencyDegree" />
         <result column="rp_yy_date" property="rpYyDate" />
         <result column="rp_yy_address" property="rpYyAddress" />
+        <result column="rp_classify" property="rpClassify" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

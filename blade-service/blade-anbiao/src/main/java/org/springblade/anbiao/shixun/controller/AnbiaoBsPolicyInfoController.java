@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
+import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.shixun.entity.AnbiaoBsPolicyInfo;
 import org.springblade.anbiao.shixun.page.BsPolicyInfoPage;
 import org.springblade.anbiao.shixun.service.IAnbiaoBsPolicyInfoService;
@@ -16,6 +17,9 @@ import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -81,39 +85,88 @@ public class AnbiaoBsPolicyInfoController {
 			return r;
 		}
 		QueryWrapper<AnbiaoBsPolicyInfo> bsPolicyInfoQueryWrapper = new QueryWrapper<AnbiaoBsPolicyInfo>();
-		bsPolicyInfoQueryWrapper.lambda().eq(AnbiaoBsPolicyInfo::getDeptId, bsPolicyInfo.getDeptId());
-		bsPolicyInfoQueryWrapper.lambda().eq(AnbiaoBsPolicyInfo::getIsdelete, 0);
-		bsPolicyInfoQueryWrapper.lambda().eq(AnbiaoBsPolicyInfo::getBiaoti, bsPolicyInfo.getBiaoti());
-		bsPolicyInfoQueryWrapper.lambda().eq(AnbiaoBsPolicyInfo::getBiaoqian, bsPolicyInfo.getBiaoqian());
-		AnbiaoBsPolicyInfo deail = BsPolicyInfoService.getBaseMapper().selectOne(bsPolicyInfoQueryWrapper);
-		if(deail == null) {
-			bsPolicyInfo.setCaozuoren(user.getUserName());
-			bsPolicyInfo.setCaozuorenid(user.getUserId().toString());
-			bsPolicyInfo.setCaozuoshijian(DateUtil.now());
-			bsPolicyInfo.setIsdelete(0);
-			bsPolicyInfo.setShifouqiyong("启用");
-			if (StringUtils.isBlank(bsPolicyInfo.getBiaoqian())){
-				bsPolicyInfo.setBiaoqian("时讯");
-			}
-			bsPolicyInfo.setFangwenliang("0");
-			boolean i = BsPolicyInfoService.save(bsPolicyInfo);
-			if(i){
-				r.setMsg("新增成功");
-				r.setCode(200);
-				r.setSuccess(true);
-				return r;
+		if(StringUtils.isEmpty(bsPolicyInfo.getDeptIds())){
+			bsPolicyInfoQueryWrapper.lambda().eq(AnbiaoBsPolicyInfo::getDeptId, bsPolicyInfo.getDeptId());
+			bsPolicyInfoQueryWrapper.lambda().eq(AnbiaoBsPolicyInfo::getIsdelete, 0);
+			bsPolicyInfoQueryWrapper.lambda().eq(AnbiaoBsPolicyInfo::getBiaoti, bsPolicyInfo.getBiaoti());
+			bsPolicyInfoQueryWrapper.lambda().eq(AnbiaoBsPolicyInfo::getBiaoqian, bsPolicyInfo.getBiaoqian());
+			AnbiaoBsPolicyInfo deail = BsPolicyInfoService.getBaseMapper().selectOne(bsPolicyInfoQueryWrapper);
+			if(deail == null) {
+				bsPolicyInfo.setCaozuoren(user.getUserName());
+				bsPolicyInfo.setCaozuorenid(user.getUserId().toString());
+				bsPolicyInfo.setCaozuoshijian(DateUtil.now());
+				bsPolicyInfo.setIsdelete(0);
+				bsPolicyInfo.setShifouqiyong("启用");
+				if (StringUtils.isBlank(bsPolicyInfo.getBiaoqian())){
+					bsPolicyInfo.setBiaoqian("时讯");
+				}
+				bsPolicyInfo.setFangwenliang("0");
+				boolean i = BsPolicyInfoService.save(bsPolicyInfo);
+				if(i){
+					r.setMsg("新增成功");
+					r.setCode(200);
+					r.setSuccess(true);
+					return r;
+				}else{
+					r.setMsg("新增失败");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
 			}else{
-				r.setMsg("新增失败");
+				r.setMsg("该数据已存在");
 				r.setCode(500);
 				r.setSuccess(false);
 				return r;
 			}
 		}else{
-			r.setMsg("该数据已存在");
-			r.setCode(500);
-			r.setSuccess(false);
-			return r;
+			String[] idsss = bsPolicyInfo.getDeptIds().split(",");
+			//去除素组中重复的数组
+			List<String> listid = new ArrayList<String>();
+			for (int i = 0; i < idsss.length; i++) {
+				if (!listid.contains(idsss[i])) {
+					listid.add(idsss[i]);
+				}
+			}
+			//返回一个包含所有对象的指定类型的数组
+			String[] idss = listid.toArray(new String[1]);
+			for (int q = 0; q < idss.length; q++) {
+				bsPolicyInfoQueryWrapper.lambda().eq(AnbiaoBsPolicyInfo::getDeptId, idss[q]);
+				bsPolicyInfoQueryWrapper.lambda().eq(AnbiaoBsPolicyInfo::getIsdelete, 0);
+				bsPolicyInfoQueryWrapper.lambda().eq(AnbiaoBsPolicyInfo::getBiaoti, bsPolicyInfo.getBiaoti());
+				bsPolicyInfoQueryWrapper.lambda().eq(AnbiaoBsPolicyInfo::getBiaoqian, bsPolicyInfo.getBiaoqian());
+				AnbiaoBsPolicyInfo deail = BsPolicyInfoService.getBaseMapper().selectOne(bsPolicyInfoQueryWrapper);
+				if(deail == null) {
+					bsPolicyInfo.setCaozuoren(user.getUserName());
+					bsPolicyInfo.setCaozuorenid(user.getUserId().toString());
+					bsPolicyInfo.setCaozuoshijian(DateUtil.now());
+					bsPolicyInfo.setIsdelete(0);
+					bsPolicyInfo.setShifouqiyong("启用");
+					if (StringUtils.isBlank(bsPolicyInfo.getBiaoqian())){
+						bsPolicyInfo.setBiaoqian("时讯");
+					}
+					bsPolicyInfo.setFangwenliang("0");
+					bsPolicyInfo.setDeptId(Integer.parseInt(idss[q]));
+					boolean i = BsPolicyInfoService.save(bsPolicyInfo);
+					if(i){
+						r.setMsg("新增成功");
+						r.setCode(200);
+						r.setSuccess(true);
+					}else{
+						r.setMsg("新增失败");
+						r.setCode(500);
+						r.setSuccess(false);
+						return r;
+					}
+				}else{
+					r.setMsg("该数据已存在");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
+			}
 		}
+		return r;
 	}
 
 	/**

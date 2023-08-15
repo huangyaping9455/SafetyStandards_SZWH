@@ -160,15 +160,17 @@
         b.twicechulirenid,
         b.endresult,
         b.baojingleixing,
-        (select accessoryphone from anbiao_vehicle_phone where is_deleted = 0 and vehid = v.id) as accessoryphone,
+        v.accessoryphone AS accessoryphone,
         IFNULL(convert((a.Distance/1000)/(a.KeepTime/3600),decimal(10,2)),0) as pingjunsudu,
         case when ROUND((UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(CutoffTime))/86400) > 8 then '超期'
-            else '未超期'
+        else '未超期'
         end as chaoqi
         FROM
             baobiao_alarmsummary_cutofftime AS a
-<!--        left join ( select a.id,a.dept_id from anbiao_vehicle a where ifnull(a.is_deleted,0) = 0) v on a.VehId = v.id-->
-        left join ( select a.id,a.dept_id from anbiao_vehicle a) v on a.VehId = v.id
+        left JOIN baobiao_alarmhandleresult AS b ON a.AlarmReportID = b.baojingid
+            and ifnull(b.is_deleted,0) = 0
+            and (a.AlarmType=b.baojingleixing or b.baojingleixing = '异常车辆报警')
+        INNER JOIN ( SELECT DISTINCT a.id, a.dept_id,accessoryphone FROM anbiao_vehicle a LEFT JOIN ( SELECT accessoryphone,VehId FROM anbiao_vehicle_phone WHERE is_deleted = 0 LIMIT 1) b on a.id = b.vehid where a.dept_id = #{deptId}) v ON a.VehId = v.id
         INNER JOIN (
             SELECT
                 DISTINCT
@@ -183,12 +185,7 @@
                 AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
                 AND shangji.id=#{deptId}
             ) dept on v.dept_id = dept.id
-        left JOIN baobiao_alarmhandleresult AS b ON a.AlarmReportID = b.baojingid
-            and ifnull(b.is_deleted,0) = 0
-            and v.dept_id = b.qiyeid
-            and (a.AlarmType=b.baojingleixing or b.baojingleixing = '异常车辆报警')
         where 1=1
-            and v.dept_id = dept.id
         <!-- 根据推送时间查询报警数据 -->
         <if test=" beginTime != null and beginTime != '' ">
             and cutoffTime &gt;= CONCAT( '${beginTime}', ' 00:00:00')
@@ -265,15 +262,7 @@
             and plateNumber like concat('%', #{cheliangpaizhao} ,'%')
         </if>
 
-        <choose>
-            <when test=" jigouName != null and jigouName != '' ">
-                and dept.dept_name like CONCAT(#{jigouName},'%')
-            </when>
-            <otherwise>
-                and dept.dept_name = #{deptName}
-            </otherwise>
-        </choose>
-        <if test="chaosubi != null  ">
+        <if test="chaosubi != null and chaosubi != '' ">
             AND ChaoSuBi &gt;= ${chaosubi}
         </if>
         <if test="chaosubiMax != null and '0'.toString() != chaosubiMax ">

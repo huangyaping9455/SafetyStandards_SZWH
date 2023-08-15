@@ -87,7 +87,7 @@ public class AnbiaoRepairsInfo implements Serializable {
     @ApiModelProperty(value = "0:PC网站；1:小程序")
     private Integer rpSource;
 
-    @ApiModelProperty(value = "0:待受理，1:待指派，2:已派单，3:转交工单，4:已接单，5:待预约，6:已预约，7:进行中，8:待审核，9:已驳回，10:已完成，11:已取消")
+    @ApiModelProperty(value = "0:待受理，1:待指派，2:已派单，3:转交工单，4:已接单，5:待预约，6:已预约，7:进行中，8:待审核，9:已驳回，10:已完成，11:已取消,12：远程维护,13：现场维护")
     private Integer rpStatus;
 
     @ApiModelProperty(value = "工单类型，1：新装工单，2：维修工单")
@@ -125,6 +125,9 @@ public class AnbiaoRepairsInfo implements Serializable {
 
 	@ApiModelProperty(value = "预约地点")
 	private String rpYyAddress;
+
+	@ApiModelProperty(value = "维修类型，1：现场维护、2：远程维护")
+	private Integer rpClassify;
 
 	@ApiModelProperty(value = "报修流程")
 	@TableField(exist = false)

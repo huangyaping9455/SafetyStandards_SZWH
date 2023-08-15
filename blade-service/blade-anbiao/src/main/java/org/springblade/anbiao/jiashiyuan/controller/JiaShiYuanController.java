@@ -6514,6 +6514,7 @@ public class JiaShiYuanController extends BladeUser{
 		Calendar now = Calendar.getInstance();
 		//word模板地址
 		String templatePath = fileServer.getPathPrefix() + "muban\\" + "jiashiyuanvehicle.docx";
+		String pdfPath = "";
 		String folder = "";
 		String[] nyr = DateUtil.today().split("-");
 		String[] idsss = driverTJMingXiVO.getJiashiyuanId().split(",");
@@ -7400,54 +7401,56 @@ public class JiaShiYuanController extends BladeUser{
 					if (StringUtils.isNotEmpty(wjName) && wjName != "null") {
 						WordUtil2.exportDataWord3(templatePath, temDir, fileName, map, request, response);
 					}
-					urlList.add(temDir);
-
-					//替换路径前缀,获得pdf文件路径
-					String pdfPath = temDir + "\\" + wjName + ".pdf";
-					//生成文件父级目录
-					FileUtil.mkParentDirs(pdfPath);
-					//生成pdf到pdf文件路径
-					temDir = temDir + "\\" + wjName + formatSuffix;
-					String finalTemDir = temDir;
-
-					thread = new Thread(new Runnable() {
-						@Override
-						public void run() {
-							// 线程执行的逻辑
-							CommonUtil.world2pdf(finalTemDir, pdfPath);
-							FileSystemUtils.deleteRecursively(new File(finalTemDir));
-						}
-					});
-					thread.start();
-					System.out.println("已生成驾驶员pdf" + pdfPath);
-					deptName = t.getDeptName();
-					System.out.println(DateUtil.now());
+//					urlList.add(temDir);
+//
+//					//替换路径前缀,获得pdf文件路径
+					pdfPath = temDir+fileName;
+					//temDir + "\\" + wjName + ".pdf";
+//					//生成文件父级目录
+//					FileUtil.mkParentDirs(pdfPath);
+//					//生成pdf到pdf文件路径
+//					temDir = temDir + "\\" + wjName + formatSuffix;
+//					String finalTemDir = temDir;
+//
+//					String finalPdfPath = pdfPath;
+//					thread = new Thread(new Runnable() {
+//						@Override
+//						public void run() {
+//							// 线程执行的逻辑
+//							CommonUtil.world2pdf(finalTemDir, finalPdfPath);
+//							FileSystemUtils.deleteRecursively(new File(finalTemDir));
+//						}
+//					});
+//					thread.start();
+//					System.out.println("已生成驾驶员pdf" + pdfPath);
+//					deptName = t.getDeptName();
+//					System.out.println(DateUtil.now());
 				}
 			}
 		}
 		// 等待子线程执行完毕
-		try {
-			if (thread != null) {
-				thread.join();
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			if (thread != null) {
+//				thread.join();
+//			}
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 		// 子线程执行完毕后的逻辑
 
-		folder = fileServer.getPathPrefix() + FilePathConstant.ENCLOSURE_PATH + nyr[0] + "/" + nyr[1] + "/" + deptName + "-人车台账.zip";
-		ExcelUtils.deleteFile(folder);
-//		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(folder));
-//		ApacheZipUtils.doCompress1(urlList, bizOut);
-		System.out.println(DateUtil.now());
-		PackageToZIp.toZip(fileServer.getPathPrefix() + FilePathConstant.ENCLOSURE_PATH + nyr[0] + "\\" + nyr[1] + "\\" + uuid + "\\" + deptName, folder);
-		System.out.println(DateUtil.now());
+//		folder = fileServer.getPathPrefix() + FilePathConstant.ENCLOSURE_PATH + nyr[0] + "/" + nyr[1] + "/" + deptName + "-人车台账.zip";
+//		ExcelUtils.deleteFile(folder);
+////		ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(folder));
+////		ApacheZipUtils.doCompress1(urlList, bizOut);
+//		System.out.println(DateUtil.now());
+//		PackageToZIp.toZip(fileServer.getPathPrefix() + FilePathConstant.ENCLOSURE_PATH + nyr[0] + "\\" + nyr[1] + "\\" + uuid + "\\" + deptName, folder);
+//		System.out.println(DateUtil.now());
 		//不要忘记调用
 //		bizOut.close();
 
 		rs.setMsg("下载成功");
 		rs.setCode(200);
-		rs.setData(folder);
+		rs.setData(pdfPath);
 		rs.setSuccess(true);
 		return rs;
 	}

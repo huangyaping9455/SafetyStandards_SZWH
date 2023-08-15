@@ -120,7 +120,7 @@ public class AnbiaoRepairsInfoController {
 							r.setCode(200);
 							r.setSuccess(true);
 						}
-						if(6 == repairsInfo.getRpStatus()){
+						if(6 == repairsInfo.getRpStatus() || 7 == repairsInfo.getRpStatus()){
 							repairsInfo.setRpYyDate(remark.getRpdtDate());
 							repairsInfo.setRpYyAddress(remark.getRpdtYwAddress());
 							ii = repairsInfoService.updateById(repairsInfo);
@@ -165,7 +165,7 @@ public class AnbiaoRepairsInfoController {
 							r.setCode(500);
 							r.setSuccess(false);
 						}
-						if(6 == repairsInfo.getRpStatus()){
+						if(6 == repairsInfo.getRpStatus() || 7 == repairsInfo.getRpStatus()){
 							r.setMsg("预约失败");
 							r.setCode(500);
 							r.setSuccess(false);
@@ -206,7 +206,7 @@ public class AnbiaoRepairsInfoController {
 							remark.setRpdtDate(DateUtil.now());
 							ii = repairsRemarkService.save(remark);
 							if (ii) {
-								if(6 == repairsInfo.getRpStatus()) {
+								if(6 == repairsInfo.getRpStatus() || 7 == repairsInfo.getRpStatus()) {
 									r.setMsg("预约成功");
 									r.setCode(200);
 									r.setSuccess(true);
@@ -217,7 +217,7 @@ public class AnbiaoRepairsInfoController {
 									r.setSuccess(true);
 								}
 							}else {
-								if(6 == repairsInfo.getRpStatus()) {
+								if(6 == repairsInfo.getRpStatus() || 7 == repairsInfo.getRpStatus()) {
 									r.setMsg("预约失败");
 									r.setCode(500);
 									r.setSuccess(false);
@@ -463,5 +463,104 @@ public class AnbiaoRepairsInfoController {
 		anbiaoRepairsInfo.setCount(pages.getRecords().size());
 		return R.data(anbiaoRepairsInfo);
 	}
+
+	@PostMapping("/technicalAudit")
+	@ApiLog("报修单管理-技术审核")
+	@ApiOperation(value = "报修单管理-技术审核", notes = "传入AnbiaoRepairsInfo", position = 6)
+	public R technicalAudit(@RequestBody AnbiaoRepairsInfo repairsInfo, BladeUser user) {
+		R r = new R();
+		boolean ii = false;
+		if(StringUtils.isNotEmpty(repairsInfo.getRpId())){
+			if (user != null) {
+				repairsInfo.setRpUpdatename(user.getUserName());
+				repairsInfo.setRpUpdateid(user.getUserId());
+			}
+			repairsInfo.setRpUpdatetime(DateUtil.now());
+			ii = repairsInfoService.updateById(repairsInfo);
+			if (ii) {
+				QueryWrapper<AnbiaoRepairsRemark> repairsRemarkQueryWrapper = new QueryWrapper<AnbiaoRepairsRemark>();
+				repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtRpId, repairsInfo.getRpId());
+				if(repairsInfo.getRpClassify() == 2){
+					repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtType, 12);
+				}else{
+					repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtType, 13);
+				}
+				AnbiaoRepairsRemark repairsRemark = repairsRemarkService.getBaseMapper().selectOne(repairsRemarkQueryWrapper);
+				if(repairsRemark == null) {
+					AnbiaoRepairsRemark remark = repairsInfo.getRemark();
+					remark.setRpdtRpId(repairsInfo.getRpId());
+					if(repairsInfo.getRpClassify() == 2){
+						remark.setRpdtType(12);
+					}else{
+						remark.setRpdtType(13);
+					}
+					if (user != null) {
+						remark.setRpdtCreatename(user.getUserName());
+						remark.setRpdtCreateid(user.getUserId());
+					}
+					remark.setRpdtCreatetime(DateUtil.now());
+					remark.setRpdtDate(DateUtil.now());
+					ii = repairsRemarkService.save(remark);
+					if (ii) {
+						r.setMsg("保存成功");
+						r.setCode(200);
+						r.setSuccess(true);
+					}else{
+						r.setMsg("保存失败");
+						r.setCode(500);
+						r.setSuccess(false);
+					}
+				}
+			}
+		}else{
+			r.setMsg("参数不能为空");
+			r.setCode(500);
+			r.setSuccess(false);
+			return r;
+		}
+		return r;
+	}
+
+	@PostMapping("/technicalAuditEnd")
+	@ApiLog("报修单管理-远程维护-结单")
+	@ApiOperation(value = "报修单管理-远程维护-结单", notes = "传入报修单ID", position = 7)
+	public R technicalAuditEnd(@RequestBody AnbiaoRepairsInfo repairsInfo, BladeUser user) {
+		R r = new R();
+		boolean ii = false;
+		if(StringUtils.isNotEmpty(repairsInfo.getRpId())){
+			QueryWrapper<AnbiaoRepairsRemark> repairsRemarkQueryWrapper = new QueryWrapper<AnbiaoRepairsRemark>();
+			repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtRpId, repairsInfo.getRpId());
+			repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtType, 14);
+			AnbiaoRepairsRemark repairsRemark = repairsRemarkService.getBaseMapper().selectOne(repairsRemarkQueryWrapper);
+			if(repairsRemark == null) {
+				AnbiaoRepairsRemark remark = repairsInfo.getRemark();
+				remark.setRpdtRpId(repairsInfo.getRpId());
+				remark.setRpdtType(14);
+				if (user != null) {
+					remark.setRpdtCreatename(user.getUserName());
+					remark.setRpdtCreateid(user.getUserId());
+				}
+				remark.setRpdtCreatetime(DateUtil.now());
+				remark.setRpdtDate(DateUtil.now());
+				ii = repairsRemarkService.save(remark);
+				if (ii) {
+					r.setMsg("保存成功");
+					r.setCode(200);
+					r.setSuccess(true);
+				}else{
+					r.setMsg("保存失败");
+					r.setCode(500);
+					r.setSuccess(false);
+				}
+			}
+		}else{
+			r.setMsg("参数不能为空");
+			r.setCode(500);
+			r.setSuccess(false);
+			return r;
+		}
+		return r;
+	}
+
 
 }

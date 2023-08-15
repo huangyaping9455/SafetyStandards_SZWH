@@ -107,4 +107,7 @@ public class AlarmPage<T> extends BasePage<T> {
 	@ApiModelProperty("机构名称")
 	private String jigouName;
 
+	@ApiModelProperty("数据状态")
+	private String processedHD;
+
 }

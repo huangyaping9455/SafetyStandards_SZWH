@@ -1503,10 +1503,6 @@ values
         --         AND i.aja_delete = 0
         --         AND j.ajw_delete = 0
         --         and m.ajw_delete = 0
-
-        GROUP BY
-        a.id
-
     </select>
 
     <select id="selectAlarmTJMXPage3" resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTJMX" parameterType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTJMX">
