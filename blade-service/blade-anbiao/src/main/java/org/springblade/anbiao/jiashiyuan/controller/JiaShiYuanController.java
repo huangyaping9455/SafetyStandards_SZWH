@@ -7404,7 +7404,7 @@ public class JiaShiYuanController extends BladeUser{
 //					urlList.add(temDir);
 //
 //					//替换路径前缀,获得pdf文件路径
-					pdfPath = temDir+fileName;
+					pdfPath = temDir+"\\"+fileName;
 					//temDir + "\\" + wjName + ".pdf";
 //					//生成文件父级目录
 //					FileUtil.mkParentDirs(pdfPath);
@@ -7426,6 +7426,7 @@ public class JiaShiYuanController extends BladeUser{
 //					deptName = t.getDeptName();
 //					System.out.println(DateUtil.now());
 				}
+				folder += pdfPath+",";
 			}
 		}
 		// 等待子线程执行完毕
@@ -7450,7 +7451,7 @@ public class JiaShiYuanController extends BladeUser{
 
 		rs.setMsg("下载成功");
 		rs.setCode(200);
-		rs.setData(pdfPath);
+		rs.setData(folder);
 		rs.setSuccess(true);
 		return rs;
 	}
