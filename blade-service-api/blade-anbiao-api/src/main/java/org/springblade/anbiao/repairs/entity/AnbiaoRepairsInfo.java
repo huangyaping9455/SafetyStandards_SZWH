@@ -118,7 +118,7 @@ public class AnbiaoRepairsInfo implements Serializable {
 	private String rpDetailAddress;
 
 	@ApiModelProperty(value = "紧急程度")
-	private String rpEmergencyDegree;
+	private Integer rpEmergencyDegree = 1;
 
 	@ApiModelProperty(value = "预约时间")
 	private String rpYyDate;
@@ -128,6 +128,9 @@ public class AnbiaoRepairsInfo implements Serializable {
 
 	@ApiModelProperty(value = "维修类型，1：现场维护、2：远程维护")
 	private Integer rpClassify;
+
+	@ApiModelProperty(value = "删除标志，默认0,1：删除")
+	private Integer rpIsdelete = 0;
 
 	@ApiModelProperty(value = "报修流程")
 	@TableField(exist = false)

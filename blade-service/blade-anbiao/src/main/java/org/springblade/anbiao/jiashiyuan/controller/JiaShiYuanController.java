@@ -4490,24 +4490,28 @@ public class JiaShiYuanController extends BladeUser{
 					if (StringUtils.isNotBlank(t.getShenfenzhengfujian()) && !t.getShenfenzhengfujian().equals("null")) {
 						if (StrUtil.isNotEmpty(t.getShenfenzhengfujian()) && t.getShenfenzhengfujian().contains("http") == false) {
 							url1 = fileUploadClient.getUrl(t.getShenfenzhengfujian());
-							t.setShenfenzhengfujian(url1);
-							//添加图片到工作表的指定位置
+							if(url1 != null){
+								t.setShenfenzhengfujian(url1);
+								//添加图片到工作表的指定位置
 
-							String url2 = new URL(t.getShenfenzhengfujian()).toString();
-							//获得第一个点的位置
-							int index = url2.indexOf("/");
-							System.out.println(index);
-							//根据第一个点的位置 获得第二个点的位置
-							index = url2.indexOf("/", index + 2);
-							//根据第三个点的位置，截取 字符串。得到结果 result
-							String result = url2.substring(index);
-							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+								String url2 = new URL(t.getShenfenzhengfujian()).toString();
+								//获得第一个点的位置
+								int index = url2.indexOf("/");
+								System.out.println(index);
+								//根据第一个点的位置 获得第二个点的位置
+								index = url2.indexOf("/", index + 2);
+								//根据第三个点的位置，截取 字符串。得到结果 result
+								String result = url2.substring(index);
+								result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
 
-							url2 = fileServer.getPathPrefix() + result;
-							System.out.println(url2);
-							image.setUrl(url2);
-							image.setType(WordImageEntity.URL);
-							map.put("b1", image);
+								url2 = fileServer.getPathPrefix() + result;
+								System.out.println(url2);
+								image.setUrl(url2);
+								image.setType(WordImageEntity.URL);
+								map.put("b1", image);
+							}else{
+								map.put("b1", "-");
+							}
 						} else if (StrUtil.isNotEmpty(t.getShenfenzhengfujian())) {
 							String url2 = t.getShenfenzhengfujian();
 							//获得第一个点的位置
@@ -6743,27 +6747,31 @@ public class JiaShiYuanController extends BladeUser{
 					image = new WordImageEntity();
 					image.setHeight(220);
 					image.setWidth(350);
-					if (StringUtils.isNotBlank(t.getShenfenzhengfujian()) && !t.getShenfenzhengfujian().equals("null")) {
+					if (StringUtils.isNotEmpty(t.getShenfenzhengfujian()) && !t.getShenfenzhengfujian().equals("null") && t.getShenfenzhengfujian() != null) {
 						if (StrUtil.isNotEmpty(t.getShenfenzhengfujian()) && t.getShenfenzhengfujian().contains("http") == false) {
 							url1 = fileUploadClient.getUrl(t.getShenfenzhengfujian());
-							t.setShenfenzhengfujian(url1);
-							//添加图片到工作表的指定位置
+							if(url1 != null){
+								t.setShenfenzhengfujian(url1);
+								//添加图片到工作表的指定位置
 
-							String url2 = new URL(t.getShenfenzhengfujian()).toString();
-							//获得第一个点的位置
-							int index = url2.indexOf("/");
-							System.out.println(index);
-							//根据第一个点的位置 获得第二个点的位置
-							index = url2.indexOf("/", index + 2);
-							//根据第三个点的位置，截取 字符串。得到结果 result
-							String result = url2.substring(index);
-							result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
+								String url2 = new URL(t.getShenfenzhengfujian()).toString();
+								//获得第一个点的位置
+								int index = url2.indexOf("/");
+								System.out.println(index);
+								//根据第一个点的位置 获得第二个点的位置
+								index = url2.indexOf("/", index + 2);
+								//根据第三个点的位置，截取 字符串。得到结果 result
+								String result = url2.substring(index);
+								result = result.replace("/", "\\");  // 将正斜杠替换为反斜杠
 
-							url2 = fileServer.getPathPrefix() + result;
-							System.out.println(url2);
-							image.setUrl(url2);
-							image.setType(WordImageEntity.URL);
-							map.put("b1", image);
+								url2 = fileServer.getPathPrefix() + result;
+								System.out.println(url2);
+								image.setUrl(url2);
+								image.setType(WordImageEntity.URL);
+								map.put("b1", image);
+							}else{
+								map.put("b1", "-");
+							}
 						} else if (StrUtil.isNotEmpty(t.getShenfenzhengfujian())) {
 							String url2 = t.getShenfenzhengfujian();
 							//获得第一个点的位置

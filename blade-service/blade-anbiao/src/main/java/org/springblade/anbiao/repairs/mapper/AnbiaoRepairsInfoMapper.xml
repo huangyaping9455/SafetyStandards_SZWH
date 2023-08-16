@@ -37,6 +37,7 @@
         <result column="rp_yy_date" property="rpYyDate" />
         <result column="rp_yy_address" property="rpYyAddress" />
         <result column="rp_classify" property="rpClassify" />
+        <result column="rp_isdelete" property="rpIsdelete" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

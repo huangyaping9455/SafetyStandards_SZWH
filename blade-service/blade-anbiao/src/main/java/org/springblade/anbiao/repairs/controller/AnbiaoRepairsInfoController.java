@@ -243,10 +243,10 @@ public class AnbiaoRepairsInfoController {
 			QueryWrapper<AnbiaoRepairsInfo> dangerQueryWrapper = new QueryWrapper<AnbiaoRepairsInfo>();
 			dangerQueryWrapper.lambda().eq(AnbiaoRepairsInfo::getRpDeptId, repairsInfo.getRpDeptId());
 			dangerQueryWrapper.lambda().eq(AnbiaoRepairsInfo::getRpNo, repairsInfo.getRpNo());
-			dangerQueryWrapper.lambda().eq(AnbiaoRepairsInfo::getRpStatus, 1);
+			dangerQueryWrapper.lambda().eq(AnbiaoRepairsInfo::getRpStatus, 0);
 			AnbiaoRepairsInfo deail = repairsInfoService.getBaseMapper().selectOne(dangerQueryWrapper);
 			if(deail == null) {
-				repairsInfo.setRpStatus(1);
+				repairsInfo.setRpStatus(0);
 
 				//获取当前企业当天最大序列号 维修单号：20230620-4587-0001
 				String xuhao = "";
@@ -475,6 +475,11 @@ public class AnbiaoRepairsInfoController {
 				repairsInfo.setRpUpdatename(user.getUserName());
 				repairsInfo.setRpUpdateid(user.getUserId());
 			}
+			if(repairsInfo.getRpClassify() == 1){
+				repairsInfo.setRpStatus(1);
+			}else{
+				repairsInfo.setRpStatus(12);
+			}
 			repairsInfo.setRpUpdatetime(DateUtil.now());
 			ii = repairsInfoService.updateById(repairsInfo);
 			if (ii) {
@@ -560,6 +565,34 @@ public class AnbiaoRepairsInfoController {
 			return r;
 		}
 		return r;
+	}
+
+	@PostMapping("/del")
+	@ApiLog("报修单管理-删除")
+	@ApiOperation(value = "报修单管理-删除", notes = "传入AnbiaoRepairsInfo", position = 8)
+	public R del(@RequestBody AnbiaoRepairsInfo repairsInfo, BladeUser user) {
+		R r = new R();
+		QueryWrapper<AnbiaoRepairsInfo> repairsInfoQueryWrapper = new QueryWrapper<>();
+		repairsInfoQueryWrapper.lambda().eq(AnbiaoRepairsInfo::getRpId, repairsInfo.getRpId());
+		repairsInfoQueryWrapper.lambda().eq(AnbiaoRepairsInfo::getRpIsdelete, 0);
+		AnbiaoRepairsInfo deal = repairsInfoService.getBaseMapper().selectOne(repairsInfoQueryWrapper);
+		if (deal != null) {
+			deal.setRpIsdelete(1);
+			deal.setRpUpdatetime(DateUtil.now());
+			deal.setRpUpdatename(user.getUserName());
+			deal.setRpUpdateid(user.getUserId());
+			repairsInfoService.updateById(deal);
+			r.setMsg("删除成功");
+			r.setCode(200);
+			r.setSuccess(true);
+			r.setData(deal);
+			return r;
+		} else {
+			r.setMsg("无数据");
+			r.setCode(200);
+			r.setSuccess(true);
+			return r;
+		}
 	}
 
 
