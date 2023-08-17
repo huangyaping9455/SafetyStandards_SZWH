@@ -533,30 +533,43 @@ public class AnbiaoRepairsInfoController {
 		R r = new R();
 		boolean ii = false;
 		if(StringUtils.isNotEmpty(repairsInfo.getRpId())){
-			QueryWrapper<AnbiaoRepairsRemark> repairsRemarkQueryWrapper = new QueryWrapper<AnbiaoRepairsRemark>();
-			repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtRpId, repairsInfo.getRpId());
-			repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtType, 14);
-			AnbiaoRepairsRemark repairsRemark = repairsRemarkService.getBaseMapper().selectOne(repairsRemarkQueryWrapper);
-			if(repairsRemark == null) {
-				AnbiaoRepairsRemark remark = repairsInfo.getRemark();
-				remark.setRpdtRpId(repairsInfo.getRpId());
-				remark.setRpdtType(14);
-				if (user != null) {
-					remark.setRpdtCreatename(user.getUserName());
-					remark.setRpdtCreateid(user.getUserId());
+			if (user != null) {
+				repairsInfo.setRpUpdatename(user.getUserName());
+				repairsInfo.setRpUpdateid(user.getUserId());
+			}
+			repairsInfo.setRpStatus(14);
+			repairsInfo.setRpUpdatetime(DateUtil.now());
+			ii = repairsInfoService.updateById(repairsInfo);
+			if (ii) {
+				QueryWrapper<AnbiaoRepairsRemark> repairsRemarkQueryWrapper = new QueryWrapper<AnbiaoRepairsRemark>();
+				repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtRpId, repairsInfo.getRpId());
+				repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtType, 14);
+				AnbiaoRepairsRemark repairsRemark = repairsRemarkService.getBaseMapper().selectOne(repairsRemarkQueryWrapper);
+				if(repairsRemark == null) {
+					AnbiaoRepairsRemark remark = repairsInfo.getRemark();
+					remark.setRpdtRpId(repairsInfo.getRpId());
+					remark.setRpdtType(14);
+					if (user != null) {
+						remark.setRpdtCreatename(user.getUserName());
+						remark.setRpdtCreateid(user.getUserId());
+					}
+					remark.setRpdtCreatetime(DateUtil.now());
+					remark.setRpdtDate(DateUtil.now());
+					ii = repairsRemarkService.save(remark);
+					if (ii) {
+						r.setMsg("保存成功");
+						r.setCode(200);
+						r.setSuccess(true);
+					}else{
+						r.setMsg("保存失败");
+						r.setCode(500);
+						r.setSuccess(false);
+					}
 				}
-				remark.setRpdtCreatetime(DateUtil.now());
-				remark.setRpdtDate(DateUtil.now());
-				ii = repairsRemarkService.save(remark);
-				if (ii) {
-					r.setMsg("保存成功");
-					r.setCode(200);
-					r.setSuccess(true);
-				}else{
-					r.setMsg("保存失败");
-					r.setCode(500);
-					r.setSuccess(false);
-				}
+			}else{
+				r.setMsg("保存失败");
+				r.setCode(500);
+				r.setSuccess(false);
 			}
 		}else{
 			r.setMsg("参数不能为空");
@@ -585,7 +598,6 @@ public class AnbiaoRepairsInfoController {
 			r.setMsg("删除成功");
 			r.setCode(200);
 			r.setSuccess(true);
-			r.setData(deal);
 			return r;
 		} else {
 			r.setMsg("无数据");

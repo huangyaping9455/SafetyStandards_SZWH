@@ -1200,7 +1200,19 @@ public class AnbiaoCarExamineInfoController {
 		R rs = new R();
 		List<String> urlList = new ArrayList<>();
 		SafetyCheckMingXiVO safetyCheckMingXiVO = new SafetyCheckMingXiVO();
-		safetyCheckMingXiVO.setDeptId("1");
+		String[] dept_idsss = deptId.split(",");
+		//去除素组中重复的数组
+		List<String> dept_listid = new ArrayList<String>();
+		for (int i = 0; i < dept_idsss.length; i++) {
+			if (!dept_listid.contains(dept_idsss[i])) {
+				dept_listid.add(dept_idsss[i]);
+			}
+		}
+		//返回一个包含所有对象的指定类型的数组
+		String[] dept_idss = dept_listid.toArray(new String[1]);
+		for (int j = 0; j < dept_idss.length; j++) {
+			safetyCheckMingXiVO.setDeptId(dept_idss[j]);
+		}
 		safetyCheckMingXiVO.setDate(beginTime);
 		safetyCheckMingXiVO.setVehid(vehId);
 		// TODO 渲染其他类型的数据请参考官方文档

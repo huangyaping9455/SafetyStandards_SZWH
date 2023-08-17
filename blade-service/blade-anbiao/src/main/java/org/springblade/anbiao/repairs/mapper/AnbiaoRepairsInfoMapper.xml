@@ -61,6 +61,7 @@
         left join anbiao_repairs_return r on r.ret_rp_id = a.rp_id
 		where 1=1
 			and left(a.rp_date,10) >= left(#{date},10)
+            and a.rp_isdelete = 0
 	</sql>
 
 	<sql id="querySql">
@@ -139,6 +140,7 @@
                 where a.rp_id = b.rpdt_rp_id
                   and d.id = a.rp_dept_id
                   and b.rpdt_person_id = #{driverId}
+                  and a.rp_isdelete = 0
                 <if test="rpType != null and rpType != ''">
                     and a.rp_type = #{rpType}
                 </if>

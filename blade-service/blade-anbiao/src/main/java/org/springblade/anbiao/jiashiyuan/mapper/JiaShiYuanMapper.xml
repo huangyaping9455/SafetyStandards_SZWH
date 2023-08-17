@@ -946,48 +946,40 @@ values
         inner join  (
         <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) bb on a.dept_id = bb.id
-        LEFT JOIN anbiao_jiashiyuan_ruzhi o ON a.id = o.ajr_aj_ids AND o.ajr_delete = 0
-        LEFT JOIN anbiao_jiashiyuan_jiashizheng b ON a.id = b.ajj_aj_ids AND b.ajj_delete = 0
-        LEFT JOIN anbiao_jiashiyuan_congyezigezheng c ON a.id = c.ajc_aj_ids AND c.ajc_delete = 0
-        LEFT JOIN anbiao_jiashiyuan_tijian d ON a.id = d.ajt_aj_ids AND d.ajt_delete = 0
-        LEFT JOIN anbiao_jiashiyuan_gangqianpeixun e ON a.id = e.ajg_aj_ids AND e.ajg_delete = 0
-        LEFT JOIN anbiao_jiashiyuan_wuzezhengming f ON a.id = f.ajw_aj_ids AND f.ajw_delete = 0
-        LEFT JOIN anbiao_jiashiyuan_anquanzerenshu g ON a.id = g.aja_aj_ids AND g.aja_delete = 0
-        LEFT JOIN anbiao_jiashiyuan_weihaigaozhishu h ON a.id = h.ajw_aj_ids AND h.ajw_delete = 0
-        LEFT JOIN anbiao_jiashiyuan_laodonghetong i ON a.id = i.ajw_aj_ids AND i.ajw_delete = 0
+        JOIN anbiao_jiashiyuan_ruzhi o ON a.id = o.ajr_aj_ids AND o.ajr_delete = 0
+        JOIN anbiao_jiashiyuan_jiashizheng b ON a.id = b.ajj_aj_ids AND b.ajj_delete = 0
+        JOIN anbiao_jiashiyuan_congyezigezheng c ON a.id = c.ajc_aj_ids AND c.ajc_delete = 0
+        JOIN anbiao_jiashiyuan_tijian d ON a.id = d.ajt_aj_ids AND d.ajt_delete = 0
+        JOIN anbiao_jiashiyuan_gangqianpeixun e ON a.id = e.ajg_aj_ids AND e.ajg_delete = 0
+        JOIN anbiao_jiashiyuan_wuzezhengming f ON a.id = f.ajw_aj_ids AND f.ajw_delete = 0
+        JOIN anbiao_jiashiyuan_anquanzerenshu g ON a.id = g.aja_aj_ids AND g.aja_delete = 0
+        JOIN anbiao_jiashiyuan_weihaigaozhishu h ON a.id = h.ajw_aj_ids AND h.ajw_delete = 0
+        JOIN anbiao_jiashiyuan_laodonghetong i ON a.id = i.ajw_aj_ids AND i.ajw_delete = 0
         LEFT JOIN (
         SELECT xsz_compeleted,ysz_compeleted,xnbg_compeleted,o.jiashiyuanid as jiashiyuanid,djzs_compeleted,cheliangpaizhao,j.id as id FROM anbiao_vehicle j
-        inner join  (
-        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
-        ) bb on j.dept_id = bb.id
-        LEFT JOIN anbiao_vehicle_xingshizheng k on j.id = k.avx_av_ids
-        LEFT JOIN anbiao_vehicle_daoluyunshuzheng l on j.id = l.avd_av_ids
-        LEFT JOIN anbiao_vehicle_xingnengbaogao m on j.id = m.avx_av_ids
-        LEFT JOIN anbiao_vehicle_dengjizhengshu n on j.id = n.avd_vehicle_ids
-        LEFT JOIN anbiao_cheliang_jiashiyuan_daily o on j.id = o.gvehid and o.gstatus = 1
+<!--        inner join  (-->
+<!--        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>-->
+<!--        ) bb on j.dept_id = bb.id-->
+        JOIN anbiao_vehicle_xingshizheng k on j.id = k.avx_av_ids and k.avx_delete = 0
+        JOIN anbiao_vehicle_daoluyunshuzheng l on j.id = l.avd_av_ids and l.avd_delete = 0
+        JOIN anbiao_vehicle_xingnengbaogao m on j.id = m.avx_av_ids and m.avx_delete = 0
+        JOIN anbiao_vehicle_dengjizhengshu n on j.id = n.avd_vehicle_ids and n.avd_delete = 0
+        JOIN anbiao_cheliang_jiashiyuan_daily o on j.id = o.gvehid and o.gstatus = 1
         WHERE j.cheliangpaizhao like '%挂'
         and j.is_deleted = 0
-        and k.avx_delete = 0
-        and l.avd_delete = 0
-        and m.avx_delete = 0
-        and n.avd_delete = 0
         ) j on a.id = j.jiashiyuanid
         LEFT JOIN (
         SELECT xsz_compeleted,ysz_compeleted,xnbg_compeleted,o.jiashiyuanid as jiashiyuanid,djzs_compeleted,cheliangpaizhao,j.id as id FROM anbiao_vehicle j
-        inner join  (
-        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
-        ) bb on j.dept_id = bb.id
-        LEFT JOIN anbiao_vehicle_xingshizheng k on j.id = k.avx_av_ids
-        LEFT JOIN anbiao_vehicle_daoluyunshuzheng l on j.id = l.avd_av_ids
-        LEFT JOIN anbiao_vehicle_xingnengbaogao m on j.id = m.avx_av_ids
-        LEFT JOIN anbiao_vehicle_dengjizhengshu n on j.id = n.avd_vehicle_ids
-        LEFT JOIN anbiao_cheliang_jiashiyuan_daily o on j.id = o.vehid and o.vstatus = 1
+<!--        inner join  (-->
+<!--        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>-->
+<!--        ) bb on j.dept_id = bb.id-->
+        JOIN anbiao_vehicle_xingshizheng k on j.id = k.avx_av_ids and k.avx_delete = 0
+        JOIN anbiao_vehicle_daoluyunshuzheng l on j.id = l.avd_av_ids and l.avd_delete = 0
+        JOIN anbiao_vehicle_xingnengbaogao m on j.id = m.avx_av_ids and m.avx_delete = 0
+        JOIN anbiao_vehicle_dengjizhengshu n on j.id = n.avd_vehicle_ids and n.avd_delete = 0
+        JOIN anbiao_cheliang_jiashiyuan_daily o on j.id = o.vehid and o.vstatus = 1
         WHERE j.cheliangpaizhao not like '%挂'
         and j.is_deleted = 0
-        and k.avx_delete = 0
-        and l.avd_delete = 0
-        and m.avx_delete = 0
-        and n.avd_delete = 0
         -- 				and o.jiashiyuanid="051578f40f304b809c35ece72b0a8fb7"
         ) h on a.id = h.jiashiyuanid
         LEFT JOIN ( SELECT DISTINCT ajb_insured_ids FROM anbiao_jiashiyuan_baoxian where ajb_delete = 0 ) jsybx ON jsybx.ajb_insured_ids = a.id
@@ -1005,7 +997,7 @@ values
         <if test="jiashiyuanxingming !=null and jiashiyuanxingming != ''">
             AND a.jiashiyuanxingming  LIKE '%${jiashiyuanxingming}%'
         </if>
-        order BY a.id
+--         order BY a.id
 
     </sql>
     <sql id="queryTJMXSql">

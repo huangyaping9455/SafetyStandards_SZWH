@@ -2396,12 +2396,7 @@ public class JiaShiYuanController extends BladeUser{
 
 			//验证从业资格证类别是否满足规则
 			String congyeleibie = String.valueOf(a.get("从业资格证类别")).trim();
-			if (StringUtils.isBlank(congyeleibie) && !congyeleibie.equals("null")) {
-				driver.setMsg("从业资格证类别不能为空;");
-				driver.setImportUrl("icon_cha.png");
-				errorStr += "从业资格证类别不能为空;";
-				bb++;
-			} else {
+			if (StringUtils.isNotEmpty(congyeleibie) && !congyeleibie.equals("null")) {
 				boolean ss = false;
 				List<Dict> dictVOList = iDictClient.getDictByCode("congyezigezhengleibie", null);
 				for (int i = 0; i < dictVOList.size(); i++) {
@@ -2424,7 +2419,7 @@ public class JiaShiYuanController extends BladeUser{
 			}
 			//验证从业人员类型
 			String congyerenyuanleixing = String.valueOf(a.get("从业人员类型")).trim();
-			if (StringUtils.isNotBlank(congyerenyuanleixing) && !congyerenyuanleixing.equals("null")) {
+			if (StringUtils.isNotEmpty(congyerenyuanleixing) && !congyerenyuanleixing.equals("null")) {
 				boolean ss = false;
 				List<Dict> dictVOList = iDictClient.getDictByCode("congyerenyuanleixing", null);
 				for (int i = 0; i < dictVOList.size(); i++) {
@@ -2444,13 +2439,7 @@ public class JiaShiYuanController extends BladeUser{
 					driver.setMsg(congyerenyuanleixing + ",该从业人员类型异常,请校验;");
 					bb++;
 				}
-			} else {
-				driver.setMsg("从业人员类型不能为空;");
-				driver.setImportUrl("icon_cha.png");
-				errorStr += "从业人员类型不能为空;";
-				bb++;
 			}
-
 
 			//验证Excel导入时，是否存在重复数据
 			for (JiaShiYuan item : drivers) {
