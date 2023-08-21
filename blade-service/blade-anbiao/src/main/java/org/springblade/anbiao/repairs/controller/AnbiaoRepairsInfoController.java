@@ -11,12 +11,14 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.cheliangguanli.entity.Vehicle;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
+import org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineVO;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
 import org.springblade.anbiao.repairs.entity.*;
 import org.springblade.anbiao.repairs.entity.AnbiaoRepairsInfo;
 import org.springblade.anbiao.repairs.page.AnbiaoRepairsDeptPage;
 import org.springblade.anbiao.repairs.service.IAnbiaoRepairsInfoService;
+import org.springblade.anbiao.repairs.service.IAnbiaoRepairsPersonService;
 import org.springblade.anbiao.repairs.service.IAnbiaoRepairsRemarkService;
 import org.springblade.anbiao.repairs.service.IAnbiaoRepairsReturnService;
 import org.springblade.anbiao.zhengfu.entity.Organization;
@@ -52,6 +54,8 @@ public class AnbiaoRepairsInfoController {
 	private IOrganizationsService organizationService;
 
 	private IVehicleService vehicleService;
+
+	private IAnbiaoRepairsPersonService personService;
 
 	@PostMapping("/insert")
 	@ApiLog("报修单管理-新增、编辑、派单、接单、预约、维修、审核、取消")
@@ -411,6 +415,17 @@ public class AnbiaoRepairsInfoController {
 			remarkQueryWrapper.lambda().orderByDesc(AnbiaoRepairsRemark::getRpdtDate);
 			List<AnbiaoRepairsRemark> remark = repairsRemarkService.getBaseMapper().selectList(remarkQueryWrapper);
 			if(remark != null){
+				remark.forEach(item -> {
+					if(StringUtils.isNotEmpty(item.getRpdtPersonId())){
+						QueryWrapper<AnbiaoRepairsPerson> anbiaoRiskConfigurationQueryWrapper = new QueryWrapper<>();
+						anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRepairsPerson::getRpId, item.getRpdtPersonId());
+						anbiaoRiskConfigurationQueryWrapper.lambda().eq(AnbiaoRepairsPerson::getRpDelete, 0);
+						AnbiaoRepairsPerson deal = personService.getBaseMapper().selectOne(anbiaoRiskConfigurationQueryWrapper);
+						if (deal != null) {
+							item.setRpdtPersonName(deal.getRpName());
+						}
+					}
+				});
 				deail.setRepairsRemarkList(remark);
 			}
 			r.setMsg("获取成功");
@@ -544,6 +559,7 @@ public class AnbiaoRepairsInfoController {
 				QueryWrapper<AnbiaoRepairsRemark> repairsRemarkQueryWrapper = new QueryWrapper<AnbiaoRepairsRemark>();
 				repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtRpId, repairsInfo.getRpId());
 				repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtType, 14);
+				repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtDate, DateUtil.now());
 				AnbiaoRepairsRemark repairsRemark = repairsRemarkService.getBaseMapper().selectOne(repairsRemarkQueryWrapper);
 				if(repairsRemark == null) {
 					AnbiaoRepairsRemark remark = repairsInfo.getRemark();

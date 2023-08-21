@@ -400,7 +400,7 @@ public class AnbiaoHiddenDangerController {
 						//如果目标文件所在的目录不存在，则创建父目录
 						newFile.mkdirs();
 					}
-					fileName = fileName+"/"+t.getDeptname()+"-隐患登记台账.xlsx";
+					fileName = fileName+"/"+t.getDeptname()+t.getCheliangpaizhao()+"-隐患登记台账.xlsx";
 					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
 					WriteSheet writeSheet = EasyExcel.writerSheet().build();
 					// 写入list之前的数据

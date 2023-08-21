@@ -1,5 +1,6 @@
 package org.springblade.anbiao.repairs.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -9,6 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * <p>
@@ -77,6 +79,10 @@ public class AnbiaoRepairsRemark implements Serializable {
 
 	@ApiModelProperty(value = "驾驶员签字")
 	private String rpdtDisposeSign;
+
+	@ApiModelProperty(value = "服务人员ID")
+	@TableField(exist = false)
+	private String rpdtPersonName;
 
 
 }

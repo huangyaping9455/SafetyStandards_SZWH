@@ -6442,10 +6442,15 @@ public class JiaShiYuanController extends BladeUser{
 			deptQueryWrapper.lambda().eq(Dept::getId, idss[j]);
 			deptQueryWrapper.lambda().eq(Dept::getIsDeleted, 0);
 			Dept dept = deptService.getBaseMapper().selectOne(deptQueryWrapper);
+			//维修隐患整改台账
 			R r1 = maintenanceController.goExport_HiddenDanger_Excel(null, null, deptId, date, null);
+			//事故信息台账
 			R r2 = accidentReportsController.goExport_HiddenDanger_Excel(null, null, null, deptId, date, null);
+			//劳保信息台账
 			R r3 = laborController.goExport_HiddenDanger_Excel(null, null, null, null, deptId, date);
+			//安全会议台账
 			R r4 = anbiaoAnquanhuiyiController.goExport_HiddenDanger_Excel(null, null, null, deptId, date, null);
+			//车辆安全检查台账统计表
 			R r5 = anbiaoCarExamineInfoController.goExport_ExamineInfo_Excel(null, null, deptId, null, null, date, date, null);
 
 			urlList.add(r1.getData().toString());
@@ -6453,7 +6458,7 @@ public class JiaShiYuanController extends BladeUser{
 			urlList.add(r3.getData().toString());
 			urlList.add(r4.getData().toString());
 			urlList.add(r5.getData().toString());
-			String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+"总台账.zip";
+			String fileName = fileServer.getPathPrefix()+ FilePathConstant.ENCLOSURE_PATH+nyr[0]+"\\"+nyr[1]+"\\"+dept.getDeptName()+"总台账.zip";
 			ExcelUtils.deleteFile(fileName);
 			ZipOutputStream bizOut = new ZipOutputStream(new FileOutputStream(fileName));
 			ApacheZipUtils.doCompress1(urlList, bizOut);
