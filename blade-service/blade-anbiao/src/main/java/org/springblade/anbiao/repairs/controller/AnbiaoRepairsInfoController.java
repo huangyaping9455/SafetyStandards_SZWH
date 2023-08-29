@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -60,7 +61,7 @@ public class AnbiaoRepairsInfoController {
 	@PostMapping("/insert")
 	@ApiLog("报修单管理-新增、编辑、派单、接单、预约、维修、审核、取消")
 	@ApiOperation(value = "报修单管理-新增、编辑、派单、接单、预约、维修、审核、取消", notes = "传入AnbiaoRepairsInfo", position = 1)
-	public R insert(@RequestBody AnbiaoRepairsInfo repairsInfo, BladeUser user) {
+	public R insert(@RequestBody AnbiaoRepairsInfo repairsInfo, BladeUser user) throws InterruptedException {
 		R r = new R();
 		boolean ii = false;
 		if(StringUtils.isNotEmpty(repairsInfo.getRpId())){
@@ -93,6 +94,9 @@ public class AnbiaoRepairsInfoController {
 							r.setSuccess(true);
 						}
 						if(3 == repairsInfo.getRpStatus()){
+							System.out.println("转单");
+							System.out.println(DateUtil.now());
+							TimeUnit.SECONDS.sleep(2);
 							remark = repairsInfo.getRemark();
 							remark.setRpdtRpId(repairsInfo.getRpId());
 							remark.setRpdtType(2);
@@ -192,6 +196,44 @@ public class AnbiaoRepairsInfoController {
 						return r;
 					}
 				}else{
+					if(3 == repairsInfo.getRpStatus()){
+						AnbiaoRepairsRemark remark = repairsInfo.getRemark();
+						repairsRemarkQueryWrapper = new QueryWrapper<AnbiaoRepairsRemark>();
+						repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtRpId, repairsInfo.getRpId());
+						repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtType, repairsInfo.getRpStatus());
+						repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtDate, remark.getRpdtDate());
+						repairsRemark = repairsRemarkService.getBaseMapper().selectOne(repairsRemarkQueryWrapper);
+						if(repairsRemark == null) {
+							System.out.println("转单");
+							System.out.println(DateUtil.now());
+							TimeUnit.SECONDS.sleep(2);
+							remark = repairsInfo.getRemark();
+							remark.setRpdtRpId(repairsInfo.getRpId());
+							remark.setRpdtType(2);
+							if (user != null) {
+								remark.setRpdtCreatename(user.getUserName());
+								remark.setRpdtCreateid(user.getUserId());
+							}
+							remark.setRpdtCreatetime(DateUtil.now());
+							remark.setRpdtDate(DateUtil.now());
+							ii = repairsRemarkService.save(remark);
+							if (user != null) {
+								repairsInfo.setRpUpdatename(user.getUserName());
+								repairsInfo.setRpUpdateid(user.getUserId());
+							}
+							repairsInfo.setRpUpdatetime(DateUtil.now());
+							ii = repairsInfoService.updateById(repairsInfo);
+							if (ii) {
+								r.setMsg("转单成功");
+								r.setCode(200);
+								r.setSuccess(true);
+							} else {
+								r.setMsg("转单失败");
+								r.setCode(500);
+								r.setSuccess(false);
+							}
+						}
+					}
 					if(repairsInfo.getRpStatus() == 6 || repairsInfo.getRpStatus() == 8){
 						AnbiaoRepairsRemark remark = repairsInfo.getRemark();
 						repairsRemarkQueryWrapper = new QueryWrapper<AnbiaoRepairsRemark>();

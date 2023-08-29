@@ -22,9 +22,14 @@ spring:
     #    password: Root@123456
 
     #唐僧
-    url: jdbc:mysql://219.153.12.86:3366/ote-cs?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
-    username: root
-    password: admin@ts
+#    url: jdbc:mysql://219.153.12.86:3366/ote-cs?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+#    username: root
+#    password: admin@ts
+
+    #测试
+#    url: jdbc:mysql://120.78.198.161:3306/ote?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+#    username: root
+#    password: Ts2022
 
     #青岛
     #    url: jdbc:mysql://150.138.133.178:3366/ote?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8

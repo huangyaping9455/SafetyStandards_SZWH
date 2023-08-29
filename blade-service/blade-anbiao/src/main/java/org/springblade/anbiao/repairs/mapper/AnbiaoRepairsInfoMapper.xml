@@ -80,6 +80,10 @@
         <if test="hfstatus != null and hfstatus != '' ">
             and hfstatus = #{hfstatus}
         </if>
+
+        <if test="rpType != null and rpType != ''">
+            and rp_type = #{rpType}
+        </if>
 	</sql>
 
 	<sql id="orderSql">
@@ -130,9 +134,42 @@
 
     <sql id="tableDriverSql">
         select
-            b.*,
+            b.rp_id,
+            b.rp_dept_id,
+            b.rp_yw_person,
+            b.rp_yh_person,
+            b.rp_vehid,
+            b.rp_veh_drving_license,
+            b.rp_veh_type,
+            b.rp_remark,
+            b.rp_equipment,
+            b.rp_explain,
+            b.rp_createtime,
+            b.rp_createid,
+            b.rp_createname,
+            b.rp_updatetime,
+            b.rp_updateid,
+            b.rp_updatename,
+            b.rp_date,
+            b.rp_no,
+            b.rp_source,
+            b.rp_type,
+            b.rp_trouble_type,
+            b.rp_img,
+            b.rp_video,
+            b.rp_isfree,
+            b.rp_relation_person,
+            b.rp_relation_phone,
+            b.rp_address,
+            b.rp_detail_address,
+            b.rp_emergency_degree,
+            b.rp_yy_date,
+            b.rp_yy_address,
+            b.rp_classify,
+            b.rp_isdelete,
             c.cheliangpaizhao,
-            c.chepaiyanse
+            c.chepaiyanse,
+            case when (b.rp_status = 3 and b.rp_status != d.rpdt_type and d.rpdt_person_id = #{driverId}) then d.rpdt_type else b.rp_status end as rp_status
         from
             anbiao_repairs_person a
             inner join (
@@ -147,8 +184,24 @@
                 <if test="date != null and date != ''">
                     and left(a.rp_date,10) >= left(#{date},10)
                 </if>
-                ORDER BY rp_date desc LIMIT 1
             )b on a.rp_id = b.rpdt_person_id
+            left join (
+                select * from anbiao_repairs_remark
+                where rpdt_rp_id in(
+                    select distinct a.rp_id from anbiao_repairs_info a,anbiao_repairs_remark b,blade_dept d
+                    where a.rp_id = b.rpdt_rp_id
+                    and d.id = a.rp_dept_id
+                    and b.rpdt_person_id = #{driverId}
+                    and a.rp_isdelete = 0
+                    <if test="rpType != null and rpType != ''">
+                        and a.rp_type = #{rpType}
+                    </if>
+                    <if test="date != null and date != ''">
+                        and left(a.rp_date,10) >= left(#{date},10)
+                    </if>
+                    )
+                ORDER BY rpdt_date desc LIMIT 1
+            )d on b.rp_id = d.rpdt_rp_id
             left join anbiao_vehicle c on c.id = b.rp_vehid
         where 1=1
     </sql>

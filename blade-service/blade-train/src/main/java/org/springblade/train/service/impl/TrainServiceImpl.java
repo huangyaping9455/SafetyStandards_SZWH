@@ -23,6 +23,7 @@ import lombok.AllArgsConstructor;
 import org.springblade.anbiao.guanlijigouherenyuan.feign.IPersonnelClient;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTrain;
 import org.springblade.anbiao.jiashiyuan.feign.IJiaShiYuanClient;
+import org.springblade.common.tool.StringUtils;
 import org.springblade.train.entity.*;
 import org.springblade.train.mapper.*;
 import org.springblade.train.page.CourseInfoPage;
@@ -55,6 +56,8 @@ public class TrainServiceImpl extends ServiceImpl<TrainMapper, Train> implements
 	private AreaMapper areaMapper;
 
 	private IJiaShiYuanClient jiaShiYuanClient;
+
+	private ExamSignatrueMapper mapper;
 
     @Override
     public List<Train> getQYCourseList(String name, String id) {
@@ -278,6 +281,9 @@ public class TrainServiceImpl extends ServiceImpl<TrainMapper, Train> implements
 						studentitem.setSignatrue(item.getSignatrue());
 					}
 				});
+			}else{
+				ExamSignatrue examSignatrue = mapper.getSignatrue(studentId, courseId);
+				studentitem.setSignatrue(examSignatrue.getSignatrueimg());
 			}
 		});
 		return studentProveList;
