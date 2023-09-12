@@ -2291,11 +2291,15 @@
             )b on a.id = b.cid
             LEFT JOIN(
                 select
-                    *
+                    deptId,
+                    SUM(uploadedNum) as uploadedNum,
+                    SUM(finshNum) as finshNum
                 from
                     anbiao_safetyproductionfile_num
                 where YEAR(date) = YEAR(NOW())
-                  and MONTH(date) = MONTH(NOW())
+                    and MONTH(date) = MONTH(NOW())
+                GROUP BY
+                    deptId
             )c ON a.id = c.deptId
             LEFT JOIN(
                 select
@@ -2307,12 +2311,10 @@
                     lwlk_dept_day
                 where YEAR(date) = YEAR(NOW())
                     and MONTH(date) = MONTH(NOW())
-                    and dept_id = #{deptId}
                 GROUP BY
                     dept_id
             )d ON a.id = d.dept_id
         WHERE 1=1
-          AND a.id = #{deptId}
     </select>
 
 </mapper>

@@ -20,10 +20,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.pagehelper.PageHelper;
 import lombok.AllArgsConstructor;
-import org.springblade.anbiao.guanlijigouherenyuan.feign.IPersonnelClient;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTrain;
 import org.springblade.anbiao.jiashiyuan.feign.IJiaShiYuanClient;
-import org.springblade.common.tool.StringUtils;
+import org.springblade.anbiao.qiyeshouye.page.QiYeShouYePage;
 import org.springblade.train.entity.*;
 import org.springblade.train.mapper.*;
 import org.springblade.train.page.CourseInfoPage;
@@ -314,6 +313,43 @@ public class TrainServiceImpl extends ServiceImpl<TrainMapper, Train> implements
 	@Override
 	public List<CourseKind> getCourseKindList(String name) {
 		return trainMapper.getCourseKindList(name);
+	}
+
+	@Override
+	public QiYeShouYePage<ZFCourseInfo> selectZFPersonLearnCoutAll(QiYeShouYePage qiYeShouYePage) {
+		Integer total = trainMapper.selectZFPersonLearnCoutAllTotal(qiYeShouYePage);
+		if(qiYeShouYePage.getSize()==0){
+			if(qiYeShouYePage.getTotal()==0){
+				qiYeShouYePage.setTotal(total);
+			}
+			if(qiYeShouYePage.getTotal()==0){
+				return qiYeShouYePage;
+			}else{
+				List<ZFCourseInfo> ZFCourseInfoList = trainMapper.selectZFPersonLearnCoutAll(qiYeShouYePage);
+				qiYeShouYePage.setRecords(ZFCourseInfoList);
+				return qiYeShouYePage;
+			}
+		}
+		Integer pagetotal = 0;
+		if (total > 0) {
+			if(total%qiYeShouYePage.getSize()==0){
+				pagetotal = total / qiYeShouYePage.getSize();
+			}else {
+				pagetotal = total / qiYeShouYePage.getSize() + 1;
+			}
+		}
+		if (pagetotal >= qiYeShouYePage.getCurrent()) {
+			qiYeShouYePage.setPageTotal(pagetotal);
+			Integer offsetNo = 0;
+			if (qiYeShouYePage.getCurrent() > 1) {
+				offsetNo = qiYeShouYePage.getSize() * (qiYeShouYePage.getCurrent() - 1);
+			}
+			qiYeShouYePage.setTotal(total);
+			qiYeShouYePage.setOffsetNo(offsetNo);
+			List<ZFCourseInfo> ZFCourseInfoList = trainMapper.selectZFPersonLearnCoutAll(qiYeShouYePage);
+			qiYeShouYePage.setRecords(ZFCourseInfoList);
+		}
+		return qiYeShouYePage;
 	}
 
 	private void formatStudent(List<Student> students){

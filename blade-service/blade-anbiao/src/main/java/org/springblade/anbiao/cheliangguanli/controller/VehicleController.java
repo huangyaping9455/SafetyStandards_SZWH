@@ -5061,7 +5061,10 @@ public class VehicleController {
 					bb++;
 				}
 			}else{
-				vehicle.setCheliangzhuangtai("0");
+				vehicle.setImportUrl("icon_cha.png");
+				errorStr = cheliangpaiz+"运营状态不能为空;";
+				vehicle.setMsg(cheliangpaiz + "运营状态不能为空;");
+				bb++;
 			}
 			if(StringUtils.isNotBlank(String.valueOf(a.get("道路运输证号"))) && !String.valueOf(a.get("道路运输证号")).equals("null")){
 				vehicle.setDaoluyunshuzheng(String.valueOf(a.get("道路运输证号")).trim());
@@ -5070,6 +5073,7 @@ public class VehicleController {
 			String daoluyunshuzhengchulingriqi = String.valueOf(a.get("道路运输证初次发放日期")).trim();
 			if(StringUtils.isNotBlank(daoluyunshuzhengchulingriqi) && !daoluyunshuzhengchulingriqi.equals("null")){
 				if(DateUtils.isDateString(daoluyunshuzhengchulingriqi,null) == true){
+					daoluyunshuzhengchulingriqi = daoluyunshuzhengchulingriqi.substring(0,10);
 					vehicle.setDaoluyunshuzhengchulingriqi(daoluyunshuzhengchulingriqi);
 					vehicle.setImportUrl("icon_gou.png");
 				}else{
@@ -5083,6 +5087,7 @@ public class VehicleController {
 			String daoluyunshuzhengyouxiaoqi = String.valueOf(a.get("道路运输证有效截至日期")).trim();
 			if(StringUtils.isNotBlank(daoluyunshuzhengyouxiaoqi) && !daoluyunshuzhengyouxiaoqi.equals("null")){
 				if(DateUtils.isDateString(daoluyunshuzhengyouxiaoqi,null) == true){
+					daoluyunshuzhengchulingriqi = daoluyunshuzhengchulingriqi.substring(0,10);
 					vehicle.setDaoluyunshuzhengyouxiaoqi(daoluyunshuzhengyouxiaoqi);
 					vehicle.setImportUrl("icon_gou.png");
 				}else{
@@ -5130,6 +5135,7 @@ public class VehicleController {
 			String bencinianshenriqi = String.valueOf(a.get("本次年审日期")).trim();
 			if(StringUtils.isNotBlank(bencinianshenriqi) && !bencinianshenriqi.equals("null")){
 				if(DateUtils.isDateString(bencinianshenriqi,null) == true){
+					bencinianshenriqi = bencinianshenriqi.substring(0,10);
 					vehicle.setBencinianshenriqi(bencinianshenriqi);
 					vehicle.setImportUrl("icon_gou.png");
 				}else{
@@ -5143,6 +5149,7 @@ public class VehicleController {
 			String xiacinianshenriqi = String.valueOf(a.get("下次年审日期")).trim();
 			if(StringUtils.isNotBlank(xiacinianshenriqi) && !xiacinianshenriqi.equals("null")){
 				if(DateUtils.isDateString(xiacinianshenriqi,null) == true){
+					xiacinianshenriqi = xiacinianshenriqi.substring(0,10);
 					vehicle.setXiacinianshenriqi(xiacinianshenriqi);
 					vehicle.setImportUrl("icon_gou.png");
 				}else{
@@ -5190,6 +5197,7 @@ public class VehicleController {
 			String bencinianjianriqi = String.valueOf(a.get("本次年检日期")).trim();
 			if(StringUtils.isNotBlank(bencinianjianriqi) && !bencinianjianriqi.equals("null")){
 				if(DateUtils.isDateString(bencinianjianriqi,null) == true){
+					bencinianjianriqi = bencinianjianriqi.substring(0,10);
 					vehicle.setBencinianjianriqi(bencinianjianriqi);
 					vehicle.setImportUrl("icon_gou.png");
 				}else{
@@ -5203,6 +5211,7 @@ public class VehicleController {
 			String xiacinianjianriqi = String.valueOf(a.get("下次年检日期")).trim();
 			if(StringUtils.isNotBlank(xiacinianjianriqi) && !xiacinianjianriqi.equals("null")){
 				if(DateUtils.isDateString(xiacinianjianriqi,null) == true){
+					xiacinianjianriqi = xiacinianjianriqi.substring(0,10);
 					vehicle.setXiacinianjianriqi(xiacinianjianriqi);
 					vehicle.setImportUrl("icon_gou.png");
 				}else{
@@ -5250,6 +5259,7 @@ public class VehicleController {
 			String bencijipingriqi = String.valueOf(a.get("本次技评日期")).trim();
 			if(StringUtils.isNotBlank(bencijipingriqi) && !bencijipingriqi.equals("null")){
 				if(DateUtils.isDateString(bencijipingriqi,null) == true){
+					bencijipingriqi = bencijipingriqi.substring(0,10);
 					vehicle.setBencijipingriqi(bencijipingriqi);
 					vehicle.setImportUrl("icon_gou.png");
 				}else{
@@ -5263,6 +5273,7 @@ public class VehicleController {
 			String xiacijipingriqi = String.valueOf(a.get("下次技评日期")).trim();
 			if(StringUtils.isNotBlank(xiacijipingriqi) && !xiacijipingriqi.equals("null")){
 				if(DateUtils.isDateString(xiacijipingriqi,null) == true){
+					xiacijipingriqi = xiacijipingriqi.substring(0,10);
 					vehicle.setXiacijipingriqi(xiacijipingriqi);
 					vehicle.setImportUrl("icon_gou.png");
 				}else{
@@ -5310,6 +5321,7 @@ public class VehicleController {
 			String baofeiriqi = String.valueOf(a.get("报废日期")).trim();
 			if(StringUtils.isNotBlank(baofeiriqi) && !baofeiriqi.equals("null")){
 				if(DateUtils.isDateString(baofeiriqi,null) == true){
+					baofeiriqi = baofeiriqi.substring(0,10);
 					vehicle.setBaofeiriqi(baofeiriqi);
 					vehicle.setImportUrl("icon_gou.png");
 				}else{
@@ -5323,6 +5335,7 @@ public class VehicleController {
 			String baoxiandaoqi = String.valueOf(a.get("保险到期日期")).trim();
 			if(StringUtils.isNotBlank(baoxiandaoqi) && !baoxiandaoqi.equals("null")){
 				if(DateUtils.isDateString(baoxiandaoqi,null) == true){
+					baoxiandaoqi = baoxiandaoqi.substring(0,10);
 					vehicle.setBaoxiandaoqishijian(baoxiandaoqi);
 					vehicle.setImportUrl("icon_gou.png");
 				}else{
@@ -5336,6 +5349,7 @@ public class VehicleController {
 			String xingshizhengdaoqishijian = String.valueOf(a.get("行驶证到期时间")).trim();
 			if(StringUtils.isNotBlank(xingshizhengdaoqishijian) && !xingshizhengdaoqishijian.equals("null")){
 				if(DateUtils.isDateString(xingshizhengdaoqishijian,null) == true){
+					xingshizhengdaoqishijian = xingshizhengdaoqishijian.substring(0,10);
 					vehicle.setXingshizhengdaoqishijian(xingshizhengdaoqishijian);
 					vehicle.setImportUrl("icon_gou.png");
 				}else{
@@ -5396,6 +5410,11 @@ public class VehicleController {
 					vehicle.setMsg(cheliangpaiz+",平台连接方式输入错误,请校验;");
 					bb++;
 				}
+			}else{
+				vehicle.setImportUrl("icon_cha.png");
+				errorStr = cheliangpaiz+"平台连接方式不能为空;";
+				vehicle.setMsg(cheliangpaiz + "平台连接方式不能为空;");
+				bb++;
 			}
 			//验证终端协议类型
 			String terminalProtocolType = String.valueOf(a.get("终端协议类型")).trim();
@@ -5418,6 +5437,11 @@ public class VehicleController {
 					vehicle.setMsg(cheliangpaiz+",终端协议类型输入错误,请校验;");
 					bb++;
 				}
+			}else{
+				vehicle.setImportUrl("icon_cha.png");
+				errorStr = cheliangpaiz+"终端协议类型不能为空;";
+				vehicle.setMsg(cheliangpaiz + "终端协议类型不能为空;");
+				bb++;
 			}
 			//验证视频通道数
 			String videoChannelNum = String.valueOf(a.get("视频通道数")).trim();

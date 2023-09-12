@@ -2,6 +2,8 @@ package org.springblade.anbiao.guanlijigouherenyuan.feign;
 
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
+import org.springblade.anbiao.qiyeshouye.entity.BaobiaoZhengfuQiye;
+import org.springblade.anbiao.zhengfu.entity.Organization;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -50,6 +52,16 @@ public class IOrganizationsClientBack implements IOrganizationsClient {
 
 	@Override
 	public Organizations selectParentDeptById(String deptId) {
+		return null;
+	}
+
+	@Override
+	public Organization selectGetZFJB(String deptId) {
+		return null;
+	}
+
+	@Override
+	public List<BaobiaoZhengfuQiye> getZFQiYe(String province, String city, String country) {
 		return null;
 	}
 

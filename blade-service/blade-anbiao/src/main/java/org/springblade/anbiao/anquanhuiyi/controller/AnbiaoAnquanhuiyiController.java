@@ -17,6 +17,8 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.tools.zip.ZipOutputStream;
 import org.json.JSONObject;
 import org.springblade.anbiao.anquanhuiyi.VO.AnbiaoAnquanhuiyiDetailVO;
@@ -39,6 +41,8 @@ import org.springblade.common.configurationBean.FileServer;
 import org.springblade.common.configurationBean.TrainServer;
 import org.springblade.common.constant.FilePathConstant;
 import org.springblade.common.tool.*;
+import org.springblade.common.tool.excel.CellStyleModel;
+import org.springblade.common.tool.excel.CustomCellStyleHandler;
 import org.springblade.common.tool.face.util.FaceUtil;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.mp.support.Condition;
@@ -552,6 +556,10 @@ public class AnbiaoAnquanhuiyiController {
 		HorizontalCellStyleStrategy horizontalCellStyleStrategy =
 			new HorizontalCellStyleStrategy(null, contentWriteCellStyle);
 
+		List<CellStyleModel> cellStyleList = new ArrayList<>();
+		//第一种方式四条边框一起设置线条类型和边框颜色
+		//设置单元格边框类型和边框颜色
+		cellStyleList.add(CellStyleModel.createBorderCellStyleModel("模板", 0, 0, BorderStyle.DOUBLE, IndexedColors.RED));
 
 		//去除素组中重复的数组
 		List<String> listid = new ArrayList<String>();
@@ -708,7 +716,7 @@ public class AnbiaoAnquanhuiyiController {
 						newFile.mkdirs();
 					}
 					fileName = fileName + "/" + t.getDeptname() + "-" + t.getHuiyimingcheng() + "-" + t.getDateShow() + "-安全会议台账.xlsx";
-					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).registerWriteHandler(horizontalCellStyleStrategy).build();
+					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).registerWriteHandler(new CustomCellStyleHandler(cellStyleList)).build();
 					WriteSheet writeSheet = EasyExcel.writerSheet().build();
 					// 写入list之前的数据
 					excelWriter.fill(map, writeSheet);

@@ -43,6 +43,9 @@ public class AnbiaoHiddenDangerPage<T> extends BasePage<T> {
 
 	@ApiModelProperty(value = "驾驶员id")
 	private String jiashiyuanid;
+
+	@ApiModelProperty(value = "车辆ID")
+	private String vehId;
 }
 
 

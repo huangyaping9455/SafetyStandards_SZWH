@@ -29,7 +29,7 @@ import org.springblade.common.constant.FilePathConstant;
 import org.springblade.common.tool.CommonUtil;
 import org.springblade.common.tool.DateUtils;
 import org.springblade.common.tool.FileSortTest;
-import org.springblade.common.tool.util.FileUtils;
+import org.springblade.common.tool.doc.util.FileUtils;
 import org.springblade.core.boot.ctrl.BladeController;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
@@ -41,7 +41,6 @@ import org.springblade.doc.safetyproductionfile.entity.SafetyProductionFile;
 import org.springblade.doc.safetyproductionfile.service.IAnbiaoSafetyproductionfileNumService;
 import org.springblade.doc.safetyproductionfile.service.ISafetyProductionFileService;
 import org.springblade.doc.safetyproductionfile.vo.SafetyProductionFileVO;
-import org.springblade.system.entity.Dept;
 import org.springblade.system.feign.IDictClient;
 import org.springblade.system.feign.ISysClient;
 import org.springframework.mock.web.MockMultipartFile;
@@ -153,8 +152,8 @@ public class SafetyProductionFileController extends BladeController {
 				FileUtil.mkdir(fileParse.getPath(parent.getPath()) + File.separator + fileName);
 			} else {
 				FileUtil.mkdir(fileParse.getPath(parent.getPath()) + File.separator + fileName);
-			// msg = "新增失败，该节点不是目录或不存在";
-			// return R.fail(msg);
+				// msg = "新增失败，该节点不是目录或不存在";
+				// return R.fail(msg);
 			}
 			//查询最大id
 			Integer newId = safetyProductionFileService.selectMaxId() + 1;
@@ -314,7 +313,8 @@ public class SafetyProductionFileController extends BladeController {
 			boolean save = safetyProductionFileService.save(parent);
 			//保存成功，生成对应的pdf，图片
 			if(save){
-				fileParse.creatFormalFile(parent);
+//				fileParse.creatFormalFile(parent);
+				msg = "新增成功";
 			}
 		}else{
 			msg = "新增失败，该节点不是目录或不存在";
@@ -343,6 +343,7 @@ public class SafetyProductionFileController extends BladeController {
 			msg = "新增失败，未授权";
 			return R.fail(msg);
 		}
+		String filename = "";
 		//如果当前路径是目录
 		if(files.length>10){
 			return R.fail("图片数量超出限制,最大10张图片");
@@ -355,6 +356,7 @@ public class SafetyProductionFileController extends BladeController {
 				}
 			}
 			int i = 0;
+			String filePath = "";
 			Map<String,PictureRenderData> map = new HashMap<String,PictureRenderData>();
 			for (MultipartFile file : files) {
 				//获取文件名称
@@ -373,10 +375,25 @@ public class SafetyProductionFileController extends BladeController {
 				}
 				PictureRenderData pictureRenderData = new PictureRenderData(width, height, ".png",file.getBytes());
 				map.put("image"+i++,pictureRenderData);
-
+				if(StringUtils.isEmpty(documentName)){
+					documentName = file.getOriginalFilename();
+					String[] a = documentName.split("\\.");
+					filename = "."+a[a.length-1];
+				}
+				//获得文件物理路径
+				if(StringUtils.isEmpty(filename)){
+					filePath = fileParse.getPath(parent.getPath())+File.separator+documentName+".png";
+				}else{
+					filePath = fileParse.getPath(parent.getPath())+File.separator+documentName;
+				}
+				File dir = new File(fileParse.getPath(parent.getPath())+File.separator);
+				if (!dir.exists()) {
+					dir.mkdirs();
+				}
+				File targetFile = new File(filePath);
+				//执行上传
+				file.transferTo(targetFile);
 			}
-			//获得文件物理路径
-			String filePath = fileParse.getPath(parent.getPath())+File.separator+documentName+".docx";
 			//查询最大id
 			Integer newId = safetyProductionFileService.selectMaxId()+1;
 			//查询下级最大sort
@@ -388,7 +405,11 @@ public class SafetyProductionFileController extends BladeController {
 			parent.setCaozuorenid(user.getUserId());
 			parent.setCaozuoshijian(DateUtil.now());
 			parent.setTier(parent.getTier()+"-"+newId);
-			parent.setName(documentName+".docx");
+			if(StringUtils.isEmpty(filename)) {
+				parent.setName(documentName + ".png");
+			}else{
+				parent.setName(documentName);
+			}
 			parent.setSort(newSort);
 			parent.setType("文件");
 			parent.setDocumentNumber(documentNumber);
@@ -402,7 +423,8 @@ public class SafetyProductionFileController extends BladeController {
 			boolean save = safetyProductionFileService.save(parent);
 //			//保存成功，生成对应的pdf，图片
 			if(save){
-				fileParse.creatFormalImageFile(map,parent);
+//				fileParse.creatFormalImage(map,parent);
+				msg = "新增成功";
 			}
 		}else{
 			msg = "新增失败，该节点不是目录或不存在";
@@ -484,7 +506,8 @@ public class SafetyProductionFileController extends BladeController {
 
 		//替换成功，生成对应的正式文件，pdf，图片
 		if(updateById){
-			fileParse.creatFormalFile(wenjian);
+//			fileParse.creatFormalFile(wenjian);
+			msg = "替换成功";
 		}
 		SafetyProductionFileVO vo = new SafetyProductionFileVO();
 		BeanUtil.copyProperties(wenjian,vo);
@@ -567,16 +590,20 @@ public class SafetyProductionFileController extends BladeController {
 		@ApiImplicitParam(name = "name", value = "名称（用于模糊查询）", required = false)
 	})
 	public R<List<SafetyProductionFileVO>> tree(@RequestParam Integer deptId,@RequestParam(required = true,defaultValue="0")  Integer parentId, String name) {
-		List<SafetyProductionFileVO> list= safetyProductionFileService.tree(deptId,parentId,name);
-		return R.data(list);
+		if(deptId != null){
+			List<SafetyProductionFileVO> list= safetyProductionFileService.tree(deptId,parentId,name);
+			return R.data(list);
+		}else{
+			return R.data(null);
+		}
 	}
 
 	@GetMapping("/bindTree")
 	@ApiLog("安全生产文档-获取-绑定树")
 	@ApiOperation(value = "获取-绑定树", notes = "传入deptId", position = 1)
 	@ApiImplicitParams({ @ApiImplicitParam(name = "parentId", value = "上级id", required = false),
-			@ApiImplicitParam(name = "deptId", value = "单位id", required = true),
-			@ApiImplicitParam(name = "biaozhunhuamubanId", value = "标准化文件目录id", required = true)
+		@ApiImplicitParam(name = "deptId", value = "单位id", required = true),
+		@ApiImplicitParam(name = "biaozhunhuamubanId", value = "标准化文件目录id", required = true)
 	})
 	public R<List<SafetyProductionFileVO>> bindTree(@RequestParam Integer deptId,@RequestParam(required = true,defaultValue="0")  Integer parentId,@RequestParam Integer biaozhunhuamubanId) {
 		List<SafetyProductionFileVO> list= safetyProductionFileService.bindTree(deptId,parentId,biaozhunhuamubanId);
@@ -765,7 +792,7 @@ public class SafetyProductionFileController extends BladeController {
 	})
 	public R aKeyGeneration(Integer deptId,Integer isOnlyDir,String caozuoren,Integer caozuorenid,String leixingid){
 		// TODO: 2019/9/3 非线程安全，改成多例模式或者用消息队列
-//		List<Integer> deptIds = iSysClient.getDetpIds(deptId);
+		List<Integer> deptIds = iSysClient.getDetpIds(deptId);
 //		List<Integer> deptIds = new ArrayList<>();
 //		deptIds.add(5263);
 		String type = "";
@@ -777,57 +804,33 @@ public class SafetyProductionFileController extends BladeController {
 			mubanList = safetyProductionFileService.getMubanTreeWJ(null,type,leixingid);
 		}
 
-//		for (Integer id : deptIds) {
-//			int i = safetyProductionFileService.getCountByDetpId(id);
-//			//如果改机构已有文件，则跳过
-//			if(i>0){
-//				return R.success("该机构已有文件");
-//			}
-//			String deptName = iSysClient.getDeptName(id);
-////			String deptName = "宿州市双泽运输有限公司";
-//			int maxId = safetyProductionFileService.selectMaxId()+1;
-//			fileParse.setId(maxId);
-//			fileParse.setDeptName(deptName);
-//			fileParse.setDeptId(id);
-//
-////			fileParse.parseAbcdMubanList(mubanList, FilePathConstant.DEFAULT_PARENT_ID,FilePathConstant.DEFAULT_TIER);
-//            String tier = "0-"+leixingid;
-//            fileParse.parseAbcdMubanList(mubanList, Integer.parseInt(leixingid),tier,null);
-//			List<SafetyProductionFile> list = fileParse.getAbcdList();
-//			fileParse.close();
-//			list.get(i).setCaozuoren(caozuoren);
-//			list.get(i).setCaozuorenid(caozuorenid);
-//			String formatStr2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-//			list.get(i).setCaozuoshijian(formatStr2);
-//			list.get(i).setIs_muban(1);
-//			list.get(i).setIsMuban(1);
-//			safetyProductionFileService.saveBatch(list);
-//		}
-
-		int i = safetyProductionFileService.getCountByDetpId(deptId);
-		//如果改机构已有文件，则跳过
-		if(i>0){
-			return R.success("该机构已有文件");
-		}
-		String deptName = iSysClient.getDeptName(deptId);
+		for (Integer id : deptIds) {
+			int i = safetyProductionFileService.getCountByDetpId(id);
+			//如果改机构已有文件，则跳过
+			if(i>0){
+				return R.success("该机构已有文件");
+			}
+			String deptName = iSysClient.getDeptName(id);
 //			String deptName = "宿州市双泽运输有限公司";
-		int maxId = safetyProductionFileService.selectMaxId()+1;
-		fileParse.setId(maxId);
-		fileParse.setDeptName(deptName);
-		fileParse.setDeptId(deptId);
+			int maxId = safetyProductionFileService.selectMaxId()+1;
+			fileParse.setId(maxId);
+			fileParse.setDeptName(deptName);
+			fileParse.setDeptId(id);
 
 //			fileParse.parseAbcdMubanList(mubanList, FilePathConstant.DEFAULT_PARENT_ID,FilePathConstant.DEFAULT_TIER);
-		String tier = "0-"+leixingid;
-		fileParse.parseAbcdMubanList(mubanList, Integer.parseInt(leixingid),tier,null);
-		List<SafetyProductionFile> list = fileParse.getAbcdList();
-		fileParse.close();
-		list.get(i).setCaozuoren(caozuoren);
-		list.get(i).setCaozuorenid(caozuorenid);
-		String formatStr2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-		list.get(i).setCaozuoshijian(formatStr2);
-		list.get(i).setIs_muban(1);
-		list.get(i).setIsMuban(1);
-		safetyProductionFileService.saveBatch(list);
+			String tier = "0-"+leixingid;
+			fileParse.parseAbcdMubanList(mubanList, Integer.parseInt(leixingid),tier,null);
+			List<SafetyProductionFile> list = fileParse.getAbcdList();
+			fileParse.close();
+			list.get(i).setCaozuoren(caozuoren);
+			list.get(i).setCaozuorenid(caozuorenid);
+			String formatStr2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+			list.get(i).setCaozuoshijian(formatStr2);
+			list.get(i).setIs_muban(1);
+			list.get(i).setIsMuban(1);
+			safetyProductionFileService.saveBatch(list);
+		}
+
 		return R.success("一键生成成功");
 	}
 
@@ -1135,8 +1138,8 @@ public class SafetyProductionFileController extends BladeController {
 					InputStream inputStream = new FileInputStream(file);
 					MultipartFile multipartFile = new MockMultipartFile(file.getName(), inputStream);
 					log.info("file转multipartFile成功. {}",multipartFile);
-	//				FileInputStream inputStream = new FileInputStream(file);
-	//				MultipartFile multipartFile = new MockMultipartFile(file.getName(), file.getName(), ContentType.APPLICATION_OCTET_STREAM.toString(), inputStream);
+					//				FileInputStream inputStream = new FileInputStream(file);
+					//				MultipartFile multipartFile = new MockMultipartFile(file.getName(), file.getName(), ContentType.APPLICATION_OCTET_STREAM.toString(), inputStream);
 					// 将接收的文件保存到指定文件中
 					multipartFile.transferTo(FileUtil.file(filePath));
 					//获取后缀名
@@ -1224,8 +1227,8 @@ public class SafetyProductionFileController extends BladeController {
 					InputStream inputStream = new FileInputStream(file);
 					MultipartFile multipartFile = new MockMultipartFile(file.getName(), inputStream);
 					log.info("file转multipartFile成功. {}",multipartFile);
-	//				FileInputStream inputStream = new FileInputStream(file);
-	//				MultipartFile multipartFile = new MockMultipartFile(file.getName(), file.getName(), ContentType.APPLICATION_OCTET_STREAM.toString(), inputStream);
+					//				FileInputStream inputStream = new FileInputStream(file);
+					//				MultipartFile multipartFile = new MockMultipartFile(file.getName(), file.getName(), ContentType.APPLICATION_OCTET_STREAM.toString(), inputStream);
 					// 将接收的文件保存到指定文件中
 					multipartFile.transferTo(FileUtil.file(filePath));
 					//获取后缀名
@@ -1339,19 +1342,27 @@ public class SafetyProductionFileController extends BladeController {
 						}
 					}
 					//获得文件物理路径
-					filePath = fileParse.getPath(parent.getPath())+"\\"+fileName.substring(0,fileName.lastIndexOf("/"));
+					filePath = fileParse.getPath(parent.getPath())+ File.separator + fileName;
+//					filePath = fileParse.getPath(parent.getPath())+"\\"+fileName.substring(0,fileName.lastIndexOf("/"));
 //						+"/"+fileName.substring(0,fileName.lastIndexOf("/"));
 
 					//获取后缀名
 					String expandedName =f.getOriginalFilename().substring(f.getOriginalFilename().lastIndexOf('.'));
 					//如果是doc文件则转换为docx
 					if(".doc".equals(expandedName)){
+						FileUtil.mkParentDirs(filePath);
+						//存入本地
+						f.transferTo(FileUtil.file(filePath));
 						CommonUtil.convertDocFmt(filePath, StrUtil.replace(filePath,".doc",".docx"),CommonUtil.DOCX_FMT);
 						//删除源文件
 						FileUtil.del(filePath);
 						//得到新的文件名与文件路径
 						filePath = StrUtil.replace(filePath,".doc",".docx");
 						fileName = StrUtil.replace(fileName,".doc",".docx");
+					}else{
+						FileUtil.mkParentDirs(filePath);
+						//存入本地
+						f.transferTo(FileUtil.file(filePath));
 					}
 
 					String type=f.getContentType();
@@ -1361,13 +1372,13 @@ public class SafetyProductionFileController extends BladeController {
 					if(!FileUtils.isDir(filePath)){
 						FileUtils.makeDirs(filePath);
 					}
-					int index = fileName.indexOf("/");//获取第一个_索引
-					String str0 = fileName.substring(0, index);
-					fileName = fileName.substring(str0.length() + 1, fileName.length());
-
-					fileName = fileName.substring(fileName.lastIndexOf("/")+1);
-					fileNewPath = filePath+"\\"+ fileName;
-					file = new File(fileNewPath);
+//					int index = fileName.indexOf("/");//获取第一个_索引
+//					String str0 = fileName.substring(0, index);
+//					fileName = fileName.substring(str0.length() + 1, fileName.length());
+//
+//					fileName = fileName.substring(fileName.lastIndexOf("/")+1);
+//					fileNewPath = filePath+"\\"+ fileName;
+					file = new File(filePath);
 					try {
 						System.out.println(file);
 						file.createNewFile();
@@ -1385,7 +1396,7 @@ public class SafetyProductionFileController extends BladeController {
 					safetyProductionFile.setParentId(id);
 					safetyProductionFile.setId(newId);
 					safetyProductionFile.setDeptId(parent.getDeptId());
-					safetyProductionFile.setPath(fileParse.getInsertPath(fileNewPath));
+					safetyProductionFile.setPath(fileParse.getInsertPath(filePath));
 					safetyProductionFile.setCaozuoren(username);
 					safetyProductionFile.setCaozuorenid(userid);
 					safetyProductionFile.setCaozuoshijian(DateUtil.now());
@@ -1433,7 +1444,8 @@ public class SafetyProductionFileController extends BladeController {
 					boolean save = safetyProductionFileService.save(safetyProductionFile);
 					//保存成功，生成对应的pdf，图片
 					if(save){
-						fileParse.creatFormalFile(safetyProductionFile);
+//						fileParse.creatFormalFile(safetyProductionFile);
+						System.out.println("生成成功");
 					}
 				}
 			}else{

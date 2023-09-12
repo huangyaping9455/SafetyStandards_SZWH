@@ -41,6 +41,7 @@
 <!--            <artifactId>jxl-report</artifactId>-->
 <!--            <version>1.0</version>-->
 <!--        </dependency>-->
+        <!--hutool工具包-->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
@@ -218,11 +219,16 @@
             <version>3.0.3</version>
         </dependency>
 
-        <!--alibaba easyexcel-->
+        <!-- EasyExcel文档处理工具 -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>easyexcel</artifactId>
             <version>3.0.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <!--配置 Free Spire.Doc for Java-->

@@ -17,6 +17,8 @@ package org.springblade.train.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
+import org.springblade.anbiao.qiyeshouye.entity.PersonLearnInfo;
+import org.springblade.anbiao.qiyeshouye.page.QiYeShouYePage;
 import org.springblade.train.entity.*;
 import org.springblade.train.page.CourseInfoPage;
 
@@ -134,6 +136,14 @@ public interface TrainMapper extends BaseMapper<Train> {
 	 * @return
 	 */
 	List<CourseKind> getCourseKindList(@Param("name") String name);
+
+	/**
+	 * 政府查询学习统计列表
+	 * @param qiYeShouYePage
+	 * @return
+	 */
+	List<ZFCourseInfo> selectZFPersonLearnCoutAll(QiYeShouYePage qiYeShouYePage);
+	int selectZFPersonLearnCoutAllTotal(QiYeShouYePage qiYeShouYePage);
 
 
 }

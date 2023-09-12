@@ -13,6 +13,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springblade.common.BasePage;
 
+import java.util.List;
+
 /**
  * @author 呵呵哒
  * @创建人 hyp
@@ -58,6 +60,9 @@ public class QiYeShouYePage<T> extends BasePage<T> {
 
 	@ApiModelProperty(value = "县")
 	private String country;
+
+	@ApiModelProperty(value = "企业名称列表")
+	private String[] list;
 
 	@ApiModelProperty(value = "排序字段")
 	private String orderColumns;

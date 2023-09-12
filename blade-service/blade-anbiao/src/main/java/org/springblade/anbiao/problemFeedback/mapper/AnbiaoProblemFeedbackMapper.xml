@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.problemFeedback.mapper.AnbiaoProblemFeedbackMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.problemFeedback.entity.AnbiaoProblemFeedback">
+        <id column="pf_id" property="pfId" />
+        <result column="pf_driver_id" property="pfDriverId" />
+        <result column="pf_driver_name" property="pfDriverName" />
+        <result column="pf_date" property="pfDate" />
+        <result column="pf_problem" property="pfProblem" />
+        <result column="pf_opinion" property="pfOpinion" />
+        <result column="pf_relaxation" property="pfRelaxation" />
+        <result column="pf_status" property="pfStatus" />
+        <result column="pf_way" property="pfWay" />
+        <result column="pf_feedback_img" property="pfFeedbackImg" />
+        <result column="pf_img" property="pfImg" />
+        <result column="pf_createtime" property="pfCreatetime" />
+        <result column="pf_updateid" property="pfUpdateid" />
+        <result column="pf_updatename" property="pfUpdatename" />
+        <result column="pf_updatetime" property="pfUpdatetime" />
+        <result column="pf_dept_id" property="pfDeptId" />
+        <result column="pf_delete" property="pfDelete" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        pf_id, pf_driver_id, pf_driver_name, pf_date, pf_problem, pf_opinion, pf_relaxation, pf_status, pf_way, pf_feedback_img, pf_img, pf_createtime, pf_updateid, pf_updatename, pf_updatetime, pf_dept_id, pf_delete
+    </sql>
+
+    <sql id="tableSql">
+        select
+            a.*,
+            b.dept_name as pfDeptName
+        from
+            anbiao_problem_feedback a
+        inner join  (
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b on a.pf_dept_id = b.id
+        where a.pf_delete = 0
+        <if test="pfDate != null and pfDate != ''">
+            and left(a.pf_date,7) >= left(#{pfDate},7)
+        </if>
+
+        <if test="pfStatus != null ">
+            and pf_status = #{pfStatus}
+        </if>
+    </sql>
+
+    <sql id="querySql">
+
+        <if test="deptName != null and deptName != '' ">
+            and pfDeptName like '%${deptName}%'
+        </if>
+
+        <if test="pfDriverName != null and pfDriverName != '' ">
+            and pf_driver_name like '%${pfDriverName}%'
+        </if>
+
+        <if test="pfDriverId != null and pfDriverId != '' ">
+            and pf_driver_id = #{pfDriverId}
+        </if>
+
+    </sql>
+
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        ORDER BY pf_date desc
+    </sql>
+
+    <select id="selectALLPage" resultMap="BaseResultMap"
+            parameterType="org.springblade.anbiao.problemFeedback.page.AnbiaoProblemFeedbackPage" >
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectALLTotal"
+            parameterType="org.springblade.anbiao.problemFeedback.page.AnbiaoProblemFeedbackPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql" />
+        )d
+        where 1 = 1
+        <include refid="querySql" />
+    </select>
+
+</mapper>

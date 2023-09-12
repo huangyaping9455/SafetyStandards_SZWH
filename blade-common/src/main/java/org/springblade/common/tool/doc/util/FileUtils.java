@@ -1,4 +1,4 @@
-package org.springblade.common.tool.util;
+package org.springblade.common.tool.doc.util;
 
 
 import java.io.File;

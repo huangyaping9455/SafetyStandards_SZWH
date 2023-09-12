@@ -18,6 +18,7 @@ package org.springblade.train.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.ibatis.annotations.Param;
+import org.springblade.anbiao.qiyeshouye.page.QiYeShouYePage;
 import org.springblade.train.entity.*;
 import org.springblade.train.page.CourseInfoPage;
 import org.springblade.train.page.StudyRecordPage;
@@ -174,7 +175,12 @@ public interface ITrainService extends IService<Train> {
 	 */
 	List<CourseKind> getCourseKindList(String name);
 
-
+	/**
+	 * 政府查询学习统计列表
+	 * @param qiYeShouYePage
+	 * @return
+	 */
+	QiYeShouYePage<ZFCourseInfo> selectZFPersonLearnCoutAll(QiYeShouYePage qiYeShouYePage);
 
 
 }

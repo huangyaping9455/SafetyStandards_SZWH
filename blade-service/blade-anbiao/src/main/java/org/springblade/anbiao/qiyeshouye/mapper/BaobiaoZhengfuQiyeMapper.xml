@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.qiyeshouye.mapper.BaobiaoZhengfuQiyeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.qiyeshouye.entity.BaobiaoZhengfuQiye">
+        <id column="qiyeid" property="qiyeid" />
+        <result column="qiyemingcheng" property="qiyemingcheng" />
+        <result column="jigouleixing" property="jigouleixing" />
+        <result column="province" property="province" />
+        <result column="city" property="city" />
+        <result column="country" property="country" />
+        <result column="yunguanmingcheng" property="yunguanmingcheng" />
+        <result column="yunguanid" property="yunguanid" />
+        <result column="areaname" property="areaname" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        qiyeid, qiyemingcheng, jigouleixing, province, city, country, yunguanmingcheng, yunguanid, areaname
+    </sql>
+
+	<select id="getZFQiYe" resultType="org.springblade.anbiao.qiyeshouye.entity.BaobiaoZhengfuQiye">
+		select * from baobiao_zhengfu_qiye
+		where jigouleixing in ('qiye','geti')
+		<if test="province != null and province != '' ">
+			and province = #{province}
+		</if>
+
+		<if test="city != null and city != '' ">
+			and city = #{city}
+		</if>
+
+		<if test="country != null and country != '' ">
+			and country = #{country}
+		</if>
+	</select>
+
+</mapper>

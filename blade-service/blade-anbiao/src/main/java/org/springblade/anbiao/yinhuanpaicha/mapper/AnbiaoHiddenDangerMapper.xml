@@ -80,6 +80,9 @@
         <if test="jiashiyuanid != null and jiashiyuanid != '' ">
             and ahd_driver_ids = #{jiashiyuanid}
         </if>
+        <if test="vehId != null and vehId != '' ">
+            and ahd_vehicle_ids = #{vehId}
+        </if>
     </sql>
 
     <sql id="orderSql">

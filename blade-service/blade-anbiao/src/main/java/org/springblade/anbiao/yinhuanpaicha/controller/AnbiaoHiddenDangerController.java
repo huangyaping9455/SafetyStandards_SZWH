@@ -299,19 +299,21 @@ public class AnbiaoHiddenDangerController {
 	@GetMapping("/goExport_HiddenDanger_Excel")
 	@ApiLog("隐患排查信息-导出")
 	@ApiOperation(value = "隐患排查信息-导出", notes = "传入AnbiaoHiddenDangerPage", position = 7)
-	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String deptId , String date, BladeUser user) throws IOException {
+	public R goExport_HiddenDanger_Excel(HttpServletRequest request, HttpServletResponse response, String deptId , String date, String vehId,  BladeUser user) throws IOException {
 		R rs = new R();
 		List<String> urlList = new ArrayList<>();
 		AnbiaoHiddenDangerPage anbiaoHiddenDangerPage = new AnbiaoHiddenDangerPage();
 		anbiaoHiddenDangerPage.setDeptId(deptId);
 		anbiaoHiddenDangerPage.setDate(date);
+		anbiaoHiddenDangerPage.setVehId(vehId);
 		// TODO 渲染其他类型的数据请参考官方文档
 		DecimalFormat df = new DecimalFormat("######0.00");
 		Calendar now = Calendar.getInstance();
 		//word模板地址
 		String templatePath =fileServer.getPathPrefix()+"muban\\"+"HiddenDanger.xlsx";
 		String [] nyr= DateUtil.today().split("-");
-		String[] idsss = anbiaoHiddenDangerPage.getDeptId().split(",");
+
+		String[] idsss = anbiaoHiddenDangerPage.getVehId().split(",");
 		//去除素组中重复的数组
 		List<String> listid = new ArrayList<String>();
 		for (int i=0; i<idsss.length; i++) {
@@ -325,7 +327,7 @@ public class AnbiaoHiddenDangerController {
 			anbiaoHiddenDangerPage.setDeptname("");
 			anbiaoHiddenDangerPage.setSize(0);
 			anbiaoHiddenDangerPage.setCurrent(0);
-			anbiaoHiddenDangerPage.setDeptId(idss[j]);
+			anbiaoHiddenDangerPage.setVehId(idss[j]);
 			service.selectPage(anbiaoHiddenDangerPage);
 			List<AnbiaoHiddenDangerVO> hiddenDangerVOList = anbiaoHiddenDangerPage.getRecords();
 			//Excel中的结果集ListData
@@ -370,23 +372,132 @@ public class AnbiaoHiddenDangerController {
 
 					if (StrUtil.isNotEmpty(t.getAhdHiddendangerEnclosure()) && t.getAhdHiddendangerEnclosure().contains("http") == false) {
 						t.setAhdHiddendangerEnclosure(fileUploadClient.getUrl(t.getAhdHiddendangerEnclosure()));
-						//添加图片到工作表的指定位置
-						try {
-							t.setImgUrl(new URL(t.getAhdHiddendangerEnclosure()));
-						} catch (MalformedURLException e) {
-							e.printStackTrace();
+						System.out.println(t.getAhdHiddendangerEnclosure());
+						String[] img_idsss = t.getAhdHiddendangerEnclosure().split(",");
+						//去除素组中重复的数组
+						List<String> img_listid = new ArrayList<String>();
+						for (int q=0; q<img_idsss.length; q++) {
+							if(!img_listid.contains(img_idsss[q])) {
+								img_listid.add(img_idsss[q]);
+							}
 						}
-						map.put("ahdHiddendangerEnclosure", t.getImgUrl());
+						//返回一个包含所有对象的指定类型的数组
+						String[] img_idss= img_listid.toArray(new String[1]);
+						String url1 = null;
+						String url2 = null;
+						String url3 = null;
+						for(int w = 0;w< img_idss.length;w++){
+							if(w == 0){
+								url1 = img_idss[0];
+							}
+							if(w == 1){
+								url2 = img_idss[1];
+							}
+							if(w == 2){
+								url3 = img_idss[2];
+							}
+						}
+						if(StringUtils.isNotEmpty(url1)){
+							//添加图片到工作表的指定位置
+							try {
+								t.setImgUrl(new URL(url1));
+							} catch (MalformedURLException e) {
+								e.printStackTrace();
+							}
+							map.put("ahdHiddendangerEnclosure", t.getImgUrl());
+						}else{
+							map.put("ahdHiddendangerEnclosure", "无");
+						}
+
+						if(StringUtils.isNotEmpty(url2)){
+							//添加图片到工作表的指定位置
+							try {
+								t.setImgUrl(new URL(url2));
+							} catch (MalformedURLException e) {
+								e.printStackTrace();
+							}
+							map.put("ahdHiddendangerEnclosure1", t.getImgUrl());
+						}else{
+							map.put("ahdHiddendangerEnclosure1", "无");
+						}
+
+						if(StringUtils.isNotEmpty(url3)){
+							//添加图片到工作表的指定位置
+							try {
+								t.setImgUrl(new URL(url3));
+							} catch (MalformedURLException e) {
+								e.printStackTrace();
+							}
+							map.put("ahdHiddendangerEnclosure2", t.getImgUrl());
+						}else{
+							map.put("ahdHiddendangerEnclosure2", "无");
+						}
+
 					}else if(StrUtil.isNotEmpty(t.getAhdHiddendangerEnclosure())){
-						//添加图片到工作表的指定位置
-						try {
-							t.setImgUrl(new URL(t.getAhdHiddendangerEnclosure()));
-						} catch (MalformedURLException e) {
-							e.printStackTrace();
+						System.out.println(t.getAhdHiddendangerEnclosure());
+						String[] img_idsss = t.getAhdHiddendangerEnclosure().split(",");
+						//去除素组中重复的数组
+						List<String> img_listid = new ArrayList<String>();
+						for (int q=0; q<img_idsss.length; q++) {
+							if(!img_listid.contains(img_idsss[q])) {
+								img_listid.add(img_idsss[q]);
+							}
 						}
-						map.put("ahdHiddendangerEnclosure", t.getImgUrl());
+						//返回一个包含所有对象的指定类型的数组
+						String[] img_idss= img_listid.toArray(new String[1]);
+						String url1 = null;
+						String url2 = null;
+						String url3 = null;
+						for(int w = 0;w< img_idss.length;w++){
+							if(w == 0){
+								url1 = img_idss[0];
+							}
+							if(w == 1){
+								url2 = img_idss[1];
+							}
+							if(w == 2){
+								url3 = img_idss[2];
+							}
+						}
+						if(StringUtils.isNotEmpty(url1)){
+							//添加图片到工作表的指定位置
+							try {
+								t.setImgUrl(new URL(url1));
+							} catch (MalformedURLException e) {
+								e.printStackTrace();
+							}
+							map.put("ahdHiddendangerEnclosure", t.getImgUrl());
+						}else{
+							map.put("ahdHiddendangerEnclosure", "无");
+						}
+
+						if(StringUtils.isNotEmpty(url2)){
+							//添加图片到工作表的指定位置
+							try {
+								t.setImgUrl(new URL(url2));
+							} catch (MalformedURLException e) {
+								e.printStackTrace();
+							}
+							map.put("ahdHiddendangerEnclosure1", t.getImgUrl());
+						}else{
+							map.put("ahdHiddendangerEnclosure1", "无");
+						}
+
+						if(StringUtils.isNotEmpty(url3)){
+							//添加图片到工作表的指定位置
+							try {
+								t.setImgUrl(new URL(url3));
+							} catch (MalformedURLException e) {
+								e.printStackTrace();
+							}
+							map.put("ahdHiddendangerEnclosure2", t.getImgUrl());
+						}else{
+							map.put("ahdHiddendangerEnclosure2", "无");
+						}
 					}else{
 						map.put("ahdHiddendangerEnclosure", "无");
+						map.put("ahdHiddendangerEnclosure1", "无");
+						map.put("ahdHiddendangerEnclosure2", "无");
 					}
 					// 模板注意 用{} 来表示你要用的变量 如果本来就有"{","}" 特殊字符 用"\{","\}"代替
 					// {} 代表普通变量 {.} 代表是list的变量
@@ -400,7 +511,7 @@ public class AnbiaoHiddenDangerController {
 						//如果目标文件所在的目录不存在，则创建父目录
 						newFile.mkdirs();
 					}
-					fileName = fileName+"/"+t.getDeptname()+t.getCheliangpaizhao()+"-隐患登记台账.xlsx";
+					fileName = fileName+"/"+t.getDeptname()+"-"+t.getCheliangpaizhao()+"-隐患登记台账.xlsx";
 					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
 					WriteSheet writeSheet = EasyExcel.writerSheet().build();
 					// 写入list之前的数据
