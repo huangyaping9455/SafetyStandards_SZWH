@@ -2285,7 +2285,8 @@
             LEFT JOIN(
                 select cid,ROUND(SUM(TravelMileage),2) as TravelMileage from baobiao_alarmdailyreport
                 where YEAR(date) = YEAR(NOW())
-                  and MONTH(date) = MONTH(NOW())
+                    and MONTH(date) = MONTH(NOW())
+                    and cid = #{deptId}
                 GROUP BY
                     cid
             )b on a.id = b.cid
@@ -2298,6 +2299,7 @@
                     anbiao_safetyproductionfile_num
                 where YEAR(date) = YEAR(NOW())
                     and MONTH(date) = MONTH(NOW())
+                    and deptId = #{deptId}
                 GROUP BY
                     deptId
             )c ON a.id = c.deptId
@@ -2311,6 +2313,7 @@
                     lwlk_dept_day
                 where YEAR(date) = YEAR(NOW())
                     and MONTH(date) = MONTH(NOW())
+                    and dept_id = #{deptId}
                 GROUP BY
                     dept_id
             )d ON a.id = d.dept_id

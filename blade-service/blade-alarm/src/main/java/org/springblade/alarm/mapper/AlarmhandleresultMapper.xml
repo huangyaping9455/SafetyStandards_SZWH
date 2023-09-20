@@ -185,11 +185,14 @@
                 b.baojingid
             from(
                 SELECT
-                    *
+                    id,
+                    AlarmType
                 FROM
                     baobiao_driverbehavior
                 WHERE
                     cid = #{deptId}
+                    and AlarmType in('接打电话报警','分神驾驶报警','抽烟报警','生理疲劳报警','驾驶员异常报警')
+                    and stateEx='核定报警'
                 <if test=" type == 'ss' ">
                     and GpsTime >= CONCAT( left( #{date} ,10), ' 00:00:00')
                     and GpsTime &lt;= CONCAT( left(now(),10), ' 23:59:59')
@@ -212,8 +215,6 @@
                 ) a
                 LEFT JOIN baobiao_alarmhandleresult b on a.id=b.baojingid and a.AlarmType=b.baojingleixing
             WHERE b.baojingid is null
-                and a.stateEx='核定报警'
-                and a.AlarmType in('接打电话报警','分神驾驶报警','抽烟报警','生理疲劳报警','驾驶员异常报警')
             ) ab  GROUP BY AlarmType
     </select>
     <select id="selectOneribao" resultType="java.lang.Integer">

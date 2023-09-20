@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.repairs.mapper.AnbiaoSparePartsStorePersonMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.repairs.entity.AnbiaoSparePartsStorePerson">
+        <id column="spp_id" property="sppId" />
+        <result column="spp_no" property="sppNo" />
+        <result column="spp_name" property="sppName" />
+        <result column="spp_specification" property="sppSpecification" />
+        <result column="spp_model" property="sppModel" />
+        <result column="spp_brand" property="sppBrand" />
+        <result column="spp_classify" property="sppClassify" />
+        <result column="spp_unit" property="sppUnit" />
+        <result column="spp_good_products_num" property="sppGoodProductsNum" />
+        <result column="spp_bad_products_num" property="sppBadProductsNum" />
+        <result column="spp_createtime" property="sppCreatetime" />
+        <result column="spp_createid" property="sppCreateid" />
+        <result column="spp_createname" property="sppCreatename" />
+        <result column="spp_updatetime" property="sppUpdatetime" />
+        <result column="spp_updateid" property="sppUpdateid" />
+        <result column="spp_updatename" property="sppUpdatename" />
+        <result column="spp_delete" property="sppDelete" />
+        <result column="spp_dept_id" property="sppDeptId" />
+        <result column="spp_personid" property="sppPersonid" />
+        <result column="spp_personname" property="sppPersonname" />
+        <result column="spp_date" property="sppDate" />
+        <result column="spp_sp_no" property="sppSpNo" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        spp_id, spp_no, spp_name, spp_specification, spp_model, spp_brand, spp_classify, spp_unit, spp_good_products_num, spp_bad_products_num, spp_warehouse, spp_warehouse_id, spp_createtime, spp_createid, spp_createname, spp_updatetime, spp_updateid, spp_updatename, spp_delete, spp_dept_id
+    </sql>
+
+    <sql id="tableSql">
+        select
+            a.*
+        from
+            anbiao_spare_parts_store_person a
+        inner join  (
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b on a.spp_dept_id = b.id
+        inner join anbiao_spare_parts_store sp on sp.sp_no = a.spp_sp_no
+        where a.spp_delete = 0
+        and sp.sp_delete = 0
+    </sql>
+
+    <sql id="querySql">
+
+        <if test="sppNo != null and sppNo != '' ">
+            and spp_no like '%${sppNo}%'
+        </if>
+
+        <if test="sppName != null and sppName != '' ">
+            and spp_name like '%${sppName}%'
+        </if>
+
+        <if test="sppPersonname != null and sppPersonname != '' ">
+            and spp_personname like '%${sppPersonname}%'
+        </if>
+
+        <if test="sppPersonid != null and sppPersonid != '' ">
+            and spp_personid = #{sppPersonid}
+        </if>
+
+    </sql>
+
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        ORDER BY spp_no desc
+    </sql>
+
+    <select id="selectAllPage" resultMap="BaseResultMap"
+            parameterType="org.springblade.anbiao.repairs.page.AnbiaoSparePartsStorePersonPage" >
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectAllTotal"
+            parameterType="org.springblade.anbiao.repairs.page.AnbiaoSparePartsStorePersonPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql" />
+        )d
+        where 1 = 1
+        <include refid="querySql" />
+    </select>
+
+    <select id="selectMaxXuhao" resultType="org.springblade.anbiao.repairs.entity.AnbiaoSparePartsStorePerson">
+        select
+            MAX(spp_no) as spp_no
+        from
+            anbiao_spare_parts_store_person
+        where left(spp_createtime,10) = left(now(),10)
+          and spp_dept_id = #{deptId}
+    </select>
+
+</mapper>

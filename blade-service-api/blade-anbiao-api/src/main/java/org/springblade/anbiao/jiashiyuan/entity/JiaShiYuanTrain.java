@@ -29,4 +29,7 @@ public class JiaShiYuanTrain implements Serializable {
 
 	@ApiModelProperty(value = "电子签名")
 	private String signatrue;
+
+	@ApiModelProperty(value = "头像")
+	private String photo;
 }

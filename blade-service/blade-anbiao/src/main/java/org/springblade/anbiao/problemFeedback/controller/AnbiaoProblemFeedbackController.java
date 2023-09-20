@@ -137,20 +137,21 @@ public class AnbiaoProblemFeedbackController {
 		QueryWrapper<AnbiaoProblemFeedback> dangerQueryWrapper = new QueryWrapper<AnbiaoProblemFeedback>();
 		dangerQueryWrapper.lambda().eq(AnbiaoProblemFeedback::getPfId, repairsReturn.getPfId());
 		AnbiaoProblemFeedback deail = problemFeedbackService.getBaseMapper().selectOne(dangerQueryWrapper);
-		if(deail == null) {
+		if(deail != null) {
 			if (user != null) {
 				repairsReturn.setPfUpdatename(user.getUserName());
 				repairsReturn.setPfUpdateid(user.getUserId());
 			}
+			repairsReturn.setPfStatus(1);
 			repairsReturn.setPfUpdatetime(DateUtil.now());
 			repairsReturn.setPfUpdatetime(DateUtil.now());
-			ii = problemFeedbackService.save(repairsReturn);
+			ii = problemFeedbackService.updateById(repairsReturn);
 			if (ii) {
-				r.setMsg("回访成功");
+				r.setMsg("回复成功");
 				r.setCode(200);
 				r.setSuccess(true);
 			} else {
-				r.setMsg("回访失败");
+				r.setMsg("回复失败");
 				r.setCode(500);
 				r.setSuccess(false);
 				return r;

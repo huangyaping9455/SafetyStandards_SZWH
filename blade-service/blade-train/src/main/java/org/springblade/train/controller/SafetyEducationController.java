@@ -90,9 +90,9 @@ public class SafetyEducationController extends BaseController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			rs.setCode(500);
+			rs.setCode(200);
 			rs.setSuccess(true);
-			rs.setMsg("查询抓拍图片失败");
+			rs.setMsg("暂未数据");
 		}
 		return rs;
 	}
@@ -119,9 +119,9 @@ public class SafetyEducationController extends BaseController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			rs.setCode(500);
+			rs.setCode(200);
 			rs.setSuccess(true);
-			rs.setMsg("查询学员头像图片失败");
+			rs.setMsg("暂未数据");
 		}
 		return rs;
 	}
@@ -160,9 +160,9 @@ public class SafetyEducationController extends BaseController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			rs.setCode(500);
+			rs.setCode(200);
 			rs.setSuccess(true);
-			rs.setMsg("查询学员证明图片失败");
+			rs.setMsg("暂未数据");
 		}
 		return rs;
 	}
@@ -190,9 +190,9 @@ public class SafetyEducationController extends BaseController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			rs.setCode(500);
+			rs.setCode(200);
 			rs.setSuccess(true);
-			rs.setMsg("查询学员证明学习记录失败");
+			rs.setMsg("暂未数据");
 		}
 		return rs;
 	}
@@ -222,9 +222,9 @@ public class SafetyEducationController extends BaseController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			rs.setCode(500);
+			rs.setCode(200);
 			rs.setSuccess(true);
-			rs.setMsg("查询学员证明学员信息失败");
+			rs.setMsg("暂未数据");
 		}
 		return rs;
 	}
@@ -251,9 +251,9 @@ public class SafetyEducationController extends BaseController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			rs.setCode(500);
+			rs.setCode(200);
 			rs.setSuccess(true);
-			rs.setMsg("查询学习情况统计失败");
+			rs.setMsg("暂未数据");
 		}
 		return rs;
 	}
@@ -288,9 +288,9 @@ public class SafetyEducationController extends BaseController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			rs.setCode(500);
+			rs.setCode(200);
 			rs.setSuccess(true);
-			rs.setMsg("查询课件信息失败");
+			rs.setMsg("暂未数据");
 		}
 		return rs;
 	}
@@ -351,7 +351,7 @@ public class SafetyEducationController extends BaseController {
 		R rs = new R();
 		Student student = iTrainService.getStudentByName(driverName,deptName);
 		if(student == null){
-			rs.setCode(500);
+			rs.setCode(200);
 			rs.setSuccess(false);
 			rs.setMsg("当前驾驶员未在教育系统中");
 		}else{
@@ -390,8 +390,8 @@ public class SafetyEducationController extends BaseController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			rs.setCode(500);
-			rs.setMsg("获取学习待办数失败");
+			rs.setCode(200);
+			rs.setMsg("暂未数据");
 			rs.setSuccess(false);
 		}
 		return rs;
@@ -410,7 +410,7 @@ public class SafetyEducationController extends BaseController {
 		Integer courseKind = null;
 		Student student = iTrainService.getStudentByName(driverName,deptName);
 		if(student == null){
-			rs.setCode(500);
+			rs.setCode(200);
 			rs.setSuccess(false);
 			rs.setMsg("当前驾驶员未在教育系统中");
 		}else{
@@ -428,6 +428,36 @@ public class SafetyEducationController extends BaseController {
 				rs.setSuccess(true);
 				rs.setData(null);
 			}
+		}
+		return rs;
+	}
+
+	@GetMapping("/getStudentCoursewareList")
+	@ApiOperation(value = "教育--查询学员证明--学习课件", notes = "教育--查询学员证明--学习课件", position = 14)
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "courseId", value = "课程ID", required = true),
+		@ApiImplicitParam(name = "studentId", value = "学员ID", required = true)
+	})
+	public R getStudentCoursewareList(Integer courseId, Integer studentId) {
+		R rs = new R();
+		try {
+			//查询信息
+			List<StudentProveDetail> studentProveDetailList = iTrainService.getStudentCoursewareList(courseId,studentId);
+			if(studentProveDetailList != null){
+				rs.setCode(200);
+				rs.setSuccess(true);
+				rs.setData(studentProveDetailList);
+				rs.setMsg("查询成功");
+			}else{
+				rs.setCode(200);
+				rs.setSuccess(true);
+				rs.setMsg("查询成功,暂未数据");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rs.setCode(200);
+			rs.setSuccess(true);
+			rs.setMsg("暂未数据");
 		}
 		return rs;
 	}

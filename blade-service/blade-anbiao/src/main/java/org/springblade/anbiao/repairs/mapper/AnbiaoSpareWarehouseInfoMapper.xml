@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.repairs.mapper.AnbiaoSpareWarehouseInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.repairs.entity.AnbiaoSpareWarehouseInfo">
+        <id column="wa_id" property="waId" />
+        <result column="wa_name" property="waName" />
+        <result column="wa_no" property="waNo" />
+        <result column="wa_address" property="waAddress" />
+        <result column="wa_createtime" property="waCreatetime" />
+        <result column="wa_createid" property="waCreateid" />
+        <result column="wa_createname" property="waCreatename" />
+        <result column="wa_updatetime" property="waUpdatetime" />
+        <result column="wa_updateid" property="waUpdateid" />
+        <result column="wa_updatename" property="waUpdatename" />
+        <result column="wa_delete" property="waDelete" />
+        <result column="wa_dept_id" property="waDeptId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        wa_id, wa_name, wa_no, wa_address, wa_createtime, wa_createid, wa_createname, wa_updatetime, wa_updateid, wa_updatename, wa_delete, wa_dept_id
+    </sql>
+
+    <sql id="tableSql">
+        select
+            a.*,
+            b.dept_name as wadeptName
+        from
+            anbiao_spare_warehouse_info a
+        inner join  (
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b on a.wa_dept_id = b.id
+        where 1=1
+            and a.wa_delete = 0
+    </sql>
+
+    <sql id="querySql">
+        <if test="deptName != null and deptName != '' ">
+            and wadeptName like '%${deptName}%'
+        </if>
+
+        <if test="waName != null and waName != '' ">
+            and wa_name like '%${waName}%'
+        </if>
+
+    </sql>
+
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        ORDER BY wa_no desc
+    </sql>
+
+    <select id="selectAllPage" resultMap="BaseResultMap"
+            parameterType="org.springblade.anbiao.repairs.page.AnbiaoSpareWarehouseInfoPage" >
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectAllTotal"
+            parameterType="org.springblade.anbiao.repairs.page.AnbiaoSpareWarehouseInfoPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql" />
+        )d
+        where 1 = 1
+        <include refid="querySql" />
+    </select>
+
+    <select id="selectMaxXuhao" resultType="org.springblade.anbiao.repairs.entity.AnbiaoSpareWarehouseInfo">
+        select
+            MAX(wa_no) as wa_no
+        from
+            anbiao_spare_warehouse_info
+        where left(wa_createname,10) = left(now(),10)
+          and wa_dept_id = #{deptId}
+    </select>
+
+    <select id="selectByDeptIdList" resultType="org.springblade.anbiao.repairs.entity.AnbiaoSpareWarehouseInfo">
+        select
+            wa_id,
+            wa_no,
+            wa_name,
+            wa_address
+        from
+            anbiao_spare_warehouse_info
+        where wa_dept_id = #{deptId}
+            and wa_delete = 0
+        group by
+            wa_id,
+            wa_no,
+            wa_name,
+            wa_address
+    </select>
+
+</mapper>

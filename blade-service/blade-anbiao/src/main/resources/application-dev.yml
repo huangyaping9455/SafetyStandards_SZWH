@@ -14,9 +14,17 @@ spring:
     password: ${blade.datasource.dev.password}
 
     #测试
-    #    url: jdbc:mysql://120.78.198.161:3306/blade?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+    #        url: jdbc:mysql://120.78.198.161:3306/blade?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+    #        username: root
+    #        password: Ts2022
+
+    #    url: jdbc:mysql://221.10.137.57:22438/blade?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true
     #    username: root
-    #    password: Ts2022
+    #    password: admin@xs
+
+    #    url: jdbc:mysql://202.105.11.193:3366/blade_qg?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+    #    username: root
+    #    password: admin@gzqy
 
     driver-class-name: com.mysql.jdbc.Driver    #指定数据库驱动
     type: com.alibaba.druid.pool.DruidDataSource  #指定类型连接池
@@ -38,7 +46,6 @@ spring:
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
 
-
 #文件的物理路径前缀与url前缀
 fileserver:
   path-prefix: ${fileserver.dev.path}
@@ -56,4 +63,3 @@ alarmserver:
 
 trainserver:
   search-score: 60
-

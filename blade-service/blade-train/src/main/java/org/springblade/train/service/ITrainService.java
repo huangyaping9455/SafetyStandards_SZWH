@@ -161,6 +161,15 @@ public interface ITrainService extends IService<Train> {
 	List<StudentProveDetail> getStudentProveDetailList(int courseId, int studentId);
 
 	/**
+	 * 查询学员相关课件
+	 * @param courseId
+	 * @param studentId
+	 * @return
+	 */
+	List<StudentProveDetail> getStudentCoursewareList(@Param("courseId") int courseId,@Param("studentId") int studentId);
+
+
+	/**
 	 * 汇总数据查询
 	 * @param unitId
 	 * @param courseId

@@ -20,6 +20,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.pagehelper.PageHelper;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTrain;
 import org.springblade.anbiao.jiashiyuan.feign.IJiaShiYuanClient;
 import org.springblade.anbiao.qiyeshouye.page.QiYeShouYePage;
@@ -189,7 +190,7 @@ public class TrainServiceImpl extends ServiceImpl<TrainMapper, Train> implements
 			}else {
 				List<CourseInfo> courseInfoList = trainMapper.selectCourseInfoPage(courseInfoPage);
 				courseInfoList.forEach(item-> {
-					CoursewareInfo coursewareInfo = trainMapper.getCoursewareDuration(item.getId());
+					CoursewareInfo coursewareInfo = trainMapper.getCoursewareDuration(item.getCourseId());
 					if(coursewareInfo != null){
 						item.setDuration(coursewareInfo.getDuration());
 					}
@@ -216,7 +217,7 @@ public class TrainServiceImpl extends ServiceImpl<TrainMapper, Train> implements
 			courseInfoPage.setOffsetNo(offsetNo);
 			List<CourseInfo> courseInfoList = trainMapper.selectCourseInfoPage(courseInfoPage);
 			courseInfoList.forEach(item-> {
-				CoursewareInfo coursewareInfo = trainMapper.getCoursewareDuration(item.getId());
+				CoursewareInfo coursewareInfo = trainMapper.getCoursewareDuration(item.getCourseId());
 				if(coursewareInfo != null){
 					item.setDuration(coursewareInfo.getDuration());
 				}
@@ -278,11 +279,16 @@ public class TrainServiceImpl extends ServiceImpl<TrainMapper, Train> implements
 				jiaShiYuanTrainList.forEach(item-> {
 					if(studentitem.getRealName().equals(item.getJiashiyuanxingming())){
 						studentitem.setSignatrue(item.getSignatrue());
+						if(StringUtils.isNotEmpty(item.getPhoto())){
+							studentitem.setFullFacePhoto(item.getPhoto());
+						}
 					}
 				});
 			}else{
 				ExamSignatrue examSignatrue = mapper.getSignatrue(studentId, courseId);
-				studentitem.setSignatrue(examSignatrue.getSignatrueimg());
+				if(examSignatrue != null){
+					studentitem.setSignatrue(examSignatrue.getSignatrueimg());
+				}
 			}
 		});
 		return studentProveList;
@@ -291,6 +297,11 @@ public class TrainServiceImpl extends ServiceImpl<TrainMapper, Train> implements
 	@Override
 	public List<StudentProveDetail> getStudentProveDetailList(int courseId, int studentId) {
 		return trainMapper.getStudentProveDetailList(courseId, studentId);
+	}
+
+	@Override
+	public List<StudentProveDetail> getStudentCoursewareList(int courseId, int studentId) {
+		return trainMapper.getStudentCoursewareList(courseId, studentId);
 	}
 
 	@Override

@@ -10,9 +10,9 @@ spring:
     #    password: ${blade.datasource.dev.password}
 
     #测试
-    url: jdbc:mysql://rm-2vcu2m013irzt8gm5bo.mysql.cn-chengdu.rds.aliyuncs.com:3306/blade?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
-    username: anbiao
-    password: Ts2022*
+    url: jdbc:mysql://202.105.11.193:3366/blade_qg?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+    username: root
+    password: admin@gzqy
 
 #文件的物理路径前缀与url前缀
 fileserver:

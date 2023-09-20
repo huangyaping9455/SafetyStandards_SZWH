@@ -581,6 +581,38 @@
         </where>
     </select>
 
+    <!-- 查询学员相关课件 -->
+    <select id="getStudentCoursewareList" resultMap="StudentProveDetailResultMap">
+        select
+            distinct
+            bcw.id,
+            bcw.original_name,
+            MIN(bsr.begin_time) as begin_time,
+            MIN(bsr.end_time) as end_time,
+            bcw.duration,
+            bsr.valid
+        from
+            biz_study_record bsr
+        inner join base_student bs on bsr.student_id = bs.id
+        inner join relation_unit_course ruc on ruc.id = bsr.rel_unit_course_id
+        inner join base_course bc on ruc.course_id = bc.id
+        inner join base_courseware bcw on bsr.courseware_id = bcw.id
+        <where>
+            bsr.valid = 1
+            <if test = "courseId != null and courseId != 0">
+                and bc.id = #{courseId}
+            </if>
+            <if test = "studentId != null and studentId != 0">
+                and bs.id = #{studentId}
+            </if>
+        </where>
+        GROUP BY
+            bcw.id,
+            bcw.original_name,
+            bcw.duration,
+            bsr.valid
+    </select>
+
     <!-- 安全培训汇总 -->
     <select id="getStudentAllList" resultMap="BaseResultMap">
         select

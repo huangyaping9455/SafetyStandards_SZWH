@@ -891,10 +891,11 @@ values
 
     <select id="selectJiaShiYuanTrain" resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTrain">
         select
-        a.id,a.jiashiyuanxingming,a.shoujihaoma,a.dept_id as deptId,b.signatrue
+        a.id,a.jiashiyuanxingming,a.shoujihaoma,a.dept_id as deptId,b.signatrue,r.ajr_head_portrait as photo
         from
         anbiao_jiashiyuan a
-        inner join anbiao_jiashiyuan_signatrue b on a.id = b.jiashiyuanid
+        INNER JOIN anbiao_jiashiyuan_ruzhi r on r.ajr_aj_ids = a.id
+        left JOIN anbiao_jiashiyuan_signatrue b ON a.id = b.jiashiyuanid
         where a.isdelete = 0
         <if test="deptId != null and deptId != '' ">
             AND a.dept_id= #{deptId}

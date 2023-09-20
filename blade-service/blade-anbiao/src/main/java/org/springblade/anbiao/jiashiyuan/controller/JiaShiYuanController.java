@@ -351,8 +351,9 @@ public class JiaShiYuanController extends BladeUser{
 
 		//验证驾驶证
 		if (StringUtils.isNotBlank(jiaShiYuan.getJiashizhenghao()) && jiaShiYuan.getJiashizhenghao() != null) {
-			if (IdCardUtil.isValidCard(jiaShiYuan.getJiashizhenghao()) == true) {
-				jiaShiYuan.setJiashizhenghao(jiaShiYuan.getJiashizhenghao());
+			if(deail != null && StringUtils.isNotEmpty(deail.getJiashizhenghao())){
+				if (IdCardUtil.isValidCard(deail.getJiashizhenghao()) == true) {
+					jiaShiYuan.setJiashizhenghao(deail.getJiashizhenghao());
 //				if (deail != null) {
 //					r.setMsg(deail.getJiashizhenghao() + "该驾驶证号已存在;");
 //					r.setCode(500);
@@ -361,39 +362,83 @@ public class JiaShiYuanController extends BladeUser{
 //				} else {
 //					jiaShiYuan.setJiashizhenghao(jiaShiYuan.getJiashizhenghao());
 //				}
-			} else {
-				r.setMsg(jiaShiYuan.getJiashizhenghao() + "该驾驶证号不合法;");
-				r.setCode(500);
-				r.setSuccess(false);
-				return r;
+				} else {
+					r.setMsg(deail.getJiashizhenghao() + "该驾驶证号不合法;");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
+			}else{
+				if (IdCardUtil.isValidCard(jiaShiYuan.getJiashizhenghao()) == true) {
+					jiaShiYuan.setJiashizhenghao(jiaShiYuan.getJiashizhenghao());
+//				if (deail != null) {
+//					r.setMsg(deail.getJiashizhenghao() + "该驾驶证号已存在;");
+//					r.setCode(500);
+//					r.setSuccess(false);
+//					return r;
+//				} else {
+//					jiaShiYuan.setJiashizhenghao(jiaShiYuan.getJiashizhenghao());
+//				}
+				} else {
+					r.setMsg(jiaShiYuan.getJiashizhenghao() + "该驾驶证号不合法;");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
 			}
 		}
 
 		jiaShiYuan.setXingbie("1");
 		//验证身份证
 		if (StringUtils.isNotEmpty(jiaShiYuan.getShenfenzhenghao()) && jiaShiYuan.getShenfenzhenghao() != null) {
-			if (IdCardUtil.isValidCard(jiaShiYuan.getShenfenzhenghao()) == true) {
-				jiaShiYuan.setShenfenzhenghao(jiaShiYuan.getShenfenzhenghao());
+			if(deail != null && StringUtils.isNotEmpty(deail.getJiashizhenghao())){
+				if (IdCardUtil.isValidCard(deail.getShenfenzhenghao()) == true) {
+					jiaShiYuan.setShenfenzhenghao(deail.getShenfenzhenghao());
 //			if (deail != null) {
 //				r.setMsg(deail.getShenfenzhenghao() + "该驾驶员身份证号已存在");
 //				r.setCode(500);
 //				r.setSuccess(false);
 //				return r;
 //			} else {
-				jiaShiYuan.setShenfenzhenghao(jiaShiYuan.getShenfenzhenghao());
-				//通过身份证获取年龄
-				Integer age = IdCardUtil.getAgeByCard(jiaShiYuan.getShenfenzhenghao());
-				jiaShiYuan.setNianling(age.toString());
-				//通过身份证获取生日日期
-				Date chushengshijian = IdCardUtil.getBirthDate(jiaShiYuan.getShenfenzhenghao());
-				jiaShiYuan.setChushengshijian(dateFormat2.format(chushengshijian));
-				jiaShiYuan.setXingbie(Integer.toString(IdCardUtil.getGender(jiaShiYuan.getShenfenzhenghao())));
+					jiaShiYuan.setShenfenzhenghao(deail.getShenfenzhenghao());
+					//通过身份证获取年龄
+					Integer age = IdCardUtil.getAgeByCard(deail.getShenfenzhenghao());
+					jiaShiYuan.setNianling(age.toString());
+					//通过身份证获取生日日期
+					Date chushengshijian = IdCardUtil.getBirthDate(deail.getShenfenzhenghao());
+					jiaShiYuan.setChushengshijian(dateFormat2.format(chushengshijian));
+					jiaShiYuan.setXingbie(Integer.toString(IdCardUtil.getGender(deail.getShenfenzhenghao())));
 //			}
-			} else {
-				r.setMsg(jiaShiYuan.getShenfenzhenghao() + "该驾驶员身份证号不合法");
-				r.setCode(500);
-				r.setSuccess(false);
-				return r;
+				} else {
+					r.setMsg(deail.getShenfenzhenghao() + "该驾驶员身份证号不合法");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
+			}else{
+				if (IdCardUtil.isValidCard(jiaShiYuan.getShenfenzhenghao()) == true) {
+					jiaShiYuan.setShenfenzhenghao(jiaShiYuan.getShenfenzhenghao());
+//			if (deail != null) {
+//				r.setMsg(deail.getShenfenzhenghao() + "该驾驶员身份证号已存在");
+//				r.setCode(500);
+//				r.setSuccess(false);
+//				return r;
+//			} else {
+					jiaShiYuan.setShenfenzhenghao(jiaShiYuan.getShenfenzhenghao());
+					//通过身份证获取年龄
+					Integer age = IdCardUtil.getAgeByCard(jiaShiYuan.getShenfenzhenghao());
+					jiaShiYuan.setNianling(age.toString());
+					//通过身份证获取生日日期
+					Date chushengshijian = IdCardUtil.getBirthDate(jiaShiYuan.getShenfenzhenghao());
+					jiaShiYuan.setChushengshijian(dateFormat2.format(chushengshijian));
+					jiaShiYuan.setXingbie(Integer.toString(IdCardUtil.getGender(jiaShiYuan.getShenfenzhenghao())));
+//			}
+				} else {
+					r.setMsg(jiaShiYuan.getShenfenzhenghao() + "该驾驶员身份证号不合法");
+					r.setCode(500);
+					r.setSuccess(false);
+					return r;
+				}
 			}
 		}
 

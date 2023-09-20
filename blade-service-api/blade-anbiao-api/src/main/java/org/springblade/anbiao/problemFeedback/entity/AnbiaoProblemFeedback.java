@@ -29,7 +29,7 @@ public class AnbiaoProblemFeedback implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "pf_id", type = IdType.AUTO)
+    @TableId(value = "pf_id", type = IdType.UUID)
     private String pfId;
 
     @ApiModelProperty(value = "驾驶员ID")
@@ -91,6 +91,10 @@ public class AnbiaoProblemFeedback implements Serializable {
 	@ApiModelProperty(value = "企业ID")
 	@TableField("pf_dept_id")
 	private Integer pfDeptId;
+
+	@ApiModelProperty(value = "企业名称")
+	@TableField(exist = false)
+	private String pfDeptName;
 
 	@ApiModelProperty(value = "删除标志，默认0,1：已删除")
 	@TableField("pf_delete")

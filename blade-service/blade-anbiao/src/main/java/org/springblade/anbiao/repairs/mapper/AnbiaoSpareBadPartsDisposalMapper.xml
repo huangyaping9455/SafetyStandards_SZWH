@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.repairs.mapper.AnbiaoSpareBadPartsDisposalMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.repairs.entity.AnbiaoSpareBadPartsDisposal">
+        <id column="sbp_id" property="sbpId" />
+        <result column="sbp_no" property="sbpNo" />
+        <result column="sbp_num" property="sbpNum" />
+        <result column="sbp_way" property="sbpWay" />
+        <result column="sbp_date" property="sbpDate" />
+        <result column="sbp_createtime" property="sbpCreatetime" />
+        <result column="sbp_createid" property="sbpCreateid" />
+        <result column="sbp_createname" property="sbpCreatename" />
+        <result column="sbp_updatetime" property="sbpUpdatetime" />
+        <result column="sbp_updateid" property="sbpUpdateid" />
+        <result column="sbp_updatename" property="sbpUpdatename" />
+        <result column="sbp_delete" property="sbpDelete" />
+        <result column="sbp_dept_id" property="sbpDeptId" />
+        <result column="sbp_sp_no" property="sbpSpNo" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        sbp_id, sbpSpNo, sbp_num, sbp_way, sbp_date, sbp_createtime, sbp_createid, sbp_createname, sbp_updatetime, sbp_updateid, sbp_updatename, sbp_delete, sbp_dept_id
+    </sql>
+
+    <sql id="tableSql">
+        select
+            a.*
+        from
+            anbiao_spare_bad_parts_disposal a
+        inner join anbiao_spare_parts_store sp on sp.sp_no = a.sbp_sp_no
+        where a.sbp_delete = 0
+            and sp.sp_delete = 0
+            and sp.sp_no = #{sbpSpNo}
+    </sql>
+
+    <sql id="querySql">
+
+        <if test="sbpWay != null ">
+            and sbp_way = #{sbpWay}
+        </if>
+
+    </sql>
+
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        ORDER BY sbp_no desc
+    </sql>
+
+    <select id="selectAllPage" resultMap="BaseResultMap"
+            parameterType="org.springblade.anbiao.repairs.page.AnbiaoSpareBadPartsDisposalPage" >
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectAllTotal"
+            parameterType="org.springblade.anbiao.repairs.page.AnbiaoSpareBadPartsDisposalPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql" />
+        )d
+        where 1 = 1
+        <include refid="querySql" />
+    </select>
+
+    <select id="selectMaxXuhao" resultType="org.springblade.anbiao.repairs.entity.AnbiaoSpareBadPartsDisposal">
+        select
+            MAX(sbp_no) as sbp_no
+        from
+            anbiao_spare_bad_parts_disposal
+        where left(sbp_createtime,10) = left(now(),10)
+          and sbp_dept_id = #{deptId}
+    </select>
+
+</mapper>

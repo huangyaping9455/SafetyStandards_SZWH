@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.repairs.mapper.AnbiaoSpareOutInWarehouseMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.repairs.entity.AnbiaoSpareOutInWarehouse">
+        <id column="soi_id" property="soiId" />
+        <result column="soi_no" property="soiNo" />
+        <result column="soi_type" property="soiType" />
+        <result column="soi_user_id" property="soiUserId" />
+        <result column="soi_user_name" property="soiUserName" />
+        <result column="soi_date" property="soiDate" />
+        <result column="soi_audit_status" property="soiAuditStatus" />
+        <result column="soi_audit_opinion" property="soiAuditOpinion" />
+        <result column="soi_audit_date" property="soiAuditDate" />
+        <result column="soi_sp_no" property="soiSpNo" />
+        <result column="soi_sp_name" property="soiSpName" />
+        <result column="soi_sp_specification" property="soiSpSpecification" />
+        <result column="soi_sp_model" property="soiSpModel" />
+        <result column="soi_sp_good_products_num" property="soiSpGoodProductsNum" />
+        <result column="soi_sp_bad_products_num" property="soiSpBadProductsNum" />
+        <result column="soi_audit_user_id" property="soiAuditUserId" />
+        <result column="soi_audit_user_name" property="soiAuditUserName" />
+        <result column="soi_dept_id" property="soiDeptId" />
+        <result column="soi_delete" property="soiDelete" />
+        <result column="soi_createtime" property="soiCreatetime" />
+        <result column="soi_createid" property="soiCreateid" />
+        <result column="soi_createname" property="soiCreatename" />
+        <result column="soi_updatetime" property="soiUpdatetime" />
+        <result column="soi_updateid" property="soiUpdateid" />
+        <result column="soi_updatename" property="soiUpdatename" />
+        <result column="soi_brand" property="soiBrand" />
+        <result column="soi_classify" property="soiClassify" />
+        <result column="soi_unit" property="soiUnit" />
+        <result column="soi_cost_price" property="soiCostPrice" />
+        <result column="soi_warehouse" property="soiWarehouse" />
+        <result column="soi_warehouse_id" property="soiWarehouseId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        soi_id, soi_no, soi_type, soi_user_id, soi_user_name, soi_date, soi_audit_status, soi_audit_opinion, soi_audit_date, soi_sp_no, soi_sp_name, soi_sp_specification, soi_sp_model, soi_sp_good_products_num, soi_sp_bad_products_num, soi_audit_user_id, soi_audit_user_name, soi_sp_wa_id, soi_sp_wa_name, soi_dept_id, soi_delete
+    </sql>
+
+    <sql id="tableSql">
+        select
+            a.*
+        from
+            anbiao_spare_out_in_warehouse a
+        inner join  (
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b on a.soi_dept_id = b.id
+        left join anbiao_spare_parts_store sp on sp.sp_no = a.soi_sp_no and sp.sp_delete = 0
+        where a.soi_delete = 0
+    </sql>
+
+    <sql id="querySql">
+
+        <if test="soiNo != null and soiNo != '' ">
+            and soi_no like '%${soiNo}%'
+        </if>
+
+        <if test="soiSpNo != null and soiSpNo != '' ">
+            and soi_sp_no like '%${soiSpNo}%'
+        </if>
+
+        <if test="soiType != null ">
+            and soi_type = #{soiType}
+        </if>
+
+        <if test="soiUserName != null and soiUserName != '' ">
+            and soi_user_name like '%${soiUserName}%'
+        </if>
+
+        <if test="soiDate != null and soiDate != '' ">
+            and soi_date >= #{soiDate}
+        </if>
+
+        <if test="soiAuditStatus != null ">
+            and soi_audit_status = #{soiAuditStatus}
+        </if>
+
+    </sql>
+
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        ORDER BY soi_no desc
+    </sql>
+
+    <select id="selectAllPage" resultMap="BaseResultMap"
+            parameterType="org.springblade.anbiao.repairs.page.AnbiaoSpareOutInWarehousePage" >
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectAllTotal"
+            parameterType="org.springblade.anbiao.repairs.page.AnbiaoSpareOutInWarehousePage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql" />
+        )d
+        where 1 = 1
+        <include refid="querySql" />
+    </select>
+
+    <select id="selectMaxXuhao" resultType="org.springblade.anbiao.repairs.entity.AnbiaoSpareOutInWarehouse">
+        select
+            MAX(soi_no) as soi_no
+        from
+            anbiao_spare_out_in_warehouse
+        where left(soi_createtime,10) = left(now(),10)
+          and soi_dept_id = #{deptId}
+    </select>
+
+</mapper>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.repairs.mapper.AnbiaoSparePersonApplyForAuditMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.repairs.entity.AnbiaoSparePersonApplyForAudit">
+        <id column="sp_id" property="spId" />
+        <result column="sp_person_id" property="spPersonId" />
+        <result column="sp_person_name" property="spPersonName" />
+        <result column="sp_date" property="spDate" />
+        <result column="sp_no" property="spNo" />
+        <result column="sp_type" property="spType" />
+        <result column="soi_sp_no" property="soiSpNo" />
+        <result column="sp_num" property="spNum" />
+        <result column="sp_remark" property="spRemark" />
+        <result column="sp_audit_status" property="spAuditStatus" />
+        <result column="sp_audit_opinion" property="spAuditOpinion" />
+        <result column="sp_audit_date" property="spAuditDate" />
+        <result column="sp_audit_user_id" property="spAuditUserId" />
+        <result column="sp_audit_user_name" property="spAuditUserName" />
+        <result column="sp_createtime" property="spCreatetime" />
+        <result column="sp_createid" property="spCreateid" />
+        <result column="sp_createname" property="spCreatename" />
+        <result column="sp_updatetime" property="spUpdatetime" />
+        <result column="sp_updateid" property="spUpdateid" />
+        <result column="sp_updatename" property="spUpdatename" />
+        <result column="sp_delete" property="spDelete" />
+        <result column="sp_dept_id" property="spDeptId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        sp_id, sp_person_id, sp_person_name, sp_date, sp_no, sp_type, soi_sp_no, sp_num, sp_remark, sp_audit_status, sp_audit_opinion, sp_audit_date, sp_audit_user_id, sp_audit_user_name, sp_createtime, sp_createid, sp_createname, sp_updatetime, sp_updateid, sp_updatename, sp_delete, sp_dept_id
+    </sql>
+
+    <sql id="tableSql">
+        select
+            a.*
+        from
+            anbiao_spare_person_apply_for_audit a
+        inner join  (
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b on a.sp_dept_id = b.id
+        inner join anbiao_spare_parts_store sp on sp.sp_no = a.soi_sp_no
+        where a.spp_delete = 0
+            and sp.sp_delete = 0
+    </sql>
+
+    <sql id="querySql">
+
+        <if test="spNo != null and spNo != '' ">
+            and sp_no like '%${spNo}%'
+        </if>
+
+        <if test="soiSpNo != null and soiSpNo != '' ">
+            and soi_sp_no like '%${soiSpNo}%'
+        </if>
+
+        <if test="spPersonname != null and spPersonname != '' ">
+            and sp_person_name like '%${spPersonname}%'
+        </if>
+
+        <if test="spType != null ">
+            and sp_type = #{spType}
+        </if>
+
+        <if test="spAuditStatus != null ">
+            and sp_audit_status = #{spAuditStatus}
+        </if>
+
+        <if test="spPersonId != null and spPersonId != '' ">
+            and sp_person_id = #{spPersonId}
+        </if>
+
+    </sql>
+
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        ORDER BY sp_no desc
+    </sql>
+
+    <select id="selectAllPage" resultMap="BaseResultMap"
+            parameterType="org.springblade.anbiao.repairs.page.AnbiaoSparePersonApplyForAuditPage" >
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectAllTotal"
+            parameterType="org.springblade.anbiao.repairs.page.AnbiaoSparePersonApplyForAuditPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql" />
+        )d
+        where 1 = 1
+        <include refid="querySql" />
+    </select>
+
+    <select id="selectMaxXuhao" resultType="org.springblade.anbiao.repairs.entity.AnbiaoSparePersonApplyForAudit">
+        select
+            MAX(sp_no) as sp_no
+        from
+            anbiao_spare_person_apply_for_audit
+        where left(sp_createtime,10) = left(now(),10)
+          and sp_dept_id = #{deptId}
+    </select>
+
+
+</mapper>
