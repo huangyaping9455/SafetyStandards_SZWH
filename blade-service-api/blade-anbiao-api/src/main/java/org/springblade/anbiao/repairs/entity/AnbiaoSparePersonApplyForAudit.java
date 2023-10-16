@@ -57,7 +57,7 @@ public class AnbiaoSparePersonApplyForAudit implements Serializable {
 
     @ApiModelProperty(value = "申请数量")
     @TableField("sp_num")
-    private Integer spNum;
+    private Integer spNum = 0;
 
     @ApiModelProperty(value = "备注")
     @TableField("sp_remark")
@@ -115,5 +115,11 @@ public class AnbiaoSparePersonApplyForAudit implements Serializable {
     @TableField("sp_dept_id")
     private Integer spDeptId;
 
+	@ApiModelProperty(value = "所属企业")
+	@TableField(exist = false)
+	private String rpDeptName;
 
+	@ApiModelProperty(value = "备件名称")
+	@TableField(exist = false)
+	private String spName;
 }

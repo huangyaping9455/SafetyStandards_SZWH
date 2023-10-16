@@ -101,6 +101,7 @@ public class AnbiaoSparePersonApplyForAuditController {
 		dangerQueryWrapper.lambda().eq(AnbiaoSparePersonApplyForAudit::getSpDeptId, sparePersonApplyForAudit.getSpDeptId());
 		dangerQueryWrapper.lambda().eq(AnbiaoSparePersonApplyForAudit::getSpDate, sparePersonApplyForAudit.getSpDate());
 		dangerQueryWrapper.lambda().eq(AnbiaoSparePersonApplyForAudit::getSoiSpNo, sparePersonApplyForAudit.getSoiSpNo());
+		dangerQueryWrapper.lambda().eq(AnbiaoSparePersonApplyForAudit::getSpType, sparePersonApplyForAudit.getSpType());
 		AnbiaoSparePersonApplyForAudit deail = sparePersonApplyForAuditService.getBaseMapper().selectOne(dangerQueryWrapper);
 		if (deail == null) {
 			sparePersonApplyForAudit.setSpDelete(0);
@@ -233,14 +234,7 @@ public class AnbiaoSparePersonApplyForAuditController {
 					r.setSuccess(true);
 					return r;
 				}else {
-					if(StringUtils.isNotEmpty(deail.getSpId())){
-						if (user != null) {
-							deail.setSpUpdatename(user.getUserName());
-							deail.setSpUpdateid(user.getUserId());
-						}
-						deail.setSpUpdatetime(DateUtil.now());
-						deail.setSpGoodProductsNum(deal.getSpNum()+deail.getSpGoodProductsNum());
-						ii = sparePartsStoreService.updateById(deail);
+					if(sparePersonApplyForAudit.getSpAuditStatus() != null && sparePersonApplyForAudit.getSpAuditStatus() == 2){
 						if(ii){
 							r.setMsg("审核成功");
 							r.setCode(200);
@@ -252,91 +246,59 @@ public class AnbiaoSparePersonApplyForAuditController {
 							r.setSuccess(false);
 							return r;
 						}
-					}
-					//员工库存管理
-					QueryWrapper<AnbiaoSparePartsStorePerson> storePersonQueryWrapper = new QueryWrapper<AnbiaoSparePartsStorePerson>();
-					storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppDeptId, deail.getSpDeptId());
-					storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppSpNo, deail.getSpNo());
-					storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppDelete, 0);
-					AnbiaoSparePartsStorePerson sparePartsStorePerson = sparePartsStorePersonService.getBaseMapper().selectOne(storePersonQueryWrapper);
-					if (sparePartsStorePerson == null) {
-						sparePartsStorePerson = new AnbiaoSparePartsStorePerson();
-						sparePartsStorePerson.setSppDelete(0);
-						if(StringUtils.isEmpty(sparePartsStorePerson.getSppDate())){
-							sparePartsStorePerson.setSppDate(DateUtil.now());
-						}
-						sparePartsStorePerson.setSppGoodProductsNum(sparePersonApplyForAudit.getSpNum());
-						sparePartsStorePerson.setSppDeptId(deail.getSpDeptId());
-						//获取当前企业当天最大序列号 维修单号：20230620-4587-0001
-						String xuhao = "";
-						AnbiaoSparePartsStorePerson AnbiaoSparePartsStorePerson = sparePartsStorePersonService.selectMaxXuhao(sparePartsStorePerson.getSppDeptId().toString());
-						if (AnbiaoSparePartsStorePerson != null && StringUtils.isNotEmpty(AnbiaoSparePartsStorePerson.getSppNo())) {
-							xuhao = AnbiaoSparePartsStorePerson.getSppNo();
-							Integer xh = Integer.parseInt(xuhao.substring(xuhao.length() - 4));
-							xh = xh += 1;
-							xuhao = xh.toString();
-							if (xuhao.length() < 2) {
-								xuhao = "000" + xuhao;
-								SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-								xuhao = format.format(new Date()) + "-" + sparePartsStorePerson.getSppDeptId() + "-" + xuhao;
-								sparePartsStorePerson.setSppNo(xuhao);
-							} else if (xuhao.length() >= 2 && xuhao.length() < 3) {
-								xuhao = "00" + xuhao;
-								SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-								xuhao = format.format(new Date()) + "-" + sparePartsStorePerson.getSppDeptId() + "-" + xuhao;
-								sparePartsStorePerson.setSppNo(xuhao);
-							} else if (xuhao.length() >= 3 && xuhao.length() < 4) {
-								xuhao = "0" + xuhao;
-								SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-								xuhao = format.format(new Date()) + "-" + sparePartsStorePerson.getSppDeptId() + "-" + xuhao;
-								sparePartsStorePerson.setSppNo(xuhao);
-							} else {
-								SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-								xuhao = format.format(new Date()) + "-" + sparePartsStorePerson.getSppDeptId() + "-" + xuhao;
-								sparePartsStorePerson.setSppNo(xuhao);
+					}else{
+						if(StringUtils.isNotEmpty(deail.getSpId())){
+							if (user != null) {
+								deail.setSpUpdatename(user.getUserName());
+								deail.setSpUpdateid(user.getUserId());
 							}
-						} else {
-							SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-							xuhao = format.format(new Date()) + "-" + sparePartsStorePerson.getSppDeptId() + "-0001";
-							sparePartsStorePerson.setSppNo(xuhao);
+							deail.setSpUpdatetime(DateUtil.now());
+							deail.setSpGoodProductsNum(deal.getSpNum()+deail.getSpGoodProductsNum());
+							ii = sparePartsStoreService.updateById(deail);
+							if(ii){
+								r.setMsg("审核成功");
+								r.setCode(200);
+								r.setSuccess(true);
+							}else {
+								r.setMsg("审核失败");
+								r.setCode(500);
+								r.setSuccess(false);
+								return r;
+							}
 						}
-						if (user != null) {
-							sparePartsStorePerson.setSppCreatename(user.getUserName());
-							sparePartsStorePerson.setSppCreateid(user.getUserId());
-						}
-						sparePartsStorePerson.setSppCreatetime(DateUtil.now());
-						ii = sparePartsStorePersonService.save(AnbiaoSparePartsStorePerson);
-						if (ii) {
-							r.setMsg("新增成功");
-							r.setCode(200);
-							r.setSuccess(true);
-						} else {
-							r.setMsg("新增失败");
-							r.setCode(500);
-							r.setSuccess(false);
-							return r;
-						}
-					}else {
-						if (user != null) {
-							sparePartsStorePerson.setSppUpdatename(user.getUserName());
-							sparePartsStorePerson.setSppUpdateid(user.getUserId());
-						}
-						sparePartsStorePerson.setSppUpdatetime(DateUtil.now());
-						if(StringUtils.isEmpty(sparePartsStorePerson.getSppDate())){
-							sparePartsStorePerson.setSppDate(DateUtil.now());
-						}
-						sparePartsStorePerson.setSppGoodProductsNum(sparePartsStorePerson.getSppGoodProductsNum()-deal.getSpNum());
-						ii = sparePartsStorePersonService.updateById(sparePartsStorePerson);
-						if(ii){
-							r.setMsg("审核成功");
+						//员工库存管理
+						QueryWrapper<AnbiaoSparePartsStorePerson> storePersonQueryWrapper = new QueryWrapper<AnbiaoSparePartsStorePerson>();
+						storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppDeptId, deail.getSpDeptId());
+						storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppSpNo, deail.getSpNo());
+						storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppDelete, 0);
+						AnbiaoSparePartsStorePerson sparePartsStorePerson = sparePartsStorePersonService.getBaseMapper().selectOne(storePersonQueryWrapper);
+						if (sparePartsStorePerson == null) {
+							r.setMsg("暂无数据");
 							r.setCode(200);
 							r.setSuccess(true);
 							return r;
 						}else {
-							r.setMsg("审核失败");
-							r.setCode(500);
-							r.setSuccess(false);
-							return r;
+							if (user != null) {
+								sparePartsStorePerson.setSppUpdatename(user.getUserName());
+								sparePartsStorePerson.setSppUpdateid(user.getUserId());
+							}
+							sparePartsStorePerson.setSppUpdatetime(DateUtil.now());
+							if(StringUtils.isEmpty(sparePartsStorePerson.getSppDate())){
+								sparePartsStorePerson.setSppDate(DateUtil.now());
+							}
+							sparePartsStorePerson.setSppGoodProductsNum(sparePartsStorePerson.getSppGoodProductsNum()-deal.getSpNum());
+							ii = sparePartsStorePersonService.updateById(sparePartsStorePerson);
+							if(ii){
+								r.setMsg("审核成功");
+								r.setCode(200);
+								r.setSuccess(true);
+								return r;
+							}else {
+								r.setMsg("审核失败");
+								r.setCode(500);
+								r.setSuccess(false);
+								return r;
+							}
 						}
 					}
 				}
@@ -389,15 +351,7 @@ public class AnbiaoSparePersonApplyForAuditController {
 					r.setSuccess(true);
 					return r;
 				}else {
-					//总库存管理
-					if(StringUtils.isNotEmpty(deail.getSpId())){
-						if (user != null) {
-							deail.setSpUpdatename(user.getUserName());
-							deail.setSpUpdateid(user.getUserId());
-						}
-						deail.setSpUpdatetime(DateUtil.now());
-						deail.setSpGoodProductsNum(deail.getSpGoodProductsNum()-deal.getSpNum());
-						ii = sparePartsStoreService.updateById(deail);
+					if(sparePersonApplyForAudit.getSpAuditStatus() != null && sparePersonApplyForAudit.getSpAuditStatus() == 2){
 						if(ii){
 							r.setMsg("审核成功");
 							r.setCode(200);
@@ -409,39 +363,132 @@ public class AnbiaoSparePersonApplyForAuditController {
 							r.setSuccess(false);
 							return r;
 						}
-					}
-					//员工库存管理
-					QueryWrapper<AnbiaoSparePartsStorePerson> storePersonQueryWrapper = new QueryWrapper<AnbiaoSparePartsStorePerson>();
-					storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppDeptId, deail.getSpDeptId());
-					storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppSpNo, deail.getSpNo());
-					storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppDelete, 0);
-					AnbiaoSparePartsStorePerson person = sparePartsStorePersonService.getBaseMapper().selectOne(storePersonQueryWrapper);
-					if (person == null) {
-						r.setMsg("暂无数据");
-						r.setCode(200);
-						r.setSuccess(true);
-						return r;
-					}else {
-						if (user != null) {
-							person.setSppUpdatename(user.getUserName());
-							person.setSppUpdateid(user.getUserId());
+					}else{
+						//总库存管理
+						if(StringUtils.isNotEmpty(deail.getSpId())){
+							if (user != null) {
+								deail.setSpUpdatename(user.getUserName());
+								deail.setSpUpdateid(user.getUserId());
+							}
+							deail.setSpUpdatetime(DateUtil.now());
+							deail.setSpGoodProductsNum(deail.getSpGoodProductsNum()-deal.getSpNum());
+							ii = sparePartsStoreService.updateById(deail);
+							if(ii){
+								r.setMsg("审核成功");
+								r.setCode(200);
+								r.setSuccess(true);
+							}else {
+								r.setMsg("审核失败");
+								r.setCode(500);
+								r.setSuccess(false);
+								return r;
+							}
 						}
-						person.setSppUpdatetime(DateUtil.now());
-						if(StringUtils.isEmpty(person.getSppDate())){
-							person.setSppDate(DateUtil.now());
-						}
-						person.setSppGoodProductsNum(person.getSppGoodProductsNum()+deal.getSpNum());
-						ii = sparePartsStorePersonService.updateById(person);
-						if(ii){
-							r.setMsg("审核成功");
-							r.setCode(200);
-							r.setSuccess(true);
-							return r;
+						//员工库存管理
+						QueryWrapper<AnbiaoSparePartsStorePerson> storePersonQueryWrapper = new QueryWrapper<AnbiaoSparePartsStorePerson>();
+						storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppDeptId, deail.getSpDeptId());
+						storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppSpNo, deail.getSpNo());
+						storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppDelete, 0);
+						AnbiaoSparePartsStorePerson person = sparePartsStorePersonService.getBaseMapper().selectOne(storePersonQueryWrapper);
+						if (person == null) {
+							person = new AnbiaoSparePartsStorePerson();
+							person.setSppDelete(0);
+							person.setSppDeptId(deal.getSpDeptId());
+							//获取当前企业当天最大序列号 维修单号：20230620-4587-0001
+							String xuhao = "";
+							AnbiaoSparePartsStorePerson AnbiaoSparePartsStorePerson = sparePartsStorePersonService.selectMaxXuhao(deail.getSpDeptId().toString());
+							if (AnbiaoSparePartsStorePerson != null && StringUtils.isNotEmpty(AnbiaoSparePartsStorePerson.getSppNo())) {
+								xuhao = AnbiaoSparePartsStorePerson.getSppNo();
+								Integer xh = Integer.parseInt(xuhao.substring(xuhao.length() - 4));
+								xh = xh += 1;
+								xuhao = xh.toString();
+								if (xuhao.length() < 2) {
+									xuhao = "000" + xuhao;
+									SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+									xuhao = format.format(new Date()) + "-" + person.getSppDeptId() + "-" + xuhao;
+									person.setSppNo(xuhao);
+								} else if (xuhao.length() >= 2 && xuhao.length() < 3) {
+									xuhao = "00" + xuhao;
+									SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+									xuhao = format.format(new Date()) + "-" + person.getSppDeptId() + "-" + xuhao;
+									person.setSppNo(xuhao);
+								} else if (xuhao.length() >= 3 && xuhao.length() < 4) {
+									xuhao = "0" + xuhao;
+									SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+									xuhao = format.format(new Date()) + "-" + person.getSppDeptId() + "-" + xuhao;
+									person.setSppNo(xuhao);
+								} else {
+									SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+									xuhao = format.format(new Date()) + "-" + person.getSppDeptId() + "-" + xuhao;
+									person.setSppNo(xuhao);
+								}
+							} else {
+								SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+								xuhao = format.format(new Date()) + "-" + person.getSppDeptId() + "-0001";
+								person.setSppNo(xuhao);
+							}
+							if (user != null) {
+								person.setSppCreatename(user.getUserName());
+								person.setSppCreateid(user.getUserId());
+							}
+							person.setSppCreatetime(DateUtil.now());
+							person.setSppDeptId(deail.getSpDeptId());
+							person.setSppName(deail.getSpName());
+							person.setSppSpecification(deail.getSpSpecification());
+							person.setSppModel(deail.getSpModel());
+							person.setSppBrand(deail.getSpBrand());
+							person.setSppClassify(deail.getSpClassify());
+							person.setSppUnit(deail.getSpUnit());
+							person.setSppPersonid(deal.getSpPersonId());
+							person.setSppPersonname(deal.getSpPersonName());
+							if (StringUtils.isEmpty(person.getSppDate())) {
+								person.setSppDate(DateUtil.now());
+							}
+							person.setSppSpNo(deal.getSoiSpNo());
+							person.setSppGoodProductsNum(person.getSppGoodProductsNum() + deal.getSpNum());
+							ii = sparePartsStorePersonService.save(person);
+							if (ii) {
+								r.setMsg("审核成功");
+								r.setCode(200);
+								r.setSuccess(true);
+								return r;
+							} else {
+								r.setMsg("审核失败");
+								r.setCode(500);
+								r.setSuccess(false);
+								return r;
+							}
 						}else {
-							r.setMsg("审核失败");
-							r.setCode(500);
-							r.setSuccess(false);
-							return r;
+							person.setSppDeptId(deail.getSpDeptId());
+							person.setSppName(deail.getSpName());
+							person.setSppSpecification(deail.getSpSpecification());
+							person.setSppModel(deail.getSpModel());
+							person.setSppBrand(deail.getSpBrand());
+							person.setSppClassify(deail.getSpClassify());
+							person.setSppUnit(deail.getSpUnit());
+							person.setSppPersonid(deal.getSpPersonId());
+							person.setSppPersonname(deal.getSpPersonName());
+							if (user != null) {
+								person.setSppUpdatename(user.getUserName());
+								person.setSppUpdateid(user.getUserId());
+							}
+							person.setSppUpdatetime(DateUtil.now());
+							if(StringUtils.isEmpty(person.getSppDate())){
+								person.setSppDate(DateUtil.now());
+							}
+							person.setSppGoodProductsNum(person.getSppGoodProductsNum()+deal.getSpNum());
+							ii = sparePartsStorePersonService.updateById(person);
+							if(ii){
+								r.setMsg("审核成功");
+								r.setCode(200);
+								r.setSuccess(true);
+								return r;
+							}else {
+								r.setMsg("审核失败");
+								r.setCode(500);
+								r.setSuccess(false);
+								return r;
+							}
 						}
 					}
 				}

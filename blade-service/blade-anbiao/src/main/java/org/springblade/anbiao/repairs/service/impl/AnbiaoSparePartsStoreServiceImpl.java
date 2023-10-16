@@ -68,7 +68,7 @@ public class AnbiaoSparePartsStoreServiceImpl extends ServiceImpl<AnbiaoSparePar
 	}
 
 	@Override
-	public List<AnbiaoSparePartsStore> selectByDeptIdList(String deptId) {
-		return mapper.selectByDeptIdList(deptId);
+	public List<AnbiaoSparePartsStore> selectByDeptIdList(String deptId,String spWarehouseId) {
+		return mapper.selectByDeptIdList(deptId,spWarehouseId);
 	}
 }

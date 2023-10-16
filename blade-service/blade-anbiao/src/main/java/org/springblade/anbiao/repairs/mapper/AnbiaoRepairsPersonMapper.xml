@@ -86,6 +86,7 @@
             a.rp_id,
             a.rp_name,
             a.rp_phone,
+            a.rp_deptid,
             b.dept_name as rpDeptName
         from
             anbiao_repairs_person a
@@ -93,6 +94,12 @@
             <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) b on a.rp_deptid = b.id
         where a.rp_delete = 0
+        group by
+            a.rp_id,
+            a.rp_name,
+            a.rp_phone,
+            a.rp_deptid,
+            b.dept_name
     </select>
 
     <update id="updatePassWord" parameterType="java.lang.String">

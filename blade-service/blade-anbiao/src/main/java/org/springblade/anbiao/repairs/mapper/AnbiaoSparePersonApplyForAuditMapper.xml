@@ -35,14 +35,16 @@
 
     <sql id="tableSql">
         select
-            a.*
+            a.*,
+            b.dept_name  as rpDeptName,
+            sp.sp_name as spName
         from
             anbiao_spare_person_apply_for_audit a
         inner join  (
             <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) b on a.sp_dept_id = b.id
         inner join anbiao_spare_parts_store sp on sp.sp_no = a.soi_sp_no
-        where a.spp_delete = 0
+        where a.sp_delete = 0
             and sp.sp_delete = 0
     </sql>
 

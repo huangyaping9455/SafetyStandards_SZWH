@@ -9,8 +9,10 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
+import org.springblade.anbiao.repairs.entity.AnbiaoSparePartsStore;
 import org.springblade.anbiao.repairs.entity.AnbiaoSpareWarehouseInfo;
 import org.springblade.anbiao.repairs.page.AnbiaoSpareWarehouseInfoPage;
+import org.springblade.anbiao.repairs.service.IAnbiaoSparePartsStoreService;
 import org.springblade.anbiao.repairs.service.IAnbiaoSpareWarehouseInfoService;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
@@ -36,6 +38,8 @@ import java.util.List;
 public class AnbiaoSpareWarehouseInfoController {
 
 	private IAnbiaoSpareWarehouseInfoService warehouseInfoService;
+
+	private IAnbiaoSparePartsStoreService sparePartsStoreService;
 
 	@PostMapping("/list")
 	@ApiLog("备件仓库管理-分页")
@@ -146,15 +150,26 @@ public class AnbiaoSpareWarehouseInfoController {
 		spareWarehouseInfoQueryWrapper.lambda().eq(AnbiaoSpareWarehouseInfo::getWaDelete, 0);
 		AnbiaoSpareWarehouseInfo deal = warehouseInfoService.getBaseMapper().selectOne(spareWarehouseInfoQueryWrapper);
 		if (deal != null) {
-			deal.setWaDelete(1);
-			deal.setWaUpdatetime(DateUtil.now());
-			deal.setWaUpdatename(user.getUserName());
-			deal.setWaUpdateid(user.getUserId());
-			warehouseInfoService.updateById(deal);
-			r.setMsg("删除成功");
-			r.setCode(200);
-			r.setSuccess(true);
-			return r;
+			QueryWrapper<AnbiaoSparePartsStore> sparePartsStoreQueryWrapper = new QueryWrapper<AnbiaoSparePartsStore>();
+			sparePartsStoreQueryWrapper.lambda().eq(AnbiaoSparePartsStore::getSpWarehouseId, deal.getWaId());
+			sparePartsStoreQueryWrapper.lambda().eq(AnbiaoSparePartsStore::getSpDelete, 0);
+			List<AnbiaoSparePartsStore> deail = sparePartsStoreService.getBaseMapper().selectList(sparePartsStoreQueryWrapper);
+			if (deail.size() < 1) {
+				deal.setWaDelete(1);
+				deal.setWaUpdatetime(DateUtil.now());
+				deal.setWaUpdatename(user.getUserName());
+				deal.setWaUpdateid(user.getUserId());
+				warehouseInfoService.updateById(deal);
+				r.setMsg("删除成功");
+				r.setCode(200);
+				r.setSuccess(true);
+				return r;
+			}else{
+				r.setMsg("该仓库中还存在备件，不能进行删除！");
+				r.setCode(500);
+				r.setSuccess(true);
+				return r;
+			}
 		} else {
 			r.setMsg("无数据");
 			r.setCode(200);

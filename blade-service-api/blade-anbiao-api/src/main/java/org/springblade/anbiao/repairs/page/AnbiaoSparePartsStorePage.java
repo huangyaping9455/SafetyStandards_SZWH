@@ -29,6 +29,12 @@ public class AnbiaoSparePartsStorePage<T> extends BasePage<T> {
 	@ApiModelProperty(value = "备件名称")
 	private String spName;
 
+	@ApiModelProperty(value = "仓库ID")
+	private String spWarehouseId;
+
+	@ApiModelProperty(value = "备件编码")
+	private String spNo;
+
 }
 
 

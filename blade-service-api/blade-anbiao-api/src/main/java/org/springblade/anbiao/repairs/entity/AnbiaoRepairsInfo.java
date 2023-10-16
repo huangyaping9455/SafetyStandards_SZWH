@@ -168,4 +168,8 @@ public class AnbiaoRepairsInfo implements Serializable {
 	@TableField(exist = false)
 	private String hfstatus;
 
+	@ApiModelProperty(value = "报修配件List")
+	@TableField(exist = false)
+	private List<AnbiaoRepairsSpareInfo> repairsSpareInfoList;
+
 }

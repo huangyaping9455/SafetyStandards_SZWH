@@ -21,6 +21,6 @@ public interface AnbiaoSparePartsStoreMapper extends BaseMapper<AnbiaoSpareParts
 
 	AnbiaoSparePartsStore selectMaxXuhao(String deptId);
 
-	List<AnbiaoSparePartsStore> selectByDeptIdList(String deptId);
+	List<AnbiaoSparePartsStore> selectByDeptIdList(String deptId,String spWarehouseId);
 
 }

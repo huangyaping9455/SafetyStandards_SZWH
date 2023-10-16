@@ -70,10 +70,10 @@ public class AnbiaoSpareOutInWarehouse implements Serializable {
     private String soiSpModel;
 
     @ApiModelProperty(value = "良品数量")
-    private Integer soiSpGoodProductsNum;
+    private Integer soiSpGoodProductsNum = 0;
 
     @ApiModelProperty(value = "坏件数量")
-    private Integer soiSpBadProductsNum;
+    private Integer soiSpBadProductsNum = 0;
 
     @ApiModelProperty(value = "审核人ID")
     private String soiAuditUserId;
@@ -109,13 +109,13 @@ public class AnbiaoSpareOutInWarehouse implements Serializable {
     private String soiBrand;
 
     @ApiModelProperty(value = "备件分类")
-    private Integer soiClassify;
+    private Integer soiClassify = 1;
 
     @ApiModelProperty(value = "单位，对应数据字典值（个、条、台、套）")
-    private Integer soiUnit;
+    private Integer soiUnit = 1;
 
     @ApiModelProperty(value = "成本价格")
-    private Double soiCostPrice;
+    private Double soiCostPrice = 0.00;
 
 	@ApiModelProperty(value = "仓库名称")
 	private String soiWarehouse;
@@ -126,7 +126,6 @@ public class AnbiaoSpareOutInWarehouse implements Serializable {
 	@ApiModelProperty(value = "错误消息")
 	@TableField(exist = false)
 	private String msg;
-
 
 
 }

@@ -1,37 +1,17 @@
 package org.springblade.anbiao.qiye.timer;
 
 import cn.hutool.core.date.DateUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
-import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
-import org.springblade.anbiao.cheliangguanli.entity.*;
-import org.springblade.anbiao.cheliangguanli.service.IVehicleDaoluyunshuzhengService;
-import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
-import org.springblade.anbiao.cheliangguanli.service.IVehicleXingshizhengService;
-import org.springblade.anbiao.cheliangguanli.vo.BaoYangWeiXiuVO;
-import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
-import org.springblade.anbiao.jiaoyupeixun.entity.AnbiaoSafetyTraining;
-import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
-import org.springblade.anbiao.labor.entity.LaborlingquEntity;
-import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
-import org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoHiddenDangerVO;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * @author hyp

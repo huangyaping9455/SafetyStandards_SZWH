@@ -181,13 +181,14 @@ public class AnbiaoSparePartsStoreController {
 	}
 
 	@GetMapping("/getDriverRepairsCount")
-	@ApiLog("备件库管理-根据企业ID获取备件列表")
-	@ApiOperation(value = "备件库管理-根据企业ID获取备件列表", notes = "企业ID", position = 5)
+	@ApiLog("备件库管理-根据企业ID、仓库ID获取备件列表")
+	@ApiOperation(value = "备件库管理-根据企业ID、仓库ID获取备件列表", notes = "企业ID、仓库ID", position = 5)
 	@ApiImplicitParams({
-		@ApiImplicitParam(name = "deptId", value = "企业ID", required = true)
+		@ApiImplicitParam(name = "deptId", value = "企业ID"),
+		@ApiImplicitParam(name = "spWarehouseId", value = "仓库ID")
 	})
-	public R<List<AnbiaoSparePartsStore>> getDriverRepairsCount(String deptId) {
-		List<AnbiaoSparePartsStore> anbiaoSparePartsStores = sparePartsStoreService.selectByDeptIdList(deptId);
+	public R<List<AnbiaoSparePartsStore>> getDriverRepairsCount(String deptId,String spWarehouseId) {
+		List<AnbiaoSparePartsStore> anbiaoSparePartsStores = sparePartsStoreService.selectByDeptIdList(deptId,spWarehouseId);
 		return R.data(anbiaoSparePartsStores);
 	}
 
@@ -198,7 +199,6 @@ public class AnbiaoSparePartsStoreController {
 		R r = new R();
 		AnbiaoSparePartsStore deail = sparePartsStoreService.getById(spId);
 		if (deail != null) {
-			//本人照片(人员头像)
 			if (StrUtil.isNotEmpty(deail.getSpImg()) && deail.getSpImg().contains("http") == false) {
 				deail.setSpImg(fileUploadClient.getUrl(deail.getSpImg()));
 			}

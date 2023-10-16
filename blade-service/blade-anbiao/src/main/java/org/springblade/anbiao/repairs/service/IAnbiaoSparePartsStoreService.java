@@ -20,6 +20,6 @@ public interface IAnbiaoSparePartsStoreService extends IService<AnbiaoSpareParts
 
 	AnbiaoSparePartsStore selectMaxXuhao(String deptId);
 
-	List<AnbiaoSparePartsStore> selectByDeptIdList(String deptId);
+	List<AnbiaoSparePartsStore> selectByDeptIdList(String deptId,String spWarehouseId);
 
 }

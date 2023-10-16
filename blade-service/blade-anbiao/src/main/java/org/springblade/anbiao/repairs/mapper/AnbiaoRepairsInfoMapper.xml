@@ -61,6 +61,9 @@
         left join anbiao_repairs_return r on r.ret_rp_id = a.rp_id
 		where 1=1
 			and left(a.rp_date,10) >= left(#{date},10)
+            <if test="endDate != null and endDate != '' ">
+                and left(a.rp_date,10) &lt;= left(#{endDate},10)
+            </if>
             and a.rp_isdelete = 0
 	</sql>
 
@@ -167,6 +170,7 @@
             b.rp_yy_address,
             b.rp_classify,
             b.rp_isdelete,
+            b.rpDeptName,
             c.cheliangpaizhao,
             c.chepaiyanse,
             case when (b.rp_status = 3 and b.rp_status != d.rpdt_type and d.rpdt_person_id = #{driverId}) then d.rpdt_type else b.rp_status end as rp_status
@@ -182,7 +186,7 @@
                     and a.rp_type = #{rpType}
                 </if>
                 <if test="date != null and date != ''">
-                    and left(a.rp_date,10) >= left(#{date},10)
+                    and left(a.rp_date,10) = left(#{date},10)
                 </if>
             )b on a.rp_id = b.rpdt_person_id
             left join (
@@ -197,7 +201,7 @@
                         and a.rp_type = #{rpType}
                     </if>
                     <if test="date != null and date != ''">
-                        and left(a.rp_date,10) >= left(#{date},10)
+                        and left(a.rp_date,10) = left(#{date},10)
                     </if>
                     )
                 ORDER BY rpdt_date desc LIMIT 1
@@ -210,6 +214,14 @@
 
         <if test="cheliangpaizhao != null and cheliangpaizhao != '' ">
             and cheliangpaizhao like '%${cheliangpaizhao}%'
+        </if>
+
+        <if test="rpDeptName != null and rpDeptName != '' ">
+            and rpDeptName like '%${rpDeptName}%'
+        </if>
+
+        <if test="rpRelationPhone != null and rpRelationPhone != '' ">
+            and rp_relation_phone like '%${rpRelationPhone}%'
         </if>
 
         <if test="rpStatus != null ">

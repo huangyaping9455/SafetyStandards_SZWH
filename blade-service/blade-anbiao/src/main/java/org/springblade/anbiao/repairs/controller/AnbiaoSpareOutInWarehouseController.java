@@ -87,6 +87,9 @@ public class AnbiaoSpareOutInWarehouseController {
 				AnbiaoSpareOutInWarehouse deail = spareOutInWarehouseService.getBaseMapper().selectOne(dangerQueryWrapper);
 				if (deail == null) {
 					spareOutInWarehouse.setSoiDelete(0);
+					if(StringUtils.isNotEmpty(spareOutInWarehouse.getSoiSpNo())){
+						spareOutInWarehouse.setSoiSpNo(spareOutInWarehouse.getSoiSpNo());
+					}
 					//获取当前企业当天最大序列号 维修单号：20230620-4587-0001
 					String xuhao = "";
 					AnbiaoSpareOutInWarehouse AnbiaoSpareOutInWarehouse = spareOutInWarehouseService.selectMaxXuhao(spareOutInWarehouse.getSoiDeptId().toString());
@@ -125,6 +128,8 @@ public class AnbiaoSpareOutInWarehouseController {
 						spareOutInWarehouse.setSoiCreateid(user.getUserId());
 					}
 					spareOutInWarehouse.setSoiCreatetime(DateUtil.now());
+					spareOutInWarehouse.setSoiUserId(user.getUserId());
+					spareOutInWarehouse.setSoiUserName(user.getUserName());
 					ii = spareOutInWarehouseService.save(spareOutInWarehouse);
 					if (ii) {
 						r.setMsg("新增成功");
@@ -233,66 +238,7 @@ public class AnbiaoSpareOutInWarehouseController {
 			deal.setSoiUpdateid(user.getUserId());
 			boolean ii = spareOutInWarehouseService.updateById(deal);
 			if(ii){
-				QueryWrapper<AnbiaoSparePartsStore> dangerQueryWrapper = new QueryWrapper<AnbiaoSparePartsStore>();
-				dangerQueryWrapper.lambda().eq(AnbiaoSparePartsStore::getSpDeptId, deal.getSoiDeptId());
-				dangerQueryWrapper.lambda().eq(AnbiaoSparePartsStore::getSpName, deal.getSoiSpName());
-				dangerQueryWrapper.lambda().eq(AnbiaoSparePartsStore::getSpDelete, 0);
-				AnbiaoSparePartsStore deail = sparePartsStoreService.getBaseMapper().selectOne(dangerQueryWrapper);
-				if (deail == null) {
-					deail = new AnbiaoSparePartsStore();
-					deail.setSpDelete(0);
-					deail.setSpDeptId(deal.getSoiDeptId());
-					//获取当前企业当天最大序列号 维修单号：20230620-4587-0001
-					String xuhao = "";
-					AnbiaoSparePartsStore AnbiaoSparePartsStore = sparePartsStoreService.selectMaxXuhao(deal.getSoiDeptId().toString());
-					if (AnbiaoSparePartsStore != null && StringUtils.isNotEmpty(AnbiaoSparePartsStore.getSpNo())) {
-						xuhao = AnbiaoSparePartsStore.getSpNo().toString();
-						Integer xh = Integer.parseInt(xuhao.substring(xuhao.length() - 4));
-						xh = xh += 1;
-						xuhao = xh.toString();
-						if (xuhao.length() < 2) {
-							xuhao = "000" + xuhao;
-							SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-							xuhao = format.format(new Date()) + "-" + deail.getSpDeptId() + "-" + xuhao;
-							deail.setSpNo(xuhao);
-						} else if (xuhao.length() >= 2 && xuhao.length() < 3) {
-							xuhao = "00" + xuhao;
-							SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-							xuhao = format.format(new Date()) + "-" + deail.getSpDeptId() + "-" + xuhao;
-							deail.setSpNo(xuhao);
-						} else if (xuhao.length() >= 3 && xuhao.length() < 4) {
-							xuhao = "0" + xuhao;
-							SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-							xuhao = format.format(new Date()) + "-" + deail.getSpDeptId() + "-" + xuhao;
-							deail.setSpNo(xuhao);
-						} else {
-							SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-							xuhao = format.format(new Date()) + "-" + deail.getSpDeptId() + "-" + xuhao;
-							deail.setSpNo(xuhao);
-						}
-					} else {
-						SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-						xuhao = format.format(new Date()) + "-" + deail.getSpDeptId() + "-0001";
-						deail.setSpNo(xuhao);
-					}
-					if (user != null) {
-						deail.setSpCreatename(user.getUserName());
-						deail.setSpCreateid(user.getUserId());
-					}
-					deail.setSpCreatetime(DateUtil.now());
-					deail.setSpName(deal.getSoiSpName());
-					deail.setSpSpecification(deal.getSoiSpSpecification());
-					deail.setSpModel(deal.getSoiSpModel());
-					deail.setSpBrand(deal.getSoiBrand());
-					deail.setSpClassify(deal.getSoiClassify());
-					deail.setSpUnit(deal.getSoiUnit());
-					deail.setSpCostPrice(deal.getSoiCostPrice());
-					deail.setSpWarehouse(deal.getSoiWarehouse());
-					deail.setSpWarehouseId(deal.getSoiWarehouseId());
-					deail.setSpDeptId(deal.getSoiDeptId());
-					deail.setSpGoodProductsNum(deal.getSoiSpGoodProductsNum());
-					deail.setSpBadProductsNum(deal.getSoiSpBadProductsNum());
-					ii = sparePartsStoreService.save(deail);
+				if(spareOutInWarehouse.getSoiAuditStatus() != null && spareOutInWarehouse.getSoiAuditStatus() == 2){
 					if(ii){
 						r.setMsg("审核成功");
 						r.setCode(200);
@@ -304,13 +250,59 @@ public class AnbiaoSpareOutInWarehouseController {
 						r.setSuccess(false);
 						return r;
 					}
-				}else {
-					if(StringUtils.isNotEmpty(deail.getSpId())){
-						if (user != null) {
-							deail.setSpUpdatename(user.getUserName());
-							deail.setSpUpdateid(user.getUserId());
+				}else{
+					QueryWrapper<AnbiaoSparePartsStore> dangerQueryWrapper = new QueryWrapper<AnbiaoSparePartsStore>();
+					dangerQueryWrapper.lambda().eq(AnbiaoSparePartsStore::getSpDeptId, deal.getSoiDeptId());
+					dangerQueryWrapper.lambda().eq(AnbiaoSparePartsStore::getSpName, deal.getSoiSpName());
+					dangerQueryWrapper.lambda().eq(AnbiaoSparePartsStore::getSpDelete, 0);
+					AnbiaoSparePartsStore deail = sparePartsStoreService.getBaseMapper().selectOne(dangerQueryWrapper);
+					if (deail == null) {
+						deail = new AnbiaoSparePartsStore();
+						deail.setSpDelete(0);
+						deail.setSpDeptId(deal.getSoiDeptId());
+						if(StringUtils.isNotEmpty(deal.getSoiSpNo())){
+							deail.setSpNo(deal.getSoiSpNo());
+						}else{
+							//获取当前企业当天最大序列号 维修单号：20230620-4587-0001
+							String xuhao = "";
+							AnbiaoSparePartsStore AnbiaoSparePartsStore = sparePartsStoreService.selectMaxXuhao(deal.getSoiDeptId().toString());
+							if (AnbiaoSparePartsStore != null && StringUtils.isNotEmpty(AnbiaoSparePartsStore.getSpNo())) {
+								xuhao = AnbiaoSparePartsStore.getSpNo().toString();
+								Integer xh = Integer.parseInt(xuhao.substring(xuhao.length() - 4));
+								xh = xh += 1;
+								xuhao = xh.toString();
+								if (xuhao.length() < 2) {
+									xuhao = "000" + xuhao;
+									SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+									xuhao = format.format(new Date()) + "-" + deail.getSpDeptId() + "-" + xuhao;
+									deail.setSpNo(xuhao);
+								} else if (xuhao.length() >= 2 && xuhao.length() < 3) {
+									xuhao = "00" + xuhao;
+									SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+									xuhao = format.format(new Date()) + "-" + deail.getSpDeptId() + "-" + xuhao;
+									deail.setSpNo(xuhao);
+								} else if (xuhao.length() >= 3 && xuhao.length() < 4) {
+									xuhao = "0" + xuhao;
+									SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+									xuhao = format.format(new Date()) + "-" + deail.getSpDeptId() + "-" + xuhao;
+									deail.setSpNo(xuhao);
+								} else {
+									SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+									xuhao = format.format(new Date()) + "-" + deail.getSpDeptId() + "-" + xuhao;
+									deail.setSpNo(xuhao);
+								}
+							} else {
+								SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+								xuhao = format.format(new Date()) + "-" + deail.getSpDeptId() + "-0001";
+								deail.setSpNo(xuhao);
+							}
 						}
-						deail.setSpUpdatetime(DateUtil.now());
+
+						if (user != null) {
+							deail.setSpCreatename(user.getUserName());
+							deail.setSpCreateid(user.getUserId());
+						}
+						deail.setSpCreatetime(DateUtil.now());
 						deail.setSpName(deal.getSoiSpName());
 						deail.setSpSpecification(deal.getSoiSpSpecification());
 						deail.setSpModel(deal.getSoiSpModel());
@@ -321,9 +313,9 @@ public class AnbiaoSpareOutInWarehouseController {
 						deail.setSpWarehouse(deal.getSoiWarehouse());
 						deail.setSpWarehouseId(deal.getSoiWarehouseId());
 						deail.setSpDeptId(deal.getSoiDeptId());
-						deail.setSpGoodProductsNum(deal.getSoiSpGoodProductsNum()+deail.getSpGoodProductsNum());
-						deail.setSpBadProductsNum(deal.getSoiSpBadProductsNum()+deail.getSpBadProductsNum());
-						ii = sparePartsStoreService.updateById(deail);
+						deail.setSpGoodProductsNum(deal.getSoiSpGoodProductsNum());
+						deail.setSpBadProductsNum(deal.getSoiSpBadProductsNum());
+						ii = sparePartsStoreService.save(deail);
 						if(ii){
 							r.setMsg("审核成功");
 							r.setCode(200);
@@ -334,6 +326,38 @@ public class AnbiaoSpareOutInWarehouseController {
 							r.setCode(500);
 							r.setSuccess(false);
 							return r;
+						}
+					}else {
+						if(StringUtils.isNotEmpty(deail.getSpId())){
+							if (user != null) {
+								deail.setSpUpdatename(user.getUserName());
+								deail.setSpUpdateid(user.getUserId());
+							}
+							deail.setSpUpdatetime(DateUtil.now());
+							deail.setSpName(deal.getSoiSpName());
+							deail.setSpSpecification(deal.getSoiSpSpecification());
+							deail.setSpModel(deal.getSoiSpModel());
+							deail.setSpBrand(deal.getSoiBrand());
+							deail.setSpClassify(deal.getSoiClassify());
+							deail.setSpUnit(deal.getSoiUnit());
+							deail.setSpCostPrice(deal.getSoiCostPrice());
+							deail.setSpWarehouse(deal.getSoiWarehouse());
+							deail.setSpWarehouseId(deal.getSoiWarehouseId());
+							deail.setSpDeptId(deal.getSoiDeptId());
+							deail.setSpGoodProductsNum(deal.getSoiSpGoodProductsNum()+deail.getSpGoodProductsNum());
+							deail.setSpBadProductsNum(deal.getSoiSpBadProductsNum()+deail.getSpBadProductsNum());
+							ii = sparePartsStoreService.updateById(deail);
+							if(ii){
+								r.setMsg("审核成功");
+								r.setCode(200);
+								r.setSuccess(true);
+								return r;
+							}else {
+								r.setMsg("审核失败");
+								r.setCode(500);
+								r.setSuccess(false);
+								return r;
+							}
 						}
 					}
 				}
@@ -387,14 +411,7 @@ public class AnbiaoSpareOutInWarehouseController {
 					r.setSuccess(true);
 					return r;
 				}else {
-					if(StringUtils.isNotEmpty(deail.getSpId())){
-						if (user != null) {
-							deail.setSpUpdatename(user.getUserName());
-							deail.setSpUpdateid(user.getUserId());
-						}
-						deail.setSpUpdatetime(DateUtil.now());
-						deail.setSpGoodProductsNum(deail.getSpGoodProductsNum() - deal.getSoiSpGoodProductsNum());
-						ii = sparePartsStoreService.updateById(deail);
+					if(spareOutInWarehouse.getSoiAuditStatus() != null && spareOutInWarehouse.getSoiAuditStatus() == 2){
 						if(ii){
 							r.setMsg("审核成功");
 							r.setCode(200);
@@ -405,6 +422,27 @@ public class AnbiaoSpareOutInWarehouseController {
 							r.setCode(500);
 							r.setSuccess(false);
 							return r;
+						}
+					}else{
+						if(StringUtils.isNotEmpty(deail.getSpId())){
+							if (user != null) {
+								deail.setSpUpdatename(user.getUserName());
+								deail.setSpUpdateid(user.getUserId());
+							}
+							deail.setSpUpdatetime(DateUtil.now());
+							deail.setSpGoodProductsNum(deail.getSpGoodProductsNum() - deal.getSoiSpGoodProductsNum());
+							ii = sparePartsStoreService.updateById(deail);
+							if(ii){
+								r.setMsg("审核成功");
+								r.setCode(200);
+								r.setSuccess(true);
+								return r;
+							}else {
+								r.setMsg("审核失败");
+								r.setCode(500);
+								r.setSuccess(false);
+								return r;
+							}
 						}
 					}
 				}
@@ -470,6 +508,11 @@ public class AnbiaoSpareOutInWarehouseController {
 				if (deail != null) {
 					spareOutInWarehouse.setSoiWarehouseId(deail.getWaId());
 					spareOutInWarehouse.setSoiWarehouse(deail.getWaName());
+					spareOutInWarehouse.setSoiDeptId(deail.getWaDeptId());
+				}else{
+					spareOutInWarehouse.setMsg("该仓库不存在;");
+					errorStr += "该仓库不存在;";
+					bb++;
 				}
 			}
 //			//验证所属企业是否存在
@@ -499,6 +542,15 @@ public class AnbiaoSpareOutInWarehouseController {
 				bb++;
 			} else {
 				spareOutInWarehouse.setSoiSpName(soiSpName);
+			}
+			//验证备件编码不能为空
+			String soiSpNo = String.valueOf(a.get("备件编码")).trim();
+			if (StringUtils.isEmpty(soiSpNo) || soiSpNo.equals("null")) {
+				spareOutInWarehouse.setMsg("备件编码不能为空;");
+				errorStr += "备件编码不能为空;";
+				bb++;
+			} else {
+				spareOutInWarehouse.setSoiSpNo(soiSpNo);
 			}
 			//验证品牌
 			String soiBrand = String.valueOf(a.get("品牌")).trim();
@@ -570,7 +622,7 @@ public class AnbiaoSpareOutInWarehouseController {
 				spareOutInWarehouse.setSoiUserName(user.getUserName());
 			}
 			spareOutInWarehouse.setSoiDate(DateUtil.now());
-			spareOutInWarehouse.setSoiDeptId(deptId);
+			spareOutInWarehouse.setSoiDeptId(spareOutInWarehouse.getSoiDeptId());
 			spareOutInWarehouseList.add(spareOutInWarehouse);
 		}
 		if (bb > 0) {
@@ -589,10 +641,14 @@ public class AnbiaoSpareOutInWarehouseController {
 					QueryWrapper<AnbiaoSpareOutInWarehouse> dangerQueryWrapper = new QueryWrapper<AnbiaoSpareOutInWarehouse>();
 					dangerQueryWrapper.lambda().eq(AnbiaoSpareOutInWarehouse::getSoiDeptId, spareOutInWarehouse.getSoiDeptId());
 					dangerQueryWrapper.lambda().eq(AnbiaoSpareOutInWarehouse::getSoiSpNo, spareOutInWarehouse.getSoiSpNo());
+					dangerQueryWrapper.lambda().eq(AnbiaoSpareOutInWarehouse::getSoiDate, spareOutInWarehouse.getSoiDate());
 					dangerQueryWrapper.lambda().eq(AnbiaoSpareOutInWarehouse::getSoiDelete, 0);
 					AnbiaoSpareOutInWarehouse deail = spareOutInWarehouseService.getBaseMapper().selectOne(dangerQueryWrapper);
 					if (deail == null) {
 						spareOutInWarehouse.setSoiDelete(0);
+						if(StringUtils.isNotEmpty(spareOutInWarehouse.getSoiSpNo())){
+							spareOutInWarehouse.setSoiSpNo(spareOutInWarehouse.getSoiSpNo());
+						}
 						//获取当前企业当天最大序列号 维修单号：20230620-4587-0001
 						String xuhao = "";
 						AnbiaoSpareOutInWarehouse AnbiaoSpareOutInWarehouse = spareOutInWarehouseService.selectMaxXuhao(spareOutInWarehouse.getSoiDeptId().toString());
@@ -626,11 +682,12 @@ public class AnbiaoSpareOutInWarehouseController {
 							xuhao = format.format(new Date()) + "-" + spareOutInWarehouse.getSoiDeptId() + "-0001";
 							spareOutInWarehouse.setSoiNo(xuhao);
 						}
+
+
 						if (user != null) {
 							spareOutInWarehouse.setSoiCreatename(user.getUserName());
 							spareOutInWarehouse.setSoiCreateid(user.getUserId());
 						}
-						spareOutInWarehouse.setSoiCreatetime(DateUtil.now());
 						boolean ii = spareOutInWarehouseService.save(spareOutInWarehouse);
 						if (ii) {
 							rs.setMsg("导入成功");

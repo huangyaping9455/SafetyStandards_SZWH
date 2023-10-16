@@ -2282,7 +2282,7 @@
         from(
             <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             )a
-            LEFT JOIN(
+            inner JOIN(
                 select cid,ROUND(SUM(TravelMileage),2) as TravelMileage from baobiao_alarmdailyreport
                 where YEAR(date) = YEAR(NOW())
                     and MONTH(date) = MONTH(NOW())

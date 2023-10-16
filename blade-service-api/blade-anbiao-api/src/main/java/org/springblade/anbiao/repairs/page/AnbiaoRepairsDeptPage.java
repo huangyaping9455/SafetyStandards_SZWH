@@ -26,8 +26,11 @@ public class AnbiaoRepairsDeptPage<T> extends BasePage<T> {
 	@ApiModelProperty(value = "企业ID")
 	private String deptId;
 
-	@ApiModelProperty(value = "报修日期")
+	@ApiModelProperty(value = "报修日期",required = true)
 	private String date;
+
+	@ApiModelProperty(value = "报修日期结束日期",required = true)
+	private String endDate;
 
 	@ApiModelProperty(value = "车辆牌照")
 	private String cheliangpaizhao;
@@ -43,6 +46,12 @@ public class AnbiaoRepairsDeptPage<T> extends BasePage<T> {
 
 	@ApiModelProperty(value = "回访状态（已回访、未回访）")
 	private String hfstatus;
+
+	@ApiModelProperty(value = "客户单位名称")
+	private String rpDeptName;
+
+	@ApiModelProperty(value = "联系电话")
+	private String rpRelationPhone;
 
 }
 

@@ -17,10 +17,7 @@ import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService
 import org.springblade.anbiao.repairs.entity.*;
 import org.springblade.anbiao.repairs.entity.AnbiaoRepairsInfo;
 import org.springblade.anbiao.repairs.page.AnbiaoRepairsDeptPage;
-import org.springblade.anbiao.repairs.service.IAnbiaoRepairsInfoService;
-import org.springblade.anbiao.repairs.service.IAnbiaoRepairsPersonService;
-import org.springblade.anbiao.repairs.service.IAnbiaoRepairsRemarkService;
-import org.springblade.anbiao.repairs.service.IAnbiaoRepairsReturnService;
+import org.springblade.anbiao.repairs.service.*;
 import org.springblade.anbiao.zhengfu.entity.Organization;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
@@ -58,6 +55,11 @@ public class AnbiaoRepairsInfoController {
 
 	private IAnbiaoRepairsPersonService personService;
 
+	private IAnbiaoRepairsSpareInfoService repairsSpareInfoService;
+
+	private IAnbiaoSparePartsStorePersonService sparePartsStorePersonService;
+
+
 	@PostMapping("/insert")
 	@ApiLog("报修单管理-新增、编辑、派单、接单、预约、维修、审核、取消")
 	@ApiOperation(value = "报修单管理-新增、编辑、派单、接单、预约、维修、审核、取消", notes = "传入AnbiaoRepairsInfo", position = 1)
@@ -72,9 +74,31 @@ public class AnbiaoRepairsInfoController {
 			repairsInfo.setRpUpdatetime(DateUtil.now());
 			ii = repairsInfoService.updateById(repairsInfo);
 			if (ii) {
+				//添加设备使用记录
+				List<AnbiaoRepairsSpareInfo> repairsSpareInfoList = repairsInfo.getRepairsSpareInfoList();
+				if(repairsSpareInfoList != null && repairsSpareInfoList.size() > 0){
+					for (int i = 0; i < repairsSpareInfoList.size(); i++) {
+						AnbiaoRepairsSpareInfo repairsSpareInfo = repairsSpareInfoList.get(i);
+						repairsSpareInfo.setRppsCreatetime(DateUtil.now());
+						QueryWrapper<AnbiaoRepairsSpareInfo> repairsSpareInfoQueryWrapper = new QueryWrapper<AnbiaoRepairsSpareInfo>();
+
+						repairsSpareInfoQueryWrapper.lambda().eq(AnbiaoRepairsSpareInfo::getRppsRpId, repairsInfo.getRpId());
+						repairsSpareInfoQueryWrapper.lambda().eq(AnbiaoRepairsSpareInfo::getRppsSppNo, repairsSpareInfo.getRppsSppNo());
+						repairsSpareInfoQueryWrapper.lambda().eq(AnbiaoRepairsSpareInfo::getRppsSpNo, repairsSpareInfo.getRppsSpNo());
+						repairsSpareInfoQueryWrapper.lambda().eq(AnbiaoRepairsSpareInfo::getRppsNum, repairsSpareInfo.getRppsNum());
+						repairsSpareInfoQueryWrapper.lambda().eq(AnbiaoRepairsSpareInfo::getRppsCreatetime, repairsSpareInfo.getRppsCreatetime());
+						AnbiaoRepairsSpareInfo repairsSpareInfo1 = repairsSpareInfoService.getBaseMapper().selectOne(repairsSpareInfoQueryWrapper);
+						System.out.println(repairsSpareInfo1);
+						if(repairsSpareInfo1 == null && repairsSpareInfo.getRppsId() == null) {
+							ii = repairsSpareInfoService.save(repairsSpareInfo);
+						}
+
+					}
+				}
 				QueryWrapper<AnbiaoRepairsRemark> repairsRemarkQueryWrapper = new QueryWrapper<AnbiaoRepairsRemark>();
 				repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtRpId, repairsInfo.getRpId());
 				repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtType, repairsInfo.getRpStatus());
+				repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtDate, repairsInfo.getRpDate());
 				AnbiaoRepairsRemark repairsRemark = repairsRemarkService.getBaseMapper().selectOne(repairsRemarkQueryWrapper);
 				if(repairsRemark == null) {
 					AnbiaoRepairsRemark remark = repairsInfo.getRemark();
@@ -148,9 +172,46 @@ public class AnbiaoRepairsInfoController {
 							r.setSuccess(true);
 						}
 						if(9 == repairsInfo.getRpStatus() || 10 == repairsInfo.getRpStatus()){
-							r.setMsg("审核成功");
-							r.setCode(200);
-							r.setSuccess(true);
+							if(10 == repairsInfo.getRpStatus()){
+								//根据设备使用记录更新员工库存数据
+								repairsSpareInfoList = repairsInfo.getRepairsSpareInfoList();
+								if(repairsSpareInfoList != null && repairsSpareInfoList.size() > 0){
+									for (int i = 0; i < repairsSpareInfoList.size(); i++) {
+										AnbiaoRepairsSpareInfo repairsSpareInfo = repairsSpareInfoList.get(i);
+//										repairsSpareInfo.setRppsType(1);
+										repairsSpareInfo.setRppsId(repairsSpareInfo.getRppsId());
+										ii = repairsSpareInfoService.updateById(repairsSpareInfo);
+										//审核通过更新员工库存
+										if(repairsSpareInfo.getRppsType() == 1){
+											//员工库存管理
+											QueryWrapper<AnbiaoSparePartsStorePerson> storePersonQueryWrapper = new QueryWrapper<AnbiaoSparePartsStorePerson>();
+//										storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppDeptId, repairsSpareInfo.getDeptId());
+											storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppSpNo, repairsSpareInfo.getRppsSpNo());
+											storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppPersonid, repairsSpareInfo.getRppsCreateid());
+											storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppDelete, 0);
+											AnbiaoSparePartsStorePerson person = sparePartsStorePersonService.getBaseMapper().selectOne(storePersonQueryWrapper);
+											if (person != null) {
+												if (user != null) {
+													person.setSppUpdatename(user.getUserName());
+													person.setSppUpdateid(user.getUserId());
+												}
+												person.setSppUpdatetime(DateUtil.now());
+												person.setSppGoodProductsNum(person.getSppGoodProductsNum()-repairsSpareInfo.getRppsNum());
+												ii = sparePartsStorePersonService.updateById(person);
+												if(ii){
+													r.setMsg("审核成功");
+													r.setCode(200);
+													r.setSuccess(true);
+												}
+											}
+										}
+									}
+								}
+							}else{
+								r.setMsg("审核成功");
+								r.setCode(200);
+								r.setSuccess(true);
+							}
 						}
 						if(11 == repairsInfo.getRpStatus()){
 							r.setMsg("取消成功");
@@ -233,8 +294,7 @@ public class AnbiaoRepairsInfoController {
 								r.setSuccess(false);
 							}
 						}
-					}
-					if(repairsInfo.getRpStatus() == 6 || repairsInfo.getRpStatus() == 8){
+					}else if(repairsInfo.getRpStatus() == 6 || repairsInfo.getRpStatus() == 8){
 						AnbiaoRepairsRemark remark = repairsInfo.getRemark();
 						repairsRemarkQueryWrapper = new QueryWrapper<AnbiaoRepairsRemark>();
 						repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtRpId, repairsInfo.getRpId());
@@ -277,6 +337,10 @@ public class AnbiaoRepairsInfoController {
 								}
 							}
 						}
+					}else{
+						r.setMsg("编辑成功");
+						r.setCode(200);
+						r.setSuccess(true);
 					}
 				}
 			} else {
@@ -333,6 +397,19 @@ public class AnbiaoRepairsInfoController {
 				}
 				repairsInfo.setRpCreatetime(DateUtil.now());
 				ii = repairsInfoService.save(repairsInfo);
+//				//添加设备使用记录
+//				List<AnbiaoRepairsSpareInfo> repairsSpareInfoList = repairsInfo.getRepairsSpareInfoList();
+//				if(repairsSpareInfoList != null && repairsSpareInfoList.size() > 0){
+//					for (int i = 0; i < repairsSpareInfoList.size(); i++) {
+//						AnbiaoRepairsSpareInfo repairsSpareInfo = repairsSpareInfoList.get(i);
+//						if (user != null) {
+//							repairsSpareInfo.setRppsCreatename(user.getUserName());
+//							repairsSpareInfo.setRppsCreateid(user.getUserId());
+//						}
+//						repairsSpareInfo.setRppsCreatetime(DateUtil.now());
+//						ii = repairsSpareInfoService.save(repairsSpareInfo);
+//					}
+//				}
 				if (ii) {
 					QueryWrapper<AnbiaoRepairsRemark> repairsRemarkQueryWrapper = new QueryWrapper<AnbiaoRepairsRemark>();
 					repairsRemarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtRpId, repairsInfo.getRpId());
@@ -435,6 +512,25 @@ public class AnbiaoRepairsInfoController {
 		R r = new R();
 		AnbiaoRepairsInfo deail = repairsInfoService.getBaseMapper().selectById(Id);
 		if(deail != null) {
+			List<AnbiaoRepairsSpareInfo> repairsSpareTypeList = repairsSpareInfoService.selectByType(deail.getRpId());
+//			if(repairsSpareTypeList.size() > 1){
+//				//运单备件信息 第一次
+//				List<AnbiaoRepairsSpareInfo> repairsSpareInfo = repairsSpareInfoService.selectByDeptIdList(deail.getRpId(),"2");
+//				if(repairsSpareInfo != null && repairsSpareInfo.size() > 0){
+//					deail.setRepairsSpareInfoList1(repairsSpareInfo);
+//				}
+//				//运单备件信息 二次
+//				List<AnbiaoRepairsSpareInfo> repairsSpareInfoList1 = repairsSpareInfoService.selectByDeptIdList(deail.getRpId(),"1");
+//				if(repairsSpareInfoList1 != null && repairsSpareInfoList1.size() > 0){
+//					deail.setRepairsSpareInfoList2(repairsSpareInfoList1);
+//				}
+//			}else{
+//				//运单备件信息 一次
+//				List<AnbiaoRepairsSpareInfo> repairsSpareInfo = repairsSpareInfoService.selectByDeptIdList(deail.getRpId(),"1");
+//				if(repairsSpareInfo != null){
+//					deail.setRepairsSpareInfoList1(repairsSpareInfo);
+//				}
+//			}
 			QueryWrapper<Organizations> organizationQueryWrapper = new QueryWrapper<Organizations>();
 			organizationQueryWrapper.lambda().eq(Organizations::getDeptId, deail.getRpDeptId());
 			organizationQueryWrapper.lambda().eq(Organizations::getIsdelete,0);
@@ -451,7 +547,6 @@ public class AnbiaoRepairsInfoController {
 				deail.setCheliangpaizhao(vehicle.getCheliangpaizhao());
 				deail.setChepaiyanse(vehicle.getChepaiyanse());
 			}
-
 			QueryWrapper<AnbiaoRepairsRemark> remarkQueryWrapper = new QueryWrapper<AnbiaoRepairsRemark>();
 			remarkQueryWrapper.lambda().eq(AnbiaoRepairsRemark::getRpdtRpId, deail.getRpId());
 			remarkQueryWrapper.lambda().orderByDesc(AnbiaoRepairsRemark::getRpdtDate);
@@ -469,6 +564,15 @@ public class AnbiaoRepairsInfoController {
 					}
 				});
 				deail.setRepairsRemarkList(remark);
+			}
+			//添加设备使用记录
+			QueryWrapper<AnbiaoRepairsSpareInfo> repairsSpareInfoQueryWrapper = new QueryWrapper<AnbiaoRepairsSpareInfo>();
+			repairsSpareInfoQueryWrapper.lambda().eq(AnbiaoRepairsSpareInfo::getRppsRpId, deail.getRpId());
+			repairsSpareInfoQueryWrapper.lambda().eq(AnbiaoRepairsSpareInfo::getRppsDelete, 0);
+			repairsSpareInfoQueryWrapper.lambda().orderByAsc(AnbiaoRepairsSpareInfo::getRppsCreatetime);
+			List<AnbiaoRepairsSpareInfo> repairsSpareInfoList = repairsSpareInfoService.getBaseMapper().selectList(repairsSpareInfoQueryWrapper);
+			if(repairsSpareInfoList != null){
+				deail.setRepairsSpareInfoList(repairsSpareInfoList);
 			}
 			r.setMsg("获取成功");
 			r.setData(deail);

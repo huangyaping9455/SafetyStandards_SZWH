@@ -98,7 +98,8 @@
             wa_id,
             wa_no,
             wa_name,
-            wa_address
+            wa_address,
+            wa_dept_id
         from
             anbiao_spare_warehouse_info
         where wa_dept_id = #{deptId}
@@ -107,7 +108,8 @@
             wa_id,
             wa_no,
             wa_name,
-            wa_address
+            wa_address,
+            wa_dept_id
     </select>
 
 </mapper>

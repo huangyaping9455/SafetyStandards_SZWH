@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.repairs.mapper.AnbiaoRepairsSpareInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.repairs.entity.AnbiaoRepairsSpareInfo">
+        <id column="rpps_id" property="rppsId" />
+        <result column="rpps_rp_id" property="rppsRpId" />
+        <result column="rpps_spp_no" property="rppsSppNo" />
+        <result column="rpps_spp_name" property="rppsSppName" />
+        <result column="rpps_num" property="rppsNum" />
+        <result column="rpps_createtime" property="rppsCreatetime" />
+        <result column="rpps_createid" property="rppsCreateid" />
+        <result column="rpps_createname" property="rppsCreatename" />
+        <result column="rpps_delete" property="rppsDelete" />
+        <result column="rpps_sp_no" property="rppsSpNo" />
+        <result column="rpps_status" property="rppsStatus" />
+        <result column="rpps_type" property="rppsType" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        rpps_id, rpps_rp_id, rpps_spp_no, rpps_spp_name, rpps_num, rpps_createtime, rpps_createid, rpps_createname, rpps_delete, rpps_sp_no
+    </sql>
+
+    <select id="selectByDeptIdList" resultType="org.springblade.anbiao.repairs.entity.AnbiaoRepairsSpareInfo" parameterType="java.lang.String">
+        select
+            *
+        from
+            anbiao_repairs_spare_info
+        where 1=1
+        <if test="rppsRpId != null and rppsRpId != '' ">
+            and rpps_rp_id = #{rppsRpId}
+        </if>
+        <if test="rppsType == '2'.toString() ">
+            and rpps_type = 2
+        </if>
+        <if test="rppsType == '1'.toString() ">
+            and rpps_type in (0,1)
+        </if>
+            and rpps_delete = 0
+    </select>
+
+    <select id="selectByType" resultType="org.springblade.anbiao.repairs.entity.AnbiaoRepairsSpareInfo" parameterType="java.lang.String">
+        select
+            rpps_rp_id,
+            rpps_type
+        from
+            anbiao_repairs_spare_info
+        where 1=1
+        <if test="rppsRpId != null and rppsRpId != '' ">
+            and rpps_rp_id = #{rppsRpId}
+        </if>
+            and rpps_delete = 0
+        GROUP BY
+            rpps_rp_id,
+            rpps_type
+    </select>
+
+</mapper>

@@ -53,19 +53,19 @@ public class AnbiaoSparePartsStorePerson implements Serializable {
 
     @ApiModelProperty(value = "备件分类")
     @TableField("spp_classify")
-    private Integer sppClassify;
+    private Integer sppClassify = 1;
 
     @ApiModelProperty(value = "单位，对应数据字典值（个、条、台、套）")
     @TableField("spp_unit")
-    private Integer sppUnit;
+    private Integer sppUnit = 1;
 
     @ApiModelProperty(value = "良品库存数量")
     @TableField("spp_good_products_num")
-    private Integer sppGoodProductsNum;
+    private Integer sppGoodProductsNum = 0;
 
     @ApiModelProperty(value = "坏件库存数量")
     @TableField("spp_bad_products_num")
-    private Integer sppBadProductsNum;
+    private Integer sppBadProductsNum = 0;
 
     @ApiModelProperty(value = "创建时间")
     @TableField("spp_createtime")
@@ -114,6 +114,14 @@ public class AnbiaoSparePartsStorePerson implements Serializable {
     @ApiModelProperty(value = "备件编码")
     @TableField("spp_sp_no")
     private String sppSpNo;
+
+	@ApiModelProperty(value = "所属企业")
+	@TableField(exist = false)
+	private String rpDeptName;
+
+	@ApiModelProperty(value = "联系电话")
+	@TableField(exist = false)
+	private String rpPhone;
 
 
 }

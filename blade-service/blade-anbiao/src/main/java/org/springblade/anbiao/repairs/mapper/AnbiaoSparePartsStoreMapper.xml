@@ -56,6 +56,14 @@
             and sp_name like '%${spName}%'
         </if>
 
+        <if test="spNo != null and spNo != '' ">
+            and sp_no like '%${spNo}%'
+        </if>
+
+        <if test="spWarehouseId != null and spWarehouseId != '' ">
+            and sp_warehouse_id = #{spWarehouseId}
+        </if>
+
     </sql>
 
     <sql id="orderSql">
@@ -123,7 +131,13 @@
             sp_dept_id
         from
             anbiao_spare_parts_store
-        where sp_dept_id = #{deptId}
+        where 1=1
+        <if test="deptId != null and deptId != '' ">
+            and sp_dept_id = #{deptId}
+        </if>
+        <if test="spWarehouseId != null and spWarehouseId != '' ">
+            and sp_warehouse_id = #{spWarehouseId}
+        </if>
             and sp_delete = 0
         group by
             sp_id,

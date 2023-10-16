@@ -49,13 +49,13 @@ public class AnbiaoSparePartsStore implements Serializable {
     private String spBrand;
 
     @ApiModelProperty(value = "备件分类")
-    private Integer spClassify;
+    private Integer spClassify = 1;
 
     @ApiModelProperty(value = "单位，对应数据字典值（个、条、台、套）")
-    private Integer spUnit;
+    private Integer spUnit = 1;
 
     @ApiModelProperty(value = "成本价格")
-    private Double spCostPrice;
+    private Double spCostPrice = 0.00;
 
     @ApiModelProperty(value = "良品库存数量")
     private Integer spGoodProductsNum = 0;
@@ -91,7 +91,7 @@ public class AnbiaoSparePartsStore implements Serializable {
     private String spUpdatename;
 
     @ApiModelProperty(value = "删除标志，默认0,1：删除")
-    private Integer spDelete;
+    private Integer spDelete = 0;
 
     @ApiModelProperty(value = "备件附件")
     private String spImg;

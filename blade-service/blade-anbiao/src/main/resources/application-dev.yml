@@ -18,10 +18,6 @@ spring:
     #        username: root
     #        password: Ts2022
 
-    #    url: jdbc:mysql://221.10.137.57:22438/blade?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true
-    #    username: root
-    #    password: admin@xs
-
     #    url: jdbc:mysql://202.105.11.193:3366/blade_qg?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
     #    username: root
     #    password: admin@gzqy
@@ -45,6 +41,13 @@ spring:
     maxPoolPreparedStatementPerConnectionSize: 20  # // 池中能够缓冲的preparedStatements语句数量
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+
+  redis:
+    host: ${spring.redis.host}
+    port: ${spring.redis.port}
+    password: ${spring.redis.password}
+    database: 7
+    ssl: false
 
 #文件的物理路径前缀与url前缀
 fileserver:
