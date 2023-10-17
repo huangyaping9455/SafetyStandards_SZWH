@@ -270,6 +270,7 @@ public class AnbiaoSparePersonApplyForAuditController {
 						QueryWrapper<AnbiaoSparePartsStorePerson> storePersonQueryWrapper = new QueryWrapper<AnbiaoSparePartsStorePerson>();
 						storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppDeptId, deail.getSpDeptId());
 						storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppSpNo, deail.getSpNo());
+						storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppPersonid, deal.getSpPersonId());
 						storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppDelete, 0);
 						AnbiaoSparePartsStorePerson sparePartsStorePerson = sparePartsStorePersonService.getBaseMapper().selectOne(storePersonQueryWrapper);
 						if (sparePartsStorePerson == null) {
@@ -388,6 +389,7 @@ public class AnbiaoSparePersonApplyForAuditController {
 						QueryWrapper<AnbiaoSparePartsStorePerson> storePersonQueryWrapper = new QueryWrapper<AnbiaoSparePartsStorePerson>();
 						storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppDeptId, deail.getSpDeptId());
 						storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppSpNo, deail.getSpNo());
+						storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppPersonid, deal.getSpPersonId());
 						storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppDelete, 0);
 						AnbiaoSparePartsStorePerson person = sparePartsStorePersonService.getBaseMapper().selectOne(storePersonQueryWrapper);
 						if (person == null) {

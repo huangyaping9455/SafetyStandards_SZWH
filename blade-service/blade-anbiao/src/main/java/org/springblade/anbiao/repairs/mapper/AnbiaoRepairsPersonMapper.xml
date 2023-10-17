@@ -19,6 +19,7 @@
         <result column="rp_updatename" property="rpUpdatename" />
         <result column="rp_delete" property="rpDelete" />
         <result column="rp_openid" property="rpOpenid" />
+        <result column="rp_gzh_openid" property="rpGzhOpenid" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -42,6 +43,14 @@
 		<if test="deptName != null and deptName != '' ">
 			and rpDeptName like '%${deptName}%'
 		</if>
+
+        <if test="rpName != null and rpName != '' ">
+            and rp_name like '%${rpName}%'
+        </if>
+
+        <if test="rpRelationPhone != null and rpRelationPhone != '' ">
+            and rp_phone like '%${rpRelationPhone}%'
+        </if>
 	</sql>
 
 	<sql id="orderSql">

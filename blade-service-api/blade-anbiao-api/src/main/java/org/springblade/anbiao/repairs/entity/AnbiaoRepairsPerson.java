@@ -70,8 +70,11 @@ public class AnbiaoRepairsPerson implements Serializable {
     @ApiModelProperty(value = "是否删除，默认0,1：删除")
     private Integer rpDelete;
 
-	@ApiModelProperty(value = "Openid")
+	@ApiModelProperty(value = "小程序openID")
 	private String rpOpenid;
+
+	@ApiModelProperty(value = "公众号openID")
+	private String rpGzhOpenid;
 
 	@ApiModelProperty(value = "所属企业名称")
 	@TableField(exist = false)

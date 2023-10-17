@@ -2,8 +2,11 @@ package org.springblade.anbiao.config.wechat;
 
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springblade.anbiao.repairs.entity.AnbiaoRepairsPerson;
+import org.springblade.anbiao.repairs.service.IAnbiaoRepairsPersonService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +29,8 @@ public class WechatPushCrontab {
 	private static boolean taskFlag = false;
 	@Resource
 	public HttpUtils httpUtils;
+
+	private IAnbiaoRepairsPersonService personService;
 
 	public void run(String params) throws Exception {
 		//默认都是用正式模板
@@ -53,12 +58,21 @@ public class WechatPushCrontab {
 		// 获取关注用户
 		List<String> users = httpUtils.getUsers();
 		if (users != null && users.size() > 0) {
-			// 获取天气
+			System.out.println(users);
+			QueryWrapper<AnbiaoRepairsPerson> personQueryWrapper = new QueryWrapper<AnbiaoRepairsPerson>();
+			personQueryWrapper.lambda().eq(AnbiaoRepairsPerson::getRpPhone, "13224068007");
+			personQueryWrapper.lambda().eq(AnbiaoRepairsPerson::getRpDelete, 0);
+			AnbiaoRepairsPerson person = personService.getBaseMapper().selectOne(personQueryWrapper);
+			if(person != null){
+				// 获取天气
 //			WeatherModel weather = httpUtils.getWeather();
-			// 并行遍历推送
-			users.stream().parallel().forEach(x->{
-				if (x != null) {
-					String postData = messageTemplate.replace("{0}", x)
+				// 并行遍历推送
+				users.stream().parallel().forEach(x->{
+					System.out.println(x);
+					System.out.println(person.getRpGzhOpenid());
+					if(person.getRpGzhOpenid().equals(x)) {
+						if (x != null) {
+							String postData = messageTemplate.replace("{0}", x)
 //						.replace("{1}", weather.getDate())
 //						.replace("{2}", weather.getWeek())
 //						.replace("{3}", weather.getCity())
@@ -66,17 +80,19 @@ public class WechatPushCrontab {
 //						.replace("{5}", weather.getLow())
 //						.replace("{6}", weather.getHigh());
 
-						.replace("{1}", DateUtil.now())
-						.replace("{2}", "星期六")
-						.replace("{3}", "重庆市")
-						.replace("{4}", "阴天")
-						.replace("{5}", "15")
-						.replace("{6}", "20");
-					log.info("[发送模板信息]sendTemplateMessage:"+postData);
-					JSONObject jsonObject = HttpUtils.httpsRequest(sendUrl, "POST", postData);
-					log.info("[发送模板信息] sendTemplateMessage result:"+jsonObject);
-				}
-			});
+								.replace("{1}", DateUtil.now())
+								.replace("{2}", "星期六")
+								.replace("{3}", "重庆市")
+								.replace("{4}", "阴天")
+								.replace("{5}", "15")
+								.replace("{6}", "20");
+							log.info("[发送模板信息]sendTemplateMessage:"+postData);
+							JSONObject jsonObject = HttpUtils.httpsRequest(sendUrl, "POST", postData);
+							log.info("[发送模板信息] sendTemplateMessage result:"+jsonObject);
+						}
+					}
+				});
+			}
 		}
 	}
 
@@ -96,7 +112,7 @@ public class WechatPushCrontab {
 //			System.out.println("执行同步预警数据");
 //
 //			//获取驾驶员风险信息
-//			run(null);
+////			run(null);
 //
 //			System.out.println("执行完成");
 //		} catch (Exception e) {

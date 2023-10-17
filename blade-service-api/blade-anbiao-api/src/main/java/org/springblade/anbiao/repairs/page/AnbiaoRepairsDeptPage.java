@@ -53,6 +53,9 @@ public class AnbiaoRepairsDeptPage<T> extends BasePage<T> {
 	@ApiModelProperty(value = "联系电话")
 	private String rpRelationPhone;
 
+	@ApiModelProperty(value = "人员姓名")
+	private String rpName;
+
 }
 
 

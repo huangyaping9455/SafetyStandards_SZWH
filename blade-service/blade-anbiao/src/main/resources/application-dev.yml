@@ -9,18 +9,18 @@ spring:
       max-file-size: 1000MB
       max-request-size: 1000MB
   datasource:
-    url: ${blade.datasource.dev.url}
-    username: ${blade.datasource.dev.username}
-    password: ${blade.datasource.dev.password}
+#    url: ${blade.datasource.dev.url}
+#    username: ${blade.datasource.dev.username}
+#    password: ${blade.datasource.dev.password}
 
     #测试
     #        url: jdbc:mysql://120.78.198.161:3306/blade?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
     #        username: root
     #        password: Ts2022
 
-    #    url: jdbc:mysql://202.105.11.193:3366/blade_qg?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
-    #    username: root
-    #    password: admin@gzqy
+    url: jdbc:mysql://202.105.11.193:3366/blade_qg?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+    username: root
+    password: admin@gzqy
 
     driver-class-name: com.mysql.jdbc.Driver    #指定数据库驱动
     type: com.alibaba.druid.pool.DruidDataSource  #指定类型连接池
@@ -43,9 +43,13 @@ spring:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
 
   redis:
-    host: ${spring.redis.host}
-    port: ${spring.redis.port}
-    password: ${spring.redis.password}
+#    host: ${spring.redis.host}
+#    port: ${spring.redis.port}
+#    password: ${spring.redis.password}
+
+    host: 127.0.0.1
+    port: 6379
+    password: swh2022
     database: 7
     ssl: false
 
@@ -66,3 +70,11 @@ alarmserver:
 
 trainserver:
   search-score: 60
+
+wechat:
+  # 微信公众号账号
+  mappid: wx8d72399b90d7b5fa
+  # 微信公众号密码
+  msecret: 9369b95d0b0f9c0b7a72d9eb754227bc
+  # 微信公众账号原始ID
+  originalId: gh_bea908f00c63

@@ -280,64 +280,64 @@ public class SynchronousYAKTCrontab {
 	//每5分钟执行一次
 //	@Scheduled(cron = "0 */5 * * * ?")
 	//每2小时执行一次
-	@Scheduled(cron = "0 * */2 * * ?")
-	//每天凌晨5点执行一次
-//	@Scheduled(cron = "0 0 5 * * ?")
-	public void configureTasks_study() {
-		synchronized (KEY) {
-			if (SynchronousYAKTCrontab.taskFlag) {
-				System.out.println("定时任务-执行同步赛唯教育数据已经启动" + DateUtil.now());
-				log.info("定时任务-执行同步赛唯教育数据已经启动", DateUtil.now());
-				return;
-			}
-			SynchronousYAKTCrontab.taskFlag = true;
-		}
-		log.warn("定时任务-执行同步赛唯教育数据更新开始", DateUtil.now());
-		try {
-			System.out.println("执行同步赛唯教育数据");
-			if (StringUtils.isNotBlank(alarmServer.getAddressPath()) && "sw".equals(alarmServer.getAddressPath())){
-				//获取最近5天的日期
-//				String [] days = DateUtils.test(5).toArray(new String[0]);
-//				for (int i=0;i<days.length;i++){
-//					System.out.println(days[i]);
+//	@Scheduled(cron = "0 * */2 * * ?")
+//	//每天凌晨5点执行一次
+////	@Scheduled(cron = "0 0 5 * * ?")
+//	public void configureTasks_study() {
+//		synchronized (KEY) {
+//			if (SynchronousYAKTCrontab.taskFlag) {
+//				System.out.println("定时任务-执行同步赛唯教育数据已经启动" + DateUtil.now());
+//				log.info("定时任务-执行同步赛唯教育数据已经启动", DateUtil.now());
+//				return;
+//			}
+//			SynchronousYAKTCrontab.taskFlag = true;
+//		}
+//		log.warn("定时任务-执行同步赛唯教育数据更新开始", DateUtil.now());
+//		try {
+//			System.out.println("执行同步赛唯教育数据");
+//			if (StringUtils.isNotBlank(alarmServer.getAddressPath()) && "sw".equals(alarmServer.getAddressPath())){
+//				//获取最近5天的日期
+////				String [] days = DateUtils.test(5).toArray(new String[0]);
+////				for (int i=0;i<days.length;i++){
+////					System.out.println(days[i]);
+////				}
+//				//获取token
+//				String token = fillMethod();
+//				//获取学习地址
+//				addDriverStudyUrl(token);
+//
+//				//获取当天的日期
+//				String date = LocalDate.now().toString();
+//				List<OrganizationsVO> organizationsVOS = iOrganizationsService.selectByDeptName();
+//				if(organizationsVOS.size() >0){
+//					organizationsVOS.forEach(item->{
+//						Calendar now = Calendar.getInstance();
+//						//获取当前年份
+//						int nian = now.get(Calendar.YEAR);
+//						//获取当前月份
+//						int yue = now.get(Calendar.MONTH) + 1;
+//						List<Dict> dictVOList = iDictClient.getDictByCode("jiapeileixing",null);
+//						if(dictVOList.size() > 0){
+//							dictVOList.forEach(dict->{
+//								//获取学习记录
+//								try {
+//									String nianfen = Integer.toString(nian);
+//									String yuefen = Integer.toString(yue);
+//									addDriverStudyHours(item.getJigoubianma(),nianfen,yuefen,dict.getDictValue(),date,token);
+//								} catch (IOException e) {
+//									e.printStackTrace();
+//								}
+//							});
+//						}
+//					});
 //				}
-				//获取token
-				String token = fillMethod();
-				//获取学习地址
-				addDriverStudyUrl(token);
-
-				//获取当天的日期
-				String date = LocalDate.now().toString();
-				List<OrganizationsVO> organizationsVOS = iOrganizationsService.selectByDeptName();
-				if(organizationsVOS.size() >0){
-					organizationsVOS.forEach(item->{
-						Calendar now = Calendar.getInstance();
-						//获取当前年份
-						int nian = now.get(Calendar.YEAR);
-						//获取当前月份
-						int yue = now.get(Calendar.MONTH) + 1;
-						List<Dict> dictVOList = iDictClient.getDictByCode("jiapeileixing",null);
-						if(dictVOList.size() > 0){
-							dictVOList.forEach(dict->{
-								//获取学习记录
-								try {
-									String nianfen = Integer.toString(nian);
-									String yuefen = Integer.toString(yue);
-									addDriverStudyHours(item.getJigoubianma(),nianfen,yuefen,dict.getDictValue(),date,token);
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-							});
-						}
-					});
-				}
-			}
-			System.out.println("执行完成");
-		} catch (Exception e) {
-			log.error("定时任务-执行同步赛唯教育数据-执行出错", e.getMessage());
-		}
-		SynchronousYAKTCrontab.taskFlag = false;
-		System.err.println("执行静态定时任务时间: " + LocalDateTime.now());
-	}
+//			}
+//			System.out.println("执行完成");
+//		} catch (Exception e) {
+//			log.error("定时任务-执行同步赛唯教育数据-执行出错", e.getMessage());
+//		}
+//		SynchronousYAKTCrontab.taskFlag = false;
+//		System.err.println("执行静态定时任务时间: " + LocalDateTime.now());
+//	}
 }
 
