@@ -17,6 +17,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tools.zip.ZipOutputStream;
@@ -460,13 +461,18 @@ public class VehicleController {
 					xingshizheng.setAvxPlateNo(v.getCheliangpaizhao());
 					xingshizheng.setAvxVehicleType(v.getCheliangleixing());
 					xingshizheng.setAvxOwner(dept.getDeptName());
-					xingshizheng.setAvxAddress("住址");
+					xingshizheng.setAvxAddress(null);
 					xingshizheng.setAvxUseCharter(v.getShiyongxingzhi());
 					xingshizheng.setAvxModel(v.getCheliangxinghao());
 					xingshizheng.setAvxVin(v.getChejiahao());
 					xingshizheng.setAvxEngineNo(v.getFadongjihao());
 					xingshizheng.setAvxRegisterDate(v.getZhuceriqi());
-					xingshizheng.setAvxBaofeiTime(v.getQiangzhibaofeishijian());
+//					xingshizheng.setAvxBaofeiTime(vehicle.getBaofeiriqi());
+					if (StringUtils.isNotBlank(v.getQiangzhibaofeishijian())  && !v.getQiangzhibaofeishijian().equals("null")){
+						xingshizheng.setAvxBaofeiTime(v.getQiangzhibaofeishijian());
+					}else{
+						xingshizheng.setAvxBaofeiTime(v.getBaofeiriqi());
+					}
 					xingshizheng.setAvxIssueDate(v.getZhuceriqi());
 					if(v.getHedingzaikeshu() != null){
 						xingshizheng.setAvxAuthorizedSeatingCapacity(Integer.parseInt(v.getHedingzaikeshu()));
@@ -2418,6 +2424,8 @@ public class VehicleController {
 						}
 						if (StringUtils.isNotBlank(vehicle.getQiangzhibaofeishijian())  && !vehicle.getQiangzhibaofeishijian().equals("null")){
 							xingshizheng.setAvxBaofeiTime(vehicle.getQiangzhibaofeishijian());
+						}else{
+							xingshizheng.setAvxBaofeiTime(vehicle.getBaofeiriqi());
 						}
 						QueryWrapper<VehicleXingshizheng> xingshizhengQueryWrapper = new QueryWrapper<>();
 						xingshizhengQueryWrapper.lambda().eq(VehicleXingshizheng::getAvxAvIds,xingshizheng.getAvxAvIds());
@@ -3697,6 +3705,8 @@ public class VehicleController {
 						}
 						if (StringUtils.isNotBlank(vehicle.getQiangzhibaofeishijian())  && !vehicle.getQiangzhibaofeishijian().equals("null")){
 							xingshizheng.setAvxBaofeiTime(vehicle.getQiangzhibaofeishijian());
+						}else{
+							xingshizheng.setAvxBaofeiTime(vehicle.getBaofeiriqi());
 						}
 						QueryWrapper<VehicleXingshizheng> xingshizhengQueryWrapper = new QueryWrapper<>();
 						xingshizhengQueryWrapper.lambda().eq(VehicleXingshizheng::getAvxAvIds,xingshizheng.getAvxAvIds());
@@ -5928,7 +5938,7 @@ public class VehicleController {
 						xingshizheng.setAvxPlateNo(vehicle.getCheliangpaizhao());
 						xingshizheng.setAvxVehicleType(vehicle.getCheliangleixing());
 						xingshizheng.setAvxOwner(dept.getDeptName());
-						xingshizheng.setAvxAddress("住址");
+						xingshizheng.setAvxAddress("");
 						xingshizheng.setAvxUseCharter(vehicle.getShiyongxingzhi());
 						xingshizheng.setAvxModel(vehicle.getXinghao());
 //						xingshizheng.setAvxOwner(vehicle.getOwner());
@@ -5968,6 +5978,8 @@ public class VehicleController {
 						}
 						if (StringUtils.isNotBlank(vehicle.getQiangzhibaofeishijian())  && !vehicle.getQiangzhibaofeishijian().equals("null")){
 							xingshizheng.setAvxBaofeiTime(vehicle.getQiangzhibaofeishijian());
+						}else{
+							xingshizheng.setAvxBaofeiTime(vehicle.getBaofeiriqi());
 						}
 						QueryWrapper<VehicleXingshizheng> xingshizhengQueryWrapper = new QueryWrapper<>();
 						xingshizhengQueryWrapper.lambda().eq(VehicleXingshizheng::getAvxAvIds,xingshizheng.getAvxAvIds());

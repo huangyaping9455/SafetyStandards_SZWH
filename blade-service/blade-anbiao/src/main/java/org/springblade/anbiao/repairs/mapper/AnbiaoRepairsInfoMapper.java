@@ -1,7 +1,9 @@
 package org.springblade.anbiao.repairs.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.repairs.entity.AnbiaoRepairsInfo;
+import org.springblade.anbiao.repairs.entity.AnbiaoRepairsRemark;
 import org.springblade.anbiao.repairs.page.AnbiaoRepairsDeptPage;
 
 import java.util.List;
@@ -23,5 +25,7 @@ public interface AnbiaoRepairsInfoMapper extends BaseMapper<AnbiaoRepairsInfo> {
 
 	List<AnbiaoRepairsInfo> selectDriverPage(AnbiaoRepairsDeptPage anbiaoRepairsDeptPage);
 	int selectDriverTotal(AnbiaoRepairsDeptPage anbiaoRepairsDeptPage);
+
+	AnbiaoRepairsInfo selectRpStatus(@Param("driverId") String driverId,@Param("rpdtRpId") String rpdtRpId);
 
 }

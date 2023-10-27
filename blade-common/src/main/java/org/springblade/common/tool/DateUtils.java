@@ -632,10 +632,19 @@ public class DateUtils {
 		String endTime = "2021-10-18 14:07:00";
 		System.out.println(getTime(startTime, endTime));
 
-		String s1="2010-09-30";
-       	String s2="2010-09-29";
+		String s1="2023-06-17";
+       	String s2="2023-10-27";
 		int between = fun(s1, s2);
 		System.out.println("两个时间间隔天数为："+between);
+
+		System.out.println("111111111111111111111");
+
+		s1="2023-07-01";
+		s2="2023-10-27";
+		between = fun(s1, s2);
+		System.out.println("两个时间间隔天数为："+between);
+
+		System.out.println("222222222222222222222");
 
 
 		System.out.println("获取指定日期月的第一天、最后一天");

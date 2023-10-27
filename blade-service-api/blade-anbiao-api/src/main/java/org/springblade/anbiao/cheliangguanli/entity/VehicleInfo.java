@@ -172,6 +172,9 @@ public class VehicleInfo implements Serializable {
 	@ApiModelProperty(value = "强制报废时间")
 	private String qiangzhibaofeishijian;
 
+	@ApiModelProperty(value = "报废日期")
+	private String baofeiriqi;
+
 	@ApiModelProperty(value = "后轮距")
 	private String frontlunju;
 

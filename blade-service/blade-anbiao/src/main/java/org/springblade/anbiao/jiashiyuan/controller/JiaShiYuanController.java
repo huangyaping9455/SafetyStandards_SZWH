@@ -5169,8 +5169,8 @@ public class JiaShiYuanController extends BladeUser{
 
 					//行驶证正面
 					image = new WordImageEntity();
-					image.setHeight(220);
-					image.setWidth(350);
+					image.setHeight(350);
+					image.setWidth(600);
 					if (StringUtils.isNotBlank(t.getAvxOriginalEnclosure()) && !t.getAvxOriginalEnclosure().equals("null")) {
 						if (StrUtil.isNotEmpty(t.getAvxOriginalEnclosure()) && t.getAvxOriginalEnclosure().contains("http") == false) {
 							url1 = fileUploadClient.getUrl(t.getAvxOriginalEnclosure());
@@ -5215,8 +5215,8 @@ public class JiaShiYuanController extends BladeUser{
 
 					//行驶证反面
 					image = new WordImageEntity();
-					image.setHeight(220);
-					image.setWidth(350);
+					image.setHeight(350);
+					image.setWidth(600);
 					if (StringUtils.isNotBlank(t.getAvxCopyEnclosure()) && !t.getAvxCopyEnclosure().equals("null")) {
 						if (StrUtil.isNotEmpty(t.getAvxCopyEnclosure()) && t.getAvxCopyEnclosure().contains("http") == false) {
 							url1 = fileUploadClient.getUrl(t.getAvxCopyEnclosure());

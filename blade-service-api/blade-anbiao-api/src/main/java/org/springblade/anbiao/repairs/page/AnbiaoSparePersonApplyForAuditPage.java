@@ -29,8 +29,11 @@ public class AnbiaoSparePersonApplyForAuditPage<T> extends BasePage<T> {
 	@ApiModelProperty(value = "备件编码")
 	private String soiSpNo;
 
+	@ApiModelProperty(value = "备件名称")
+	private String spName;
+
 	@ApiModelProperty(value = "申请人名称")
-	private String spPersonname;
+	private String spPersonName;
 
 	@ApiModelProperty(value = "单据类型")
 	private Integer spType;

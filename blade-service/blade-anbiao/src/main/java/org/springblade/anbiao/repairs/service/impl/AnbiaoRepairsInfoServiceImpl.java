@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.repairs.entity.AnbiaoRepairsDept;
 import org.springblade.anbiao.repairs.entity.AnbiaoRepairsInfo;
+import org.springblade.anbiao.repairs.entity.AnbiaoRepairsRemark;
 import org.springblade.anbiao.repairs.mapper.AnbiaoRepairsInfoMapper;
 import org.springblade.anbiao.repairs.page.AnbiaoRepairsDeptPage;
 import org.springblade.anbiao.repairs.service.IAnbiaoRepairsInfoService;
@@ -101,6 +102,14 @@ public class AnbiaoRepairsInfoServiceImpl extends ServiceImpl<AnbiaoRepairsInfoM
 			anbiaoRepairsDeptPage.setTotal(total);
 			anbiaoRepairsDeptPage.setOffsetNo(offsetNo);
 			List<AnbiaoRepairsInfo> repairsInfos = repairsInfoMapper.selectDriverPage(anbiaoRepairsDeptPage);
+			repairsInfos.forEach(item-> {
+				AnbiaoRepairsInfo remark = repairsInfoMapper.selectRpStatus(anbiaoRepairsDeptPage.getDriverId(),item.getRpId());
+				if(remark != null){
+					item.setRpStatus(remark.getRpStatus());
+				}else {
+					item.setRpStatus(item.getRpStatus());
+				}
+			});
 			anbiaoRepairsDeptPage.setRecords(repairsInfos);
 		}
 		return anbiaoRepairsDeptPage;

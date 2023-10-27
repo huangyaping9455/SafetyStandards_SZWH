@@ -58,8 +58,12 @@
             and soi_sp_no like '%${soiSpNo}%'
         </if>
 
-        <if test="spPersonname != null and spPersonname != '' ">
-            and sp_person_name like '%${spPersonname}%'
+        <if test="spPersonName != null and spPersonName != '' ">
+            and sp_person_name like '%${spPersonName}%'
+        </if>
+
+        <if test="spName != null and spName != '' ">
+            and spName like '%${spName}%'
         </if>
 
         <if test="spType != null ">

@@ -2110,17 +2110,16 @@
                 b.xinghao,
                 a.LastLocateTime,
                 a.LastLocateTime as lastLineTime,
-                CONCAT(convert(TRUNCATE(TIMESTAMPDIFF(SECOND,a.LastLocateTime,#{tongjiriqi})/(24*3600), 0), char), '天') locate_DAY,
-                CONCAT(convert(TRUNCATE(TIMESTAMPDIFF(SECOND,a.LastLocateTime,#{tongjiriqi})%(24*3600)/3600, 0), char), '小时') locate_HOUR,
-                CONCAT(convert(TRUNCATE(TIMESTAMPDIFF(SECOND,a.LastLocateTime,#{tongjiriqi})%3600/60, 0), char), '分') locate_MINUTE,
-                CONCAT(convert(TRUNCATE((TIMESTAMPDIFF(SECOND,a.LastLocateTime,#{tongjiriqi}))%60, 0), char), '秒') locate_SECOND
+                CONCAT(convert(TRUNCATE(TIMESTAMPDIFF(SECOND,a.time,#{tongjiriqi})/(24*3600), 0), char), '天') locate_DAY,
+                CONCAT(convert(TRUNCATE(TIMESTAMPDIFF(SECOND,a.time,#{tongjiriqi})%(24*3600)/3600, 0), char), '小时') locate_HOUR,
+                CONCAT(convert(TRUNCATE(TIMESTAMPDIFF(SECOND,a.time,#{tongjiriqi})%3600/60, 0), char), '分') locate_MINUTE,
+                CONCAT(convert(TRUNCATE((TIMESTAMPDIFF(SECOND,a.time,#{tongjiriqi}))%60, 0), char), '秒') locate_SECOND
             from
                 tpvehdata a
                 inner join anbiao_vehicle b on a.Vehid = b.id
                 inner join blade_dept c on b.dept_id = c.id
             where b.dept_id = #{deptId}
               and b.is_deleted = 0
-              and a.locate = 1
             )a
         where a.locate_DAY >= #{day}
     </sql>

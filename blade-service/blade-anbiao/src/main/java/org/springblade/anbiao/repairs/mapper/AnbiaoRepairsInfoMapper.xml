@@ -275,4 +275,37 @@
         <include refid="queryDriverSql" />
     </select>
 
+    <select id="selectRpStatus" resultType="org.springblade.anbiao.repairs.entity.AnbiaoRepairsInfo">
+        select
+            case when (b.rp_status = 3 and b.rp_status != d.rpdt_type and d.rpdt_person_id = #{driverId}) then d.rpdt_type else b.rp_status end as rp_status
+        from
+            anbiao_repairs_person a
+                inner join (
+                select distinct a.*,b.rpdt_person_id,d.dept_name as rpDeptName from anbiao_repairs_info a,anbiao_repairs_remark b,blade_dept d
+                where a.rp_id = b.rpdt_rp_id
+                  and d.id = a.rp_dept_id
+                  and b.rpdt_person_id = #{driverId}
+                  and a.rp_isdelete = 0
+                <!-- and a.rp_type = 2
+                and left(a.rp_date,10) = left(#{date},10)-->
+          )b on a.rp_id = b.rpdt_person_id
+      left join (
+          select rpdt_person_id,rpdt_type,rpdt_rp_id from anbiao_repairs_remark
+          where rpdt_rp_id in(
+              select distinct a.rp_id from anbiao_repairs_info a,anbiao_repairs_remark b,blade_dept d
+              where a.rp_id = b.rpdt_rp_id
+                and d.id = a.rp_dept_id
+                and b.rpdt_person_id = #{driverId}
+                and a.rp_isdelete = 0
+            <!-- and a.rp_type = 2
+            and left(a.rp_date,10) = left(#{date},10) -->
+                  and rpdt_rp_id = #{rpdtRpId}
+            )
+            ORDER BY rpdt_date desc LIMIT 1
+		)d on b.rp_id = d.rpdt_rp_id
+        left join anbiao_vehicle c on c.id = b.rp_vehid
+        where 1=1
+          and rpdt_rp_id = #{rpdtRpId}
+    </select>
+
 </mapper>
