@@ -588,10 +588,18 @@
         from
             anbiao_organization a
             inner join(
-                select b.id from blade_dept a,blade_dept b
-                where b.tree_code like CONCAT(a.tree_code,'%')
-                    and a.id = #{deptId}
-                    and b.extend_type = '机构'
+                SELECT
+                    DISTINCT
+                    xiaji.id,
+                    xiaji.parent_id,
+                    xiaji.dept_name,
+                    xiaji.is_deleted
+                FROM
+                    blade_dept shangji,
+                    blade_dept xiaji
+                WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                    AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+                    AND shangji.id=#{deptId}
             )b on a.dept_id = b.id
         where jigouleixing in('qiye','geti')
             and a.isdelete = 0
@@ -615,10 +623,18 @@
         from
             anbiao_organization a
             inner join(
-                select b.id from blade_dept a,blade_dept b
-                where b.tree_code like CONCAT(a.tree_code,'%')
-                    and a.id = #{deptId}
-                    and b.extend_type = '机构'
+                SELECT
+                    DISTINCT
+                    xiaji.id,
+                    xiaji.parent_id,
+                    xiaji.dept_name,
+                    xiaji.is_deleted
+                FROM
+                    blade_dept shangji,
+                    blade_dept xiaji
+                WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                    AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+                    AND shangji.id=#{deptId}
             )b on a.dept_id = b.id
         where jigouleixing in('qiye','geti')
             and a.isdelete = 0

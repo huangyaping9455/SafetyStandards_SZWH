@@ -127,7 +127,15 @@ public class VehicleController {
 	@PostMapping("/list")
 	@ApiLog("分页-车辆资料管理")
     @ApiOperation(value = "分页-车辆资料管理", notes = "传入VehiclePage", position = 1)
-    public R<VehiclePage<VehicleListVO>> list(@RequestBody VehiclePage vehiclepage) {
+    public R<VehiclePage<VehicleListVO>> list(@RequestBody VehiclePage vehiclepage, BladeUser user) {
+		R r = new R();
+		if (user == null) {
+			r.setCode(401);
+			r.setMsg("用户权限验证失败");
+			r.setData(null);
+			r.setSuccess(false);
+			return r;
+		}
         VehiclePage<VehicleListVO> pages = vehicleService.selectVehiclePage(vehiclepage);
 //		List<VehicleVO>  list=pages.getRecords();
 //		for (int i = 0; i <list.size() ; i++) {
@@ -151,7 +159,15 @@ public class VehicleController {
     @GetMapping("/detail")
 	@ApiLog("详情-车辆资料管理")
     @ApiOperation(value = "详情-车辆资料管理", notes = "传入id", position = 2)
-    public R<VehicleInfo> detail(String id) {
+    public R<VehicleInfo> detail(String id,BladeUser user) {
+		R r = new R();
+		if (user == null) {
+			r.setCode(401);
+			r.setMsg("用户权限验证失败");
+			r.setData(null);
+			r.setSuccess(false);
+			return r;
+		}
         VehicleVO detail = vehicleService.selectByKey(id);
 		//车辆照片
 		if(StrUtil.isNotEmpty(detail.getCheliangzhaopian()) && detail.getCheliangzhaopian().contains("http") == false){
@@ -237,6 +253,15 @@ public class VehicleController {
 		v.setSimnum(detail.getSimnum());
 		v.setYunyingshangjieruma(detail.getYunyingshangjieruma());
 		v.setChangpai(detail.getChangpai());
+		v.setBencinianshenriqi(detail.getBencinianshenriqi());
+		v.setXiacinianshenriqi(detail.getXiacinianshenriqi());
+		v.setBencinianjianriqi(detail.getBencinianjianriqi());
+		v.setXiacinianjianriqi(detail.getXiacinianjianriqi());
+		v.setBencijipingriqi(detail.getBencijipingriqi());
+		v.setXiacijipingriqi(detail.getXiacijipingriqi());
+		v.setBaoxiandaoqishijian(detail.getBaoxiandaoqishijian());
+		v.setBaofeiriqi(detail.getBaofeiriqi());
+		v.setQiangzhibaofeishijian(detail.getBaofeiriqi());
 
 		QueryWrapper<VehicleBiangengjilu> biangengjiluQueryWrapper = new QueryWrapper<VehicleBiangengjilu>();
 		biangengjiluQueryWrapper.lambda().eq(VehicleBiangengjilu::getAvbjVehicleId,detail.getId());
@@ -326,7 +351,6 @@ public class VehicleController {
 	@ApiOperation(value = "新增-车辆资料管理【新版】", notes = "传入VehicleInfo", position = 30)
 	public R addSave(@RequestBody VehicleInfo v,BladeUser user) {
 		R r = new R();
-
 		if(user == null) {
 			r.setMsg("未授权");
 			r.setCode(401);
@@ -551,7 +575,6 @@ public class VehicleController {
 	@ApiOperation(value = "编辑-车辆资料管理【新版】", notes = "传入VehicleInfo", position = 31)
 	public R updateSave(@RequestBody VehicleInfo v,BladeUser user) {
     	R r = new R();
-
     	if(user == null) {
     		r.setMsg("未授权");
     		r.setCode(401);
@@ -629,6 +652,22 @@ public class VehicleController {
 		vehicle.setYunyingshang(v.getYunyingshang());
 		vehicle.setYunyingshangmingcheng(v.getYunyingshangmingcheng());
 		vehicle.setYunyingshangjieruma(v.getYunyingshangjieruma());
+
+		vehicle.setZongduanxinghao(v.getZongduanxinghao());
+		vehicle.setPlatformconnectiontype(v.getPlatformconnectiontype());
+		vehicle.setTerminalprotocoltype(v.getTerminalprotocoltype());
+		vehicle.setZhongduanchangshang(v.getZhongduanchangshang());
+		vehicle.setVideochannelnum(v.getVideochannelnum());
+
+		vehicle.setSimnum(v.getSimnum());
+		vehicle.setChangpai(v.getChangpai());
+		vehicle.setBencinianshenriqi(v.getBencinianshenriqi());
+		vehicle.setXiacinianshenriqi(v.getXiacinianshenriqi());
+		vehicle.setBencinianjianriqi(v.getBencinianjianriqi());
+		vehicle.setXiacinianjianriqi(v.getXiacinianjianriqi());
+		vehicle.setBencijipingriqi(v.getBencijipingriqi());
+		vehicle.setXiacijipingriqi(v.getXiacijipingriqi());
+		vehicle.setBaoxiandaoqishijian(v.getBaoxiandaoqishijian());
 //		String str="1";
 //		//登录页
 //		if(StringUtil.isNotBlank(vehicle.getCheliangzhaopian())){
@@ -636,6 +675,34 @@ public class VehicleController {
 //		}
 		boolean i = vehicleService.updateById(vehicle);
 		if(i==true){
+
+			if(v.getCheliangbiangengjilu() != null && v.getCheliangbiangengjilu().size() > 0) {
+				for(VehicleBiangengjilu biangengjilu:v.getCheliangbiangengjilu()) {
+					if(biangengjilu.getAvbjIds() != null){
+						VehicleBiangengjilu change = vehicleBiangengjiluService.getById(biangengjilu.getAvbjIds());
+						change.setAvbjVehicleId(vehicle.getId());
+						change.setAvbjDelete("0");
+						change.setAvbjCreateByName(user.getUserName());
+						change.setAvbjCreateByIds(user.getUserId().toString());
+						change.setAvbjCreateTime(LocalDateTime.now());
+						vehicleBiangengjiluService.updateById(change);
+					} else {
+						biangengjilu.setAvbjVehicleId(vehicle.getId());
+						biangengjilu.setAvbjDelete("0");
+						biangengjilu.setAvbjCreateByName(user.getUserName());
+						biangengjilu.setAvbjCreateByIds(user.getUserId().toString());
+						biangengjilu.setAvbjCreateTime(LocalDateTime.now());
+						vehicleBiangengjiluService.save(biangengjilu);
+					}
+
+//							QueryWrapper<VehicleBiangengjilu> biangengjiluQueryWrapper = new QueryWrapper<VehicleBiangengjilu>();
+//							biangengjiluQueryWrapper.lambda().eq(VehicleBiangengjilu::getAvbjVehicleId,vehicle.getId());
+//							biangengjiluQueryWrapper.lambda().eq(VehicleBiangengjilu::getAvbjDelete,"0");
+//							biangengjiluQueryWrapper.lambda().eq(VehicleBiangengjilu::getAvbjLicensePlate,vehicle.getCheliangpaizhao());
+//							VehicleBiangengjilu deail = vehicleBiangengjiluService.getBaseMapper().selectOne(biangengjiluQueryWrapper);
+				}
+			}
+
 //			new Thread(new Runnable() {
 //				@Override
 //				public void run() {
@@ -786,6 +853,14 @@ public class VehicleController {
 	@ApiOperation(value = "更新-车辆详细档案【新版】", notes = "传入Vehicle", position = 32)
 	public R updateDetailed(@RequestBody VehicleDetailed vd,BladeUser user) throws ParseException {
     	R r = new R();
+		if (user == null) {
+			r.setCode(401);
+			r.setMsg("用户权限验证失败");
+			r.setData(null);
+			r.setSuccess(false);
+			return r;
+		}
+
     	if(!StringUtil.isNotBlank(vd.getVehicleId())) {
     		r.setMsg("请传入车辆主键信息！");
 			r.setCode(500);
@@ -962,7 +1037,6 @@ public class VehicleController {
     @ApiOperation(value = "新增-车辆资料管理", notes = "传入Vehicle", position = 3)
     public R insert(@RequestBody Vehicle vehicle,BladeUser user) {
 		R r = new R();
-
 		if(user == null) {
 			r.setMsg("未授权");
 			r.setCode(401);
@@ -1033,6 +1107,13 @@ public class VehicleController {
     @ApiOperation(value = "修改-车辆资料管理", notes = "传入Vehicle", position = 4)
     public R update(@RequestBody Vehicle vehicle,BladeUser user) {
 		R r = new R();
+		if (user == null) {
+			r.setCode(401);
+			r.setMsg("用户权限验证失败");
+			r.setData(null);
+			r.setSuccess(false);
+			return r;
+		}
 		VehicleVO vehicleVO = vehicleService.selectCPYS(vehicle.getCheliangpaizhao(),vehicle.getChepaiyanse());
 //		if(vehicleVO!=null){
 //			r.setMsg(vehicleVO.getCheliangpaizhao()+"该车已存在");
@@ -1092,8 +1173,15 @@ public class VehicleController {
 	@PostMapping("/del")
 	@ApiLog("删除-车辆资料管理")
 	@ApiOperation(value = "删除-车辆资料管理", notes = "传入车辆id", position = 5)
-	public R del(@RequestParam String id) {
+	public R del(@RequestParam String id,BladeUser user) {
 		R r = new R();
+		if (user == null) {
+			r.setCode(401);
+			r.setMsg("用户权限验证失败");
+			r.setData(null);
+			r.setSuccess(false);
+			return r;
+		}
 		String[] idsss = id.split(",");
 		//去除素组中重复的数组
 		List<String> listid = new ArrayList<String>();
@@ -1122,8 +1210,15 @@ public class VehicleController {
 	@PostMapping("/updateVehicleOutStatus")
 	@ApiLog("停用-车辆资料管理")
 	@ApiOperation(value = "停用-车辆资料管理", notes = "传入车辆id", position = 15)
-	public R updateVehicleOutStatus(@RequestParam String id) {
+	public R updateVehicleOutStatus(@RequestParam String id,BladeUser user) {
 		R r = new R();
+		if (user == null) {
+			r.setCode(401);
+			r.setMsg("用户权限验证失败");
+			r.setData(null);
+			r.setSuccess(false);
+			return r;
+		}
 		String[] idsss = id.split(",");
 		//去除素组中重复的数组
 		List<String> listid = new ArrayList<String>();
@@ -1152,8 +1247,15 @@ public class VehicleController {
 	@PostMapping("/updateVehicleSignStatus")
 	@ApiLog("启用-车辆资料管理")
 	@ApiOperation(value = "启用-车辆资料管理", notes = "传入车辆id", position = 15)
-	public R updateVehicleSignStatus(@RequestParam String id) {
+	public R updateVehicleSignStatus(@RequestParam String id,BladeUser user) {
 		R r = new R();
+		if (user == null) {
+			r.setCode(401);
+			r.setMsg("用户权限验证失败");
+			r.setData(null);
+			r.setSuccess(false);
+			return r;
+		}
 		String[] idsss = id.split(",");
 		//去除素组中重复的数组
 		List<String> listid = new ArrayList<String>();
@@ -1182,8 +1284,15 @@ public class VehicleController {
 	@PostMapping("/updateVehicleScrapStatus")
 	@ApiLog("报废-车辆资料管理")
 	@ApiOperation(value = "报废-车辆资料管理", notes = "传入车辆id", position = 16)
-	public R updateVehicleScrapStatus(@RequestParam String id) {
+	public R updateVehicleScrapStatus(@RequestParam String id,BladeUser user) {
 		R r = new R();
+		if (user == null) {
+			r.setCode(401);
+			r.setMsg("用户权限验证失败");
+			r.setData(null);
+			r.setSuccess(false);
+			return r;
+		}
 		String[] idsss = id.split(",");
 		//去除素组中重复的数组
 		List<String> listid = new ArrayList<String>();

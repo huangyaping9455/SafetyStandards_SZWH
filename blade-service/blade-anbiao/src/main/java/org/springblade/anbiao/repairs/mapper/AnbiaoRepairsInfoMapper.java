@@ -28,4 +28,7 @@ public interface AnbiaoRepairsInfoMapper extends BaseMapper<AnbiaoRepairsInfo> {
 
 	AnbiaoRepairsInfo selectRpStatus(@Param("driverId") String driverId,@Param("rpdtRpId") String rpdtRpId);
 
+	AnbiaoRepairsInfo selectRepairsPerson(@Param("rpdtRpId") String rpdtRpId,@Param("type") Integer type);
+
+
 }

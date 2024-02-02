@@ -331,6 +331,10 @@
             AND cheliangpaizhao LIKE '%挂%'
         </if>
 
+        <if test='cheliangleixing !=null and cheliangleixing != ""and cheliangleixing == "0" '>
+            AND cheliangpaizhao not LIKE '%挂%'
+        </if>
+
         <if test="shiyongxingzhi !=null and shiyongxingzhi != '' ">
             AND shiyongxingzhi = #{shiyongxingzhi}
         </if>

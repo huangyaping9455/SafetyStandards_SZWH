@@ -7,8 +7,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
+import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanCongyezigezheng;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanJiashizheng;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
+import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanCongyezigezhengService;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanJiashizhengService;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
@@ -51,6 +53,8 @@ public class AnbiaoJiashiyuanJiashizhengController {
 	private IJiaShiYuanService jiaShiYuanService;
 	@Autowired
 	private AnbiaoRiskDetailController riskDetailController;
+
+	private IAnbiaoJiashiyuanCongyezigezhengService congyezigezhengService;
 
 	/**
 	 * 新增
@@ -222,10 +226,24 @@ public class AnbiaoJiashiyuanJiashizhengController {
 			jiaShiYuan.setJiashizhengfujian(jiashizheng.getAjjFrontPhotoAddress());
 			jiaShiYuan.setJiashizhengchulingriqi(jiashizheng.getAjjValidPeriodStart());
 			jiaShiYuan.setJiashizhengyouxiaoqi(jiashizheng.getAjjValidPeriodEnd());
+			jiaShiYuan.setShenfenzhenghao(jiashizheng.getAjjFileNo());
 			jiaShiYuanService.updateById(jiaShiYuan);
 
-			jiashizhengService.updateById(jiashizheng);
+			//向从业资格证信息表添加数据
+			QueryWrapper<AnbiaoJiashiyuanCongyezigezheng> congyezigezhengQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanCongyezigezheng>();
+			congyezigezhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanCongyezigezheng::getAjcAjIds, jiaShiYuan.getId());
+			congyezigezhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanCongyezigezheng::getAjcDelete, "0");
+			AnbiaoJiashiyuanCongyezigezheng cyzdeail = congyezigezhengService.getBaseMapper().selectOne(congyezigezhengQueryWrapper);
+			if (cyzdeail != null) {
+				cyzdeail.setAjcAjIds(jiashizheng.getAjjAjIds());
+				cyzdeail.setAjcCertificateNo(jiashizheng.getAjjFileNo());
+				cyzdeail.setAjcUpdateByIds(user.getUserId().toString());
+				cyzdeail.setAjcUpdateByName(user.getUserName());
+				cyzdeail.setAjcUpdateTime(DateUtil.now());
+				congyezigezhengService.updateById(cyzdeail);
+			}
 
+			jiashizhengService.updateById(jiashizheng);
 			String jiashiyuanId = jiashizheng.getAjjAjIds();
 			riskDetailController.jiashiyuanJiaShiZhengRiskinsert(jiashiyuanId,user);
 

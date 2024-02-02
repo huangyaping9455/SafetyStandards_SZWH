@@ -23,7 +23,6 @@ import cn.hutool.poi.excel.ExcelUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.ExcelWriter;
-import com.alibaba.excel.write.handler.CellWriteHandler;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.fill.FillConfig;
 import com.alibaba.excel.write.metadata.style.WriteCellStyle;
@@ -35,12 +34,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.tools.zip.ZipEntry;
-import org.apache.tools.zip.ZipOutputStream;
-import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxian;
-import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxianInfo;
-import org.springblade.anbiao.cheliangguanli.entity.JiashiyuanBaoxianMingxi;
+import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.service.IJiashiyuanBaoxianMingxiService;
 import org.springblade.anbiao.cheliangguanli.service.IJiashiyuanBaoxianService;
 import org.springblade.anbiao.cheliangguanli.service.IVehicleService;
@@ -51,9 +45,6 @@ import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanLedgerPage;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanRuzhiService;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanLedgerVO;
-import org.springblade.anbiao.labor.VO.LaborledgerVO;
-import org.springblade.anbiao.labor.entity.LaborlingquEntity;
-import org.springblade.anbiao.labor.page.laborledgerPage;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDetailService;
 import org.springblade.common.configurationBean.FileServer;
@@ -65,7 +56,6 @@ import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
-import org.springblade.core.tool.utils.DigestUtil;
 import org.springblade.core.tool.utils.StringUtil;
 import org.springblade.system.entity.Dept;
 import org.springblade.system.feign.ISysClient;
@@ -80,8 +70,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.*;
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -117,7 +105,15 @@ public class JiashiyuanBaoxianController extends BladeController {
 	 */
 	@GetMapping("/detail")
 	@ApiOperation(value = "详情", notes = "传入jiashiyuanBaoxian")
-	public R<JiashiyuanBaoxianInfo> detail(String ajbId) {
+	public R<JiashiyuanBaoxianInfo> detail(String ajbId,BladeUser user) {
+		R r = new R();
+		if (user == null) {
+			r.setCode(401);
+			r.setMsg("用户权限验证失败");
+			r.setData(null);
+			r.setSuccess(false);
+			return r;
+		}
 //		JiashiyuanBaoxian detail = jiashiyuanBaoxianService.getOne(Condition.getQueryWrapper(jiashiyuanBaoxian));
 		JiashiyuanBaoxianInfo detail = jiashiyuanBaoxianService.queryDetail(ajbId);
 		return R.data(detail);
@@ -125,8 +121,15 @@ public class JiashiyuanBaoxianController extends BladeController {
 
 	@GetMapping("/queryByDriver")
 	@ApiOperation(value = "根据被保险人ID查询保险详情", notes = "根据被保险人ID查询保险详情")
-	public R<JiashiyuanBaoxianInfo> queryByDept(String driverId) {
+	public R<JiashiyuanBaoxianInfo> queryByDept(String driverId,BladeUser user) {
 		R r = new R();
+		if (user == null) {
+			r.setCode(401);
+			r.setMsg("用户权限验证失败");
+			r.setData(null);
+			r.setSuccess(false);
+			return r;
+		}
 		JiashiyuanBaoxian deptBaoxian = new JiashiyuanBaoxian();
 		deptBaoxian.setAjbInsureIds(driverId);
 		deptBaoxian.setAjbDelete("0");
@@ -143,7 +146,15 @@ public class JiashiyuanBaoxianController extends BladeController {
 
 	@GetMapping("/queryByMax")
 	@ApiOperation(value = "根据被保险人ID查询上次保险记录", notes = "根据被保险人ID查询上次保险记录")
-	public R<JiashiyuanBaoxian> queryByMax(String driverId) {
+	public R<JiashiyuanBaoxian> queryByMax(String driverId,BladeUser user) {
+		R r = new R();
+		if (user == null) {
+			r.setCode(401);
+			r.setMsg("用户权限验证失败");
+			r.setData(null);
+			r.setSuccess(false);
+			return r;
+		}
 		return R.data(jiashiyuanBaoxianService.queryByMax(driverId));
 	}
 
@@ -201,6 +212,10 @@ public class JiashiyuanBaoxianController extends BladeController {
 			String avbInsureContacts = String.valueOf(mmap.get("投保人")).trim();
 			String avbInsureContactNumber = String.valueOf(mmap.get("投保联系人电话")).trim();
 			String avbmRisk = String.valueOf(mmap.get("保险种类")).trim();
+			if("安责险".equals(avbmRisk) || "意外险".equals(avbmRisk) || "其他险种".equals(avbmRisk)){
+				isFail=true;
+				errorStr += avbmRisk+"保险种类不存在！";
+			}
 			String avbmName = String.valueOf(mmap.get("保险名称")).trim();
 			String avbInsurancePeriodStart = String.valueOf(mmap.get("投保开始时间")).trim();
 			String avbInsurancePeriodEnd = String.valueOf(mmap.get("投保结束时间")).trim();
@@ -241,17 +256,24 @@ public class JiashiyuanBaoxianController extends BladeController {
 					if(avbInsuredDept != null) {
 						baoxian.setAjbDeptIds(new Long(avbInsuredDept.getId()));		//被保险人所属企业
 					} else {
-						errorStr += "没有查询到被保险单位！";
+						errorStr += avbInsuredName+"没有查询到被保险单位！";
+						r.setCode(500);
+						r.setMsg(errorStr);
+						return r;
 					}
 				} else {
 					isFail=true;
 					errorStr += "被保险单位不能为空！";
+					r.setCode(500);
+					r.setMsg(errorStr);
+					return r;
 				}
 				//被保险人
 				if(StringUtil.isNotBlank(avbInsuredContacts) && avbInsuredContacts != "null") {
 					JiaShiYuan jsy = new JiaShiYuan();
 					jsy.setJiashiyuanxingming(avbInsuredContacts);
 					jsy.setIsdelete(0);
+					jsy.setDeptId(avbInsuredDept.getId());
 					JiaShiYuan driver = jiaShiYuanService.getOne(Condition.getQueryWrapper(jsy));
 					if(driver != null) {
 						baoxian.setAjbInsuredIds(driver.getId());
@@ -267,11 +289,17 @@ public class JiashiyuanBaoxianController extends BladeController {
 							baoxian.setAjbInsuredContactAddress(ruzhiInfo.getAjrAddress());
 						}
 					} else {
-						errorStr += "没有查询到被保险人驾驶员！";
+						errorStr += avbInsuredContacts+"没有查询到该被保险人驾驶员！";
+						r.setCode(500);
+						r.setMsg(errorStr);
+						return r;
 					}
 				} else {
 					isFail=true;
 					errorStr += "被保驾驶员不能为空！";
+					r.setCode(500);
+					r.setMsg(errorStr);
+					return r;
 				}
 				if(StringUtil.isNotBlank(avbInsuranceCompany)) {
 					baoxian.setAjbInsuranceCompany(avbInsuranceCompany);
@@ -307,41 +335,76 @@ public class JiashiyuanBaoxianController extends BladeController {
 			} else {
 				successNum++;
 			}
-		}
-		baoxianInfo.setBaoxianMingxis(insurance);
-		if(failNum > 0) {
-			r.setCode(500);
-			r.setMsg(errorStr);
-			r.setSuccess(false);
-			r.setData(null);
-			return r;
-		} else {
-			baoxian.setAjbCreateTime(LocalDateTime.now());
-			baoxian.setAjbCreateByIds(user.getUserId().toString());
-			baoxian.setAjbCreateByName(user.getUserName());
-			boolean isSave = jiashiyuanBaoxianService.save(baoxian);
 
-			QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
-			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"驾驶员保险");
-			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
-			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,baoxian.getAjbInsuredIds());
-			riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,"无保险");
-			AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
-			if (riskDetail!=null){
-				riskDetail.setArdIsRectification("1");
-				riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
-				riskDetailService.getBaseMapper().updateById(riskDetail);
-			}
+			baoxianInfo.setBaoxianMingxis(insurance);
+			if(failNum > 0) {
+				r.setCode(500);
+				r.setMsg(errorStr);
+				r.setSuccess(false);
+				r.setData(null);
+				return r;
+			} else {
+				QueryWrapper<JiashiyuanBaoxian> jiashiyuanBaoxianQueryWrapper = new QueryWrapper<>();
+				jiashiyuanBaoxianQueryWrapper.lambda().eq(JiashiyuanBaoxian::getAjbPolicyNo,baoxian.getAjbPolicyNo());
+				jiashiyuanBaoxianQueryWrapper.lambda().eq(JiashiyuanBaoxian::getAjbDelete,"0");
+				JiashiyuanBaoxian jiashiyuanBaoxian = jiashiyuanBaoxianService.getBaseMapper().selectOne(jiashiyuanBaoxianQueryWrapper);
+				if (jiashiyuanBaoxian != null){
+					baoxian.setAjbIds(jiashiyuanBaoxian.getAjbIds());
+					jiashiyuanBaoxianService.updateById(baoxian);
+					for (JiashiyuanBaoxianMingxi baoxianMingxi: insurance) {
+						QueryWrapper<JiashiyuanBaoxianMingxi> deptBaoxianMingxiQueryWrapper = new QueryWrapper<>();
+						deptBaoxianMingxiQueryWrapper.lambda().eq(JiashiyuanBaoxianMingxi::getAjbmName,baoxianMingxi.getAjbmName());
+						deptBaoxianMingxiQueryWrapper.lambda().eq(JiashiyuanBaoxianMingxi::getAjbmRisk,baoxianMingxi.getAjbmRisk());
+						deptBaoxianMingxiQueryWrapper.lambda().eq(JiashiyuanBaoxianMingxi::getAjbmAvbIds,baoxian.getAjbIds());
+						JiashiyuanBaoxianMingxi jiashiyuanBaoxianMingxi = mingxiService.getBaseMapper().selectOne(deptBaoxianMingxiQueryWrapper);
+						if (jiashiyuanBaoxianMingxi != null){
+							baoxianMingxi.setAjbmIds(jiashiyuanBaoxianMingxi.getAjbmIds());
+							baoxianMingxi.setAjbmAvbIds(baoxian.getAjbIds());
+							if(StringUtil.isEmpty(baoxianMingxi.getAjbmName())){
+								baoxianMingxi.setAjbmName("人员");
+							}
+							mingxiService.getBaseMapper().updateById(baoxianMingxi);
+						}else {
+							baoxianMingxi.setAjbmAvbIds(baoxian.getAjbIds());
+							if(StringUtil.isEmpty(baoxianMingxi.getAjbmName())){
+								baoxianMingxi.setAjbmName("人员");
+							}
+							mingxiService.save(baoxianMingxi);
+						}
+					}
+				}else {
+					baoxian.setAjbCreateTime(LocalDateTime.now());
+					baoxian.setAjbCreateByIds(user.getUserId().toString());
+					baoxian.setAjbCreateByName(user.getUserName());
+					boolean isSave = jiashiyuanBaoxianService.save(baoxian);
 
-			for (JiashiyuanBaoxianMingxi baoxianMingxi: insurance) {
-				baoxianMingxi.setAjbmAvbIds(baoxian.getAjbIds());
-				if(StringUtil.isEmpty(baoxianMingxi.getAjbmName())){
-					baoxianMingxi.setAjbmName("人员");
+					QueryWrapper<AnbiaoRiskDetail> riskDetailQueryWrapper = new QueryWrapper<>();
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdTitle,"驾驶员保险");
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification,"0");
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdAssociationValue,baoxian.getAjbInsuredIds());
+					riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdContent,"无保险");
+					AnbiaoRiskDetail riskDetail = riskDetailService.getBaseMapper().selectOne(riskDetailQueryWrapper);
+					if (riskDetail!=null){
+						riskDetail.setArdIsRectification("1");
+						riskDetail.setArdRectificationDate(DateUtil.now().substring(0,10));
+						riskDetailService.getBaseMapper().updateById(riskDetail);
+					}
+
+					for (JiashiyuanBaoxianMingxi baoxianMingxi: insurance) {
+						baoxianMingxi.setAjbmAvbIds(baoxian.getAjbIds());
+						if(StringUtil.isEmpty(baoxianMingxi.getAjbmName())){
+							baoxianMingxi.setAjbmName("人员");
+						}
+						mingxiService.save(baoxianMingxi);
+					}
 				}
-				mingxiService.save(baoxianMingxi);
+//				return R.status(isSave);
 			}
-			return R.status(isSave);
+
 		}
+		r.setCode(200);
+		r.setSuccess(true);
+		return r;
 	}
 
 
@@ -489,7 +552,15 @@ public class JiashiyuanBaoxianController extends BladeController {
 	 */
 	@PostMapping("/submit")
 	@ApiOperation(value = "新增或修改", notes = "传入jiashiyuanBaoxian")
-	public R submit(@Valid @RequestBody JiashiyuanBaoxian jiashiyuanBaoxian) {
+	public R submit(@Valid @RequestBody JiashiyuanBaoxian jiashiyuanBaoxian,BladeUser user) {
+		R r = new R();
+		if (user == null) {
+			r.setCode(401);
+			r.setMsg("用户权限验证失败");
+			r.setData(null);
+			r.setSuccess(false);
+			return r;
+		}
 		return R.status(jiashiyuanBaoxianService.saveOrUpdate(jiashiyuanBaoxian));
 	}
 
@@ -499,7 +570,15 @@ public class JiashiyuanBaoxianController extends BladeController {
 	 */
 	@PostMapping("/remove")
 	@ApiOperation(value = "逻辑删除", notes = "传入ids")
-	public R remove(@ApiParam(value = "主键集合", required = true) @RequestParam String ids) {
+	public R remove(@ApiParam(value = "主键集合", required = true) @RequestParam String ids,BladeUser user) {
+		R r = new R();
+		if (user == null) {
+			r.setCode(401);
+			r.setMsg("用户权限验证失败");
+			r.setData(null);
+			r.setSuccess(false);
+			return r;
+		}
 		String[] idsss = ids.split(",");
 		List<JiashiyuanBaoxian> deptBaoxians = new ArrayList<>();
 		for(String id:idsss) {
@@ -598,6 +677,13 @@ public class JiashiyuanBaoxianController extends BladeController {
 	public R goExport_Excel(HttpServletRequest request, HttpServletResponse response, String deptId , String date, BladeUser user) throws IOException {
 		int a=1;
 		R rs = new R();
+		if (user == null) {
+			rs.setCode(401);
+			rs.setMsg("用户权限验证失败");
+			rs.setData(null);
+			rs.setSuccess(false);
+			return rs;
+		}
 		String uuid = UUID.randomUUID().toString().replace("-", "");
 		List<String> urlList = new ArrayList<>();
 		JiaShiYuanLedgerPage jiaShiYuanLedgerPage = new JiaShiYuanLedgerPage();
@@ -799,6 +885,13 @@ public class JiashiyuanBaoxianController extends BladeController {
 	@ApiOperation(value = "保险明细信息-导出", notes = "传入JiaShiYuanLedgerPage", position = 22)
 	public R goExport_MingXi_Excel(HttpServletRequest request, HttpServletResponse response, String deptId , String date, BladeUser user) throws IOException {
 		R rs = new R();
+		if (user == null) {
+			rs.setCode(401);
+			rs.setMsg("用户权限验证失败");
+			rs.setData(null);
+			rs.setSuccess(false);
+			return rs;
+		}
 		String uuid = UUID.randomUUID().toString().replace("-", "");
 		JiaShiYuanLedgerVO jiaShiYuanLedgerVO = new JiaShiYuanLedgerVO();
 		String PDF;
@@ -1274,6 +1367,13 @@ public class JiashiyuanBaoxianController extends BladeController {
 	@ApiOperation(value = "总保单-导出", notes = "传入JiaShiYuanLedgerPage", position = 22)
 	public R goExport_MasterPolicy_Excel(HttpServletRequest request, HttpServletResponse response, String deptId , String date, BladeUser user) throws IOException {
 		R rs = new R();
+		if (user == null) {
+			rs.setCode(401);
+			rs.setMsg("用户权限验证失败");
+			rs.setData(null);
+			rs.setSuccess(false);
+			return rs;
+		}
 		String uuid = UUID.randomUUID().toString().replace("-", "");
 		JiaShiYuanLedgerVO jiaShiYuanLedgerVO = new JiaShiYuanLedgerVO();
 		List<Map> ListData = new ArrayList<Map>();

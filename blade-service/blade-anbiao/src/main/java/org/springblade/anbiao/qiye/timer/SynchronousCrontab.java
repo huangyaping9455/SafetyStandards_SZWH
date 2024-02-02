@@ -817,6 +817,8 @@ public class SynchronousCrontab {
 		vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel,0);
 		List<Vehicle> vehicleList = vehicleService.getBaseMapper().selectList(vehicleQueryWrapper);
 		for (Vehicle vehicle:vehicleList) {
+			System.out.println("++++++++++++++++++++++++++++++++++++++");
+			System.out.println(vehicle.getId());
 			//车辆行驶证
 			QueryWrapper<VehicleXingshizheng> xingshizhengQueryWrapper = new QueryWrapper<>();
 			xingshizhengQueryWrapper.lambda().eq(VehicleXingshizheng::getAvxAvIds,vehicle.getId());
@@ -845,7 +847,7 @@ public class SynchronousCrontab {
 				}
 
 				//注册日期
-				if(xingshizheng.getAvxRegisterDate() != null) {
+				if(StringUtils.isNotEmpty(xingshizheng.getAvxRegisterDate())) {
 				} else {
 //					riskDetail.setArdTitle("注册日期");
 //					riskDetail.setArdContent("注册日期缺项");
@@ -856,7 +858,7 @@ public class SynchronousCrontab {
 				}
 
 				//有效期
-				if(xingshizheng.getAvxValidUntil() != null) {
+				if(StringUtils.isNotEmpty(xingshizheng.getAvxValidUntil())) {
 					riskDetail.setDaoqishijian(xingshizheng.getAvxValidUntil().toString());
 //					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.CHINA);
 					int timeDifference = differentDays(DateUtil.now(),xingshizheng.getAvxValidUntil());
@@ -880,6 +882,10 @@ public class SynchronousCrontab {
 //					riskDetail.setArdRectificationFieldType("date");
 //					queryRiskOrInsert(riskDetail);
 				}
+			}
+
+			if(vehicle.getId().equals("ce3c3c066691479e9bf4761066ac54d4")){
+				System.out.println("黑娃，你快来看看");
 			}
 
 			//道路运输证
@@ -909,7 +915,7 @@ public class SynchronousCrontab {
 				}
 
 				//注册日期
-				if(daoluyunshuzheng.getAvdIssueDate() != null) {
+				if(StringUtils.isNotEmpty(daoluyunshuzheng.getAvdIssueDate())) {
 				} else {
 //					riskDetail.setArdTitle("发证日期");
 //					riskDetail.setArdContent("发证日期缺项");
@@ -920,7 +926,7 @@ public class SynchronousCrontab {
 				}
 
 				//有效期
-				if(daoluyunshuzheng.getAvdValidUntil() != null) {
+				if(StringUtils.isNotEmpty(daoluyunshuzheng.getAvdValidUntil())) {
 					riskDetail.setDaoqishijian(daoluyunshuzheng.getAvdValidUntil().toString());
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.CHINA);
 					//formatter.format()
@@ -2628,9 +2634,9 @@ public class SynchronousCrontab {
 	}
 
 	//每6小时执行一次
-	@Scheduled(cron = "0 0 */6 * * ?")
+//	@Scheduled(cron = "0 0 */6 * * ?")
 	//每天凌晨5点执行一次
-//	@Scheduled(cron = "0 34 18 * * ?")
+	@Scheduled(cron = "0 01 15 * * ?")
 	public void configureTasks_static_data() {
 		synchronized (KEY) {
 			if (SynchronousCrontab.taskFlag) {
@@ -2645,58 +2651,76 @@ public class SynchronousCrontab {
 			System.out.println("执行同步预警数据");
 
 			//获取驾驶员风险信息
-			addQYDriverList();
-
-			//获取车辆风险信息
-			addQyVehicleList();
-
-			//入职表风险
-			RuZhiRiskinsert();
-
-			//身份证风险
-			ShenFenZhengRiskinsert();
-
-			//驾驶证风险
-			JiaShiZhengRiskinsert();
-
-			//从业资格证风险
-			CongYeZhengRiskinsert();
-
-			//体检表风险
-			TiJianRiskinsert();
-
-			//岗前培训风险
-			GangQianPeiXunRiskinsert();
-
-			//无责证明风险
-			WuZeZhengMingRiskinsert();
-
-			//安全责任书风险
-			AnQuanZeRenShuRiskinsert();
-
-			//危害告知书风险
-			WeiHaiGaoZhiShuRiskinsert();
-
-			//劳动合同风险
-			LaoDongHeTongRiskinsert();
-
-			//安全会议风险
-			AnQuanHuiYiRiskinsert();
-
-			//安全培训风险
-			AnQuanPeiXunRiskinsert();
-
-			//隐患排查风险
-			YinHuanPaiChaRiskinsert();
-
-			//维修登记风险
-			WeiXiuDengJiRiskinsert();
+//			addQYDriverList();
+//			System.out.println("____________111111111111111111111_______________");
+//
+//			//获取车辆风险信息
+//			addQyVehicleList();
+//			System.out.println("____________222222222222222222222_______________");
+//
+//			//入职表风险
+//			RuZhiRiskinsert();
+//			System.out.println("____________33333333333333333333333_______________");
+//
+//			//身份证风险
+//			ShenFenZhengRiskinsert();
+//			System.out.println("____________444444444444444444444444444444_______________");
+//
+//			//驾驶证风险
+//			JiaShiZhengRiskinsert();
+//			System.out.println("____________55555555555555555555555_______________");
+//
+//			//从业资格证风险
+//			CongYeZhengRiskinsert();
+//			System.out.println("____________66666666666666666666_______________");
+//
+//			//体检表风险
+//			TiJianRiskinsert();
+//			System.out.println("____________7777777777777777777777777777_______________");
+//
+//			//岗前培训风险
+//			GangQianPeiXunRiskinsert();
+//			System.out.println("____________88888888888888888888888888888888888_______________");
+//
+//			//无责证明风险
+//			WuZeZhengMingRiskinsert();
+//			System.out.println("____________99999999999999999999999999_______________");
+//
+//			//安全责任书风险
+//			AnQuanZeRenShuRiskinsert();
+//			System.out.println("____________AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA_______________");
+//
+//			//危害告知书风险
+//			WeiHaiGaoZhiShuRiskinsert();
+//			System.out.println("____________BBBBBBBBBBBBBBBBBBBBBBBBB_______________");
+//
+//			//劳动合同风险
+//			LaoDongHeTongRiskinsert();
+//			System.out.println("____________CCCCCCCCCCCCCCCCCCCC_______________");
+//
+//			//安全会议风险
+//			AnQuanHuiYiRiskinsert();
+//			System.out.println("____________DDDDDDDDDDDDDDDDDDDD_______________");
+//
+//			//安全培训风险
+//			AnQuanPeiXunRiskinsert();
+//			System.out.println("____________EEEEEEEEEEEEEEEEEEEEEEE_______________");
+//
+//			//隐患排查风险
+//			YinHuanPaiChaRiskinsert();
+//			System.out.println("____________FFFFFFFFFFFFFFFFFFFFFFFFFFF_______________");
+//
+//			//维修登记风险
+//			WeiXiuDengJiRiskinsert();
+//			System.out.println("____________GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG_______________");
 
 			//劳保用品风险
 			LaBorRiskinsert();
+			System.out.println("____________HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH_______________");
 
 			//安全检查风险
 			AnQuanJianChaRiskinsert();
+			System.out.println("____________IIIIIIIIIIIIIIIIIIIIIIIIIIII_______________");
 
 			//行驶证风险
 			XingShiZhengRiskinsert();

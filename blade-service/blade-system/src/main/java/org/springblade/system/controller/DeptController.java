@@ -1137,7 +1137,7 @@ public class DeptController extends BladeController {
 				AnbiaoJiashiyuan shenfenzhengZM = new AnbiaoJiashiyuan();
 				shenfenzhengZM.setJiashiyuanxingming(anbiaoDriverImg.getJiashiyuanxingming());
 				shenfenzhengZM.setCount(anbiaoDriverImg.getSfzzmimgzcount());
-				if (org.springblade.common.tool.StringUtils.isNotEmpty(anbiaoDriverImg.getSfzzmimg()) && !anbiaoDriverImg.getSfzzmimg().contains("http")) {
+				if (StringUtils.isNotEmpty(anbiaoDriverImg.getSfzzmimg()) && !anbiaoDriverImg.getSfzzmimg().contains("http")) {
 					shenfenzhengZM.setAttachments(fileUploadClient.getUrl(anbiaoDriverImg.getSfzzmimg()));
 				}else {
 					shenfenzhengZM.setAttachments(anbiaoDriverImg.getSfzzmimg());
@@ -1155,7 +1155,8 @@ public class DeptController extends BladeController {
 				AnbiaoJiashiyuan shenfenzhengFM = new AnbiaoJiashiyuan();
 				shenfenzhengFM.setJiashiyuanxingming(anbiaoDriverImg.getJiashiyuanxingming());
 				shenfenzhengFM.setCount(anbiaoDriverImg.getSfzfmimgzcount());
-				if (org.springblade.common.tool.StringUtils.isNotEmpty(anbiaoDriverImg.getSfzfmimg()) && !anbiaoDriverImg.getSfzzmimg().contains("http")) {
+				System.out.println(anbiaoDriverImg.getSfzfmimg());
+				if (StringUtils.isNotEmpty(anbiaoDriverImg.getSfzfmimg()) && !anbiaoDriverImg.getSfzfmimg().contains("http")) {
 					shenfenzhengFM.setAttachments(fileUploadClient.getUrl(anbiaoDriverImg.getSfzfmimg()));
 				}else {
 					shenfenzhengFM.setAttachments(anbiaoDriverImg.getSfzfmimg());
@@ -1173,7 +1174,7 @@ public class DeptController extends BladeController {
 				AnbiaoJiashiyuan jiashizhengZM = new AnbiaoJiashiyuan();
 				jiashizhengZM.setJiashiyuanxingming(anbiaoDriverImg.getJiashiyuanxingming());
 				jiashizhengZM.setCount(anbiaoDriverImg.getJszzmimgcount());
-				if (org.springblade.common.tool.StringUtils.isNotEmpty(anbiaoDriverImg.getJszzmimg()) && !anbiaoDriverImg.getJszzmimg().contains("http")) {
+				if (StringUtils.isNotEmpty(anbiaoDriverImg.getJszzmimg()) && !anbiaoDriverImg.getJszzmimg().contains("http")) {
 					jiashizhengZM.setAttachments(fileUploadClient.getUrl(anbiaoDriverImg.getJszzmimg()));
 				}else {
 					jiashizhengZM.setAttachments(anbiaoDriverImg.getJszzmimg());

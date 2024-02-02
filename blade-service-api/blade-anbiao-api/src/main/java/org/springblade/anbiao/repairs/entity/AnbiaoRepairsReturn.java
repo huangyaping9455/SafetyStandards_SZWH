@@ -60,5 +60,8 @@ public class AnbiaoRepairsReturn implements Serializable {
     @ApiModelProperty(value = "回访时间")
     private String retDate;
 
+	@ApiModelProperty(value = "回访附件")
+	private String retImg;
+
 
 }

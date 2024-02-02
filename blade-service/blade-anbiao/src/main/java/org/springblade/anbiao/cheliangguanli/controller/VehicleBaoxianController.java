@@ -192,6 +192,10 @@ public class VehicleBaoxianController extends BladeController {
 			String avbInsureContacts = String.valueOf(mmap.get("投保车辆")).trim();
 			String avbInsureContactNumber = String.valueOf(mmap.get("投保联系人电话")).trim();
 			String avbmRisk = String.valueOf(mmap.get("保险种类")).trim();
+			if("车险".equals(avbmRisk) || "交强险".equals(avbmRisk) || "超赔险".equals(avbmRisk)){
+				isFail=true;
+				errorStr += avbmRisk+"保险种类不存在！";
+			}
 			String avbmName = String.valueOf(mmap.get("保险名称")).trim();
 			String avbInsurancePeriodStart = String.valueOf(mmap.get("投保开始时间")).trim();
 			String avbInsurancePeriodEnd = String.valueOf(mmap.get("投保结束时间")).trim();

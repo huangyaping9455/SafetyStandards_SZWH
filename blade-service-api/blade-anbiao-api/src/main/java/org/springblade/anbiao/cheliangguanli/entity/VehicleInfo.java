@@ -213,4 +213,26 @@ public class VehicleInfo implements Serializable {
 
 	@ApiModelProperty(value = "厂牌")
 	private String changpai;
+
+	@ApiModelProperty(value = "本次车年审日期")
+	private String bencinianshenriqi;
+
+	@ApiModelProperty(value = "下次年审日期")
+	private String xiacinianshenriqi;
+
+	@ApiModelProperty(value = "本次年检日期")
+	private String bencinianjianriqi;
+
+	@ApiModelProperty(value = "下次年检日期")
+	private String xiacinianjianriqi;
+
+	@ApiModelProperty(value = "本次技术评定日期")
+	private String bencijipingriqi;
+
+	@ApiModelProperty(value = "下次技术评定日期")
+	private String xiacijipingriqi;
+
+	@ApiModelProperty(value = "保险到期时间")
+	private String baoxiandaoqishijian;
+
 }

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.realnameRegistration.mapper.AnbiaoRealnameRegistrationMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.realnameRegistration.entity.AnbiaoRealnameRegistration">
+        <id column="rnr_id" property="rnrId" />
+        <result column="rnr_veh_id" property="rnrVehId" />
+        <result column="rnr_dept_id" property="rnrDeptId" />
+        <result column="rnr_jsy_id" property="rnrJsyId" />
+        <result column="rnr_jsy_name" property="rnrJsyName" />
+        <result column="rnr_phone" property="rnrPhone" />
+        <result column="rnr_begin_address" property="rnrBeginAddress" />
+        <result column="rnr_begin_time" property="rnrBeginTime" />
+        <result column="rnr_end_address" property="rnrEndAddress" />
+        <result column="rnr_end_time" property="rnrEndTime" />
+        <result column="rnr_createtime" property="rnrCreatetime" />
+        <result column="rnr_createid" property="rnrCreateid" />
+        <result column="rnr_createname" property="rnrCreatename" />
+        <result column="rnr_updatetime" property="rnrUpdatetime" />
+        <result column="rnr_updateid" property="rnrUpdateid" />
+        <result column="rnr_updatename" property="rnrUpdatename" />
+        <result column="rnr_delete" property="rnrDelete" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        rnr_id, rnr_veh_id, rnr_dept_id, rnr_jsy_id, rnr_jsy_name, rnr_phone, rnr_begin_address, rnr_begin_time, rnr_end_address, rnr_end_time, rnr_createtime, rnr_createid, rnr_createname, rnr_updatetime, rnr_updateid, rnr_updatename, rnr_delete
+    </sql>
+
+    <sql id="tableSql">
+        select
+            a.*,
+            b.dept_name as deptName,
+            v.cheliangpaizhao,
+            v.fadongjihao,
+            js.jiashiyuanxingming
+        from
+            anbiao_realname_registration a
+        inner join  (
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b on a.rnr_dept_id = b.id
+        left join anbiao_vehicle v on v.id = a.rnr_veh_id and v.is_deleted = 0
+        left join anbiao_jiashiyuan js on js.id = a.rnr_jsy_id and js.isdelete = 0
+        where a.rnr_delete = 0
+        <if test="date != null and date != ''">
+            and left(a.rnr_begin_time,10) >= left(#{date},10)
+        </if>
+
+    </sql>
+
+    <sql id="querySql">
+
+        <if test="deptName != null and deptName != '' ">
+            and deptName like '%${deptName}%'
+        </if>
+
+        <if test="cheliangpaizhao != null and cheliangpaizhao != '' ">
+            and cheliangpaizhao like '%${cheliangpaizhao}%'
+        </if>
+
+        <if test="jiashiyuanxingming != null and jiashiyuanxingming != '' ">
+            and jiashiyuanxingming like '%${jiashiyuanxingming}%'
+        </if>
+
+    </sql>
+
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        ORDER BY qs_date desc
+    </sql>
+
+    <select id="selectALLPage" resultMap="BaseResultMap"
+            parameterType="org.springblade.anbiao.realnameRegistration.page.AnbiaoRealnameRegistrationPage" >
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectALLTotal"
+            parameterType="org.springblade.anbiao.realnameRegistration.page.AnbiaoRealnameRegistrationPage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql" />
+        )d
+        where 1 = 1
+        <include refid="querySql" />
+    </select>
+
+</mapper>

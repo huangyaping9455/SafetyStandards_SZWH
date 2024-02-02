@@ -46,7 +46,7 @@ public class JiashiyuanBaoxian implements Serializable {
      * 车辆保险主表主键
      */
 	@TableId(value = "ajb_ids", type = IdType.UUID)
-    @ApiModelProperty(value = "车辆保险主表主键")
+    @ApiModelProperty(value = "保险主表主键")
     private String ajbIds;
     /**
      * 保单号

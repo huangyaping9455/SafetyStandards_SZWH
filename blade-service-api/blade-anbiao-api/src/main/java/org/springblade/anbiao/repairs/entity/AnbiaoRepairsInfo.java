@@ -132,6 +132,9 @@ public class AnbiaoRepairsInfo implements Serializable {
 	@ApiModelProperty(value = "删除标志，默认0,1：删除")
 	private Integer rpIsdelete = 0;
 
+	@ApiModelProperty(value = "费用金额")
+	private double rpMoney = 0.00;
+
 	@ApiModelProperty(value = "报修流程")
 	@TableField(exist = false)
 	private AnbiaoRepairsRemark remark;
@@ -171,5 +174,14 @@ public class AnbiaoRepairsInfo implements Serializable {
 	@ApiModelProperty(value = "报修配件List")
 	@TableField(exist = false)
 	private List<AnbiaoRepairsSpareInfo> repairsSpareInfoList;
+
+	@ApiModelProperty(value = "维修师傅名称")
+	@TableField(exist = false)
+	private String rpdtPersonName;
+
+	@ApiModelProperty(value = "维修师傅Id")
+	@TableField(exist = false)
+	private String rpdtPersonId;
+
 
 }

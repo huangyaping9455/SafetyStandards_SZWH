@@ -464,7 +464,7 @@ public class MaintenanceController {
 						//如果目标文件所在的目录不存在，则创建父目录
 						newFile.mkdirs();
 					}
-					fileName = fileName+"/"+t.getDeptName()+"-维修隐患整改台账.xlsx";
+					fileName = fileName+"/"+t.getDeptName()+t.getSendDate().substring(0,10)+"-维修隐患整改台账.xlsx";
 					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
 					WriteSheet writeSheet = EasyExcel.writerSheet().build();
 					// 写入list之前的数据

@@ -109,6 +109,11 @@ public class AnbiaoRepairsInfoServiceImpl extends ServiceImpl<AnbiaoRepairsInfoM
 				}else {
 					item.setRpStatus(item.getRpStatus());
 				}
+				AnbiaoRepairsInfo repairsInfo = repairsInfoMapper.selectRepairsPerson(item.getRpId(),item.getRpType());
+				if(repairsInfo != null){
+					item.setRpdtPersonName(repairsInfo.getRpdtPersonName());
+					item.setRpdtPersonId(repairsInfo.getRpdtPersonId());
+				}
 			});
 			anbiaoRepairsDeptPage.setRecords(repairsInfos);
 		}

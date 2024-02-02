@@ -419,5 +419,9 @@ public class Organizations implements Serializable {
 	@ApiModelProperty(value = "企业分级")
 	private String qiyefenji;
 
+	@ApiModelProperty(value = "上级企业名称")
+	@TableField(exist = false)
+	private String sjdeptName;
+
 
 }

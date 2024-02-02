@@ -13,6 +13,7 @@
 		<result column="ahd_discoverer_ids" property="ahdDiscovererIds" />
 		<result column="ahd_discoverer_name" property="ahdDiscovererName" />
 		<result column="ahd_discovery_time" property="ahdDiscoveryTime" />
+        <result column="ahd_discovery_time_end" property="ahdDiscoveryTimeEnd" />
 		<result column="ahd_describe" property="ahdDescribe" />
 		<result column="ahd_hiddendanger_enclosure" property="ahdHiddendangerEnclosure" />
 		<result column="ahd_rectification_situation" property="ahdRectificationSituation" />
@@ -44,6 +45,7 @@
 
     <sql id="tableSql">
         select
+            distinct
             a.*,
             b.dept_name as deptname,
             c.cheliangpaizhao,

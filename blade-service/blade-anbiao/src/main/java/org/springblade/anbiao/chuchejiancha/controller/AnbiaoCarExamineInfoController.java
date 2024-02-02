@@ -182,17 +182,36 @@ public class AnbiaoCarExamineInfoController {
 										maintenanceDTO.setVehicleId(finalDeail.getVehid());
 										maintenanceDTO.setDriverId(finalDeail.getJsyid());
 										maintenanceDTO.setSendDate(finalDeail.getDate());
-										maintenanceDTO.setMaintainDictId(0);
-										if(StringUtils.isEmpty(finalDeail.getRemark())){
-											maintenanceDTO.setAcbMaintenanceContent("未填写");
+										maintenanceDTO.setMaintainDictId(1);
+
+										QueryWrapper<AnbiaoCarExamine> carExamineQueryWrapper = new QueryWrapper<>();
+										carExamineQueryWrapper.lambda().eq(AnbiaoCarExamine::getId,item.getXiangid());
+										carExamineQueryWrapper.lambda().eq(AnbiaoCarExamine::getIsdelete,0);
+										AnbiaoCarExamine carExamine = iAnbiaoCarExamineService.getBaseMapper().selectOne(carExamineQueryWrapper);
+										if(carExamine != null){
+											if(StringUtils.isEmpty(remark.getFlgremark())){
+												maintenanceDTO.setAcbMaintenanceContent("未填写");
+											}else{
+												maintenanceDTO.setAcbMaintenanceContent(carExamine.getName()+","+remark.getFlgremark());
+											}
+											if(StringUtils.isEmpty(remark.getFlgremark())){
+												maintenanceDTO.setAcbRepairReason("未填写");
+											}else{
+												maintenanceDTO.setAcbRepairReason(carExamine.getName()+","+remark.getFlgremark());
+											}
 										}else{
-											maintenanceDTO.setAcbMaintenanceContent(finalDeail.getRemark());
+											if(StringUtils.isEmpty(remark.getFlgremark())){
+												maintenanceDTO.setAcbMaintenanceContent("未填写");
+											}else{
+												maintenanceDTO.setAcbMaintenanceContent(remark.getFlgremark());
+											}
+											if(StringUtils.isEmpty(remark.getFlgremark())){
+												maintenanceDTO.setAcbRepairReason("未填写");
+											}else{
+												maintenanceDTO.setAcbRepairReason(remark.getFlgremark());
+											}
 										}
-										if(StringUtils.isEmpty(remark.getFlgremark())){
-											maintenanceDTO.setAcbRepairReason("未填写");
-										}else{
-											maintenanceDTO.setAcbRepairReason(remark.getFlgremark());
-										}
+
 										maintenanceDTO.setMaintenanceDeptName(dept.getDeptName());
 										maintenanceDTO.setAcbBeforeMaintenance(remark.getFlgimg());
 										maintenanceDTO.setCreateid(finalDeail.getJsyid());
@@ -214,11 +233,21 @@ public class AnbiaoCarExamineInfoController {
 										danger.setAhdCreateTime(DateUtil.now());
 										danger.setAhdCreateByIds(finalDeail.getJsyid());
 										danger.setAhdPlace(finalDeail.getAddress());
-										if(StringUtils.isEmpty(remark.getFlgremark())){
-											danger.setAhdDescribe("未填写");
+
+										if(carExamine != null){
+											if(StringUtils.isEmpty(remark.getFlgremark())){
+												danger.setAhdDescribe("未填写");
+											}else{
+												danger.setAhdDescribe(carExamine.getName()+","+remark.getFlgremark());
+											}
 										}else{
-											danger.setAhdDescribe(remark.getFlgremark());
+											if(StringUtils.isEmpty(remark.getFlgremark())){
+												danger.setAhdDescribe("未填写");
+											}else{
+												danger.setAhdDescribe(remark.getFlgremark());
+											}
 										}
+
 										danger.setAhdAddress("车辆设备");
 										danger.setAhdLevel("0");
 										hiddenDangerService.save(danger);

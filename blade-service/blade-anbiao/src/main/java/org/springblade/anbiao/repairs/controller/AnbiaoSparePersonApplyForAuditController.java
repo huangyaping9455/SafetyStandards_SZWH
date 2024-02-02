@@ -97,6 +97,28 @@ public class AnbiaoSparePersonApplyForAuditController {
 		if(StringUtils.isEmpty(sparePersonApplyForAudit.getSpDate())){
 			sparePersonApplyForAudit.setSpDate(DateUtil.now());
 		}
+		QueryWrapper<AnbiaoSparePartsStorePerson> storePersonQueryWrapper = new QueryWrapper<AnbiaoSparePartsStorePerson>();
+		storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppDeptId, sparePersonApplyForAudit.getSpDeptId());
+		storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppSpNo, sparePersonApplyForAudit.getSoiSpNo());
+		storePersonQueryWrapper.lambda().eq(AnbiaoSparePartsStorePerson::getSppPersonid, sparePersonApplyForAudit.getSpPersonId());
+		AnbiaoSparePartsStorePerson sparePartsStorePerson = sparePartsStorePersonService.getBaseMapper().selectOne(storePersonQueryWrapper);
+		if (sparePartsStorePerson != null) {
+			if(sparePartsStorePerson.getSppGoodProductsNum() < 2 ){
+				QueryWrapper<AnbiaoSparePersonApplyForAudit> dangerQueryWrapper = new QueryWrapper<AnbiaoSparePersonApplyForAudit>();
+				dangerQueryWrapper.lambda().eq(AnbiaoSparePersonApplyForAudit::getSpAuditStatus, 0);
+				dangerQueryWrapper.lambda().eq(AnbiaoSparePersonApplyForAudit::getSpPersonId, sparePersonApplyForAudit.getSpPersonId());
+				dangerQueryWrapper.lambda().eq(AnbiaoSparePersonApplyForAudit::getSoiSpNo, sparePersonApplyForAudit.getSoiSpNo());
+				dangerQueryWrapper.lambda().eq(AnbiaoSparePersonApplyForAudit::getSpType, 1);
+				AnbiaoSparePersonApplyForAudit deail = sparePersonApplyForAuditService.getBaseMapper().selectOne(dangerQueryWrapper);
+				if (deail != null) {
+					r.setMsg("该记录已添加，请联系管理员进行审核！");
+					r.setCode(200);
+					r.setSuccess(true);
+					return r;
+				}
+			}
+		}
+
 		QueryWrapper<AnbiaoSparePersonApplyForAudit> dangerQueryWrapper = new QueryWrapper<AnbiaoSparePersonApplyForAudit>();
 		dangerQueryWrapper.lambda().eq(AnbiaoSparePersonApplyForAudit::getSpDeptId, sparePersonApplyForAudit.getSpDeptId());
 		dangerQueryWrapper.lambda().eq(AnbiaoSparePersonApplyForAudit::getSpDate, sparePersonApplyForAudit.getSpDate());

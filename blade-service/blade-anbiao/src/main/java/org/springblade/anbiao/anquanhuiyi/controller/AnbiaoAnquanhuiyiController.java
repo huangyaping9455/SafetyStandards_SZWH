@@ -416,11 +416,16 @@ public class AnbiaoAnquanhuiyiController {
 			List<AnbiaoAnquanhuiyiDetail> details = anquanhuiyiDetailService.getBaseMapper().selectList(anquanhuiyiDetailQueryWrapper);
 			List<AnbiaoAnquanhuiyiDetail> details1 = new ArrayList<>();
 			for (AnbiaoAnquanhuiyiDetail a:details) {
-				QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
-				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,"0");
-				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId,a.getAadApIds());
-				JiaShiYuan jiaShiYuan = iJiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
-				if (jiaShiYuan!=null){
+				if(!"0".equals(a.getAadApType())){
+					QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
+					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,"0");
+					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId,a.getAadApIds());
+					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId,anquanhuiyiInfo.getDeptId());
+					JiaShiYuan jiaShiYuan = iJiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+					if (jiaShiYuan!=null){
+						details1.add(a);
+					}
+				}else{
 					details1.add(a);
 				}
 			}
@@ -763,7 +768,7 @@ public class AnbiaoAnquanhuiyiController {
 			AnbiaoAnquanhuiyiVO anquanhuiyiVO = new AnbiaoAnquanhuiyiVO();
 			anquanhuiyiVO.setDeptName(deptName);
 			anquanhuiyiVO.setHuiyimingcheng(anquanhuiyiInfo.getHuiyimingcheng());
-			String dates = anquanhuiyiInfo.getHuiyijieshushijian().substring(0, 10) + "至" + anquanhuiyiInfo.getHuiyijieshushijian().substring(0, 10);
+			String dates = anquanhuiyiInfo.getHuiyikaishishijian().substring(0, 10) + "至" + anquanhuiyiInfo.getHuiyijieshushijian().substring(0, 10);
 			anquanhuiyiVO.setDateShow(dates);
 			String message = "";
 			if (details != null && details.size() > 0) {
@@ -772,6 +777,7 @@ public class AnbiaoAnquanhuiyiController {
 					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getJiashiyuanxingming,detail.getAadApName());
 					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId,detail.getAadApIds());
 					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,"0");
+					jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId,anquanhuiyiInfo.getDeptId());
 					JiaShiYuan jiaShiYuan = iJiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
 					if (jiaShiYuan!=null){
 						message += detail.getAadApName() + ",";

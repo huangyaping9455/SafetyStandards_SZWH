@@ -637,9 +637,27 @@ public class OrganizationsController extends BladeController {
 			Organizations organization = new Organizations();
 			int deptids = iSysClient.selectMaxId()+1;
 			organization.setDeptId(Integer.toString(deptids));
+
+			//验证单位名称不能为空
+			String sjdeptName = String.valueOf(a.get("上级企业名称")).trim();
+			if (StringUtils.isNotBlank(sjdeptName) && !sjdeptName.equals("null")) {
+				int i = iSysClient.selectByName(sjdeptName);
+				if(i > 0){
+					organization.setSjdeptName(sjdeptName);
+					Dept dept = iSysClient.getDeptByName(sjdeptName);
+					organization.setParentId(dept.getId().toString());
+					organization.setImportUrl("icon_gou.png");
+				}else{
+					organization.setMsg(sjdeptName+"上级企业名称不存在;");
+					organization.setImportUrl("icon_cha.png");
+					errorStr += sjdeptName+"上级企业名称不存在;";
+					bb++;
+				}
+			}
+
 			//验证单位名称不能为空
 			String deptName = String.valueOf(a.get("所属企业")).trim();
-			if (StringUtils.isBlank(deptName) && !deptName.equals("null")) {
+			if (StringUtils.isBlank(deptName) || deptName.equals("null")) {
 				organization.setMsg("所属企业不能为空;");
 				organization.setImportUrl("icon_cha.png");
 				errorStr += "所属企业不能为空;";
@@ -658,7 +676,7 @@ public class OrganizationsController extends BladeController {
 
 			//验证职务名称不能为空
 			String gangwei = String.valueOf(a.get("职务名称")).trim();
-			if (StringUtils.isBlank(gangwei) && !gangwei.equals("null")) {
+			if (StringUtils.isBlank(gangwei) || gangwei.equals("null")) {
 				organization.setMsg("职务名称不能为空;");
 				organization.setImportUrl("icon_cha.png");
 				errorStr += "职务名称不能为空;";
@@ -678,7 +696,7 @@ public class OrganizationsController extends BladeController {
 
 			//验证姓名不能为空
 			String xingming = String.valueOf(a.get("姓名")).trim();
-			if (StringUtils.isBlank(xingming) && !xingming.equals("null")) {
+			if (StringUtils.isBlank(xingming) || xingming.equals("null")) {
 				organization.setMsg("姓名不能为空;");
 				organization.setImportUrl("icon_cha.png");
 				errorStr += "姓名不能为空;";
@@ -690,7 +708,7 @@ public class OrganizationsController extends BladeController {
 
 			//验证手机号码不能为空
 			String shoujihaoma = String.valueOf(a.get("手机号码")).trim();
-			if (StringUtils.isBlank(shoujihaoma) && !shoujihaoma.equals("null")) {
+			if (StringUtils.isBlank(shoujihaoma) || shoujihaoma.equals("null")) {
 				organization.setMsg("手机号码不能为空;");
 				organization.setImportUrl("icon_cha.png");
 				errorStr += "手机号码不能为空;";
@@ -710,11 +728,11 @@ public class OrganizationsController extends BladeController {
 
 			//验证统一社会信用代码不能为空
 			String jiGouBianMa = String.valueOf(a.get("统一社会信用代码")).trim();
-			if (StringUtils.isBlank(jiGouBianMa) && !jiGouBianMa.equals("null")) {
-				organization.setMsg("统一社会信用代码不能为空;");
-				organization.setImportUrl("icon_cha.png");
-				errorStr += "统一社会信用代码不能为空;";
-				bb++;
+			if (StringUtils.isBlank(jiGouBianMa) || jiGouBianMa.equals("null")) {
+//				organization.setMsg("统一社会信用代码不能为空;");
+//				organization.setImportUrl("icon_cha.png");
+//				errorStr += "统一社会信用代码不能为空;";
+//				bb++;
 			} else {
 				organization.setJigoubianma(jiGouBianMa);
 				organization.setImportUrl("icon_gou.png");
@@ -1082,6 +1100,8 @@ public class OrganizationsController extends BladeController {
 			Dept dept = new Dept();
 			if (String.valueOf(a.get("parentId")).trim() == null || String.valueOf(a.get("parentId")).trim().equals("") || String.valueOf(a.get("parentId")).trim().equals("null")) {
 				organization.setParentId("1");
+			}else{
+				organization.setParentId(String.valueOf(a.get("parentId")).trim());
 			}
 			String treeCode = iSysClient.selectByTreeCode(organization.getParentId()).getTreeCode();
 			organization.setDeptId(String.valueOf(a.get("deptId")).trim());

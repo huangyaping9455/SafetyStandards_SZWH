@@ -15,6 +15,7 @@
         <result column="ret_createid" property="retCreateid" />
         <result column="ret_createname" property="retCreatename" />
         <result column="ret_date" property="retDate" />
+        <result column="ret_img" property="retImg" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

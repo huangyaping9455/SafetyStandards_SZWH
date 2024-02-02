@@ -57,6 +57,9 @@ public class AnbiaoHiddenDanger implements Serializable {
     @ApiModelProperty(value = "隐患发现时间")
     private String ahdDiscoveryTime;
 
+	@ApiModelProperty(value = "隐患发现结束时间")
+	private String ahdDiscoveryTimeEnd;
+
     @ApiModelProperty(value = "隐患描述")
     private String ahdDescribe;
 

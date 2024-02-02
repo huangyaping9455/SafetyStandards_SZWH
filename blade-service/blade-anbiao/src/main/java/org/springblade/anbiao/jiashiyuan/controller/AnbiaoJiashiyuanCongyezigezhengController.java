@@ -8,8 +8,10 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanCongyezigezheng;
+import org.springblade.anbiao.jiashiyuan.entity.AnbiaoJiashiyuanJiashizheng;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanCongyezigezhengService;
+import org.springblade.anbiao.jiashiyuan.service.IAnbiaoJiashiyuanJiashizhengService;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.anbiao.risk.controller.AnbiaoRiskDetailController;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
@@ -49,6 +51,7 @@ public class AnbiaoJiashiyuanCongyezigezhengController {
 	private IAnbiaoRiskDetailService riskDetailService;
 	private IAnbiaoRiskDetailInfoService detailInfoService;
 	private IJiaShiYuanService jiaShiYuanService;
+	private IAnbiaoJiashiyuanJiashizhengService jiashizhengService;
 	@Autowired
 	private AnbiaoRiskDetailController riskDetailController;
 
@@ -216,7 +219,31 @@ public class AnbiaoJiashiyuanCongyezigezhengController {
 			jiaShiYuan.setCongyezhengfujian(congyezigezheng.getAjcLicence());
 			jiaShiYuan.setCongyezhengchulingri(congyezigezheng.getAjcInitialIssuing());
 			jiaShiYuan.setCongyezhengyouxiaoqi(congyezigezheng.getAjcValidUntil());
+			jiaShiYuan.setCongyerenyuanleixing(congyezigezheng.getAjcCategory());
+			jiaShiYuan.setShenfenzhenghao(congyezigezheng.getAjcCertificateNo());
+			if(user != null){
+				jiaShiYuan.setCaozuoren(user.getUserName());
+				jiaShiYuan.setCaozuorenid(user.getUserId());
+			}else{
+				jiaShiYuan.setCaozuoren(congyezigezheng.getAjcUpdateByName());
+				jiaShiYuan.setCaozuorenid(Integer.parseInt(congyezigezheng.getAjcUpdateByIds()));
+			}
+			jiaShiYuan.setCaozuoshijian(DateUtil.now());
 			jiaShiYuanService.updateById(jiaShiYuan);
+
+			//向驾驶证信息表添加数据
+			QueryWrapper<AnbiaoJiashiyuanJiashizheng> jiashizhengQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanJiashizheng>();
+			jiashizhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanJiashizheng::getAjjAjIds, jiaShiYuan.getId());
+			jiashizhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanJiashizheng::getAjjDelete, "0");
+			AnbiaoJiashiyuanJiashizheng jszdeail = jiashizhengService.getBaseMapper().selectOne(jiashizhengQueryWrapper);
+			if (jszdeail != null) {
+				jszdeail.setAjjAjIds(jiaShiYuan.getId());
+				jszdeail.setAjjFileNo(jiaShiYuan.getShenfenzhenghao());
+				jszdeail.setAjjCreateByIds(jiaShiYuan.getCaozuorenid().toString());
+				jszdeail.setAjjCreateByName(jiaShiYuan.getCaozuoren());
+				jszdeail.setAjjCreateTime(jiaShiYuan.getCaozuoshijian());
+				jiashizhengService.updateById(jszdeail);
+			}
 
 			congyezigezhengService.updateById(congyezigezheng);
 

@@ -141,7 +141,7 @@ public class AnbiaoHiddenDangerController {
 		Vehicle vehicle = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper);
 
 		QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
-		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getJiashiyuanxingming,danger.getAhdDriverName());
+		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId,danger.getAhdDriverIds());
 		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,0);
 		JiaShiYuan jiaShiYuan = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
 
@@ -511,7 +511,7 @@ public class AnbiaoHiddenDangerController {
 						//如果目标文件所在的目录不存在，则创建父目录
 						newFile.mkdirs();
 					}
-					fileName = fileName+"/"+t.getDeptname()+"-"+t.getCheliangpaizhao()+"-隐患登记台账.xlsx";
+					fileName = fileName+"/"+t.getDeptname()+"-"+t.getCheliangpaizhao()+t.getAhdDiscoveryTime().substring(0,10)+"-隐患登记台账.xlsx";
 					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
 					WriteSheet writeSheet = EasyExcel.writerSheet().build();
 					// 写入list之前的数据

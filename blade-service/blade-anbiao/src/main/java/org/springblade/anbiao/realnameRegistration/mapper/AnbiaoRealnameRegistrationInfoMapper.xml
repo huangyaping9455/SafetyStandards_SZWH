@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.realnameRegistration.mapper.AnbiaoRealnameRegistrationInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.realnameRegistration.entity.AnbiaoRealnameRegistrationInfo">
+        <id column="rnri_id" property="rnriId" />
+        <result column="rnri_rnr_id" property="rnriRnrId" />
+        <result column="rnri_name" property="rnriName" />
+        <result column="rnri_card_number" property="rnriCardNumber" />
+        <result column="rnri_phone" property="rnriPhone" />
+        <result column="rnri_date" property="rnriDate" />
+        <result column="rnri_address" property="rnriAddress" />
+        <result column="rnri_end_date" property="rnriEndDate" />
+        <result column="rnri_end_address" property="rnriEndAddress" />
+        <result column="rnri_createtime" property="rnriCreatetime" />
+        <result column="rnri_createid" property="rnriCreateid" />
+        <result column="rnri_createname" property="rnriCreatename" />
+        <result column="rnri_updatetime" property="rnriUpdatetime" />
+        <result column="rnri_updateid" property="rnriUpdateid" />
+        <result column="rnri_updatename" property="rnriUpdatename" />
+        <result column="rnri_delete" property="rnriDelete" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        rnri_id, rnri_rnr_id, rnri_name, rnri_card_number, rnri_phone, rnri_date, rnri_address, rnri_end_date, rnri_end_address, rnri_createtime, rnri_createid, rnri_createname, rnri_updatetime, rnri_updateid, rnri_updatename, rnri_delete
+    </sql>
+
+</mapper>

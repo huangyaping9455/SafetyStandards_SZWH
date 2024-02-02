@@ -167,6 +167,10 @@ public class DeptBaoxianController extends BladeController {
 			String avbInsureContacts = String.valueOf(mmap.get("投保联系人")).trim();
 			String avbInsureContactNumber = String.valueOf(mmap.get("投保人联系电话")).trim();
 			String avbmRisk = String.valueOf(mmap.get("保险种类")).trim();
+			if("安责险".equals(avbmRisk) || "货柜险".equals(avbmRisk) || "其他险种".equals(avbmRisk)){
+				isFail=true;
+				errorStr += avbmRisk+"保险种类不存在！";
+			}
 			String avbmName = String.valueOf(mmap.get("保险名称")).trim();
 			String avbInsurancePeriodStart = String.valueOf(mmap.get("投保开始时间")).trim();
 			String avbInsurancePeriodEnd = String.valueOf(mmap.get("投保结束时间")).trim();

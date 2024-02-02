@@ -415,35 +415,36 @@ public class QiyewenjianController extends BladeController {
 		String pathPdf = fileServer.getPathPrefix()+FilePathConstant.ENCLOSURE_PATH+table+"\\";
 		String pathPic = fileServer.getPathPrefix()+FilePathConstant.ENCLOSURE_PATH+table+"\\";
 		String name=file.getOriginalFilename();
-		String[] a=name.split("\\.");
-		String filename = System.currentTimeMillis()+"."+a[a.length-1];
-		String filenamepdf = System.currentTimeMillis()+".pdf";
-		String filenamepic = pathPic+"\\";
-		File dir = new File(path);
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
-		File dirs = new File(pathPdf);
-		if(!dirs.exists()){
-			dirs.mkdirs();
-		}
-		File dirp = new File(filenamepic);
-		if(!dirp.exists()){
-			dirp.mkdirs();
-		}
-		File targetFile = new File(path+filename);
-		//执行上传
-		file.transferTo(targetFile);
-		//判断是否上传成功
-		if(targetFile.exists()){
-			//存放数据
-			long ab=System.currentTimeMillis();
-			System.out.println("正在转换中 请等待-------");
-			if(!name.contains("pdf")){
-				CommonUtil.world2pdf(path+"\\"+filename
-					, pathPdf+"\\"+filenamepdf);
+		if(name.contains(".doc") || name.contains(".docx")){
+			String[] a=name.split("\\.");
+			String filename = System.currentTimeMillis()+"."+a[a.length-1];
+			String filenamepdf = System.currentTimeMillis()+".pdf";
+			String filenamepic = pathPic+"\\";
+			File dir = new File(path);
+			if (!dir.exists()) {
+				dir.mkdirs();
 			}
-			long b=System.currentTimeMillis();
+			File dirs = new File(pathPdf);
+			if(!dirs.exists()){
+				dirs.mkdirs();
+			}
+			File dirp = new File(filenamepic);
+			if(!dirp.exists()){
+				dirp.mkdirs();
+			}
+			File targetFile = new File(path+filename);
+			//执行上传
+			file.transferTo(targetFile);
+			//判断是否上传成功
+			if(targetFile.exists()){
+				//存放数据
+				long ab=System.currentTimeMillis();
+				System.out.println("正在转换中 请等待-------");
+				if(!name.contains("pdf")){
+					CommonUtil.world2pdf(path+"\\"+filename
+						, pathPdf+"\\"+filenamepdf);
+				}
+				long b=System.currentTimeMillis();
 //			String urlpath = CommonUtil.pdf2Image(pathPdf+filenamepdf,pathPic+filenamepic,300,0);
 //			System.out.println(urlpath);
 //			String[] urls = urlpath.split("\\|");
@@ -453,17 +454,69 @@ public class QiyewenjianController extends BladeController {
 //				urlpic = urlpic+urls[i]+"|";
 //			}
 //			System.out.println(urlpath);
-			System.out.println("转换完成用时："+(b-ab)/1000+"秒");
-			map.put("fileName",name);
-			map.put("worldurl",FilePathConstant.ENCLOSURE_PATH+filename);
-			map.put("pdfurl",FilePathConstant.ENCLOSURE_PATH+filenamepdf);
+				System.out.println("转换完成用时："+(b-ab)/1000+"秒");
+				map.put("fileName",name);
+				map.put("worldurl",FilePathConstant.ENCLOSURE_PATH+table+"\\"+filename);
+				map.put("pdfurl",FilePathConstant.ENCLOSURE_PATH+table+"\\"+filenamepdf);
 //			map.put("picurl",urlpic);
 
+			}else{
+				map.put("fileName",name);
+				map.put("worldurl","");
+				map.put("pdfurl","");
+				map.put("error","文件上传失败");
+			}
 		}else{
-			map.put("fileName",name);
-			map.put("worldurl","");
-			map.put("pdfurl","");
-			map.put("error","文件上传失败");
+			String[] a=name.split("\\.");
+			String filename = System.currentTimeMillis()+"."+a[a.length-1];
+//			String filenamepdf = System.currentTimeMillis()+".pdf";
+//			String filenamepic = pathPic+"\\";
+			File dir = new File(path);
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+//			File dirs = new File(pathPdf);
+//			if(!dirs.exists()){
+//				dirs.mkdirs();
+//			}
+//			File dirp = new File(filenamepic);
+//			if(!dirp.exists()){
+//				dirp.mkdirs();
+//			}
+			File targetFile = new File(path+filename);
+			//执行上传
+			file.transferTo(targetFile);
+			//判断是否上传成功
+			if(targetFile.exists()){
+				//存放数据
+				long ab=System.currentTimeMillis();
+				System.out.println("正在转换中 请等待-------");
+//				if(!name.contains("pdf")){
+//					CommonUtil.world2pdf(path+"\\"+filename
+//						, pathPdf+"\\"+filenamepdf);
+//				}
+				long b=System.currentTimeMillis();
+//			String urlpath = CommonUtil.pdf2Image(pathPdf+filenamepdf,pathPic+filenamepic,300,0);
+//			System.out.println(urlpath);
+//			String[] urls = urlpath.split("\\|");
+//			String urlpic="";
+//			for(int i=0;i<urls.length;i++){
+//				System.out.println(urls[i]);
+//				urlpic = urlpic+urls[i]+"|";
+//			}
+//			System.out.println(urlpath);
+				System.out.println("转换完成用时："+(b-ab)/1000+"秒");
+				map.put("fileName",name);
+				map.put("worldurl",FilePathConstant.ENCLOSURE_PATH+table+"\\"+filename);
+				map.put("pdfurl",FilePathConstant.ENCLOSURE_PATH+table+"\\"+filename);
+//			map.put("picurl",urlpic);
+
+			}else{
+				map.put("fileName",name);
+				map.put("worldurl","");
+				map.put("pdfurl","");
+				map.put("error","文件上传失败");
+			}
 		}
 		return R.data(map);
 	}

@@ -891,7 +891,7 @@
             `anbiao_cheliang_jiashiyuan_daily` a
                 LEFT JOIN anbiao_jiashiyuan b ON a.jiashiyuanid = b.id
                 LEFT JOIN anbiao_vehicle c ON a.vehid = c.id
-                LEFT JOIN ( SELECT jsyid,vehid,MAX(createtime) createtime FROM `anbiao_car_examine_info` GROUP BY jsyid ORDER BY createtime desc ) as d on d.jsyid=a.jiashiyuanid
+                LEFT JOIN ( SELECT jsyid,vehid,MAX(createtime) createtime FROM `anbiao_car_examine_info` GROUP BY jsyid,vehid ORDER BY createtime desc ) as d on d.jsyid=a.jiashiyuanid
         WHERE
             a.vstatus = 1
           AND b.isdelete = 0

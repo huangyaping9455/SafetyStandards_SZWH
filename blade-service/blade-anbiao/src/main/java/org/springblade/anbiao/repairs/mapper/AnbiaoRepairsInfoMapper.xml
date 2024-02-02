@@ -38,6 +38,7 @@
         <result column="rp_yy_address" property="rpYyAddress" />
         <result column="rp_classify" property="rpClassify" />
         <result column="rp_isdelete" property="rpIsdelete" />
+        <result column="rp_money" property="rpMoney" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -186,7 +187,10 @@
                     and a.rp_type = #{rpType}
                 </if>
                 <if test="date != null and date != ''">
-                    and left(a.rp_date,10) = left(#{date},10)
+                    and left(a.rp_date,10) >= left(#{date},10)
+                </if>
+                <if test="endDate != null and endDate != '' ">
+                    and left(a.rp_date,10) &lt;= left(#{endDate},10)
                 </if>
             )b on a.rp_id = b.rpdt_person_id
             left join (
@@ -201,7 +205,10 @@
                         and a.rp_type = #{rpType}
                     </if>
                     <if test="date != null and date != ''">
-                        and left(a.rp_date,10) = left(#{date},10)
+                        and left(a.rp_date,10) >= left(#{date},10)
+                    </if>
+                    <if test="endDate != null and endDate != '' ">
+                        and left(a.rp_date,10) &lt;= left(#{endDate},10)
                     </if>
                     )
                 ORDER BY rpdt_date desc LIMIT 1
@@ -306,6 +313,18 @@
         left join anbiao_vehicle c on c.id = b.rp_vehid
         where 1=1
           and rpdt_rp_id = #{rpdtRpId}
+    </select>
+
+    <select id="selectRepairsPerson" resultType="org.springblade.anbiao.repairs.entity.AnbiaoRepairsInfo">
+        select
+            b.rp_name as rpdtPersonName,
+            a.rpdt_person_id as rpdtPersonId
+        from
+            anbiao_repairs_remark a
+            inner join anbiao_repairs_person b on b.rp_id = a.rpdt_person_id
+            where a.rpdt_rp_id = #{rpdtRpId}
+                and a.rpdt_type = #{type}
+            ORDER BY a.rpdt_date desc LIMIT 1
     </select>
 
 </mapper>
