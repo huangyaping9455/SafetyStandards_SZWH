@@ -193,7 +193,7 @@
             <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) d on a.dept_id = d.id
             where 1=1
-            and a.is_deleted = 0
+            and a.is_deleted = 0 and a.cheliangpaizhao not like '%挂%'
             limit ${total}
         </if>
         <if test="current != 0" >
@@ -226,7 +226,7 @@
             <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) d on a.dept_id = d.id
             where 1=1
-            and a.is_deleted = 0
+            and a.is_deleted = 0 and a.cheliangpaizhao not like '%挂%'
             limit ${offsetNo},${size}
         </if>
     </select>
@@ -265,6 +265,7 @@
         ) d on a.dept_id = d.id
         where 1=1
         and a.is_deleted = 0
+        and a.cheliangpaizhao not like '%挂%'
         )d
         where 1 = 1
     </select>

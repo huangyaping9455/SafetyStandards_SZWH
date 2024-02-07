@@ -17,5 +17,5 @@ wechatserver:
   secret: ${wechatserver.dev.secret}
 #  qyAppId: wxdf3d89ad7f43450c
   qyAppId: ${wechatserver.dev.qyAppId}
-#  qySecret: 479d5adac8b4393557827a4af8e11568
+#  qySecret: c0cc3e4c76710a199a5a938381ec47fa
   qySecret: ${wechatserver.dev.qySecret}

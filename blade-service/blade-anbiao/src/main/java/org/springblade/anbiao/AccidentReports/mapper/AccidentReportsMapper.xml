@@ -23,11 +23,11 @@
                  AND year(a.shigufashengshijian) >= year(#{asiYear})
              </if>
 
-            <if test="deptName !=null">
+            <if test="deptName !=null and deptName != ''">
                 AND b.dept_name = #{deptName}
             </if>
 
-            <if test="jiashiyuan !=null">
+            <if test="jiashiyuan !=null and jiashiyuan != ''">
                 AND a.jiashiyuan = #{jiashiyuan}
             </if>
 
@@ -56,11 +56,11 @@
                 AND year(a.shigufashengshijian) >= year(#{asiYear})
             </if>
 
-            <if test="deptName !=null">
+            <if test="deptName !=null and deptName != ''">
                 AND b.dept_name = #{deptName}
             </if>
 
-            <if test="jiashiyuan !=null">
+            <if test="jiashiyuan !=null and jiashiyuan != ''">
                 AND a.jiashiyuan = #{jiashiyuan}
             </if>
 
@@ -342,9 +342,14 @@
         <if test="asiYear!=null and asiYear!=''">
             AND year(d.shigufashengshijian) >= year(#{asiYear})
         </if>
-        <if test="deptName!=null and deptName!=''">
-            AND d.deptName= #{deptName}
+        <if test="deptName !=null and deptName != ''">
+            AND d.deptName = #{deptName}
         </if>
+
+        <if test="jiashiyuan !=null and jiashiyuan != ''">
+            AND d.jiashiyuan = #{jiashiyuan}
+        </if>
+
         <if test="chepaihao !=null and chepaihao != ''">
             AND d.chepaihao like CONCAT('%',#{chepaihao},'%')
         </if>

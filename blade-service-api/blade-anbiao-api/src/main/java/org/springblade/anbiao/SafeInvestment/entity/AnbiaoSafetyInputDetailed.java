@@ -38,4 +38,7 @@ public class AnbiaoSafetyInputDetailed implements Serializable {
 	private String 	asidAmountUsed;
 
 	private String asidDelete;
+
+	private String asidImg;
+
 }

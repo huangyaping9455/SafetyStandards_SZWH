@@ -59,7 +59,8 @@
         asid_investment_scope AS asidInvestmentScope,
         asid_investment_dare AS asidInvestmentDare,
         asid_amount_used AS asidAmountUsed,
-        asid_delete AS asidDelete
+        asid_delete AS asidDelete,
+        asid_img AS asidImg
         FROM
         anbiao_safety_input_detailed
         <where>
@@ -104,7 +105,7 @@
     </insert>
 
     <insert id="insertInput" parameterType="org.springblade.anbiao.SafeInvestment.entity.AnbiaoSafetyInputDetailed">
-        insert  into anbiao_safety_input_detailed(asid_ids,asid_asi_ids,asid_entry_name,asid_handled_by_name,asid_handled_by_ids,asid_investment_scope,asid_investment_dare,asid_amount_used,asid_delete)
+        insert  into anbiao_safety_input_detailed(asid_ids,asid_asi_ids,asid_entry_name,asid_handled_by_name,asid_handled_by_ids,asid_investment_scope,asid_investment_dare,asid_amount_used,asid_delete,asid_img)
         values
             (#{asidIds},
             #{asidAsiIds},
@@ -114,7 +115,8 @@
             #{asidHandledByIds},
             #{asidInvestmentDare},
             #{asidAmountUsed},
-            0
+            0,
+             #{asidImg}
              )
 
     </insert>
@@ -172,6 +174,9 @@
             </if>
             <if test="asidAmountUsed != null">
                 asid_amount_used = #{asidAmountUsed},
+            </if>
+            <if test="asidImg != null">
+                asid_img = #{asidImg},
             </if>
             asid_handled_by_ids = #{asidHandledByIds}
         </set>
