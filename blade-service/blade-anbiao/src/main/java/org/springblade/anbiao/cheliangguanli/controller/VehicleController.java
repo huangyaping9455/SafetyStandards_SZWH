@@ -583,7 +583,7 @@ public class VehicleController {
 
 		VehicleVO vehicleVO = vehicleService.selectCPYS(v.getCheliangpaizhao(),v.getChepaiyanse());
 		if(vehicleVO == null){
-			r.setMsg(vehicleVO.getCheliangpaizhao()+"该车不存在");
+			r.setMsg(v.getCheliangpaizhao()+"该车不存在");
 			r.setCode(500);
 			return r;
 		}

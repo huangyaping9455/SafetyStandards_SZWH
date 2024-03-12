@@ -21,7 +21,6 @@ public class MaintenanceEntity {
 	private Long id;
 	@TableField(exist = false)
 	private Integer	depID;
-
 	private Integer	deptId;
 	private String  driverId;
 	private String	vehicleId;
@@ -38,7 +37,7 @@ public class MaintenanceEntity {
 	private Integer sendRepairPersonId;
 	private Integer	pickUpVehicleDriverId;
 	private String pickUpVehicleDate;
-	private Integer	caozuorenid;
+	private String	caozuorenid;
 	private String  caozuoren;
 	private String 	caozuoshijian;
 	private String  remark;

@@ -3,7 +3,6 @@ package org.springblade.anbiao.guanlijigouherenyuan.controller;
 
 import cn.afterturn.easypoi.word.entity.WordImageEntity;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
@@ -15,11 +14,8 @@ import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tools.zip.ZipOutputStream;
-import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
-import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiDetail;
 import org.springblade.anbiao.cheliangguanli.entity.*;
 import org.springblade.anbiao.cheliangguanli.service.*;
-import org.springblade.anbiao.chuchejiancha.entity.AnbiaoCarExamineInfo;
 import org.springblade.anbiao.configure.entity.Configure;
 import org.springblade.anbiao.configure.service.IConfigureService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.*;
@@ -38,12 +34,10 @@ import org.springblade.common.tool.DateUtils;
 import org.springblade.common.tool.WordUtil2;
 import org.springblade.core.boot.ctrl.BladeController;
 import org.springblade.core.log.annotation.ApiLog;
-import org.springblade.core.mp.support.Condition;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
 import org.springblade.core.tool.utils.DigestUtil;
 import org.springblade.core.tool.utils.StringUtil;
-import org.springblade.system.entity.AnbiaoJiashiyuan;
 import org.springblade.system.entity.Dept;
 import org.springblade.system.entity.Dict;
 import org.springblade.system.entity.Post;
@@ -1036,6 +1030,12 @@ public class OrganizationsController extends BladeController {
 					organization.setImportUrl("icon_cha.png");
 					errorStr += organizations + "机构信息重复；";
 					organization.setMsg(organizations + "机构信息重复；");
+					bb++;
+				}
+				if (item.getShoujihaoma().equals(shoujihaoma)) {
+					organization.setImportUrl("icon_cha.png");
+					errorStr += shoujihaoma + "手机号码信息重复；";
+					organization.setMsg(shoujihaoma + "手机号码信息重复；");
 					bb++;
 				}
 			}

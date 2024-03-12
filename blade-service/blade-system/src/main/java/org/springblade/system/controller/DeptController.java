@@ -889,7 +889,7 @@ public class DeptController extends BladeController {
 	@ApiImplicitParams({@ApiImplicitParam(name = "postId", value = "岗位id", required = false),
 		@ApiImplicitParam(name = "deptId", value = "单位id", required = false)
 	})
-	public R imageTree(String postId, String deptId, String deptName, String nodeId, String jigouleixing,Integer count) {
+	public R imageTree(String postId, String deptId, String deptName, String nodeId, String jigouleixing,Integer count,String selectName) {
 		Dept dept;
 		List<DeptVO> tree;
 		ArrayList<DeptVO> aptitudes = new ArrayList<>();
@@ -1097,7 +1097,7 @@ public class DeptController extends BladeController {
 
 			}
 			if (deptName.equals("驾驶员")) {
-				List<AnbiaoDriverImg> byDriverImgAll = iJiaShiYuanService.getByDriverImgAll("",deptId);
+				List<AnbiaoDriverImg> byDriverImgAll = iJiaShiYuanService.getByDriverImgAll(selectName,deptId);
 				for (AnbiaoDriverImg a : byDriverImgAll) {
 					a.setDeptName(a.getJiashiyuanxingming());
 					a.setDeptId(a.getId());
@@ -1302,7 +1302,7 @@ public class DeptController extends BladeController {
 
 			}
 			if (deptName.equals("车辆")){
-				List<AnbiaoVehicleImg> byVehImgAll = vehicleService.getByVehImgAll("", deptId);
+				List<AnbiaoVehicleImg> byVehImgAll = vehicleService.getByVehImgAll(selectName, deptId);
 				for (AnbiaoVehicleImg a:byVehImgAll) {
 					a.setDeptName(a.getCheliangpaizhao());
 					a.setDeptId(a.getId());

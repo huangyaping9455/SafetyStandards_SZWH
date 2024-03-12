@@ -267,4 +267,13 @@ public interface VehicleMapper extends BaseMapper<Vehicle> {
 
 	List<JiaShiYuanVO> selectCheLiangJiaShiYuan(JiaShiYuanVO jiaShiYuanVO);
 
+	/**
+	 * 自定义删除
+	 * @param id
+	 * @return
+	 */
+	boolean deleteVehicle(@Param("isdel") String isdel,@Param("caozuoren") String caozuoren,
+						  @Param("caozuorenid") String caozuorenid,@Param("id") String id,@Param("shijian") String shijian);
+
+
 }

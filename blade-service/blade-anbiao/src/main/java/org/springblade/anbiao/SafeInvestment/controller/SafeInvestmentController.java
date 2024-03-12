@@ -113,6 +113,7 @@ public class SafeInvestmentController extends BladeController {
 				anbiaoSafetyInputDetailed.setAsidInvestmentDare(list.getAsidInvestmentDare());
 				anbiaoSafetyInputDetailed.setAsidAmountUsed(list.getAsidAmountUsed());
 				anbiaoSafetyInputDetailed.setAsidHandledByIds(safeInvestmentDTO.getDeptId());
+				anbiaoSafetyInputDetailed.setAsidImg(list.getAsidImg());
 				insert = safeInvestmentService.insert(anbiaoSafetyInputDetailed);
 			}
 		}
@@ -155,6 +156,7 @@ public class SafeInvestmentController extends BladeController {
 					safetyInvestmentDetailsVO.setAsidAmountUsed(list.getAsidAmountUsed());
 					safetyInvestmentDetailsVO.setAsidHandledByIds(safeInvestmentDTO.getDeptId());
 					safetyInvestmentDetailsVO.setAsidIds(safeInvestmentDTO.getAsiIds());
+					safetyInvestmentDetailsVO.setAsidImg(list.getAsidImg());
 					update = safeInvestmentService.updateSafede(safetyInvestmentDetailsVO);
 				}
 			} else {
@@ -169,6 +171,7 @@ public class SafeInvestmentController extends BladeController {
 					anbiaoSafetyInputDetailed.setAsidInvestmentDare(list.getAsidInvestmentDare());
 					anbiaoSafetyInputDetailed.setAsidAmountUsed(list.getAsidAmountUsed());
 					anbiaoSafetyInputDetailed.setAsidHandledByIds(safeInvestmentDTO.getDeptId());
+					anbiaoSafetyInputDetailed.setAsidImg(list.getAsidImg());
 					insert = safeInvestmentService.insert(anbiaoSafetyInputDetailed);
 				}
 			}

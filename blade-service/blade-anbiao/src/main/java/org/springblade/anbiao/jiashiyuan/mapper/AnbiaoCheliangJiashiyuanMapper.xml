@@ -167,7 +167,22 @@
               AND xiaji.extend_type = '机构'
               AND o.jigouleixing IN ( 'qiye', 'geti' )
               AND xiaji.id = o.dept_id
-              AND shangji.id = #{deptId}
+              AND shangji.id in (
+                SELECT DISTINCT
+                    shangji.id as deptId
+                FROM
+                    blade_dept shangji,
+                    blade_dept xiaji,
+                    anbiao_organization o
+                WHERE
+                    xiaji.parent_id = shangji.id
+                  AND xiaji.is_deleted = 0
+                  AND xiaji.extend_type = '机构'
+                  AND o.jigouleixing IN ( 'qiye', 'geti' )
+                  AND shangji.id = o.dept_id
+                  AND xiaji.id = #{deptId}
+                  AND shangji.id != 1
+            )
         UNION
             SELECT DISTINCT
                 shangji.id as deptId,

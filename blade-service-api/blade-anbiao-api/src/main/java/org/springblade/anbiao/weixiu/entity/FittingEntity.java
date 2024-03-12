@@ -20,7 +20,7 @@ public class FittingEntity {
 	private String id;
 	private Long weihuid;
 	private String caozuoren;
-	private Integer	caozuorenid;
+	private String	caozuorenid;
 	private String caozuoshijian;
 
 	private String cailiaomingcheng;

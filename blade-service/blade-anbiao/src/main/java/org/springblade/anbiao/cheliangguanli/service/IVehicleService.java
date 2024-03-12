@@ -255,4 +255,13 @@ public interface IVehicleService extends IService<Vehicle> {
 
 	List<JiaShiYuanVO> selectCheLiangJiaShiYuan(JiaShiYuanVO jiaShiYuanVO);
 
+	/**
+	 * 自定义 假删除
+	 * @param  id
+	 * @author :hyp
+	 * */
+	boolean deleteVehicle(@Param("isDeleted") Integer isDeleted,@Param("caozuoren") String caozuoren,
+						  @Param("caozuorenid") String caozuorenid,@Param("id") String id,@Param("shijian") String shijian);
+
+
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.VehIccChange.mapper.TsVehIccidChangeRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.VehIccChange.entity.TsVehIccidChangeRecord">
+        <id column="t_id" property="tId" />
+        <result column="veh_id" property="vehId" />
+        <result column="iccid" property="iccid" />
+        <result column="create_userid" property="createUserid" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_userid" property="updateUserid" />
+        <result column="update_by" property="updateBy" />
+        <result column="udpate_time" property="udpateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        t_id, veh_id, iccid, create_userid, create_by, create_time, update_userid, update_by, udpate_time
+    </sql>
+
+</mapper>

@@ -139,18 +139,31 @@
             CASE WHEN IFNULL( h.ajt_enclosure, '' ) != '' THEN 1 ELSE 0 end AS QTcount
         FROM
             `anbiao_jiashiyuan` a
-                LEFT JOIN anbiao_jiashiyuan_ruzhi b on b.ajr_aj_ids = a.id and b.ajr_delete=0
-                LEFT JOIN anbiao_jiashiyuan_jiashizheng c on c.ajj_aj_ids = a.id and c.ajj_delete=0
-                LEFT JOIN anbiao_jiashiyuan_congyezigezheng d on d.ajc_aj_ids = a.id and d.ajc_delete=0
-                LEFT JOIN anbiao_jiashiyuan_tijian e on e.ajt_aj_ids = a.id and e.ajt_delete=0
-                LEFT JOIN anbiao_jiashiyuan_gangqianpeixun f on f.ajg_aj_ids = a.id and f.ajg_delete=0
-                LEFT JOIN anbiao_jiashiyuan_wuzezhengming g on g.ajw_aj_ids = a.id and g.ajw_delete=0
-                LEFT JOIN anbiao_jiashiyuan_qita h on h.ajt_aj_ids =a.id and h.ajt_delete=0
+            inner join  (
+                SELECT
+                    DISTINCT
+                    xiaji.id,
+                    xiaji.parent_id,
+                    xiaji.dept_name,
+                    xiaji.is_deleted
+                FROM
+                    blade_dept shangji,
+                    blade_dept xiaji
+                WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                    AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+                <if test="deptId !=null and deptId != ''">
+                    and shangji.id=#{deptId}
+                </if>
+            ) bb on a.dept_id = bb.id
+            LEFT JOIN anbiao_jiashiyuan_ruzhi b on b.ajr_aj_ids = a.id and b.ajr_delete=0
+            LEFT JOIN anbiao_jiashiyuan_jiashizheng c on c.ajj_aj_ids = a.id and c.ajj_delete=0
+            LEFT JOIN anbiao_jiashiyuan_congyezigezheng d on d.ajc_aj_ids = a.id and d.ajc_delete=0
+            LEFT JOIN anbiao_jiashiyuan_tijian e on e.ajt_aj_ids = a.id and e.ajt_delete=0
+            LEFT JOIN anbiao_jiashiyuan_gangqianpeixun f on f.ajg_aj_ids = a.id and f.ajg_delete=0
+            LEFT JOIN anbiao_jiashiyuan_wuzezhengming g on g.ajw_aj_ids = a.id and g.ajw_delete=0
+            LEFT JOIN anbiao_jiashiyuan_qita h on h.ajt_aj_ids =a.id and h.ajt_delete=0
         where
             a.isdelete=0
-        <if test="deptId !=null and deptId != ''">
-            and a.dept_id=#{deptId}
-        </if>
         <if test="jiashiyuanxingming !=null and jiashiyuanxingming != ''">
             and a.jiashiyuanxingming=#{jiashiyuanxingming}
         </if>

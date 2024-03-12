@@ -221,28 +221,33 @@ public class MaintenanceController {
 					fittingEntityQueryWrapper.lambda().eq(FittingEntity::getWeihuid, maintenanceEntity.getId());
 					fittingService.getBaseMapper().delete(fittingEntityQueryWrapper);
 					List<FittingsEntity> fittingEntities = maintenanceEntity.getFittingDTOS();
-					for (FittingsEntity list : fittingEntities) {
-						FittingEntity fitting = new FittingEntity();
-						fitting.setWeihuid(maintenanceEntity.getId());
-						fitting.setCaozuorenid(maintenanceEntity.getCaozuorenid());
-						fitting.setCaozuoren(maintenanceEntity.getCaozuoren());
-						fitting.setCailiaomingcheng(list.getAwpName());
-						fitting.setPeijianid(list.getPeijianId());
-						fitting.setXiaoji(list.getAwpModel());
-						fitting.setShuliang(String.valueOf(fittingEntities.size()));
-						fitting.setBeizhu(list.getAwpRemarks());
-						fitting.setIsdelete(maintenanceEntity.getIsDeleted().toString());
-						boolean b = fittingService.save(fitting);
-						if (b) {
-							r.setMsg("更新成功");
-							r.setCode(200);
-							r.setSuccess(false);
-						} else {
-							r.setMsg("更新失败");
-							r.setCode(500);
-							r.setSuccess(false);
+					if(fittingEntities.size() > 0 && fittingEntities != null){
+						for (FittingsEntity list : fittingEntities) {
+							FittingEntity fitting = new FittingEntity();
+							fitting.setWeihuid(maintenanceEntity.getId());
+							fitting.setCaozuorenid(maintenanceEntity.getCaozuorenid());
+							fitting.setCaozuoren(maintenanceEntity.getCaozuoren());
+							fitting.setCailiaomingcheng(list.getAwpName());
+							fitting.setPeijianid(list.getPeijianId());
+							fitting.setXiaoji(list.getAwpModel());
+							fitting.setShuliang(String.valueOf(fittingEntities.size()));
+							fitting.setBeizhu(list.getAwpRemarks());
+							fitting.setIsdelete(maintenanceEntity.getIsDeleted().toString());
+							boolean b = fittingService.save(fitting);
+							if (b) {
+								r.setMsg("更新成功");
+								r.setCode(200);
+								r.setSuccess(false);
+							} else {
+								r.setMsg("更新失败");
+								r.setCode(500);
+								r.setSuccess(false);
+							}
 						}
-
+					}else{
+						r.setMsg("更新成功");
+						r.setCode(200);
+						r.setSuccess(false);
 					}
 				}
 			} else {

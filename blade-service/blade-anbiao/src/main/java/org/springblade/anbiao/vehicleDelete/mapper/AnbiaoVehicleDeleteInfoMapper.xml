@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.vehicleDelete.mapper.AnbiaoVehicleDeleteInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.vehicleDelete.entity.AnbiaoVehicleDeleteInfo">
+        <id column="vd_id" property="vdId" />
+        <result column="vd_veh_id" property="vdVehId" />
+        <result column="vd_veh_plate" property="vdVehPlate" />
+        <result column="vd_veh_color" property="vdVehColor" />
+        <result column="vd_date" property="vdDate" />
+        <result column="vd_createtime" property="vdCreatetime" />
+        <result column="vd_createid" property="vdCreateid" />
+        <result column="vd_createname" property="vdCreatename" />
+        <result column="vd_dept_id" property="vdDeptId" />
+        <result column="vd_remark" property="vdRemark" />
+        <result column="vd_status" property="vdStatus" />
+        <result column="vd_updatetime" property="vdUpdatetime" />
+        <result column="vd_updateid" property="vdUpdateid" />
+        <result column="vd_updatename" property="vdUpdatename" />
+		<result column="vd_zhongduanhao" property="vdZhongduanhao" />
+		<result column="vd_new_zhongduanhao" property="vdNewZhongduanhao" />
+		<result column="vd_sim" property="vdSim" />
+		<result column="vd_new_sim" property="vdNewSim" />
+		<result column="vd_new_veh_plate" property="vdNewVehPlate" />
+		<result column="vd_new_veh_color" property="vdNewVehColor" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        vd_id, vd_veh_id, vd_veh_plate, vd_date, vd_createtime, vd_createid, vd_createname
+    </sql>
+
+    <sql id="tableSql">
+        select
+            a.*,
+            b.dept_name as rpDeptName
+        from
+            anbiao_vehicle_delete_info a
+        inner join  (
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b on a.vd_dept_id = b.id
+        where 1=1
+            and vd_status = 0
+        <if test="vdDate != null and vdDate != '' ">
+            and vd_date = #{vdDate}
+        </if>
+    </sql>
+
+    <sql id="querySql">
+        <if test="deptName != null and deptName != '' ">
+            and rpDeptName like CONCAT("%", #{deptName}, "%")
+        </if>
+        <if test="vehPlate != null and vehPlate != '' ">
+            and vd_veh_plate like CONCAT("%", #{vehPlate}, "%")
+        </if>
+    </sql>
+
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        ORDER BY vd_date desc
+    </sql>
+
+    <select id="selectTJPage" resultMap="BaseResultMap"
+            parameterType="org.springblade.anbiao.vehicleDelete.page.VehicleDeletePage" >
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectTJTotal"
+            parameterType="org.springblade.anbiao.vehicleDelete.page.VehicleDeletePage"
+            resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql" />
+        )d
+        where 1 = 1
+        <include refid="querySql" />
+    </select>
+
+
+
+</mapper>

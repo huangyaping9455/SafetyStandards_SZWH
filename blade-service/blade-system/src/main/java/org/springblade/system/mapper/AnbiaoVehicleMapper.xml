@@ -182,15 +182,28 @@
             CASE WHEN IFNULL( e.avd_enclosure, '' ) != '' THEN 1 ELSE 0 end as djzimgcount
         FROM
             anbiao_vehicle a
-                left join anbiao_vehicle_xingshizheng b on a.id = b.avx_av_ids and b.avx_delete = 0
-                left join anbiao_vehicle_daoluyunshuzheng c on a.id = c.avd_av_ids and c.avd_delete = 0
-                left join anbiao_vehicle_xingnengbaogao d on a.id = d.avx_av_ids and d.avx_delete = 0
-                left join anbiao_vehicle_dengjizhengshu e on a.id = e.avd_vehicle_ids and e.avd_delete = 0
+            inner join  (
+                SELECT
+                    DISTINCT
+                    xiaji.id,
+                    xiaji.parent_id,
+                    xiaji.dept_name,
+                    xiaji.is_deleted
+                FROM
+                    blade_dept shangji,
+                    blade_dept xiaji
+                WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+                    AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+                <if test="deptId !=null and deptId != ''">
+                    and shangji.id=#{deptId}
+                </if>
+            ) bb on a.dept_id = bb.id
+            left join anbiao_vehicle_xingshizheng b on a.id = b.avx_av_ids and b.avx_delete = 0
+            left join anbiao_vehicle_daoluyunshuzheng c on a.id = c.avd_av_ids and c.avd_delete = 0
+            left join anbiao_vehicle_xingnengbaogao d on a.id = d.avx_av_ids and d.avx_delete = 0
+            left join anbiao_vehicle_dengjizhengshu e on a.id = e.avd_vehicle_ids and e.avd_delete = 0
         WHERE
             a.is_deleted = 0
-        <if test="deptId !=null and deptId != ''">
-            and a.dept_id=#{deptId}
-        </if>
         <if test="cheliangpaizhao !=null and cheliangpaizhao != ''">
             and a.cheliangpaizhao=#{cheliangpaizhao}
         </if>

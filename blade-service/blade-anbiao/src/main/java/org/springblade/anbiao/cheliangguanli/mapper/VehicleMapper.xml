@@ -179,9 +179,9 @@
 
     <!-- 车辆 删除 -->
     <update id="deleteVehicle" parameterType="java.lang.String" >
-         update anbiao_vehicle set is_deleted = 1 , caozuoshijian = NOW()
+        update anbiao_vehicle set is_deleted = #{isdel}  , caozuoren = #{caozuoren} , caozuorenid = #{caozuorenid}, caozuoshijian = #{shijian, jdbcType=VARCHAR}
         WHERE id = #{id}
-  </update>
+    </update>
 
     <!-- 车辆 停用 -->
     <update id="updateVehicleOutStatus" parameterType="java.lang.String" >

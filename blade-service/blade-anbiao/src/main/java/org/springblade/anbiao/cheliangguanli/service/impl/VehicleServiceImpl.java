@@ -363,5 +363,10 @@ public class VehicleServiceImpl extends ServiceImpl<VehicleMapper, Vehicle> impl
 		return vehicleMapper.selectCheLiangJiaShiYuan(jiaShiYuanVO);
 	}
 
+	@Override
+	public boolean deleteVehicle(Integer isDeleted, String caozuoren, String caozuorenid, String id, String shijian) {
+		return vehicleMapper.deleteVehicle(isDeleted.toString(), caozuoren, caozuorenid, id, shijian);
+	}
+
 
 }

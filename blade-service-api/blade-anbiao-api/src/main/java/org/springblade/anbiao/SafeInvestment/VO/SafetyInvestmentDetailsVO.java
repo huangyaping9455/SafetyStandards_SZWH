@@ -30,7 +30,9 @@ public class SafetyInvestmentDetailsVO {
 	@JsonFormat(pattern = "yyyy",timezone = "GMT+8")
 	private Date asidInvestmentDare;
 
-	private String 	asidAmountUsed;
+	private String asidAmountUsed;
 
 	private String asidDelete;
+
+	private String asidImg;
 }
