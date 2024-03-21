@@ -275,7 +275,7 @@ public class TrainServiceImpl extends ServiceImpl<TrainMapper, Train> implements
 		List<StudentProve> studentProveList = trainMapper.getStudentProveInfo(unitId, courseId, studentId);
 		studentProveList.forEach(studentitem-> {
 			List<JiaShiYuanTrain> jiaShiYuanTrainList =jiaShiYuanClient.selectJiaShiYuanTrain(deptId);
-			if(jiaShiYuanTrainList.size() > 0){
+			if(jiaShiYuanTrainList != null && jiaShiYuanTrainList.size() > 0){
 				jiaShiYuanTrainList.forEach(item-> {
 					if(studentitem.getRealName().equals(item.getJiashiyuanxingming())){
 						studentitem.setSignatrue(item.getSignatrue());

@@ -902,6 +902,10 @@ public class DeptController extends BladeController {
 				a.setNodeId(uuid.toString());
 			}
 		} else {
+			if(StringUtils.isNotEmpty(selectName) && "企业".equals(deptName)){
+				tree = deptService.treeDeptImage(deptId, "2",selectName);
+				return R.data(tree);
+			}
 			//根据所选择树形加载下级数据
 			tree = deptService.treeDeptImage(deptId, "2",deptName);
 			for (DeptVO a : tree) {

@@ -14,21 +14,6 @@ spring:
     username: root
     password: Ts2022
 
-    #gzqy
-    #    url: jdbc:mysql://202.105.11.193:3366/blade_qg?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
-    #    username: root
-    #    password: admin@gzqy
-
-    #swh8.0
-    #    url: jdbc:mysql://39.108.120.102:3366/blade?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
-    #    username: root
-    #    password: admin@swh
-
-    #gzht
-#    url: jdbc:mysql://220.197.15.174:3366/blade_qg?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
-#    username: root
-#    password: admin@htkj
-
 #文件的物理路径前缀与url前缀
 fileserver:
   path-prefix: ${fileserver.dev.path}
