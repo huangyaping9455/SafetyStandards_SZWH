@@ -96,4 +96,7 @@ public class VehiclePage<T> extends BasePage<T> {
 
 	@ApiModelProperty(value = "车辆id")
 	private String id;
+
+	@ApiModelProperty(value = "变更状态，1：离职，2：请假，3：机动，4：调离，5：迁出")
+	private Integer status;
 }

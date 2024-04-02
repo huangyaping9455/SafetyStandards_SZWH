@@ -336,5 +336,8 @@ public class VehicleListVO {
 	@ApiModelProperty(value = "道路运输证剩余有效期")
 	private String daoluyunshuzhengshengyuyouxiaoqi;
 
+	@ApiModelProperty(value = "状态")
+	private String status;
+
 
 }

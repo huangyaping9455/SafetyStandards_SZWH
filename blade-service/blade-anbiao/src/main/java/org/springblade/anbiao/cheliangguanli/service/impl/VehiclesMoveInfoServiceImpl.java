@@ -4,8 +4,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.cheliangguanli.entity.VehiclesMoveInfo;
 import org.springblade.anbiao.cheliangguanli.mapper.VehiclesMoveInfoMapper;
-import org.springblade.anbiao.cheliangguanli.page.VehiclesMoveInfoPage;
+import org.springblade.anbiao.cheliangguanli.page.VehiclePage;
 import org.springblade.anbiao.cheliangguanli.service.IVehiclesMoveInfoService;
+import org.springblade.anbiao.cheliangguanli.vo.VehicleListVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,42 +20,108 @@ public class VehiclesMoveInfoServiceImpl extends ServiceImpl<VehiclesMoveInfoMap
 
     private VehiclesMoveInfoMapper vehiclesMoveInfoMapper;
 
-	@Override
-	public VehiclesMoveInfoPage<VehiclesMoveInfo> selectVehiclePage(VehiclesMoveInfoPage vehiclesMoveInfoPage) {
-
-		Integer total = vehiclesMoveInfoMapper.selectVehicleTotal(vehiclesMoveInfoPage);
-		if(vehiclesMoveInfoPage.getSize()==0){
-			if(vehiclesMoveInfoPage.getTotal()==0){
-				vehiclesMoveInfoPage.setTotal(total);
-			}
-			List<VehiclesMoveInfo> vehiclesMoveInfoList = vehiclesMoveInfoMapper.selectVehiclePage(vehiclesMoveInfoPage);
-			vehiclesMoveInfoPage.setRecords(vehiclesMoveInfoList);
-			return vehiclesMoveInfoPage;
-		}
-		Integer pagetotal = 0;
-		if (total > 0) {
-			if(total%vehiclesMoveInfoPage.getSize()==0){
-				pagetotal = total / vehiclesMoveInfoPage.getSize();
-			}else {
-				pagetotal = total / vehiclesMoveInfoPage.getSize() + 1;
-			}
-		}
-		if (pagetotal >= vehiclesMoveInfoPage.getCurrent()) {
-			vehiclesMoveInfoPage.setPageTotal(pagetotal);
-			Integer offsetNo = 0;
-			if (vehiclesMoveInfoPage.getCurrent() > 1) {
-				offsetNo = vehiclesMoveInfoPage.getSize() * (vehiclesMoveInfoPage.getCurrent() - 1);
-			}
-			vehiclesMoveInfoPage.setTotal(total);
-			vehiclesMoveInfoPage.setOffsetNo(offsetNo);
-			List<VehiclesMoveInfo> vehiclesMoveInfoList = vehiclesMoveInfoMapper.selectVehiclePage(vehiclesMoveInfoPage);
-			vehiclesMoveInfoPage.setRecords(vehiclesMoveInfoList);
-		}
-		return vehiclesMoveInfoPage;
-	}
+//	@Override
+//	public vehiclePage<VehiclesMoveInfo> selectVehiclePage(vehiclePage vehiclePage) {
+//
+//		Integer total = vehiclesMoveInfoMapper.selectVehicleTotal(vehiclePage);
+//		if(vehiclePage.getSize()==0){
+//			if(vehiclePage.getTotal()==0){
+//				vehiclePage.setTotal(total);
+//			}
+//			List<VehiclesMoveInfo> vehiclesMoveInfoList = vehiclesMoveInfoMapper.selectVehiclePage(vehiclePage);
+//			vehiclePage.setRecords(vehiclesMoveInfoList);
+//			return vehiclePage;
+//		}
+//		Integer pagetotal = 0;
+//		if (total > 0) {
+//			if(total%vehiclePage.getSize()==0){
+//				pagetotal = total / vehiclePage.getSize();
+//			}else {
+//				pagetotal = total / vehiclePage.getSize() + 1;
+//			}
+//		}
+//		if (pagetotal >= vehiclePage.getCurrent()) {
+//			vehiclePage.setPageTotal(pagetotal);
+//			Integer offsetNo = 0;
+//			if (vehiclePage.getCurrent() > 1) {
+//				offsetNo = vehiclePage.getSize() * (vehiclePage.getCurrent() - 1);
+//			}
+//			vehiclePage.setTotal(total);
+//			vehiclePage.setOffsetNo(offsetNo);
+//			List<VehiclesMoveInfo> vehiclesMoveInfoList = vehiclesMoveInfoMapper.selectVehiclePage(vehiclePage);
+//			vehiclePage.setRecords(vehiclesMoveInfoList);
+//		}
+//		return vehiclePage;
+//	}
 
 	@Override
 	public boolean insertSelective(VehiclesMoveInfo vehiclesMoveInfo) {
 		return vehiclesMoveInfoMapper.insertSelective(vehiclesMoveInfo);
+	}
+
+	@Override
+	public VehiclePage<VehicleListVO> selectPageList(VehiclePage vehiclePage) {
+		Integer total = vehiclesMoveInfoMapper.selectTotal(vehiclePage);
+		if(vehiclePage.getSize()==0){
+			if(vehiclePage.getTotal()==0){
+				vehiclePage.setTotal(total);
+			}
+			List<VehicleListVO> vehiclesMoveInfoList = vehiclesMoveInfoMapper.selectPageList(vehiclePage);
+			vehiclePage.setRecords(vehiclesMoveInfoList);
+			return vehiclePage;
+		}
+		Integer pagetotal = 0;
+		if (total > 0) {
+			if(total%vehiclePage.getSize()==0){
+				pagetotal = total / vehiclePage.getSize();
+			}else {
+				pagetotal = total / vehiclePage.getSize() + 1;
+			}
+		}
+		if (pagetotal >= vehiclePage.getCurrent()) {
+			vehiclePage.setPageTotal(pagetotal);
+			Integer offsetNo = 0;
+			if (vehiclePage.getCurrent() > 1) {
+				offsetNo = vehiclePage.getSize() * (vehiclePage.getCurrent() - 1);
+			}
+			vehiclePage.setTotal(total);
+			vehiclePage.setOffsetNo(offsetNo);
+			List<VehicleListVO> vehiclesMoveInfoList = vehiclesMoveInfoMapper.selectPageList(vehiclePage);
+			vehiclePage.setRecords(vehiclesMoveInfoList);
+		}
+		return vehiclePage;
+	}
+
+	@Override
+	public VehiclePage<VehicleListVO> selectGHCPageList(VehiclePage vehiclePage) {
+		Integer total = vehiclesMoveInfoMapper.selectGHCTotal(vehiclePage);
+		if(vehiclePage.getSize()==0){
+			if(vehiclePage.getTotal()==0){
+				vehiclePage.setTotal(total);
+			}
+			List<VehicleListVO> vehiclesMoveInfoList = vehiclesMoveInfoMapper.selectGHCPageList(vehiclePage);
+			vehiclePage.setRecords(vehiclesMoveInfoList);
+			return vehiclePage;
+		}
+		Integer pagetotal = 0;
+		if (total > 0) {
+			if(total%vehiclePage.getSize()==0){
+				pagetotal = total / vehiclePage.getSize();
+			}else {
+				pagetotal = total / vehiclePage.getSize() + 1;
+			}
+		}
+		if (pagetotal >= vehiclePage.getCurrent()) {
+			vehiclePage.setPageTotal(pagetotal);
+			Integer offsetNo = 0;
+			if (vehiclePage.getCurrent() > 1) {
+				offsetNo = vehiclePage.getSize() * (vehiclePage.getCurrent() - 1);
+			}
+			vehiclePage.setTotal(total);
+			vehiclePage.setOffsetNo(offsetNo);
+			List<VehicleListVO> vehiclesMoveInfoList = vehiclesMoveInfoMapper.selectGHCPageList(vehiclePage);
+			vehiclePage.setRecords(vehiclesMoveInfoList);
+		}
+		return vehiclePage;
 	}
 }

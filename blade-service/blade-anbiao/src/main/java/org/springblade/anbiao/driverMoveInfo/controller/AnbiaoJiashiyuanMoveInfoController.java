@@ -2,8 +2,11 @@ package org.springblade.anbiao.driverMoveInfo.controller;
 
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
@@ -18,6 +21,7 @@ import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
 import org.springblade.core.tool.utils.DigestUtil;
+import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -36,7 +40,7 @@ import java.util.UUID;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/anbiao/jiashiyuanMoveInfo")
-@Api(value = "驾驶员管理-驾驶员异动", tags = "驾驶员管理-驾驶员异动")
+@Api(value = "驾驶员资料状态记录管理", tags = "驾驶员资料状态记录管理")
 public class AnbiaoJiashiyuanMoveInfoController {
 
 	private IAnbiaoJiashiyuanMoveInfoService jiashiyuanMoveInfoService;
@@ -52,6 +56,7 @@ public class AnbiaoJiashiyuanMoveInfoController {
 	private IAnbiaoJiashiyuanLaodonghetongService laodonghetongService;
 	private IAnbiaoJiashiyuanQitaService qitaService;
 	private IAnbiaoCheliangJiashiyuanDailyService cheliangJiashiyuanDailyService;
+	private IFileUploadClient fileUploadClient;
 
 
 	/*@PostMapping("/insert")
@@ -381,6 +386,312 @@ public class AnbiaoJiashiyuanMoveInfoController {
 	public R<JiaShiYuanPage<JiaShiYuanListVO>> getGHCPageList(@RequestBody JiaShiYuanPage jiaShiYuanPage) {
 		JiaShiYuanPage<JiaShiYuanListVO> pages = jiashiyuanMoveInfoService.selectGHCPageList(jiaShiYuanPage);
 		return R.data(pages);
+	}
+
+	/**
+	 * 查询详情
+	 */
+	@GetMapping("/detail")
+	@ApiLog("详情-驾驶员资料管理")
+	@ApiOperation(value = "详情-驾驶员资料管理", notes = "传入id、type", position = 4)
+	@ApiImplicitParams({@ApiImplicitParam(name = "id", value = "驾驶员ID", required = true),
+		@ApiImplicitParam(name = "type", value = "分类（1：入职登记表，2：身份证，3：驾驶证，4:从业资格证,5:体检表,6:岗前培训三级教育卡," +
+			"7:三年无重大责任事故正面,8:驾驶员安全责任书,9:驾驶员职业危害告知书,10:劳动合同,11:其他,）", required = true),
+	})
+	public R detail(String id, int type) {
+		R r = new R();
+		QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<JiaShiYuan>();
+		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId, id);
+		JiaShiYuan detal = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+		if (detal != null) {
+			///入职登记表///
+			if (type == 1) {
+				QueryWrapper<AnbiaoJiashiyuanRuzhi> ruzhiQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanRuzhi>();
+				ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrAjIds, detal.getId());
+				AnbiaoJiashiyuanRuzhi ruzhiInfo = ruzhiService.getBaseMapper().selectOne(ruzhiQueryWrapper);
+				if (ruzhiInfo != null) {
+					//本人照片(人员头像)
+					if (StrUtil.isNotEmpty(ruzhiInfo.getAjrHeadPortrait()) && ruzhiInfo.getAjrHeadPortrait().contains("http") == false) {
+						ruzhiInfo.setAjrHeadPortrait(fileUploadClient.getUrl(ruzhiInfo.getAjrHeadPortrait()));
+					}
+					ruzhiInfo.setAjrAjIds(detal.getId());
+					r.setData(ruzhiInfo);
+					r.setCode(200);
+					r.setMsg("获取成功");
+					return r;
+				} else {
+					r.setCode(200);
+					r.setMsg("暂无数据");
+					return r;
+				}
+
+			}
+
+			///身份证///
+			if (type == 2) {
+				jiaShiYuanQueryWrapper = new QueryWrapper<JiaShiYuan>();
+				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId, id);
+				JiaShiYuan shenfenzhengInfo = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+				if (shenfenzhengInfo != null) {
+					//照片(人员头像)
+//					if(StrUtil.isNotEmpty(detal.getZhaopian()) && detal.getZhaopian().contains("http") == false){
+//						detal.setZhaopian(fileUploadClient.getUrl(detal.getZhaopian()));
+//					}
+					//身份证附件
+					if (StrUtil.isNotEmpty(shenfenzhengInfo.getShenfenzhengfujian()) && shenfenzhengInfo.getShenfenzhengfujian().contains("http") == false) {
+						shenfenzhengInfo.setShenfenzhengfujian(fileUploadClient.getUrl(shenfenzhengInfo.getShenfenzhengfujian()));
+					}
+					//身份证附件反面
+					if (StrUtil.isNotEmpty(shenfenzhengInfo.getShenfenzhengfanmianfujian()) && shenfenzhengInfo.getShenfenzhengfanmianfujian().contains("http") == false) {
+						shenfenzhengInfo.setShenfenzhengfanmianfujian(fileUploadClient.getUrl(shenfenzhengInfo.getShenfenzhengfanmianfujian()));
+					}
+
+					r.setData(shenfenzhengInfo);
+					r.setCode(200);
+					r.setMsg("获取成功");
+					return r;
+				} else {
+					r.setCode(200);
+					r.setMsg("暂无数据");
+					return r;
+				}
+			}
+
+			///驾驶证///
+			if (type == 3) {
+				QueryWrapper<AnbiaoJiashiyuanJiashizheng> jiashizhengQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanJiashizheng>();
+				jiashizhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanJiashizheng::getAjjAjIds, detal.getId());
+				AnbiaoJiashiyuanJiashizheng jiashizhengInfo = jiashizhengService.getBaseMapper().selectOne(jiashizhengQueryWrapper);
+				if (jiashizhengInfo != null) {
+					//驾驶证正面照片
+					if (StrUtil.isNotEmpty(jiashizhengInfo.getAjjFrontPhotoAddress()) && jiashizhengInfo.getAjjFrontPhotoAddress().contains("http") == false) {
+						jiashizhengInfo.setAjjFrontPhotoAddress(fileUploadClient.getUrl(jiashizhengInfo.getAjjFrontPhotoAddress()));
+					}
+					//驾驶证反面照片
+					if (StrUtil.isNotEmpty(jiashizhengInfo.getAjjAttachedPhotos()) && jiashizhengInfo.getAjjAttachedPhotos().contains("http") == false) {
+						jiashizhengInfo.setAjjAttachedPhotos(fileUploadClient.getUrl(jiashizhengInfo.getAjjAttachedPhotos()));
+					}
+					r.setData(jiashizhengInfo);
+					r.setCode(200);
+					r.setMsg("获取成功");
+					return r;
+				} else {
+					r.setCode(200);
+					r.setMsg("暂无数据");
+					return r;
+				}
+			}
+
+			///从业资格证///
+			if (type == 4) {
+				QueryWrapper<AnbiaoJiashiyuanCongyezigezheng> congyezigezhengQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanCongyezigezheng>();
+				congyezigezhengQueryWrapper.lambda().eq(AnbiaoJiashiyuanCongyezigezheng::getAjcAjIds, detal.getId());
+				AnbiaoJiashiyuanCongyezigezheng congyezigezhengInfo = congyezigezhengService.getBaseMapper().selectOne(congyezigezhengQueryWrapper);
+				if (congyezigezhengInfo != null) {
+					//从业资格证照片
+					if (StrUtil.isNotEmpty(congyezigezhengInfo.getAjcLicence()) && congyezigezhengInfo.getAjcLicence().contains("http") == false) {
+						congyezigezhengInfo.setAjcLicence(fileUploadClient.getUrl(congyezigezhengInfo.getAjcLicence()));
+					}
+					congyezigezhengInfo.setAjcAjIds(detal.getId());
+					r.setData(congyezigezhengInfo);
+					r.setCode(200);
+					r.setMsg("获取成功");
+					return r;
+				} else {
+					r.setCode(200);
+					r.setMsg("暂无数据");
+					return r;
+				}
+			}
+
+			///体检表///
+			if (type == 5) {
+				QueryWrapper<AnbiaoJiashiyuanTijian> tijianQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanTijian>();
+				tijianQueryWrapper.lambda().eq(AnbiaoJiashiyuanTijian::getAjtAjIds, detal.getId());
+				AnbiaoJiashiyuanTijian tijianInfo = tijianService.getBaseMapper().selectOne(tijianQueryWrapper);
+				if (tijianInfo != null) {
+					//体检附件
+					if (StrUtil.isNotEmpty(tijianInfo.getAjtEnclosure()) && tijianInfo.getAjtEnclosure().contains("http") == false) {
+						tijianInfo.setAjtEnclosure(fileUploadClient.getUrl(tijianInfo.getAjtEnclosure()));
+					}
+					tijianInfo.setAjtAjIds(detal.getId());
+					r.setData(tijianInfo);
+					r.setCode(200);
+					r.setMsg("获取成功");
+					return r;
+				} else {
+					r.setCode(200);
+					r.setMsg("暂无数据");
+					return r;
+				}
+			}
+
+			///岗前培训三级教育卡///
+			if (type == 6) {
+				QueryWrapper<AnbiaoJiashiyuanGangqianpeixun> gangqianpeixunQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanGangqianpeixun>();
+				gangqianpeixunQueryWrapper.lambda().eq(AnbiaoJiashiyuanGangqianpeixun::getAjgAjIds, detal.getId());
+				AnbiaoJiashiyuanGangqianpeixun gangqianpeixunInfo = gangqianpeixunService.getBaseMapper().selectOne(gangqianpeixunQueryWrapper);
+				if (gangqianpeixunInfo != null) {
+					//培训附件
+					if (StrUtil.isNotEmpty(gangqianpeixunInfo.getAjgTrainingEnclosure()) && gangqianpeixunInfo.getAjgTrainingEnclosure().contains("http") == false) {
+						gangqianpeixunInfo.setAjgTrainingEnclosure(fileUploadClient.getUrl(gangqianpeixunInfo.getAjgTrainingEnclosure()));
+					}
+					gangqianpeixunInfo.setAjgAjIds(detal.getId());
+					r.setData(gangqianpeixunInfo);
+					r.setCode(200);
+					r.setMsg("获取成功");
+					return r;
+				} else {
+					r.setCode(200);
+					r.setMsg("暂无数据");
+					return r;
+				}
+			}
+
+			///三年无重大责任事故正面///
+			if (type == 7) {
+				QueryWrapper<AnbiaoJiashiyuanWuzezhengming> wuzezhengmingQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanWuzezhengming>();
+				wuzezhengmingQueryWrapper.lambda().eq(AnbiaoJiashiyuanWuzezhengming::getAjwAjIds, detal.getId());
+				AnbiaoJiashiyuanWuzezhengming wuzezhengmingInfo = wuzezhengmingService.getBaseMapper().selectOne(wuzezhengmingQueryWrapper);
+				if (wuzezhengmingInfo != null) {
+					//无责证明附件
+					if (StrUtil.isNotEmpty(wuzezhengmingInfo.getAjwEnclosure()) && wuzezhengmingInfo.getAjwEnclosure().contains("http") == false) {
+						wuzezhengmingInfo.setAjwEnclosure(fileUploadClient.getUrl(wuzezhengmingInfo.getAjwEnclosure()));
+					}
+					wuzezhengmingInfo.setAjwAjIds(detal.getId());
+					r.setData(wuzezhengmingInfo);
+					r.setCode(200);
+					r.setMsg("获取成功");
+					return r;
+				} else {
+					r.setCode(200);
+					r.setMsg("暂无数据");
+					return r;
+				}
+
+			}
+
+			///驾驶员安全责任书///
+			if (type == 8) {
+				QueryWrapper<AnbiaoJiashiyuanAnquanzerenshu> anquanzerenshuQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanAnquanzerenshu>();
+				anquanzerenshuQueryWrapper.lambda().eq(AnbiaoJiashiyuanAnquanzerenshu::getAjaAjIds, detal.getId());
+				AnbiaoJiashiyuanAnquanzerenshu anquanzerenshuInfo = anquanzerenshuService.getBaseMapper().selectOne(anquanzerenshuQueryWrapper);
+				if (anquanzerenshuInfo != null) {
+					//安全责任书附件
+					if (StrUtil.isNotEmpty(anquanzerenshuInfo.getAjaEnclosure()) && anquanzerenshuInfo.getAjaEnclosure().contains("http") == false) {
+						anquanzerenshuInfo.setAjaEnclosure(fileUploadClient.getUrl(anquanzerenshuInfo.getAjaEnclosure()));
+					}
+					//安全责任书签名附件
+					if (StrUtil.isNotEmpty(anquanzerenshuInfo.getAjaAutographEnclosure()) && anquanzerenshuInfo.getAjaAutographEnclosure().contains("http") == false) {
+						anquanzerenshuInfo.setAjaAutographEnclosure(fileUploadClient.getUrl(anquanzerenshuInfo.getAjaAutographEnclosure()));
+					}
+					anquanzerenshuInfo.setAjaAjIds(detal.getId());
+					anquanzerenshuInfo.setDeptName(detal.getDeptName());
+					r.setData(anquanzerenshuInfo);
+					r.setCode(200);
+					r.setMsg("获取成功");
+					return r;
+				} else {
+					r.setCode(200);
+					r.setMsg("暂无数据");
+					return r;
+				}
+			}
+
+			///驾驶员职业危害告知书///
+			if (type == 9) {
+				QueryWrapper<AnbiaoJiashiyuanWeihaigaozhishu> weihaigaozhishuQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanWeihaigaozhishu>();
+				weihaigaozhishuQueryWrapper.lambda().eq(AnbiaoJiashiyuanWeihaigaozhishu::getAjwAjIds, detal.getId());
+				AnbiaoJiashiyuanWeihaigaozhishu weihaigaozhishuInfo = weihaigaozhishuService.getBaseMapper().selectOne(weihaigaozhishuQueryWrapper);
+
+				if (weihaigaozhishuInfo != null) {
+					//无责证明附件
+					if (StrUtil.isNotEmpty(weihaigaozhishuInfo.getAjwEnclosure()) && weihaigaozhishuInfo.getAjwEnclosure().contains("http") == false) {
+						weihaigaozhishuInfo.setAjwEnclosure(fileUploadClient.getUrl(weihaigaozhishuInfo.getAjwEnclosure()));
+					}
+					//无责证明签名附件
+					if (StrUtil.isNotEmpty(weihaigaozhishuInfo.getAjwAutographEnclosure()) && weihaigaozhishuInfo.getAjwAutographEnclosure().contains("http") == false) {
+						weihaigaozhishuInfo.setAjwAutographEnclosure(fileUploadClient.getUrl(weihaigaozhishuInfo.getAjwAutographEnclosure()));
+					}
+					weihaigaozhishuInfo.setAjwAjIds(detal.getId());
+					r.setData(weihaigaozhishuInfo);
+					r.setCode(200);
+					r.setMsg("获取成功");
+					return r;
+				} else {
+					r.setCode(200);
+					r.setMsg("暂无数据");
+					return r;
+				}
+			}
+
+			///劳动合同///
+			if (type == 10) {
+				QueryWrapper<AnbiaoJiashiyuanLaodonghetong> laodonghetongQueryWrapper = new QueryWrapper<>();
+				laodonghetongQueryWrapper.lambda().eq(AnbiaoJiashiyuanLaodonghetong::getAjwAjIds, detal.getId());
+				AnbiaoJiashiyuanLaodonghetong laodonghetongInfo = laodonghetongService.getBaseMapper().selectOne(laodonghetongQueryWrapper);
+
+				if (laodonghetongInfo != null) {
+					//劳动合同附件
+					if (StrUtil.isNotEmpty(laodonghetongInfo.getAjwEnclosure()) && laodonghetongInfo.getAjwEnclosure().contains("http") == false) {
+						laodonghetongInfo.setAjwEnclosure(fileUploadClient.getUrl(laodonghetongInfo.getAjwEnclosure()));
+					}
+					//劳动合同签名附件
+					if (StrUtil.isNotEmpty(laodonghetongInfo.getAjwAutographEnclosure()) && laodonghetongInfo.getAjwAutographEnclosure().contains("http") == false) {
+						laodonghetongInfo.setAjwAutographEnclosure(fileUploadClient.getUrl(laodonghetongInfo.getAjwAutographEnclosure()));
+					}
+					laodonghetongInfo.setAjwAjIds(detal.getId());
+					laodonghetongInfo.setDeptName(detal.getDeptName());
+					QueryWrapper<AnbiaoJiashiyuanRuzhi> ruzhiQueryWrapper = new QueryWrapper<AnbiaoJiashiyuanRuzhi>();
+					ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrAjIds, detal.getId());
+					ruzhiQueryWrapper.lambda().eq(AnbiaoJiashiyuanRuzhi::getAjrDelete, "0");
+					AnbiaoJiashiyuanRuzhi ruzhiInfo = ruzhiService.getBaseMapper().selectOne(ruzhiQueryWrapper);
+					if (ruzhiInfo != null) {
+						laodonghetongInfo.setDriverAddress(ruzhiInfo.getAjrAddress());
+					}
+					laodonghetongInfo.setDriverNo(detal.getShenfenzhenghao());
+					laodonghetongInfo.setDriverPhone(detal.getShoujihaoma());
+
+					r.setData(laodonghetongInfo);
+					r.setCode(200);
+					r.setMsg("获取成功");
+					return r;
+				} else {
+					r.setCode(200);
+					r.setMsg("暂无数据");
+					return r;
+				}
+			}
+
+			///其他///
+			if (type == 11) {
+				QueryWrapper<AnbiaoJiashiyuanQita> qitaQueryWrapper = new QueryWrapper<>();
+				qitaQueryWrapper.lambda().eq(AnbiaoJiashiyuanQita::getAjtAjIds, detal.getId());
+				AnbiaoJiashiyuanQita qitaInfo = qitaService.getBaseMapper().selectOne(qitaQueryWrapper);
+
+				if (qitaInfo != null) {
+					//劳动合同附件
+					if (StrUtil.isNotEmpty(qitaInfo.getAjtEnclosure()) && qitaInfo.getAjtEnclosure().contains("http") == false) {
+						qitaInfo.setAjtEnclosure(fileUploadClient.getUrl(qitaInfo.getAjtEnclosure()));
+					}
+					qitaInfo.setAjtAjIds(detal.getId());
+					r.setData(qitaInfo);
+					r.setCode(200);
+					r.setMsg("获取成功");
+					return r;
+				} else {
+					r.setCode(200);
+					r.setMsg("暂无数据");
+					return r;
+				}
+			}
+
+		} else {
+			r.setMsg("暂无数据");
+			r.setCode(200);
+			return r;
+		}
+		return r;
 	}
 
 

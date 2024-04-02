@@ -79,4 +79,8 @@ public class VehiclesMoveInfo implements Serializable {
 	@ApiModelProperty(value = "车牌颜色")
 	private String chepaiyanse;
 
+	@ApiModelProperty(value = "变更状态，0：在职，1：删除，2：报停，3：报销，4：过户")
+	@TableField("type")
+	private Integer type;
+
 }

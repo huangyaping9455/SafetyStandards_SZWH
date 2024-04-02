@@ -178,14 +178,22 @@
             a.jiashiyuanleixing,
             a.dept_id as deptId,
             bb.dept_name deptName ,
-            jiashiyuanxingming ,
+            a.jiashiyuanxingming ,
             case when xingbie = 1 then '男' else '女' end as xingbie,
-            shoujihaoma ,
-            shenfenzhenghao
-        FROM
-            anbiao_jiashiyuan a
+            a.shoujihaoma ,
+            a.shenfenzhenghao
+        FROM(
+            select
+                DISTINCT id,jiashiyuanxingming,shoujihaoma,dept_id,congyerenyuanleixing,shenfenzhenghao,jiashiyuanleixing,xingbie
+            from
+                anbiao_jiashiyuan
+            where isdelete = 1
+            GROUP BY
+                jiashiyuanxingming,shoujihaoma,dept_id,congyerenyuanleixing,shenfenzhenghao,jiashiyuanleixing,xingbie
+            ORDER BY MAX(caozuoshijian) desc
+            ) a
         inner join  (
-        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
         ) bb on a.dept_id = bb.id
         left join (SELECT * FROM anbiao_jiashiyuan_ruzhi WHERE ajr_delete = 0) d on a.id = d.ajr_aj_ids
         left join (SELECT * FROM anbiao_jiashiyuan_laodonghetong WHERE ajw_delete = 0) e on a.id = e.ajw_aj_ids
@@ -196,7 +204,6 @@
         left join (SELECT * FROM anbiao_jiashiyuan_tijian WHERE ajt_delete = 0) k on a.id = k.ajt_aj_ids
         left join (SELECT * FROM anbiao_jiashiyuan_wuzezhengming WHERE ajw_delete = 0) l on a.id = l.ajw_aj_ids
         WHERE 1=1
-            and a.isdelete = 1
         <if test="id !=null and id != ''">
             AND a.id = #{id}
         </if>
