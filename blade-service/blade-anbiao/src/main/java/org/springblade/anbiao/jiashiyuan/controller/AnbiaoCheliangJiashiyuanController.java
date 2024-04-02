@@ -97,7 +97,7 @@ public class AnbiaoCheliangJiashiyuanController {
 			if (node.get("shiyongxingzhi") != null && !node.get("shiyongxingzhi").isNull() && !node.get("shiyongxingzhi").asText().isEmpty()){
 				String shiyongxingzhi = node.get("shiyongxingzhi").asText();
 				List<CheliangJiashiyuanVO> cheliangJiashiyuanVOS = cheliangJiashiyuanServiceImpl.SelectByJiashiyuanID(shiyongxingzhi,deptId);
-				if(cheliangJiashiyuanVOS.size() > 0){
+				if(cheliangJiashiyuanVOS != null && cheliangJiashiyuanVOS.size() > 0){
 //					cheliangJiashiyuanVOS.forEach(item-> {
 //						if (item.getJiashiyuanid() != null && item.getJiashiyuanid().equals(jiashiyuanid)) {
 //							item.setStatus(-1);
@@ -135,7 +135,7 @@ public class AnbiaoCheliangJiashiyuanController {
 					deptId = deail.getDeptId();
 				}
 				List<CheliangJiashiyuanVO> cheliangJiashiyuanVOS = cheliangJiashiyuanServiceImpl.SelectByJiashiyuanID(shiyongxingzhi,deptId);
-				if(cheliangJiashiyuanVOS.size() > 0){
+				if(cheliangJiashiyuanVOS != null && cheliangJiashiyuanVOS.size() > 0){
 					cheliangJiashiyuanVOS.forEach(item-> {
 						if (item.getJiashiyuanid() != null && item.getJiashiyuanid().equals(jiashiyuanid)) {
 							item.setStatus(-1);

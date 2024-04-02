@@ -89,6 +89,10 @@ public class WaitCompletedController extends BaseController {
         int courseType = 1;
 		int courseId = 0;
         try {
+			driverName = driverName.trim();
+			deptName = deptName.trim();
+			courseName = courseName.trim();
+			cellphone = cellphone.trim();
 			//根据学员姓名、企业名称获取培训的学员ID
 			Unit unitDeail = trainService.getUnitByName(deptName);
 			QueryWrapper<Student> studentQueryWrapper = new QueryWrapper<Student>();

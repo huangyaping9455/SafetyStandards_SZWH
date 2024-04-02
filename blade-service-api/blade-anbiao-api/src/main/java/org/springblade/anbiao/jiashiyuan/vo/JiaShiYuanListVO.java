@@ -206,5 +206,8 @@ public class JiaShiYuanListVO {
 	@ApiModelProperty(value = "驾驶员类型")
 	private String jiashiyuanleixing;
 
+	@ApiModelProperty(value = "状态")
+	private String status;
+
 
 }

@@ -1,5 +1,6 @@
 package org.springblade.anbiao.jiashiyuan.page;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -43,5 +44,8 @@ public class JiaShiYuanPage<T> extends BasePage<T> {
 	private String id;
 
 	private String type;
+
+	@ApiModelProperty(value = "变更状态，1：离职，2：请假，3：机动，4：调离，5：迁出")
+	private Integer status;
 
 }

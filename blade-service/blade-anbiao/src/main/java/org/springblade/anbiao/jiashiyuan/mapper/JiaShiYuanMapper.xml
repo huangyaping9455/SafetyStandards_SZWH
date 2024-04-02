@@ -91,7 +91,8 @@ values
         l.ajw_date as wuzhongdazerenshiguqishiriqi,
         case when IFNULL(l.ajw_date,'') = '' then '0天'
         when year(l.ajw_date) > YEAR(NOW()) then '365天'
-        else CONCAT(TIMESTAMPDIFF(DAY,NOW(),DATE_ADD(l.ajw_date, INTERVAL 1 YEAR)),'天') end as wuzhongdazerenshigujieshuriqi
+        else CONCAT(TIMESTAMPDIFF(DAY,NOW(),DATE_ADD(l.ajw_date, INTERVAL 1 YEAR)),'天') end as wuzhongdazerenshigujieshuriqi,
+        a.status
         FROM
         anbiao_jiashiyuan a
         inner join  (
@@ -874,6 +875,7 @@ values
             ) e on e.jiashiyuanid = a.id
         where a.isdelete = 0
           and a.id = #{jsyId}
+        limit 1
     </select>
 
     <select id="getJiaShiYuanByDept" resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan">
@@ -1549,5 +1551,11 @@ values
         order BY a.id
 
     </select>
+
+    <!-- 驾驶员异动 -->
+    <update id="updateDeptId" parameterType="map" >
+        update anbiao_jiashiyuan set dept_id = #{deptId} , caozuoshijian = NOW()
+        WHERE id = #{id}
+    </update>
 
 </mapper>

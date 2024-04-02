@@ -164,4 +164,12 @@ public interface IJiaShiYuanService extends IService<JiaShiYuan> {
 	 */
 	List<JiaShiYuanTable> jiaShiYuanTableList(@Param("deptId") Integer deptId);
 
+	/**
+	 * 驾驶员异动
+	 * @param deptId
+	 * @param id
+	 * @return
+	 */
+	boolean updateDeptId(@Param("deptId") String deptId,@Param("id") String id);
+
 }

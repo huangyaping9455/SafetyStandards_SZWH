@@ -236,6 +236,7 @@ public class AnbiaoJiashiyuan implements Serializable {
     @ApiModelProperty(value = "状态，默认0：在职，1：离职")
     private Integer status;
 
+	@TableField(exist = false)
     private Integer sfzCompeleted;
 
 	@ApiModelProperty(value = "deptName")

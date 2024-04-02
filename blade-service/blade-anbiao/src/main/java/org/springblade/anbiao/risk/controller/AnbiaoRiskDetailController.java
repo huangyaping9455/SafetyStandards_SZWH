@@ -3960,7 +3960,7 @@ public class AnbiaoRiskDetailController {
 		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdDeptIds, jiaShiYuan2.getDeptId());
 		riskDetailQueryWrapper.lambda().eq(AnbiaoRiskDetail::getArdIsRectification, 0);
 		List<AnbiaoRiskDetail> anbiaoRiskDetails = riskDetailService.getBaseMapper().selectList(riskDetailQueryWrapper);
-		if (anbiaoRiskDetails.size() > 0) {
+		if (anbiaoRiskDetails != null && anbiaoRiskDetails.size() > 0) {
 			riskCount += anbiaoRiskDetails.size();
 		}
 		VehicleRiskAllPage vehicleRiskAllPage = new VehicleRiskAllPage<>();
@@ -3969,7 +3969,7 @@ public class AnbiaoRiskDetailController {
 		vehicleRiskAllPage.setSize(0);
 		vehicleRiskAllPage.setCurrent(0);
 		VehicleRiskAllPage<VehicleRiskAllVO> pages = riskDetailService.selectVehicleRiskAll(vehicleRiskAllPage);
-		if (pages.getRecords().size() > 0) {
+		if (pages != null && pages.getRecords().size() > 0) {
 			riskCount += pages.getRecords().size();
 		}
 		r.setMsg("查询成功");

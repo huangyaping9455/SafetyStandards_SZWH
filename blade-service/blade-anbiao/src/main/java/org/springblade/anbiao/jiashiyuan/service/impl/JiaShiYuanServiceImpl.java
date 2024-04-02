@@ -388,5 +388,10 @@ public class JiaShiYuanServiceImpl extends ServiceImpl<JiaShiYuanMapper, JiaShiY
 		return jiaShiYuanMapper.jiaShiYuanTableList(deptId);
 	}
 
+	@Override
+	public boolean updateDeptId(String deptId, String id) {
+		return jiaShiYuanMapper.updateDeptId(deptId, id);
+	}
+
 
 }

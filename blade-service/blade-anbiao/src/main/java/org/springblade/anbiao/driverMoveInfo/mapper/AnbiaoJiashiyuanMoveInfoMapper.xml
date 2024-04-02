@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.driverMoveInfo.mapper.AnbiaoJiashiyuanMoveInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.driverMoveInfo.entity.AnbiaoJiashiyuanMoveInfo">
+        <id column="id" property="id" />
+        <result column="jsyId" property="jsyId" />
+        <result column="outOfDeptId" property="outOfDeptId" />
+        <result column="inOfDeptId" property="inOfDeptId" />
+        <result column="type" property="type" />
+        <result column="updateTime" property="updateTime" />
+        <result column="updateUserId" property="updateUserId" />
+        <result column="updateUser" property="updateUser" />
+        <result column="fuJian" property="fuJian" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, jsyId, outOfDeptId, inOfDeptId, type, updateTime, updateUserId, updateUser, fuJian, remark
+    </sql>
+
+    <sql id="tableSql">
+        SELECT
+        DISTINCT
+        a.id,
+        case when ifnull(g.ajc_category,'') = '' then a.congyerenyuanleixing else g.ajc_category end as congyerenyuanleixing,
+        a.jiashiyuanleixing,
+        a.dept_id as deptId,
+        bb.dept_name deptName ,
+        jiashiyuanxingming ,
+        case when xingbie = 1 then '男' else '女' end as xingbie,
+        shoujihaoma,
+        b.cheliangpaizhao as cheliangpaizhao,
+        case when IFNULL(a.pingyongriqi,'') = '' then LEFT(a.createtime,10) else a.pingyongriqi end as sijiruzhiriqi,
+        e.ajw_start_date as laodonghetongkaishiriqi,
+        e.ajw_end_date as laodonghetongjieshuriqi,
+        case when IFNULL(e.ajw_end_date,'') = '' then '0天'
+        when year(e.ajw_end_date) > YEAR(NOW()) then '365天'
+        else CONCAT(TIMESTAMPDIFF(DAY,NOW(),e.ajw_end_date),'天') end as laodonghetongshengyuyouxiaoqi,
+        shenfenzhenghao ,
+        shenfenzhengchulingriqi ,
+        shenfenzhengyouxiaoqi ,
+        case when IFNULL(shenfenzhengyouxiaoqi,'') = '' then '0天'
+        else CONCAT(TIMESTAMPDIFF(day,NOW(),shenfenzhengyouxiaoqi),'天') end as shenfenzhengshengyuyouxiaoqi,
+        jiashizhenghao ,
+        f.ajj_valid_period_start as jiashizhengkaishiriqi,
+        f.ajj_valid_period_end as jiashizhengjieshuriqi,
+        case when IFNULL(f.ajj_valid_period_end,'') = '' then '0天'
+        else CONCAT(TIMESTAMPDIFF(day,NOW(),f.ajj_valid_period_end),'天') end as jiashizhengshengyuyouxiaoqi,
+        g.ajc_certificate_no as congyezigezhenghao,
+        g.ajc_initial_issuing as congyezigezhengkaishiriqi,
+        g.ajc_valid_until as congyezigezhengjieshuriqi,
+        case when IFNULL(g.ajc_valid_until,'') = '' then '0天'
+        else CONCAT(TIMESTAMPDIFF(day,NOW(),g.ajc_valid_until),'天') end as congyezigezhengshengyuyouxiaoqi,
+        h.aja_start_date as anquanshengchanzerenshuqishiriqi ,
+        case when IFNULL(h.aja_start_date,'') = '' then '0天'
+        when year(h.aja_start_date) > YEAR(NOW()) then '365天'
+        else CONCAT(TIMESTAMPDIFF(DAY,NOW(),DATE_ADD(h.aja_start_date, INTERVAL 1 YEAR)),'天') end as anquanshengchanzerenshushengyuyouxiaoqi,
+        j.ajw_start_date as gangweiweixiangaozhishuqishiriqi,
+        case when IFNULL(j.ajw_start_date,'') = '' then '0天'
+        else CONCAT(TIMESTAMPDIFF(DAY,NOW(),DATE_ADD(j.ajw_start_date, INTERVAL 3 YEAR)),'天') end as gangweiweixiangaozhishushengyuyouxiaoqi,
+        k.ajt_physical_examination_date as tijianbaogaoqishiriqi ,
+        case when IFNULL(k.ajt_physical_examination_date,'') = '' then '0天'
+        when year(k.ajt_physical_examination_date) > YEAR(NOW()) then '365天'
+        else CONCAT(TIMESTAMPDIFF(DAY,NOW(),DATE_ADD(k.ajt_physical_examination_date, INTERVAL 1 YEAR)),'天') end as tijianbaogaoshengyuyouxiaoqi,
+        l.ajw_date as wuzhongdazerenshiguqishiriqi,
+        case when IFNULL(l.ajw_date,'') = '' then '0天'
+        when year(l.ajw_date) > YEAR(NOW()) then '365天'
+        else CONCAT(TIMESTAMPDIFF(DAY,NOW(),DATE_ADD(l.ajw_date, INTERVAL 1 YEAR)),'天') end as wuzhongdazerenshigujieshuriqi,
+        a.status
+        FROM
+        anbiao_jiashiyuan a
+        inner join  (
+        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) bb on a.dept_id = bb.id
+        left join (
+        select cheliangpaizhao,b.jiashiyuanid from anbiao_vehicle a,anbiao_cheliang_jiashiyuan_daily b
+        where a.is_deleted = 0
+        and a.id = b.vehid
+        and b.vstatus = 1
+        and cheliangpaizhao not like '%挂%'
+        ) b on a.id = b.jiashiyuanid
+        left join (
+        select cheliangpaizhao,b.jiashiyuanid from anbiao_vehicle a,anbiao_cheliang_jiashiyuan_daily b
+        where a.is_deleted = 0
+        and a.id = b.gvehid
+        and b.gstatus = 1
+        and cheliangpaizhao like '%挂%'
+
+        ) c on a.id = c.jiashiyuanid
+        left join (SELECT * FROM anbiao_jiashiyuan_ruzhi WHERE ajr_delete = 0) d on a.id = d.ajr_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_laodonghetong WHERE ajw_delete = 0) e on a.id = e.ajw_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_jiashizheng WHERE ajj_delete = 0) f on a.id = f.ajj_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_congyezigezheng WHERE ajc_delete = 0) g on a.id = g.ajc_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_anquanzerenshu WHERE aja_delete = 0) h on a.id = h.aja_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_weihaigaozhishu WHERE ajw_delete = 0) j on a.id = j.ajw_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_tijian WHERE ajt_delete = 0) k on a.id = k.ajt_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_wuzezhengming WHERE ajw_delete = 0) l on a.id = l.ajw_aj_ids
+        WHERE 1=1
+            and a.isdelete not in (0,1)
+            and ifnull(a.status,0) != 0
+        <if test="id !=null and id != ''">
+            AND a.id = #{id}
+        </if>
+    </sql>
+
+    <sql id="querySql">
+        <if test="jiashiyuanxingming !=null and jiashiyuanxingming != ''">
+            AND jiashiyuanxingming  LIKE '%${jiashiyuanxingming}%'
+        </if>
+
+        <if test="deptName !=null and deptName != ''">
+            AND deptName LIKE '%${deptName}%'
+        </if>
+
+        <if test="shenfenzhenghao !=null and shenfenzhenghao != ''">
+            AND shenfenzhenghao = #{shenfenzhenghao}
+        </if>
+
+        <if test="shoujihaoma !=null and shoujihaoma != ''">
+            AND shoujihaoma LIKE '%${shoujihaoma}%'
+        </if>
+
+        <if test="congyerenyuanleixing !=null and congyerenyuanleixing != ''">
+            AND congyerenyuanleixing = #{congyerenyuanleixing}
+        </if>
+
+        <if test="jiashiyuanleixing !=null and jiashiyuanleixing != ''">
+            AND jiashiyuanleixing = #{jiashiyuanleixing}
+        </if>
+
+        <if test="status !=null ">
+            and status = #{status}
+        </if>
+
+    </sql>
+    <sql id="orderSql">
+        <!-- 默认排序规则 -->
+        order by jiashiyuanxingming
+    </sql>
+
+    <select id="selectPageList" parameterType="org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage" resultType="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanListVO">
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableSql" />
+            )b
+            where 1=1
+            <include refid="querySql" />
+            <include refid="orderSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectTotal" parameterType="org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage" resultType="int">
+        select COUNT(1) from (
+        <include refid="tableSql" />
+        )d
+        where 1 = 1
+        <include refid="querySql" />
+    </select>
+
+    <sql id="tableGHCSql">
+        SELECT
+            DISTINCT
+            a.id,
+            case when ifnull(g.ajc_category,'') = '' then a.congyerenyuanleixing else g.ajc_category end as congyerenyuanleixing,
+            a.jiashiyuanleixing,
+            a.dept_id as deptId,
+            bb.dept_name deptName ,
+            jiashiyuanxingming ,
+            case when xingbie = 1 then '男' else '女' end as xingbie,
+            shoujihaoma ,
+            shenfenzhenghao
+        FROM
+            anbiao_jiashiyuan a
+        inner join  (
+        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) bb on a.dept_id = bb.id
+        left join (SELECT * FROM anbiao_jiashiyuan_ruzhi WHERE ajr_delete = 0) d on a.id = d.ajr_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_laodonghetong WHERE ajw_delete = 0) e on a.id = e.ajw_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_jiashizheng WHERE ajj_delete = 0) f on a.id = f.ajj_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_congyezigezheng WHERE ajc_delete = 0) g on a.id = g.ajc_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_anquanzerenshu WHERE aja_delete = 0) h on a.id = h.aja_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_weihaigaozhishu WHERE ajw_delete = 0) j on a.id = j.ajw_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_tijian WHERE ajt_delete = 0) k on a.id = k.ajt_aj_ids
+        left join (SELECT * FROM anbiao_jiashiyuan_wuzezhengming WHERE ajw_delete = 0) l on a.id = l.ajw_aj_ids
+        WHERE 1=1
+            and a.isdelete = 1
+        <if test="id !=null and id != ''">
+            AND a.id = #{id}
+        </if>
+    </sql>
+
+    <sql id="queryGHCSql">
+        <if test="jiashiyuanxingming !=null and jiashiyuanxingming != ''">
+            AND jiashiyuanxingming  LIKE '%${jiashiyuanxingming}%'
+        </if>
+
+        <if test="deptName !=null and deptName != ''">
+            AND deptName LIKE '%${deptName}%'
+        </if>
+
+        <if test="shenfenzhenghao !=null and shenfenzhenghao != ''">
+            AND shenfenzhenghao = #{shenfenzhenghao}
+        </if>
+
+        <if test="shoujihaoma !=null and shoujihaoma != ''">
+            AND shoujihaoma LIKE '%${shoujihaoma}%'
+        </if>
+    </sql>
+    <sql id="orderGHCSql">
+        <!-- 默认排序规则 -->
+        order by jiashiyuanxingming
+    </sql>
+
+    <select id="selectGHCPageList" parameterType="org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage" resultType="org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanListVO">
+        <if test="size == 0" >
+            select * from (
+            <include refid="tableGHCSql" />
+            )b
+            where 1=1
+            <include refid="queryGHCSql" />
+            <include refid="orderGHCSql" />
+            limit ${total}
+        </if>
+        <if test="current != 0" >
+            select * from (
+            <include refid="tableGHCSql" />
+            )b
+            where 1=1
+            <include refid="queryGHCSql" />
+            <include refid="orderGHCSql" />
+            limit ${offsetNo},${size}
+        </if>
+    </select>
+
+    <select id="selectGHCTotal" parameterType="org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage" resultType="int">
+        select COUNT(1) from (
+        <include refid="tableGHCSql" />
+        )d
+        where 1 = 1
+        <include refid="queryGHCSql" />
+    </select>
+
+</mapper>

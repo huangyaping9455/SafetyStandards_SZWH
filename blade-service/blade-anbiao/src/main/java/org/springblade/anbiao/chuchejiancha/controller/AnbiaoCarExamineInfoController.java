@@ -996,14 +996,17 @@ public class AnbiaoCarExamineInfoController {
 									System.out.println(tt.get(ts).getDate().substring(tt.get(ts).getDate().length() - 2));
 									dates = tt.get(ts).getDate().substring(tt.get(ts).getDate().length() - 2);
 								}else{
-									dates = tt.get(ts).getDate().substring(tt.get(ts).getDate().length() - 1);
+									pp = "0"+pp;
+									System.out.println(pp);
+									System.out.println(tt.get(ts).getDate().substring(tt.get(ts).getDate().length() - 2));
+									dates = tt.get(ts).getDate().substring(tt.get(ts).getDate().length() - 2);
 								}
 								if(dates.equals(pp)){
-									if(tt.get(ts).getStatus().equals(0)){
+									if(0 == tt.get(ts).getStatus()){
 										str +="a"+p+":√,";
-									}else if(tt.get(ts).getStatus().equals(6)){
+									}else if(6 == tt.get(ts).getStatus()){
 										str +="a"+p+":#,";
-									}else if(tt.get(ts).getStatus().equals(1)){
+									}else if(1 == tt.get(ts).getStatus()){
 										str +="a"+p+":*,";
 									}else{
 										str +="a"+p+":×,";
