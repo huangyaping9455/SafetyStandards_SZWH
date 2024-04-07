@@ -68,15 +68,19 @@ public class VehiclesMoveInfo implements Serializable {
 	private String remark;
 
 	@ApiModelProperty(value = "迁入企业")
+	@TableField(exist = false)
 	private String inOfDeptName;
 
 	@ApiModelProperty(value = "迁出企业")
+	@TableField(exist = false)
 	private String outOfDeptName;
 
 	@ApiModelProperty(value = "车辆牌照")
+	@TableField(exist = false)
 	private String cheliangpaizhao;
 
 	@ApiModelProperty(value = "车牌颜色")
+	@TableField(exist = false)
 	private String chepaiyanse;
 
 	@ApiModelProperty(value = "变更状态，0：在职，1：删除，2：报停，3：报销，4：过户")

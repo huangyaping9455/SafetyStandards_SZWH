@@ -99,8 +99,7 @@
         left join (SELECT * FROM anbiao_jiashiyuan_tijian WHERE ajt_delete = 0) k on a.id = k.ajt_aj_ids
         left join (SELECT * FROM anbiao_jiashiyuan_wuzezhengming WHERE ajw_delete = 0) l on a.id = l.ajw_aj_ids
         WHERE 1=1
-            and a.isdelete not in (0,1)
-            and ifnull(a.status,0) != 0
+            and a.status not in (0,1)
         <if test="id !=null and id != ''">
             AND a.id = #{id}
         </if>
@@ -188,6 +187,7 @@
             from
                 anbiao_jiashiyuan
             where isdelete = 1
+                and `status` = 1
             GROUP BY
                 jiashiyuanxingming,shoujihaoma,dept_id,congyerenyuanleixing,shenfenzhenghao,jiashiyuanleixing,xingbie
             ORDER BY MAX(caozuoshijian) desc

@@ -311,12 +311,7 @@
             inner join relation_unit_course ruc2 on ruc2.id = a.rel_unit_course_id
             INNER JOIN base_student bs on bs.id = a.student_id and bs.unit_id = ruc2.unit_id
             where bs.deleted=0  and ruc2.unit_id = bu.id and ruc2.id = ruc.id ) as inStudyNumber,
-            (select count(*)
-            from relation_student_course rsc
-            inner join relation_unit_course ruc2 on ruc2.id = rsc.rel_unit_course_id
-            INNER JOIN base_student bs on bs.id = rsc.student_id and bs.unit_id = ruc2.unit_id
-            where bs.deleted = 0 and rsc.course_status = 1 and rsc.rel_unit_course_id = ruc.id and ruc2.unit_id = bu.id
-            ) as finishStudyCount,
+            st.finishStudyCount,
             (select count(*)
             from relation_student_course rsc
             inner join relation_unit_course ruc2 on ruc2.id = rsc.rel_unit_course_id
@@ -334,12 +329,49 @@
             inner join relation_unit_course ruc on bc.id = ruc.course_id
             inner join base_unit bu on ruc.unit_id = bu.id
             inner join base_course_ext bce on bce.rel_unit_course_id = ruc.id
-        where ruc.deleted = 0
-            and ruc.status = 1
-            and bu.deleted=0
-        <if test = "unitId != null and unitId != 0">
-            and ruc.unit_id = #{unitId}
-        </if>
+            LEFT JOIN(
+                select
+                    rel_unit_course_id,
+                    count(*) as finishStudyCount
+                from(
+                    select
+                        ruc.id,
+                        sum(bc.duration) duration
+                    from
+                        relation_course_courseware rc
+                    INNER JOIN base_courseware bc on bc.id = rc.courseware_id
+                    INNER JOIN relation_unit_course ruc ON rc.course_id = ruc.course_id
+                    where 1=1
+                        AND bc.deleted = 0
+                    GROUP BY
+                        ruc.id
+                    )	a
+                LEFT JOIN(
+                    SELECT
+                        ifnull( sum( duration ), 0 ) AS studyDuration,
+                        student_id,
+                        rel_unit_course_id
+                    FROM
+                        biz_study_record a,
+                        base_student b
+                    WHERE
+                        a.valid = 1
+                        AND a.student_id = b.id
+                        AND b.deleted = 0
+                    GROUP BY
+                        student_id,
+                        rel_unit_course_id
+                    )	b on a.id = b.rel_unit_course_id
+                where b.studyDuration >= a.duration
+                GROUP BY
+                    rel_unit_course_id
+                )	st on ruc.id = st.rel_unit_course_id
+            where ruc.deleted = 0
+                and ruc.status = 1
+                and bu.deleted=0
+            <if test = "unitId != null and unitId != 0">
+                and ruc.unit_id = #{unitId}
+            </if>
     </sql>
 
     <sql id="querySql">

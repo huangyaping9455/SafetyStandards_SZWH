@@ -254,10 +254,19 @@
         left join anbiao_vehicle_xingshizheng c on a.id = c.avx_av_ids
         left join anbiao_vehicle_daoluyunshuzheng d on a.id = d.avd_av_ids
         WHERE 1=1
-        and a.isdelete not in (0,1)
-        and ifnull(a.cheliangzhuangtai,0) != 0
+        and a.cheliangzhuangtai not in (0,1)
         and a.dept_id in(
-            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            SELECT
+            DISTINCT
+            xiaji.id
+            FROM
+            blade_dept shangji,
+            blade_dept xiaji
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+            AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+            <if test="deptId != null">
+                and shangji.id=#{deptId}
+            </if>
         )
         <if test="id !=null and id != '' ">
             AND a.id = #{id}
@@ -391,9 +400,20 @@
         left join anbiao_vehicle_xingshizheng c on a.id = c.avx_av_ids
         left join anbiao_vehicle_daoluyunshuzheng d on a.id = d.avd_av_ids
         WHERE 1=1
-        and a.isdelete = 1
+        and a.is_deleted = 1
+        and a.cheliangzhuangtai = 1
         and a.dept_id in(
-        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            SELECT
+            DISTINCT
+            xiaji.id
+            FROM
+            blade_dept shangji,
+            blade_dept xiaji
+            WHERE xiaji.tree_code LIKE CONCAT(shangji.tree_code,'%')
+            AND xiaji.is_deleted = 0 AND xiaji.extend_type='机构'
+            <if test="deptId != null">
+                and shangji.id=#{deptId}
+            </if>
         )
         <if test="id !=null and id != '' ">
             AND a.id = #{id}

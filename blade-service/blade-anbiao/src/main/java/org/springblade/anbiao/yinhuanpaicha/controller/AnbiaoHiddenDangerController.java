@@ -406,7 +406,7 @@ public class AnbiaoHiddenDangerController {
 							}
 							map.put("ahdHiddendangerEnclosure", t.getImgUrl());
 						}else{
-							map.put("ahdHiddendangerEnclosure", "无");
+							map.put("ahdHiddendangerEnclosure", "未上传");
 						}
 
 						if(StringUtils.isNotEmpty(url2)){
@@ -418,7 +418,7 @@ public class AnbiaoHiddenDangerController {
 							}
 							map.put("ahdHiddendangerEnclosure1", t.getImgUrl());
 						}else{
-							map.put("ahdHiddendangerEnclosure1", "无");
+							map.put("ahdHiddendangerEnclosure1", "未上传");
 						}
 
 						if(StringUtils.isNotEmpty(url3)){
@@ -430,7 +430,7 @@ public class AnbiaoHiddenDangerController {
 							}
 							map.put("ahdHiddendangerEnclosure2", t.getImgUrl());
 						}else{
-							map.put("ahdHiddendangerEnclosure2", "无");
+							map.put("ahdHiddendangerEnclosure2", "未上传");
 						}
 
 					}else if(StrUtil.isNotEmpty(t.getAhdHiddendangerEnclosure())){
@@ -468,7 +468,7 @@ public class AnbiaoHiddenDangerController {
 							}
 							map.put("ahdHiddendangerEnclosure", t.getImgUrl());
 						}else{
-							map.put("ahdHiddendangerEnclosure", "无");
+							map.put("ahdHiddendangerEnclosure", "未上传");
 						}
 
 						if(StringUtils.isNotEmpty(url2)){
@@ -480,7 +480,7 @@ public class AnbiaoHiddenDangerController {
 							}
 							map.put("ahdHiddendangerEnclosure1", t.getImgUrl());
 						}else{
-							map.put("ahdHiddendangerEnclosure1", "无");
+							map.put("ahdHiddendangerEnclosure1", "未上传");
 						}
 
 						if(StringUtils.isNotEmpty(url3)){
@@ -492,12 +492,12 @@ public class AnbiaoHiddenDangerController {
 							}
 							map.put("ahdHiddendangerEnclosure2", t.getImgUrl());
 						}else{
-							map.put("ahdHiddendangerEnclosure2", "无");
+							map.put("ahdHiddendangerEnclosure2", "未上传");
 						}
 					}else{
-						map.put("ahdHiddendangerEnclosure", "无");
-						map.put("ahdHiddendangerEnclosure1", "无");
-						map.put("ahdHiddendangerEnclosure2", "无");
+						map.put("ahdHiddendangerEnclosure", "未上传");
+						map.put("ahdHiddendangerEnclosure1", "未上传");
+						map.put("ahdHiddendangerEnclosure2", "未上传");
 					}
 					// 模板注意 用{} 来表示你要用的变量 如果本来就有"{","}" 特殊字符 用"\{","\}"代替
 					// {} 代表普通变量 {.} 代表是list的变量
@@ -511,7 +511,7 @@ public class AnbiaoHiddenDangerController {
 						//如果目标文件所在的目录不存在，则创建父目录
 						newFile.mkdirs();
 					}
-					fileName = fileName+"/"+t.getDeptname()+"-"+t.getCheliangpaizhao()+t.getAhdDiscoveryTime().substring(0,10)+"-隐患登记台账.xlsx";
+					fileName = fileName+"/"+t.getDeptname()+"-"+t.getCheliangpaizhao()+"-"+t.getAhdDiscoveryTime().substring(0,10)+"-隐患登记台账.xlsx";
 					ExcelWriter excelWriter = EasyExcel.write(fileName).withTemplate(templateFileName).build();
 					WriteSheet writeSheet = EasyExcel.writerSheet().build();
 					// 写入list之前的数据

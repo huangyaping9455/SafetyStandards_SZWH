@@ -9,14 +9,12 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang.StringUtils;
 import org.springblade.anbiao.driverMoveInfo.entity.AnbiaoJiashiyuanMoveInfo;
 import org.springblade.anbiao.driverMoveInfo.service.IAnbiaoJiashiyuanMoveInfoService;
 import org.springblade.anbiao.jiashiyuan.entity.*;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.service.*;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanListVO;
-import org.springblade.common.tool.IdCardUtil;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
@@ -25,7 +23,6 @@ import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -375,7 +372,15 @@ public class AnbiaoJiashiyuanMoveInfoController {
 	@PostMapping("/list")
 	@ApiLog("分页-非在职驾驶员资料")
 	@ApiOperation(value = "分页-非在职驾驶员资料", notes = "传入JiaShiYuanPage", position = 5)
-	public R<JiaShiYuanPage<JiaShiYuanListVO>> list(@RequestBody JiaShiYuanPage jiaShiYuanPage) {
+	public R<JiaShiYuanPage<JiaShiYuanListVO>> list(@RequestBody JiaShiYuanPage jiaShiYuanPage,BladeUser user) {
+		R r = new R();
+		if (user == null) {
+			r.setCode(401);
+			r.setMsg("用户权限验证失败");
+			r.setData(null);
+			r.setSuccess(false);
+			return r;
+		}
 		JiaShiYuanPage<JiaShiYuanListVO> pages = jiashiyuanMoveInfoService.selectPageList(jiaShiYuanPage);
 		return R.data(pages);
 	}
@@ -383,7 +388,15 @@ public class AnbiaoJiashiyuanMoveInfoController {
 	@PostMapping("/getGHCPageList")
 	@ApiLog("分页-公海池驾驶员资料")
 	@ApiOperation(value = "分页-公海池驾驶员资料", notes = "传入JiaShiYuanPage", position = 6)
-	public R<JiaShiYuanPage<JiaShiYuanListVO>> getGHCPageList(@RequestBody JiaShiYuanPage jiaShiYuanPage) {
+	public R<JiaShiYuanPage<JiaShiYuanListVO>> getGHCPageList(@RequestBody JiaShiYuanPage jiaShiYuanPage,BladeUser user) {
+		R r = new R();
+		if (user == null) {
+			r.setCode(401);
+			r.setMsg("用户权限验证失败");
+			r.setData(null);
+			r.setSuccess(false);
+			return r;
+		}
 		JiaShiYuanPage<JiaShiYuanListVO> pages = jiashiyuanMoveInfoService.selectGHCPageList(jiaShiYuanPage);
 		return R.data(pages);
 	}
@@ -398,8 +411,15 @@ public class AnbiaoJiashiyuanMoveInfoController {
 		@ApiImplicitParam(name = "type", value = "分类（1：入职登记表，2：身份证，3：驾驶证，4:从业资格证,5:体检表,6:岗前培训三级教育卡," +
 			"7:三年无重大责任事故正面,8:驾驶员安全责任书,9:驾驶员职业危害告知书,10:劳动合同,11:其他,）", required = true),
 	})
-	public R detail(String id, int type) {
+	public R detail(String id, int type,BladeUser user) {
 		R r = new R();
+		if (user == null) {
+			r.setCode(401);
+			r.setMsg("用户权限验证失败");
+			r.setData(null);
+			r.setSuccess(false);
+			return r;
+		}
 		QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<JiaShiYuan>();
 		jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId, id);
 		JiaShiYuan detal = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
