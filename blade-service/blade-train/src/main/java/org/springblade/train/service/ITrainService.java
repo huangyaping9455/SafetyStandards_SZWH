@@ -191,5 +191,6 @@ public interface ITrainService extends IService<Train> {
 	 */
 	QiYeShouYePage<ZFCourseInfo> selectZFPersonLearnCoutAll(QiYeShouYePage qiYeShouYePage);
 
+	Boolean getStudentDept(Integer deptId);
 
 }

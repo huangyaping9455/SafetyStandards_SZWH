@@ -185,24 +185,67 @@ public class VehicleBaoxianController extends BladeController {
 			SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
 
 			String avbInsureName = String.valueOf(mmap.get("投保单位")).trim();		//投保单位
+			if(StringUtil.isEmpty(avbInsureName)){
+				isFail=true;
+				errorStr += "投保单位不能为空！";
+			}
 			String avbInsuredName = String.valueOf(mmap.get("保险单位")).trim();
+			if(StringUtil.isEmpty(avbInsuredName)){
+				isFail=true;
+				errorStr += "保险单位不能为空！";
+			}
 			String avbInsuranceCompany = String.valueOf(mmap.get("保险公司")).trim();
+			if(StringUtil.isEmpty(avbInsuranceCompany)){
+				isFail=true;
+				errorStr += "保险公司不能为空！";
+			}
 			String avbInsuredContacts = String.valueOf(mmap.get("被保险人")).trim();
 			String avbPolicyNo = String.valueOf(mmap.get("保险单号")).trim();
+			if(StringUtil.isEmpty(avbPolicyNo)){
+				isFail=true;
+				errorStr += "保险单号不能为空！";
+			}
 			String avbInsureContacts = String.valueOf(mmap.get("投保车辆")).trim();
+			if(StringUtil.isEmpty(avbInsureContacts)){
+				isFail=true;
+				errorStr += "投保车辆不能为空！";
+			}
 			String avbInsureContactNumber = String.valueOf(mmap.get("投保联系人电话")).trim();
 			String avbmRisk = String.valueOf(mmap.get("保险种类")).trim();
-			if("车险".equals(avbmRisk) || "交强险".equals(avbmRisk) || "超赔险".equals(avbmRisk)){
+			if(StringUtil.isEmpty(avbmRisk)){
+				isFail=true;
+				errorStr += "保险种类不能为空！";
+			}
+			if(!"车险".equals(avbmRisk) && !"交强险".equals(avbmRisk) && !"超赔险".equals(avbmRisk)){
 				isFail=true;
 				errorStr += avbmRisk+"保险种类不存在！";
 			}
 			String avbmName = String.valueOf(mmap.get("保险名称")).trim();
+			if(StringUtil.isEmpty(avbmName)){
+				isFail=true;
+				errorStr += "保险名称不能为空！";
+			}
 			String avbInsurancePeriodStart = String.valueOf(mmap.get("投保开始时间")).trim();
+			if(StringUtil.isEmpty(avbInsurancePeriodStart)){
+				isFail=true;
+				errorStr += "投保开始时间不能为空！";
+			}
 			String avbInsurancePeriodEnd = String.valueOf(mmap.get("投保结束时间")).trim();
+			if(StringUtil.isEmpty(avbInsurancePeriodEnd)){
+				isFail=true;
+				errorStr += "投保结束时间不能为空！";
+			}
 			String daysRemaining = String.valueOf(mmap.get("投保剩余有效期")).trim();
 			String avbmInsuranceAmount = String.valueOf(mmap.get("保险金额")).trim();
+//			if(StringUtil.isEmpty(avbmInsuranceAmount)){
+//				isFail=true;
+//				errorStr += "保险金额不能为空！";
+//			}
 			String avbmBasicPremium = String.valueOf(mmap.get("保险费用")).trim();
-
+//			if(StringUtil.isEmpty(avbmBasicPremium)){
+//				isFail=true;
+//				errorStr += "保险费用不能为空！";
+//			}
 //			if(baoxian == null) {
 				if(StringUtil.isNotBlank(avbInsureName)) {
 					avbInsureDept = iSysClient.getDeptByName(avbInsureName);
@@ -263,9 +306,10 @@ public class VehicleBaoxianController extends BladeController {
 							if (ruzhiInfo != null) {
 								baoxian.setAvbInsuredContactAddress(ruzhiInfo.getAjrAddress());
 							}
-						} else {
-							errorStr += "没有查询到"+avbInsuredVehicle.getCheliangpaizhao()+"的车主信息！";
 						}
+//						else {
+//							errorStr += "没有查询到"+avbInsuredVehicle.getCheliangpaizhao()+"的车主信息！";
+//						}
 					} else {
 						errorStr += "没有查询到被保车辆："+avbInsureContacts+"，请查证后重新导入！";
 					}

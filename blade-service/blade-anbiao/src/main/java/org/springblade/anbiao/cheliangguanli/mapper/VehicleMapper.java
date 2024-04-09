@@ -63,7 +63,7 @@ public interface VehicleMapper extends BaseMapper<Vehicle> {
      * @param id
      * @return
      */
-    boolean deleteVehicle(String id);
+    boolean deleteById(String id);
 
 	/**
 	 * 自定义停用

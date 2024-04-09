@@ -91,7 +91,7 @@ public class VehicleServiceImpl extends ServiceImpl<VehicleMapper, Vehicle> impl
 
 	@Override
     public boolean deleleVehicle(String id) {
-        return vehicleMapper.deleteVehicle(id);
+        return vehicleMapper.deleteById(id);
     }
 
 	@Override

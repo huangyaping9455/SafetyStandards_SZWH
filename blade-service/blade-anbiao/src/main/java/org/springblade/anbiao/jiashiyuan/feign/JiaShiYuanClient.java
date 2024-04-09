@@ -25,7 +25,7 @@ public class JiaShiYuanClient implements IJiaShiYuanClient {
 	@Override
 	@GetMapping(API_PREFIX + "/selectJiaShiYuanTrain")
 	@ApiOperation(value = "根据单位id进行查询数据", notes = "传入deptId", position = 1)
-	public List<JiaShiYuanTrain> selectJiaShiYuanTrain(Integer deptId) {
-		return service.selectJiaShiYuanTrain(deptId);
+	public List<JiaShiYuanTrain> selectJiaShiYuanTrain(Integer deptId,String driverId) {
+		return service.selectJiaShiYuanTrain(deptId,driverId);
 	}
 }

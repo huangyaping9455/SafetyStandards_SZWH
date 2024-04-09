@@ -246,7 +246,8 @@
         d.avd_issue_date as daoluyunshuzhengkaishiriqi,
         d.avd_valid_until as daoluyunshuzhengjieshuriqi,
         case when IFNULL(d.avd_valid_until,'') = '' then '0天'
-        else CONCAT(TIMESTAMPDIFF(day,NOW(),d.avd_valid_until),'天') end as daoluyunshuzhengshengyuyouxiaoqi
+        else CONCAT(TIMESTAMPDIFF(day,NOW(),d.avd_valid_until),'天') end as daoluyunshuzhengshengyuyouxiaoqi,
+        a.cheliangzhuangtai as status
         FROM
         anbiao_vehicle a
         inner join anbiao_organization cc on a.dept_id = cc.dept_id and cc.isdelete = 0
@@ -392,7 +393,8 @@
         d.avd_issue_date as daoluyunshuzhengkaishiriqi,
         d.avd_valid_until as daoluyunshuzhengjieshuriqi,
         case when IFNULL(d.avd_valid_until,'') = '' then '0天'
-        else CONCAT(TIMESTAMPDIFF(day,NOW(),d.avd_valid_until),'天') end as daoluyunshuzhengshengyuyouxiaoqi
+        else CONCAT(TIMESTAMPDIFF(day,NOW(),d.avd_valid_until),'天') end as daoluyunshuzhengshengyuyouxiaoqi,
+        a.cheliangzhuangtai as status
         FROM
         anbiao_vehicle a
         inner join anbiao_organization cc on a.dept_id = cc.dept_id and cc.isdelete = 0

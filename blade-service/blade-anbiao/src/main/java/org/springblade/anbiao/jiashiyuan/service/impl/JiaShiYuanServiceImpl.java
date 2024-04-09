@@ -183,8 +183,8 @@ public class JiaShiYuanServiceImpl extends ServiceImpl<JiaShiYuanMapper, JiaShiY
 	}
 
 	@Override
-	public List<JiaShiYuanTrain> selectJiaShiYuanTrain(Integer deptId) {
-		return jiaShiYuanMapper.selectJiaShiYuanTrain(deptId);
+	public List<JiaShiYuanTrain> selectJiaShiYuanTrain(Integer deptId,String driverId) {
+		return jiaShiYuanMapper.selectJiaShiYuanTrain(deptId,driverId);
 	}
 
 	@Override

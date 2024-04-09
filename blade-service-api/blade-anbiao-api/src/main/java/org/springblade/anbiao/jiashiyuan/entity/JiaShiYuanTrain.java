@@ -24,6 +24,15 @@ public class JiaShiYuanTrain implements Serializable {
 	@ApiModelProperty(value = "手机号码")
 	private String shoujihaoma;
 
+	@ApiModelProperty(value = "驾驶员姓名")
+	private String shenfenzhenghao;
+
+	@ApiModelProperty(value = "性别（1：男，2：女）")
+	private String xingbie;
+
+	@ApiModelProperty(value = "车辆牌照")
+	private String chepaihao;
+
 	@ApiModelProperty(value = "企业ID")
 	private Integer deptId;
 

@@ -10,8 +10,9 @@ import java.util.List;
  **/
 @Component
 public class IJiaShiYuanClientBack implements IJiaShiYuanClient {
+
 	@Override
-	public List<JiaShiYuanTrain> selectJiaShiYuanTrain(Integer deptId) {
+	public List<JiaShiYuanTrain> selectJiaShiYuanTrain(Integer deptId, String driverId) {
 		return null;
 	}
 }

@@ -25,5 +25,5 @@ public interface IJiaShiYuanClient {
 	 * @return
 	 */
 	@GetMapping(API_PREFIX + "/selectJiaShiYuanTrain")
-	List<JiaShiYuanTrain> selectJiaShiYuanTrain(@RequestParam("deptId") Integer deptId);
+	List<JiaShiYuanTrain> selectJiaShiYuanTrain(@RequestParam("deptId") Integer deptId,@RequestParam("driverId") String driverId);
 }

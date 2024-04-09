@@ -5,22 +5,14 @@ server:
 #数据源配置
 spring:
   redis:
-    host: edu.swhaq.com
-    port: 18003
-    password: lingyi
-    database: 0
-    ssl: false
+    host: ${spring.redis.host}
+    port: ${spring.redis.port}
+    password: ${spring.redis.password}
 
   datasource:
-    #    url: ${blade.datasource.train.url}
-    #    username: ${blade.datasource.train.username}
-    #    password: ${blade.datasource.train.password}
-
-
-    #测试
-    url: jdbc:mysql://120.78.198.161:3306/ote?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
-    username: root
-    password: Ts2022
+    url: ${blade.datasource.train.url}
+    username: ${blade.datasource.train.username}
+    password: ${blade.datasource.train.password}
 
     driver-class-name: com.mysql.jdbc.Driver    #指定数据库驱动
     type: com.alibaba.druid.pool.DruidDataSource  #指定类型连接池
@@ -44,14 +36,9 @@ spring:
 
 
 trainserver:
-  #  file-server: ${trainserver.dev.fileServer}
-  #  file-server: https://education.zhongkeguangtong.com:18002
-  #  file-server: https://edu.sztoosun.com:18002/
-  file-server: https://edu.sztoosun.com:18002/
-  #  video-server: ${trainserver.dev.videoServer}
-  video-server: D:/media/transcoding
-  #  uploadVideo-server: ${trainserver.dev.uploadVideoServer}
-  uploadVideo-server: https://edu.sztoosun.com:18005/picApi/group1/upload
+  file-server: ${trainserver.dev.fileServer}
+  video-server: ${trainserver.dev.videoServer}
+  uploadVideo-server: ${trainserver.dev.uploadVideoServer}
   client-id: QEbLaP18zPu8mkKrtethmgt4
   client-secret: yUnHQD6PDHrnFu3noGC9t7v8oilaT2m1
   access-token-url: https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials
@@ -62,6 +49,6 @@ trainserver:
   search-face-url: https://aip.baidubce.com/rest/2.0/face/v3/search?access_token=
   user-get-url: https://aip.baidubce.com/rest/2.0/face/v3/faceset/user/get?access_token=
   image-type: BASE64
-  face-platform-id: henanote
-  search-score: 35
+  face-platform-id: ${trainserver.dev.facePlatformId}
+  search-score: 50
   enable: true

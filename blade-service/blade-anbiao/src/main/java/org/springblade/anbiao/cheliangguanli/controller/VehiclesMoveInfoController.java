@@ -120,14 +120,14 @@ public class VehiclesMoveInfoController {
 			return r;
 		}
 		boolean ii = false;
-		vehiclesMoveInfo.setUpdateUserId(vehiclesMoveInfo.getUpdateUserId());
-		vehiclesMoveInfo.setUpdateUser(vehiclesMoveInfo.getUpdateUser());
-		vehiclesMoveInfo.setUpdateTime(vehiclesMoveInfo.getUpdateTime());
 		QueryWrapper<VehiclesMoveInfo> dangerQueryWrapper = new QueryWrapper<VehiclesMoveInfo>();
 		dangerQueryWrapper.lambda().eq(VehiclesMoveInfo::getVehId, vehiclesMoveInfo.getVehId());
 		dangerQueryWrapper.lambda().eq(VehiclesMoveInfo::getType, vehiclesMoveInfo.getType());
 		VehiclesMoveInfo deail = iVehiclesMoveInfoService.getBaseMapper().selectOne(dangerQueryWrapper);
 		if(deail == null){
+			vehiclesMoveInfo.setUpdateUserId(user.getUserId().toString());
+			vehiclesMoveInfo.setUpdateUser(user.getUserName());
+			vehiclesMoveInfo.setUpdateTime(DateUtil.now());
 			ii = iVehiclesMoveInfoService.save(vehiclesMoveInfo);
 			if(ii){
 				Vehicle vehicle = new Vehicle();
@@ -142,6 +142,7 @@ public class VehiclesMoveInfoController {
 					vehicle.setIsdel(vehiclesMoveInfo.getType());
 				}
 				ii = vehicleService.updateById(vehicle);
+				ii = vehicleService.deleteVehicle(vehicle.getIsdel(),vehicle.getCaozuoren(),vehicle.getCaozuorenid().toString(),vehicle.getId(),DateUtil.now());
 				if(ii){
 					//解绑人车绑定关系
 					QueryWrapper<AnbiaoCheliangJiashiyuanDaily> AnbiaoCheliangJiashiyuanDailyQueryWrapper = new QueryWrapper<>();
@@ -228,6 +229,8 @@ public class VehiclesMoveInfoController {
 			xingshizhengQueryWrapper.lambda().eq(VehicleXingshizheng::getAvxDelete,"0");
 			VehicleXingshizheng xingshizheng = vehicleXingshizhengService.getBaseMapper().selectOne(xingshizhengQueryWrapper);
 			if(xingshizheng != null){
+				UUID uuid = UUID.randomUUID();
+				xingshizheng.setAvxIds(uuid.toString());
 				xingshizheng.setAvxAvIds(clid.toString());
 				xingshizheng.setAvxDelete("0");
 				xingshizheng.setAvxCreateTime(LocalDateTime.now());
@@ -241,6 +244,8 @@ public class VehiclesMoveInfoController {
 			daoluyunshuzhengQueryWrapper.lambda().eq(VehicleDaoluyunshuzheng::getAvdDelete,0);
 			VehicleDaoluyunshuzheng daoluyunshuzheng = daoluyunshuzhengService.getBaseMapper().selectOne(daoluyunshuzhengQueryWrapper);
 			if (daoluyunshuzheng !=null){
+				UUID uuid = UUID.randomUUID();
+				daoluyunshuzheng.setAvdIds(uuid.toString());
 				daoluyunshuzheng.setAvdAvIds(clid.toString());
 				daoluyunshuzheng.setAvdDelete("0");
 				daoluyunshuzheng.setAvdCreateByName(user.getUserName());
@@ -254,6 +259,8 @@ public class VehiclesMoveInfoController {
 			xingnengbaogaoQueryWrapper.lambda().eq(VehicleXingnengbaogao::getAvxDelete,0);
 			VehicleXingnengbaogao xingnengbaogao = xingnengbaogaoService.getBaseMapper().selectOne(xingnengbaogaoQueryWrapper);
 			if (xingnengbaogao !=null){
+				UUID uuid = UUID.randomUUID();
+				xingnengbaogao.setAvxIds(uuid.toString());
 				xingnengbaogao.setAvxAvIds(clid.toString());
 				xingnengbaogao.setAvxDelete("0");
 				xingnengbaogao.setAvxCreateByName(user.getUserName());
@@ -267,6 +274,8 @@ public class VehiclesMoveInfoController {
 			dengjizhengshuQueryWrapper.lambda().eq(VehicleDengjizhengshu::getAvdDelete,0);
 			VehicleDengjizhengshu dengjizhengshu = dengjizhengshuService.getBaseMapper().selectOne(dengjizhengshuQueryWrapper);
 			if (dengjizhengshu !=null){
+				UUID uuid = UUID.randomUUID();
+				dengjizhengshu.setAvdIds(uuid.toString());
 				dengjizhengshu.setAvdVehicleIds(clid.toString());
 				dengjizhengshu.setAvdDelete("0");
 				dengjizhengshu.setAvdCreateByName(user.getUserName());

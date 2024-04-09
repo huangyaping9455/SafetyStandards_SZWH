@@ -892,16 +892,34 @@ values
     </select>
 
     <select id="selectJiaShiYuanTrain" resultType="org.springblade.anbiao.jiashiyuan.entity.JiaShiYuanTrain">
-        select
-        a.id,a.jiashiyuanxingming,a.shoujihaoma,a.dept_id as deptId,b.signatrue,r.ajr_head_portrait as photo
-        from
-        anbiao_jiashiyuan a
-        INNER JOIN anbiao_jiashiyuan_ruzhi r on r.ajr_aj_ids = a.id
-        left JOIN anbiao_jiashiyuan_signatrue b ON a.id = b.jiashiyuanid
-        where a.isdelete = 0
+        SELECT
+            a.id,
+            a.jiashiyuanxingming,
+            a.shoujihaoma,
+            a.dept_id AS deptId,
+            b.signatrue,
+            r.ajr_head_portrait AS photo,
+            a.shenfenzhenghao,
+            a.xingbie,
+            case when vstatus = 0 then '' else c.cheliangpaizhao end as chepaihao
+        FROM
+            anbiao_jiashiyuan a
+        INNER JOIN anbiao_jiashiyuan_ruzhi r ON r.ajr_aj_ids = a.id
+        LEFT JOIN anbiao_cheliang_jiashiyuan_daily cd on cd.jiashiyuanid = a.id and cd.vstatus = 1
+        LEFT JOIN anbiao_vehicle c on cd.vehid = c.id and c.is_deleted = 0
+        <if test="deptId != null and deptId != '' ">
+            AND c.dept_id= #{deptId}
+        </if>
+        LEFT JOIN anbiao_jiashiyuan_signatrue b ON a.id = b.jiashiyuanid
+        WHERE
+            a.isdelete = 0
         <if test="deptId != null and deptId != '' ">
             AND a.dept_id= #{deptId}
         </if>
+        <if test="driverId != null and driverId != '' ">
+            AND a.jiashiyuanxingming= #{driverId}
+        </if>
+
     </select>
 
     <select id="selectMaxId" resultType="java.lang.Integer">

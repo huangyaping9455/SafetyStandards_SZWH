@@ -462,4 +462,32 @@ public class SafetyEducationController extends BaseController {
 		return rs;
 	}
 
+	@GetMapping("/synchronizationDept")
+	@ApiOperation(value = "教育--同步企业信息", notes = "教育--同步企业信息", position = 14)
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "deptId", value = "企业ID（企业端）", required = true)
+	})
+	public R updateDept(Integer deptId) {
+		R rs = new R();
+		try {
+			//查询信息
+			boolean ss = iTrainService.getStudentDept(deptId);
+			if(ss){
+				rs.setCode(200);
+				rs.setSuccess(true);
+				rs.setMsg("同步更新成功");
+			}else{
+				rs.setCode(500);
+				rs.setSuccess(false);
+				rs.setMsg("同步更新失败");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rs.setCode(500);
+			rs.setSuccess(false);
+			rs.setMsg("同步更新失败");
+		}
+		return rs;
+	}
+
 }
