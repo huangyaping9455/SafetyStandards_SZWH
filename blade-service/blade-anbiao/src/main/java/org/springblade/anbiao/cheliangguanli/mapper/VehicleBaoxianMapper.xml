@@ -172,6 +172,9 @@
             <if test="deptName != null and deptName != ''">
                 and bd.dept_name like concat('%', #{deptName}, '%')
             </if>
+            <if test="isOverdue != null and isOverdue != ''">
+                and DATEDIFF(avb.avb_insurance_period_end,SYSDATE()) &lt; 0
+            </if>
         </where>
     </select>
 

@@ -45,7 +45,7 @@ public interface JiashiyuanBaoxianMapper extends BaseMapper<JiashiyuanBaoxian> {
 	 * @param jiashiyuanBaoxian
 	 * @return
 	 */
-	List<JiashiyuanBaoxianVO> selectJiashiyuanBaoxianPage(IPage page, JiashiyuanBaoxianVO jiashiyuanBaoxian,String ajbInsuredIds);
+	List<JiashiyuanBaoxianVO> selectJiashiyuanBaoxianPage(IPage page, JiashiyuanBaoxianVO jiashiyuanBaoxian,String ajbInsuredIds,String isOverdue);
 
 	/**
 	 * 自定义根据ID查询明细

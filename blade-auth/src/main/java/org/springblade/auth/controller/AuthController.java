@@ -33,10 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 获取用户登录验证
@@ -403,5 +400,6 @@ public class AuthController {
 //			return R.fail("该账号不存在");
 //		}
 //	}
+
 
 }

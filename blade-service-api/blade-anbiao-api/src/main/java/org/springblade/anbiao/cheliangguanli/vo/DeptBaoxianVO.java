@@ -32,4 +32,6 @@ import io.swagger.annotations.ApiModel;
 public class DeptBaoxianVO extends DeptBaoxian {
 	private static final long serialVersionUID = 1L;
 
+	private String isOverdue;
+
 }

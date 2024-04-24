@@ -83,7 +83,7 @@ public class VehiclesMoveInfo implements Serializable {
 	@TableField(exist = false)
 	private String chepaiyanse;
 
-	@ApiModelProperty(value = "变更状态，0：在职，1：删除，2：报停，3：报销，4：过户")
+	@ApiModelProperty(value = "变更状态，0：营运，1：删除，2：报停，3：报销，4：过户")
 	@TableField("type")
 	private Integer type;
 

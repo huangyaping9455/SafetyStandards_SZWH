@@ -14,6 +14,8 @@ import org.springblade.anbiao.cheliangguanli.page.VehiclePage;
 import org.springblade.anbiao.cheliangguanli.service.*;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleListVO;
 import org.springblade.anbiao.cheliangguanli.vo.VehicleVO;
+import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
+import org.springblade.anbiao.guanlijigouherenyuan.feign.IOrganizationsClient;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
 import org.springblade.anbiao.guanlijigouherenyuan.vo.OrganizationsVO;
 import org.springblade.anbiao.jiashiyuan.entity.AnbiaoCheliangJiashiyuanDaily;
@@ -21,6 +23,7 @@ import org.springblade.anbiao.jiashiyuan.service.IAnbiaoCheliangJiashiyuanDailyS
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
+import org.springblade.system.entity.Dept;
 import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,6 +64,8 @@ public class VehiclesMoveInfoController {
 	private IVehicleBiangengjiluService vehicleBiangengjiluService;
 
 	private IFileUploadClient fileUploadClient;
+
+	private IOrganizationsClient orrganizationsClient;
 
 
 //    @PostMapping("/list")
@@ -138,7 +143,7 @@ public class VehiclesMoveInfoController {
 				}
 				vehicle.setCaozuoshijian(LocalDateTime.now());
 				vehicle.setCheliangzhuangtai(vehiclesMoveInfo.getType().toString());
-				if(vehiclesMoveInfo.getType() == 1 || vehiclesMoveInfo.getType() == 3 || vehiclesMoveInfo.getType() == 4 ){
+				if(vehiclesMoveInfo.getType() == 0 || vehiclesMoveInfo.getType() == 1 || vehiclesMoveInfo.getType() == 2 || vehiclesMoveInfo.getType() == 3 || vehiclesMoveInfo.getType() == 4 ){
 					vehicle.setIsdel(vehiclesMoveInfo.getType());
 				}
 				ii = vehicleService.updateById(vehicle);
@@ -184,10 +189,28 @@ public class VehiclesMoveInfoController {
 		return r;
 	}
 
+	@GetMapping("/selectByCL")
+	@ApiLog("车牌搜索")
+	@ApiOperation(value = "车牌搜索", notes = "传入cheliangpaizhao", position = 2)
+	public R selectByCL(String cheliangpaizhao) {
+		R r = new R();
+		QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<Vehicle>();
+		vehicleQueryWrapper.lambda().eq(Vehicle::getCheliangpaizhao, cheliangpaizhao);
+		vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel, 0);
+		Vehicle vehicle = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper);
+		if(vehicle != null){
+			r.setMsg("该车牌信息已存在");
+			r.setCode(500);
+			r.setData(null);
+		}
+		return r;
+	}
+
+
 	@PostMapping("/updateDeptId")
 	@ApiLog("车辆资料状态记录管理-车辆异动")
 	@ApiOperation(value = "车辆资料状态记录管理-车辆异动", notes = "传入车辆ID,企业ID", position = 10)
-	public R updateDeptId(@RequestParam String id, @RequestParam String deptId, BladeUser user) {
+	public R updateDeptId(@RequestParam String id, @RequestParam String deptId, @RequestParam String plate,BladeUser user) {
 		R r = new R();
 		boolean ss = false;
 		if(user == null) {
@@ -216,6 +239,7 @@ public class VehiclesMoveInfoController {
 			if(vehicle != null){
 				vehicle.setDeptId(Integer.parseInt(deptId));
 				vehicle.setId(clid.toString());
+				vehicle.setCheliangpaizhao(plate);
 				vehicle.setCaozuoren(user.getUserName());
 				vehicle.setCaozuorenid(user.getUserId());
 				vehicle.setCreatetime(LocalDateTime.now());
@@ -223,6 +247,7 @@ public class VehiclesMoveInfoController {
 				vehicle.setCheliangzhuangtai("0");
 				ss = vehicleService.save(vehicle);
 			}
+			Organizations dept = orrganizationsClient.selectByDeptId(deptId);
 			//行驶证
 			QueryWrapper<VehicleXingshizheng> xingshizhengQueryWrapper = new QueryWrapper<>();
 			xingshizhengQueryWrapper.lambda().eq(VehicleXingshizheng::getAvxAvIds,id);
@@ -232,10 +257,17 @@ public class VehiclesMoveInfoController {
 				UUID uuid = UUID.randomUUID();
 				xingshizheng.setAvxIds(uuid.toString());
 				xingshizheng.setAvxAvIds(clid.toString());
+				xingshizheng.setAvxOwner(dept.getDeptName());
+				xingshizheng.setAvxPlateNo(plate);
 				xingshizheng.setAvxDelete("0");
 				xingshizheng.setAvxCreateTime(LocalDateTime.now());
 				xingshizheng.setAvxCreateByIds(user.getUserId().toString());
 				xingshizheng.setAvxCreateByName(user.getUserName());
+				xingshizheng.setAvxFileNo(null);
+				xingshizheng.setAvxValidUntil(null);
+				xingshizheng.setAvxValidUntil2(null);
+				xingshizheng.setAvxCopyEnclosure(null);
+				xingshizheng.setAvxOriginalEnclosure(null);
 				ss = vehicleXingshizhengService.save(xingshizheng);
 			}
 			//道路运输证
@@ -247,10 +279,15 @@ public class VehiclesMoveInfoController {
 				UUID uuid = UUID.randomUUID();
 				daoluyunshuzheng.setAvdIds(uuid.toString());
 				daoluyunshuzheng.setAvdAvIds(clid.toString());
+				daoluyunshuzheng.setAvdPlateNo(plate);
 				daoluyunshuzheng.setAvdDelete("0");
 				daoluyunshuzheng.setAvdCreateByName(user.getUserName());
 				daoluyunshuzheng.setAvdCreateByIds(user.getUserId().toString());
 				daoluyunshuzheng.setAvdCreateTime(DateUtil.now());
+				daoluyunshuzheng.setAvdRoadTransportCertificateNo(null);
+				daoluyunshuzheng.setAvdValidUntil(null);
+				daoluyunshuzheng.setAvdValidUntil2(null);
+				daoluyunshuzheng.setAvdEnclosure(null);
 				ss = daoluyunshuzhengService.save(daoluyunshuzheng);
 			}
 			//车辆综合性能检测报告
@@ -262,6 +299,7 @@ public class VehiclesMoveInfoController {
 				UUID uuid = UUID.randomUUID();
 				xingnengbaogao.setAvxIds(uuid.toString());
 				xingnengbaogao.setAvxAvIds(clid.toString());
+				xingnengbaogao.setAvxFileNo(plate);
 				xingnengbaogao.setAvxDelete("0");
 				xingnengbaogao.setAvxCreateByName(user.getUserName());
 				xingnengbaogao.setAvxCreateByIds(user.getUserId().toString());
@@ -277,6 +315,7 @@ public class VehiclesMoveInfoController {
 				UUID uuid = UUID.randomUUID();
 				dengjizhengshu.setAvdIds(uuid.toString());
 				dengjizhengshu.setAvdVehicleIds(clid.toString());
+				dengjizhengshu.setAvxFileNo(plate);
 				dengjizhengshu.setAvdDelete("0");
 				dengjizhengshu.setAvdCreateByName(user.getUserName());
 				dengjizhengshu.setAvdCreateByIds(user.getUserId().toString());

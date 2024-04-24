@@ -436,6 +436,9 @@ public class AnbiaoAnquanhuiyiController {
 				if (StrUtil.isNotEmpty(anbiaoAnquanhuiyiDetail.getAddApHeadPortrait()) && anbiaoAnquanhuiyiDetail.getAddApHeadPortrait().contains("http") == false) {
 					anbiaoAnquanhuiyiDetail.setAddApHeadPortrait(fileUploadClient.getUrl(anbiaoAnquanhuiyiDetail.getAddApHeadPortrait()));
 				}
+				if (StrUtil.isNotEmpty(anbiaoAnquanhuiyiDetail.getAddApAutograph()) && anbiaoAnquanhuiyiDetail.getAddApAutograph().contains("http") == false) {
+					anbiaoAnquanhuiyiDetail.setAddApAutograph(fileUploadClient.getUrl(anbiaoAnquanhuiyiDetail.getAddApAutograph()));
+				}
 			}
 			anquanhuiyiInfo.setAnquanhuiyiDetails(details1);
 			AnbiaoAnquanhuiyiDetail anbiaoAnquanhuiyiDetail = new AnbiaoAnquanhuiyiDetail();

@@ -155,6 +155,9 @@
         <if test="deptBaoxian.avbInsuredName != null and deptBaoxian.avbInsuredName != ''">
             and adb.avb_insured_name like concat('%', #{deptBaoxian.avbInsuredName}, '%')
         </if>
+        <if test="deptBaoxian.isOverdue != null and deptBaoxian.isOverdue != ''">
+            and DATEDIFF(adb.avb_insurance_period_end,adb.avb_insurance_period_start) &lt; 0
+        </if>
     </select>
 
     <select id="queryByMax" resultMap="deptBaoxianResultMap" parameterType="java.lang.String">

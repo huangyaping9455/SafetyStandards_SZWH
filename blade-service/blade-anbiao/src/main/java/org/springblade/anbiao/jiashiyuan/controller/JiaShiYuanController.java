@@ -4558,8 +4558,8 @@ public class JiaShiYuanController extends BladeUser{
 
 					//身份证正面
 					image = new WordImageEntity();
-					image.setHeight(220);
-					image.setWidth(350);
+					image.setHeight(815);
+					image.setWidth(378);
 					if (StringUtils.isNotEmpty(t.getShenfenzhengfujian()) && !t.getShenfenzhengfujian().equals("null")) {
 						if (StrUtil.isNotEmpty(t.getShenfenzhengfujian()) && t.getShenfenzhengfujian().contains("http") == false) {
 							url1 = fileUploadClient.getUrl(t.getShenfenzhengfujian());
@@ -4608,8 +4608,8 @@ public class JiaShiYuanController extends BladeUser{
 
 					//身份证反面
 					image = new WordImageEntity();
-					image.setHeight(220);
-					image.setWidth(350);
+					image.setHeight(815);
+					image.setWidth(378);
 //					String jsonObject = t.getShenfenzhengfujian();
 					if (StringUtils.isNotEmpty(t.getShenfenzhengfanmianfujian()) && !t.getShenfenzhengfanmianfujian().equals("null")) {
 						if (StrUtil.isNotEmpty(t.getShenfenzhengfanmianfujian()) && t.getShenfenzhengfanmianfujian().contains("http") == false) {
@@ -4656,8 +4656,8 @@ public class JiaShiYuanController extends BladeUser{
 
 					//驾驶证正面
 					image = new WordImageEntity();
-					image.setHeight(220);
-					image.setWidth(350);
+					image.setHeight(815);
+					image.setWidth(378);
 //					String jsonObject = t.getShenfenzhengfujian();
 					if (StringUtils.isNotEmpty(t.getAjjFrontPhotoAddress()) && !t.getAjjFrontPhotoAddress().equals("null")) {
 						if (StrUtil.isNotEmpty(t.getAjjFrontPhotoAddress()) && t.getAjjFrontPhotoAddress().contains("http") == false) {
@@ -4704,8 +4704,8 @@ public class JiaShiYuanController extends BladeUser{
 
 					//驾驶证反面
 					image = new WordImageEntity();
-					image.setHeight(220);
-					image.setWidth(350);
+					image.setHeight(815);
+					image.setWidth(378);
 //					String jsonObject = t.getShenfenzhengfujian();
 
 					if (StringUtils.isNotEmpty(t.getAjjAttachedPhotos()) && !t.getAjjAttachedPhotos().equals("null")) {

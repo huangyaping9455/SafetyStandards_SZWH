@@ -165,6 +165,9 @@
             <if test="jiashiyuanBaoxian.ajbInsuredName !=null and jiashiyuanBaoxian.ajbInsuredName != ''">
                 and ajb.ajb_insured_name like concat('%', #{jiashiyuanBaoxian.ajbInsuredName}, '%')
             </if>
+            <if test="isOverdue != null and isOverdue != ''">
+                and DATEDIFF(ajb.ajb_insurance_period_end,SYSDATE()) &lt; 0
+            </if>
         </where>
     </select>
 

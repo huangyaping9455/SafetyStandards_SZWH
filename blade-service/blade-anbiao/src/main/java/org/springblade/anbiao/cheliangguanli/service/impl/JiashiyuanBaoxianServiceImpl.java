@@ -50,8 +50,8 @@ public class JiashiyuanBaoxianServiceImpl extends ServiceImpl<JiashiyuanBaoxianM
 	private JiashiyuanBaoxianMingxiMapper mingxiMapper;
 	private JiashiyuanBaoxianMapper baoxianMapper;
 	@Override
-	public IPage<JiashiyuanBaoxianVO> selectJiashiyuanBaoxianPage(IPage<JiashiyuanBaoxianVO> page, JiashiyuanBaoxianVO jiashiyuanBaoxian,String ajbInsuredIds) {
-		return page.setRecords(baseMapper.selectJiashiyuanBaoxianPage(page, jiashiyuanBaoxian,ajbInsuredIds));
+	public IPage<JiashiyuanBaoxianVO> selectJiashiyuanBaoxianPage(IPage<JiashiyuanBaoxianVO> page, JiashiyuanBaoxianVO jiashiyuanBaoxian,String ajbInsuredIds,String isOverdue) {
+		return page.setRecords(baseMapper.selectJiashiyuanBaoxianPage(page, jiashiyuanBaoxian,ajbInsuredIds,isOverdue));
 	}
 
 	@Override
