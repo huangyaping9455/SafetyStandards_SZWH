@@ -581,12 +581,12 @@ public class VehicleController {
 			return r;
 		}
 
-		VehicleVO vehicleVO = vehicleService.selectCPYS(v.getCheliangpaizhao(),v.getChepaiyanse());
-		if(vehicleVO == null){
-			r.setMsg(v.getCheliangpaizhao()+"该车不存在");
-			r.setCode(500);
-			return r;
-		}
+//		VehicleVO vehicleVO = vehicleService.selectCPYS(v.getCheliangpaizhao(),v.getChepaiyanse());
+//		if(vehicleVO == null){
+//			r.setMsg(v.getCheliangpaizhao()+"该车不存在");
+//			r.setCode(500);
+//			return r;
+//		}
 		String jsonObject = JSONUtils.obj2StringPretty(v);
 		Vehicle vehicle = JSONUtils.string2Obj(jsonObject,Vehicle.class);
 		vehicle.setCaozuoren(user.getUserName());
@@ -869,7 +869,7 @@ public class VehicleController {
 
 //    	Vehicle vehicle = new Vehicle();
 //    	vehicle.setId(vd.getVehicleId());
-		Vehicle vehicleVO = vehicleService.getById(vd.getVehicleId());
+		Vehicle vehicleVO = vehicleService.selectByKey(vd.getVehicleId());
     	if(vehicleVO == null) {
 			r.setMsg("未搜索到您需更新的车辆信息，请查证信息是否正确！");
 			r.setCode(500);

@@ -221,7 +221,7 @@ public class Vehicle implements Serializable {
 	@TableLogic
 	@ApiModelProperty(value = "是否已删除")
 	@TableField("is_deleted")
-	private Integer isdel = 0;
+	private Integer isdel;
 
 	/**
 	 * 创建时间

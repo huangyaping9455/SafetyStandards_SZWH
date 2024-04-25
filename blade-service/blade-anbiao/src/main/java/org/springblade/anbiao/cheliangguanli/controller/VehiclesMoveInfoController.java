@@ -181,11 +181,12 @@ public class VehiclesMoveInfoController {
 				r.setCode(500);
 				r.setSuccess(false);
 			}
-		}else{
-			r.setMsg("该数据已添加");
-			r.setCode(500);
-			r.setSuccess(false);
 		}
+//		else{
+//			r.setMsg("该数据已添加");
+//			r.setCode(500);
+//			r.setSuccess(false);
+//		}
 		return r;
 	}
 
@@ -234,8 +235,8 @@ public class VehiclesMoveInfoController {
 			UUID clid = UUID.randomUUID();
 			QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<Vehicle>();
 			vehicleQueryWrapper.lambda().eq(Vehicle::getId, id);
-			vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel, 0);
-			Vehicle vehicle = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper);
+//			vehicleQueryWrapper.lambda().eq(Vehicle::getIsdel, 0);
+			Vehicle vehicle = vehicleService.selectByKey(id);
 			if(vehicle != null){
 				vehicle.setDeptId(Integer.parseInt(deptId));
 				vehicle.setId(clid.toString());
@@ -251,7 +252,7 @@ public class VehiclesMoveInfoController {
 			//行驶证
 			QueryWrapper<VehicleXingshizheng> xingshizhengQueryWrapper = new QueryWrapper<>();
 			xingshizhengQueryWrapper.lambda().eq(VehicleXingshizheng::getAvxAvIds,id);
-			xingshizhengQueryWrapper.lambda().eq(VehicleXingshizheng::getAvxDelete,"0");
+//			xingshizhengQueryWrapper.lambda().eq(VehicleXingshizheng::getAvxDelete,"0");
 			VehicleXingshizheng xingshizheng = vehicleXingshizhengService.getBaseMapper().selectOne(xingshizhengQueryWrapper);
 			if(xingshizheng != null){
 				UUID uuid = UUID.randomUUID();
@@ -273,7 +274,7 @@ public class VehiclesMoveInfoController {
 			//道路运输证
 			QueryWrapper<VehicleDaoluyunshuzheng> daoluyunshuzhengQueryWrapper = new QueryWrapper<>();
 			daoluyunshuzhengQueryWrapper.lambda().eq(VehicleDaoluyunshuzheng::getAvdAvIds,id);
-			daoluyunshuzhengQueryWrapper.lambda().eq(VehicleDaoluyunshuzheng::getAvdDelete,0);
+//			daoluyunshuzhengQueryWrapper.lambda().eq(VehicleDaoluyunshuzheng::getAvdDelete,0);
 			VehicleDaoluyunshuzheng daoluyunshuzheng = daoluyunshuzhengService.getBaseMapper().selectOne(daoluyunshuzhengQueryWrapper);
 			if (daoluyunshuzheng !=null){
 				UUID uuid = UUID.randomUUID();
@@ -293,7 +294,7 @@ public class VehiclesMoveInfoController {
 			//车辆综合性能检测报告
 			QueryWrapper<VehicleXingnengbaogao> xingnengbaogaoQueryWrapper = new QueryWrapper<>();
 			xingnengbaogaoQueryWrapper.lambda().eq(VehicleXingnengbaogao::getAvxAvIds,id);
-			xingnengbaogaoQueryWrapper.lambda().eq(VehicleXingnengbaogao::getAvxDelete,0);
+//			xingnengbaogaoQueryWrapper.lambda().eq(VehicleXingnengbaogao::getAvxDelete,0);
 			VehicleXingnengbaogao xingnengbaogao = xingnengbaogaoService.getBaseMapper().selectOne(xingnengbaogaoQueryWrapper);
 			if (xingnengbaogao !=null){
 				UUID uuid = UUID.randomUUID();
@@ -309,7 +310,7 @@ public class VehiclesMoveInfoController {
 			//车辆登记证书
 			QueryWrapper<VehicleDengjizhengshu> dengjizhengshuQueryWrapper = new QueryWrapper<>();
 			dengjizhengshuQueryWrapper.lambda().eq(VehicleDengjizhengshu::getAvdVehicleIds,id);
-			dengjizhengshuQueryWrapper.lambda().eq(VehicleDengjizhengshu::getAvdDelete,0);
+//			dengjizhengshuQueryWrapper.lambda().eq(VehicleDengjizhengshu::getAvdDelete,0);
 			VehicleDengjizhengshu dengjizhengshu = dengjizhengshuService.getBaseMapper().selectOne(dengjizhengshuQueryWrapper);
 			if (dengjizhengshu !=null){
 				UUID uuid = UUID.randomUUID();
@@ -386,9 +387,9 @@ public class VehiclesMoveInfoController {
 			r.setSuccess(false);
 			return r;
 		}
-		QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<>();
-		vehicleQueryWrapper.lambda().eq(Vehicle::getId,id);
-		Vehicle detal = vehicleService.getBaseMapper().selectOne(vehicleQueryWrapper);
+//		QueryWrapper<Vehicle> vehicleQueryWrapper = new QueryWrapper<>();
+//		vehicleQueryWrapper.lambda().eq(Vehicle::getId,id);
+		Vehicle detal = vehicleService.selectByKey(id);
 		if (detal != null) {
 			///车辆行驶证///
 			if (type == 1) {
