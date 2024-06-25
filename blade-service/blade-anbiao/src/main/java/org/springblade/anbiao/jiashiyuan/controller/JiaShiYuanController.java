@@ -124,13 +124,13 @@ public class JiaShiYuanController extends BladeUser{
 	@ApiOperation(value = "新增-驾驶员资料管理", notes = "传入jiaShiYuan", position = 1)
 	public R insert(@RequestBody JiaShiYuan jiaShiYuan, BladeUser user) throws ParseException {
 		R r = new R();
-		if (user == null) {
-			r.setCode(401);
-			r.setMsg("用户权限验证失败");
-			r.setData(null);
-			r.setSuccess(false);
-			return r;
-		}
+//		if (user == null) {
+//			r.setCode(401);
+//			r.setMsg("用户权限验证失败");
+//			r.setData(null);
+//			r.setSuccess(false);
+//			return r;
+//		}
 
 		SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
 		QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<JiaShiYuan>();
@@ -486,8 +486,14 @@ public class JiaShiYuanController extends BladeUser{
 			if (StringUtils.isBlank(jiaShiYuan.getJiashiyuanleixing())) {
 				jiaShiYuan.setCongyerenyuanleixing("驾驶员");
 			}
-			jiaShiYuan.setCaozuoren(user.getUserName());
-			jiaShiYuan.setCaozuorenid(user.getUserId());
+			if(user != null){
+				jiaShiYuan.setCaozuoren(user.getUserName());
+				jiaShiYuan.setCaozuorenid(user.getUserId());
+			}else{
+				jiaShiYuan.setCaozuoren(jiaShiYuan.getJiashiyuanxingming());
+				jiaShiYuan.setCaozuorenid(7777);
+			}
+
 			jiaShiYuan.setCreatetime(DateUtil.now());
 			jiaShiYuan.setDenglumima(DigestUtil.encrypt(jiaShiYuan.getShoujihaoma().substring(jiaShiYuan.getShoujihaoma().length() - 6)));
 			jiaShiYuan.setIsdelete(0);
@@ -916,8 +922,8 @@ public class JiaShiYuanController extends BladeUser{
 				anbiaoRiskDetails) {
 				if (riskDetail != null && StringUtils.isNotEmpty(jiaShiYuan1.getShenfenzhengyouxiaoqi()) && !jiaShiYuan1.getShenfenzhengyouxiaoqi().equals("null")) {
 					riskDetail.setArdIsRectification("1");
-					riskDetail.setArdRectificationByIds(user.getUserId().toString());
-					riskDetail.setArdRectificationByName(user.getUserName());
+					riskDetail.setArdRectificationByIds(jiaShiYuan.getCaozuorenid().toString());
+					riskDetail.setArdRectificationByName(jiaShiYuan.getCaozuoren());
 					riskDetail.setArdRectificationDate(DateUtil.now());
 					riskDetail.setArdModularName("身份证有效期");
 					riskDetail.setArdRectificationField("shenfenzhengyouxiaoqi");
@@ -928,8 +934,8 @@ public class JiaShiYuanController extends BladeUser{
 					if (b == true) {
 						//整改内容
 						anbiaoRiskDetailInfo.setArdRiskIds(riskDetail.getArdIds().toString());
-						anbiaoRiskDetailInfo.setArdRectificationByIds(user.getUserId().toString());
-						anbiaoRiskDetailInfo.setArdRectificationByName(user.getUserName());
+						anbiaoRiskDetailInfo.setArdRectificationByIds(jiaShiYuan.getCaozuorenid().toString());
+						anbiaoRiskDetailInfo.setArdRectificationByName(jiaShiYuan.getCaozuoren());
 						anbiaoRiskDetailInfo.setArdRectificationDate(DateUtil.now());
 						anbiaoRiskDetailInfo.setArdRectificationField("shenfenzhengyouxiaoqi");
 						anbiaoRiskDetailInfo.setArdRectificationValue(jiaShiYuan1.getShenfenzhengyouxiaoqi());
@@ -950,8 +956,8 @@ public class JiaShiYuanController extends BladeUser{
 			for (AnbiaoRiskDetail riskDetail2 : anbiaoRiskDetails2) {
 				if (riskDetail2 != null && StringUtils.isNotEmpty(jiaShiYuan1.getJiashizhengyouxiaoqi()) && !jiaShiYuan1.getJiashizhengyouxiaoqi().equals("null")) {
 					riskDetail2.setArdIsRectification("1");
-					riskDetail2.setArdRectificationByIds(user.getUserId().toString());
-					riskDetail2.setArdRectificationByName(user.getUserName());
+					riskDetail2.setArdRectificationByIds(jiaShiYuan.getCaozuorenid().toString());
+					riskDetail2.setArdRectificationByName(jiaShiYuan.getCaozuoren());
 					riskDetail2.setArdRectificationDate(DateUtil.now());
 					riskDetail2.setArdModularName("驾驶证有效期");
 					riskDetail2.setArdRectificationField("jiashizhengyouxiaoqi");
@@ -962,8 +968,8 @@ public class JiaShiYuanController extends BladeUser{
 					if (b == true) {
 						//整改内容
 						anbiaoRiskDetailInfo2.setArdRiskIds(riskDetail2.getArdIds().toString());
-						anbiaoRiskDetailInfo2.setArdRectificationByIds(user.getUserId().toString());
-						anbiaoRiskDetailInfo2.setArdRectificationByName(user.getUserName());
+						anbiaoRiskDetailInfo2.setArdRectificationByIds(jiaShiYuan.getCaozuorenid().toString());
+						anbiaoRiskDetailInfo2.setArdRectificationByName(jiaShiYuan.getCaozuoren());
 						anbiaoRiskDetailInfo2.setArdRectificationDate(DateUtil.now());
 						anbiaoRiskDetailInfo2.setArdRectificationField("jiashizhengyouxiaoqi");
 						anbiaoRiskDetailInfo2.setArdRectificationValue(jiaShiYuan1.getJiashizhengyouxiaoqi());
@@ -985,8 +991,8 @@ public class JiaShiYuanController extends BladeUser{
 				anbiaoRiskDetails3) {
 				if (riskDetail3 != null && StringUtils.isNotEmpty(jiaShiYuan1.getCongyezhengyouxiaoqi()) && !jiaShiYuan1.getCongyezhengyouxiaoqi().equals("null")) {
 					riskDetail3.setArdIsRectification("1");
-					riskDetail3.setArdRectificationByIds(user.getUserId().toString());
-					riskDetail3.setArdRectificationByName(user.getUserName());
+					riskDetail3.setArdRectificationByIds(jiaShiYuan.getCaozuorenid().toString());
+					riskDetail3.setArdRectificationByName(jiaShiYuan.getCaozuoren());
 					riskDetail3.setArdRectificationDate(DateUtil.now());
 					riskDetail3.setArdModularName("从业资格证有效期");
 					riskDetail3.setArdRectificationField("congyezhengyouxiaoqi");
@@ -997,8 +1003,8 @@ public class JiaShiYuanController extends BladeUser{
 					if (b == true) {
 						//整改内容
 						anbiaoRiskDetailInfo3.setArdRiskIds(riskDetail3.getArdIds().toString());
-						anbiaoRiskDetailInfo3.setArdRectificationByIds(user.getUserId().toString());
-						anbiaoRiskDetailInfo3.setArdRectificationByName(user.getUserName());
+						anbiaoRiskDetailInfo3.setArdRectificationByIds(jiaShiYuan.getCaozuorenid().toString());
+						anbiaoRiskDetailInfo3.setArdRectificationByName(jiaShiYuan.getCaozuoren());
 						anbiaoRiskDetailInfo3.setArdRectificationDate(DateUtil.now());
 						anbiaoRiskDetailInfo3.setArdRectificationField("congyezhengyouxiaoqi");
 						anbiaoRiskDetailInfo3.setArdRectificationValue(jiaShiYuan1.getCongyezhengyouxiaoqi());
@@ -1019,8 +1025,8 @@ public class JiaShiYuanController extends BladeUser{
 			for (AnbiaoRiskDetail riskDetail4 : anbiaoRiskDetails4) {
 				if (riskDetail4 != null && StringUtils.isNotEmpty(jiaShiYuan1.getTijianyouxiaoqi()) && !jiaShiYuan1.getTijianyouxiaoqi().equals("null")) {
 					riskDetail4.setArdIsRectification("1");
-					riskDetail4.setArdRectificationByIds(user.getUserId().toString());
-					riskDetail4.setArdRectificationByName(user.getUserName());
+					riskDetail4.setArdRectificationByIds(jiaShiYuan.getCaozuorenid().toString());
+					riskDetail4.setArdRectificationByName(jiaShiYuan.getCaozuoren());
 					riskDetail4.setArdRectificationDate(DateUtil.now());
 					riskDetail4.setArdModularName("体检有效期");
 					riskDetail4.setArdRectificationField("tijianyouxiaoqi");
@@ -1030,8 +1036,8 @@ public class JiaShiYuanController extends BladeUser{
 					if (b == true) {
 						//整改内容
 						anbiaoRiskDetailInfo4.setArdRiskIds(riskDetail4.getArdIds().toString());
-						anbiaoRiskDetailInfo4.setArdRectificationByIds(user.getUserId().toString());
-						anbiaoRiskDetailInfo4.setArdRectificationByName(user.getUserName());
+						anbiaoRiskDetailInfo4.setArdRectificationByIds(jiaShiYuan.getCaozuorenid().toString());
+						anbiaoRiskDetailInfo4.setArdRectificationByName(jiaShiYuan.getCaozuoren());
 						anbiaoRiskDetailInfo4.setArdRectificationDate(DateUtil.now());
 						anbiaoRiskDetailInfo4.setArdRectificationField("tijianyouxiaoqi");
 						anbiaoRiskDetailInfo4.setArdRectificationValue(jiaShiYuan1.getTijianyouxiaoqi());

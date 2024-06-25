@@ -33,4 +33,7 @@ public class RiskDeptConfigurationListVO implements Serializable {
 
 	@ApiModelProperty(value = "预警说明")
 	private String shuoming;
+
+	@ApiModelProperty(value = "预警类型")
+	private Integer yujingleixing;
 }

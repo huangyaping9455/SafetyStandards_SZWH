@@ -53,4 +53,9 @@ public class IPersonnelClientBack implements IPersonnelClient {
 		return null;
 	}
 
+	@Override
+	public void bindWechatOpenId(String yhId, String openid, Integer status, Integer type) {
+
+	}
+
 }

@@ -292,7 +292,7 @@
         </if>
 
         <if test="status !=null ">
-            and cheliangzhuangtai = #{status}
+            and status = #{status}
         </if>
 
     </sql>

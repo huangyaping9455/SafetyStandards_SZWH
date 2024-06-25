@@ -13,7 +13,10 @@ import org.springblade.anbiao.risk.vo.RiskConfigurationVO;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -22,8 +25,8 @@ import java.util.List;
  * 前端控制器
  * </p>
  *
- * @author lmh
- * @since 2023-03-01
+ * @author hyp
+ * @since 2024-06-16
  */
 
 @RestController

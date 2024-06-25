@@ -30,9 +30,13 @@ public class WechatPushCrontab {
 	@Resource
 	public HttpUtils httpUtils;
 
+	private final WechatProperties wechatProperties;
+
 	private IAnbiaoRepairsPersonService personService;
 
 	public void run(String params) throws Exception {
+		String appid = wechatProperties.getMappid();
+		String secret = wechatProperties.getMsecret();
 		//默认都是用正式模板
 		String templateId = "oXuOy7ObCR_bS5iRNSjubS-bUJWax3xIW701M-Qlvzo";
 		String appidUrl = "wx0404affd3250861e";
@@ -52,11 +56,11 @@ public class WechatPushCrontab {
 			+ "\"low\": {\"value\":\"{5}\",\"color\":\"#FF6347\"},"
 			+ "\"high\": {\"value\":\"{6}\",\"color\":\"#173177\"}}}";
 		// 获取token
-		AccessToken accessToken = httpUtils.getAccessToken();
+		AccessToken accessToken = httpUtils.getAccessToken(appid,secret);
 		String URL_TEMPLATE_MSG_SEND = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={0}";
 		String sendUrl = URL_TEMPLATE_MSG_SEND.replace("{0}", accessToken.getToken());
 		// 获取关注用户
-		List<String> users = httpUtils.getUsers();
+		List<String> users = httpUtils.getUsers(appid,secret);
 		if (users != null && users.size() > 0) {
 			System.out.println(users);
 			QueryWrapper<AnbiaoRepairsPerson> personQueryWrapper = new QueryWrapper<AnbiaoRepairsPerson>();

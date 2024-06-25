@@ -18,4 +18,8 @@ public class RiskConfigurationPage<T> extends BasePage<T> {
 
 	@ApiModelProperty(value = "预警项")
 	private String yujingxiang;
+
+	@ApiModelProperty(value = "预警类型")
+	private String yujingleixing;
+
 }

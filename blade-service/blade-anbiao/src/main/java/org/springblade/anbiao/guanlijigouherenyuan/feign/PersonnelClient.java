@@ -2,6 +2,7 @@ package org.springblade.anbiao.guanlijigouherenyuan.feign;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.springblade.anbiao.deptUserWecat.service.IAnbiaoDeptUserWechatInfoService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Personnel;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IPersonnelService;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
@@ -28,6 +29,8 @@ public class PersonnelClient implements IPersonnelClient{
 	private IJiaShiYuanService service;
 
 	private IAnbiaoRepairsPersonService repairsPersonService;
+
+	private IAnbiaoDeptUserWechatInfoService deptUserWechatInfoService;
 
 	@Override
 	@PostMapping(API_PREFIX + "/saveOrUpdate")
@@ -77,6 +80,11 @@ public class PersonnelClient implements IPersonnelClient{
 	@GetMapping(API_PREFIX + "/getPerson")
 	public AnbiaoRepairsPerson getPerson(String account, String password) {
 		return repairsPersonService.getPerson(account, password);
+	}
+
+	@Override
+	public void bindWechatOpenId(String yhId, String openid, Integer status, Integer type) {
+		deptUserWechatInfoService.bindWechatOpenId(yhId, openid, status, type);
 	}
 
 }

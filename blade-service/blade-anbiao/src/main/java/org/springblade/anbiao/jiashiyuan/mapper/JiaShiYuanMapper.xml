@@ -1576,4 +1576,28 @@ values
         WHERE id = #{id}
     </update>
 
+    <select id="selectRiskByDriverId" parameterType="org.springblade.anbiao.risk.page.JiashiyuanRiskAllPage" resultType="org.springblade.anbiao.risk.vo.JiashiyuanRiskAllVO">
+        SELECT
+            ard_dept_ids as deptId,
+            a.dept_name ,
+            ard_title ,
+            CASE WHEN IFNULL( daoqishijian, '' )= '' THEN ard_content ELSE CONCAT(IFNULL(ard_content, ''), "(到期时间：",IFNULL(daoqishijian, ''),"  剩余天数：", IFNULL(l.youxiaoqi, ''),")") end as ard_content2,
+            ard_discovery_date,
+            ard_association_value
+        FROM
+            anbiao_risk_detail rd
+        INNER JOIN(
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) a on a.id=rd.ard_dept_ids
+        INNER JOIN anbiao_organization k on a.id = k.dept_id and k.jigouleixing in('qiye','geti')
+        LEFT JOIN  anbiao_jiashiyuan j on j.id=rd.ard_association_value
+        LEFT JOIN (SELECT ard_ids,CASE WHEN IFNULL( DATEDIFF( daoqishijian, SYSDATE()), '' )= '' THEN '' ELSE DATEDIFF(daoqishijian,SYSDATE()) END AS youxiaoqi from 	`anbiao_risk_detail` )l on l.ard_ids=rd.ard_ids
+        WHERE
+            ard_is_rectification = 0
+            and ard_association_table = "anbiao_jiashiyuan"
+            and ard_association_field = "id"
+            and j.isdelete=0
+            and rd.ard_association_value = #{jsyId}
+    </select>
+
 </mapper>

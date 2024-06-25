@@ -175,6 +175,11 @@
             <artifactId>weixin-java-miniapp</artifactId>
             <version>3.9.0</version>
         </dependency>
+        <!-- WxJava公众号 -->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-mp</artifactId>
+            <version>3.9.0</version></dependency>
         <dependency>
             <groupId>com.alibaba.nacos</groupId>
             <artifactId>nacos-client</artifactId>

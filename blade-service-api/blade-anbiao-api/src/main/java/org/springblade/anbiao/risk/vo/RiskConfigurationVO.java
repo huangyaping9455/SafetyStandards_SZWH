@@ -23,5 +23,5 @@ public class RiskConfigurationVO implements Serializable {
 	private String shuoming;
 
 	@ApiModelProperty(value = "预警类型")
-	private Integer yujingleixing;
+	private Integer yujingleixing = 0;
 }

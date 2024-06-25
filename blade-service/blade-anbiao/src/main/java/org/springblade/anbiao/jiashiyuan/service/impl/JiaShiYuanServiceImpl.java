@@ -12,6 +12,7 @@ import org.springblade.anbiao.jiashiyuan.vo.DriverInfoVO;
 import org.springblade.anbiao.jiashiyuan.vo.DriverTJMingXiVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanListVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
+import org.springblade.anbiao.risk.vo.JiashiyuanRiskAllVO;
 import org.springblade.common.tool.StringUtils;
 import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.stereotype.Service;
@@ -391,6 +392,11 @@ public class JiaShiYuanServiceImpl extends ServiceImpl<JiaShiYuanMapper, JiaShiY
 	@Override
 	public boolean updateDeptId(String deptId, String id) {
 		return jiaShiYuanMapper.updateDeptId(deptId, id);
+	}
+
+	@Override
+	public List<JiashiyuanRiskAllVO> selectRiskByDriverId(String deptId,String jsyId) {
+		return jiaShiYuanMapper.selectRiskByDriverId(deptId,jsyId);
 	}
 
 

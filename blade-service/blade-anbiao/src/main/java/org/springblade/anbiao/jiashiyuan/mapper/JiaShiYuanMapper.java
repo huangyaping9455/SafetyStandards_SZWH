@@ -10,6 +10,7 @@ import org.springblade.anbiao.jiashiyuan.vo.DriverInfoVO;
 import org.springblade.anbiao.jiashiyuan.vo.DriverTJMingXiVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanListVO;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanVO;
+import org.springblade.anbiao.risk.vo.JiashiyuanRiskAllVO;
 
 import java.util.List;
 
@@ -183,5 +184,7 @@ public interface JiaShiYuanMapper extends BaseMapper<JiaShiYuan> {
 	 * @return
 	 */
 	boolean updateDeptId(@Param("deptId") String deptId,@Param("id") String id);
+
+	List<JiashiyuanRiskAllVO> selectRiskByDriverId(@Param("deptId") String deptId,@Param("jsyId") String jsyId);
 
 }

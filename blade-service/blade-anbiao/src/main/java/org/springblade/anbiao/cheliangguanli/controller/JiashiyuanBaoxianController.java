@@ -116,6 +116,9 @@ public class JiashiyuanBaoxianController extends BladeController {
 		}
 //		JiashiyuanBaoxian detail = jiashiyuanBaoxianService.getOne(Condition.getQueryWrapper(jiashiyuanBaoxian));
 		JiashiyuanBaoxianInfo detail = jiashiyuanBaoxianService.queryDetail(ajbId);
+		if (StrUtil.isNotEmpty(detail.getBaoxian().getAjbEnclosure()) && detail.getBaoxian().getAjbEnclosure().contains("http") == false) {
+			detail.getBaoxian().setAjbEnclosure(fileUploadClient.getUrl(detail.getBaoxian().getAjbEnclosure()));
+		}
 		return R.data(detail);
 	}
 

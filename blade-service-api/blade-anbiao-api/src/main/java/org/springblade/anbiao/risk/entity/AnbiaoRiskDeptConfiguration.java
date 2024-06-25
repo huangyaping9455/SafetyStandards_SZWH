@@ -1,9 +1,12 @@
 package org.springblade.anbiao.risk.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.util.List;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -53,4 +56,7 @@ public class AnbiaoRiskDeptConfiguration implements Serializable {
 
 	@ApiModelProperty(value = "创建人")
 	private String chuangjianren;
+
+	@TableField(exist = false)
+	private List<AnbiaoRiskDeptConfigurationPlan> riskDeptConfigurationPlanList;
 }

@@ -69,8 +69,8 @@ trainserver:
 
 wechat:
   # 微信公众号账号
-  mappid: wx8d72399b90d7b5fa
+  mappid: wx25b7d86c96470f49
   # 微信公众号密码
-  msecret: 9369b95d0b0f9c0b7a72d9eb754227bc
+  msecret: 5b76df7322cfbb075b0abaf5879a00bc
   # 微信公众账号原始ID
-  originalId: gh_bea908f00c63
+  originalId: gh_41494997580e

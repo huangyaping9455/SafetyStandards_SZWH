@@ -33,5 +33,14 @@ public class WechatServer {
 	 */
 	private String qySecret;
 
+	/**
+	 * 微信公众号appid
+	 */
+	private String wxgzhAppId;
+	/**
+	 * 微信公众号密匙
+	 */
+	private String wxgzhSecret;
+
 
 }

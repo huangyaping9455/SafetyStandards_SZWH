@@ -126,9 +126,9 @@ public class HttpUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public AccessToken getAccessToken() throws Exception{
-		String appid = wechatProperties.getMappid();
-		String secret = wechatProperties.getMsecret();
+	public AccessToken getAccessToken(String appid,String secret) throws Exception{
+//		String appid = wechatProperties.getMappid();
+//		String secret = wechatProperties.getMsecret();
 		AccessToken accessToken = null;
 		String requestUrl = ACCESS_TOKEN_URL.replace("{0}",appid).replace("{1}",secret);
 		JSONObject jsonObject=null;
@@ -158,13 +158,12 @@ public class HttpUtils {
 	 * 获取关注用户
 	 * @return
 	 */
-	public List<String> getUsers() {
+	public List<String> getUsers(String appid,String secret) {
 		try {
 			log.info("------------ [获取用户信息] ---------------");
-			String appid = wechatProperties.getMappid();
 			String token = null;
 			if(null== redisCache.get(appid)){
-				AccessToken accessToken = this.getAccessToken();
+				AccessToken accessToken = this.getAccessToken(appid,secret);
 				if (accessToken != null) {
 					token = accessToken.getToken();
 				}

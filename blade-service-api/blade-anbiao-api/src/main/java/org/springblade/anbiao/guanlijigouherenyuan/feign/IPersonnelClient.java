@@ -52,5 +52,8 @@ public interface 				IPersonnelClient {
 	@GetMapping(API_PREFIX + "/getPerson")
 	AnbiaoRepairsPerson getPerson(@RequestParam("account") String account, @RequestParam("password") String password);
 
+	@GetMapping(API_PREFIX + "/bindWechatOpenId")
+	void bindWechatOpenId(@RequestParam("yhId") String yhId,@RequestParam("openid") String openid,@RequestParam("status") Integer status,@RequestParam("type") Integer type);
+
 
 }

@@ -15,6 +15,7 @@
  */
 package org.springblade.anbiao.cheliangguanli.controller;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -42,6 +43,7 @@ import org.springblade.core.tool.utils.StringUtil;
 import org.springblade.system.entity.Dept;
 import org.springblade.system.feign.ISysClient;
 import org.springblade.system.user.entity.User;
+import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -77,6 +79,7 @@ public class DeptBaoxianController extends BladeController {
 	private IVehicleService vehicleService;
 	private ISysClient iSysClient;
 	private IJiashiyuanBaoxianService jiashiyuanBaoxianService;
+	private IFileUploadClient fileUploadClient;
 
 	/**
 	 * 详情
@@ -85,6 +88,9 @@ public class DeptBaoxianController extends BladeController {
 	@ApiOperation(value = "详情", notes = "传入deptBaoxian")
 	public R<DeptBaoxianInfo> detail(String avbId) {
 		DeptBaoxianInfo detail = deptBaoxianService.queryDetail(avbId);
+		if (StrUtil.isNotEmpty(detail.getBaoxian().getAvbEnclosure()) && detail.getBaoxian().getAvbEnclosure().contains("http") == false) {
+			detail.getBaoxian().setAvbEnclosure(fileUploadClient.getUrl(detail.getBaoxian().getAvbEnclosure()));
+		}
 		return R.data(detail);
 	}
 

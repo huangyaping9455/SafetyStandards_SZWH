@@ -15,16 +15,14 @@
     <select id="selectPageList" parameterType="org.springblade.anbiao.risk.page.RiskDeptConfigurationPage" resultType="org.springblade.anbiao.risk.vo.RiskDeptConfigurationListVO">
         <if test="size == 0" >
             SELECT
-            rdc.id as id,a.dept_name as deptName,rdc.dept_id AS deptId,rdc.rc_id AS rcId,rdc.status AS status ,rc.yujingxiang AS yujingxiang,rc.shuoming AS shuoming
+                rdc.id as id,a.dept_name as deptName,rdc.dept_id AS deptId,rdc.rc_id AS rcId,rdc.status AS status ,rc.yujingxiang AS yujingxiang,rc.shuoming AS shuoming,rc.yujingleixing
             FROM
-            anbiao_risk_dept_configuration rdc
+                anbiao_risk_dept_configuration rdc
             INNER JOIN(<include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>) a on a.id=rdc.dept_id
-            INNER JOIN anbiao_organization k on a.id = k.dept_id and k.jigouleixing in('qiye','geti')
             LEFT JOIN anbiao_risk_configuration rc on rc.id=rdc.rc_id
             WHERE
-            rdc.is_deleted = 0
-            and
-            rc.is_deleted = 0
+                rdc.is_deleted = 0
+            and rc.is_deleted = 0
             <if test="deptName !=null and deptName != ''">
                 and a.dept_name like '%${deptName}%'
             </if>
@@ -33,16 +31,14 @@
         </if>
         <if test="current != 0" >
             SELECT
-            rdc.id as id,a.dept_name as deptName,rdc.dept_id AS deptId,rdc.rc_id AS rcId,rdc.status AS status ,rc.yujingxiang AS yujingxiang,rc.shuoming AS shuoming
+                rdc.id as id,a.dept_name as deptName,rdc.dept_id AS deptId,rdc.rc_id AS rcId,rdc.status AS status ,rc.yujingxiang AS yujingxiang,rc.shuoming AS shuoming,rc.yujingleixing
             FROM
-            anbiao_risk_dept_configuration rdc
+                anbiao_risk_dept_configuration rdc
             INNER JOIN(<include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>) a on a.id=rdc.dept_id
-            INNER JOIN anbiao_organization k on a.id = k.dept_id and k.jigouleixing in('qiye','geti')
             LEFT JOIN anbiao_risk_configuration rc on rc.id=rdc.rc_id
             WHERE
-            rdc.is_deleted = 0
-            and
-            rc.is_deleted = 0
+                rdc.is_deleted = 0
+            and rc.is_deleted = 0
             <if test="deptName !=null and deptName != ''">
                 and a.dept_name like '%${deptName}%'
             </if>
@@ -52,19 +48,15 @@
     </select>
 
     <select id="selectTotal" parameterType="org.springblade.anbiao.risk.page.RiskDeptConfigurationPage" resultType="int">
-        select COUNT(1) from
-                             (
-                                 SELECT
-        rdc.id as id,a.dept_name as deptName,rdc.dept_id AS deptId,rdc.rc_id AS rcId,rdc.status AS status ,rc.yujingxiang AS yujingxiang,rc.shuoming AS shuoming
-        FROM
-        anbiao_risk_dept_configuration rdc
-        INNER JOIN(<include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>) a on a.id=rdc.dept_id
-        INNER JOIN anbiao_organization k on a.id = k.dept_id and k.jigouleixing in('qiye','geti')
-        LEFT JOIN anbiao_risk_configuration rc on rc.id=rdc.rc_id
-        WHERE
-        rdc.is_deleted = 0
-        and
-        rc.is_deleted = 0
+        select COUNT(1) from (
+            SELECT
+                rdc.id as id,a.dept_name as deptName,rdc.dept_id AS deptId,rdc.rc_id AS rcId,rdc.status AS status ,rc.yujingxiang AS yujingxiang,rc.shuoming AS shuoming,rc.yujingleixing
+            FROM
+                anbiao_risk_dept_configuration rdc
+            INNER JOIN(<include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>) a on a.id=rdc.dept_id
+            LEFT JOIN anbiao_risk_configuration rc on rc.id=rdc.rc_id
+            WHERE rdc.is_deleted = 0
+            and rc.is_deleted = 0
         <if test="deptName !=null and deptName != ''">
             and a.dept_name like '%${deptName}%'
         </if>

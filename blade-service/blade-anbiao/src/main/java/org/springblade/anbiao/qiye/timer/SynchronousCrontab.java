@@ -2636,7 +2636,9 @@ public class SynchronousCrontab {
 	//每6小时执行一次
 //	@Scheduled(cron = "0 0 */6 * * ?")
 	//每天凌晨5点执行一次
-	@Scheduled(cron = "0 01 15 * * ?")
+	@Scheduled(cron = "0 0 5 * * ?")
+//	//每5分钟执行一次
+//	@Scheduled(cron = "0 */5 * * * ?")
 	public void configureTasks_static_data() {
 		synchronized (KEY) {
 			if (SynchronousCrontab.taskFlag) {
@@ -2651,68 +2653,68 @@ public class SynchronousCrontab {
 			System.out.println("执行同步预警数据");
 
 			//获取驾驶员风险信息
-//			addQYDriverList();
-//			System.out.println("____________111111111111111111111_______________");
-//
-//			//获取车辆风险信息
-//			addQyVehicleList();
-//			System.out.println("____________222222222222222222222_______________");
-//
-//			//入职表风险
-//			RuZhiRiskinsert();
-//			System.out.println("____________33333333333333333333333_______________");
-//
-//			//身份证风险
-//			ShenFenZhengRiskinsert();
-//			System.out.println("____________444444444444444444444444444444_______________");
-//
-//			//驾驶证风险
-//			JiaShiZhengRiskinsert();
-//			System.out.println("____________55555555555555555555555_______________");
-//
-//			//从业资格证风险
-//			CongYeZhengRiskinsert();
-//			System.out.println("____________66666666666666666666_______________");
-//
-//			//体检表风险
-//			TiJianRiskinsert();
-//			System.out.println("____________7777777777777777777777777777_______________");
-//
-//			//岗前培训风险
-//			GangQianPeiXunRiskinsert();
-//			System.out.println("____________88888888888888888888888888888888888_______________");
-//
-//			//无责证明风险
-//			WuZeZhengMingRiskinsert();
-//			System.out.println("____________99999999999999999999999999_______________");
-//
-//			//安全责任书风险
-//			AnQuanZeRenShuRiskinsert();
-//			System.out.println("____________AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA_______________");
-//
-//			//危害告知书风险
-//			WeiHaiGaoZhiShuRiskinsert();
-//			System.out.println("____________BBBBBBBBBBBBBBBBBBBBBBBBB_______________");
-//
-//			//劳动合同风险
-//			LaoDongHeTongRiskinsert();
-//			System.out.println("____________CCCCCCCCCCCCCCCCCCCC_______________");
-//
-//			//安全会议风险
-//			AnQuanHuiYiRiskinsert();
-//			System.out.println("____________DDDDDDDDDDDDDDDDDDDD_______________");
-//
-//			//安全培训风险
-//			AnQuanPeiXunRiskinsert();
-//			System.out.println("____________EEEEEEEEEEEEEEEEEEEEEEE_______________");
-//
-//			//隐患排查风险
-//			YinHuanPaiChaRiskinsert();
-//			System.out.println("____________FFFFFFFFFFFFFFFFFFFFFFFFFFF_______________");
-//
-//			//维修登记风险
-//			WeiXiuDengJiRiskinsert();
-//			System.out.println("____________GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG_______________");
+			addQYDriverList();
+			System.out.println("____________111111111111111111111_______________");
+
+			//获取车辆风险信息
+			addQyVehicleList();
+			System.out.println("____________222222222222222222222_______________");
+
+			//入职表风险
+			RuZhiRiskinsert();
+			System.out.println("____________33333333333333333333333_______________");
+
+			//身份证风险
+			ShenFenZhengRiskinsert();
+			System.out.println("____________444444444444444444444444444444_______________");
+
+			//驾驶证风险
+			JiaShiZhengRiskinsert();
+			System.out.println("____________55555555555555555555555_______________");
+
+			//从业资格证风险
+			CongYeZhengRiskinsert();
+			System.out.println("____________66666666666666666666_______________");
+
+			//体检表风险
+			TiJianRiskinsert();
+			System.out.println("____________7777777777777777777777777777_______________");
+
+			//岗前培训风险
+			GangQianPeiXunRiskinsert();
+			System.out.println("____________88888888888888888888888888888888888_______________");
+
+			//无责证明风险
+			WuZeZhengMingRiskinsert();
+			System.out.println("____________99999999999999999999999999_______________");
+
+			//安全责任书风险
+			AnQuanZeRenShuRiskinsert();
+			System.out.println("____________AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA_______________");
+
+			//危害告知书风险
+			WeiHaiGaoZhiShuRiskinsert();
+			System.out.println("____________BBBBBBBBBBBBBBBBBBBBBBBBB_______________");
+
+			//劳动合同风险
+			LaoDongHeTongRiskinsert();
+			System.out.println("____________CCCCCCCCCCCCCCCCCCCC_______________");
+
+			//安全会议风险
+			AnQuanHuiYiRiskinsert();
+			System.out.println("____________DDDDDDDDDDDDDDDDDDDD_______________");
+
+			//安全培训风险
+			AnQuanPeiXunRiskinsert();
+			System.out.println("____________EEEEEEEEEEEEEEEEEEEEEEE_______________");
+
+			//隐患排查风险
+			YinHuanPaiChaRiskinsert();
+			System.out.println("____________FFFFFFFFFFFFFFFFFFFFFFFFFFF_______________");
+
+			//维修登记风险
+			WeiXiuDengJiRiskinsert();
+			System.out.println("____________GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG_______________");
 
 			//劳保用品风险
 			LaBorRiskinsert();
@@ -2735,10 +2737,10 @@ public class SynchronousCrontab {
 			XingNengBaoGaoRiskinsert();
 
 			//驾驶员保险风险
-//			JiaShiYuanBaoXianRiskinsert();
+			JiaShiYuanBaoXianRiskinsert();
 
 			//车辆保险风险
-//			VehicleBaoXianRiskinsert();
+			VehicleBaoXianRiskinsert();
 
 			System.out.println("执行完成");
 		} catch (Exception e) {

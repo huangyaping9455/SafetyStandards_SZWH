@@ -237,8 +237,14 @@ public class AnbiaoJiashiyuanJiashizhengController {
 			if (cyzdeail != null) {
 				cyzdeail.setAjcAjIds(jiashizheng.getAjjAjIds());
 				cyzdeail.setAjcCertificateNo(jiashizheng.getAjjFileNo());
-				cyzdeail.setAjcUpdateByIds(user.getUserId().toString());
-				cyzdeail.setAjcUpdateByName(user.getUserName());
+				if(user != null){
+					cyzdeail.setAjcUpdateByIds(user.getUserId().toString());
+					cyzdeail.setAjcUpdateByName(user.getUserName());
+				}else{
+					cyzdeail.setAjcUpdateByIds(jiashizheng.getAjjUpdateByIds());
+					cyzdeail.setAjcUpdateByName(jiashizheng.getAjjUpdateByName());
+				}
+
 				cyzdeail.setAjcUpdateTime(DateUtil.now());
 				congyezigezhengService.updateById(cyzdeail);
 			}

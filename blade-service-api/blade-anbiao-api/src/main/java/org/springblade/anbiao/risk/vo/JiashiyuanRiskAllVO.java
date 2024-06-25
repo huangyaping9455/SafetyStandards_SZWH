@@ -42,4 +42,10 @@ public class JiashiyuanRiskAllVO implements Serializable {
 	@ApiModelProperty(value = "有效期")
 	private String youxiaoqi;
 
+	@ApiModelProperty(value = "有效期")
+	private String cheliangpaizhao;
+
+	@ApiModelProperty(value = "车辆id")
+	private String vehicleId;
+
 }

@@ -279,7 +279,7 @@ public class OrganizationsController extends BladeController {
 							System.out.println(strs);
 							Departmentpost departmentpost = new Departmentpost();
 							String type = "岗位";
-							departmentpost.setParentId(dept.getId().toString());
+							departmentpost.setParentId(organization.getDeptId());
 							//执行机构表新增
 							treeCode = iSysClient.selectByTreeCode(departmentpost.getParentId()).getTreeCode();
 							dept.setTreeCode(treeCode);

@@ -16,6 +16,7 @@
 package org.springblade.anbiao.cheliangguanli.controller;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -47,6 +48,7 @@ import org.springblade.core.tool.utils.StringUtil;
 import org.springblade.system.entity.Dept;
 import org.springblade.system.feign.ISysClient;
 import org.springblade.system.user.entity.User;
+import org.springblade.upload.upload.feign.IFileUploadClient;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -84,6 +86,7 @@ public class VehicleBaoxianController extends BladeController {
 	private IJiashiyuanBaoxianService jiashiyuanBaoxianService;
 	private IAnbiaoJiashiyuanRuzhiService ruzhiService;
 	private IAnbiaoRiskDetailService riskDetailService;
+	private IFileUploadClient fileUploadClient;
 
 	/**
 	 * 详情
@@ -93,6 +96,9 @@ public class VehicleBaoxianController extends BladeController {
 	public R<VehicleBaoxianInfo> detail(String avbId) {
 //		VehicleBaoxian detail = vehicleBaoxianService.getOne(Condition.getQueryWrapper(vehicleBaoxian));
 		VehicleBaoxianInfo detail = vehicleBaoxianService.queryDetail(avbId);
+		if (StrUtil.isNotEmpty(detail.getBaoxian().getAvbEnclosure()) && detail.getBaoxian().getAvbEnclosure().contains("http") == false) {
+			detail.getBaoxian().setAvbEnclosure(fileUploadClient.getUrl(detail.getBaoxian().getAvbEnclosure()));
+		}
 		return R.data(detail);
 	}
 
@@ -350,6 +356,7 @@ public class VehicleBaoxianController extends BladeController {
 			}else {
 				mingxi.setAvbmBasicPremium(new BigDecimal(0));
 			}
+			System.out.println(avbmInsuranceAmount);
 			if (StringUtil.isNotBlank(avbmInsuranceAmount) && avbmInsuranceAmount != "null"){
 				mingxi.setAvbmInsuranceAmount(new BigDecimal(avbmInsuranceAmount));
 			}else {
