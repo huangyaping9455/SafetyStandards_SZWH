@@ -18,9 +18,9 @@ spring:
     password: ${blade.datasource.dev.password}
 
     #测试
-#    url: jdbc:mysql://120.78.198.161:3306/blade?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
-#    username: root
-#    password: Ts2022
+    #    url: jdbc:mysql://120.78.198.161:3306/blade?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+    #    username: root
+    #    password: Ts2022
 
     driver-class-name: com.mysql.jdbc.Driver    #指定数据库驱动
     type: com.alibaba.druid.pool.DruidDataSource  #指定类型连接池
@@ -48,7 +48,6 @@ spring:
     password: ${spring.redis.password}
     database: 7
     ssl: false
-#    edu.swhaq.com 18003 lingyi
 
 #文件的物理路径前缀与url前缀
 fileserver:

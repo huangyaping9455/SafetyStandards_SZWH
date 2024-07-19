@@ -3,6 +3,7 @@ package org.springblade.anbiao.labor.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springblade.anbiao.labor.DTO.laborDTO;
+import org.springblade.anbiao.labor.VO.LaborMonthVO;
 import org.springblade.anbiao.labor.VO.LaborVO;
 import org.springblade.anbiao.labor.VO.LaborledgerVO;
 import org.springblade.anbiao.labor.VO.graphicsVO;
@@ -70,4 +71,7 @@ public interface laborService extends IService<LaborEntity> {
 	IPage<LaborledgerVO> selectLedgerList(IPage<LaborledgerVO> page, LaborledgerVO laborledgerVO);
 
 	laborledgerPage selectLedgerList(laborledgerPage laborledgerPage);
+
+	List<LaborMonthVO> selectLaborMonth(String deptId, String date);
+
 }

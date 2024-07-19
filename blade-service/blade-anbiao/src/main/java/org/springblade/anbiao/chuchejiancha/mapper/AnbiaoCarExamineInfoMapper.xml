@@ -615,4 +615,51 @@
 
     </select>
 
+    <select id="selectDayCarExamine" resultMap="AnbiaoCarExamineInfoTZVOResultMap">
+        SELECT
+            DISTINCT
+            v.dept_id as deptId,
+            b.dept_name as deptName,
+            day(#{date}) as days,
+            COUNT(1) as num
+        FROM
+            anbiao_vehicle v
+        INNER JOIN (
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b ON v.dept_id = b.id
+        WHERE v.is_deleted = 0
+            AND v.cheliangpaizhao NOT LIKE '%挂%'
+            AND v.id not in(
+                select Vehid from anbiao_car_examine_info
+                where isdelete = 0
+                and date >= left(#{date},10)
+                and date &lt;= left(#{date},10)
+            )
+        GROUP BY
+            v.dept_id,
+            b.dept_name
+    </select>
+
+    <select id="selectCarExamineDay" resultMap="AnbiaoCarExamineInfoTZVOResultMap">
+        SELECT
+            DISTINCT
+            v.id,
+            v.dept_id as deptId,
+            v.cheliangpaizhao,
+            b.dept_name as deptName
+        FROM
+            anbiao_vehicle v
+        INNER JOIN (
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) b ON v.dept_id = b.id
+        WHERE v.is_deleted = 0
+            AND v.cheliangpaizhao NOT LIKE '%挂%'
+            AND v.id not in(
+                select Vehid from anbiao_car_examine_info
+                where isdelete = 0
+                    and date >= left(#{date},10)
+                    and date &lt;= left(#{date},10)
+                )
+    </select>
+
 </mapper>

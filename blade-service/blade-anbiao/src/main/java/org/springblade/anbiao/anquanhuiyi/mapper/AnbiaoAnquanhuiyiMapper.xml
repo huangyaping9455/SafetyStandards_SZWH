@@ -202,4 +202,29 @@
         GROUP BY id
 
     </select>
+
+    <select id="selectHuiYiMonth" resultType="org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi">
+        select
+            a.dept_id as deptId,
+            max(a.id) as id,
+            month(a.huiyikaishishijian) as huiyikaishishijian,
+            b.dept_name as deptname,
+            COUNT(1) as num
+        from
+            anbiao_anquanhuiyi a
+            inner join anbiao_anquanhuiyi_detail ad on a.id = ad.aad_aa_ids
+            inner join anbiao_jiashiyuan j on ad.aad_ap_ids = j.id and j.isdelete = 0
+            inner join  (
+                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) b on a.dept_id = b.id
+        where a.is_deleted = 0
+            and year(a.huiyikaishishijian) = year(#{date})
+            and month(a.huiyikaishishijian) = month(#{date})
+            and ad.add_ap_being_joined = 0
+        GROUP BY
+            a.dept_id,b.dept_name
+    </select>
+
+
+
 </mapper>

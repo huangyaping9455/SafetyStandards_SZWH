@@ -301,5 +301,15 @@ public class AnbiaoCarExamineInfoServiceImpl extends ServiceImpl<AnbiaoCarExamin
 		return mapper.selectSafetyCheckScore(safetyCheckMingXiVO);
 	}
 
+	@Override
+	public List<AnbiaoCarExamineInfoTZVO> selectDayCarExamine(String deptId, String date) {
+		return mapper.selectDayCarExamine(deptId, date);
+	}
+
+	@Override
+	public List<AnbiaoCarExamineInfoTZVO> selectCarExamineDay(String deptId, String date) {
+		return mapper.selectCarExamineDay(deptId, date);
+	}
+
 
 }

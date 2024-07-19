@@ -3,7 +3,9 @@ package org.springblade.anbiao.labor.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.mapstruct.Mapper;
+import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.labor.DTO.laborDTO;
+import org.springblade.anbiao.labor.VO.LaborMonthVO;
 import org.springblade.anbiao.labor.VO.LaborVO;
 import org.springblade.anbiao.labor.VO.LaborledgerVO;
 import org.springblade.anbiao.labor.VO.graphicsVO;
@@ -83,4 +85,6 @@ public interface laborMapper extends BaseMapper<LaborEntity> {
 
 	List<LaborledgerVO> selectLedgerPage(laborledgerPage laborledgerPage);
 	int selectLedgerTotal(laborledgerPage laborledgerPage);
+
+	List<LaborMonthVO> selectLaborMonth(String deptId, String date);
 }

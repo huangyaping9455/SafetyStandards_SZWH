@@ -13,6 +13,7 @@ import org.springblade.anbiao.risk.service.IAnbiaoRiskConfigurationService;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDeptConfigurationPlanService;
 import org.springblade.anbiao.risk.service.IAnbiaoRiskDeptConfigurationService;
 import org.springblade.anbiao.risk.vo.RiskDeptConfigurationListVO;
+import org.springblade.anbiao.risk.vo.RiskPlanListConfigurationVO;
 import org.springblade.core.log.annotation.ApiLog;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
@@ -394,6 +395,199 @@ public class AnbiaoRiskDeptConfigurationController {
 			return r;
 		}else {
 			r.setMsg("暂无数据");
+			r.setCode(200);
+			r.setSuccess(true);
+			return r;
+		}
+	}
+
+	@PostMapping("/insert_planList")
+	@ApiLog("插入企业风险配置信息")
+	@ApiOperation(value = "插入企业风险配置信息", notes = "传入rcId，deptId", position = 1)
+	public R insertPlanList(@RequestBody RiskPlanListConfigurationVO riskPlanListConfigurationVO, BladeUser user) {
+		R r = new R();
+		boolean save = false;
+		List<RiskPlanListConfigurationVO> planList = riskPlanListConfigurationVO.getPlanList();
+		if(planList != null && planList.size() > 0){
+			for (int j = 0; j < planList.size(); j++) {
+				QueryWrapper<AnbiaoRiskDeptConfiguration> riskDeptConfigurationQueryWrapper = new QueryWrapper<>();
+				riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getRcId, planList.get(j).getRcId());
+				riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getDeptId, planList.get(j).getDeptId());
+				riskDeptConfigurationQueryWrapper.lambda().eq(AnbiaoRiskDeptConfiguration::getIsDeleted, 0);
+				AnbiaoRiskDeptConfiguration deal = anbiaoRiskDeptConfigurationService.getBaseMapper().selectOne(riskDeptConfigurationQueryWrapper);
+				if (deal == null) {
+					AnbiaoRiskDeptConfiguration anbiaoRiskDeptConfiguration = new AnbiaoRiskDeptConfiguration();
+					anbiaoRiskDeptConfiguration.setRcId(planList.get(j).getRcId());
+					anbiaoRiskDeptConfiguration.setDeptId(planList.get(j).getDeptId());
+					anbiaoRiskDeptConfiguration.setCreattime(DateUtil.now());
+					anbiaoRiskDeptConfiguration.setChuangjianren(user.getUserName());
+					anbiaoRiskDeptConfiguration.setStatus("1");
+					anbiaoRiskDeptConfiguration.setIsDeleted("0");
+					save = anbiaoRiskDeptConfigurationService.save(anbiaoRiskDeptConfiguration);
+					if(save){
+						QueryWrapper<AnbiaoRiskDeptConfigurationPlan> anbiaoRiskDeptConfigurationPlanQueryWrapper = new QueryWrapper<>();
+						anbiaoRiskDeptConfigurationPlanQueryWrapper.lambda().eq(AnbiaoRiskDeptConfigurationPlan::getRdcId, anbiaoRiskDeptConfiguration.getId());
+						anbiaoRiskDeptConfigurationPlanQueryWrapper.lambda().eq(AnbiaoRiskDeptConfigurationPlan::getType, planList.get(j).getType());
+						anbiaoRiskDeptConfigurationPlanQueryWrapper.lambda().eq(AnbiaoRiskDeptConfigurationPlan::getLevel, planList.get(j).getLevel());
+						anbiaoRiskDeptConfigurationPlanQueryWrapper.lambda().eq(AnbiaoRiskDeptConfigurationPlan::getStatus, 1);
+						anbiaoRiskDeptConfigurationPlanQueryWrapper.lambda().eq(AnbiaoRiskDeptConfigurationPlan::getIsDeleted, 0);
+						AnbiaoRiskDeptConfigurationPlan deptConfigurationPlan = riskDeptConfigurationPlanService.getBaseMapper().selectOne(anbiaoRiskDeptConfigurationPlanQueryWrapper);
+						if (deptConfigurationPlan == null) {
+							AnbiaoRiskDeptConfigurationPlan riskDeptConfigurationPlan1 = new AnbiaoRiskDeptConfigurationPlan();
+							riskDeptConfigurationPlan1.setCreatetime(DateUtil.now());
+							riskDeptConfigurationPlan1.setChuangjianren(user.getUserName());
+							riskDeptConfigurationPlan1.setStatus(1);
+							riskDeptConfigurationPlan1.setRdcId(anbiaoRiskDeptConfiguration.getId());
+							riskDeptConfigurationPlan1.setLevel(planList.get(j).getLevel());
+							riskDeptConfigurationPlan1.setUserId(anbiaoRiskDeptConfiguration.getChuangjianren());
+							riskDeptConfigurationPlan1.setDate(planList.get(j).getDate());
+							riskDeptConfigurationPlan1.setType(planList.get(j).getType());
+							riskDeptConfigurationPlan1.setHours(planList.get(j).getHours());
+							save = riskDeptConfigurationPlanService.save(riskDeptConfigurationPlan1);
+							if (save == true) {
+								r.setMsg("操作成功");
+								r.setCode(200);
+								r.setSuccess(true);
+							} else {
+								r.setMsg("操作失败");
+								r.setCode(500);
+								r.setSuccess(false);
+								return r;
+							}
+						}else{
+							deptConfigurationPlan.setUpdatetime(DateUtil.now());
+							deptConfigurationPlan.setCaozuoren(user.getUserName());
+							deptConfigurationPlan.setRdcId(anbiaoRiskDeptConfiguration.getId());
+							deptConfigurationPlan.setLevel(planList.get(j).getLevel());
+							deptConfigurationPlan.setUserId(anbiaoRiskDeptConfiguration.getChuangjianren());
+							deptConfigurationPlan.setDate(planList.get(j).getDate());
+							deptConfigurationPlan.setType(planList.get(j).getType());
+							deptConfigurationPlan.setHours(planList.get(j).getHours());
+							save = riskDeptConfigurationPlanService.updateById(deptConfigurationPlan);
+							if (save == true) {
+								r.setMsg("操作成功");
+								r.setCode(200);
+								r.setSuccess(true);
+								r.setData(deal);
+							} else {
+								r.setMsg("操作失败");
+								r.setCode(500);
+								r.setSuccess(false);
+								r.setData(deal);
+								return r;
+							}
+						}
+					}else {
+						r.setMsg("新增失败");
+						r.setCode(500);
+						r.setSuccess(false);
+						r.setData(deal);
+						return r;
+					}
+				}else{
+					deal.setRcId(planList.get(j).getRcId());
+					deal.setDeptId(planList.get(j).getDeptId());
+					deal.setCreattime(DateUtil.now());
+					deal.setChuangjianren(user.getUserName());
+					deal.setStatus("1");
+					deal.setIsDeleted("0");
+					save = anbiaoRiskDeptConfigurationService.updateById(deal);
+					if(save){
+						QueryWrapper<AnbiaoRiskDeptConfigurationPlan> anbiaoRiskDeptConfigurationPlanQueryWrapper = new QueryWrapper<>();
+						anbiaoRiskDeptConfigurationPlanQueryWrapper.lambda().eq(AnbiaoRiskDeptConfigurationPlan::getRdcId, deal.getId());
+						anbiaoRiskDeptConfigurationPlanQueryWrapper.lambda().eq(AnbiaoRiskDeptConfigurationPlan::getType, planList.get(j).getType());
+						anbiaoRiskDeptConfigurationPlanQueryWrapper.lambda().eq(AnbiaoRiskDeptConfigurationPlan::getLevel, planList.get(j).getLevel());
+						anbiaoRiskDeptConfigurationPlanQueryWrapper.lambda().eq(AnbiaoRiskDeptConfigurationPlan::getStatus, 1);
+						anbiaoRiskDeptConfigurationPlanQueryWrapper.lambda().eq(AnbiaoRiskDeptConfigurationPlan::getIsDeleted, 0);
+						AnbiaoRiskDeptConfigurationPlan deptConfigurationPlan = riskDeptConfigurationPlanService.getBaseMapper().selectOne(anbiaoRiskDeptConfigurationPlanQueryWrapper);
+						if (deptConfigurationPlan == null) {
+							AnbiaoRiskDeptConfigurationPlan riskDeptConfigurationPlan1 = new AnbiaoRiskDeptConfigurationPlan();
+							riskDeptConfigurationPlan1.setCreatetime(DateUtil.now());
+							riskDeptConfigurationPlan1.setChuangjianren(user.getUserName());
+							riskDeptConfigurationPlan1.setStatus(1);
+							riskDeptConfigurationPlan1.setRdcId(deal.getId());
+							riskDeptConfigurationPlan1.setLevel(planList.get(j).getLevel());
+							riskDeptConfigurationPlan1.setUserId(deal.getChuangjianren());
+							riskDeptConfigurationPlan1.setDate(planList.get(j).getDate());
+							riskDeptConfigurationPlan1.setType(planList.get(j).getType());
+							riskDeptConfigurationPlan1.setHours(planList.get(j).getHours());
+							save = riskDeptConfigurationPlanService.save(riskDeptConfigurationPlan1);
+							if (save == true) {
+								r.setMsg("新增成功");
+								r.setCode(200);
+								r.setSuccess(true);
+							} else {
+								r.setMsg("新增失败");
+								r.setCode(500);
+								r.setSuccess(false);
+								return r;
+							}
+						}else{
+							deptConfigurationPlan.setUpdatetime(DateUtil.now());
+							deptConfigurationPlan.setCaozuoren(user.getUserName());
+							deptConfigurationPlan.setRdcId(deal.getId());
+							deptConfigurationPlan.setLevel(planList.get(j).getLevel());
+							deptConfigurationPlan.setUserId(deal.getChuangjianren());
+							deptConfigurationPlan.setDate(planList.get(j).getDate());
+							deptConfigurationPlan.setType(planList.get(j).getType());
+							deptConfigurationPlan.setHours(planList.get(j).getHours());
+							save = riskDeptConfigurationPlanService.updateById(deptConfigurationPlan);
+							if (save == true) {
+								r.setMsg("操作成功");
+								r.setCode(200);
+								r.setSuccess(true);
+								r.setData(deal);
+							} else {
+								r.setMsg("操作失败");
+								r.setCode(500);
+								r.setSuccess(false);
+								r.setData(deal);
+								return r;
+							}
+						}
+					}else {
+						r.setMsg("操作失败");
+						r.setCode(500);
+						r.setSuccess(false);
+						r.setData(deal);
+						return r;
+					}
+				}
+			}
+		}else{
+			r.setMsg("操作成功");
+			r.setCode(200);
+			r.setSuccess(true);
+			return r;
+		}
+
+		if (save == true) {
+			r.setMsg("操作成功");
+			r.setCode(200);
+			r.setSuccess(true);
+			return r;
+		} else {
+			r.setMsg("操作失败");
+			r.setCode(500);
+			r.setSuccess(false);
+			return r;
+		}
+	}
+
+	@GetMapping("/defaultDetail")
+	@ApiLog("默认风险配置信息详情")
+	@ApiOperation(value = "默认风险配置信息详情", notes = "传入数据ID", position = 6)
+	public R defaultDetail(String deptId) {
+		R r = new R();
+		List<RiskDeptConfigurationListVO> deptConfigurationListVOList = anbiaoRiskDeptConfigurationService.selectDeptDefault("1");
+		if(deptConfigurationListVOList != null && deptConfigurationListVOList.size() > 0){
+			r.setMsg("获取成功");
+			r.setCode(200);
+			r.setSuccess(true);
+			r.setData(deptConfigurationListVOList);
+			return r;
+		}else {
+			r.setMsg("获取成功，暂无数据");
 			r.setCode(200);
 			r.setSuccess(true);
 			return r;

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.risk.mapper.AnbiaoRiskDeptConfigurationPlanMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.risk.entity.AnbiaoRiskDeptConfigurationPlan">
+        <id column="id" property="id" />
+        <result column="rdc_id" property="rdcId" />
+        <result column="status" property="status" />
+        <result column="updatetime" property="updatetime" />
+        <result column="caozuoren" property="caozuoren" />
+        <result column="createtime" property="createtime" />
+        <result column="chuangjianren" property="chuangjianren" />
+        <result column="type" property="type" />
+        <result column="date" property="date" />
+        <result column="level" property="level" />
+        <result column="user_id" property="userId" />
+        <result column="driver_id" property="driverId" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="days" property="days" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, rdc_id, status, updatetime, caozuoren, createtime, chuangjianren, type, date, level, user_id, driver_id
+    </sql>
+
+    <!-- 根据应急预案id 查询列表 -->
+    <select id="selectByList" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+            a.*,
+            b.`name` as userName
+        FROM
+            anbiao_risk_dept_configuration_plan a,blade_user b
+        where a.user_id = b.id
+            and a.rdc_id = #{Id}
+    </select>
+
+
+</mapper>

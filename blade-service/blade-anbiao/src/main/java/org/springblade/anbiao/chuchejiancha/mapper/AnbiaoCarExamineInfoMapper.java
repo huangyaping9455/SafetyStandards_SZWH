@@ -7,6 +7,7 @@ import org.springblade.anbiao.chuchejiancha.page.AnbiaoCarExamineInfoPage;
 import org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineInfoTZVO;
 import org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineInfoVO;
 import org.springblade.anbiao.chuchejiancha.vo.SafetyCheckMingXiVO;
+import org.springblade.anbiao.labor.VO.LaborMonthVO;
 
 import java.util.List;
 
@@ -43,6 +44,10 @@ public interface AnbiaoCarExamineInfoMapper extends BaseMapper<AnbiaoCarExamineI
 	List<SafetyCheckMingXiVO>  selectSafetyCheckMingXi(SafetyCheckMingXiVO safetyCheckMingXiVO);
 
 	List<SafetyCheckMingXiVO>  selectSafetyCheckScore(SafetyCheckMingXiVO safetyCheckMingXiVO);
+
+	List<AnbiaoCarExamineInfoTZVO> selectDayCarExamine(String deptId, String date);
+
+	List<AnbiaoCarExamineInfoTZVO> selectCarExamineDay(String deptId, String date);
 
 
 }

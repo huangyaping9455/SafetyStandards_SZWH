@@ -29,4 +29,6 @@ public interface AnbiaoAnquanhuiyiMapper extends BaseMapper<AnbiaoAnquanhuiyi> {
 
 	List<AnquanhuiyiledgerVO> selectAllMeetingsInMonth( AnquanhuiyiledgerVO anquanhuiyiledgerVO);
 
+	List<AnbiaoAnquanhuiyi> selectHuiYiMonth(String deptId,String date);
+
 }

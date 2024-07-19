@@ -495,4 +495,35 @@
         <include refid="queryLaborSql" />
     </select>
 
+    <select id="selectLaborMonth" resultType="org.springblade.anbiao.labor.VO.LaborMonthVO">
+        select
+            MAX(aliIds) as aliIds,
+            month(a.aliIssueDate) AS aliIssueDate,
+            b.id as aliDeptIds,
+            b.dept_name as deptname,
+            COUNT(1) as num
+        from(
+            SELECT
+                a.ali_ids AS aliIds,
+                a.ali_name AS aliName,
+                a.ali_issue_date AS aliIssueDate,
+                a.ali_dept_ids AS aliDeptIds,
+                b.alr_person_ids AS aadApIds,
+                case when IFNULL(b.ali_application_scope,0) =1 then j.jiashiyuanxingming else b.alr_person_name end AS aadApName
+            FROM
+                anbiao_labor_insurance a
+            left join anbiao_labor_receive b on a.ali_ids = b.alr_ali_ids
+            inner join anbiao_jiashiyuan j on b.alr_person_ids = j.id and j.isdelete = 0
+            where a.ali_delete = 0
+              and year(a.ali_issue_date) = year(#{date})
+              and month(a.ali_issue_date) = month(#{date})
+              and IFNULL(b.alr_person_autograph,'') = ''
+            )a
+        inner join(
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) b on a.aliDeptIds = b.id
+        GROUP BY
+            b.id,b.dept_name
+    </select>
+
 </mapper>

@@ -23,6 +23,7 @@
             WHERE
                 rdc.is_deleted = 0
             and rc.is_deleted = 0
+            and rdc.dept_id != 1
             <if test="deptName !=null and deptName != ''">
                 and a.dept_name like '%${deptName}%'
             </if>
@@ -39,6 +40,7 @@
             WHERE
                 rdc.is_deleted = 0
             and rc.is_deleted = 0
+            and rdc.dept_id != 1
             <if test="deptName !=null and deptName != ''">
                 and a.dept_name like '%${deptName}%'
             </if>
@@ -57,11 +59,40 @@
             LEFT JOIN anbiao_risk_configuration rc on rc.id=rdc.rc_id
             WHERE rdc.is_deleted = 0
             and rc.is_deleted = 0
+            and rdc.dept_id != 1
         <if test="deptName !=null and deptName != ''">
             and a.dept_name like '%${deptName}%'
         </if>
         GROUP BY rdc.id
                                  )d
+    </select>
+
+    <select id="selectDeptDefault" resultType="org.springblade.anbiao.risk.vo.RiskDeptConfigurationListVO" parameterType="String">
+        SELECT
+            distinct
+            rdc.id AS id,
+            a.dept_name AS deptName,
+            rdc.dept_id AS deptId,
+            rdc.rc_id AS rcId,
+            rdc.STATUS AS STATUS,
+            rc.yujingxiang AS yujingxiang,
+            rc.shuoming AS shuoming,
+            rc.yujingleixing,
+            p.type,
+            p.`level`,
+            p.hours,
+            p.date
+        FROM
+            anbiao_risk_dept_configuration rdc
+            INNER JOIN(
+                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+            ) a on a.id=rdc.dept_id
+            LEFT JOIN anbiao_risk_configuration rc on rc.id=rdc.rc_id
+            LEFT JOIN anbiao_risk_dept_configuration_plan p on p.rdc_id = rdc.id
+        WHERE
+            rdc.is_deleted = 0
+          and rc.is_deleted = 0
+          and rdc.dept_id = 1
     </select>
 
 </mapper>

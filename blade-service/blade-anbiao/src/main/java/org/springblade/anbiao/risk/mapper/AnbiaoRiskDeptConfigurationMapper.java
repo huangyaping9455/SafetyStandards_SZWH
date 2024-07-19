@@ -1,6 +1,7 @@
 package org.springblade.anbiao.risk.mapper;
 
 import lombok.AllArgsConstructor;
+import org.apache.ibatis.annotations.Param;
 import org.springblade.anbiao.jiashiyuan.page.JiaShiYuanPage;
 import org.springblade.anbiao.jiashiyuan.vo.JiaShiYuanListVO;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDeptConfiguration;
@@ -34,4 +35,15 @@ public interface AnbiaoRiskDeptConfigurationMapper extends BaseMapper<AnbiaoRisk
 	 * @return
 	 */
 	int selectTotal(RiskDeptConfigurationPage riskDeptConfigurationPage);
+
+
+	List<RiskDeptConfigurationListVO> selectDeptDefault(@Param("deptId") String deptId);
+
+
+
+
+
+
+
+
 }

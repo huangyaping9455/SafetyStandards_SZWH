@@ -1,6 +1,7 @@
 package org.springblade.anbiao.risk.vo;
 
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -36,4 +37,18 @@ public class RiskDeptConfigurationListVO implements Serializable {
 
 	@ApiModelProperty(value = "预警类型")
 	private Integer yujingleixing;
+
+	@ApiModelProperty(value = "风险推送频率；1：按日，2：按月")
+	private Integer type;
+
+	@ApiModelProperty(value = "推送等级，1,2,3")
+	private Integer level;
+
+	@ApiModelProperty(value = "日期，每月的几号（按月才有），多个以英文逗号隔开")
+	private String date;
+
+	@ApiModelProperty(value = "小时，每日几点")
+	private String hours;
+
+
 }

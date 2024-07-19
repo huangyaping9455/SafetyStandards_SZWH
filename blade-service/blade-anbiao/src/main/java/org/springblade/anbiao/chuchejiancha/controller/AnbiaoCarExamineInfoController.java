@@ -5409,5 +5409,14 @@ public class AnbiaoCarExamineInfoController {
 		return rs;
 	}
 
+	@PostMapping("/getCarExamineDay")
+	@ApiLog("当天未进行安全检查的车辆信息")
+	@ApiOperation(value = "当天未进行安全检查的车辆信息", notes = "传入deptId", position = 8)
+	public R getCarExamineDay(String deptId) {
+		R rs = new R();
+		List<AnbiaoCarExamineInfoTZVO> list= iAnbiaoCarExamineInfoService.selectCarExamineDay(deptId, DateUtil.now());
+		return R.data(list);
+	}
+
 
 }

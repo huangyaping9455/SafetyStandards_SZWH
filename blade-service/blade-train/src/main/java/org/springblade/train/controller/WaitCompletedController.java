@@ -99,7 +99,7 @@ public class WaitCompletedController extends BaseController {
 			studentQueryWrapper.lambda().eq(Student::getRealName, driverName);
 			studentQueryWrapper.lambda().eq(Student::getCellphone, cellphone);
 			studentQueryWrapper.lambda().eq(Student::getUnitId, unitDeail.getId());
-			studentQueryWrapper.lambda().eq(Student::getDeleted, "0");
+			studentQueryWrapper.lambda().eq(Student::getDeleted, 0);
 			Student studentDeail = studentService.getBaseMapper().selectOne(studentQueryWrapper);
 			if(studentDeail == null){
 				rs.setCode(200);

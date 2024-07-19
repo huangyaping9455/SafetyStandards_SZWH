@@ -64,4 +64,9 @@ public class AnbiaoRiskDeptConfigurationServiceImpl extends ServiceImpl<AnbiaoRi
 			return (RiskDeptConfigurationPage<RiskDeptConfigurationListVO>) riskDeptConfigurationPage.setRecords(riskDeptConfigurationListVOS);
 		}
 	}
+
+	@Override
+	public List<RiskDeptConfigurationListVO> selectDeptDefault(String deptId) {
+		return riskDeptConfigurationMapper.selectDeptDefault(deptId);
+	}
 }

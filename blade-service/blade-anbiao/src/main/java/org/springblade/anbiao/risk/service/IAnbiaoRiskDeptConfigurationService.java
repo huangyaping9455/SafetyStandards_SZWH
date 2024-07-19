@@ -19,4 +19,7 @@ import java.util.List;
 public interface IAnbiaoRiskDeptConfigurationService extends IService<AnbiaoRiskDeptConfiguration> {
 
 	RiskDeptConfigurationPage<RiskDeptConfigurationListVO> selectPageList(RiskDeptConfigurationPage riskDeptConfigurationPage);
+
+	List<RiskDeptConfigurationListVO> selectDeptDefault(String deptId);
+
 }

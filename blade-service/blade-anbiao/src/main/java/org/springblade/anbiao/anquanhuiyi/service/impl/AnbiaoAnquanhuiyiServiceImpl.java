@@ -112,4 +112,9 @@ public class AnbiaoAnquanhuiyiServiceImpl extends ServiceImpl<AnbiaoAnquanhuiyiM
 	public List<AnquanhuiyiledgerVO> selectAllMeetingsInMonth(AnquanhuiyiledgerVO anquanhuiyiledgerVO) {
 		return mapper.selectAllMeetingsInMonth(anquanhuiyiledgerVO);
 	}
+
+	@Override
+	public List<AnbiaoAnquanhuiyi> selectHuiYiMonth(String deptId,String date) {
+		return mapper.selectHuiYiMonth(deptId,date);
+	}
 }

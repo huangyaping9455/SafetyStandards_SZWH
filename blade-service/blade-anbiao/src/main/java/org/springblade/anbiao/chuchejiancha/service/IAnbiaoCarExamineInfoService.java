@@ -41,4 +41,8 @@ public interface IAnbiaoCarExamineInfoService extends IService<AnbiaoCarExamineI
 
 	List<SafetyCheckMingXiVO>  selectSafetyCheckScore(SafetyCheckMingXiVO safetyCheckMingXiVO);
 
+	List<AnbiaoCarExamineInfoTZVO> selectDayCarExamine(String deptId, String date);
+
+	List<AnbiaoCarExamineInfoTZVO> selectCarExamineDay(String deptId, String date);
+
 }

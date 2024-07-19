@@ -28,4 +28,6 @@ public interface IAnbiaoAnquanhuiyiService extends IService<AnbiaoAnquanhuiyi> {
 
 	List<AnquanhuiyiledgerVO> selectAllMeetingsInMonth( AnquanhuiyiledgerVO anquanhuiyiledgerVO);
 
+	List<AnbiaoAnquanhuiyi> selectHuiYiMonth(String deptId,String date);
+
 }

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springblade.anbiao.labor.DTO.laborDTO;
+import org.springblade.anbiao.labor.VO.LaborMonthVO;
 import org.springblade.anbiao.labor.VO.LaborVO;
 import org.springblade.anbiao.labor.VO.LaborledgerVO;
 import org.springblade.anbiao.labor.VO.graphicsVO;
@@ -15,7 +16,6 @@ import org.springblade.anbiao.labor.mapper.laborMapper;
 import org.springblade.anbiao.labor.page.LaborPage;
 import org.springblade.anbiao.labor.page.laborledgerPage;
 import org.springblade.anbiao.labor.service.laborService;
-import org.springblade.anbiao.yinhuanpaicha.vo.AnbiaoHiddenDangerVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -204,5 +204,10 @@ public class laborServiceImpl extends ServiceImpl<laborMapper,LaborEntity> imple
 			laborledgerPage.setRecords(LaborledgerVOS);
 			return laborledgerPage;
 		}
+	}
+
+	@Override
+	public List<LaborMonthVO> selectLaborMonth(String deptId, String date) {
+		return laborMapper.selectLaborMonth(deptId, date);
 	}
 }

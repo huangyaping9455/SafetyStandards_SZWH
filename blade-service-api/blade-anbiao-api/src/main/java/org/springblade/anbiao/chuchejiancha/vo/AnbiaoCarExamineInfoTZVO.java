@@ -52,5 +52,11 @@ public class AnbiaoCarExamineInfoTZVO {
 
 	private List<AnbiaoCarExamineInfoTZVO> examineInfoTZVOList;
 
+	@ApiModelProperty(value = "未检查车辆数")
+	private Integer num = 0;
+
+	@ApiModelProperty(value = "日期（天）")
+	private Integer days;
+
 
 }

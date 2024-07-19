@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.springblade.anbiao.deptUserWecat.mapper.AnbiaoDeptUserWechatInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.springblade.anbiao.deptUserWecat.entity.AnbiaoDeptUserWechatInfo">
+        <id column="id" property="id" />
+        <result column="yh_id" property="yhId" />
+        <result column="yh_gzh_openid" property="yhGzhOpenid" />
+        <result column="create_time" property="createTime" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, yh_id, yh_gzh_openid, create_time, is_deleted, status
+    </sql>
+
+    <select id="selectByUser" resultType="org.springblade.anbiao.deptUserWecat.entity.AnbiaoDeptUserWechatInfo">
+        select id as perId,name as perName,dept_id as deptId from blade_user where id = #{yhId} and is_deleted = 0
+    </select>
+
+</mapper>
