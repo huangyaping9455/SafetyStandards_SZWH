@@ -31,4 +31,6 @@ public interface AnbiaoAnquanhuiyiMapper extends BaseMapper<AnbiaoAnquanhuiyi> {
 
 	List<AnbiaoAnquanhuiyi> selectHuiYiMonth(String deptId,String date);
 
+	AnbiaoAnquanhuiyi selectHyChNum(String hyId);
+
 }

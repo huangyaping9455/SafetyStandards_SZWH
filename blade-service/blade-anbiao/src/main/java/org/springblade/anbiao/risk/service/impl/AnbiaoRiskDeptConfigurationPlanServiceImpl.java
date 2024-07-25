@@ -27,4 +27,9 @@ public class AnbiaoRiskDeptConfigurationPlanServiceImpl extends ServiceImpl<Anbi
 	public List<AnbiaoRiskDeptConfigurationPlan> selectByList(String Id) {
 		return deptConfigurationPlanMapper.selectByList(Id);
 	}
+
+	@Override
+	public AnbiaoRiskDeptConfigurationPlan selectYujingxiangByName(String deptId) {
+		return deptConfigurationPlanMapper.selectYujingxiangByName(deptId);
+	}
 }

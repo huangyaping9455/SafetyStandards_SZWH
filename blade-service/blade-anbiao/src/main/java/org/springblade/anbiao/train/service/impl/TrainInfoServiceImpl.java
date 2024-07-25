@@ -38,4 +38,9 @@ public class TrainInfoServiceImpl extends ServiceImpl<TrainInfoMapper, TrainInfo
 	public List<TrainInfo> getDeptWait(String deptId) {
 		return trainMapper.getDeptWait(deptId);
 	}
+
+	@Override
+	public List<TrainInfo> getDeptWaitCount(String deptId) {
+		return trainMapper.getDeptWaitCount(deptId);
+	}
 }

@@ -16,7 +16,6 @@
 package org.springblade.anbiao.train.entity;
 
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.models.auth.In;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -43,5 +42,17 @@ public class TrainInfo implements Serializable {
 
 	@ApiModelProperty(value = "企业名称")
 	private String deptName;
+
+	@ApiModelProperty(value = "学员ID")
+	private String studentId;
+
+	@ApiModelProperty(value = "学员名称")
+	private String realname;
+
+	@ApiModelProperty(value = "手机号码")
+	private String cellphone;
+
+	@ApiModelProperty(value = "数量")
+	private Integer num;
 
 }

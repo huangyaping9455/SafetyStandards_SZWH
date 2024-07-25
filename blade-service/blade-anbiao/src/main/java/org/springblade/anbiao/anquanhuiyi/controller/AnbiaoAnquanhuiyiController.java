@@ -33,7 +33,9 @@ import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiDetailServic
 import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiService;
 import org.springblade.anbiao.anquanhuiyi.service.IAnbiaoAnquanhuiyiSourceService;
 import org.springblade.anbiao.guanlijigouherenyuan.entity.Organizations;
+import org.springblade.anbiao.guanlijigouherenyuan.entity.Personnel;
 import org.springblade.anbiao.guanlijigouherenyuan.service.IOrganizationsService;
+import org.springblade.anbiao.guanlijigouherenyuan.service.IPersonnelService;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.anbiao.risk.entity.AnbiaoRiskDetail;
@@ -110,6 +112,8 @@ public class AnbiaoAnquanhuiyiController {
 	private IAnbiaoRiskDetailService riskDetailService;
 
 	private TrainServer trainServer;
+
+	private IPersonnelService personnelService;
 
 
 	/**
@@ -426,7 +430,15 @@ public class AnbiaoAnquanhuiyiController {
 						details1.add(a);
 					}
 				}else{
-					details1.add(a);
+					//将删除的人员排除掉
+					QueryWrapper<Personnel> personnelQueryWrapper = new QueryWrapper<>();
+					personnelQueryWrapper.lambda().eq(Personnel::getIsDeleted,"0");
+					personnelQueryWrapper.lambda().eq(Personnel::getUserid,a.getAadApIds());
+					personnelQueryWrapper.lambda().eq(Personnel::getDeptId,anquanhuiyiInfo.getDeptId());
+					Personnel personnel = personnelService.getBaseMapper().selectOne(personnelQueryWrapper);
+					if (personnel!=null){
+						details1.add(a);
+					}
 				}
 			}
 

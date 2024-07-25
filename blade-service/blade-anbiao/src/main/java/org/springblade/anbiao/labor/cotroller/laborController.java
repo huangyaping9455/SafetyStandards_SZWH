@@ -12,6 +12,9 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tools.zip.ZipOutputStream;
+import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyiDetail;
+import org.springblade.anbiao.guanlijigouherenyuan.entity.Personnel;
+import org.springblade.anbiao.guanlijigouherenyuan.service.IPersonnelService;
 import org.springblade.anbiao.jiashiyuan.entity.JiaShiYuan;
 import org.springblade.anbiao.jiashiyuan.service.IJiaShiYuanService;
 import org.springblade.anbiao.labor.DTO.laborDTO;
@@ -74,6 +77,9 @@ public class laborController {
 	private IAnbiaoRiskDetailService riskDetailService;
 
 	private IJiaShiYuanService jiaShiYuanService;
+
+	private IPersonnelService personnelService;
+
 
 //	@PostMapping("list")
 //	@ApiLog("列表-劳保用品信息")
@@ -155,7 +161,30 @@ public class laborController {
 	public R selectAll(@RequestBody LaborPage laborPage) {
 		LaborEntity laborEntities = service.selectAll(laborPage);
 		List<Labor> labor = service.selectC(laborPage);
-		laborEntities.setLabor(labor);
+		List<Labor> details1 = new ArrayList<>();
+		for (Labor a:labor) {
+			if(!"0".equals(a.getAadApType())){
+				QueryWrapper<JiaShiYuan> jiaShiYuanQueryWrapper = new QueryWrapper<>();
+				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getIsdelete,"0");
+				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getId,a.getAadApIds());
+				jiaShiYuanQueryWrapper.lambda().eq(JiaShiYuan::getDeptId,laborEntities.getAliDeptIds());
+				JiaShiYuan jiaShiYuan = jiaShiYuanService.getBaseMapper().selectOne(jiaShiYuanQueryWrapper);
+				if (jiaShiYuan!=null){
+					details1.add(a);
+				}
+			}else{
+				//将删除的人员排除掉
+				QueryWrapper<Personnel> personnelQueryWrapper = new QueryWrapper<>();
+				personnelQueryWrapper.lambda().eq(Personnel::getIsDeleted,"0");
+				personnelQueryWrapper.lambda().eq(Personnel::getUserid,a.getAadApIds());
+				personnelQueryWrapper.lambda().eq(Personnel::getDeptId,laborEntities.getAliDeptIds());
+				Personnel personnel = personnelService.getBaseMapper().selectOne(personnelQueryWrapper);
+				if (personnel!=null){
+					details1.add(a);
+				}
+			}
+		}
+		laborEntities.setLabor(details1);
 		return R.data(laborEntities);
 	}
 

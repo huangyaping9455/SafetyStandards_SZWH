@@ -17,5 +17,7 @@ public interface AnbiaoRiskDeptConfigurationPlanMapper extends BaseMapper<Anbiao
 
 	List<AnbiaoRiskDeptConfigurationPlan> selectByList(String Id);
 
+	AnbiaoRiskDeptConfigurationPlan selectYujingxiangByName(String deptId);
+
 
 }

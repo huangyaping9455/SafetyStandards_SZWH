@@ -81,7 +81,8 @@ public class SynchronousPushMessageCrontab {
 			JSONObject jsonObject = HttpUtils.httpsRequest(sendUrl, "POST", ss);
 			log.info("[发送模板信息] sendTemplateMessage result:"+jsonObject);
 			System.out.println(jsonObject.get("errcode").toString());
-			if(jsonObject.get("errcode").toString().equals("42001")){
+			int code = Integer.parseInt(jsonObject.get("errcode").toString());
+			if(code != 0){
 				String errmsg = jsonObject.get("errmsg").toString();
 				System.out.println(errmsg);
 				if(errmsg.contains("access_token")){
@@ -122,7 +123,7 @@ public class SynchronousPushMessageCrontab {
 					newBacklogMessage.setAlarmTime(item.getArdDiscoveryDate());
 					newBacklogMessage.setAlarmRemark(item.getArdTitle());
 					newBacklogMessage.setAppidUrl("wx2893c20e8065e5af");
-					newBacklogMessage.setPageUrl("/packages/mine/dossier/dossier-details/index?userId="+item.getArdAssociationValue()+"&ardTitle="+item.getArdTitle()+"&id="+item.getVehicleId()+"&code="+item.getCheliangpaizhao());
+					newBacklogMessage.setPageUrl("/packages/wechat-push/index?userId="+item.getArdAssociationValue()+"&ardTitle="+item.getArdTitle());
 					try {
 						run(newBacklogMessage);
 					} catch (Exception e) {

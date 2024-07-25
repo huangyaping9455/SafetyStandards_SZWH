@@ -205,6 +205,60 @@
 
     <select id="selectHuiYiMonth" resultType="org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi">
         select
+            case when IFNULL(a.id,'') = '' then b.id else a.id end as id,
+            dp.id as deptId,
+            case when IFNULL(a.huiyikaishishijian,'') = '' then b.huiyikaishishijian else a.huiyikaishishijian end as huiyikaishishijian,
+            dp.dept_name as deptname,
+            IFNULL( a.num, 0 ) + IFNULL( b.num, 0 ) AS num
+        from(
+            <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        )dp
+        left join(
+            select
+                a.dept_id as deptId,
+                max(a.id) as id,
+                month(a.huiyikaishishijian) as huiyikaishishijian,
+                b.dept_name as deptname,
+                COUNT(1) as num
+            from
+                anbiao_anquanhuiyi a
+            inner join anbiao_anquanhuiyi_detail ad on a.id = ad.aad_aa_ids and ad.aad_ap_type = 1
+            inner join anbiao_jiashiyuan j on ad.aad_ap_ids = j.id and j.isdelete = 0
+            inner join  (
+                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+                ) b on a.dept_id = b.id
+            where a.is_deleted = 0
+                and year(a.huiyikaishishijian) = year(#{date})
+                and month(a.huiyikaishishijian) = month(#{date})
+                and ad.add_ap_being_joined = 0
+            GROUP BY
+                a.dept_id,b.dept_name
+            )a on a.deptId = dp.id
+        LEFT JOIN(
+            select
+                a.dept_id as deptId,
+                max(a.id) as id,
+                month(a.huiyikaishishijian) as huiyikaishishijian,
+                b.dept_name as deptname,
+                COUNT(1) as num
+            from
+                anbiao_anquanhuiyi a
+            inner join anbiao_anquanhuiyi_detail ad on a.id = ad.aad_aa_ids and ad.aad_ap_type = 0
+            inner join anbiao_personnel p on p.userid = ad.aad_ap_ids and p.is_deleted = 0
+            inner join  (
+                <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+                ) b on a.dept_id = b.id
+            where a.is_deleted = 0
+                and year(a.huiyikaishishijian) = year(#{date})
+                and month(a.huiyikaishishijian) = month(#{date})
+                and ad.add_ap_being_joined = 0
+            GROUP BY
+                a.dept_id,b.dept_name
+            ) b on b.deptId = dp.id
+
+
+
+        <!--select
             a.dept_id as deptId,
             max(a.id) as id,
             month(a.huiyikaishishijian) as huiyikaishishijian,
@@ -213,7 +267,7 @@
         from
             anbiao_anquanhuiyi a
             inner join anbiao_anquanhuiyi_detail ad on a.id = ad.aad_aa_ids
-            inner join anbiao_jiashiyuan j on ad.aad_ap_ids = j.id and j.isdelete = 0
+            left join anbiao_jiashiyuan j on ad.aad_ap_ids = j.id and j.isdelete = 0
             inner join  (
                 <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
             ) b on a.dept_id = b.id
@@ -222,7 +276,30 @@
             and month(a.huiyikaishishijian) = month(#{date})
             and ad.add_ap_being_joined = 0
         GROUP BY
-            a.dept_id,b.dept_name
+            a.dept_id,b.dept_name-->
+    </select>
+
+    <select id="selectHyChNum" resultType="org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi">
+        select (
+           ( SELECT
+                 COUNT( 1 ) AS num
+             FROM
+                 anbiao_anquanhuiyi_detail a
+                inner join anbiao_jiashiyuan j on a.aad_ap_ids = j.id and j.isdelete = 0
+             WHERE
+                 a.aad_aa_ids = #{hyId}
+               AND a.aad_ap_type = 1
+           )
+           + (
+               SELECT
+                   COUNT( 1 ) AS num
+               FROM
+                   anbiao_anquanhuiyi_detail a
+                   inner join anbiao_personnel p on p.userid = a.aad_ap_ids and p.is_deleted = 0
+               WHERE
+                   a.aad_aa_ids = #{hyId}
+                 AND a.aad_ap_type = 0)
+       ) as canhuirenshu
     </select>
 
 

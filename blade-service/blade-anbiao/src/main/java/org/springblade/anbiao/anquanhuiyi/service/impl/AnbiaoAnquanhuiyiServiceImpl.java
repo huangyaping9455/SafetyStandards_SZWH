@@ -53,6 +53,12 @@ public class AnbiaoAnquanhuiyiServiceImpl extends ServiceImpl<AnbiaoAnquanhuiyiM
 						if (detail != null && detail.size() > 0){
 							item.setShijicanhuirenshu(detail.size());
 						}
+
+						//更新参会人数
+						AnbiaoAnquanhuiyi anquanhuiyi = mapper.selectHyChNum(item.getId());
+						if(anquanhuiyi != null && anquanhuiyi.getCanhuirenshu() > 0){
+							item.setCanhuirenshu(anquanhuiyi.getCanhuirenshu());
+						}
 					});
 				}
 				anQuanHuiYiPage.setRecords(bsPolicyInfoList);
@@ -86,6 +92,13 @@ public class AnbiaoAnquanhuiyiServiceImpl extends ServiceImpl<AnbiaoAnquanhuiyiM
 					if (detail != null && detail.size() > 0){
 						item.setShijicanhuirenshu(detail.size());
 					}
+
+					//更新参会人数
+					AnbiaoAnquanhuiyi anquanhuiyi = mapper.selectHyChNum(item.getId());
+					if(anquanhuiyi != null && anquanhuiyi.getCanhuirenshu() > 0){
+						item.setCanhuirenshu(anquanhuiyi.getCanhuirenshu());
+					}
+
 				});
 			}
 			anQuanHuiYiPage.setRecords(bsPolicyInfoList);

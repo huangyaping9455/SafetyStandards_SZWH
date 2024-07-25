@@ -30,5 +30,7 @@ public interface ITrainInfoService extends IService<TrainInfo> {
 
 	List<TrainInfo> getDeptWait(@Param("deptId") String deptId);
 
+	List<TrainInfo> getDeptWaitCount(@Param("deptId") String deptId);
+
 
 }

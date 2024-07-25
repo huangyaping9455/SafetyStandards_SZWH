@@ -92,4 +92,14 @@ public class AnbiaoRiskDeptConfigurationPlan implements Serializable {
 	@TableField(exist = false)
 	private String userName;
 
+	@TableField(exist = false)
+	private String yujingxiang;
+
+	@TableField(exist = false)
+	private String shuoming;
+
+	@TableField(exist = false)
+	private String deptId;
+
+
 }

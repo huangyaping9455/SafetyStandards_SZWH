@@ -18,4 +18,6 @@ public interface IAnbiaoRiskDeptConfigurationPlanService extends IService<Anbiao
 
 	List<AnbiaoRiskDeptConfigurationPlan> selectByList(String Id);
 
+	AnbiaoRiskDeptConfigurationPlan selectYujingxiangByName(String deptId);
+
 }

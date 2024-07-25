@@ -154,7 +154,7 @@ public class DeptDayRiskPushMessageCrontab {
 	//企业安全培训日常风险（每日）
 	private void deptTrainRiskDay(String openId,String deptId) throws IOException, ParseException {
 		if(StringUtils.isNotEmpty(deptId)){
-			List<TrainInfo> trainInfoList = trainInfoService.getDeptWait(deptId);
+			List<TrainInfo> trainInfoList = trainInfoService.getDeptWaitCount(deptId);
 			if(trainInfoList != null && trainInfoList.size() > 0 ){
 				trainInfoList.forEach(item->{
 					String month = item.getYue()+"月";
@@ -164,7 +164,7 @@ public class DeptDayRiskPushMessageCrontab {
 					newBacklogMessage.setTemplateId("0mD7DcYJf7gga9osMe3wWDfRDs5fSngNPXOageEA7iM");
 					newBacklogMessage.setDeptName(item.getDeptName());
 					newBacklogMessage.setAlarmTime(DateUtil.now());
-					newBacklogMessage.setAlarmRemark(month+"未完成安全培训的人员有："+trainInfoList.size()+"人");
+					newBacklogMessage.setAlarmRemark(month+"未完成安全培训的人员有："+item.getNum()+"人");
 					newBacklogMessage.setAppidUrl("wx2893c20e8065e5af");
 					newBacklogMessage.setPageUrl("https://swhaq.com/#/pages/risk/index?dept="+item.getDeptId()+"&id="+item.getId()+"&ardTitle=未完成安全培训的人员");
 					try {
@@ -179,7 +179,7 @@ public class DeptDayRiskPushMessageCrontab {
 
 
 	public void runDeptDayRisk(NewBacklogMessage newBacklogMessage) throws Exception {
-		String deptName = "深圳市深威豪科技有限公司";
+//		String deptName = "深圳市深威豪科技有限公司";
 		//默认都是用正式模板
 		String messageTemplate = "{" +
 			"\"touser\":\"{0}\"," +
@@ -202,7 +202,7 @@ public class DeptDayRiskPushMessageCrontab {
 //			System.out.println(users);
 		System.out.println("推送的用户opendId是："+newBacklogMessage.getOpenId());
 		String postData = messageTemplate.replace("{0}", newBacklogMessage.getOpenId())
-			.replace("{1}", deptName)
+			.replace("{1}", newBacklogMessage.getDeptName())
 			.replace("{2}", newBacklogMessage.getAlarmTime())
 			.replace("{3}", newBacklogMessage.getAlarmRemark());
 		log.info("[发送模板信息]sendTemplateMessage:"+postData);
@@ -211,7 +211,8 @@ public class DeptDayRiskPushMessageCrontab {
 		JSONObject jsonObject = HttpUtils.httpsRequest(sendUrl, "POST", ss);
 		log.info("[发送模板信息] sendTemplateMessage result:"+jsonObject);
 		System.out.println(jsonObject.get("errcode").toString());
-		if(jsonObject.get("errcode").toString().equals("42001")){
+		int code = Integer.parseInt(jsonObject.get("errcode").toString());
+		if(code != 0){
 			String errmsg = jsonObject.get("errmsg").toString();
 			System.out.println(errmsg);
 			if(errmsg.contains("access_token")){
@@ -226,7 +227,7 @@ public class DeptDayRiskPushMessageCrontab {
 //			System.out.println(users);
 				System.out.println("推送的用户opendId是："+newBacklogMessage.getOpenId());
 				postData = messageTemplate.replace("{0}", newBacklogMessage.getOpenId())
-					.replace("{1}", deptName)
+					.replace("{1}", newBacklogMessage.getDeptName())
 					.replace("{2}", newBacklogMessage.getAlarmTime())
 					.replace("{3}", newBacklogMessage.getAlarmRemark());
 				log.info("[发送模板信息]sendTemplateMessage:"+postData);
@@ -264,6 +265,7 @@ public class DeptDayRiskPushMessageCrontab {
 			deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getStatus, 1);
 			deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getType, 2);
 			deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getIsDeleted, 0);
+			deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getYhId, "1445");
 			List<AnbiaoDeptUserWechatInfo> deptUserWechatInfoList = deptUserWechatInfoService.getBaseMapper().selectList(deptUserWechatInfoQueryWrapper);
 			if (deptUserWechatInfoList != null && deptUserWechatInfoList.size() > 0 ) {
 				deptUserWechatInfoList.forEach(deptitem-> {
@@ -313,7 +315,7 @@ public class DeptDayRiskPushMessageCrontab {
 						}
 
 						//获取未完成安全培训的人员信息
-						List<TrainInfo> trainInfoList = trainInfoService.getDeptWait(userWechatInfo.getDeptId());
+						List<TrainInfo> trainInfoList = trainInfoService.getDeptWaitCount(userWechatInfo.getDeptId());
 						if(trainInfoList != null && trainInfoList.size() > 0 ){
 							trainInfoList.forEach(item-> {
 								try {

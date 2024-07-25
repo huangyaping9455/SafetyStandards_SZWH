@@ -6,7 +6,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springblade.anbiao.anquanhuiyi.entity.AnbiaoAnquanhuiyi;
 import org.springblade.anbiao.chuchejiancha.service.IAnbiaoCarExamineInfoService;
 import org.springblade.anbiao.chuchejiancha.vo.AnbiaoCarExamineInfoTZVO;
 import org.springblade.anbiao.config.wechat.AccessToken;
@@ -14,14 +13,13 @@ import org.springblade.anbiao.config.wechat.HttpUtils;
 import org.springblade.anbiao.config.wechat.RedisCache;
 import org.springblade.anbiao.deptUserWecat.entity.AnbiaoDeptUserWechatInfo;
 import org.springblade.anbiao.deptUserWecat.service.IAnbiaoDeptUserWechatInfoService;
-import org.springblade.anbiao.labor.VO.LaborMonthVO;
 import org.springblade.anbiao.messagePush.NewBacklogMessage;
+import org.springblade.anbiao.risk.entity.AnbiaoRiskDeptConfigurationPlan;
+import org.springblade.anbiao.risk.service.IAnbiaoRiskDeptConfigurationPlanService;
 import org.springblade.common.tool.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.scheduling.Trigger;
-import org.springframework.scheduling.TriggerContext;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.scheduling.support.CronTrigger;
@@ -29,9 +27,13 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 定时任务
@@ -40,9 +42,10 @@ import java.util.List;
 @Data
 @Slf4j
 @Component
+@Configuration
 public class ScheduleTask implements SchedulingConfigurer {
 
-	@Value("0/10 * * * * ?")
+	@Value("0 0 16 * * ? ")
 	private String cron;
 
 	@Autowired
@@ -52,10 +55,29 @@ public class ScheduleTask implements SchedulingConfigurer {
 	private IAnbiaoCarExamineInfoService carExamineInfoService;
 
 	@Autowired
+	private IAnbiaoRiskDeptConfigurationPlanService riskDeptConfigurationPlanService;
+
+	@Autowired
 	public HttpUtils httpUtils;
 
 	@Autowired
 	private RedisCache redisCache;
+
+	public void run(String openid,String deptId) {
+		//获取未进行安全检查的车辆信息
+		List<AnbiaoCarExamineInfoTZVO> carExamineInfoTZVOList = carExamineInfoService.selectDayCarExamine(deptId,DateUtil.now());
+		if(carExamineInfoTZVOList != null && carExamineInfoTZVOList.size() > 0 ){
+			carExamineInfoTZVOList.forEach(item-> {
+				try {
+					deptVehCheckRiskDay(openid,item.getDeptId());
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				} catch (ParseException e) {
+					throw new RuntimeException(e);
+				}
+			});
+		}
+	}
 
 
 	//企业车辆出车检查日常风险（每日）
@@ -117,7 +139,8 @@ public class ScheduleTask implements SchedulingConfigurer {
 		JSONObject jsonObject = HttpUtils.httpsRequest(sendUrl, "POST", ss);
 		log.info("[发送模板信息] sendTemplateMessage result:"+jsonObject);
 		System.out.println(jsonObject.get("errcode").toString());
-		if(jsonObject.get("errcode").toString().equals("42001") || jsonObject.get("errcode").toString().equals("40001")){
+		int code = Integer.parseInt(jsonObject.get("errcode").toString());
+		if(code != 0){
 			String errmsg = jsonObject.get("errmsg").toString();
 			System.out.println(errmsg);
 			if(errmsg.contains("access_token")){
@@ -145,58 +168,163 @@ public class ScheduleTask implements SchedulingConfigurer {
 //		}
 	}
 
+//	@Override
+//	public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+//		// 动态使用cron表达式设置循环间隔
+//		taskRegistrar.addTriggerTask(new Runnable() {
+//			@Override
+//			public void run() {
+//
+//				log.info("Current time： {}", LocalDateTime.now());
+//				System.out.println("哈哈哈哈哈哈哈哈哈哈哈哈！");
+//				//获取绑定推送的企业用户信息
+//				QueryWrapper<AnbiaoDeptUserWechatInfo> deptUserWechatInfoQueryWrapper = new QueryWrapper<AnbiaoDeptUserWechatInfo>();
+//				deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getStatus, 1);
+//				deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getType, 2);
+//				deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getIsDeleted, 0);
+//				deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getYhId, "1445");
+//				List<AnbiaoDeptUserWechatInfo> deptUserWechatInfoList = deptUserWechatInfoService.getBaseMapper().selectList(deptUserWechatInfoQueryWrapper);
+//				if (deptUserWechatInfoList != null && deptUserWechatInfoList.size() > 0) {
+//					deptUserWechatInfoList.forEach(deptitem -> {
+//						AnbiaoRiskDeptConfigurationPlan plan = riskDeptConfigurationPlanService.selectYujingxiangByName(deptitem.getDeptId());
+//						if (plan == null) {
+//							plan = riskDeptConfigurationPlanService.selectYujingxiangByName("1");
+//							if (plan != null) {
+//								try {
+//									//根据用户ID获取所属企业ID deptitem.getYhId()  1445----7243f9920ece84e16ebbbff44f22fbab
+//									AnbiaoDeptUserWechatInfo userWechatInfo = deptUserWechatInfoService.selectByUser(deptitem.getYhId());
+//									ScheduleTask.this.run(deptitem.getYhGzhOpenid(), userWechatInfo.getDeptId());
+//								} catch (Exception e) {
+//									throw new RuntimeException(e);
+//								}
+//							}
+//						}
+//					});
+//				}
+//				//终止执行
+//				taskRegistrar.destroy();
+//			}
+//
+//		}, new Trigger() {
+//			@Override
+//			public Date nextExecutionTime(TriggerContext triggerContext) {
+//				//自定义定时任务的时间参数
+//				cron = "* 0/2 * * * ?";
+////				AtomicReference<String> new_cron = new AtomicReference<>("");
+////				//获取绑定推送的企业用户信息
+////				QueryWrapper<AnbiaoDeptUserWechatInfo> deptUserWechatInfoQueryWrapper = new QueryWrapper<AnbiaoDeptUserWechatInfo>();
+////				deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getStatus, 1);
+////				deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getType, 2);
+////				deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getIsDeleted, 0);
+////				deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getYhId, "1445");
+////				List<AnbiaoDeptUserWechatInfo> deptUserWechatInfoList = deptUserWechatInfoService.getBaseMapper().selectList(deptUserWechatInfoQueryWrapper);
+////				if (deptUserWechatInfoList != null && deptUserWechatInfoList.size() > 0 ) {
+////					deptUserWechatInfoList.forEach(deptitem-> {
+////						AnbiaoRiskDeptConfigurationPlan plan = riskDeptConfigurationPlanService.selectYujingxiangByName(deptitem.getDeptId());
+////						if(plan == null){
+////							plan = riskDeptConfigurationPlanService.selectYujingxiangByName("1");
+////							if(plan != null){
+////								String hours = plan.getHours();
+////								int h = Integer.parseInt(StringUtils.substringBefore(hours,":"));
+////								int s = Integer.parseInt(StringUtils.substringAfter(hours,":"));
+////								System.out.println(h+"-------"+s);
+////								String cron = s+" "+h;
+////								new_cron.set("* " + cron + " * * ?");
+////								System.out.println(cron);
+////							}
+////						}
+////					});
+////				}
+////				cron = new_cron.get();
+////				System.out.println(cron);
+//
+//				// 使用CronTrigger触发器，可动态修改cron表达式来操作循环规则
+//				CronTrigger cronTrigger = new CronTrigger(cron);
+//				Date nextExecutionTime = cronTrigger.nextExecutionTime(triggerContext);
+//				return nextExecutionTime;
+//			}
+//		});
+//	}
+
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 	@Override
 	public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-		// 动态使用cron表达式设置循环间隔
-		taskRegistrar.addTriggerTask(new Runnable() {
-			@Override
-			public void run() {
-				log.info("Current time： {}", LocalDateTime.now());
-				System.out.println("哈哈哈哈哈哈哈哈哈哈哈哈！");
-
-				//获取绑定推送的企业用户信息
-				QueryWrapper<AnbiaoDeptUserWechatInfo> deptUserWechatInfoQueryWrapper = new QueryWrapper<AnbiaoDeptUserWechatInfo>();
-				deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getStatus, 1);
-				deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getType, 2);
-				deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getIsDeleted, 0);
-				List<AnbiaoDeptUserWechatInfo> deptUserWechatInfoList = deptUserWechatInfoService.getBaseMapper().selectList(deptUserWechatInfoQueryWrapper);
-				if (deptUserWechatInfoList != null && deptUserWechatInfoList.size() > 0 ) {
-					deptUserWechatInfoList.forEach(deptitem-> {
-						//根据用户ID获取所属企业ID deptitem.getYhId()  1445----7243f9920ece84e16ebbbff44f22fbab
-						AnbiaoDeptUserWechatInfo userWechatInfo = deptUserWechatInfoService.selectByUser(deptitem.getYhId());
-						if(userWechatInfo != null){
-
-							//获取未进行安全检查的车辆信息
-							List<AnbiaoCarExamineInfoTZVO> carExamineInfoTZVOList = carExamineInfoService.selectDayCarExamine(userWechatInfo.getDeptId(),DateUtil.now());
-							if(carExamineInfoTZVOList != null && carExamineInfoTZVOList.size() > 0 ){
-								carExamineInfoTZVOList.forEach(item-> {
-									try {
-										deptVehCheckRiskDay(deptitem.getYhGzhOpenid(),item.getDeptId());
-									} catch (IOException e) {
-										throw new RuntimeException(e);
-									} catch (ParseException e) {
-										throw new RuntimeException(e);
-									}
-								});
-							}
-
-
-						}
-					});
+		//自定义定时任务的时间参数
+		cron = "* 0/2 * * * ?";
+		AtomicReference<String> new_cron = new AtomicReference<>("");
+		//获取绑定推送的企业用户信息
+		QueryWrapper<AnbiaoDeptUserWechatInfo> deptUserWechatInfoQueryWrapper = new QueryWrapper<AnbiaoDeptUserWechatInfo>();
+		deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getStatus, 1);
+		deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getType, 2);
+		deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getIsDeleted, 0);
+		deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getYhId, "1445");
+		List<AnbiaoDeptUserWechatInfo> deptUserWechatInfoList = deptUserWechatInfoService.getBaseMapper().selectList(deptUserWechatInfoQueryWrapper);
+		if (deptUserWechatInfoList != null && deptUserWechatInfoList.size() > 0 ) {
+			deptUserWechatInfoList.forEach(deptitem-> {
+				AnbiaoRiskDeptConfigurationPlan plan = riskDeptConfigurationPlanService.selectYujingxiangByName(deptitem.getDeptId());
+				if(plan == null){
+					plan = riskDeptConfigurationPlanService.selectYujingxiangByName("1");
+					if(plan != null){
+						String hours = plan.getHours();
+						int h = Integer.parseInt(StringUtils.substringBefore(hours,":"));
+						int s = Integer.parseInt(StringUtils.substringAfter(hours,":"));
+						System.out.println(h+"-------"+s);
+						String cron = s+" "+h;
+						new_cron.set("* " + cron + " * * ?");
+						System.out.println(cron);
+					}
 				}
+			});
+		}
+		cron = new_cron.get();
+		System.out.println(cron);
 
-			}
-		}, new Trigger() {
-			@Override
-			public Date nextExecutionTime(TriggerContext triggerContext) {
-				//自定义定时任务的时间参数
-				cron = "0/20 * * * * ?";
-
-				// 使用CronTrigger触发器，可动态修改cron表达式来操作循环规则
+		AtomicBoolean isTaskCompleted = new AtomicBoolean(false);
+		taskRegistrar.setScheduler(taskExecutor());
+		taskRegistrar.addTriggerTask(
+			//定义执行任务内容
+			() -> {
+				System.out.println("执行任务：" + dateFormat.format(new Date()));
+				run("oc4jx6sAkhoV5Nwr9j-WUlUDKI7I", "5498");
+				// 执行完毕后的操作
+				// 假设任务执行完毕后设置标志
+				isTaskCompleted.set(true);
+			},
+			// 定义执行周期
+			triggerContext -> {
+				// 这里设置了每天只执行一次，具体时间可以根据需要调整
+				// 例如："0 0 2 * * ?" 表示每天凌晨2点执行
 				CronTrigger cronTrigger = new CronTrigger(cron);
-				Date nextExecutionTime = cronTrigger.nextExecutionTime(triggerContext);
-				return nextExecutionTime;
+				return cronTrigger.nextExecutionTime(triggerContext);
 			}
-		});
+			// 定义执行的触发时机，这里设置为每天定时执行，比如每天的10:00:00
+//			triggerContext -> new CronTrigger("* 0/2 * * * ?").nextExecutionTime(triggerContext)
+		);
+		// 循环等待任务完成
+		while (isTaskCompleted.get()==true) {
+			// 可以在这里做其他事情，比如检查是否有其他任务完成
+			taskRegistrar.setScheduler(taskExecutor());
+		}
+		System.out.println("任务已完成，跳出循环。");
 	}
+
+	// 使用默认的线程池
+	private Executor taskExecutor() {
+		return Executors.newScheduledThreadPool(5);
+	}
+
+
+
+//	public static void main(String[] args) {
+//		String hours = "10:50";
+//		int h = Integer.parseInt(StringUtils.substringBefore(hours,":"));
+//		int s = Integer.parseInt(StringUtils.substringAfter(hours,":"));
+//		System.out.println(h+"-------"+s);
+//		String cron = s+" "+h;
+//		cron = "* "+cron+" * * ?";
+//		System.out.println(cron);
+//	}
+
 }
+
+

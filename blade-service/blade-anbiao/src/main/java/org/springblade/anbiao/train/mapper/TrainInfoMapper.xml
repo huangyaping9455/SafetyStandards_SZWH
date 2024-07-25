@@ -15,5 +15,22 @@
         INNER JOIN (select * from ote.proc_train_wait) o on o.unitName = a.dept_name and o.realname = b.jiashiyuanxingming and o.cellphone = b.shoujihaoma
     </select>
 
+    <select id="getDeptWaitCount" resultType="org.springblade.anbiao.train.entity.TrainInfo">
+        select
+            b.dept_id as deptId,
+            a.dept_name as deptName,
+            count(1) as num,
+            month(now()) as yue
+        from(
+        <include refid="org.springblade.anbiao.guanlijigouherenyuan.mapper.OrganizationsMapper.getByDeptId"/>
+        ) a
+        INNER JOIN anbiao_jiashiyuan b on a.id = b.dept_id and b.isdelete = 0
+        INNER JOIN (select * from ote.proc_train_wait) o on o.unitName = a.dept_name and o.realname = b.jiashiyuanxingming and o.cellphone = b.shoujihaoma
+        GROUP BY
+            b.dept_id,
+            a.dept_name
+    </select>
+
+
 
 </mapper>

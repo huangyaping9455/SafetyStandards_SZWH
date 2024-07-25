@@ -35,6 +35,9 @@ public class RegistryConfiguration implements WebMvcConfigurer {
 		secureRegistry.excludePathPatterns("/anbiao/**");
 		secureRegistry.excludePathPatterns("/upload/**");
 		secureRegistry.excludePathPatterns("/vehicledaoluyunshuzheng/**");
+		secureRegistry.excludePathPatterns("/vehiclexingshizheng/**");
+		secureRegistry.excludePathPatterns("/vehiclexingnengbaogao/**");
+		secureRegistry.excludePathPatterns("/vehicledengjizhengshu/**");
 		return secureRegistry;
 	}
 

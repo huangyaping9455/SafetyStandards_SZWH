@@ -25,7 +25,6 @@
         id, rdc_id, status, updatetime, caozuoren, createtime, chuangjianren, type, date, level, user_id, driver_id
     </sql>
 
-    <!-- 根据应急预案id 查询列表 -->
     <select id="selectByList" resultMap="BaseResultMap" parameterType="java.lang.String">
         SELECT
             a.*,
@@ -34,6 +33,26 @@
             anbiao_risk_dept_configuration_plan a,blade_user b
         where a.user_id = b.id
             and a.rdc_id = #{Id}
+    </select>
+
+    <select id="selectYujingxiangByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+            DISTINCT
+            a.yujingxiang,
+            a.shuoming,
+            b.dept_id as deptId,
+            c.hours,
+            c.type
+        FROM
+            anbiao_risk_configuration a
+                LEFT JOIN anbiao_risk_dept_configuration b ON a.id = b.rc_id
+                AND b.is_deleted = 0
+                LEFT JOIN anbiao_risk_dept_configuration_plan c ON c.rdc_id = b.id
+        WHERE
+            a.is_deleted = 0
+          AND a.yujingxiang LIKE '%未按时进行安全检查（司机）%'
+          AND dept_id = #{deptId}
+            LIMIT 1
     </select>
 
 
