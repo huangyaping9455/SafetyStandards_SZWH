@@ -265,7 +265,7 @@ public class DeptDayRiskPushMessageCrontab {
 			deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getStatus, 1);
 			deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getType, 2);
 			deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getIsDeleted, 0);
-			deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getYhId, "1445");
+//			deptUserWechatInfoQueryWrapper.lambda().eq(AnbiaoDeptUserWechatInfo::getYhId, "1445");
 			List<AnbiaoDeptUserWechatInfo> deptUserWechatInfoList = deptUserWechatInfoService.getBaseMapper().selectList(deptUserWechatInfoQueryWrapper);
 			if (deptUserWechatInfoList != null && deptUserWechatInfoList.size() > 0 ) {
 				deptUserWechatInfoList.forEach(deptitem-> {
@@ -301,18 +301,18 @@ public class DeptDayRiskPushMessageCrontab {
 						}
 
 						//获取未进行安全检查的车辆信息
-						List<AnbiaoCarExamineInfoTZVO> carExamineInfoTZVOList = carExamineInfoService.selectDayCarExamine(userWechatInfo.getDeptId(),DateUtil.now());
-						if(carExamineInfoTZVOList != null && carExamineInfoTZVOList.size() > 0 ){
-							carExamineInfoTZVOList.forEach(item-> {
-								try {
-									deptVehCheckRiskDay(deptitem.getYhGzhOpenid(),item.getDeptId());
-								} catch (IOException e) {
-									throw new RuntimeException(e);
-								} catch (ParseException e) {
-									throw new RuntimeException(e);
-								}
-							});
-						}
+//						List<AnbiaoCarExamineInfoTZVO> carExamineInfoTZVOList = carExamineInfoService.selectDayCarExamine(userWechatInfo.getDeptId(),DateUtil.now());
+//						if(carExamineInfoTZVOList != null && carExamineInfoTZVOList.size() > 0 ){
+//							carExamineInfoTZVOList.forEach(item-> {
+//								try {
+//									deptVehCheckRiskDay(deptitem.getYhGzhOpenid(),item.getDeptId());
+//								} catch (IOException e) {
+//									throw new RuntimeException(e);
+//								} catch (ParseException e) {
+//									throw new RuntimeException(e);
+//								}
+//							});
+//						}
 
 						//获取未完成安全培训的人员信息
 						List<TrainInfo> trainInfoList = trainInfoService.getDeptWaitCount(userWechatInfo.getDeptId());
